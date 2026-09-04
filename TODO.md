@@ -183,7 +183,13 @@ replaces:
 `MACCVT` documents the PL/S conversion rules. Extracting them costs one `hetget`
 run and gives the comparator a reference implementation to check against.
 
-- [ ] Extract `MVSSRC.BLD.UTILITY.ASM` from `BLDMVS.AWS` (file 5) with `hetget`
+- [x] **The tape is readable without Hercules.** `BLDMVS.AWS` is a plain AWS
+      tape; a 40-line host reader walks it. Structure confirmed: standard labels,
+      15 data files, `UTL.ASM` is file 5 (914 blocks, 4.19 MB, an IEBCOPY unload)
+- [ ] Get the members out of that unload — currently blocked on
+      [cc370#113](https://github.com/mvslovers/cc370/issues/113): `file370`
+      recognises the container but parses zero members from a real MVS unload of
+      an FB source library
 - [ ] Read `COMPLMD` before implementing #110 — especially how it decides what
       counts as a difference
 - [ ] Keep the extract as reference material; **no MBT project, no port**
@@ -191,8 +197,30 @@ run and gives the comparator a reference implementation to check against.
 
 ### 3. 🔒 Build and test the tooling
 
-- [ ] Build the Hercules DASD utilities from `~/repos/hyperion`: `dasdls`,
-      `dasdpdsu`, `dasdseq`, `dasdcat`, plus `hetget` for the tapes
+> **Attempted 2026-09-04 on the Mac (arm64) — blocked.** Hercules itself
+> compiles once `--with-included-ltdl` and permissive CFLAGS are used
+> (`-Wno-implicit-function-declaration -Wno-int-conversion`, needed because
+> modern clang rejects what this code assumes). It then **fails to link**: the
+> external packages (crypto, decNumber, SoftFloat, telnet) ship prebuilt for x86
+> only, and `BUILDING` confirms they must be built per architecture. Their
+> CMake `build` script mis-constructs the source path on this layout
+> (`<parent>/crypto64.Release/crypto does not exist`) and was not made to work.
+>
+> Docker is not installed on the Mac either.
+>
+> **Recommended way around it:** Hercules already works on `mvsdev.lan`. Run the
+> extraction there and bring the artifacts back — macro libraries, load modules,
+> DLIB object decks. The Mac then does what it is good at: as370, the comparator,
+> the pipeline. That also matches where the instances are going to live, and it
+> removes the arm64 build from the critical path entirely.
+>
+> If a local build is still wanted, the open question is simply how Hercules was
+> built on `mvsdev` — the same recipe should work here.
+
+- [ ] **Decide: extract on `mvsdev`, or make the local build work.** This is the
+      one thing blocking items 5, 5b, 5c and the macro extraction in 7
+- [ ] Build the Hercules DASD utilities: `dasdls`, `dasdpdsu`, `dasdseq`,
+      `dasdcat`, plus `hetget` for the tapes
 - [ ] Check they read the MVS/CE volume formats — the volumes are a mix of 3350,
       3380 and 3390
 - [ ] Build and install cc370 freshly (`make && make install`), record the version
