@@ -312,12 +312,33 @@ What was ruled out:
 - **Not "mvsMF is too old".** v3.0.0 carries the *newer*-labelled mvsMF and is the
   broken one.
 
-The job log on LAB shows `$HASP373 STARTED` and `$HASP396 TERMINATED` with **no
-`$HASP395 … MAX COND CODE`** line. `SYZJ2001` installs two sysmods — `SYZJ201`
-(`SYZYGY1A` into `HASPSSSM`, which writes the `JCTCNVRC` field mvsMF reads) and
-`SYZJ202` (`SYZYGY1B` into `HASPPRPU`, which adds that `$HASP395` text). Neither
-appears to have taken effect on 3.0.0, although `SYZJ2001` has been in
-`sysgen.py`'s usermod list since 2021.
+### The difference is in JES2, not in mvsMF
+
+Comparing the job-end message settles it:
+
+| | Job-end message |
+|---|---|
+| `MVSCE-DEV` (2.1.4) | `$HASP395 MBTDEPL ENDED` |
+| `MVSCE-LAB` (3.0.0) | `$HASP396 TSTZOWE TERMINATED` |
+
+Consistent across every job tried on each side — `TSTBR14`, `TSTBR15` and
+`TSTRDR1` all end `$HASP396 … TERMINATED` on LAB.
+
+`$HASP395 … ENDED` is JES2's normal job-end message. So on 3.0.0 jobs are not
+reaching normal job termination as JES2 sees it, and the field mvsMF reads
+(`JCTCNVRC`, written at job termination) never gets written. **`retcode` is a
+symptom, not the problem.**
+
+Two things that were checked and turned out not to be the explanation:
+
+- **The usermod source is present on both.** `SYS1.HASPSRC` holds `SYZYGY1A` and
+  `SYZYGY1B` on DEV and LAB alike, and `SYS1.UMODSRC` has the same five members
+  on both. Note that checking `SYS1.HASPSRC` proves little either way: SMP
+  applies a usermod to the *target* module, and the distributed source library
+  only changes if the usermod carries `++SRC` and is ACCEPTed.
+- **`SYZJ202` is not installed on either.** DEV's `$HASP395` carries no
+  `MAX COND CODE` text, yet DEV returns retcodes. So the retcode path needs only
+  `SYZJ201`, and the message-text sysmod is irrelevant here.
 
 **Why it matters:** `retcode` is how an agent learns whether an MVS job
 succeeded. Until this is fixed, either stay on a 2.1.x image for LAB/EXP or parse
