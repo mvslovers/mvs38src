@@ -1,0 +1,21 @@
+# DASD-Images, Bänder, Archive — gehören nicht ins Repo
+*.aws
+*.AWS
+*.het
+*.7z
+*.tar
+*.tar.gz
+*.cckd
+*.3350
+*.3380
+*.3390
+
+# Extrahierte Rohdaten: reproduzierbar, deshalb nicht versioniert
+work/extract/
+work/state/
+evidence/*/iter*/
+
+# Host-Kram
+.DS_Store
+__pycache__/
+*.pyc
