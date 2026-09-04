@@ -34,7 +34,12 @@ https://groups.io/g/turnkey-mvs/files/MVS%203.8J%20Source%20Recovery/BLDMVS.7z
 Our local copy is older: `BLDMVS.AWS` of 2021-09-16, instructions as PDF at
 version 2.1 of 2020-07-05.
 
-- [ ] Download (needs group membership, so this one is yours)
+- [x] **Downloaded** — it is on disk as `~/repos/MVSSRC_BAK/BLDMVS.7z`, and
+      readable with `tar -tf` (bsdtar handles 7z; no 7z tool is installed).
+      It is **newer than our unpacked copy**: instructions 2023-08-06 against
+      2020-07-05, `BLDMVS.AWS` 2023-12-01 against 2021-09-16. `NEW.ASM` grew from
+      31 to 43 MB — plausibly the DSS370 work Dave mentioned in 2024 — and
+      `UTL.ASM` from 4.2 to 5.3 MB
 - [ ] Reconcile against `Dave Kreiss - MVS from Source/BLDMVS/`: newer
       instructions? newer tape? additional PTF series?
 - [ ] If newer: refresh the `MVSBLD/` extract and re-run the 747 count
@@ -424,23 +429,33 @@ form, so re-appliable. In no case do we have to redo his work.
 >
 > ### What the remaining 77 failures are made of
 >
-> | Cause | Count | Status |
-> |---|---:|---|
-> | `GOIF` | 79 | macro in none of the three distributed libraries |
-> | `SET` | 24 | same |
-> | `IEDQMSG`, `IEDHJN`, `IEHPOST`, `DSW`, `JPUTM` … | ~45 | same |
-> | Addressability — no active `USING` | 12 | to investigate; may be downstream of the missing macros |
-> | `DC/DS` type `S` | 4 | [cc370#108](https://github.com/mvslovers/cc370/issues/108) |
-> | undefined symbols, relocatable duplication factor | ~12 | partly downstream |
+> Counted **per module**, by first cause — not per message. (An earlier note
+> counted error lines and badly overstated `GOIF`: one module can raise it 79
+> times. Only **two** modules fail on `GOIF`/`SET`/`DSW`, and both are the
+> assembler itself, `IFNX3A` and `IFOX0I`.)
 >
-> **`GOIF`, `SET`, `DSW` and `JPUTM` are in none of `SYS1.MACLIB`,
-> `SYS1.AMODGEN` or `SYS1.APVTMACS`.** They are almost certainly in the
-> `PVTMAC`/`APVTMAC` libraries Dave Kreiss created — he writes that they hold
-> macros "which are in none of the distributed maclibs". Those are on his
-> `BLDMVS.AWS` tape, so reaching them is blocked behind
-> [cc370#113](https://github.com/mvslovers/cc370/issues/113). `GOIF` and `SET`
-> alone account for over 100 of the failures and are now the single biggest lever
-> on the rate.
+> | First cause | Modules |
+> |---|---:|
+> | missing macro `IEDHJN` (TCAM) | 10 |
+> | undefined symbol | 7 |
+> | missing macro `SMPPI` | 5 |
+> | missing macro `BLSUALLS` (IPCS) | 4 |
+> | addressability — no active `USING` | 4 |
+> | relocatable duplication factor | 3 |
+> | `DC/DS` type `S` — [cc370#108](https://github.com/mvslovers/cc370/issues/108) | 3 |
+> | missing macros `JHEAD`, `IGGDEBD`, `IEEVRSWA`, `HMASMMGP` | 3 each |
+> | missing macros `IHANVT`, `IEHPRE`, `HEWAPT`, … | 2 each |
+>
+> It is a **long tail of component-private macros**, not one blocker.
+>
+> **And all of them are on Dave Kreiss' tape.** Spot-checked ten of the missing
+> names against `MVSSRC.BLD.SMP.LIB` in the 2023 package: every one appears as
+> `++MAC(name) … SYSLIB(PVTMAC) DISTLIB(APVTMAC)`. His `PVTMAC` library is the
+> answer for the whole tail, exactly as his documentation says — macros "which
+> are in none of the distributed maclibs".
+>
+> **One catch:** the elements carry `TXLIB(SYM20104)`, so the macro text is not
+> inline in the MCS. Where `SYM20104` lives still has to be found.
 >
 > **Conclusion:** as370 is not the bottleneck. The dominant cause is macros we do
 > not have yet — an extraction problem, not a development problem.
@@ -449,9 +464,12 @@ form, so re-appliable. In no case do we have to redo his work.
 - [x] Reconcile `SYS1.MACLIB` from MVS/CE against `~/repos/mvs/sys1.maclib` —
       both have 742 members, so the local copy was genuine
 - [x] Repeat the measurement with the full macro set — 43 %
-- [ ] **Get Dave Kreiss' `PVTMAC`/`APVTMAC`** off the `BLDMVS.AWS` tape. `GOIF`
-      and `SET` alone are over 100 of the remaining failures; this is now the
-      single biggest lever on the rate. Blocked behind cc370#113
+- [x] **Located Dave Kreiss' `PVTMAC`** — the missing macros are all on his tape,
+      as `++MAC(…) SYSLIB(PVTMAC)` elements in `MVSSRC.BLD.SMP.LIB`
+- [ ] **Find `TXLIB(SYM20104)`** — the elements reference it rather than carrying
+      the macro text inline, so the text is somewhere else on the tape
+- [ ] Extract the macros and re-measure. This is the single biggest lever on the
+      rate: missing macros are the first cause for roughly half the failures
 - [ ] Re-measure once those macros are in, and again after cc370#115
 - [ ] Implement `DC/DS` type `S` in as370 — the only gap reported by name in the
       pre-measurement
