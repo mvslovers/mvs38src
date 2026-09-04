@@ -8,6 +8,34 @@ The plan says *why* and *where to*; this list says *what next*.
 
 ---
 
+## Start here tomorrow
+
+**The one thing that moves the needle:** find `TXLIB(SYM20104)` on Dave's tape
+and extract the `PVTMAC` macros. Missing component-private macros are the first
+cause for roughly half the as370 failures, and all the ones spot-checked are on
+that tape as `++MAC(name) SYSLIB(PVTMAC)` elements in `MVSSRC.BLD.SMP.LIB`.
+
+Where things stand: `SMP.LIB` is tape file 2 of `BLDMVS.AWS`; it de-blocks to
+readable text with the reader in the scratch notes, and the `++MAC` statements
+are findable. The macro *text* is not inline — it lives in a TXLIB named
+`SYM20104`, which still has to be located.
+
+Two routes if that stalls:
+
+1. **Let MVS do it.** Copy `BLDMVS.AWS` to `mvsdev`, add a tape drive to
+   `MVSCE-EXP`'s `conf/local/custom.cnf`, mount it, and run Dave's `$$$LOAD` JCL
+   to load the libraries into PDSs. Then fetch members over mvsMF. This is the
+   path his instructions are written for, and it sidesteps the unload parser
+   entirely. Needs the user's agreement to touch EXP's config.
+2. **Wait for [cc370#113](https://github.com/mvslovers/cc370/issues/113)** — a
+   real MVS IEBCOPY unload of an FB source library currently parses to zero
+   members in `file370`.
+
+Then re-run the as370 measurement (`work/`-side scripts are in the scratch
+directory, not yet committed) and see where the 49 % goes.
+
+---
+
 ## Immediate
 
 ### 1. ✅ Asked Dave about licensing — awaiting reply
@@ -23,123 +51,76 @@ Blocks **publication only**, not the work.
 calls it *"freely downloadable"*. That is not a grant of licence, but it does
 show an intent to share freely — useful if no answer comes.
 
-### 1a. 🔒 Fetch the current BLDMVS.7z and reconcile
+### 1a. ✅ Current BLDMVS package reconciled
 
-Dave names this as the **current level of the build process**:
+The 2023 package is on disk and unpacked; the 2021 one is kept beside it.
 
-```
-https://groups.io/g/turnkey-mvs/files/MVS%203.8J%20Source%20Recovery/BLDMVS.7z
-```
+| | old | new |
+|---|---|---|
+| location | `Dave Kreiss - MVS from Source/BLDMVS#2021/` | `…/BLDMVS/` |
+| instructions | 2020-07-05 | **2023-08-06** |
+| `BLDMVS.AWS` | 2021-09-16, 190 MB | **2023-12-01, 191 MB** |
+| `NEW.ASM` on tape | 31 MB | **43 MB** — plausibly the DSS370 work |
+| `UTL.ASM` on tape | 4.2 MB | **5.3 MB** |
 
-Our local copy is older: `BLDMVS.AWS` of 2021-09-16, instructions as PDF at
-version 2.1 of 2020-07-05.
+The archive is `~/repos/MVSSRC_BAK/BLDMVS.7z`. No 7z tool is installed, but
+**`tar -tf` / `tar -xf` read it** (bsdtar handles 7z).
 
-- [x] **Downloaded** — it is on disk as `~/repos/MVSSRC_BAK/BLDMVS.7z`, and
-      readable with `tar -tf` (bsdtar handles 7z; no 7z tool is installed).
-      It is **newer than our unpacked copy**: instructions 2023-08-06 against
-      2020-07-05, `BLDMVS.AWS` 2023-12-01 against 2021-09-16. `NEW.ASM` grew from
-      31 to 43 MB — plausibly the DSS370 work Dave mentioned in 2024 — and
-      `UTL.ASM` from 4.2 to 5.3 MB
-- [ ] Reconcile against `Dave Kreiss - MVS from Source/BLDMVS/`: newer
-      instructions? newer tape? additional PTF series?
-- [ ] If newer: refresh the `MVSBLD/` extract and re-run the 747 count
-- [ ] Work through its precautions and its guidance on applying the 3390 changes
-      to a running system
+**What changed in the instructions (762 lines differ):**
 
-Should happen **before** item 5d — otherwise we measure against a stale working
-state.
+- **New: a TK5 section** — install the TK5 source and CBT option, RAKF profiles
+  for `MVSSRC.BLD.*`, Hercules config for the build volumes.
+- **`MAINT05F` no longer submits its successor.** The step that copies the new
+  SMP into the running `SYS1.LINKLIB` is commented out; uncomment it or submit
+  `MAINT05Z` by hand. Anyone replaying the build will trip over this.
+- **The S106-F appendix is gone entirely** — 11 mentions in 2020, none in 2023,
+  and "no failures except the occasional S106-F" became just "no failures". The
+  sporadic build aborts seem to have gone away with newer Hercules.
+- **Dave got more pessimistic:** "little chance of working correctly" became
+  "**no** chance" for LINKLIB, LPALIB, VTAMLIB and TELCMLIB.
+- **Newly tested:** 3350 *and* 3390 mod 1 as system residence.
+- Appendix C statistics are **unchanged**, so no further modules were completed
+  between 2020 and 2023.
+- A documentation bug: the Phase 4/5 headings gained parenthetical labels that
+  are swapped — "Phase 4 (LPALIB…)" describes `DSKK000` → LINKLIB. The body text
+  is right.
 
-### 1b. 🔒 Move to MVS/CE v3.0.0
+### 1b. ✅ Instances run MVS/CE v3.0.0
 
-**Largely settled already** — mainframed767 was quicker. Current is
-**v3.0.0 "UNEXPECTED SLOTH"** of 2026-08-01 (`MVSCE.release.v3.0.0.tar`,
-199 MB). Locally we still have 2.1.4 of 2026-07-08.
+`SYS1.PARMLIB(RELEASE)` on 2026-09-04: **LAB and EXP are v3.0.0**, `MVSCE-DEV` is
+v2.1.4. mvsMF on LAB and EXP has been updated by the user and now reports
+`zosmf_version: "1"` with a `plugins` field, like DEV.
 
-The decisive part: `jcl/customize.jcl` now installs **OPNTERSE, UFSD, FTPD,
-HTTPD and MVSMF** by default at sysgen time. The agent's main channel therefore
-ships with the system; nothing has to be added.
+- [ ] **Open decision:** the baseline for comparison. Our instances are 3.0.0;
+      the pristine copy extracted on `mvsdev` (`~/tmp/mvs38src-work/`) is 2.1.4.
+      If the DLIB hypothesis holds this hardly matters — but it should be settled
+      rather than drifting.
 
-- [ ] Download v3.0.0 and make it the **reference release**
-- [ ] Confirm HTTPD and MVSMF really are in the release tarball (so far only the
-      build recipe in the repository is evidence, not the artifact)
-- [ ] **Check the levels:** which HTTPD, MVSMF, UFSD and FTPD versions are
-      actually installed? See item 1c — the suspicion is that they lag. If so,
-      update them through MVP ourselves
-- [ ] Re-check [`docs/runbook.md`](docs/runbook.md) against v3.0.0 — device
-      addresses, scripts, paths
+### 1c. ⚡ libc370 release and the four relinks — not on our critical path
 
-### 1c. 🔒 First: release libc370, then relink all four packages
+Deprioritized 2026-09-04. This entered the list as a prerequisite for asking
+mainframed767 for newer packages, which in turn was driven by the retcode
+problem. That problem turned out to be our own job cards, so the chain is gone.
 
-**The trigger is not in the four projects but one level below.** libc370 is the
-base library of the whole ecosystem — a defect there is a defect in httpd, mvsMF,
-ftpd and ufsd at once. libc370's own `TODO.md` puts it plainly:
+**We build no C programs for MVS.** libc370's fixes matter to httpd/mvsMF/ftpd —
+good ecosystem hygiene, and the SYNAD fix is real (an I/O error used to kill the
+address space with S001) — but nothing here waits on it.
 
-> *"With #145/#147 done, every multitasking consumer wants a relink on the next
-> release — now for four reasons, not one."*
+- [ ] Cut libc370 v1.0.4 and relink httpd, ufsd, ftpd, mvsmf **when convenient**
+- [ ] Give mvsmf a stable `v1.0.0` rather than only the `v1.0.0-dev` pre-release
 
-#### libc370 status
+### 1d. ⚡ Ask mainframed767 for an MVS/CE 3.0.1 — weaker case now
 
-Last release **v1.0.3 of 2026-08-23**. Since then `main` carries, among others:
+Draft in `~/repos/MVSSRC/WORK/doc/mail-mainframed767-mvsce-301.md`.
 
-| Date | Change |
-|---|---|
-| 08-26 | `fix`: `puts()` one critical section, `fclose()` teardown under the lock, `DEQ` keeps its scope bits (#147, items 2/1/4) — `sysunlock()` could never release before |
-| 08-26 | `fix`: **SYNAD on the BSAM DCBs** — a genuine I/O error is now `ferror()`+`EIO` instead of an address-space-killing **S001** (#147 item 3) |
-| 08-27 | `fix`: four duplicate externals removed (#151) |
-| 08-30 | `feat(sysmac)`: `SPIE`, `TIME`, `WTOR`, `PUTX` added (#155) |
+**The regression argument is withdrawn.** There is no JES2 regression in v3.0.0;
+that was our broken job cards. What remains is worth reporting but is not urgent:
 
-Plus #145 (internal writers, ownership-aware wrappers), merged before v1.0.3.
-
-#### Status of the four consumers
-
-All four were built against **libc370 v1.0.3** and need the relink:
-
-| Project | Last release | Date | Own unreleased changes |
-|---|---|---|---|
-| httpd | v4.0.1 | 2026-08-25 | only the bump to `4.0.2-dev` + TODO notes |
-| ufsd | v1.2.1 | 2026-08-23 | only the bump to `1.2.2-dev` |
-| ftpd | v1.0.1 | 2026-08-23 | only the bump to `1.0.2-dev` |
-| mvsmf | v1.0.0-**dev** (pre-release) | 2026-08-25 | **one real fix** (PR #359 / issue #210) |
-
-Open PRs: none, in any of the four.
-
-That three of them carry nothing of their own is therefore **not an argument
-against a release** — the reason for the rebuild sits in libc370.
-
-#### Order
-
-- [ ] **Cut libc370 v1.0.4** — the fixes have been on `main` since 08-26 and are
-      in no release
-- [ ] Rebuild and release **httpd, ufsd, ftpd** against the new libc370
-- [ ] Same for **mvsmf** — and take the opportunity to cut **a stable v1.0.0**
-      rather than a pre-release. So far the only tag is `v1.0.0-dev`, while
-      `MVP/desc/MVSMF` already says `Version: 1.0.0`, a version that does not
-      exist upstream
-- [ ] Update the version table in
-      `~/repos/MVSSRC/WORK/doc/mail-mainframed767-mvsce-301.md`
-
-### 1d. ⚡ Ask mainframed767 for an MVS/CE 3.0.1
-
-Draft in `~/repos/MVSSRC/WORK/doc/mail-mainframed767-mvsce-301.md` (kept
-outside the repository — it names a person and is not part of the work product).
-**Send only after 1c**, otherwise the request names stale versions. The carrying
-argument is then not "there are newer versions" but: *the base library had four
-fixes every consumer needs a relink for — including one where an I/O error took
-the address space down with S001.*
-
-- [ ] Update the version table in the draft to the state after 1c
-- [ ] Review, adjust, send as an issue or a mail
-- [ ] Ask alongside: **which HTTPD actually lands in the build?** The MVP
-      descriptor says 4.0.0, but `MVS-sysgen/SOFTWARE/HTTPD` still holds
-      `HTTPD330` with a `build.log` of 2025-02-13. With 3.3.0 the mvsMF console
-      services cannot work (they need `httpd ≥ 4.0.0-dev`, the `cgictx` API)
-- [ ] Report two smaller points: `SCRIPTS/SHUTDOWN.RC` does not stop HTTPD or
-      FTPD, and nothing starts them either (no `S HTTPD` anywhere in the
-      repository; `COMMND00` has only `S NET` and the JES2 parms)
-- [ ] Offer pull requests — and deliver them if accepted
-
-**Not blocking.** If no answer comes we update the four packages through MVP
-ourselves and document that as a step of baseline setup.
+- [ ] Package levels lag the current releases (update the version table first)
+- [ ] `SCRIPTS/SHUTDOWN.RC` stops neither HTTPD nor FTPD
+- [ ] Nothing starts them either — no `S HTTPD` anywhere in the repo
+- [ ] Which HTTPD actually lands in the build: `MVP/desc/HTTPD` says 4.0.0, but
+      `MVS-sysgen/SOFTWARE/HTTPD` holds `HTTPD330` from 2025-02-13
 
 ### 2. ✅ Repo created
 
@@ -200,62 +181,50 @@ run and gives the comparator a reference implementation to check against.
 - [ ] Keep the extract as reference material; **no MBT project, no port**
 - [ ] Revisit `MVSSMP38` when M7 comes around
 
-### 3. 🔒 Build and test the tooling
+### 3. ✅ Tooling — extract on `mvsdev`, process on the Mac
 
-> **Attempted 2026-09-04 on the Mac (arm64) — blocked.** Hercules itself
-> compiles once `--with-included-ltdl` and permissive CFLAGS are used
-> (`-Wno-implicit-function-declaration -Wno-int-conversion`, needed because
-> modern clang rejects what this code assumes). It then **fails to link**: the
-> external packages (crypto, decNumber, SoftFloat, telnet) ship prebuilt for x86
-> only, and `BUILDING` confirms they must be built per architecture. Their
-> CMake `build` script mis-constructs the source path on this layout
-> (`<parent>/crypto64.Release/crypto does not exist`) and was not made to work.
->
-> Docker is not installed on the Mac either.
->
-> **Recommended way around it:** Hercules already works on `mvsdev.lan`. Run the
-> extraction there and bring the artifacts back — macro libraries, load modules,
-> DLIB object decks. The Mac then does what it is good at: as370, the comparator,
-> the pipeline. That also matches where the instances are going to live, and it
-> removes the arm64 build from the critical path entirely.
->
-> If a local build is still wanted, the open question is simply how Hercules was
-> built on `mvsdev` — the same recipe should work here.
+Hercules **cannot be built on the Mac** (arm64): it compiles with
+`--with-included-ltdl` and permissive CFLAGS, then fails to link because the
+external packages ship prebuilt for x86 only and their CMake build script does
+not work on this layout. Docker is not installed either. Abandoned deliberately.
 
-- [ ] **Decide: extract on `mvsdev`, or make the local build work.** This is the
-      one thing blocking items 5, 5b, 5c and the macro extraction in 7
-- [ ] Build the Hercules DASD utilities: `dasdls`, `dasdpdsu`, `dasdseq`,
-      `dasdcat`, plus `hetget` for the tapes
-- [ ] Check they read the MVS/CE volume formats — the volumes are a mix of 3350,
-      3380 and 3390
-- [ ] Build and install cc370 freshly (`make && make install`), record the version
-- [ ] Try `file370 -v` on a known load module
+**`mvsdev` has everything** in `/usr/local/hercules/bin`: `dasdls`, `dasdpdsu`,
+`dasdseq`, `dasdcat`, `hetget`, `cckd*`. Reach it with `ssh mvsdev`.
 
-### 4. 🔒 Set up MVS/CE and freeze the baseline
+The working split: **extract on `mvsdev`, process on the Mac.** Extraction needs
+no running MVS, only the volume files, and happens once per artifact. Unpack a
+pristine release into a scratch directory rather than reading a running
+instance's volumes — `~/tmp/mvs38src-work/` holds one (2.1.4).
 
-- [ ] Unpack `MVSCE.release.v3.0.0.tar`
-- [ ] IPL it, smoke-test JES2, TSO, SMP
-- [ ] Take an **immutable snapshot** of the volumes with checksums →
-      `baseline/checksums.txt`
-- [ ] Get mvsMF running against MVS/CE — already installed in v3.0.0, only to be
-      started and checked for level
-- [ ] Adopt `/s HTTPD` after IPL and `/p HTTPD` before shutdown into the routine
-      (`SHUTDOWN.RC` does not know HTTPD)
-- [x] `retcode` works on LAB. It needs a **complete job card** — the programmer
-      name is not optional (see the runbook). `SYZJ201` was never the problem
-- [ ] Inventory the baseline → `baseline/mvsce-v3.0.0.md`: installed usermods,
-      MVP packages, sysgen parameters, I/O gen
-- [ ] **Confirm the DLIBs (`AOS*`) are on `smp000.3350`** — the whole yardstick
-      depends on it. If not: load `zdlib1.het`
-- [ ] **Evaluate the SMP CDS: which sysmods are ACCEPTed?** That decides how
-      clean the DLIBs are as an oracle (see the plan, section 5)
-- [ ] Enable the Hercules web console as a fallback (`conf/local/custom.cnf`:
-      `HTTP PORT 8038 NOAUTH` / `HTTP START`)
-- [ ] Verify [`docs/runbook.md`](docs/runbook.md) on the first pass — raise every
-      procedure from 📄 to ✅, or correct it
+⚠️ **Two traps in `dasdpdsu` output**, both hit on 2026-09-04:
 
-Without this inventory nobody can later tell `DIFF-USERMOD` from `DIFF-UNKNOWN` —
-the agent would grind itself down on explainable differences.
+1. It writes **raw EBCDIC with no record separators**. Members are RECFM=FB 80,
+   so split into 80-byte records first.
+2. Convert to a **single-byte encoding** — `cp037` in, `latin-1` out. UTF-8 turns
+   EBCDIC `X'5F'` (`¬`) into two bytes and shifts every column after it, which
+   silently breaks column 72 and therefore the continuation rule.
+
+Also useful: `BLDMVS.AWS` is a plain AWS tape and a 40-line host reader walks it
+without Hercules at all.
+
+- [x] Hercules utilities available (on `mvsdev`)
+- [x] `as370` confirmed current — `as370/src/` unchanged since the installed build
+- [ ] Build `cc370` freshly when `cmplmd370` lands
+
+### 4. ◐ MVS/CE baseline — partly done
+
+- [x] Pristine 2.1.4 unpacked on `mvsdev` at `~/tmp/mvs38src-work/MVSCE/DASD/`
+- [x] **DLIBs confirmed on `smp000.3350`** — 34 `AOS*` libraries, exactly the set
+      in Dave's appendix C. Also `SYS1.AMODGEN`, `SYS1.SMPCDS`, `SYS1.SMPPTS`,
+      `SYS1.UMOD*`, `SYS1.HASPSRC`
+- [x] Macro libraries extracted: `SYS1.MACLIB` (742), `SYS1.AMODGEN` (288),
+      `SYS1.APVTMACS` (242)
+- [x] `retcode` works — it needed a complete job card, nothing else
+- [ ] Immutable snapshot with checksums → `baseline/checksums.txt`
+- [ ] Inventory the baseline → `baseline/mvsce-*.md`: usermods, MVP packages,
+      sysgen parameters, I/O gen
+- [ ] Evaluate the SMP CDS: which sysmods are ACCEPTed?
+- [ ] Verify the runbook on a first full pass, raising 📄 to ✅
 
 ### 4b. ⚡ Set up the instances on `mvsdev.lan`
 
