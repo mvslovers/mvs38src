@@ -241,8 +241,8 @@ run and gives the comparator a reference implementation to check against.
       started and checked for level
 - [ ] Adopt `/s HTTPD` after IPL and `/p HTTPD` before shutdown into the routine
       (`SHUTDOWN.RC` does not know HTTPD)
-- [ ] Confirm `SYZJ201` is applied (`retcode` then arrives over the REST API;
-      mvsMF adds `NOTIFY=` itself)
+- [x] `retcode` works on LAB. It needs a **complete job card** — the programmer
+      name is not optional (see the runbook). `SYZJ201` was never the problem
 - [ ] Inventory the baseline → `baseline/mvsce-v3.0.0.md`: installed usermods,
       MVP packages, sysgen parameters, I/O gen
 - [ ] **Confirm the DLIBs (`AOS*`) are on `smp000.3350`** — the whole yardstick
