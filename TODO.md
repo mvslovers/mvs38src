@@ -390,40 +390,58 @@ form, so re-appliable. In no case do we have to redo his work.
 
 ### 7. 🚪 as370 gap analysis (M2)
 
-> **Pre-measurement of 2026-09-04 — the gate looks good.**
+> **Measured 2026-09-04, twice — the gate holds, and the bottleneck moved.**
 >
-> 150 modules drawn at random from `MVSBLD/`, assembled with `as370 V1.0`, with
-> `~/repos/mvs/sys1.maclib` (742 members) as the only macro source:
+> 150 modules drawn at random from `MVSBLD/`, assembled with `as370 V1.0`:
 >
-> | | |
+> | Macro set | Assembled cleanly |
 > |---|---:|
-> | assembled cleanly | **56 (37 %)** |
-> | with errors | 94 |
+> | `SYS1.MACLIB` only (742 macros) | 56 (37 %) |
+> | **+ `SYS1.AMODGEN` + `SYS1.APVTMACS` (1,269 macros)** | **65 (43 %)** |
 >
-> **The error distribution is the decisive part:** almost all of them are
-> **missing macros**, not assembler limits. Most frequent: `GOIF` (79),
-> `SET` (24), `IECRES`, `IEDQMSG`, `IEDHJN`, `IEHPOST`, `DSW`, `BLSUFRES`,
-> `SMPPI`, `IECDSECS` — AMODGEN and private macros that simply are not there yet.
+> The macros were extracted from a pristine MVS/CE 2.1.4 on `mvsdev` with
+> `dasdpdsu`. **Note for anyone repeating this: `dasdpdsu` writes raw EBCDIC with
+> no record separators.** The members are RECFM=FB 80, so the output has to be
+> split into 80-byte records and translated (cp037) before anything can read it.
+> Feeding the raw output to as370 makes the rate *drop* to 28 — which is how the
+> mistake was caught.
 >
-> Genuine as370 gaps in the sample, in single digits: **`DC/DS` type `S` is not
-> implemented** (reported by name), a few addressability errors, and
-> undefined-symbol messages that are mostly downstream of the missing DSECT
-> macros.
+> **What the remaining 85 failures are made of:**
 >
-> **Conclusion:** as370 is not the bottleneck, macro availability is — and that
-> is an extraction problem, not a development problem. The rate should rise
-> considerably with `SYS1.AMODGEN` and the private macro libraries.
+> | Cause | Count | Status |
+> |---|---:|---|
+> | `GOIF` | 79 | macro in none of the three distributed libraries |
+> | `SET` | 24 | same |
+> | `IEDQMSG`, `IEDHJN`, `IEHPOST`, `DSW`, `JPUTM` … | ~45 | same |
+> | **IFO026 severity 4 fails the build** | **19** | [cc370#115](https://github.com/mvslovers/cc370/issues/115) |
+> | `DC/DS` type `S` | 4 | [cc370#108](https://github.com/mvslovers/cc370/issues/108) |
+> | undefined symbols (`IERRCA`, `GDSCB`, `APTDSECT` …) | ~15 | mostly downstream of missing macros |
 >
-> *Preliminary: the provenance of `sys1.maclib` is unverified, the sample is
-> small, and only assemblability was measured — not object identity.*
+> **Two findings worth carrying forward:**
+>
+> 1. **`GOIF`, `SET`, `DSW`, `JPUTM` are in none of `SYS1.MACLIB`,
+>    `SYS1.AMODGEN` or `SYS1.APVTMACS`.** They are almost certainly in the
+>    `PVTMAC`/`APVTMAC` libraries Dave Kreiss created — he writes that they hold
+>    macros "which are in none of the distributed maclibs". Those sit on his
+>    `BLDMVS.AWS` tape, so getting at them is blocked behind
+>    [cc370#113](https://github.com/mvslovers/cc370/issues/113). Between them,
+>    `GOIF` and `SET` alone account for over 100 of the failures.
+> 2. **as370 refuses IBM's own `WTO` macro** — line 654 has comment text in
+>    column 72, IFOX00 flags IFO026 severity 4 and continues, as370 stops. Since
+>    `WTO` is everywhere in system source, this one condition is 19 of 85.
+>
+> **Conclusion unchanged, and now better supported:** as370 is not the
+> bottleneck. Two of the three top causes are "we do not have the macro yet", and
+> the third is a severity policy, not a missing capability.
 
-- [ ] **Extract `SYS1.AMODGEN` and the private macro libraries** — per the
-      pre-measurement this is the main lever. Plus `SYS1.APVTMACS`; Dave also
-      names his own `PVTMAC`/`APVTMAC` holding macros "which are in none of the
-      distributed maclibs"
-- [ ] Reconcile `SYS1.MACLIB` from MVS/CE against `~/repos/mvs/sys1.maclib` —
-      the latter has 742 members of unknown provenance
-- [ ] Repeat the measurement with the full macro set and carry the rate forward
+- [x] **Extract `SYS1.AMODGEN` and `SYS1.APVTMACS`** — done on `mvsdev`
+- [x] Reconcile `SYS1.MACLIB` from MVS/CE against `~/repos/mvs/sys1.maclib` —
+      both have 742 members, so the local copy was genuine
+- [x] Repeat the measurement with the full macro set — 43 %
+- [ ] **Get Dave Kreiss' `PVTMAC`/`APVTMAC`** off the `BLDMVS.AWS` tape. `GOIF`
+      and `SET` alone are over 100 of the remaining failures; this is now the
+      single biggest lever on the rate. Blocked behind cc370#113
+- [ ] Re-measure once those macros are in, and again after cc370#115
 - [ ] Implement `DC/DS` type `S` in as370 — the only gap reported by name in the
       pre-measurement
 - [ ] Run as370 over a cross-section of `MVSBLD/*.ASM` and `IKJ/*.asm`
