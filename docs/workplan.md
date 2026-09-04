@@ -715,6 +715,19 @@ itself: `DIFF-USERMOD` is no longer a suspicion but a measurement.
 | **libobj370** | Shared format library | **Phase 0 of the cc370 roadmap.** The three above should be thin frontends, not a fourth copy of the format logic |
 | **`mvsrec`** (working title) | The orchestrator: queue, state machine, budget, bookkeeping, escalation reports | This is the tool that drives the agent, not the other way round |
 
+### Dave Kreiss' utilities: read them, do not port them
+
+His nine MVS-side utilities (`COMPLMD`, `LOADLMD`, `MAPLMD`, `MACCVT`,
+`LMDXRF38`, `LMDRPT38`, `MVSASM38`, `MVSLKD38`, `MVSSMP38`) are replaced by the
+host-side chain above. They are not among the extracted `.ASM` files; they live
+on the `BLDMVS.AWS` tape in `MVSSRC.BLD.UTILITY.ASM`.
+
+They are still worth extracting — as **specification, not as code**. `COMPLMD`
+defines the `DIFIN`/`DIFOUT` semantics and `CLEARRLD` behaviour that `cmplmd370`
+has to reproduce, and `MACCVT` records the PL/S conversion rules should making
+case-D modules readable ever become a goal. `MVSSMP38` may earn its keep in M7,
+where it parses SMP output for per-step errors.
+
 ### Licensing note on dasm370
 
 `~/repos/Waterloo Disasm/dasm370.c` carries in its header:

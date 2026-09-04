@@ -111,12 +111,12 @@ against a release** — the reason for the rebuild sits in libc370.
       `MVP/desc/MVSMF` already says `Version: 1.0.0`, a version that does not
       exist upstream
 - [ ] Update the version table in
-      [`docs/mail-mainframed767-mvsce-301.md`](docs/mail-mainframed767-mvsce-301.md)
+      `~/repos/MVSSRC/WORK/doc/mail-mainframed767-mvsce-301.md`
 
 ### 1d. ⚡ Ask mainframed767 for an MVS/CE 3.0.1
 
-Draft in
-[`docs/mail-mainframed767-mvsce-301.md`](docs/mail-mainframed767-mvsce-301.md).
+Draft in `~/repos/MVSSRC/WORK/doc/mail-mainframed767-mvsce-301.md` (kept
+outside the repository — it names a person and is not part of the work product).
 **Send only after 1c**, otherwise the request names stale versions. The carrying
 argument is then not "there are newer versions" but: *the base library had four
 fixes every consumer needs a relink for — including one where an I/O error took
@@ -145,6 +145,49 @@ ourselves and document that as a step of baseline setup.
 - [x] `README.md`, `CLAUDE.md`
 - [x] `.gitignore`: DASD images, `*.AWS`, web mirrors stay out
 - [ ] Repo stays **private** (see item 1); no remote until then
+
+### 2b. ✅ cc370 issues filed for the tools we need
+
+Five issues in `mvslovers/cc370`, so another agent can pick them up:
+
+| # | Tool | Note |
+|---|---|---|
+| [#108](https://github.com/mvslovers/cc370/issues/108) | as370: `DC/DS` type `S` | measured gap; #53 fixed the silent failure, the type is still unimplemented |
+| [#109](https://github.com/mvslovers/cc370/issues/109) | `libobj370` / `libmvs370` | roadmap phase 0 — **the other three depend on it** |
+| [#110](https://github.com/mvslovers/cc370/issues/110) | `cmplmd370` | the comparator; our success criterion |
+| [#111](https://github.com/mvslovers/cc370/issues/111) | `idrdump370` | IDR records + eyecatchers per CSECT |
+| [#112](https://github.com/mvslovers/cc370/issues/112) | `dasm370` | disassembler + alignment-diff mode |
+
+Only #109 and #110 are on the critical path for the measurements in items 5b–5d.
+#112 can wait until we know how large case D actually is.
+
+### 2c. Dave Kreiss' utilities — extract, read, do not port
+
+His nine utilities are **not** among the 5,529 `.ASM` files in `MVSBLD/`. They
+live only on the `BLDMVS.AWS` tape, in `MVSSRC.BLD.UTILITY.ASM` (file 5).
+
+**We do not need to port them.** They are MVS-side tools that our host-side chain
+replaces:
+
+| Dave's tool | Replaced by |
+|---|---|
+| `COMPLMD` | `cmplmd370` (#110) |
+| `LOADLMD`, `MAPLMD` | `libobj370` / `file370` (#109) |
+| `LMDXRF38`, `LMDRPT38` | our own inventory pipeline |
+| `MVSASM38`, `MVSLKD38` | only needed if we run SMP builds ourselves |
+| `MVSSMP38` | possibly useful in M7 — it parses SMP output for per-step errors |
+| `MACCVT` | prior art for making case-D modules readable; Dave calls it "a twisted piece of code" |
+
+**But the source is worth reading as a specification.** `COMPLMD` defines the
+`DIFIN`/`DIFOUT` semantics and `CLEARRLD` that #110 has to reproduce, and
+`MACCVT` documents the PL/S conversion rules. Extracting them costs one `hetget`
+run and gives the comparator a reference implementation to check against.
+
+- [ ] Extract `MVSSRC.BLD.UTILITY.ASM` from `BLDMVS.AWS` (file 5) with `hetget`
+- [ ] Read `COMPLMD` before implementing #110 — especially how it decides what
+      counts as a difference
+- [ ] Keep the extract as reference material; **no MBT project, no port**
+- [ ] Revisit `MVSSMP38` when M7 comes around
 
 ### 3. 🔒 Build and test the tooling
 
