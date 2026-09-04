@@ -283,8 +283,18 @@ The same test against the user's `MVSCE-DEV` (`:8080`) returns
 On DEV the ones without are STCs and TSU sessions, which carry no `NOTIFY`; that
 is the documented behaviour.
 
-So the difference is the **mvsMF build**, and the two report themselves
-differently:
+**The cause is open.** The two instances report different mvsMF builds, so that
+is one candidate — but retcode has worked in this ecosystem for a long time,
+which argues against it. The other candidate is that `SYZJ201` never took effect
+on LAB/EXP, depending on how they were created: a system unpacked from a release
+tar carries whatever that release's sysgen produced, and one built locally with
+`sysgen.py` applies the usermod list itself.
+
+**How to settle it:** check whether `SYZJ201` is applied on LAB — the SMP CDS, or
+`HASPSSSM` itself — and compare against DEV. Until then, treat this as observed
+and unexplained rather than attributed.
+
+The two do report themselves differently:
 
 | | DEV `:8080` | LAB `:8082` |
 |---|---|---|
@@ -313,9 +323,9 @@ What was ruled out along the way:
 succeeded. Until LAB and EXP run a current mvsMF, every job needs its spool
 output parsed instead — workable, but fragile and slow.
 
-**The fix is the one already planned:** update mvsMF (and HTTPD) on these
-instances through MVP, or move to an MVS/CE that ships a current one. See
-`../TODO.md` items 1b–1d.
+**Next step:** establish whether `SYZJ201` is applied on LAB. If it is not, apply
+`usermods/SYZJ2001.jcl` from the MVS-sysgen repo. If it is, the mvsMF level is
+back in the frame and `../TODO.md` items 1b–1d cover it.
 
 ### Why two instances for this project
 
