@@ -390,49 +390,60 @@ form, so re-appliable. In no case do we have to redo his work.
 
 ### 7. 🚪 as370 gap analysis (M2)
 
-> **Measured 2026-09-04, twice — the gate holds, and the bottleneck moved.**
+> **Measured 2026-09-04 — the gate holds. 49 % assemble cleanly.**
 >
-> 150 modules drawn at random from `MVSBLD/`, assembled with `as370 V1.0`:
+> 150 modules drawn at random from `MVSBLD/`, assembled with `as370 V1.0`
+> (confirmed current: no change under `as370/src/` since that build):
 >
 > | Macro set | Assembled cleanly |
 > |---|---:|
 > | `SYS1.MACLIB` only (742 macros) | 56 (37 %) |
-> | **+ `SYS1.AMODGEN` + `SYS1.APVTMACS` (1,269 macros)** | **65 (43 %)** |
+> | **+ `SYS1.AMODGEN` + `SYS1.APVTMACS` (1,269 macros)** | **73 (49 %)** |
 >
-> The macros were extracted from a pristine MVS/CE 2.1.4 on `mvsdev` with
-> `dasdpdsu`. **Note for anyone repeating this: `dasdpdsu` writes raw EBCDIC with
-> no record separators.** The members are RECFM=FB 80, so the output has to be
-> split into 80-byte records and translated (cp037) before anything can read it.
-> Feeding the raw output to as370 makes the rate *drop* to 28 — which is how the
-> mistake was caught.
+> Macros extracted from a pristine MVS/CE 2.1.4 on `mvsdev` with `dasdpdsu`.
 >
-> **What the remaining 85 failures are made of:**
+> ### Two traps in the extraction, both hit and both worth writing down
+>
+> **1. `dasdpdsu` writes raw EBCDIC with no record separators.** The members are
+> RECFM=FB 80, so the output must be split into 80-byte records and translated.
+> Feeding it raw makes the rate *drop* to 28.
+>
+> **2. Convert to a single-byte encoding, never UTF-8.** This one cost a
+> wrongly-filed issue. Writing the members as UTF-8 turns EBCDIC `X'5F'` (`¬`)
+> into two bytes, and every column after it shifts right. In `WTO` that pushed a
+> comment's last character into byte column 72 — the continuation column — and
+> as370 correctly reported a continuation that consumed the next statement. The
+> fix is latin-1, where `¬` stays one byte. **Column positions are the whole
+> contract in fixed-format assembler; any multi-byte encoding destroys them.**
+>
+> as370 catching this is worth noting rather than resenting: its deliberate
+> stance that a statement-losing continuation is an error and not a severity-4
+> warning (`270b22d`) surfaced a data-corruption bug in our conversion. A warning
+> would have let 150 modules assemble against mangled macros and be compared in
+> good faith.
+>
+> ### What the remaining 77 failures are made of
 >
 > | Cause | Count | Status |
 > |---|---:|---|
 > | `GOIF` | 79 | macro in none of the three distributed libraries |
 > | `SET` | 24 | same |
 > | `IEDQMSG`, `IEDHJN`, `IEHPOST`, `DSW`, `JPUTM` … | ~45 | same |
-> | **IFO026 severity 4 fails the build** | **19** | [cc370#115](https://github.com/mvslovers/cc370/issues/115) |
+> | Addressability — no active `USING` | 12 | to investigate; may be downstream of the missing macros |
 > | `DC/DS` type `S` | 4 | [cc370#108](https://github.com/mvslovers/cc370/issues/108) |
-> | undefined symbols (`IERRCA`, `GDSCB`, `APTDSECT` …) | ~15 | mostly downstream of missing macros |
+> | undefined symbols, relocatable duplication factor | ~12 | partly downstream |
 >
-> **Two findings worth carrying forward:**
+> **`GOIF`, `SET`, `DSW` and `JPUTM` are in none of `SYS1.MACLIB`,
+> `SYS1.AMODGEN` or `SYS1.APVTMACS`.** They are almost certainly in the
+> `PVTMAC`/`APVTMAC` libraries Dave Kreiss created — he writes that they hold
+> macros "which are in none of the distributed maclibs". Those are on his
+> `BLDMVS.AWS` tape, so reaching them is blocked behind
+> [cc370#113](https://github.com/mvslovers/cc370/issues/113). `GOIF` and `SET`
+> alone account for over 100 of the failures and are now the single biggest lever
+> on the rate.
 >
-> 1. **`GOIF`, `SET`, `DSW`, `JPUTM` are in none of `SYS1.MACLIB`,
->    `SYS1.AMODGEN` or `SYS1.APVTMACS`.** They are almost certainly in the
->    `PVTMAC`/`APVTMAC` libraries Dave Kreiss created — he writes that they hold
->    macros "which are in none of the distributed maclibs". Those sit on his
->    `BLDMVS.AWS` tape, so getting at them is blocked behind
->    [cc370#113](https://github.com/mvslovers/cc370/issues/113). Between them,
->    `GOIF` and `SET` alone account for over 100 of the failures.
-> 2. **as370 refuses IBM's own `WTO` macro** — line 654 has comment text in
->    column 72, IFOX00 flags IFO026 severity 4 and continues, as370 stops. Since
->    `WTO` is everywhere in system source, this one condition is 19 of 85.
->
-> **Conclusion unchanged, and now better supported:** as370 is not the
-> bottleneck. Two of the three top causes are "we do not have the macro yet", and
-> the third is a severity policy, not a missing capability.
+> **Conclusion:** as370 is not the bottleneck. The dominant cause is macros we do
+> not have yet — an extraction problem, not a development problem.
 
 - [x] **Extract `SYS1.AMODGEN` and `SYS1.APVTMACS`** — done on `mvsdev`
 - [x] Reconcile `SYS1.MACLIB` from MVS/CE against `~/repos/mvs/sys1.maclib` —
