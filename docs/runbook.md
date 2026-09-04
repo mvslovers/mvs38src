@@ -295,6 +295,19 @@ not an empty value.
 
 A correct job returns `retcode: CC 0000` and ends with `$HASP395 jobname ENDED`.
 
+Verified on both instances 2026-09-04, including the control case — a card with
+the programmer name omitted returns `retcode: JCL ERROR`, not `null`:
+
+| | `MVSCE-LAB` :8082 | `MVSCE-EXP` :8083 |
+|---|---|---|
+| mvsMF | `"1"`, with `plugins` | `"1"`, with `plugins` |
+| correct card | `CC 0000` | `CC 0000` |
+| job end | `$HASP395 … ENDED` | `$HASP395 … ENDED` |
+| broken card | `JCL ERROR` | `JCL ERROR` |
+
+**The agent channel is therefore complete**: submit a job, poll its status, and
+tell success from failure mechanically — on both instances, from the host.
+
 ### A day spent on a self-inflicted problem — worth recording
 
 For most of 2026-09-04 this runbook claimed a JES2 regression in MVS/CE v3.0.0,
