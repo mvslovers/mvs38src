@@ -3,8 +3,9 @@
 Recovering the MVS 3.8j source at **DLIB level**, so that MVS/CE can be built
 from that source in future.
 
-> **Private** until the licensing question with Dave Kreiss is answered.
-> See [`docs/mail-dave-licensing.md`](docs/mail-dave-licensing.md).
+> **Private** until the licensing question with Dave Kreiss is answered — he was
+> asked on 2026-09-04 whether his recovery work may be published; the reply is
+> outstanding.
 
 ## The goal, in two stages
 
