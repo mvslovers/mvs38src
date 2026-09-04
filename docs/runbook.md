@@ -245,24 +245,71 @@ instructions assume it for TK3/TK4-. If not present, add it in
 
 ## 6. Instances on `mvsdev.lan`
 
-❓ *planned, not yet set up*
+✅ *set up 2026-09-04; ports verified reachable from the Mac*
 
-The systems do not run on the Mac but on **`mvsdev.lan`**, each Hercules in its
-own tmux session. **Three instances** are planned once MVS/CE 3.0.1 is available.
+Three MVS/CE instances run on **`mvsdev.lan`**, each Hercules in its own tmux
+session, plus an older `~/MVSCE`.
 
-| Instance | Purpose | Who uses it | Lifetime |
-|---|---|---|---|
-| `mvsce-lab` | all **other** projects. Permanently available. | human | permanent |
-| `mvsce-src` | this project: applying PTFs, APPLY/ACCEPT, IPL test (M7) | agent | reset from the template regularly |
-| `mvsce-exp` | this project: experiments, above all **SMPWRK3 reproduction** | agent and human | throwaway |
+| Instance | 3270 | FTP | HTTP (mvsMF) | Herc console | Access |
+|---|---|---|---|---|---|
+| `MVSCE-DEV` | — | — | — | — | **OFF LIMITS.** The user's development box |
+| `MVSCE-LAB` | 3272 | 2122 | **8082** | 8282 | ours |
+| `MVSCE-EXP` | 3273 | 2123 | **8083** | 8383 | ours |
+| `~/MVSCE` | — | — | — | — | **OFF LIMITS.** An older instance, running |
 
-### Why two for this project
+> ⚠️ **Note the naming.** Earlier drafts of this plan spoke of `mvsce-src` and
+> declared `mvsce-lab` off limits. That is obsolete and reversed: **`MVSCE-DEV`**
+> is the untouchable one, and `LAB` belongs to this project.
+
+All eight ports answer from the Mac. mvsMF responds on both HTTP ports:
+
+```
+$ curl -u IBMUSER:SYS1 -H "X-CSRF-ZOSMF-HEADER: x" http://mvsdev:8082/zosmf/info
+{"zosmf_version":"1.0.0-dev","api_version":"1","zos_version":"MVS 3.8j", ...}
+```
+
+Credentials are the MVS/CE defaults: `IBMUSER`/`SYS1`, `MVSCE01`/`CUL8TR`,
+`MVSCE02`/`PASS4U`. Without them `/zosmf/info` answers 401, which is a useful
+liveness signal in itself — 401 means mvsMF is registered, 404 means only HTTPD
+is up.
+
+### ⚠️ Open: `retcode` stays null
+
+Measured on `MVSCE-LAB` 2026-09-04. A job submitted through mvsMF reaches
+`status: OUTPUT`, but `retcode` is `null` — with **and** without an explicit
+`NOTIFY=` on the job card.
+
+What was ruled out:
+
+- **Not a missing usermod in the sysgen.** `SYZJ2001` has been in `sysgen.py`'s
+  usermod list since 2021, so both 2.1.4 and 3.0.0 should carry it.
+- **Not the job card.** An explicit `NOTIFY=IBMUSER` changes nothing, so this is
+  not the auto-`NOTIFY` injection mvsMF added in its #307.
+- **Not an mvsMF version problem.** It reports `1.0.0-dev`, the current upstream
+  pre-release.
+
+What the job log shows: `$HASP373 STARTED` and `$HASP396 TERMINATED`, with **no
+`$HASP395 … MAX COND CODE`** line at all. `SYZJ2001` installs two sysmods —
+`SYZJ201` (`SYZYGY1A` into `HASPSSSM`, which writes the `JCTCNVRC` field mvsMF
+reads) and `SYZJ202` (`SYZYGY1B` into `HASPPRPU`, which adds that `$HASP395`
+text). The absence of the second suggests neither took effect on these instances.
+
+**Why it matters:** `retcode` is how an agent learns whether an MVS job
+succeeded. Until this works, every job submitted from the host needs its spool
+output parsed instead — workable, but fragile and much slower.
+
+- [ ] Check on the instances whether `SYZJ201`/`SYZJ202` are actually applied
+      (SMP CDS, or the `HASPSSSM` module itself)
+- [ ] If they are not: apply `usermods/SYZJ2001.jcl` from the MVS-sysgen repo
+- [ ] If they are: take it upstream to mvsMF as a defect report
+
+### Why two instances for this project
 
 Because the two jobs would block each other. The SMPWRK3 analysis consists of
 **deliberately running large APPLYs until the failure appears** — for Dave a run
 took a good two hours, and the result is a broken system. Running that on the
 same instance where we verify PTFs would stall verification constantly.
-Separated, both strands run in parallel.
+`MVSCE-EXP` is the throwaway; `MVSCE-LAB` is where verification happens.
 
 ### The baseline is not an instance
 
@@ -272,11 +319,11 @@ session.
 
 The reason: every IPL changes the volumes. SMF writes, page data sets are used,
 JES2 updates its checkpoint, the catalog changes. A system that runs is no
-longer an immutable oracle. The three instances above are created **from** the
-template; the template itself stays untouched.
+longer an immutable oracle. The instances are created **from** the template; the
+template itself stays untouched.
 
 It follows that **resetting has to be cheap and scriptable.** The agent will
-break `mvsce-src` regularly — a failed ACCEPT, a hung IPL, a wait state.
+break `MVSCE-LAB` regularly — a failed ACCEPT, a hung IPL, a wait state.
 "Recreate an instance from the template" therefore belongs here as a procedure,
 not as manual work.
 
@@ -284,35 +331,21 @@ not as manual work.
 
 | Instance | Agent |
 |---|---|
-| `mvsce-lab` | **no access.** That is the human's working environment for other projects |
-| `mvsce-src` | full access, may break |
-| `mvsce-exp` | full access, is meant to break |
+| `MVSCE-DEV`, `~/MVSCE` | **no access.** The user's own systems |
+| `MVSCE-LAB` | full access, may break |
+| `MVSCE-EXP` | full access, is meant to break |
 | baseline template | **read-only** |
-
-### Port allocation
-
-Three instances on one host need a plan. The trap is already known from
-`~/repos/mvs/REFCARD.md`: with two systems on one host the **reader ports** had
-to be separated to avoid collisions (`MVP/MVP.ini`, `ascii_reader` /
-`ebcdic_reader`), or you get `MVP999E UNABLE TO FIND …`.
-
-❓ **Still to be decided** — per instance: tn3270, mvsMF/HTTPD, FTP, both
-readers, the Hercules web console. Record the table here once allocated.
 
 ### Where do the tools run?
 
-A question worth settling early: the toolchain (`as370`, `dasm370`,
-`cmplmd370`, the Hercules DASD utilities) runs on the **Mac**, while the volumes
-live on **`mvsdev.lan`**.
+The toolchain (`as370`, `cmplmd370`) runs on the **Mac**; Hercules and its DASD
+utilities live on **`mvsdev`** (`/usr/local/hercules/bin`). Building Hercules on
+the Mac (arm64) failed — the external packages ship prebuilt for x86 only.
 
-For M0 and M1 that is uncritical: extraction needs **no running MVS**, only the
-volume files, and it happens **once**. The simplest route is to bring the
-baseline template to the Mac once, extract everything there, and put the results
-in the repo.
-
-The instances on `mvsdev.lan` are genuinely needed only from **M7** on, when
-PTFs are applied and tested. **Setting up the three systems is therefore not on
-the critical path** and need not wait for 3.0.1 in order to start M0.
+That split works well: **extract on `mvsdev`, process on the Mac.** Extraction
+needs no running MVS, only the volume files, and it happens once per artifact.
+Unpack a pristine release into a scratch directory rather than reading a running
+instance's volumes.
 
 ### ⚠️ Dave's 3390 mods corrupt free space
 
@@ -324,21 +357,18 @@ Concretely, for us:
 
 - His phases 4 and 5 (`DSKK7xx`–`9xx`, `DSKL7xx`–`9xx`) contain exactly those
   extensions. Anyone running his build brings them along.
-- The most likely occasion for that is the **SMPWRK3 reproduction** — and that is
-  what `mvsce-exp` is for. A throwaway system whose volumes come fresh from the
-  template after every attempt.
-- Dave's build and his 3390 mods have **no business** on `mvsce-src`.
+- The most likely occasion is the **SMPWRK3 reproduction** — which is what
+  `MVSCE-EXP` is for.
+- Dave's build and his 3390 mods have **no business** on `MVSCE-LAB`, and
+  certainly none on `MVSCE-DEV`.
 - Our actual way of working is unaffected: we read his **source** and assemble on
-  the host. Only running his build on a real system is dangerous.
+  the host.
 
 ### Still to be settled
 
-- [ ] Decide the port allocation for three instances
 - [ ] tmux session names and start scripts per instance
 - [ ] Write and test the "recreate an instance from the template" procedure
-- [ ] Set up the agent's access to `mvsdev.lan` (mvsMF over the network)
-- [ ] Decide whether the baseline template lives on the Mac or on `mvsdev.lan` —
-      and how the checksums stay consistent across both
+- [ ] Decide where the baseline template lives and how checksums stay consistent
 
 ## 6b. Creating an instance from the template
 
@@ -346,14 +376,14 @@ Everything that writes — APPLY, ACCEPT, `ZCPY*`, IPL — runs on an instance,
 never on the template.
 
 ```sh
-cp -R MVSCE-template MVSCE-src   # copy DASD/ along
+cp -R MVSCE-template MVSCE-LAB   # copy DASD/ along
 ```
 
 Use a separate Hercules configuration in the copy so the template volumes are
 never picked up by accident — that is the most common way to destroy a baseline.
 
 **Rule for the agent:** read from the template (`dasdls`, `dasdpdsu`, shut
-down), write exclusively to `mvsce-src` or `mvsce-exp`.
+down), write exclusively to `MVSCE-LAB` or `MVSCE-EXP`.
 
 ---
 
@@ -432,8 +462,8 @@ of pulling the plug if MVS was not shut down cleanly first.
 | APPLY/ACCEPT on the clone | Promote to anything other than the clone |
 | Escalate after the wall-clock cap when an IPL does not succeed | Wait indefinitely for a message |
 | `/s HTTPD` after IPL, `/p HTTPD` before shutdown | Run the shutdown without stopping HTTPD first |
-| Anything on `mvsce-src` and `mvsce-exp` | **Touch `mvsce-lab`** — that is the working environment for other projects |
-| Dave's build and his 3390 mods **only** on `mvsce-exp` | Put them on any system whose volumes matter — they corrupt free space (see above) |
+| Anything on `MVSCE-LAB` and `MVSCE-EXP` | **Touch `MVSCE-DEV` or `~/MVSCE`** — those are the user's own systems |
+| Dave's build and his 3390 mods **only** on `MVSCE-EXP` | Put them on any system whose volumes matter — they corrupt free space (see above) |
 | Recreate a broken instance from the template | Write to the baseline template |
 | Correct this file when a procedure turns out wrong | Silently run a procedure differently from what is written here |
 
