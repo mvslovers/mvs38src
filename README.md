@@ -1,62 +1,65 @@
-# mvs38src — MVS 3.8j aus Source
+# mvs38src — MVS 3.8j from source
 
-Wiederherstellung des MVS-3.8j-Quellcodes auf **DLIB-Stand**, mit dem Ziel,
-MVS/CE künftig aus diesem Source zu bauen.
+Recovering the MVS 3.8j source at **DLIB level**, so that MVS/CE can be built
+from that source in future.
 
-> **Privat**, solange die Lizenzfrage mit Dave Kreiss nicht beantwortet ist.
-> Siehe [`docs/mail-dave-lizenzfrage.md`](docs/mail-dave-lizenzfrage.md).
+> **Private** until the licensing question with Dave Kreiss is answered.
+> See [`docs/mail-dave-licensing.md`](docs/mail-dave-licensing.md).
 
-## Das Ziel in zwei Stufen
+## The goal, in two stages
 
-1. **Ein Source-Baum auf DLIB-Stand von MVS 3.8j** — distributionsunabhängig,
-   also nicht „Source für unser MVS/CE", sondern Source für MVS 3.8j. Das ist der
-   Stamm; alles Weitere — BREXX-Integration, 3390-Erweiterungen, was auch immer —
-   ist eine Entwicklung, die von dort abzweigt.
-2. **MVS/CE künftig aus diesem Source bauen.** Die Nahtstelle steht in
-   `sysgen.py` des MVS-sysgen-Projekts: `step_03_build_dlibs` erzeugt die DLIBs
-   aus dem IBM-Band `zdlib1.het`, alles danach leitet sich daraus ab. Kommt der
-   DLIB-Inhalt aus unserem Source, baut der Rest der Kette unverändert weiter.
+1. **A source tree at the DLIB level of MVS 3.8j** — distribution-independent,
+   so not "source for our MVS/CE" but source for MVS 3.8j. That is the trunk;
+   everything beyond — a BREXX integration, 3390 extensions, whatever comes — is
+   development branching off from there.
+2. **Building MVS/CE from that source.** The seam is in the MVS-sysgen project's
+   `sysgen.py`: `step_03_build_dlibs` produces the DLIBs from IBM's `zdlib1.het`
+   tape, and everything after it derives from those DLIBs. If the DLIB content
+   comes from our source, the rest of the chain builds on unchanged.
 
-## Warum das überhaupt Arbeit ist
+## Why this is work at all
 
-Der von IBM ausgelieferte Source passt nicht zum ausgelieferten Objektcode. Das
-Objekt trägt Wartungsstände, die den Quelltext nie erreicht haben. Diese Lücke zu
-schließen ist die Aufgabe.
+The source IBM shipped does not match the object code IBM shipped. The object
+carries maintenance levels the source never received. Closing that gap is the
+task.
 
-Der Erfolgsmaßstab ist objektiv: **Der assemblierte CSECT ist byte-identisch zum
-DLIB-Objektdeck, oder er ist es nicht.** Genau das macht die Arbeit
-automatisierbar.
+The success criterion is objective: **the assembled CSECT is byte-identical to
+the DLIB object deck, or it is not.** That is precisely what makes the work
+automatable.
 
-## Arbeitsweise
+## How it works
 
-Die Wiederherstellung läuft **auf dem Host**; MVS ist nur Orakel und
-Laufzeitumgebung. Assembliert wird mit `as370` aus
-[cc370](https://github.com/mvslovers/cc370), verglichen mit `cmplmd370`
-(zu bauen). Ein Agent arbeitet eine Modulliste ab; SMP kommt erst am Ende der
-Kette zum Einsatz.
+Recovery runs **on the host**; MVS is only an oracle and a runtime. Assembly is
+done with `as370` from [cc370](https://github.com/mvslovers/cc370), comparison
+with `cmplmd370` (to be built). An agent works through a module list; SMP only
+comes in at the end of the chain.
 
-## Wo was liegt
+## Layout
 
-| Verzeichnis | Inhalt |
+| Directory | Contents |
 |---|---|
-| `docs/` | Plan, Runbook, Analyse von Dave Kreiss' Projekt, Mailentwürfe |
-| `baseline/` | MVS/CE-Baseline: Inventare, Prüfsummen, DLIB-Vergleiche |
-| `src/` | der wiederhergestellte Source, nach Zielbibliothek |
-| `tables/` | generierte Tabellen: portiert / fehlend |
-| `tools/` | Pipeline und Orchestrator |
-| `work/` | Arbeitsschlange und Zustand des Agenten |
-| `evidence/` | Beweiskette je Modul: Diffs, Iterationsverlauf, Berichte |
-| `ptf/` | SMP-Verpackung: `++PTF`/`++USERMOD`, JCLIN |
+| `docs/` | plan, runbook, analysis of Dave Kreiss' project, message drafts |
+| `baseline/` | MVS/CE baseline: inventories, checksums, DLIB comparisons |
+| `src/` | the recovered source, by target library |
+| `tables/` | generated tables: ported / missing |
+| `tools/` | pipeline and orchestrator |
+| `work/` | the agent's queue and state |
+| `evidence/` | per-module chain of evidence: diffs, iteration history, reports |
+| `ptf/` | SMP packaging: `++PTF`/`++USERMOD`, JCLIN |
 
-**Rohmaterial liegt nicht hier**, sondern in `~/repos/MVSSRC`: Dave Kreiss'
-Installationspaket und sein Arbeitsstand (`MVSBLD/`, 5.529 Module), der
-Mailverkehr als PDF, die TSO-Sourcen und zwei Web-Spiegel.
+**Raw material does not live here** but in `~/repos/MVSSRC`: Dave Kreiss'
+install package and his working state (`MVSBLD/`, 5,529 modules), the
+correspondence as PDFs, the TSO sources and two web mirrors.
 
-## Einstieg
+## Start here
 
-1. [`TODO.md`](TODO.md) — was als Nächstes zu tun ist
-2. [`docs/arbeitsplan.de.md`](docs/arbeitsplan.de.md) — warum und wohin
-   ([englisch](docs/arbeitsplan.en.md))
-3. [`docs/kreiss-projekt.de.md`](docs/kreiss-projekt.de.md) — worauf wir aufsetzen
-   ([englisch](docs/kreiss-projekt.en.md))
-4. [`docs/runbook.md`](docs/runbook.md) — wie die Dinge praktisch funktionieren
+1. [`TODO.md`](TODO.md) — what to do next
+2. [`docs/workplan.md`](docs/workplan.md) — why and where to
+3. [`docs/kreiss-project.md`](docs/kreiss-project.md) — what we are building on
+4. [`docs/runbook.md`](docs/runbook.md) — how things actually work
+
+## Language
+
+Everything in this repository is **English** — documents, issues, pull requests,
+commit messages, comments. German reference copies of the plan and the project
+analysis are kept outside the repository, in `~/repos/MVSSRC/WORK/doc/`.

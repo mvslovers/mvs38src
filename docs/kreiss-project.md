@@ -8,7 +8,8 @@ updated 5 July 2020, by Dave Kreiss*.
 Sources: `WORK/doc/*.pdf` and
 `Dave Kreiss - MVS from Source/BLDMVS/Build MVS From Source Instructions.pdf`.
 
-> German version: [kreiss-projekt.de.md](kreiss-projekt.de.md)
+> A German reference copy is kept outside this repository, in
+> `~/repos/MVSSRC/WORK/doc/kreiss-projekt.de.md`.
 
 ---
 

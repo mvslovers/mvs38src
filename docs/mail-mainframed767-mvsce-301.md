@@ -1,48 +1,46 @@
-# Entwurf an mainframed767 — MVS/CE 3.0.1 mit aktuellen Paketständen
+# Draft to mainframed767 — MVS/CE 3.0.1 with current package levels
 
-**Status: Entwurf. Nicht versendet.** Durchlesen, anpassen, dann selbst
-abschicken — als GitHub-Issue in `MVS-sysgen/sysgen` oder direkt, je nachdem,
-was dir lieber ist.
+**Status: draft. Not sent.** Review, adjust, then send it yourself — as a GitHub
+issue in `MVS-sysgen/sysgen`, or directly, whichever you prefer.
 
 ---
 
-## Worum es geht
+## What this is about
 
-⚠️ **Erst nach Punkt 1c der [TODO.md](../TODO.md) abschicken** — also nachdem
-libc370 und die vier Pakete neu releast sind. Sonst nennt die Anfrage Versionen,
-die beim Lesen schon überholt sind. Die Versionsnummern im Entwurf unten sind
-entsprechend **vor dem Versand zu aktualisieren**.
+⚠️ **Send only after item 1c of [`../TODO.md`](../TODO.md)** — that is, after
+libc370 and the four packages have been re-released. Otherwise the request names
+versions that are already stale by the time they are read. The version numbers in
+the draft below therefore have to be **updated before sending**.
 
-MVS/CE **v3.0.0** ist am 01.08.2026 erschienen. Alle vier Pakete, die für uns
-zählen, haben danach neue Releases bekommen — und bekommen gerade noch einmal
-neue, weil **libc370** als Basisbibliothek Korrekturen erhalten hat, die jeder
-Konsument relinkt braucht. Darunter: ein echter E/A-Fehler beendete den
-Adressraum mit **S001**, statt als `ferror()`+`EIO` durchgereicht zu werden.
+MVS/CE **v3.0.0** was released on 2026-08-01. All four packages that matter to us
+have had new releases since — and are about to get another round, because
+**libc370**, the base library, picked up fixes every consumer needs a relink for.
+Among them: a genuine I/O error used to end the address space with **S001**
+instead of being passed up as `ferror()`+`EIO`.
 
-Das ist das tragende Argument der Anfrage. „Es gibt neuere Versionen" ist leicht
-zu vertagen; „die Basisbibliothek hatte vier Fehler, die in jedem der vier
-Pakete stecken" nicht.
+That is the carrying argument. "There are newer versions" is easy to defer; "the
+base library had four defects that are in all four packages" is not.
 
-| Paket | MVP-Deskriptor (`MVP/desc/*`) | Stand 04.09.2026 | nach 1c |
+| Package | MVP descriptor (`MVP/desc/*`) | Level on 2026-09-04 | after 1c |
 |---|---|---|---|
-| HTTPD | 4.0.0 | 4.0.1 (25.08.2026) | *nachtragen* |
-| MVSMF | 1.0.0 | 1.0.0-dev — nur Pre-Release | *nachtragen* |
-| UFSD | 1.0.0 | 1.2.1 (23.08.2026) | *nachtragen* |
-| FTPD | 1.0.0 | 1.0.1 (23.08.2026) | *nachtragen* |
+| HTTPD | 4.0.0 | 4.0.1 (2026-08-25) | *fill in* |
+| MVSMF | 1.0.0 | 1.0.0-dev — pre-release only | *fill in* |
+| UFSD | 1.0.0 | 1.2.1 (2026-08-23) | *fill in* |
+| FTPD | 1.0.0 | 1.0.1 (2026-08-23) | *fill in* |
 
-Ein Sonderfall ist HTTPD: Der MVP-Deskriptor nennt 4.0.0, aber in
-`MVS-sysgen/SOFTWARE/HTTPD` liegt weiterhin `HTTPD330` mit einem `build.log` vom
-**13.02.2025** — also 3.3.0. Welcher Stand tatsächlich im Release landet, ist von
-außen nicht erkennbar. Das ist deshalb nicht akademisch, weil mvsMF für seine
-Konsolendienste laut eigenem README **httpd ≥ 4.0.0-dev** braucht (die
-`cgictx`-API). Mit 3.3.0 fehlt dieser Teil der API.
+HTTPD is a special case: the MVP descriptor says 4.0.0, but
+`MVS-sysgen/SOFTWARE/HTTPD` still holds `HTTPD330` with a `build.log` dated
+**2025-02-13** — i.e. 3.3.0. Which level actually lands in the release cannot be
+told from outside. That is not academic, because mvsMF requires
+**httpd ≥ 4.0.0-dev** for its console services (the `cgictx` API). With 3.3.0
+that part of the API is missing.
 
-Dazu kommen die beiden Punkte, die wir ohnehin melden wollten: `SHUTDOWN.RC`
-kennt HTTPD und FTPD nicht, und gestartet wird auch nichts automatisch.
+On top of that come the two points we wanted to report anyway: `SHUTDOWN.RC` does
+not know HTTPD or FTPD, and nothing starts them automatically either.
 
 ---
 
-## Der Entwurf
+## The draft
 
 ```text
 Betreff: MVS/CE 3.0.1 with current UFSD / FTPD / HTTPD / MVSMF?
@@ -105,26 +103,24 @@ Mike
 
 ---
 
-## Anmerkungen zum Entwurf
+## Notes on the draft
 
-- **Der Grund steht vorne**, und er ist inhaltlich, nicht formal: nicht „neuer",
-  sondern „in den ausgelieferten Binaries stecken vier Fehler der
-  Basisbibliothek". Das ist der Unterschied zwischen einer Bitte, die man
-  vertagt, und einer, die man einplant.
-- **Die Versionstabelle ist noch leer.** Bewusst — sie wird erst nach 1c
-  gefüllt.
-- **Die HTTPD-Frage ist als Frage formuliert**, nicht als Fehlermeldung. Wir
-  haben von außen ins Repository geschaut und können uns irren — der Satz „If I'm
-  reading the layout wrong, I'd be glad to be corrected" steht bewusst da.
-- **Die beiden Skript-Punkte sind nachgeordnet.** Sie sind das kleinere Anliegen
-  und sollen die Hauptbitte nicht verwässern.
-- **Das PR-Angebot ist ernst gemeint.** Wenn es angenommen wird, sollten wir es
-  auch einlösen.
-- **Kein Druck, kein Termin.** Er macht das in seiner Freizeit.
+- **The reason comes first**, and it is substantive rather than formal: not
+  "newer" but "the shipped binaries contain four defects from the base library".
+  That is the difference between a request that gets deferred and one that gets
+  scheduled.
+- **The HTTPD point is phrased as a question**, not as a bug report. We looked
+  into the repository from outside and may be wrong — the sentence "If I'm
+  reading the layout wrong, I'd be glad to be corrected" is deliberate.
+- **The version table is still empty.** Deliberately — it gets filled after 1c.
+- **The two script points are subordinate.** They are the smaller matter and
+  should not dilute the main request.
+- **The PR offer is meant seriously.** If it is taken up, we should honour it.
+- **No pressure, no deadline.** He does this in his spare time.
 
-## Falls keine Antwort kommt
+## If no answer comes
 
-Wir sind nicht blockiert. HTTPD, mvsMF, UFSD und FTPD lassen sich über MVP auch
-selbst auf den aktuellen Stand bringen — dann eben als eigener Schritt in unserer
-Baseline-Einrichtung, dokumentiert im [RUNBOOK.md](runbook.md). Die Bitte um
-3.0.1 spart uns diesen Schritt, ersetzt ihn aber nicht als Möglichkeit.
+We are not blocked. HTTPD, mvsMF, UFSD and FTPD can be brought up to date through
+MVP ourselves — as a step of our own baseline setup, documented in the
+[runbook](runbook.md). Asking for 3.0.1 saves us that step; it does not replace
+it as an option.

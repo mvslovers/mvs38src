@@ -3,10 +3,11 @@
 As of 2026-09-04. This plan resumes Dave Kreiss' project, but changes the target
 system, the tooling and the way of working.
 
-Basis: [kreiss-projekt.en.md](kreiss-projekt.en.md)
+Basis: [kreiss-project.md](kreiss-project.md)
 (status of the Kreiss project) and `Build MVS From Source Instructions.pdf`.
 
-> Deutsche Fassung: [arbeitsplan.de.md](arbeitsplan.de.md)
+> A German reference copy is kept outside this repository, in
+> `~/repos/MVSSRC/WORK/doc/arbeitsplan.de.md`.
 
 **Supersedes** `MVSSRC_BAK/SYSGEN-UND-SOURCE-BUILD-ARBEITSPLAN.md` (2026-09-03),
 which assumed a self-performed Jay Moseley SYSGEN. That falls away: MVS/CE **is**
@@ -534,7 +535,7 @@ questions: *does our source reproduce IBM's object code?* (against the DLIB) and
 
 **Important context:** the source we hold lags not only the target load module
 but already the **DLIB object deck** — the source IBM shipped was never in sync
-with the object code it shipped (see the [summary](kreiss-projekt.en.md),
+with the object code it shipped (see the [summary](kreiss-project.md),
 section 2, "What exactly is Dave's baseline?"). Closing precisely that gap is
 what Dave's `DSKnnnn` PTFs do — which makes them, for us, not incidental but
 usable source-level maintenance in IEBUPDTE form.

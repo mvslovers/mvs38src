@@ -1,559 +1,533 @@
-# TODO — MVS 3.8j Source Recovery
+# TODO — MVS 3.8j source recovery
 
-Stand: 2026-09-04. Arbeitsliste zum
-[Arbeitsplan](docs/arbeitsplan.de.md). Der Plan sagt *warum* und
-*wohin*, diese Liste sagt *was als Nächstes*.
+As of 2026-09-04. The working list for [`docs/workplan.md`](docs/workplan.md).
+The plan says *why* and *where to*; this list says *what next*.
 
-Nur auf Deutsch — das ist ein Arbeitsdokument, kein Dokument für Dritte.
-
-**Legende:** 🔒 blockiert anderes · ⚡ läuft parallel, blockiert nichts ·
-🚪 Gate: Ergebnis entscheidet über den weiteren Weg
+**Key:** 🔒 blocks other work · ⚡ runs in parallel, blocks nothing ·
+🚪 gate: the outcome decides how we proceed
 
 ---
 
-## Sofort
+## Immediate
 
-### 1. ✅ Dave wegen der Lizenz gefragt — Antwort steht aus
+### 1. ✅ Asked Dave about licensing — awaiting reply
 
-- [x] Entwurf durchlesen und anpassen
-- [x] **Abschicken** (04.09.2026)
-- [ ] Nach ~4 Wochen einmal nachfassen, danach nicht mehr
+- [x] Review and adjust the draft
+- [x] **Sent** (2026-09-04)
+- [ ] Follow up once after ~4 weeks, then let it rest
 
-Blockiert **nur die Veröffentlichung**, nicht die Arbeit.
+Blocks **publication only**, not the work.
 
-**Datenpunkt zur Lizenzfrage, aus einer früheren Mail von Dave:** Er verteilt
-`BLDMVS.7z` selbst öffentlich über die Dateiablage der turnkey-mvs-Gruppe und
-nennt es ausdrücklich *„freely downloadable"*. Das ist keine Lizenzerteilung,
-zeigt aber eine Absicht zur freien Weitergabe — hilfreich, falls die Antwort
-ausbleibt.
+**A data point on licensing, from an earlier mail:** Dave distributes
+`BLDMVS.7z` publicly himself, through the turnkey-mvs group's file area, and
+calls it *"freely downloadable"*. That is not a grant of licence, but it does
+show an intent to share freely — useful if no answer comes.
 
-### 1a. 🔒 Aktuelles BLDMVS.7z holen und abgleichen
+### 1a. 🔒 Fetch the current BLDMVS.7z and reconcile
 
-Dave nennt als **aktuellen Stand des Build-Prozesses**:
+Dave names this as the **current level of the build process**:
 
 ```
 https://groups.io/g/turnkey-mvs/files/MVS%203.8J%20Source%20Recovery/BLDMVS.7z
 ```
 
-Unser lokaler Stand ist älter: `BLDMVS.AWS` vom 16.09.2021, die Instruktionen als
-PDF in Version 2.1 vom 05.07.2020.
+Our local copy is older: `BLDMVS.AWS` of 2021-09-16, instructions as PDF at
+version 2.1 of 2020-07-05.
 
-- [ ] Herunterladen (Gruppenmitgliedschaft nötig, deshalb von dir)
-- [ ] Gegen `Dave Kreiss - MVS from Source/BLDMVS/` abgleichen: neuere
-      Instruktionen? Neueres Tape? Zusätzliche PTF-Serien?
-- [ ] Falls neuer: `MVSBLD/`-Extrakt erneuern und die 747-Zählung nachführen
-- [ ] Die dortigen Vorsichtsmaßnahmen und die Anleitung zu den
-      3390-Änderungen auf einem laufenden System auswerten
+- [ ] Download (needs group membership, so this one is yours)
+- [ ] Reconcile against `Dave Kreiss - MVS from Source/BLDMVS/`: newer
+      instructions? newer tape? additional PTF series?
+- [ ] If newer: refresh the `MVSBLD/` extract and re-run the 747 count
+- [ ] Work through its precautions and its guidance on applying the 3390 changes
+      to a running system
 
-Sollte **vor** Punkt 5d passieren — sonst messen wir gegen einen veralteten
-Arbeitsstand.
+Should happen **before** item 5d — otherwise we measure against a stale working
+state.
 
-### 1b. 🔒 Auf MVS/CE v3.0.0 umsteigen
+### 1b. 🔒 Move to MVS/CE v3.0.0
 
-**Das hat sich weitgehend erledigt** — mainframed767 war schneller. Aktuell ist
-**v3.0.0 „UNEXPECTED SLOTH"** vom 01.08.2026 (`MVSCE.release.v3.0.0.tar`,
-199 MB). Lokal liegt noch 2.1.4 vom 08.07.2026.
+**Largely settled already** — mainframed767 was quicker. Current is
+**v3.0.0 "UNEXPECTED SLOTH"** of 2026-08-01 (`MVSCE.release.v3.0.0.tar`,
+199 MB). Locally we still have 2.1.4 of 2026-07-08.
 
-Entscheidend: `jcl/customize.jcl` installiert beim Sysgen inzwischen
-standardmäßig **OPNTERSE, UFSD, FTPD, HTTPD und MVSMF**. Der Hauptkanal des
-Agenten ist damit ab Werk vorhanden, es muss nichts nachinstalliert werden.
+The decisive part: `jcl/customize.jcl` now installs **OPNTERSE, UFSD, FTPD,
+HTTPD and MVSMF** by default at sysgen time. The agent's main channel therefore
+ships with the system; nothing has to be added.
 
-- [ ] v3.0.0 herunterladen und als **Bezugsversion** festlegen
-- [ ] Bestätigen, dass HTTPD und MVSMF im Release-Tar tatsächlich enthalten sind
-      (nachgewiesen ist bisher nur das Baurezept im Repository, nicht das
-      Artefakt)
-- [ ] **Stände prüfen:** Welche HTTPD-, MVSMF-, UFSD- und FTPD-Versionen sind
-      tatsächlich installiert? Siehe Punkt 1c — die Vermutung ist, dass sie
-      hinter dem aktuellen Stand liegen. Notfalls über MVP selbst aktualisieren
-- [ ] [RUNBOOK.md](docs/runbook.md) gegen v3.0.0 gegenprüfen — Geräteadressen,
-      Skripte, Pfade
+- [ ] Download v3.0.0 and make it the **reference release**
+- [ ] Confirm HTTPD and MVSMF really are in the release tarball (so far only the
+      build recipe in the repository is evidence, not the artifact)
+- [ ] **Check the levels:** which HTTPD, MVSMF, UFSD and FTPD versions are
+      actually installed? See item 1c — the suspicion is that they lag. If so,
+      update them through MVP ourselves
+- [ ] Re-check [`docs/runbook.md`](docs/runbook.md) against v3.0.0 — device
+      addresses, scripts, paths
 
-### 1c. 🔒 Vorher: libc370 releasen, dann alle vier Pakete relinken
+### 1c. 🔒 First: release libc370, then relink all four packages
 
-**Der Auslöser liegt nicht in den vier Projekten, sondern eine Ebene tiefer.**
-libc370 ist die Basisbibliothek des ganzen Ökosystems — ein Fehler dort ist ein
-Fehler in httpd, mvsMF, ftpd und ufsd gleichzeitig. libc370s eigene `TODO.md`
-sagt es unmissverständlich:
+**The trigger is not in the four projects but one level below.** libc370 is the
+base library of the whole ecosystem — a defect there is a defect in httpd, mvsMF,
+ftpd and ufsd at once. libc370's own `TODO.md` puts it plainly:
 
-> *„With #145/#147 done, every multitasking consumer wants a relink on the next
+> *"With #145/#147 done, every multitasking consumer wants a relink on the next
 > release — now for four reasons, not one."*
 
-#### Stand libc370
+#### libc370 status
 
-Letztes Release **v1.0.3 vom 23.08.2026**. Seitdem liegen auf `main` unter
-anderem:
+Last release **v1.0.3 of 2026-08-23**. Since then `main` carries, among others:
 
-| Datum | Änderung |
+| Date | Change |
 |---|---|
-| 26.08. | `fix`: `puts()` eine kritische Sektion, `fclose()`-Teardown unter der Sperre, `DEQ` behält seine Scope-Bits (#147, Items 2/1/4) — `sysunlock()` konnte vorher nie freigeben |
-| 26.08. | `fix`: **SYNAD auf den BSAM-DCBs** — ein echter E/A-Fehler ist jetzt `ferror()`+`EIO` statt eines adressraumtötenden **S001** (#147 Item 3) |
-| 27.08. | `fix`: vier doppelte Externals entfernt (#151) |
-| 30.08. | `feat(sysmac)`: `SPIE`, `TIME`, `WTOR`, `PUTX` ergänzt (#155) |
+| 08-26 | `fix`: `puts()` one critical section, `fclose()` teardown under the lock, `DEQ` keeps its scope bits (#147, items 2/1/4) — `sysunlock()` could never release before |
+| 08-26 | `fix`: **SYNAD on the BSAM DCBs** — a genuine I/O error is now `ferror()`+`EIO` instead of an address-space-killing **S001** (#147 item 3) |
+| 08-27 | `fix`: four duplicate externals removed (#151) |
+| 08-30 | `feat(sysmac)`: `SPIE`, `TIME`, `WTOR`, `PUTX` added (#155) |
 
-Dazu #145 (interne Writer, ownership-aware Wrapper), bereits vor v1.0.3 gemerged.
+Plus #145 (internal writers, ownership-aware wrappers), merged before v1.0.3.
 
-#### Stand der vier Konsumenten
+#### Status of the four consumers
 
-Alle vier wurden gegen **libc370 v1.0.3** gebaut und brauchen den Relink:
+All four were built against **libc370 v1.0.3** and need the relink:
 
-| Projekt | Letztes Release | Datum | Eigene unreleased Änderungen |
+| Project | Last release | Date | Own unreleased changes |
 |---|---|---|---|
-| httpd | v4.0.1 | 25.08.2026 | nur Bump auf `4.0.2-dev` + TODO-Notizen |
-| ufsd | v1.2.1 | 23.08.2026 | nur Bump auf `1.2.2-dev` |
-| ftpd | v1.0.1 | 23.08.2026 | nur Bump auf `1.0.2-dev` |
-| mvsmf | v1.0.0-**dev** (Pre-Release) | 25.08.2026 | **eine echte Korrektur** (PR #359 / Issue #210) |
+| httpd | v4.0.1 | 2026-08-25 | only the bump to `4.0.2-dev` + TODO notes |
+| ufsd | v1.2.1 | 2026-08-23 | only the bump to `1.2.2-dev` |
+| ftpd | v1.0.1 | 2026-08-23 | only the bump to `1.0.2-dev` |
+| mvsmf | v1.0.0-**dev** (pre-release) | 2026-08-25 | **one real fix** (PR #359 / issue #210) |
 
-Offene PRs: keine, in keinem der vier.
+Open PRs: none, in any of the four.
 
-Dass drei davon inhaltlich nichts Eigenes mitbringen, ist also **kein Argument
-gegen ein Release** — der Grund für den Rebuild sitzt in libc370.
+That three of them carry nothing of their own is therefore **not an argument
+against a release** — the reason for the rebuild sits in libc370.
 
-#### Reihenfolge
+#### Order
 
-- [ ] **libc370 v1.0.4 schneiden** — die Korrekturen liegen seit dem 26.08. auf
-      `main` und sind in keinem Release
-- [ ] **httpd, ufsd, ftpd** gegen die neue libc370 neu bauen und releasen
-- [ ] **mvsmf** ebenso — und dabei gleich **ein stabiles v1.0.0** statt eines
-      Pre-Releases. Bisher existiert nur der eine Tag `v1.0.0-dev`, während
-      `MVP/desc/MVSMF` bereits `Version: 1.0.0` nennt, also eine Version, die es
-      upstream nicht gibt
-- [ ] Versionstabelle in
-      [mail-mainframed767-mvsce-301.md](docs/mail-mainframed767-mvsce-301.md)
-      aktualisieren
+- [ ] **Cut libc370 v1.0.4** — the fixes have been on `main` since 08-26 and are
+      in no release
+- [ ] Rebuild and release **httpd, ufsd, ftpd** against the new libc370
+- [ ] Same for **mvsmf** — and take the opportunity to cut **a stable v1.0.0**
+      rather than a pre-release. So far the only tag is `v1.0.0-dev`, while
+      `MVP/desc/MVSMF` already says `Version: 1.0.0`, a version that does not
+      exist upstream
+- [ ] Update the version table in
+      [`docs/mail-mainframed767-mvsce-301.md`](docs/mail-mainframed767-mvsce-301.md)
 
-### 1d. ⚡ mainframed767 um ein MVS/CE 3.0.1 bitten
+### 1d. ⚡ Ask mainframed767 for an MVS/CE 3.0.1
 
-Entwurf liegt in
-[mail-mainframed767-mvsce-301.md](docs/mail-mainframed767-mvsce-301.md).
-**Erst nach 1c abschicken**, sonst nennt die Anfrage veraltete Versionen. Das
-tragende Argument ist dann nicht „es gibt neuere Versionen", sondern: *die
-Basisbibliothek hatte vier Korrekturen, die jeder Konsument relinkt braucht —
-darunter eine, bei der ein E/A-Fehler den Adressraum mit S001 abgeschossen hat.*
+Draft in
+[`docs/mail-mainframed767-mvsce-301.md`](docs/mail-mainframed767-mvsce-301.md).
+**Send only after 1c**, otherwise the request names stale versions. The carrying
+argument is then not "there are newer versions" but: *the base library had four
+fixes every consumer needs a relink for — including one where an I/O error took
+the address space down with S001.*
 
-- [ ] Versionstabelle im Entwurf gegen den Stand nach 1c aktualisieren
-- [ ] Entwurf durchlesen, anpassen, als Issue oder Mail abschicken
-- [ ] Mit anfragen: **welcher HTTPD landet tatsächlich im Build?** Der
-      MVP-Deskriptor nennt 4.0.0, `MVS-sysgen/SOFTWARE/HTTPD` enthält aber
-      `HTTPD330` mit `build.log` vom 13.02.2025. Bei 3.3.0 funktionieren die
-      mvsMF-Konsolendienste nicht (brauchen `httpd ≥ 4.0.0-dev`, `cgictx`-API)
-- [ ] Zwei kleinere Punkte mitmelden: `SCRIPTS/SHUTDOWN.RC` stoppt HTTPD und
-      FTPD nicht, und gestartet wird auch nichts automatisch (kein `S HTTPD` im
-      Repository, `COMMND00` hat nur `S NET` und JES2-Parameter)
-- [ ] Pull Requests anbieten — und einlösen, falls angenommen
+- [ ] Update the version table in the draft to the state after 1c
+- [ ] Review, adjust, send as an issue or a mail
+- [ ] Ask alongside: **which HTTPD actually lands in the build?** The MVP
+      descriptor says 4.0.0, but `MVS-sysgen/SOFTWARE/HTTPD` still holds
+      `HTTPD330` with a `build.log` of 2025-02-13. With 3.3.0 the mvsMF console
+      services cannot work (they need `httpd ≥ 4.0.0-dev`, the `cgictx` API)
+- [ ] Report two smaller points: `SCRIPTS/SHUTDOWN.RC` does not stop HTTPD or
+      FTPD, and nothing starts them either (no `S HTTPD` anywhere in the
+      repository; `COMMND00` has only `S NET` and the JES2 parms)
+- [ ] Offer pull requests — and deliver them if accepted
 
-**Nicht blockierend.** Kommt keine Antwort, aktualisieren wir die vier Pakete
-über MVP selbst und dokumentieren das als Schritt der Baseline-Einrichtung.
+**Not blocking.** If no answer comes we update the four packages through MVP
+ourselves and document that as a step of baseline setup.
 
-### 2. 🔒 Repo anlegen
+### 2. ✅ Repo created
 
-Neues, kuratiertes Repo `mvs38-source-recovery` (Layout: Plan, Abschnitt 8).
+- [x] `git init`, base structure
+- [x] **`.gitattributes` with `* -text` and `*.asm binary`** — before the first
+      commit. Forget it and Git normalizes the CRLF and the 80-column records,
+      and from then on we compare artifacts of our own toolchain
+- [x] `README.md`, `CLAUDE.md`
+- [x] `.gitignore`: DASD images, `*.AWS`, web mirrors stay out
+- [ ] Repo stays **private** (see item 1); no remote until then
 
-- [ ] `git init`, Grundstruktur anlegen
-- [ ] **`.gitattributes` mit `* -text` und `*.asm binary`** — vor dem ersten
-      Commit. Wird das vergessen, normalisiert Git die CRLF und die
-      80-Spalten-Sätze, und wir vergleichen ab da Artefakte unserer eigenen
-      Werkzeugkette
-- [ ] Repo **privat** (siehe Punkt 1)
-- [ ] `README.md`, `CLAUDE.md` (Regeln für den Agenten)
-- [ ] `.gitignore`: DASD-Images, `*.AWS`, Web-Spiegel bleiben draußen
+### 3. 🔒 Build and test the tooling
 
-### 3. 🔒 Tooling bauen und testen
+- [ ] Build the Hercules DASD utilities from `~/repos/hyperion`: `dasdls`,
+      `dasdpdsu`, `dasdseq`, `dasdcat`, plus `hetget` for the tapes
+- [ ] Check they read the MVS/CE volume formats — the volumes are a mix of 3350,
+      3380 and 3390
+- [ ] Build and install cc370 freshly (`make && make install`), record the version
+- [ ] Try `file370 -v` on a known load module
 
-- [ ] Hercules-DASD-Utilities aus `~/repos/hyperion` bauen: `dasdls`,
-      `dasdpdsu`, `dasdseq`, `dasdcat`
-- [ ] Prüfen, ob sie die MVS/CE-Volumeformate lesen — die Volumes sind gemischt
-      3350, 3380 und 3390
-- [ ] cc370 frisch bauen und installieren (`make && make install`), Version
-      festhalten
-- [ ] `file370 -v` an einem bekannten Loadmodul ausprobieren
+### 4. 🔒 Set up MVS/CE and freeze the baseline
 
-### 4. 🔒 MVS/CE aufsetzen und Baseline einfrieren
-
-- [ ] `MVSCE.release.v3.0.0.tar` auspacken
-- [ ] IPLen, Rauchtest: JES2, TSO, SMP
-- [ ] **Unveränderlichen Snapshot** der Volumes anlegen, mit Prüfsummen →
+- [ ] Unpack `MVSCE.release.v3.0.0.tar`
+- [ ] IPL it, smoke-test JES2, TSO, SMP
+- [ ] Take an **immutable snapshot** of the volumes with checksums →
       `baseline/checksums.txt`
-- [ ] mvsMF gegen MVS/CE zum Laufen bringen — bei v3.0.0 bereits installiert,
-      nur zu starten und im Stand zu prüfen
-- [ ] `/s HTTPD` nach dem IPL und `/p HTTPD` vor dem Shutdown in die eigene
-      Betriebsroutine aufnehmen (`SHUTDOWN.RC` kennt HTTPD nicht)
-- [ ] Bestätigen, dass `SYZJ201` appliziert ist (`retcode` kommt dann über die
-      REST-API; `NOTIFY=` ergänzt mvsMF selbst)
-- [ ] Baseline inventarisieren → `baseline/mvsce-v3.0.0.md`: installierte
-      USERMODs, MVP-Pakete, Sysgen-Parameter, I/O-Gen
-- [ ] **Bestätigen, dass die DLIBs (`AOS*`) auf `smp000.3350` liegen** — davon
-      hängt der ganze Vergleichsmaßstab ab. Falls nicht: `zdlib1.het` laden
-- [ ] **SMP-CDS auswerten: welche SYSMODs sind ACCEPTed?** Entscheidet, wie
-      sauber die DLIBs als Vergleichsorakel sind (siehe Plan, Abschnitt 5)
-- [ ] Hercules-Webkonsole als Notweg aktivieren (`conf/local/custom.cnf`:
+- [ ] Get mvsMF running against MVS/CE — already installed in v3.0.0, only to be
+      started and checked for level
+- [ ] Adopt `/s HTTPD` after IPL and `/p HTTPD` before shutdown into the routine
+      (`SHUTDOWN.RC` does not know HTTPD)
+- [ ] Confirm `SYZJ201` is applied (`retcode` then arrives over the REST API;
+      mvsMF adds `NOTIFY=` itself)
+- [ ] Inventory the baseline → `baseline/mvsce-v3.0.0.md`: installed usermods,
+      MVP packages, sysgen parameters, I/O gen
+- [ ] **Confirm the DLIBs (`AOS*`) are on `smp000.3350`** — the whole yardstick
+      depends on it. If not: load `zdlib1.het`
+- [ ] **Evaluate the SMP CDS: which sysmods are ACCEPTed?** That decides how
+      clean the DLIBs are as an oracle (see the plan, section 5)
+- [ ] Enable the Hercules web console as a fallback (`conf/local/custom.cnf`:
       `HTTP PORT 8038 NOAUTH` / `HTTP START`)
-- [ ] [RUNBOOK.md](docs/runbook.md) beim ersten Durchlauf verifizieren — jede
-      Prozedur von 📄 auf ✅ heben oder korrigieren
+- [ ] Verify [`docs/runbook.md`](docs/runbook.md) on the first pass — raise every
+      procedure from 📄 to ✅, or correct it
 
-Ohne dieses Inventar kann später niemand `DIFF-USERMOD` von `DIFF-UNBEKANNT`
-unterscheiden — der Agent würde sich an erklärbaren Differenzen totlaufen.
+Without this inventory nobody can later tell `DIFF-USERMOD` from `DIFF-UNKNOWN` —
+the agent would grind itself down on explainable differences.
 
-### 4b. ⚡ Instanzen auf `mvsdev.lan` aufsetzen
+### 4b. ⚡ Set up the instances on `mvsdev.lan`
 
-Drei MVS/CE-Instanzen, je Hercules in einer tmux-Session (Rollen und Begründung
-in [RUNBOOK.md](docs/runbook.md), Abschnitt 6):
+Three MVS/CE instances, each Hercules in its own tmux session (roles and
+rationale in [`docs/runbook.md`](docs/runbook.md), section 6):
 
-| Instanz | Zweck |
+| Instance | Purpose |
 |---|---|
-| `mvsce-lab` | alle anderen Projekte, ständig verfügbar — **für den Agenten tabu** |
-| `mvsce-src` | dieses Projekt: PTFs, APPLY/ACCEPT, IPL-Test |
-| `mvsce-exp` | dieses Projekt: Experimente, vor allem SMPWRK3-Reproduktion |
+| `mvsce-lab` | all other projects, permanently available — **off limits to the agent** |
+| `mvsce-src` | this project: PTFs, APPLY/ACCEPT, IPL test |
+| `mvsce-exp` | this project: experiments, above all SMPWRK3 reproduction |
 
-- [ ] Portbelegung für drei Instanzen festlegen — **Reader-Ports sind die
-      bekannte Kollisionsfalle** (`MVP/MVP.ini`, siehe `~/repos/mvs/REFCARD.md`)
-- [ ] tmux-Sessionnamen und Startskripte je Instanz
-- [ ] Prozedur „Instanz aus Template neu erzeugen" schreiben und testen
-- [ ] mvsMF-Zugriff über Netz für den Agenten einrichten
-- [ ] Klären, wo das Baseline-Template liegt (Mac oder `mvsdev.lan`) und wie die
-      Prüfsummen über beide Orte konsistent bleiben
+- [ ] Decide the port allocation for three instances — **the reader ports are the
+      known collision trap** (`MVP/MVP.ini`, see `~/repos/mvs/REFCARD.md`)
+- [ ] tmux session names and start scripts per instance
+- [ ] Write and test the "recreate an instance from the template" procedure
+- [ ] Set up mvsMF access over the network for the agent
+- [ ] Decide where the baseline template lives (Mac or `mvsdev.lan`) and how the
+      checksums stay consistent across both
 
-**Nicht auf dem kritischen Pfad.** Gebraucht werden die Instanzen erst ab M7.
-M0 und M1 brauchen nur die Volume-Dateien, kein laufendes System — der Durchstich
-in Punkt 5 geht also schon mit der lokalen 2.1.4.
+**Not on the critical path.** The instances are needed only from M7 on. M0 and M1
+need the volume files, not a running system — so the end-to-end test in item 5
+works with the local 2.1.4 already.
 
-### 5. 🚪 Der Durchstich: ein einziges Loadmodul
+### 5. 🚪 End-to-end test: a single load module
 
-- [ ] Ein Loadmodul mit `dasdpdsu` aus `mvsres.3350` ziehen — **ohne laufendes
-      MVS**
-- [ ] `file370 -v` zeigt das ESD-Verzeichnis
-- [ ] CSECTs, IDR-Sätze und Eyecatcher auslesen
-- [ ] Ergebnis von Hand gegen dasselbe Modul auf dem laufenden System prüfen
+- [ ] Pull one load module out of `mvsres.3350` with `dasdpdsu` — **with no MVS
+      running**
+- [ ] `file370 -v` shows its ESD dictionary
+- [ ] Read out CSECTs, IDR records and eyecatcher
+- [ ] Check the result by hand against the same module on the running system
 
-**Das ist der wichtigste frühe Punkt der ganzen Liste.** Er beantwortet, ob die
-host-seitige Extraktion überhaupt trägt. Wenn ja, ist vieles danach
-Fleißarbeit. Wenn nein, planen wir um, bevor Aufwand hineingeflossen ist.
+**The most important early item on this list.** It answers whether host-side
+extraction holds up at all. If it does, much of what follows is legwork. If it
+does not, we replan before effort has gone in.
 
 ---
 
-## Danach: Inventar und Machbarkeit
+## Then: inventory and feasibility
 
-### 5b. 🚪 Die DLIB-These messen: MVS/CE gegen TK5
+### 5b. 🚪 Measure the DLIB hypothesis: MVS/CE against TK5
 
-**Billig, früh, und das Ergebnis verändert die Statik des Projekts.**
+**Cheap, early, and the outcome changes the statics of the project.**
 
-These: Alle Turnkey-Distributionen sitzen auf denselben IBM-DLIBs. Unterschiede
-entstehen erst durch Sysgen und USERMODs — und die wirken auf die *Target*
-Libraries, nicht auf die DLIBs. Einzige Ausnahme: per **ACCEPT** eingespielte
-SYSMODs.
+Hypothesis: all turnkey distributions sit on the same IBM DLIBs. Differences
+arise only through sysgen and usermods — and those affect the *target*
+libraries, not the DLIBs. The one exception: sysmods installed by **ACCEPT**.
 
-Beide Seiten liegen lokal vor:
+Both sides are available locally:
 
-| System | DLIB-Volume |
+| System | DLIB volume |
 |---|---|
 | MVS/CE | `smp000.3350` |
-| TK5 | `tk5dlb.392` (`~/Downloads/mvs-tk5/dasd/`, 30,5 MB) |
+| TK5 | `tk5dlb.392` (`~/Downloads/mvs-tk5/dasd/`, 30.5 MB) |
 
-- [ ] `dasdls` über beide Volumes: welche `AOS*`-Bibliotheken gibt es, gleiche
-      Mitgliederzahl?
-- [ ] Gegenprobe an der Wurzel: Haben beide denselben `ptfs.het`-Stand und
-      dieselben Morrison-USERMODs verarbeitet? (siehe Plan, Abschnitt 5)
-- [ ] Objektdecks extrahieren und CSECT-weise vergleichen
-- [ ] Abweichungen gegen die SMP-CDS beider Systeme halten — sind es ACCEPTete
-      SYSMODs?
-- [ ] Ergebnis in `baseline/dlib-vergleich.md` festhalten
+- [ ] `dasdls` over both volumes: which `AOS*` libraries exist, same member
+      counts?
+- [ ] Cross-check at the root: did both process the same `ptfs.het` level and the
+      same Morrison usermods? (see the plan, section 5)
+- [ ] Extract the object decks and compare CSECT by CSECT
+- [ ] Hold divergences against both systems' SMP CDS — are they ACCEPTed sysmods?
+- [ ] Record the outcome in `baseline/dlib-comparison.md`
 
-**Hält die These**, ist unser Ergebnis Source für **MVS 3.8j**, nicht für unser
-MVS/CE — distributionsunabhängig. Dann löst sich auch die Bezugsversionsfrage
-weitgehend auf, und Daves DLIB-Ergebnisse tragen doch (siehe Plan, Abschnitt 5).
+**If the hypothesis holds**, our output is source for **MVS 3.8j**, not for our
+MVS/CE — distribution-independent. The reference-release question then largely
+dissolves, and Dave's DLIB-level results do carry after all.
 
-**Hält sie nicht**, bekommen wir statt einer Unsicherheit eine Liste betroffener
-Elemente — auch das ist ein brauchbares Ergebnis.
+**If it does not hold**, we get a list of affected elements instead of an
+uncertainty — also a usable result.
 
-### 5c. 🚪 `ptfs.het` untersuchen — die Messung mit der größten Hebelwirkung
+### 5c. 🚪 Examine `ptfs.het` — the measurement with the greatest leverage
 
-**Korrektur einer früheren Annahme:** Die IBM-PTFs sind nicht verloren. Das
-MVS-sysgen-Projekt liefert `tape/ptfs.het` mit **1.482 PTFs für MVS 3.8j**, und
-`jcl/smpjob03.jcl` („ACCEPT FMIDS/PTFS") spielt sie per `ACCEPT G(fmid)` in die
-DLIBs ein. Der Objektcode trägt sie also — der Source nicht.
+**Correcting an earlier assumption:** the IBM PTFs are not lost. The MVS-sysgen
+project ships `tape/ptfs.het` with **1,482 PTFs for MVS 3.8j**, and
+`jcl/smpjob03.jcl` ("ACCEPT FMIDS/PTFS") installs them into the DLIBs via
+`ACCEPT G(fmid)`. So the object code carries them — the source does not.
 
-Die entscheidende Frage: **Enthalten diese PTFs `++SRC`, oder nur `++MOD`?**
+The decisive question: **do these PTFs contain `++SRC`, or only `++MOD`?**
 
-- [ ] `ptfs.het` besorgen (im sysgen-Repo, 14,2 MB) und auf dem Host auspacken
-- [ ] Auszählen: wie viele der 1.482 PTFs enthalten `++SRC`-Elemente?
-- [ ] Falls welche: welche Module betreffen sie, und decken sie sich mit unseren
-      `DIFF-UNBEKANNT`-Fällen?
-- [ ] Ergebnis in `baseline/ptfs-analyse.md`
+- [ ] Obtain `ptfs.het` (in the sysgen repo, 14.2 MB) and unpack it on the host
+- [ ] Count: how many of the 1,482 PTFs contain `++SRC` elements?
+- [ ] If any: which modules do they touch, and do they overlap our
+      `DIFF-UNKNOWN` cases?
+- [ ] Record the outcome in `baseline/ptfs-analysis.md`
 
-**Warum das so viel wert ist:** Jeder PTF mit Source schließt ein Stück der Lücke
-**mechanisch** — ohne Disassemblieren, ohne Angleich-Schleife, ohne Agent. Sind
-es viele, verkleinert sich der Arbeitsvorrat erheblich. Sind es keine, haben wir
-die Erklärung dafür, warum Source und Objekt überhaupt auseinanderlaufen — auch
-das ist ein Ergebnis.
+**Why this is worth so much:** every PTF carrying source closes part of the gap
+**mechanically** — no disassembly, no alignment loop, no agent. If there are
+many, the backlog shrinks considerably. If there are none, we have the
+explanation for why source and object drifted apart at all — also a result.
 
-Beides ist billig zu haben und sollte vor der großen Vergleichskampagne
-feststehen.
+Both are cheap to get and should be settled before the large comparison campaign.
 
-### 5d. 🚪 Daves 747 Module gegen die MVS/CE-DLIBs
+### 5d. 🚪 Dave's 747 modules against the MVS/CE DLIBs
 
-**Die wichtigste Einzelmessung des Projekts** — sie beantwortet, ob wir auf
-Daves Arbeit aufsetzen können oder sie neu machen müssen.
+**The single most important measurement of the project** — it answers whether we
+can build on Dave's work or have to redo it.
 
-`MVSBLD/` ist nicht sein Ausgangsmaterial, sondern sein **Arbeitsstand**.
-Nachgezählt, welche Module er tatsächlich angefasst hat:
+`MVSBLD/` is not his input material but his **working state**. Counted, the
+modules he actually touched:
 
-| Serie | Bereich | Module |
+| Series | Area | Modules |
 |---|---|---:|
-| `DSK0` | Basis-Bereinigung | 235 |
+| `DSK0` | base cleanup | 235 |
 | `DSK1` | NUCLEUS | 158 |
 | `DSK2` | SVCLIB | 32 |
 | `DSK3` | JES2 + SMP | 36 |
-| `DSK9` | Makro-Modernisierung | 12 |
+| `DSK9` | macro modernization | 12 |
 | `DSKC` | CMDLIB | 203 |
-| `DSKK` | LINKLIB (unvollständig) | 61 |
-| `DSKL` | LPALIB (unvollständig) | 55 |
-| | **insgesamt** | **747** von ~5.500 |
+| `DSKK` | LINKLIB (incomplete) | 61 |
+| `DSKL` | LPALIB (incomplete) | 55 |
+| | **total** | **747** of ~5,500 |
 
-- [ ] Die 747 Module identifizieren (Markierung `DSKnnnn` in Spalte 65 bzw.
-      `*DSKnnnn` in Spalte 1)
-- [ ] Alle mit `as370` assemblieren und gegen die MVS/CE-DLIB-Elemente
-      vergleichen
-- [ ] Ergebnis auswerten: überwiegend `IDENTISCH`, systematische Restdifferenz,
-      oder unsystematisch verstreut?
-- [ ] **Sonderbehandlung markieren:** 50 Module tragen `???` (Dave konnte den
-      Zweck nicht rekonstruieren), 16 tragen `!!!` (Kniff für den Vergleich).
-      Dort darf kein Agent eigenmächtig aufräumen
+- [ ] Identify the 747 modules (marker `DSKnnnn` in column 65, or `*DSKnnnn` in
+      column 1)
+- [ ] Assemble all of them with `as370` and compare against the MVS/CE DLIB
+      elements
+- [ ] Evaluate: mostly `IDENTICAL`, a systematic residual difference, or
+      scattered and unsystematic?
+- [ ] **Flag for special handling:** 50 modules carry `???` (Dave could not
+      reconstruct the purpose), 16 carry `!!!` (a compare workaround). No agent
+      may tidy up there on its own initiative
 
-**Fällt es gut aus**, ist der Arbeitsvorrat um 747 Module kleiner und die
-Werkzeugkette an bekanntem Material validiert. **Fällt es schlecht aus**, liegen
-seine eigentlichen PTFs als `MVSSRC.BLD.SMP.LIB` bis `.LIB5` auf dem
-`BLDMVS.AWS`-Band in diesem Repo — in IEBUPDTE-Form, also erneut anwendbar. Neu
-machen müssen wir seine Arbeit in keinem Fall.
+**If it turns out well**, the backlog is 747 modules smaller and the toolchain is
+validated against known material. **If it turns out badly**, his actual PTFs are
+on the `BLDMVS.AWS` tape as `MVSSRC.BLD.SMP.LIB` through `.LIB5` — in IEBUPDTE
+form, so re-appliable. In no case do we have to redo his work.
 
-### 6. Inventar und die beiden Tabellen (M1)
+### 6. Inventory and the two tables (M1)
 
-- [ ] Inventar über alle Systembibliotheken — **Target Libraries UND
-      Distribution Libraries (`AOS*`)** (`dasdls`)
-- [ ] CSECT-, IDR- und Eyecatcher-Extraktion, maschinenlesbar als CSV
-- [ ] SMP-CDS auf `smp000` auswerten: SYSMOD → Element, plus ACCEPT-Status
-- [ ] Index über alle lokalen Source-Bestände: `MVSBLD/` (5.528), `IKJ/` (269),
+- [ ] Inventory across all system libraries — **target libraries AND
+      distribution libraries (`AOS*`)** (`dasdls`)
+- [ ] CSECT, IDR and eyecatcher extraction, machine-readable as CSV
+- [ ] Evaluate the SMP CDS on `smp000`: sysmod → element, plus ACCEPT status
+- [ ] Index all local source pools: `MVSBLD/` (5,529), `IKJ/` (269),
       `www.stben.net/`, `mvssrc/mainframe.eu/`, `NEW.ASM`, `MVT.ASM`
-- [ ] Join → Tabelle A (portiert) und Tabelle B (fehlend)
+- [ ] Join → table A (ported) and table B (missing)
 
-### 7. 🚪 as370-Lückenanalyse (M2)
+### 7. 🚪 as370 gap analysis (M2)
 
-> **Vorabmessung vom 04.09.2026 — das Gate sieht gut aus.**
+> **Pre-measurement of 2026-09-04 — the gate looks good.**
 >
-> 150 zufällig gezogene Module aus `MVSBLD/`, assembliert mit `as370 V1.0`,
-> als einzige Makroquelle `~/repos/mvs/sys1.maclib` (742 Member):
+> 150 modules drawn at random from `MVSBLD/`, assembled with `as370 V1.0`, with
+> `~/repos/mvs/sys1.maclib` (742 members) as the only macro source:
 >
 > | | |
 > |---|---:|
-> | sauber assembliert | **56 (37 %)** |
-> | mit Fehlern | 94 |
+> | assembled cleanly | **56 (37 %)** |
+> | with errors | 94 |
 >
-> **Entscheidend ist die Fehlerverteilung:** Es sind fast ausschließlich
-> **fehlende Makros**, keine Assembler-Grenzen. Am häufigsten `GOIF` (79),
+> **The error distribution is the decisive part:** almost all of them are
+> **missing macros**, not assembler limits. Most frequent: `GOIF` (79),
 > `SET` (24), `IECRES`, `IEDQMSG`, `IEDHJN`, `IEHPOST`, `DSW`, `BLSUFRES`,
-> `SMPPI`, `IECDSECS` — also AMODGEN- und private Makros, die schlicht noch
-> nicht da sind.
+> `SMPPI`, `IECDSECS` — AMODGEN and private macros that simply are not there yet.
 >
-> Echte as370-Lücken in der Stichprobe, gezählt in einstelligen Zahlen:
-> **`DC/DS` Typ `S` ist nicht implementiert** (namentlich gemeldet), einzelne
-> Addressability-Fehler, und Undefined-Symbol-Meldungen, die überwiegend
-> Folgefehler fehlender DSECT-Makros sein dürften.
+> Genuine as370 gaps in the sample, in single digits: **`DC/DS` type `S` is not
+> implemented** (reported by name), a few addressability errors, and
+> undefined-symbol messages that are mostly downstream of the missing DSECT
+> macros.
 >
-> **Schlussfolgerung:** Nicht as370 ist der Engpass, sondern die
-> Makroverfügbarkeit — und das ist ein Extraktionsproblem, kein
-> Entwicklungsproblem. Die Quote dürfte mit `SYS1.AMODGEN` und den privaten
-> Makrobibliotheken deutlich steigen.
+> **Conclusion:** as370 is not the bottleneck, macro availability is — and that
+> is an extraction problem, not a development problem. The rate should rise
+> considerably with `SYS1.AMODGEN` and the private macro libraries.
 >
-> *Vorläufig: Herkunft von `sys1.maclib` ungeprüft, Stichprobe klein, nur
-> Assemblierbarkeit gemessen — nicht Objektgleichheit.*
+> *Preliminary: the provenance of `sys1.maclib` is unverified, the sample is
+> small, and only assemblability was measured — not object identity.*
 
-
-- [ ] **`SYS1.AMODGEN` und die privaten Makrobibliotheken extrahieren** — das ist
-      laut Vorabmessung der Haupthebel. Dazu `SYS1.APVTMACS`; Dave nennt zusätzlich
-      selbst angelegte `PVTMAC`/`APVTMAC` mit Makros, „which are in none of the
+- [ ] **Extract `SYS1.AMODGEN` and the private macro libraries** — per the
+      pre-measurement this is the main lever. Plus `SYS1.APVTMACS`; Dave also
+      names his own `PVTMAC`/`APVTMAC` holding macros "which are in none of the
       distributed maclibs"
-- [ ] `SYS1.MACLIB` aus MVS/CE gegen `~/repos/mvs/sys1.maclib` abgleichen —
-      letztere hat 742 Member unbekannter Herkunft
-- [ ] Messung mit vollständigem Makrosatz wiederholen und die Quote fortschreiben
-- [ ] `DC/DS` Typ `S` in as370 nachziehen — die einzige namentlich gemeldete
-      Lücke aus der Vorabmessung
-- [ ] as370 über einen Querschnitt von `MVSBLD/*.ASM` und `IKJ/*.asm` laufen
-      lassen
-- [ ] Fehler kategorisieren: fehlende Direktive, Makro, Ausdruckssyntax,
-      Adressierung, sonstiges
-- [ ] Bekannte Lücken gezielt prüfen: `START`, `PUNCH`, `REPRO`, `ICTL`,
+- [ ] Reconcile `SYS1.MACLIB` from MVS/CE against `~/repos/mvs/sys1.maclib` —
+      the latter has 742 members of unknown provenance
+- [ ] Repeat the measurement with the full macro set and carry the rate forward
+- [ ] Implement `DC/DS` type `S` in as370 — the only gap reported by name in the
+      pre-measurement
+- [ ] Run as370 over a cross-section of `MVSBLD/*.ASM` and `IKJ/*.asm`
+- [ ] Categorize failures: missing directive, macro, expression syntax,
+      addressing, other
+- [ ] Check the known gaps specifically: `START`, `PUNCH`, `REPRO`, `ICTL`,
       `OPSYN`, `DXD`
-- [ ] „Häufig und billig" sofort in as370 nachziehen
-- [ ] Gegenprobe gegen IFOX00 auf MVS an einem Modul
+- [ ] Close the "frequent and cheap" ones in as370 straight away
+- [ ] Cross-check one module against IFOX00 on MVS
 
-**Gate.** Fällt die Quote schlecht aus, hat as370 Vorrang vor allem anderen —
-dann wird aus diesem Punkt das Hauptprojekt für eine Weile.
+**Gate.** If the rate comes out poorly, as370 takes priority over everything
+else — this item then becomes the main project for a while.
 
-### 8. Daves „fertige" Module neu prüfen (M3)
+### 8. Re-check Dave's "finished" modules (M3)
 
-Daves „verifiziert" gilt gegen **TK3**, nicht gegen MVS/CE. Das muss neu
-festgestellt werden.
+Dave's "verified" holds against **TK3**, not against MVS/CE. That has to be
+re-established.
 
-- [ ] `cmplmd370` bauen: `DIFIN`/`DIFOUT`-Semantik, `CLEARRLD`, JSON-Ausgabe,
-      **Exit-Code 0 nur bei Byte-Identität**
-- [ ] Pilot: ein CMDLIB-Modul komplett durch die Kette — **`as370`-OBJ gegen das
-      DLIB-Element**, ohne `ld370` dazwischen. Dort kennen wir die erwartete
-      Antwort
-- [ ] Gegenprobe gegen das Target-Loadmodul; das Delta ist die
-      USERMOD-/Sysgen-Schicht
-- [ ] Danach **vollständig** über alle Bibliotheken (deine Entscheidung)
-- [ ] Verdikte vergeben, `DIFF_DLIB` und `DIFF_TGT` getrennt führen
-- [ ] Tabelle A mit echten Zahlen füllen
+- [ ] Build `cmplmd370`: `DIFIN`/`DIFOUT` semantics, `CLEARRLD`, JSON output,
+      **exit code 0 only on byte-identity**
+- [ ] Pilot: one CMDLIB module through the whole chain — **`as370` OBJ against
+      the DLIB element**, with no `ld370` in between. There we know the expected
+      answer
+- [ ] Cross-check against the target load module; the delta is the
+      usermod/sysgen layer
+- [ ] Then **completely** across all libraries
+- [ ] Assign verdicts, keeping `DIFF_DLIB` and `DIFF_TGT` separate
+- [ ] Fill table A with real numbers
 
-Erwartung: Gegen die DLIBs sollte die Trefferquote deutlich höher liegen als
-gegen die Target-Libraries — dort fallen USERMODs, Sysgen-Konfiguration und
-Linkage-Editor als Störquellen weg.
-
----
-
-## Werkzeugbau
-
-### 9. dasm370 und der Rundlauf (M4)
-
-- [ ] `libobj370` aus as370/ld370/file370 extrahieren (cc370-Roadmap Phase 0).
-      Validierung: die bestehenden Werkzeuge erzeugen weiterhin byte-identische
-      Ausgabe
-- [ ] `dasm370` v1 — Basis sind **as370s Opcode-Tabellen**, nicht der
-      Waterloo-Code (Lizenz, siehe Plan Abschnitt 6)
-- [ ] **Rundlauftest** `dasm370 → as370 → cmplmd370` muss `IDENTISCH` ergeben.
-      Der Selbsttest des Disassemblers und die Voraussetzung für Fall D
-- [ ] Alignment-Diff-Modus: Einfügungen und Löschungen als solche erkennen,
-      nicht als Byte-Rauschen. Ohne ihn kann der Agent Differenzen nicht
-      klassifizieren
-- [ ] Ausgabequalität: Labels, `USING`-Rekonstruktion, Literale,
-      Adresskonstanten
-
-### 10. 🚪 Der Orchestrator (M5)
-
-- [ ] `mvsrec`: Queue, Zustandsautomat, Budget, `work/state/` mit Wiederaufnahme,
-      `evidence/`, Eskalationsberichte
-- [ ] Leitplanken technisch durchsetzen, nicht nur dokumentieren (Plan,
-      Abschnitt 2.4)
-- [ ] `AGENT.md` schreiben — der Arbeitsvertrag, den ein Agent zu Beginn liest
-- [ ] Trockenlauf über Fall-A-Module: Verdikt **ohne jede Iteration**
-- [ ] Erster autonomer Lauf über fünf Fall-B-Module
-
-**Gate für das Zielbild.** Hier entscheidet sich, ob die Autonomie trägt. Alles
-davor ist Vorbereitung, alles danach Skalierung.
+Expectation: the hit rate against the DLIBs should be considerably higher than
+against the target libraries — usermods, sysgen configuration and the linkage
+editor all drop out as sources of noise there.
 
 ---
 
-## Breite herstellen
+## Tool building
 
-### 11. Abdeckung auf DLIB-Ebene (M6)
+### 9. dasm370 and the round trip (M4)
 
-Kein gezielter Zugriff mehr, sondern ein systematischer Durchgang. Ziel ist
-Abdeckung, sortiert nach Aufwand statt nach Thema.
+- [ ] Extract `libobj370` from as370/ld370/file370 (cc370 roadmap phase 0).
+      Validation: the existing tools still produce byte-identical output
+- [ ] `dasm370` v1 — based on **as370's opcode tables**, not the Waterloo code
+      (licensing, see the plan, section 6)
+- [ ] **Round-trip test** `dasm370 → as370 → cmplmd370` must yield `IDENTICAL`.
+      That is the disassembler's self-test and the precondition for case D
+- [ ] Alignment-diff mode: recognise insertions and deletions as such, not as
+      byte noise. Without it the agent cannot classify differences
+- [ ] Output quality: labels, `USING` reconstruction, literals, address constants
 
-- [ ] Von Daves verifizierten Bereichen nach außen: NUCLEUS, SVCLIB, JES2, SMP,
-      CMDLIB — dort liegt seine Source-Wartung bereits vor
-- [ ] Danach Tabelle B von unten nach oben, nach `DIFF_DLIB` sortiert
-- [ ] Fall D nebenher: Module ohne Source mechanisch auf `IDENTISCH-ROH` bringen
-- [ ] **Kalibrierung an der `IKJEFT`-Gruppe.** Daves CSECT-Vergleich von 2024
-      liefert dort eine fertige Skala: `IKJEFT40`, `52`, `53`, `54`, `56` mit
-      2 bis 10 Byte Differenz bei gleicher Länge, `IKJEFT35` (1.456),
-      `IKJEFT45` (1.441), `IKJEFT55` (4.012), bis `IKJEFT01` (6.867) und
-      `IKJEFT02` (10.899). Bekannte Zahlen von leicht bis schwer — ideal, um den
-      Agenten zu eichen
-- [ ] **Vor der ersten eigenen Änderung einfrieren:** Git-Tag auf den
-      `IDENTISCH`-Stand, Objekte als Referenz mit ablegen. Das ist der
-      Abzweigpunkt zwischen Wiederherstellung und Entwicklung
+### 10. 🚪 The orchestrator (M5)
 
-**Nicht mehr das Ziel:** die BREXX-Integration. Sie war der Anlass des
-ursprünglichen Mailverkehrs und taugt weiter als Testgelände, ist aber kein
-Projektziel mehr. `IKJ/REXX_INTEGRATION_PLAN.md` ist historisch.
+- [ ] `mvsrec`: queue, state machine, budget, `work/state/` with resume,
+      `evidence/`, escalation reports
+- [ ] Enforce the guardrails technically, not just in prose (plan, section 2.4)
+- [ ] Write `AGENT.md` — the work contract an agent reads at the start
+- [ ] Dry run over case-A modules: a verdict **without any iteration**
+- [ ] First autonomous run over five case-B modules
 
-### 12. Zurück nach MVS (M7)
-
-- [ ] `++PTF`/`++USERMOD` samt JCLIN aus Git-Source erzeugen — templatisierbar
-- [ ] Transport über `xmit370` und `RECV370`
-- [ ] APPLY/ACCEPT auf einem MVS/CE-**Klon**, gesteuert über mvsMF
-- [ ] IPL- und Funktionstest **autonom auf dem Klon**, nach
-      [RUNBOOK.md](docs/runbook.md), zwingend mit Zeitdeckel. Bei dir bleibt die
-      Übernahme in ein anderes als das Klon-System
+**Gate for the target picture.** This is where it is decided whether the autonomy
+carries. Everything before is preparation, everything after is scaling.
 
 ---
 
+## Establishing breadth
 
-### 13. MVS/CE aus Source bauen (M8) — der Endzustand
+### 11. Coverage at DLIB level (M6)
 
-Nicht „PTFs einspielen", sondern „das System aus unserem Source erzeugen".
+No longer a targeted raid but a systematic sweep. The aim is coverage, sorted by
+effort rather than by topic.
 
-Der Anknüpfungspunkt steht in `sysgen.py`: **`step_03_build_dlibs`** erzeugt die
-DLIBs aus `tape/zdlib1.het`, `step_04_system_generation` und alles Weitere
-leiten sich daraus ab. Kommt der DLIB-Inhalt aus unserem Source, baut der Rest
-der Kette unverändert weiter.
+- [ ] Work outward from Dave's verified areas: NUCLEUS, SVCLIB, JES2, SMP,
+      CMDLIB — his source-level maintenance already exists there
+- [ ] Then table B from the bottom up, sorted by `DIFF_DLIB`
+- [ ] Case D alongside: bring modules with no source to `IDENTICAL-RAW`
+      mechanically
+- [ ] **Calibrate on the `IKJEFT` group.** Dave's 2024 CSECT compare provides a
+      ready-made scale there: `IKJEFT40`, `52`, `53`, `54`, `56` differing by 2
+      to 10 bytes at identical length, `IKJEFT35` (1,456), `IKJEFT45` (1,441),
+      `IKJEFT55` (4,012), up to `IKJEFT01` (6,867) and `IKJEFT02` (10,899).
+      Known numbers from easy to hard — ideal for calibrating the agent
+- [ ] **Freeze before the first change of our own:** Git tag on the `IDENTICAL`
+      state, with the objects stored as a reference. That is the branch point
+      between recovery and development
 
-- [ ] `step_03_build_dlibs` im Detail lesen — Form und Struktur des Ergebnisses
-- [ ] DLIB-Inhalt aus unserem Source-Baum erzeugen
-- [ ] Sysgen fahren, bei dem Schritt 03 ersetzt ist
-- [ ] Ergebnis IPLen und gegen ein reguläres MVS/CE vergleichen
+**No longer the goal:** the BREXX integration. It was the occasion for the
+original correspondence and still serves as a proving ground, but it is not a
+project goal any more. `IKJ/REXX_INTEGRATION_PLAN.md` is history.
 
-**Abnahme:** Ein IPL-fähiges MVS/CE, dessen DLIBs aus unserem Source stammen.
+### 12. Back to MVS (M7)
 
-## Eigener Strang: SMPWRK3-Analyse
+- [ ] Generate `++PTF`/`++USERMOD` with JCLIN from the Git source — templatable
+- [ ] Transport via `xmit370` and `RECV370`
+- [ ] APPLY/ACCEPT on an MVS/CE **clone**, driven through mvsMF
+- [ ] IPL and function test **autonomously on the clone**, per
+      [`docs/runbook.md`](docs/runbook.md), with a mandatory wall-clock cap.
+      Promotion to anything other than the clone stays with the user
 
-⚡ Blockiert bis M7 nichts und braucht kein laufendes MVS. Kann jederzeit
-nebenher laufen.
+### 13. Build MVS/CE from source (M8) — the end state
 
-Der Befund aus Daves Mail vom 08.06.2022: SMP setzt mitten in APPLY/ACCEPT das
-Directory von `SMPWRK3` zurück, merkt es nicht und assembliert weiter; der
-Linkedit erzeugt danach nicht ausführbare Loadmodule. Zuerst betroffen ist
-APPLY von `EBB1102`.
+Not "apply PTFs" but "produce the system from our source".
 
-**Wir haben den SMP-Source lokal** — 119 `HMASM*`-Module in
-`Dave Kreiss - MVS from Source/MVSBLD/`. Damit ist die Analyse sofort
-startbar.
+The seam is in `sysgen.py`: **`step_03_build_dlibs`** produces the DLIBs from
+`tape/zdlib1.het`; `step_04_system_generation` and everything after derive from
+them. If the DLIB content comes from our source, the rest of the chain builds on
+unchanged.
 
-Konkrete Einstiegspunkte aus einer ersten Durchsicht:
+- [ ] Read `step_03_build_dlibs` in detail — the form and structure of its output
+- [ ] Produce DLIB content from our source tree
+- [ ] Run a sysgen with step 03 replaced
+- [ ] IPL the result and compare it against a regular MVS/CE
 
-- [ ] **`HMASMIO`** (dazu `HMASMIO1`, `HMASMION`) — die zentrale I/O-Schicht.
-      Alle SMP-Module rufen sie mit einem Funktionscode in `IOPFUNCT` auf;
-      `IOPSTOWR` ist „STOW replace". Hier läuft die Directory-Behandlung
-      zusammen, hier ist der Fehler am wahrscheinlichsten zu finden
-- [ ] Die drei Module, die `SMPWRK3` namentlich referenzieren: **`HMASMCMP`**
-      (schließt `SMPWRK3`, um den DEB für das Interface-Modul zu setzen —
-      auffällig), **`HMASMDC2`**, **`HMASMPIN`**
-- [ ] Die vier Module mit `STOW`-Bezug: `HMASMDC1`, `HMASMDR2`, `HMASMCRW`,
-      `HMASMRCC`
-- [ ] Daves eigene offene Frage beantworten: **Kann `STOW` unter MVS 3.8 ein
-      Directory löschen?** Die STOW-Routine ist SVC 21 = **`IGC0002A`**
-      („FIRST LOAD OF BPAM STOW ROUTINE"), liegt in `MVSBLD/IGC0002A.ASM` und
-      als Listing unter `www.stben.net`. Von dort aus die Folgeloads verfolgen
-- [ ] Hypothese formulieren, dann gezielt reproduzieren
-
-**Falsche Fährte vermeiden:** `HMASMPIN` ist eines der Module, für die kein
-Source existierte und die Dave neu geschrieben hat. Das macht es verdächtig —
-ist es aber nicht. Dave hat den Fehler auf einem **frischen TK3-System mit
-originalen SMP-Modulen** reproduziert. Die Ursache liegt also im
-Original-SMP, nicht in Daves Rekonstruktion.
-
-Ein zweiter Gedanke, der zu prüfen wäre: Der Fehler tritt nur bei **großen**
-APPLYs auf. Das riecht nach einer Grenze — Directory-Blöcke, eine
-Extent-Grenze, ein Zähler, der überläuft. Daves Versuch, `SMPWRK3` mit größerem
-Directory anzulegen, half nicht; das spricht eher gegen eine reine
-Directory-Größe und für etwas anderes, das mit der Menge skaliert.
+**Acceptance:** an IPLable MVS/CE whose DLIBs came from our source.
 
 ---
 
-## Entschieden
+## A strand of its own: SMPWRK3 analysis
 
-- [x] **Neu-Basislinierung vollständig**, alle Bibliotheken, inklusive Vergleich
-- [x] **Vergleichsmaßstab:** primär das DLIB-Objektdeck, sekundär das
-      Target-Loadmodul; das Delta ist die USERMOD-/Sysgen-Schicht und wird
-      gemessen statt geraten
-- [x] **Iterationsbudget gestaffelt:** Fall B ≈ 30, Fall D ≈ 50, Fall C ≈ 150,
-      plus Zeitdeckel
-- [x] **Der Agent darf auf dem Klon IPLen**, Betriebswissen in
-      [RUNBOOK.md](docs/runbook.md)
+⚡ Blocks nothing until M7 and needs no running MVS. Can run alongside at any
+time.
 
-## Noch offen
+The finding from Dave's mail of 2022-06-08: SMP resets the `SMPWRK3` directory
+in the middle of APPLY/ACCEPT, does not notice, and carries on assembling; the
+link-edit then produces non-executable load modules. The first FUNCTION affected
+is APPLY of `EBB1102`.
 
-- [ ] **MVP-Pakete:** nur Liste, oder auch deren Inhalt inventarisieren?
-- [ ] **Zeitdeckel** für IPL und Jobs — ergibt sich aus dem ersten Lauf
-- [ ] **Bezugsversion MVS/CE** — Vorschlag: v3.0.0, siehe Punkt 1b
-- [ ] **`IDENTISCH-ROH`:** bleiben Fall-D-Module mit absoluten Offsets stehen,
-      oder wird Lesbarmachung später ein eigenes Ziel?
+**We have the SMP source locally** — 119 `HMASM*` modules in
+`Dave Kreiss - MVS from Source/MVSBLD/`. The analysis can start immediately.
+
+Concrete entry points from a first pass:
+
+- [ ] **`HMASMIO`** (plus `HMASMIO1`, `HMASMION`) — the central I/O layer. Every
+      SMP module calls it with a function code in `IOPFUNCT`; `IOPSTOWR` is "STOW
+      replace". This is where directory handling converges, and the most likely
+      place to find the defect
+- [ ] The three modules that reference `SMPWRK3` by name: **`HMASMCMP`** (closes
+      `SMPWRK3` to set the DEB for the interface module — conspicuous),
+      **`HMASMDC2`**, **`HMASMPIN`**
+- [ ] The four modules with `STOW` involvement: `HMASMDC1`, `HMASMDR2`,
+      `HMASMCRW`, `HMASMRCC`
+- [ ] Answer Dave's own open question: **can `STOW` clear a directory under
+      MVS 3.8?** The STOW routine is SVC 21 = **`IGC0002A`** ("FIRST LOAD OF BPAM
+      STOW ROUTINE"), in `MVSBLD/IGC0002A.ASM` and as a listing on
+      `www.stben.net`. Follow the subsequent loads from there
+- [ ] Form a hypothesis, then reproduce it deliberately
+
+**A false trail to avoid:** `HMASMPIN` is one of the modules for which no source
+existed and which Dave rewrote. That makes it look suspicious — it is not. Dave
+reproduced the failure on a **fresh TK3 system with original SMP modules**. The
+cause is in the original SMP, not in his reconstruction.
+
+A second thought worth testing: the failure appears only on **large** APPLYs.
+That smells of a limit — directory blocks, an extent boundary, a counter
+overflowing. Dave's attempt to allocate `SMPWRK3` with a larger directory did not
+help, which argues against plain directory size and for something else that
+scales with volume.
+
+---
+
+## Decided
+
+- [x] **Re-baselining is complete**, all libraries, comparison included
+- [x] **Yardstick:** primarily the DLIB object deck, secondarily the target load
+      module; the delta is the usermod/sysgen layer and is measured, not guessed
+- [x] **Iteration budget staggered:** case B ≈ 30, case D ≈ 50, case C ≈ 150,
+      plus a wall-clock cap
+- [x] **The agent may IPL on the clone**, operational knowledge in
+      [`docs/runbook.md`](docs/runbook.md)
+- [x] **Repository language is English** — documents, issues, PRs, commits.
+      German reference copies of the plan and the project analysis stay in
+      `~/repos/MVSSRC/WORK/doc/`
+
+## Still open
+
+- [ ] **MVP packages:** a list only, or inventory their contents too?
+- [ ] **Wall-clock caps** for IPL and jobs — will fall out of the first run
+- [ ] **Reference release of MVS/CE** — proposal: v3.0.0, see item 1b
+- [ ] **`IDENTICAL-RAW`:** do case-D modules stay as they are with absolute
+      offsets, or does making them readable become a goal of its own later?

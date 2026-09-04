@@ -1,76 +1,83 @@
 # CLAUDE.md — mvs38src
 
-Wiederherstellung des MVS-3.8j-Source auf DLIB-Stand. Ziel und Aufbau stehen im
-[README](README.md); was als Nächstes ansteht, in [`TODO.md`](TODO.md).
+Recovery of the MVS 3.8j source at DLIB level. Goal and layout are in the
+[README](README.md); what is next is in [`TODO.md`](TODO.md).
 
-**Vor inhaltlicher Arbeit lesen:** [`docs/arbeitsplan.de.md`](docs/arbeitsplan.de.md).
-Für alles, was ein laufendes MVS berührt: [`docs/runbook.md`](docs/runbook.md).
+**Read before substantive work:** [`docs/workplan.md`](docs/workplan.md).
+For anything touching a running MVS: [`docs/runbook.md`](docs/runbook.md).
 
-## Die eine Regel, die alles trägt
+## Language
 
-**Erfolg wird nicht behauptet, sondern gemessen.** Ein Modul gilt genau dann als
-wiederhergestellt, wenn `cmplmd370` mit Exit-Code 0 endet — der assemblierte
-CSECT ist byte-identisch zum DLIB-Objektdeck. Kein Ermessen, keine Einschätzung,
-keine Formulierung wie „sollte jetzt passen".
+**Everything written into this repository is English** — Markdown, issues, pull
+requests, commit messages, code comments. Write plainly; this is read by people
+for whom English is a second language.
 
-Daraus folgt: **niemals ein Verdikt setzen, das nicht aus einem Werkzeuglauf
-stammt.**
+Conversation with the user is **German**, and German versions of documents are
+produced only on explicit request. German reference copies of the plan and the
+project analysis live outside this repo, in `~/repos/MVSSRC/WORK/doc/`.
 
-## Umgang mit dem Source
+## The one rule everything rests on
 
-**Fixed-Format-Assembler, 80 Spalten.** Sätze von exakt 80 Zeichen,
-Sequenznummern in Spalte 73–80, CRLF-Zeilenenden.
+**Success is measured, not asserted.** A module counts as recovered exactly when
+`cmplmd370` exits 0 — the assembled CSECT is byte-identical to the DLIB object
+deck. No judgement, no assessment, no "this should be right now".
 
-- **Niemals umformatieren.** Keine Zeilen kürzen, kein Whitespace „aufräumen",
-  keine Zeilenenden konvertieren. Spalte 72 ist die Fortsetzungsspalte.
-- `.gitattributes` erzwingt das (`* -text`, `*.asm binary`). Nicht lockern —
-  genau diese Bytes sind der Vergleichsgegenstand.
-- Änderungen werden markiert wie bei Dave: Spalte 1 `*DSKnnnn` oder Spalte 65
-  `DSKnnnn`.
+It follows that you must **never record a verdict that did not come out of a tool
+run.**
 
-**Zwei Markierungen bedeuten „Hände weg":**
+## Handling the source
 
-- `???` — Dave konnte nicht rekonstruieren, was der Code tut (50 Module)
-- `!!!` — Kunstgriff, damit der Objektvergleich aufgeht (16 Module)
+**Fixed-format assembler, 80 columns.** Records of exactly 80 characters,
+sequence numbers in columns 73–80, CRLF line endings.
 
-Dort wird nicht aufgeräumt, nicht modernisiert, nichts „offensichtlich
-Besseres" eingesetzt.
+- **Never reformat.** Do not shorten lines, do not "tidy" whitespace, do not
+  convert line endings. Column 72 is the continuation column.
+- `.gitattributes` enforces this (`* -text`, `*.asm binary`). Do not relax it —
+  those exact bytes are what the comparison is about.
+- Mark changes the way Dave Kreiss did: `*DSKnnnn` in column 1, or `DSKnnnn` in
+  column 65.
 
-## Reihenfolge, die nicht verhandelbar ist
+**Two markers mean hands off:**
 
-1. **Byte-Identität herstellen.** Erst danach, in getrennten Commits, optional
-   lesbarer machen. Zwei bewegliche Ziele gleichzeitig kosten die
-   Vergleichbarkeit — das war Dave Kreiss' Phase 2.
-2. **Vor der ersten eigenen Änderung einfrieren.** Git-Tag auf den
-   `IDENTISCH`-Stand plus die zugehörigen Objekte als Referenz. Danach gilt der
-   Delta-Vergleich, nicht mehr die Identitätsprüfung.
+- `???` — Dave could not reconstruct what the code does (50 modules)
+- `!!!` — a workaround that makes the object comparison succeed (16 modules)
 
-## Grenzen gegenüber MVS
+Do not tidy those, do not modernize them, do not substitute something
+"obviously better".
 
-- Baseline-Volumes ausschließlich **lesend** (`dasdls`, `dasdpdsu`,
-  heruntergefahren). Geschrieben wird nur auf `mvsce-src` oder `mvsce-exp`.
-- `mvsce-lab` ist tabu — das ist die Arbeitsumgebung für andere Projekte.
-- ⚠️ **Dave Kreiss' Build und seine 3390-Mods beschädigen den Freispeicher eines
-  Volumes.** Sie laufen ausschließlich auf `mvsce-exp`. Details im Runbook.
-- Nach jedem IPL `/s HTTPD` — ohne HTTPD kein mvsMF und damit kein Kanal.
-  Vor dem Shutdown `/p HTTPD`, das mitgelieferte Skript kennt ihn nicht.
+## An order that is not negotiable
 
-## Rohmaterial
+1. **Establish byte-identity first.** Only then, in separate commits, optionally
+   make the source more readable. Two moving targets at once cost you
+   comparability — that was Dave Kreiss' phase 2.
+2. **Freeze before the first change of our own.** Git tag on the `IDENTICAL`
+   state plus the corresponding objects as a reference. From then on the delta
+   comparison applies, not the identity check.
 
-Liegt **nicht hier**, sondern in `~/repos/MVSSRC`:
+## Boundaries towards MVS
 
-| Pfad | Inhalt |
+- Baseline volumes are **read-only** (`dasdls`, `dasdpdsu`, with the system shut
+  down). Writing happens only on `mvsce-src` or `mvsce-exp`.
+- `mvsce-lab` is off limits — it is the working environment for other projects.
+- ⚠️ **Dave Kreiss' build and his 3390 mods corrupt a volume's free space.** They
+  run on `mvsce-exp` only. Details in the runbook.
+- After every IPL, `/s HTTPD` — without HTTPD there is no mvsMF and therefore no
+  channel. Before shutdown, `/p HTTPD`; the shipped script does not know it.
+
+## Raw material
+
+Lives **elsewhere**, in `~/repos/MVSSRC`:
+
+| Path | Contents |
 |---|---|
-| `Dave Kreiss - MVS from Source/MVSBLD/` | sein Arbeitsstand, 5.529 `.ASM`, davon 747 bearbeitet |
-| `Dave Kreiss - MVS from Source/BLDMVS/` | Installationspaket, `BLDMVS.AWS`, Instruktionen als PDF |
-| `IKJ/` | TSO-Module, `.asm` plus aus Kommentaren extrahierte `.pli` |
-| `WORK/doc/` | der Mailverkehr mit Dave Kreiss als PDF |
-| `www.stben.net/`, `mvssrc/mainframe.eu/` | zwei Web-Spiegel gefundener Sourcen |
+| `Dave Kreiss - MVS from Source/MVSBLD/` | his working state, 5,529 `.ASM`, of which 747 were touched |
+| `Dave Kreiss - MVS from Source/BLDMVS/` | install package, `BLDMVS.AWS`, instructions as PDF |
+| `IKJ/` | TSO modules, `.asm` plus `.pli` extracted from comments |
+| `WORK/doc/` | the correspondence with Dave Kreiss as PDFs |
+| `www.stben.net/`, `mvssrc/mainframe.eu/` | two web mirrors of sources found online |
 
-## Konventionen
+## Conventions
 
-- Antworten auf Deutsch, sofern nicht anders geschrieben.
-- **Referenzdokumente** (`docs/*.de.md` / `*.en.md`) zweisprachig,
-  **Arbeitsdokumente** (`TODO.md`, Runbook, Entwürfe) nur deutsch.
-- Modul- und Datasetnamen in Backticks und groß: `IKJCT430`, `SYS1.CMDLIB`.
-- Der Name schreibt sich **Dave Kreiss**, mit Doppel-s.
+- Module and data set names in backticks and upper case: `IKJCT430`,
+  `SYS1.CMDLIB`.
+- The name is spelled **Dave Kreiss**, with a double s.
