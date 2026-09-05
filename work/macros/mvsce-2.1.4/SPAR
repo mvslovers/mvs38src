@@ -1,0 +1,108 @@
+         MACRO                                                          00020001
+&NAME    SPAR  &GACB,&PRTY=,&MF=I                                       00040001
+         LCLA  &LNGTH,&INC,&CNT         DEFINE WORK AREAS               00060001
+         LCLC  &NAMGACB,&NAMLIST                                        00080001
+         LCLC  &MNAME                                                   00100001
+         LCLA  &TOTLNG,&PRTYMAC                                         00120001
+         LCLC  &REGAD                                                   00140001
+&CNT     SETA  0                        COUNT IS NUMBER OF GACBS        00160001
+&INC     SETA  0                        NUMBER OF FULL WORDS            00180001
+         AIF   (K'&PRTY EQ 0).MACSET    TEST FOR A PRIORITY             00200001
+&PRTYMAC SETA  &PRTY                    IF SO, SET CONSTANT TO PRTY     00220001
+         AGO   .OVSET                                                   00240001
+.MACSET  ANOP                                                           00260001
+&PRTYMAC SETA  0                        IF NOT, SET CONSTANT TO ZERO    00280001
+.OVSET   AIF   (&PRTYMAC GT 127).ER2    TEST FOR INVALID PRIORITY       00300001
+.NXTST1  AIF   ('&MF' EQ 'I').TYPESL    TEST FOR TYPE S AND             00320001
+         AIF   ('&MF' EQ 'L').TYPESL    TYPE L.                         00340001
+         AIF   (N'&MF NE 2).ER1         THEN A TEST IS MADE TO          00360001
+         AIF   ('&MF(1)' NE 'E').ER1    CHECK PROPER MF=E FORMAT        00380001
+         AIF   ('&MF(2)'(1,1) EQ '(').USEREG                            00400001
+&NAME    LA    1,&MF(2)                 LOAD ADDRESS OF LIST            00420001
+         AGO   .OVUSRG                  INTO REGISTER 1                 00440001
+.USEREG  ANOP                           IF A REGISTER WAS SPECIFIED     00460001
+&REGAD   SETC  '&MF(2)'(2,K'&MF(2)-2)   LOAD REGISTER INSTRUCTION       00480001
+&NAME    LR    1,&REGAD                 LOAD PARAMETER LIST ADDRESS     00500001
+.OVUSRG  AIF   (K'&PRTY NE 0).LPTY      CHECK FOR A PRIORITY            00520001
+.NXTST2  AIF   (K'&GACB EQ 0).NOMOR     NO GACB IN MACRO TEST           00540001
+.NEXT    AIF   (N'&GACB EQ &CNT).NOMOR    CHECK FOR END OF GACB LIST    00560001
+&CNT     SETA  &CNT+1                   IF NOT, INCREMENT BOTH          00580001
+&INC     SETA  &INC+4                   COUNT AND INCREMENT             00600001
+         AIF   (K'&GACB(&CNT) EQ 0).NEXT    CHECK FOR BLANK ENTRY       00620001
+         AIF   ('&GACB(&CNT)'(1,1) EQ '(').REGIN   CHECK FOR REG        00640001
+&NAMGACB SETC  '&GACB(&CNT)'            LOAD GACB NAME INTO CONSTANT    00660001
+         LA    15,&NAMGACB              LOAD GACB ADDRESS INTO          00680001
+         ST    15,&INC.(1)              PARAMETER LIST                  00700001
+         AGO   .NEXT                    GO TO NEXT GACB ADDRESS         00720001
+.REGIN   AIF   ('&GACB(&CNT)'(K'&GACB(&CNT),1) NE ')').ER4              00740001
+&NAMGACB SETC  '&GACB(&CNT)'(2,K'&GACB(&CNT)-2)   LOAD REG              00760001
+         ST    &NAMGACB,&INC.(1)        STORE REG INTO PARAMETER LIST   00780001
+         AGO   .NEXT                    GO TO NEXT GACB ADDRESS         00800001
+.NOMOR   SVC   73                       LINK TO SPAR ROUTINE            00820001
+         MEXIT                                                          00840001
+.LPTY    ANOP                           IF PRIORITY,                    00860001
+         MVI   0(1),&PRTYMAC            MOVE PRIORITY INTO LIST         00880001
+         AGO   .NXTST2                                                  00900001
+.TYPESL  AIF   (K'&GACB EQ 0).ER3       IF S OR L CHECK FOR GACBS       00920001
+&LNGTH   SETA  N'&GACB+1                                                00940001
+.PARFIL  AIF   (N'&MF NE 1).ER1         CHECK MF FORMAT                 00960001
+         AIF   ('&MF' EQ 'I').TYPES     TEST FOR S FORMAT               00980001
+         AIF   (K'&NAME EQ 0).WRNMES    CHECK FOR NAME FIELD            01000001
+&MNAME   SETC  '&NAME'                  LOAD NAME INTO CONSTANT         01020001
+.AFWRN   DS    0F                        ALIGN ON FULLWORD BOUNDARY     01040001
+.GENPAR  ANOP                           GENERATE PARAMETER LIST         01060001
+&MNAME   DC    AL1(&PRTYMAC)            PRIORITY                        01080001
+         DC    AL1(0)                   RESERVED                        01100001
+         DC    AL2(&LNGTH)              LENGTH OF PARAMETER LIST        01120001
+         AIF   (K'&GACB EQ 0).JSTAL1    TEST FOR NO GACB ENTRY          01140001
+.LOOP    ANOP                                                           01160001
+&CNT     SETA  &CNT+1                   KEEP TRACK OF NUMBER OF GACBS   01180001
+         AIF   (K'&GACB(&CNT) EQ 0).SETZER   TEST FOR BLANK ENTRY       01200001
+         AIF   ('&GACB(&CNT)'(1,1) EQ '(').SETZER   REGISTER TEST       01220001
+&NAMGACB SETC  '&GACB(&CNT)'            LOAD GACB NAME INTO CONSTANT    01240001
+.PUTIN   DC    A(&NAMGACB)               GACB ADDRESS                   01260001
+         AIF   (N'&GACB NE &CNT).LOOP      TEST FOR END OF GACBS        01280001
+         MEXIT                                                          01300001
+.SETZER  ANOP                                                           01320001
+&NAMGACB SETC  '0'                      SET VALUE TO ZERO               01340001
+         AGO   .PUTIN                                                   01360001
+.JSTAL1  DC    A(0)                      GACB ADDRESS                   01380001
+         MEXIT                                                          01400001
+.TYPES   ANOP                           S TYPE MACRO                    01420001
+&MNAME   SETC  'IHB&SYSNDX'             GET SYSTEM NAME                 01440001
+&NAME    LA    1,&MNAME                 LOAD PARAMETER LIST ADDRESS     01460001
+&TOTLNG  SETA  (&LNGTH+1)*4             GET LENGTH OF LIST AND BRANCH   01480001
+         AIF   (K'&GACB EQ 0).NOSTR     TEST FOR NO STORE INSTRUCTION   01500001
+.LST     AIF   (N'&GACB EQ &CNT).NOSTMR  TEST FOR END OF GACB LIST      01520001
+&CNT     SETA  &CNT+1                   INCREMENT SUBLIST COUNT         01540001
+&INC     SETA  &INC+4                                                   01560001
+         AIF   (K'&GACB(&CNT) EQ 0).LST     CHECK FOR BLANK GACB ENTRY  01580001
+         AIF   ('&GACB(&CNT)'(1,1) NE '(').LST   CHECK FOR NO REG       01600001
+         AIF   ('&GACB(&CNT)'(K'&GACB(&CNT),1) NE ')').ER5  REG CHECK   01620001
+&NAMGACB SETC  '&GACB(&CNT)'(2,K'&GACB(&CNT)-2)   GET REG NAME          01640001
+         ST    &NAMGACB,&MNAME+&INC     STORE REG INTO PARAMETER LIST   01660001
+         AGO   .LST                                                     01680001
+.NOSTMR  ANOP                                                           01700001
+&CNT     SETA  0                        RESET COUNT                     01720001
+&INC     SETA  0                        AND INCREMENT.                  01740001
+.NOSTR   SVC   73                        LINK TO SPAR ROUTINE           01760001
+         CNOP  0,4                      ALIGN ON FULLWORD BOUNDARY      01780001
+         B     *+&TOTLNG                BRANCH OVER PARAMETER LIST      01800001
+         AGO   .GENPAR                  GO TO GENERATE PARAMETER LIST   01820001
+.ER1     IHBERMAC 35,,&MF               ERROR IN MF FORMAT              01840001
+         MEXIT                                                          01860001
+.ER2     IHBERMAC 180,PRTY,0                                            01880001
+&PRTYMAC SETA  0                                                        01900001
+         AGO   .NXTST1                                                  01920001
+.ER3     IHBERMAC 178,GACB,0            GACB NOT SPECIFIED              01940001
+&LNGTH   SETA  2                                                        01960001
+         AGO   .PARFIL                                                  01980001
+.ER4     ANOP                                                           02000001
+         IHBERMAC 147,REGISTER          INVALID REGISTER NOTATION       02020001
+         AGO   .NEXT                                                    02040001
+.ER5     ANOP                                                           02060001
+         IHBERMAC 147,REGISTER          INVALID REGISTER NOTATION       02080001
+         AGO   .LST                                                     02100001
+.WRNMES  IHBERMAC 180,NAME,ZERO                                         02120001
+         AGO   .AFWRN                                                   02140001
+         MEND                                                           02160001

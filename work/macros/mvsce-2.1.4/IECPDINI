@@ -1,0 +1,1074 @@
+         MACRO                                                          00050021
+         IECPDINI &COMP                                                 00100021
+         COPY  LCGASMSW                 DEFINE GLBL VARIABLES    YM2133 00150000
+         LCLC  &A,&B,&C                 DEFINE LOCAL CHAR VARIABLES     00200021
+*                                                                       00296402
+         AIF   ('&COMP' EQ 'OPEN').OPSCT                                00300021
+.*                                      IS OPEN EXPANSION REQUIRED      00310021
+         AIF   ('&COMP' EQ 'OPENEX').OPEXSCT                            00350021
+.*                                      IS OPEN EXECUTOR EXPANSION      00360021
+.*                                      REQUIRED                        00370021
+         AIF   ('&COMP' EQ 'CLOSE').CLSCT                               00400021
+.*                                      IS CLOSE EXPANSION REQUIRED     00410021
+         AIF   ('&COMP' EQ 'TCLOSE').TCSCT                              00450021
+.*                                      IS TCLOSE EXPANSION REQUIRED    00460021
+         AIF   ('&COMP' EQ 'EOV').EOVSCT                                00500021
+.*                                      IS EOV EXPANSION REQUIRED       00510021
+         MEXIT                          INVALID CODE PASSED, DO NOT     00520021
+.*                                      EXPAND                          00530021
+.OPSCT   ANOP                                                           00550021
+&A       SETC  'IFG0190P'               SET MODULE ID                   00600021
+&B       SETC  'X''F13'''               OPEN ABEND CODE                 00650021
+&C       SETC  '1'                      OPEN MSG ID                     00700021
+IFG0190P CSECT                                                          00750021
+         TITLE 'IFG0190P - OPEN ABEND INTERPRETATION AND RECOVERY INITIX00800021
+               AL ROUTINE'                                              00810021
+         AGO   .GENMAIN                                                 00850021
+.CLSCT   ANOP                                                           00900021
+&A       SETC  'IFG0200P'               SET MODULE ID                   01000021
+&B       SETC  'X''F14'''               CLOSE ABEND CODE                01050021
+&C       SETC  '2'                      CLOSE MSG ID                    01100021
+IFG0200P CSECT                                                          01110002
+         ENTRY IGG0206M                 ALIAS ENTRY POINT        Y02080 01120002
+IGG0206M EQU   IFG0200P                 CLOSE EXECUTOR ENTRY     Y02080 01130002
+         TITLE 'IFG0200P - CLOSE ABEND INTERPRETATION AND RECOVERY INITX01150021
+               IAL ROUTINE'                                             01160021
+         AGO   .GENMAIN                                                 01250021
+.EOVSCT  ANOP                                                           01300021
+&A       SETC  'IFG0550P'               SET MODULE ID                   01350021
+&B       SETC  'X''F37'''               EOV ABEND CODE                  01400021
+&C       SETC  '0'                      EOV MSG ID                      01450021
+IFG0550P CSECT                                                          01500021
+         TITLE 'IFG0550P - EOV ABEND INTERPRETATION AND RECOVERY INITIAX01550021
+               L ROUTINE'                                               01560021
+         AGO   .GENMAIN                                                 01600021
+.TCSCT   ANOP                                                           01650021
+&A       SETC  'IFG0230P'               SET MODULE ID                   01700021
+&B       SETC  'X''F17'''               TCLOSE ABEND CODE               01750021
+&C       SETC  '2'                      CLOSE MSG ID                    01800021
+IFG0230P CSECT                                                          01850021
+         TITLE 'IFG0230P - TCLOSE ABEND INTERPRETATION AND RECOVERY INIX01900021
+               TIAL ROUTINE'                                            01910021
+         AGO   .GENMAIN                                                 02000021
+.OPEXSCT ANOP                                                           02050021
+&A       SETC  'IGG0196M'               SET MODULE ID                   02100002
+&B       SETC  'X''F13'''               OPEN ABEND CODE                 02150021
+&C       SETC  '1'                      OPEN MSG ID                     02200021
+IGG0196M CSECT                                                   YM1447 02250002
+         TITLE 'IGG0196M - OPEN EXECUTOR ABEND INTERPRETATION AND RECOVX02300002
+               ERY INITIAL ROUTINE'                                     02310021
+.GENMAIN ANOP                                                           02400021
+*********************************************************************** 02450021
+*                                                                     * 02500002
+         AIF   ('&COMP' EQ 'OPEN').OPSCT1                               02550002
+.*                                      IS OPEN EXPANSION REQUIRED      02600002
+         AIF   ('&COMP' EQ 'OPENEX').OPEX1                              02650002
+.*                                      IS OPEN EXECUTOR EXPANSION      02660002
+.*                                      REQUIRED                        02670002
+         AIF   ('&COMP' EQ 'CLOSE').CLSCT1                              02680002
+.*                                      IS CLOSE EXPANSION REQUIRED     02690002
+         AIF   ('&COMP' EQ 'TCLOSE').TCSCT1                             02692002
+.*                                      IS TCLOSE EXPANSION REQUIRED    02694002
+         AIF   ('&COMP' EQ 'EOV').EOVSCT1                               02696002
+.*                                      IS EOV EXPANSION REQUIRED       02698002
+         MEXIT                          INVALID CODE PASSED, DO NOT     02698402
+.*                                      EXPAND                          02698802
+.OPSCT1  ANOP                                                           02699202
+* MODULE NAME = IFG0190P (OS/VS2)                                     * 02699602
+*                                                                     * 02699702
+* DESCRIPTIVE NAME = OPEN ABEND INTERPRETATION AND RECOVERY INITIAL   * 02699802
+*                    ROUTINE                                          * 02699902
+         AGO   .CONMAIN                                                 02716602
+.CLSCT1  ANOP                                                           02726602
+* MODULE NAME = IFG0200P (OS/VS2)                                     * 02728602
+*                                                                     * 02730602
+* DESCRIPTIVE NAME = CLOSE ABEND INTERPRETATION AND RECOVERY INITIAL  * 02732602
+*                    ROUTINE                                          * 02733002
+         AGO   .CONMAIN                                                 02733102
+.EOVSCT1 ANOP                                                           02733202
+* MODULE NAME = IFG0550P (OS/VS2)                                     * 02738802
+*                                                                     * 02740802
+* DESCRIPTIVE NAME = E0V ABEND INTERPRETATION AND RECOVERY INITIAL    * 02742802
+*                    ROUTINE                                          * 02743202
+         AGO   .CONMAIN                                                 02743602
+.TCSCT1  ANOP                                                           02744002
+* MODULE NAME = IFG0230P (OS/VS2)                                     * 02744102
+*                                                                     * 02744202
+* DESCRIPTIVE NAME = TCLOSE ABEND INTERPRETATION AND RECOVERY INITIAL * 02744302
+*                    ROUTINE                                          * 02758202
+         AGO   .CONMAIN                                                 02768202
+.OPEX1   ANOP                                                           02768602
+* MODULE NAME = IGG0196M (OS/VS2)                                     * 02770202
+*                                                                     * 02770602
+* DESCRIPTIVE NAME = OPEN EXECUTOR ABEND INTERPRETATION AND RECOVERY  * 02771002
+*                    INITIAL ROUTINE                                  * 02771402
+         AGO   .CONMAIN                                                 02771802
+.CONMAIN ANOP                                                           02773802
+*                                                                     * 02781502
+* COPYRIGHT = NONE                                                    * 02786102
+*                                                                     * 02800002
+* STATUS = RELEASE 4, LEVEL 0                                         * 02850037
+*                                                                     * 02900002
+* FUNCTION = GETS WORK AREA TO BE USED BY REST OF PROBLEM DETERMINA-  * 02950002
+*            TION. SEE PDBFRLEN EQUATE FOR SIZE OF WORK AREA.         * 03000002
+*            DETERMINES REAL ABEND CODE AND RETURN CODE FROM THE      * 03050002
+*            INTERNAL CODE PASSED TO IT AND TABLE IN THIS MODULE.     * 03100002
+*            THESE CODES ARE MOVED INTO THE WORK AREA.                * 03150002
+*            CONSTRUCTS WRITE-TO-PROGRAMMER MSG IN WORK AREA.         * 03200002
+*            MOVES ID OF LAST LOAD OF THE STRING IN CONTROL WHEN      * 03250002
+*            ABEND OCCURRED INTO THE CURRENT WTG TABLE ENTRY.         * 03300002
+*            PASSES CONTROL TO WRITE-TO-PROGRAMMER ROUTINE.           * 03350002
+*                                                                     * 03400002
+* NOTES = SEE BELOW                                                   * 03450002
+*                                                                     * 03500002
+*    DEPENDENCIES =                                                   * 03550002
+*            CLASS ONE CHARACTER CODE. THE EBCDIC CHARACTER CODE WAS  * 03600002
+*            USED FOR ASSEMBLY.  THE MODULE MUST BE REASSEMBLED IF A  * 03650002
+*            DIFFERENT CHARACTER SET IS USED FOR EXECUTION.           * 03700002
+*                                                                     * 03750002
+*    RESTRICTIONS = NONE                                              * 03800002
+*                                                                     * 03802002
+*    REGISTER CONVENTIONS =                                           * 03804002
+*            R0 = INTERNAL ABEND CODE                                 * 03804402
+*            R1 = PT TO PROBLEM DETERMINATION WORK AREA ON OUTPUT     * 03804802
+*            R2-R14 = SAME AS CALLING ROUTINE                         * 03805202
+*                                                                     * 03805402
+*    PATCH LABEL = SEE NEXT TO LAST LABEL IN LTORG TABLE. DC STATEMENT* 03805502
+*                                                                     * 03814402
+* MODULE TYPE = CONTROL                                               * 03816402
+*                                                                     * 03818402
+*    PROCESSOR = ASSEMBLER XF                                         * 03820402
+*                                                                     * 03822402
+*    MODULE SIZE = SEE EXTERNAL SYMBOL DICTIONARY OR LOC FIELD ON ORG * 03822802
+*                  STATEMENT AT END OF LTORG TABLE. HEX BYSTES        * 03823202
+*                                                                     * 03836002
+*    ATTRIBUTES = REENTRANT, REFRESHABLE, READ-ONLY, ENABLED,         * 03846002
+*                 PRIVILEGED.                                         * 03848002
+*                                                                     * 03848402
+* ENTRY POINT =                                                       * 03848502
+*            IFG0190P - XCTL FROM MAINLINE OPEN                       * 03848602
+*            IGG0196M - XCTL FROM OPEN EXECUTORS AND RDJFCB           * 03848702
+*            IFG0200P - XCTL FROM MAINLINE CLOSE                      * 03848802
+*            IGG0206M - XCTL FROM CLOSE EXECUTORS                     * 03848902
+*            IFG0230P - XCTL FROM MAINLINE TCLOSE                     * 03849002
+*            IFG0550P - XCTL FROM MAINLINE EOV                        * 03849102
+*                                                                     * 03853802
+* INPUT = ENTERED IN DATA MANAGEMENT KEY                              * 04102002
+*         REG 0 CONTAINS AN INTERNAL ABEND CODE.                      * 04110002
+*         REGS 2-14 ARE AS THEY WERE IN CALLING ROUTINE.              * 04150002
+*         TWO BYTE ID OF CALLING MODULE IS IN DXCALLID.               * 04200002
+*         TWO BYTE ID OF MODULE TO WHOM CONTROL IS RETURNED           * 04250002
+*         (WHERE APPLICABLE) IN DXRETID.                              * 04300002
+*                                                                     * 04350002
+* OUTPUT = EXIT IN DATA MANAGEMENT KEY                                * 04410002
+*          REG 1 CONTAINS PTR TO PROBLEM DETERMINATION WORK AREA.     * 04450002
+*          ABEND CODE, RETURN CODE, AND TRACE CODE ARE IN             * 04460002
+*          PROB DET WORKAREA. 7 BYTE MSG ID OF THE WRITE-TO-          * 04500002
+*          PROGRAMMER MSG IS PUT IN THE BUFFER.                       * 04550002
+*                                                                     * 04600002
+* EXIT- NORMAL =                                                      * 04750002
+*          XCTL TO IFG0199B FOR OPEN AND RDJFCB.                      * 04800002
+*          XCTL TO IFG0209B FOR CLOSE.                                * 04850002
+*          XCTL TO IFG0559B FOR EOV.                                  * 04900002
+*          XCTL TO IFG0239B FOR TCLOSE.                               * 04950002
+*                                                                     * 05000002
+* EXIT- ERROR =                                                       * 05050002
+*          ABEND WITH FXX ABEND IF UNABLE TO FIND CODE IN TABLE       * 05150002
+*          WHERE XX=13 FOR OPEN AND RDJFCB,                           * 05200002
+*                   14 FOR CLOSE,                                     * 05250002
+*                   17 FOR TCLOSE,                                    * 05300002
+*                   37 FOR EOV.                                       * 05350002
+*                                                                     * 05400002
+* CHANGE ACTIVITY =                                                   * 05410037
+**                                                                      05412037
+*        VS2 SU32 DELETIONS                                           * 05414037
+*                                                                       05416037
+*        VS2 RELEASE 3.860 DELETIONS/CHANGES                   @G60ASRB 05418037
+*A132405,132415,371145,371155                                  @G60ASRB 05420037
+*C371145                                                       @ZA43856 05420937
+*                                                                       05422037
+*        VS2 RELEASE 3.818 DELETIONS/CHANGES                          * 05424037
+*0000                                                          @G18MSBS 05426037
+*                                                              @G32DSMI 05428037
+**                                                                      05430037
+*        VS2 RELEASE 3 DELETIONS/CHANGES                              * 05440037
+*0000                                                          @ZA30860 05440537
+*0000                                                          @ZA04601 05441037
+*0000                                                          @ZA04602 05442037
+*0000                                                          @ZA04603 05443037
+*0000                                                          @ZA04604 05444037
+*0000                                                          @ZA04605 05445037
+*0000054500                                                    @Z40RSDS 05446037
+*0000                                                          @ZA02225 05447037
+*0000142545                                                    @ZA08863 05449037
+*0000                                                          @ZA09124 05452037
+*A687500,697500                                                @ZA37591 05452137
+*        VS2 RELEASE 2 DELETIONS/CHANGES                              * 05452437
+*A130585-130635                                                @ZA00615 05452537
+*A126995-127035,141120,371820,371980,372190                    @ZA01291 05453037
+*0000                                                          @Y30LSFY 05454003
+*0000135940                                                    @ZM00695 05455003
+*                                                                     * 05500002
+*********************************************************************** 06150021
+         EJECT                                                          06200021
+R0       EQU   0                        WORK/PARAMETER REG              06250021
+R1       EQU   1                        WORK/PARAMETER REG              06300021
+RDCB     EQU   2                        PTR TO DCB                      06350021
+RBASE    EQU   3                        BASE REG                        06400021
+RCORE    EQU   4                        PTR TO O/C/EOV WKAREA           06450021
+RES      EQU   5                        PTR TO RESIDENT RTN             06500021
+RWTGC    EQU   8                        PTR TO WTG TABLE CURRENT ENTRY  06550021
+RPARC    EQU   7                        PTR TO PARALIST CURRENT ENTRY   06600021
+RWTG     EQU   6                        PTR TO WTG TABLE                06650021
+RTIOT    EQU   9                        PTR TO TIOT ENTRY               06700021
+RUCB     EQU   10                       PTR TO UCB                      06750021
+RB       EQU   11                       WORK/PARAMETER REG              06800021
+RC       EQU   12                       WORK/PARAMETER REG              06850021
+RD       EQU   13                       WORK/PARAMETER REG              06900021
+RET      EQU   14                       WORK/PARAMETER REG              06950021
+RF       EQU   15                       WORK/PARAMETER REG              07000021
+SVRBEXSA EQU   96                       OFFSET OF SVRB EXT S/A IN SVRB  07050021
+FIVE     EQU   5                        WORK VALUE                      07250021
+SIX      EQU   6                        WORK VALUE                      07300021
+THREE    EQU   3                        WORK VALUE                      07350021
+FOURTEEN EQU   14                       WORK VALUE                      07400021
+SEVEN    EQU   7                        WORK VALUE                      07450021
+ORG      EQU   0                        WORK VALUE                      07500021
+TWO      EQU   2                        WORK VALUE                      07550021
+FOUR     EQU   4                        WORK VALUE                      07600021
+ONE      EQU   1                        WORK VALUE                      07650021
+EIGHT    EQU   8                        WORK VALUE                      07700021
+NINE     EQU   9                        WORK VALUE               YM1447 07710002
+TWELVE   EQU   12                       WORK VALUE                      07750021
+ZERO     EQU   0                        WORK VALUE                      07800021
+ABENDCOD EQU   &B                       INVALID CODE ABEND              07850021
+OPENCODE EQU   X'13'                    OPEN SVC NUMBER          YM3111 07852002
+CHARF    EQU   C'F'                     WORK VALUE                      07900021
+CHAR1    EQU   C'1'                     OPEN MESSAGE ID          YM3111 07902002
+         EJECT                                                          07910037
+         BALR  RBASE,0                  ESTABLISH ADDRESSABILITY        07950021
+         USING *,RBASE                                                  08000021
+         USING PDDSECT,R1                                               08050021
+         USING TABLE,RD                                                 08100021
+         USING FORCORE,RCORE                                            08150021
+         USING WTG,RWTG                                          Y02080 08160002
+         L     R1,CVTPTR                CVT ADDR                        08200021
+         L     R1,0(R1)                 TCB WDS                         08250021
+         L     R1,4(R1)                 TCB PTR                  XM0880 08300002
+         L     R1,0(R1)                 SVRB PTR                        08350021
+         MODESET EXTKEY=SUPR            SVRB KEY                 Y02082 08360002
+         ST    RDCB,SVRBEXSA(R1)        SAVE REG 2 IN SVRB EXT S/A      08400021
+         STM   RCORE,RWTGC,SVRBEXSA+FOUR(R1)                            08450021
+*                                       SAVE REGS 4-8 IN SVRB EXT S/A   08500021
+         MODESET EXTKEY=DATAMGT         DATA MANAGEMENT KEY      Y02082 08510002
+         LR    RC,R0                    SAVE CODE                       08550021
+         N     RC,CODEMASK              ZERO HI 3 BYTES                 08600021
+         LA    RD,CODTABLE              POINT TO TABLE                  08650021
+         SR    RET,RET                  ZERO WORK REG                   08700021
+PDF01020 IC    RET,CODE                 GET CODE IN TABLE ENTRY         08750021
+         CR    RC,RET                   RIGHT TABLE ENTRY        M0035  08800021
+         BE    PDF01040                 YES                             08850021
+         LTR   RET,RET                  END OF TABLE             M0035  08900021
+         BE    PDF01040                 YES, GET CORE FOR WTP           08950021
+         LA    RD,TABLLEN(RD)           POINT TO NEXT ENTRY             09000021
+         B     PDF01020                 CHECK NEXT ENTRY IN TABLE       09050021
+PDF01040 EQU   *                        CONTINUE BUILDING MSG           09100002
+         LA    R0,PDBFRLEN              LENGTH OF MSG BUFFER     YM3945 09150002
+         LM    RTIOT,RB,DXCCW8          SAVE WORKAREA                   09200021
+*        IECRES GET,LV=(0),PREFIX=YES,STM=(2,14,WTGPREFX),       Y02080 09410002
+*              ID=PDWA                  GET CORE FOR WTP         Y02144 09412002
+         IECRES GET,LV=(0),PREFIX=YES,STM=(2,14,WTGPREFX),       Y02080*09420002
+               ID=PDWA                                           Y02144 09470002
+         STM   RTIOT,RB,DXCCW8          RESTORE WKAREA                  09650021
+*                                                                YM3111 09650402
+         L     RF,WTGPREFX              GET BASE PREFIX PTR      YM7883 09650802
+         L     RF,IECRRPRM-IECPREFX(,RF) GET RRPLIST PTR         YM7883 09651202
+         TM    RRFLAGS2-RRPLIST(RF),RRFFIN1 1ST MODULE COMPLETED YM7883 09651602
+         LA    RF,WTGMODNM              PT T0 'IFG' ERROR MODNM  YM7883 09652002
+         BO    PDF01044                 YES, GO SET 'IFG' NAME   YM7883 09652402
+         LA    RF,IGCNAME               PT T0 'IGC' ERROR MODNM  YM7883 09652802
+PDF01044 EQU   *                        SET ERROR MODULE NAME    YM7883 09653202
+         MVC   DXWORK(L'WTGMODNM),0(RF) 1ST PART OF ERROR MODNM  YM7883 09654002
+         MVC   DXWORK+L'WTGMODNM-L'DXCALLID(L'DXCALLID),DXCALLID YM3111 09658002
+         MVC   PDERRMOD,DXWORK          ERROR NAME TO WORK AREA  YM3111 09658402
+*                                                                YM3111 09660002
+         CLI   CODE,ZERO                WAS CODE PASSED VALID    M0035  09750021
+         BZ    PDF01060                 NO, ISSUE WTP AND ABEND         09800021
+*                                       MOVE ID/VCON TO WTG      YM1447 10000002
+         MVC   WTGIDTTR-WTGENTRY(TWO,RWTGC),LASTLOAD+SIX MODID   YM1447 10050002
+         MVC   WTGIDTTR+TWO-WTGENTRY(THREE,RWTGC),LASTLOAD+NINE  YM1447 10070002
+*                                                                YM1447 10100002
+         MVC   PDRETCOD,RETCODE         MOVE RETURN CODE TO WKAREA      10150021
+         MVC   PDABCODE,ABCODE          MOVE ABEND CODE TO WKAREA       10200021
+         MVC   PDCODE,TRCCODE           MOVE TRACE CODE TO WKAREA       10250021
+         MVC   PDMSG(EIGHT),ID          MOVE OPEN/CLOSE/EOV      M0069  10300021
+*                                       MSG ID TO PD WKAREA             10350021
+         AIF   ('&COMP' NE 'EOV').SKIPEOV EOV ONLY FOLLOWS       YM3111 10352002
+         ICM   RF,B'1100',PDABCODE      X37N0000                 YM3111 10354002
+         SLL   RF,FOUR                  37N00000                 YM3111 10356002
+         SRL   RF,24                    00000037                 YM3111 10358002
+         LA    RET,OPENCODE             GET OPEN CODE            YM3111 10360002
+         CR    RF,RET                   COMPARE IF FROM COMMON   YM3111 10362002
+         BNE   PDF01050                 BRANCH IF NOT COMMON     YM3111 10364002
+         MVI   PDMSG+THREE,CHAR1        SET OPEN ID              YM3111 10366002
+.SKIPEOV ANOP                                                    YM3111 10368002
+PDF01050 MVC   PDMSG+FOUR(TWO),MSGID    MOVE LAST TWO CHARS      YM3111 10400002
+*                                       OF ID TO WKAREA                 10450021
+         L     RDCB,DXPDCBAD            INSURE COPIED DCB PTR    YM3105 10500002
+*                                                                YM1447 10510002
+*        IECRES LOAD,PREFIX=WTGPREFX,BRANCH=DIRECT,              Y02080 10710002
+*              MODNM=NEXTMOD                                     YM1447 10710202
+*                                       XCTL TO IFG0199B         Y02080 10710402
+         IECRES LOAD,PREFIX=WTGPREFX,BRANCH=DIRECT,              Y02080X10762002
+               MODNM=NEXTMOD                                     YM1447 10812002
+PDF01060 EQU   *                        ISSUE WTP AND ABEND             11000002
+         MVC   PDMSGLNG(ENDMSG+FOUR),NOCODMSG                           11050021
+*                                       MOVE MESSAGE TO BUFFER          11100021
+         MVC   PDMSGLNG+ENDMSG-L'WTGMODNM(L'WTGMODNM),PDERRMOD   YM3111 11102002
+*                                       MOVE ERROR MOD TO BUFFER YM3111 11104002
+         LR    RD,R1                    SAVE PTR TO WKAREA              11150021
+*        WTO   MF=(E,(1))               ISSUE WRITE-TO-PROGRAMMER       11200002
+         WTO   MF=(E,(1))               ISSUE WRITE-TO-PROGRAMMER       11210002
+         LA    R1,ABENDCOD              GET FXX ABEND CODE              11400021
+PDF01100 EQU   *                        ABEND                           11850002
+         L     RDCB,DXUDCBAD            GET USER DCB ADDRESS     YM5924 11860002
+*        ABEND (1),DUMP,,SYSTEM         SYSTEM ABEND WITH A DUMP Y02080 11900002
+         ABEND (1),DUMP,,SYSTEM         SYSTEM ABEND WITH A DUMP Y02080 11910002
+*                                                                       11915037
+*********************************************************************** 11920037
+*                                                                       11925037
+*        CONSTANTS                                                      11930037
+*                                                                       11940037
+         DS    0F                                                       11950021
+CODEMASK DC    X'000000FF'              MASK TO ZERO HI-3 BYTES OF      12000021
+*                                       INTERNAL CODE                   12010021
+NOCODMSG DC    AL2(ENDMSG)              LNG OF MSG                      12050021
+         DC    X'8000'                  MCSFLAGS                        12100021
+         DC    CL8'IEC900I'             MSG ID                          12150021
+         DC    C'INVALID ABEND CODE PASSED TO '                         12200021
+         DC    C'&A'                    MODULE ID                       12250021
+         DC    C' FROM '                MORE MESSAGE             YM3111 12252002
+ERRORMOD DC    CL8' '                   MODULE IN ERROR          YM3111 12254002
+ENDMSG   EQU   *-NOCODMSG               LNG OF MSG                      12300021
+         DC    X'04000020'              ROUT AND DESCRIPTOR CODES       12350021
+ID       DC    C'IEC'                   DATA MAN ID                     12500021
+         DC    C'&C'                    OPEN/CLOSE/EOV ID               12550021
+         DC    C'  I '                                                  12600021
+IGCNAME  DC    C'IGC000  '              FIRST MODULE 'IGC' NAME  YM7883 12610002
+         EJECT                                                          12650037
+*        THE FOLOWING TABLE IS USED TO DETERMINE THE EXTERNAL ABEND     12660021
+*        CODE, RETURN CODE, DATA TO BE TRACED, AND ID OF A WRITE-       12670021
+*        TO-PROGRAMMER MSG TO BE ISSUED.  THE TABLE CONSISTS OF         12680021
+*        SEVEN-BYTE ENTRIES IN THE FOLLOWING FORMAT.                    12690021
+*              BYTE 0 - INTERNAL CODE                                   12692021
+*              BYTE 1-2 - BITS 0-11 EXTERNAL ABEND CODE                 12694021
+*                       BITS 12-15 FLAGS INDICATING VALID OPTIONS THE   12696021
+*                                       USER MAY EXERCISE IN HIS ABEND  12698021
+*                                       EXIT ROUTINE FOR THE PARTICULAR 12698421
+*                                       ABEND.                          12698821
+*                                       THE POSSIBLE BIT SETTINGS IN    12698921
+*                                       THIS FIELD ARE AS FOLLOWS.      12699121
+*                                        X'08' - RECOVERY PERMITTED     12699221
+*                                        X'04' - IGNORE PERMITTED       12699321
+*                                        X'02' - DELAY ABEND PERMITTED  12699421
+*                                        X'01' - DISSALLOW DCB  ZA01291 12699502
+*                                         ABEND EXIT - POSSIBLE ZA01291 12701502
+*                                         BAD DCB               ZA01291 12703502
+*              BYTE 3 - RETURN CODE TO BE PASSED IN REGISTER 15 WHEN    12706002
+*                       ABEND IS ISSUED                                 12708002
+*              BYTE 4 - CODE INDICATING THE DATA TO BE TRACED FOR       12710002
+*                       PARTICULAR ABEND                                12712002
+*                                       THE POSSIBLE CODES IN THIS      12714002
+*                                       FIELD ARE AS FOLLOWS. (HEX)     12716002
+*                                       00 - NO TRACE                   12717037
+*                                       04 - IOB AND CCWS               12718002
+*                                       08 - TIOT ENTRY AND UCBS        12720002
+*                                       0C - JFCBVOLS                   12722002
+*                                       10 - TAPE LABEL                 12724002
+*                                       14 - JFCBDSNM                   12726002
+*                                       18 - VOLUME LABEL               12728002
+*                                       1C - DSCB (ALL ASSOCIATED WITH  12730002
+*                                            ABEND THAT ARE IN CORE.    12732002
+*                                       28 - DCB                        12734002
+*                                       34 - DCB, DSCB                  12736002
+*                                       38 - JFCBELNM                   12738002
+*                                       3C - DCB EXIT LIST ENTRIES      12740002
+*                                       40 - DCB, TAPE LABEL            12742002
+*                                       44 - DCB, JFCBDSNM              12744002
+*                                       48 - JFCBDSNM                   12746002
+*                                       4C - JFCBVOLS, DSCB      YM1238 12748002
+*              BYTE 5-6 - TWO BYTE ID TO BE PUT IN WRITE-TO-PROGRAMMER  12750002
+*                       MESSAGE.                                        12752002
+CODTABLE EQU   *                                                        12753037
+         AIF   ('&COMP' EQ 'OPEN').GENOP                                12754002
+.*                                      IS OPEN EXPANSION REQUIRED      12756002
+         AIF   ('&COMP' EQ 'OPENEX').GENOPEX                            12758002
+.*                                      IS OPEN EXECUTOR EXPANSION      12760021
+.*                                      REQUIRED                        12770021
+         AIF   ('&COMP' EQ 'CLOSE').GENCL                               12800021
+.*                                      IS CLOSE EXPANSION REQUIRED     12810021
+         AIF   ('&COMP' EQ 'TCLOSE').GENTC                              12850021
+.*                                      IS TCLOSE EXPANSION REQUIRED    12860021
+         AIF   ('&COMP' EQ 'EOV').GENEOV                                12900021
+.*                                      IS EOV EXPANSION REQUIRED       12910021
+         MEXIT                                                          12950021
+.GENOP   ANOP                                                           13000021
+         DC    X'0141360408'            1                               13001002
+         DC    C'45'                                                    13001502
+         DC    X'0241360804'            2                               13002002
+         DC    C'45'                                                    13002502
+         DC    X'0341360C04'            3                               13003002
+         DC    C'45'                                                    13003502
+         DC    X'0441361004'            4                               13004002
+         DC    C'45'                                                    13004502
+         DC    X'0651360420'            6                               13006002
+         DC    C'46'                                                    13006502
+         DC    X'08413E180C'            8                               13008002
+         DC    C'45'                                                    13008502
+         DC    X'096136040C'            9                               13009002
+         DC    C'47'                                                    13009502
+         DC    X'0AA136040C'            10                              13010002
+         DC    C'51'                                                    13010502
+         DC    X'0B613E0804'            11                              13011002
+         DC    C'47'                                                    13011502
+         DC    X'0C613E0C10'            12                              13012002
+         DC    C'47'                                                    13012502
+         DC    X'0D713E0400'            13                       XM3491 13013002
+         DC    C'48'                                                    13013502
+         DC    X'0E813E0414'            14                              13014002
+         DC    C'49'                                                    13014502
+         DC    X'0F613E1004'            15                              13015002
+         DC    C'47'                                                    13015502
+         DC    X'10613E1404'            16                              13016002
+         DC    C'47'                                                    13016502
+         DC    X'1101360400'            17                              13017002
+         DC    C'41'                                                    13017502
+         DC    X'1201360800'            18                              13018002
+         DC    C'41'                                                    13018502
+         DC    X'1391360410'            19                              13019002
+         DC    C'50'                                                    13019502
+         DC    X'1491360810'            20                              13020002
+         DC    C'50'                                                    13020502
+         DC    X'1521360804'            21                              13021002
+         DC    C'43'                                                    13021502
+         DC    X'1691300C00'            22                              13022002
+         DC    C'50'                                                    13022502
+         DC    X'1741362408'            23                              13023002
+         DC    C'45'                                                    13023502
+         DC    X'189136100C'            24                       Y01048 13024002
+         DC    C'50'                                             Y01048 13024502
+         DC    X'1A41360408'            26                              13026002
+         DC    C'45'                                                    13026502
+         DC    X'1B41362004'            27                              13027002
+         DC    C'45'                                                    13027502
+         DC    X'1C71360800'            28                       XM3491 13028002
+         DC    C'48'                                            SA55580 13028502
+         DC    X'1E213E0448'            30                              13030002
+         DC    C'43'                                                    13030502
+         DC    X'1F21361804'            31                              13031002
+         DC    C'43'                                                    13031502
+         DC    X'2011360804'            32                              13032002
+         DC    C'42'                                                    13032502
+         DC    X'2211360C3C'            34                              13034002
+         DC    C'42'                                                    13034502
+         DC    X'2431360404'            36                              13036002
+         DC    C'44'                                                    13036502
+         DC    X'2541361C00'            37                              13037002
+         DC    C'45'                                                    13037502
+         DC    X'2991301408'            41                       Y02083 13041002
+         DC    C'50'                                             Y02083 13041502
+         DC    X'2AC1361008'            42                              13042002
+         DC    C'53'                                                    13042502
+         DC    X'2B01366444'            43                              13043002
+         DC    C'41'                                                    13043502
+         DC    X'2C01366828'            44                              13044002
+         DC    C'41'                                                    13044502
+         DC    X'2E01366C08'            46                              13046002
+         DC    C'41'                                                    13046502
+         DC    X'2F01367010'            47                              13047002
+         DC    C'41'                                                    13047502
+         DC    X'3211361804'            50                              13050002
+         DC    C'42'                                                    13050502
+         DC    X'3501361430'            53                       Y02134 13053002
+         DC    C'41'                                             Y02134 13053502
+         DC    X'6E413E340C'            110                    @ZA00615 13058502
+         DC    C'45'                                           @ZA00615 13063502
+         DC    X'6F41302C00'            111                    @Y30LSFY 13103503
+         DC    C'45'                                           @Y30LSFY 13113503
+         DC    X'7041303000'            112                    @Y30LSFY 13123503
+         DC    C'45'                                           @Y30LSFY 13133503
+         DC    X'8B91361814'            139                      Y02082 13139002
+         DC    C'50'                                             Y02082 13139502
+         DC    X'8C91361C14'            140                      Y02082 13140002
+         DC    C'50'                                             Y02082 13140502
+         DC    X'8D91363800'            141                    @ZA43856 13141537
+         DC    C'50'                                           @Z40RSDS 13142537
+         DC    X'8E91363C18'            142                    @ZA43856 13143537
+         DC    C'50'                                           @Z40RSDS 13144537
+         DC    X'8F91364018'            143                    @ZA43856 13145537
+         DC    C'50'                                           @Z40RSDS 13146537
+         DC    X'98A1360808'            152                    @ZA04601 13152037
+         DC    C'51'                                           @ZA04601 13152537
+         DC    X'99A1360C08'            153                    @ZA04602 13153037
+         DC    C'51'                                           @ZA04602 13153537
+         DC    X'9AA1361010'            154                    @ZA04603 13154037
+         DC    C'51'                                           @ZA04603 13154537
+         DC    X'9BA1361410'            155                    @ZA04604 13155037
+         DC    C'51'                                           @ZA04604 13155537
+         DC    X'9CA1361810'            156                    @ZA04605 13156037
+         DC    C'51'                                           @ZA04605 13156537
+         DC    X'D603D6044C'            214                             13214002
+         DC    C'56'                                                    13214502
+         DC    X'D703D6084C'            215                             13215002
+         DC    C'56'                                                    13215502
+         DC    X'D821360C04'            216                             13216002
+         DC    C'43'                                                    13216502
+         DC    X'DCC1361808'            220                     OY02814 13220002
+         DC    C'53'                                            OY02814 13220502
+         DC    X'E491322028'            228                      Y02082 13228002
+         DC    C'50'                                             Y02082 13228502
+         DC    X'E62136201C'            230                      Y02072 13230002
+         DC    C'43'                                             Y02072 13230502
+         DC    X'E72136241C'            231                      Y02072 13231002
+         DC    C'43'                                             Y02072 13231502
+         DC    X'E803D60C34'            232                    @ZA02225 13233537
+         DC    C'56'                                           @ZA02225 13235537
+         DC    X'EE91302408'            238                      Y02083 13238002
+         DC    C'50'                                             Y02083 13238502
+         DC    X'EF91302808'            239                      Y02083 13239002
+         DC    C'50'                                             Y02083 13239502
+         DC    X'F221362C14'            242                    @G60ASRB 13240537
+         DC    C'43'                                           @G60ASRB 13241537
+         DC    X'F391362C14'            243                      Y02082 13243002
+         DC    C'50'                                             Y02082 13243502
+         DC    X'F491363010'            244                      Y02082 13244002
+         DC    C'50'                                             Y02082 13244502
+         DC    X'F591324400'            245                    @G32DSMI 13246037
+         DC    C'50'                                           @G32DSMI 13256037
+         DC    X'F621362808'            246                      YM1238 13266037
+         DC    C'43'                                             YM1238 13276037
+         DC    X'F791324800'            247                    @G32DSMI 13286037
+         DC    C'50'                                           @G32DSMI 13296037
+         DC    X'F891324C00'            248                    @G32DSMI 13306037
+         DC    C'50'                                           @G32DSMI 13316037
+         DC    X'F991325000'            249                    @G32DSMI 13326037
+         DC    C'50'                                           @G32DSMI 13336037
+         DC    X'FA91325400'            250                    @G32DSMI 13346037
+         DC    C'50'                                           @G32DSMI 13356037
+         DC    X'FB91325800'            251                    @G32DSMI 13366037
+         DC    C'50'                                           @G32DSMI 13376037
+         DC    X'FC91325C00'            252                    @G32DSMI 13386037
+         DC    C'50'                                           @G32DSMI 13396037
+         DC    X'FD4138344C'            253                    @VS44627 13406037
+         DC    C'45'                                           @G18MSBS 13416037
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 13499002
+         DC    C'  '                                                    13499102
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 13499202
+         DC    C'  '                                                    13499302
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 13499402
+         DC    C'  '                                                    13499502
+         AGO   .GNOPEND                                                 13499902
+.GENOPEX ANOP                                                           13500002
+         DC    X'2E01306C28'            46                      XL02942 13546002
+         DC    C'41'                                            XL02942 13546502
+         DC    X'2F01307028'            47                      XL02942 13547002
+         DC    C'41'                                            XL02942 13547502
+         DC    X'3301360C28'            51                       Y02144 13551002
+         DC    C'41'                                                    13551502
+         DC    X'340136102C'            52                       Y02144 13552002
+         DC    C'41'                                                    13552502
+         DC    X'3501361430'            53                       Y02144 13553002
+         DC    C'41'                                                    13553502
+         DC    X'3601361834'            54                       Y02144 13554002
+         DC    C'41'                                                    13554502
+         DC    X'3701361C34'            55                       Y02144 13555002
+         DC    C'41'                                                    13555502
+         DC    X'3801362028'            56                       Y02144 13556002
+         DC    C'41'                                                    13556502
+         DC    X'3901362428'            57                       Y02144 13557002
+         DC    C'41'                                                    13557502
+         DC    X'3A01362828'            58                       Y02144 13558002
+         DC    C'41'                                                    13558502
+         DC    X'3B01362C28'            59                       Y02144 13559002
+         DC    C'41'                                                    13559502
+         DC    X'3C01363C28'            60                       Y02144 13560002
+         DC    C'41'                                                    13560502
+         DC    X'3D01363428'            61                       Y02144 13561002
+         DC    C'41'                                                    13561502
+         DC    X'3E01363828'            62                       Y02144 13562002
+         DC    C'41'                                                    13562502
+         DC    X'3F01363028'            63                       Y02144 13563002
+         DC    C'41'                                                    13563502
+         DC    X'4001364028'            64                       Y02144 13564002
+         DC    C'41'                                                    13564502
+         DC    X'4101364428'            65                       Y02144 13565002
+         DC    C'41'                                                    13565502
+         DC    X'4201364828'            66                       Y02144 13566002
+         DC    C'41'                                                    13566502
+         DC    X'43B1361004'            67                       Y02144 13567002
+         DC    C'52'                                                    13567502
+         DC    X'44B1361400'            68                       Y02144 13568002
+         DC    C'52'                                                    13568502
+         DC    X'45B1360C04'            69                       Y02144 13569002
+         DC    C'52'                                                    13569502
+         DC    X'46B1300800'            70                       YM3213 13570002
+         DC    C'52'                                             YM3213 13570502
+         DC    X'47B1360400'            71                       Y02144 13571002
+         DC    C'52'                                                    13571502
+         DC    X'4801364C28'            72                       Y02144 13572002
+         DC    C'41'                                                    13572502
+         DC    X'4901365024'            73                       Y02144 13573002
+         DC    C'41'                                                    13573502
+         DC    X'4A01365424'            74                       Y02144 13574002
+         DC    C'41'                                                    13574502
+         DC    X'4B01365808'            75                       Y02144 13575002
+         DC    C'41'                                                    13575502
+         DC    X'4C01365C28'            76                       Y02144 13576002
+         DC    C'41'                                                    13576502
+         DC    X'4F24000428'            79                              13579002
+         DC    C'55'                                                    13579502
+         DC    X'5024000828'            80                              13580002
+         DC    C'55'                                                    13580502
+         DC    X'5124000C38'            81                              13581002
+         DC    C'55'                                                    13581502
+         DC    X'5224001028'            82                              13582002
+         DC    C'55'                                                    13582502
+         DC    X'5301366028'            83                       Y02144 13583002
+         DC    C'41'                                                    13583502
+         DC    X'5401368428'            84                       Y02144 13584002
+         DC    C'41'                                                    13584502
+         DC    X'5501307400'            85                              13585002
+         DC    C'41'                                                    13585502
+         DC    X'5601307820'            86                              13586002
+         DC    C'41'                                                    13586502
+         DC    X'5701307C20'            87                              13587002
+         DC    C'41'                                                    13587502
+         DC    X'5801308020'            88                              13588002
+         DC    C'41'                                                    13588502
+         DC    X'59B1361804'            89                       Y02144 13589002
+         DC    C'52'                                                    13589502
+         DC    X'5AB1301C00'            90                              13590002
+         DC    C'52'                                                    13590502
+         DC    X'5BC1300400'            91                              13591002
+         DC    C'57'                                                    13591502
+         DC    X'5CD1300400'            92                              13592002
+         DC    C'58'                                                    13592502
+         DC    X'5DE1300400'            93                              13593002
+         DC    C'59'                                                    13593502
+         DC    X'5E01368800'            94                     @ZM00695 13594003
+         DC    C'41'                                                    13594502
+         DC    X'5FB1362000'            95                       YM3213 13595002
+         DC    C'52'                                                    13595502
+         DC    X'60B1362400'            96                       YM3213 13596002
+         DC    C'52'                                                    13596502
+         DC    X'61B1362800'            97                       YM3213 13597002
+         DC    C'52'                                                    13597502
+         DC    X'62B1300804'            98                      YL03127 13598002
+         DC    C'52'                                            YL03127 13598502
+         DC    X'63B1301000'            99                      YL03127 13599002
+         DC    C'52'                                            YL03127 13599502
+         DC    X'6400040400'            100                      Y02144 13600002
+         DC    C'03'                                             Y02144 13600502
+         DC    X'65B1302C04'            101                      YM3213 13601002
+         DC    C'52'                                             YM3213 13601502
+         DC    X'66B1303004'            102                      YM3213 13602002
+         DC    C'52'                                             YM3213 13602502
+         DC    X'67B1303404'            103                      YM3213 13603002
+         DC    C'52'                                             YM3213 13603502
+         DC    X'6800040800'            104                      Y02144 13604002
+         DC    C'03'                                             Y02144 13604502
+         DC    X'690136CC28'            105                    @ZA09124 13605037
+         DC    C'41'                                           @ZA09124 13605537
+         DC    X'6A0130A428'            106                     XL02942 13606002
+         DC    C'41'                                            XL02942 13606502
+         DC    X'6B0130A828'            107                     XL02942 13607002
+         DC    C'41'                                            XL02942 13607502
+         DC    X'6F41302C00'            111                    @Y30LSFY 13609503
+         DC    C'45'                                           @Y30LSFY 13611503
+         DC    X'7101349000'            113                     YL03123 13613002
+         DC    C'41'                                            YL03123 13613502
+         DC    X'7201349428'            114                     YL03123 13614002
+         DC    C'41'                                            YL03123 13614502
+         DC    X'7301349828'            115                     YL03123 13615002
+         DC    C'41'                                            YL03123 13615502
+         DC    X'7401349C28'            116                     YL03123 13616002
+         DC    C'41'                                            YL03123 13616502
+         DC    X'750134A028'            117                     YL03123 13617002
+         DC    C'41'                                            YL03123 13617502
+         DC    X'760130CC00'            118  013-CC,3800 PRNTR @Z40MSRZ 13647537
+         DC    C'41'                       SETPRT FAILURE      @Z40MSRZ 13677537
+         DC    X'770130D028'            119                    @ZA37591 13687537
+         DC    C'41'                                           @ZA37591 13693537
+         DC    X'D000262834'            208                      Y02144 13708002
+         DC    C'36'                                             Y02144 13708502
+         DC    X'D302060428'            211                      Y02144 13711002
+         DC    C'38'                                             Y02144 13711502
+         DC    X'D402060834'            212                      Y02144 13712002
+         DC    C'38'                                             Y02144 13712502
+         DC    X'DD0136B028'            221                     SA49404 13721002
+         DC    C'41'                                            SA49404 13721502
+         DC    X'DE0136B428'            222                     SA51107 13722002
+         DC    C'41'                                            SA51107 13722502
+         DC    X'DF0134B828'            223                     YL03123 13723002
+         DC    C'41'                                            YL03123 13723502
+         DC    X'E20136BC00'            226                      Y02144 13726002
+         DC    C'41'                                             Y02144 13726502
+         DC    X'E30134C000'            227                      Y02144 13727002
+         DC    C'41'                                             Y02144 13727502
+         DC    X'E50136C428'            229                      Y02072 13729002
+         DC    C'41'                                             Y02072 13729502
+         DC    X'FC0134C844'            252                      YM1195 13752002
+         DC    C'41'                                             YM1195 13752502
+.GNOPEND ANOP                                                           13990002
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 13991002
+         DC    C'  '                                                    13991502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 13992002
+         DC    C'  '                                                    13992502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 13993002
+         DC    C'  '                                                    13993502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 13994002
+         DC    C'  '                                                    13994502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 13995002
+         DC    C'  '                                                    13995502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 13996002
+         DC    C'  '                                                    13996502
+         DC    X'00'                    END OF TABLE MARKER             13997002
+*        XCTLTABL ID=(NEXTMOD,IFG0199B,LASTLOAD,IFG0198N),       YM1447 13998002
+*              BRT=YES,LENGTH=                                   Y02080 13998502
+         XCTLTABL ID=(NEXTMOD,IFG0199B,LASTLOAD,IFG0198N),       YM1447X13998902
+               BRT=YES,LENGTH=                                   Y02080 13999502
+         AGO   .GENDSCT                                                 13999902
+.GENCL   ANOP                                                           14000002
+         DC    X'0101410400'            01                     @ZA30860 14020037
+         DC    C'08'                                           @ZA30860 14030037
+         DC    X'3D71460404'            61                              14061002
+         DC    C'15'                                                    14061502
+         DC    X'3E71460C04'            62                              14062002
+         DC    C'15'                                                    14062502
+         DC    X'3F71460804'            63                              14063002
+         DC    C'15'                                                    14063502
+         DC    X'4021460404'            64                              14064002
+         DC    C'10'                                                    14064502
+         DC    X'4121460804'            65                              14065002
+         DC    C'10'                                                    14065502
+         DC    X'5631460404'            86                              14086002
+         DC    C'11'                                                    14086502
+         DC    X'57A1460404'            87                              14087002
+         DC    C'16'                                                    14087502
+         DC    X'5841460404'            88                              14088002
+         DC    C'12'                                                    14088502
+         DC    X'5931460804'            89                              14089002
+         DC    C'11'                                                    14089502
+         DC    X'5A61460404'            90                              14090002
+         DC    C'14'                                                    14090502
+         DC    X'7000000000'            112                             14112002
+         DC    C'23'                                                    14112502
+         DC    X'79B1400400'            121                             14121002
+         DC    C'17'                                                    14121502
+         DC    X'7AB1400800'            122                             14122002
+         DC    C'17'                                                    14122502
+         DC    X'7BB1400C00'            123                             14123002
+         DC    C'17'                                                    14123502
+         DC    X'7CB1401000'            124                             14124002
+         DC    C'17'                                                    14124502
+         DC    X'7DB1401400'            125                      YM7854 14125002
+         DC    C'17'                                             YM7854 14125502
+         DC    X'7EB1401800'            126                      YM7854 14126002
+         DC    C'17'                                             YM7854 14126502
+         DC    X'EA61460828'            234                      Y02082 14234002
+         DC    C'14'                                             Y02082 14234502
+         DC    X'FA03120400'            250                      YM5395 14250002
+         DC    C'03'                                             YM5395 14250502
+         DC    X'FE61440C44'            254                      YM1195 14254002
+         DC    C'14'                                           @ZA08863 14254537
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 14991002
+         DC    C'  '                                                    14991502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 14992002
+         DC    C'  '                                                    14992502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 14993002
+         DC    C'  '                                                    14993502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 14994002
+         DC    C'  '                                                    14994502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 14995002
+         DC    C'  '                                                    14995502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 14996002
+         DC    C'  '                                                    14996502
+         DC    X'00'                    END OF TABLE MARKER             14997002
+*        XCTLTABL ID=(NEXTMOD,IFG0209B,LASTLOAD,IFG0202L),       YM1447 14998002
+*              BRT=YES,LENGTH=                                   Y02080 14998502
+         XCTLTABL ID=(NEXTMOD,IFG0209B,LASTLOAD,IFG0202L),       YM1447X14998902
+               BRT=YES,LENGTH=                                   Y02080 14999502
+         AGO   .GENDSCT                                                 14999902
+.GENTC   ANOP                                                           17000002
+         DC    X'7A71760404'            122                             17122002
+         DC    C'22'                                                    17122502
+         DC    X'7B71760804'            123                             17123002
+         DC    C'22'                                                    17123502
+         DC    X'7C71760804'            124                             17124002
+         DC    C'22'                                                    17124502
+         DC    X'7D71760C04'            125                             17125002
+         DC    C'22'                                                    17125502
+         DC    X'7E71760C04'            126                             17126002
+         DC    C'22'                                                    17126502
+         DC    X'7F11761004'            127                             17127002
+         DC    C'18'                                                    17127502
+         DC    X'8011761004'            128                             17128002
+         DC    C'18'                                                    17128502
+         DC    X'8111761804'            129                             17129002
+         DC    C'18'                                                    17129502
+         DC    X'8211761C04'            130                             17130002
+         DC    C'18'                                                    17130502
+         DC    X'8311760404'            131                             17131002
+         DC    C'18'                                                    17131502
+         DC    X'8431760404'            132                             17132002
+         DC    C'20'                                                    17132502
+         DC    X'8541760404'            133                             17133002
+         DC    C'21'                                                    17133502
+         DC    X'8611762004'            134                             17134002
+         DC    C'18'                                                    17134502
+         DC    X'8711762404'            135                             17135002
+         DC    C'18'                                                    17135502
+         DC    X'8811762804'            136                             17136002
+         DC    C'18'                                                    17136502
+         DC    X'8911761404'            137                             17137002
+         DC    C'18'                                                    17137502
+         DC    X'8A717E1004'            138                             17138002
+         DC    C'22'                                                    17138502
+         DC    X'8B11760804'            139                             17139002
+         DC    C'18'                                                    17139502
+         DC    X'8C11762C04'            140                             17140002
+         DC    C'18'                                                    17140502
+         DC    X'8D1176300C'            141                             17141002
+         DC    C'18'                                                    17141502
+         DC    X'8E00000034'            142                     SA48558 17142002
+         DC    C'25'                                            SA48558 17142502
+         DC    X'8F00000434'            143                     SA48558 17143002
+         DC    C'25'                                            SA48558 17143502
+         DC    X'9000000834'            144                     SA48558 17144002
+         DC    C'25'                                            SA48558 17144502
+         DC    X'9100000C34'            145                     SA48558 17145002
+         DC    C'25'                                            SA48558 17145502
+         DC    X'9700001034'            151                     SA58019 17151002
+         DC    C'25'                                            SA58019 17151502
+         DC    X'E911763428'            233                      Y02082 17233002
+         DC    C'18'                                             Y02082 17233502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 17991002
+         DC    C'  '                                                    17991502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 17992002
+         DC    C'  '                                                    17992502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 17993002
+         DC    C'  '                                                    17993502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 17994002
+         DC    C'  '                                                    17994502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 17995002
+         DC    C'  '                                                    17995502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 17996002
+         DC    C'  '                                                    17996502
+         DC    X'00'                    END OF TABLE MARKER             17997002
+*        XCTLTABL ID=(NEXTMOD,IFG0239B,LASTLOAD,IFG0232Z),       YM1447 17998002
+*              BRT=YES,LENGTH=                                   Y02080 17998502
+         XCTLTABL ID=(NEXTMOD,IFG0239B,LASTLOAD,IFG0232Z),       YM1447X17998902
+               BRT=YES,LENGTH=                                   Y02080 17999502
+         AGO   .GENDSCT                                                 17999902
+.GENEOV  ANOP                                                           37000002
+         DC    X'0193702800'            1                      @Z40RSDS 37001037
+         DC    C'29'                                           @Z40RSDS 37002037
+         DC    X'0293702C00'            2                      @Z40RSDS 37003037
+         DC    C'29'                                           @Z40RSDS 37004037
+         DC    X'0393703018'            3                      @Z40RSDS 37005037
+         DC    C'29'                                           @Z40RSDS 37006037
+         DC    X'0493703418'            4                      @Z40RSDS 37007037
+         DC    C'29'                                           @Z40RSDS 37008037
+         DC    X'0593703800'            5                      @Z40RSDS 37009037
+         DC    C'29'                                           @Z40RSDS 37010037
+         DC    X'0693703C00'            6                      @Z40RSDS 37011037
+         DC    C'29'                                           @Z40RSDS 37012037
+         DC    X'0793704000'            7                      @G32DSMI 37013037
+         DC    C'29'                                           @G32DSMI 37014037
+         DC    X'1521340804'            21                       YM5718 37021002
+         DC    C'43'                                             YM3111 37021502
+         DC    X'1691300C00'            22                       YM3111 37022002
+         DC    C'50'                                             YM3111 37022502
+         DC    X'6C137C2410'            108                      YM5718 37108002
+         DC    C'22'                                             YM5718 37108502
+         DC    X'6D937C2414'            109                      YM5718 37109002
+         DC    C'29'                                             YM5718 37109502
+         DC    X'6F73703400'            111                    @Y30LSFY 37111503
+         DC    C'27'                                           @Y30LSFY 37113503
+         DC    X'7073703800'            112                    @Y30LSFY 37115503
+         DC    C'27'                                           @Y30LSFY 37117503
+         DC    X'7173743C14'            113                    @G60ASRB 37118037
+         DC    C'27'                                           @G60ASRB 37118537
+         DC    X'7703100800'            119                      YM5395 37119002
+         DC    C'11'                                             YM5395 37119502
+         DC    X'8D13740404'            141                             37141002
+         DC    C'22'                                                    37141502
+         DC    X'8EB3740408'            142                             37142002
+         DC    C'30'                                                    37142502
+         DC    X'9063740404'            144                             37144002
+         DC    C'26'                                                    37144502
+         DC    X'9213740804'            146                             37146002
+         DC    C'22'                                                    37146502
+         DC    X'9313740C04'            147                             37147002
+         DC    C'22'                                                    37147502
+         DC    X'94237C043C'            148                             37148002
+         DC    C'23'                                                    37148502
+         DC    X'9563740804'            149                             37149002
+         DC    C'26'                                                    37149502
+         DC    X'9613741004'            150                             37150002
+         DC    C'22'                                                    37150502
+         DC    X'9763741404'            151                             37151002
+         DC    C'26'                                                    37151502
+         DC    X'9863741804'            152                             37152002
+         DC    C'26'                                                    37152502
+         DC    X'9963741C04'            153                             37153002
+         DC    C'26'                                                    37153502
+         DC    X'9B63742404'            155                             37155002
+         DC    C'26'                                                    37155502
+         DC    X'9CB3740408'            156                             37156002
+         DC    C'30'                                                    37156502
+         DC    X'9E63742C08'            158                             37158002
+         DC    C'26'                                                    37158502
+         DC    X'A063743404'            160                             37160002
+         DC    C'26'                                                    37160502
+         DC    X'A163743804'            161                             37161002
+         DC    C'26'                                                    37161502
+         DC    X'A263743C04'            162                             37162002
+         DC    C'26'                                                    37162502
+         DC    X'A363744004'            163                             37163002
+         DC    C'26'                                                    37163502
+         DC    X'A413741404'            164                             37164002
+         DC    C'22'                                                    37164502
+         DC    X'A523740814'            165                             37165002
+         DC    C'23'                                                    37165502
+         DC    X'A8B3700408'            168                             37168002
+         DC    C'30'                                                    37168502
+         DC    X'AB73700C04'            171                             37171002
+         DC    C'27'                                                    37171502
+         DC    X'AE33700428'            174                             37174002
+         DC    C'24'                                                    37174502
+         DC    X'AF73701404'            175                             37175002
+         DC    C'27'                                                    37175502
+         DC    X'B063740C28'            176                             37176002
+         DC    C'26'                                                    37176502
+         DC    X'B1B3740800'            177                      M0179  37177002
+         DC    C'30'                                             M0179  37177502
+         DC    X'B273741C04'            178                             37178002
+         DC    C'27'                                                    37178502
+         DC    X'B413741C10'            180                             37180002
+         DC    C'22'                                                    37180502
+         DC    X'B643710828'            182                     ZA01291 37182002
+         DC    C'25'                                             A48604 37182502
+         DC    X'B7E3740800'            183                      A47372 37183002
+         DC    C'32'                                             A47372 37183502
+         DC    X'B8E3740400'            184                             37184002
+         DC    C'32'                                                    37184502
+         DC    X'B9B3740408'            185                             37185002
+         DC    C'30'                                                    37185502
+         DC    X'BAD374041C'            186                             37186002
+         DC    C'31'                                                    37186502
+         DC    X'BB73741004'            187                             37187002
+         DC    C'27'                                                    37187502
+         DC    X'BD73740804'            189                             37189002
+         DC    C'27'                                                    37189502
+         DC    X'BE73740404'            190                             37190002
+         DC    C'27'                                                    37190502
+         DC    X'BF13741804'            191                             37191002
+         DC    C'22'                                                    37191502
+         DC    X'C063744404'            192                             37192002
+         DC    C'26'                                                    37192502
+         DC    X'C263741010'            194                             37194002
+         DC    C'26'                                                    37194502
+         DC    X'C313742010'            195                             37195002
+         DC    C'22'                                                    37195502
+         DC    X'C463744C04'            196                             37196002
+         DC    C'26'                                                    37196502
+         DC    X'C583740800'            197                             37197002
+         DC    C'28'                                                    37197502
+         DC    X'C6A3710444'            198                     ZA01291 37198002
+         DC    C'15'                                            SA52379 37198502
+         DC    X'C743700C28'            199                      YM2133 37199002
+         DC    C'25'                                             YM2133 37199502
+         DC    X'C800500400'            200                     YL03127 37200002
+         DC    C'41'                                            YL03127 37200502
+         DC    X'C900500800'            201                     YL03127 37201002
+         DC    C'41'                                            YL03127 37201502
+         DC    X'CA00200C80'            202                      Y02144 37202002
+         DC    C'36'                                             Y02144 37202502
+         DC    X'CB00201080'            203                      Y02144 37203002
+         DC    C'36'                                             Y02144 37203502
+         DC    X'CC00201480'            204                      Y02144 37204002
+         DC    C'36'                                             Y02144 37204502
+         DC    X'CD00201C80'            205                      Y02144 37205002
+         DC    C'36'                                             Y02144 37205502
+         DC    X'CE00202080'            206                      Y02144 37206002
+         DC    C'36'                                             Y02144 37206502
+         DC    X'CF00202480'            207                      Y02144 37207002
+         DC    C'36'                                             Y02144 37207502
+         DC    X'D100800480'            209                      Y02144 37209002
+         DC    C'37'                                             Y02144 37209502
+         DC    X'D200800880'            210                      Y02144 37210002
+         DC    C'37'                                             Y02144 37210502
+         DC    X'D500201880'            213                      Y02144 37213002
+         DC    C'36'                                             Y02144 37213502
+         DC    X'DA73702438'            218                     SA58102 37218002
+         DC    C'27'                                            SA58102 37218502
+         DC    X'DBA3710828'            219                     ZA01291 37219002
+         DC    C'15'                                            SA59307 37219502
+         DC    X'E6C374041C'            230                      YM5718 37230002
+         DC    C'33'                                             Y02072 37230502
+         DC    X'E7C374081C'            231                      YM5718 37231002
+         DC    C'33'                                             Y02072 37231502
+         DC    X'E873742C28'            232                      YM5718 37232002
+         DC    C'27'                                             Y02082 37232502
+         DC    X'F093701008'            240                      Y02083 37240002
+         DC    C'29'                                             Y02083 37240502
+         DC    X'F193701408'            241                      Y02083 37241002
+         DC    C'29'                                             Y02083 37241502
+         DC    X'F293701808'            242                      Y02083 37242002
+         DC    C'29'                                             Y02083 37242502
+         DC    X'F593741C1C'            245                      YM5718 37245002
+         DC    C'29'                                             Y02082 37245502
+         DC    X'F7B3740C08'            247                      YM5718 37247002
+         DC    C'30'                                             YM1238 37247502
+         DC    X'F883740C08'            248                      YM5718 37248002
+         DC    C'28'                                             YM1238 37248502
+         DC    X'F993742010'            249                      YM5718 37249002
+         DC    C'29'                                             YM1238 37249502
+         DC    X'FA7378284C'            250                    @G18MSBS 37250337
+         DC    C'27'                                           @G18MSBS 37251137
+         DC    X'FC33700828'            252                      YM3108 37252002
+         DC    C'24'                                             YM3108 37252502
+         DC    X'FD00200480'            253                      YM1433 37253002
+         DC    C'36'                                             YM1433 37253502
+         DC    X'FE00200880'            254                      YM1433 37254002
+         DC    C'36'                                             YM1433 37254502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 37991002
+         DC    C'  '                                                    37991502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 37992002
+         DC    C'  '                                                    37992502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 37993002
+         DC    C'  '                                                    37993502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 37994002
+         DC    C'  '                                                    37994502
+         DC    X'0000000000'            END OF TBL - ZAP NEW CODES HERE 37995002
+         DC    C'  '                                                    37995502
+         DC    X'00'                    END OF TABLE MARKER             37997002
+*        XCTLTABL ID=(NEXTMOD,IFG0559B,LASTLOAD,IFG0552X),       YM1447 37998002
+*              BRT=YES,LENGTH=                                   Y02080 37998502
+         XCTLTABL ID=(NEXTMOD,IFG0559B,LASTLOAD,IFG0552X),       YM1447X37998902
+               BRT=YES,LENGTH=                                   Y02080 37999502
+.GENDSCT ANOP                                                           40000002
+         EJECT                                                          40050002
+TABLE    DSECT                                                          40100002
+CODE     DS    CL1                                                      40150002
+ABCODE   DS    CL2                                                      40200002
+RETCODE  DS    CL1                                                      40250002
+TRCCODE  DS    CL1                                                      40300002
+MSGID    DS    CL2                                                      40350002
+TABLLEN  EQU   *-TABLE                  LNG OF CODE TABLE ENTRY  YM3111 40350402
+*        IECPDSCT                                                       40400002
+         IECPDSCT                                                       40450002
+*        IECDSECS CVT,MAIN,WTG,PREFX,RRPL,EXPAND=YES             Y02080 40500002
+         IECDSECS CVT,MAIN,WTG,PREFX,RRPL,EXPAND=YES             Y02080 40550002
+         MEND                                                           40600002

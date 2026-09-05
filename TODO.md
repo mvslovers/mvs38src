@@ -21,8 +21,10 @@ Then the two open ends of the macro work, both small:
 1. `IHANVT`, `UCBDADVC`, `IECDCST` have **no `++MAC` element at all** in the
    inventory. Find out what they are — members of another library, or COPY code
    that only exists inline somewhere.
-2. `ACCESS` (`TXLIB(COBOLMAC)`) is the only one of the 623 private macros that
-   is nowhere on this machine. One name, park it.
+2. Three of the 623 private macros are nowhere on this machine: **`ACCESS`**
+   (`TXLIB(COBOLMAC)`) and **`IQAMOD`**, **`IQAQAL`** — the latter two carry
+   `TXLIB(DISASM)` but are not in `NEW.ASM`'s directory. Three names, park
+   them.
 
 **Then `cmplmd370` ([cc370#110](https://github.com/mvslovers/cc370/issues/110))
 becomes the critical path again** — no comparison runs without it. Read

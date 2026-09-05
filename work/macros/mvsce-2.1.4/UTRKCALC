@@ -1,0 +1,492 @@
+UTRKCALC TITLE ' '                                                      00010038
+UTRKCALC CSECT ,                                                        00020038
+*---------------------------------------------------------------K900071 00020138
+*        MAINTENANCE LOG                                        K900071 00020238
+*---------------------------------------------------------------K900071 00020338
+* 2002/03/16   Jim Morrison                                     K900071 00020438
+*              Fix IEBCOPY ABENDS0C4                            K900071 00020538
+*---------------------------------------------------------------------- 00030038
+*                                                                       00040038
+*  TRKCALC macro support                                                00050038
+*                                                                       00060038
+*  Track balance is the number of bytes remaining on the track          00070038
+*  which are available to write data.  An empty track's track           00080038
+*  balance equals the device's track length (with an IBM standard       00090038
+*  Record Zero).  As each record is written, track balance moves        00100038
+*  towards zero.                                                        00110038
+*                                                                       00120038
+*  This code refers to a physical data block as a record.               00130038
+*                                                                       00140038
+*  Attributes: Reentrant, any key, problem or supervisor state          00150038
+*---------------------------------------------------------------------- 00160038
+*                                                                       00170038
+*  Zap to enter this code:                                              00180038
+*                                                                       00190038
+*        TM    DVCFLAGS,DVCMODU        modular device?                  00200038
+*        BNO   PATCH2                                                   00210038
+*        L     R11,DVCUFIX1            @ UTRKCALC CSECT                 00220038
+*        L     R11,0(,R11)             TRKCALC support addr             00230038
+*        BR    R11                     branch to new code               00240038
+* PATCH2 ICM   R10,1,STARKL                                             00250038
+*        B     BACK1                                                    00260038
+*                                                                       00270038
+*---------------------------------------------------------------------- 00280038
+*  TRKCALC macro support for 3380s                                      00290038
+*---------------------------------------------------------------------- 00300038
+*                                                                       00310038
+         DC    A(TRKCALC)              IEC0SCR1 TRKCALC support         00320038
+         DC    A(0)                    subsequent zaps                  00330038
+         DC    A(0)                    subsequent zaps                  00340038
+         DC    A(0)                    subsequent zaps                  00350038
+         DC    C'UTRKCALC'                                              00360038
+         DC    C'&SYSDATE'                                              00370038
+         EJECT ,                                                        00380038
+R0       EQU   0                       return value                     00390038
+R1       EQU   1                       TRKCALC parmlist ptr             00400038
+R2       EQU   2                                                        00410038
+R3       EQU   3                                                        00420038
+R4       EQU   4                                                        00430038
+R5       EQU   5                                                        00440038
+R6       EQU   6                                                        00450038
+R7       EQU   7                                                        00460038
+R8       EQU   8                                                        00470038
+R9       EQU   9                       DVCT entry ptr                   00480038
+R10      EQU   10                      work                             00490038
+R11      EQU   11                      work                             00500038
+R12      EQU   12                                                       00510038
+R13      EQU   13                                                       00520038
+R14      EQU   14                      return address                   00530038
+R15      EQU   15                      program base/return code         00540038
+*                                                                       00550038
+*  Only the above commented registers may be used                       00560038
+*                                                                       00570038
+         EJECT ,                                                        00580038
+TRKCALC  BALR  R15,0                                                    00590038
+         USING *,R15                                                    00600038
+         L     R15,MYBASE              reset base reg                   00610038
+         USING UTRKCALC,R15                                             00620038
+         USING STAR,R1                                                  00630038
+*                                                                       00640038
+         SLR   R10,R10                                                  00650038
+         SLR   R11,R11                                                  00660038
+         L     R9,0(,R1)               UCB/DCTE/DEVTYPE                 00670038
+*                                                                       00680038
+*  STARDTU = X'06' so we test both bits at once                         00690038
+*  B'.... .00.' = DVCT entry address                                    00700038
+*  B'.... .10.' = UCB address                                           00710038
+*  B'.... .11.' = devtype supplied in STARTYPE                          00720038
+*                                                                       00730038
+         TM    STARFLGS,STARDTU        DEVTYPE provided?                00740038
+         BZ    HAVEDVCT                DVCT, br                         00750038
+         IC    R11,STARTYPE            TYPE from TRKCALC macro  K900071 00760038
+         BO    HAVEDEVT                UCB, br                  K900071 00770038
+         IC    R11,19(,R9)             UCB.devtype              K900071 00780038
+*                                                                       00790038
+*  Have devtype in lo order byte of R11                                 00800038
+*                                                                       00810038
+HAVEDEVT DS    0H                                                       00820038
+         L     R9,16                   CVT ADDRESS                      00830038
+         L     R9,64(,R9)              IECZDTAB - IHADVCT macro         00840038
+         IC    R10,0(R11,R9)           device sysgen'd?                 00850038
+         LTR   R10,R10                                                  00860038
+         BZ    BADRC12                                                  00870038
+         AR    R9,R10                  @ DVCT (also called DCTE)        00880038
+         USING DVCT,R9                                                  00890038
+*                                                                       00900038
+HAVEDVCT DS    0H                                                       00910038
+         EJECT ,                                                        00920038
+*********************************************************************** 00930038
+*  sort out what we are willing to support                              00940038
+*********************************************************************** 00950038
+         TM    DVCMOD1+1,X'22'                                          00960038
+         BO    DT3390                                                   00970038
+*                                                                       00980038
+         LA    R0,20                   bad patch, not 3380              00990038
+         TM    DVCMOD1+1,X'20'                                          01000038
+         BO    DT3380                  3375 & 3380 use same code        01010038
+*                                                                       01020038
+         LA    R0,24                                                    01030038
+         CLC   DVCTRKLN,=AL2(47968)    3380 bytes/track                 01040038
+         BE    DT3380                                                   01050038
+*                                                                       01060038
+DIE      DS    0H                                                       01070038
+         DC    H'0'                    catastrophic error               01080038
+*                                                                       01090038
+*  Sorry, no ABEND macro is used since we really care about all         01100038
+*  the registers in the dump                                            01110038
+*                                                                       01120038
+DT3390   DS    0H                                                       01130038
+         L     R15,=V(UTRK3390)        support code                     01140038
+         BR    R15                     UTRK3390 returns to IEC0SCR1     01150038
+         DC    H'0'                    via R14                          01160038
+         EJECT ,                                                        01170038
+*---------------------------------------------------------------------- 01180038
+*                                                                       01190038
+*  3380 Device Characteristics Table entry - IHADVCT2 macro             01200038
+*                                                                       01210038
+*       FIELD     HEX                                                   01220038
+*       --------  ----                                                  01230038
+*  +00  DVCCYL    0376    # cylinders/device                            01240038
+*  +02  DVCTRK    000F    tracks/cyl                                    01250038
+*  +04  DVCTRKLN  BB60    bytes/track                                   01260038
+*  +06  DVCOVH1   0100    overhead value 1                              01270038
+*  +08  DVCOVNK   00      overhead decrement not keyed                  01280038
+*  +09  DVCFLAGS  10      flags: modulo device                          01290038
+*  +0A  DVCOVH2   010B    overhead value 2                              01300038
+*  +0C  DVCALT    000F    alternate tracks/volume                       01310038
+*  +0E  DVCOVR0   04E0    RPS: R0 overhead                              01320038
+*  +10  DVCSECT   DD      RPS: sectors in full track                    01330038
+*  +11  DVCSECTD  D6      RPS: data sectors                             01340038
+*  +12  DVCBPSEC  00E0    bytes/sector                                  01350038
+*  +14  DVCMOD1   0020    modulo factor = 32 bytes/cell                 01360038
+*                                                                       01370038
+*  Space on 3380s is arranged in cells, which are 32 bytes in size.     01380038
+*  With a standard R0 on the track, a CKD record will consume from      01390038
+*  16 to 1499 cells; without R0, it's 16 to 1515 cells.                 01400038
+*                                                                       01410038
+*  The number of cells occupied by a record is:  8 + K + D.             01420038
+*                                                                       01430038
+*  For key length zero, K = 0                                           01440038
+*  Else K = 7 + ( (KL + 12) / 32 )   round up to integer value          01450038
+*                                                                       01460038
+*  D = 7 + ( (DL + 12) / 32)         round up to integer value          01470038
+*                                                                       01480038
+*        KL = key length; DL = data length                              01490038
+*                                                                       01500038
+*  Space occupied by a record on a 3380 (in cells):                     01510038
+*                                                                       01520038
+*  GAP + COUNT+ECC + ÝGAP + KEY+ECC   ¨  + GAP + DATA+ECC               01530038
+*  7     1            7     (KL+12)/32     7     (DL+12)/32             01540038
+*                                                                       01550038
+*        ECC = error correcting code, which consumes 12 bytes           01560038
+*        Round up following division, space described in 32 byte cells  01570038
+*                                                                       01580038
+*  In code below, GCE = GAP + COUNT+ECC                                 01590038
+*                 GKE = GAP + KEY+ECC                                   01600038
+*                 GDE = GAP + DATA+ECC                                  01610038
+*                                                                       01620038
+         EJECT ,                                                        01630038
+*                                                                       01640038
+*  DVCOVH1 represents GAP + COUNT+ECC = (7 + 1) * 32 = 256 bytes.       01650038
+*                                                                       01660038
+*  DVCOVH2 is somewhat more clever, as it incorporates a "round up"     01670038
+*  factor which is equal to "modulo factor" minus one, thereby          01680038
+*  saving a LTR, BC, and possible LA instructions to round up           01690038
+*  following the division.                                              01700038
+*  DVCOVH2 = (GAP * 32) + ECC + "roundup factor"                        01710038
+*          = (7   * 32) + 12  + (modulo factor - 1)                     01720038
+*          =  224       + 12  + (32            - 1)                     01730038
+*          =  267 bytes                                                 01740038
+*  DVCOVH2 is utilized for both KL and DL.                              01750038
+*  At least that's the way IBM does it.                                 01760038
+*                                                                       01770038
+*  Personally, I prefer:                                                01780038
+*  DVCOVH1 = (GAP*32) + (COUNT+ECC)*32 + (GAP*32) + 12 + (32 - 1)       01790038
+*          = 492 bytes overhead for DATA (and COUNT+ECC and two gaps)   01800038
+*  DVCOVH2 = (GAP*32) + 12 + (32 - 1)                                   01810038
+*          = 267 bytes overhead for KEY (and one gap)                   01820038
+*  BUT ... there's maintenance on MVS38j, and some of it probably       01830038
+*  "knows" how IBM does it, so I'm going with IBM's way.                01840038
+*---------------------------------------------------------------------- 01850038
+         EJECT ,                                                        01860038
+*---------------------------------------------------------------------- 01870038
+*  3380 support                                                         01880038
+*---------------------------------------------------------------------- 01890038
+DT3380   DS    0H                                                       01900038
+         LH    R0,DVCMOD1              modulo factor = 32 bytes/cell    01910038
+         SLR   R10,R10                                                  01920038
+         SLR   R11,R11                                                  01930038
+*---------------------------------------------------------------------- 01940038
+*  Calculate # bytes needed for GCEÝGKE¨GDE for one record              01950038
+*---------------------------------------------------------------------- 01960038
+*                                                                       01970038
+*  calculate key overhead                                               01980038
+*                                                                       01990038
+         ICM   R11,1,STARKL            keyed?                           02000038
+         BZ    NOKEY                                                    02010038
+         AH    R11,DVCOVH2             add key overhead                 02020038
+         DR    R10,R0                  divide by modulo factor          02030038
+*                                      r11=GKE cells needed             02040038
+NOKEY    DS    0H                                                       02050038
+*                                                                       02060038
+*  calculate data overhead                                              02070038
+*                                                                       02080038
+         SLR   R10,R10                                                  02090038
+         ICM   R10,3,STARDL            caller's data length             02100038
+         BNZ   HAVEDL                                                   02110038
+         LA    R10,1                   default data length = 1          02120038
+HAVEDL   DS    0H                                                       02130038
+         AH    R10,DVCOVH2             add data overhead (GE)           02140038
+         LR    R15,R11                 save key overhead cells          02150038
+         LR    R11,R10                                                  02160038
+         SLR   R10,R10                                                  02170038
+         DR    R10,R0                  convert to cells                 02180038
+         AR    R11,R15                 r11 = ÝGKE¨GDE cells needed      02190038
+*                                                                       02200038
+         BALR  R15,0                   restore base reg                 02210038
+         USING *,R15                                                    02220038
+         L     R15,MYBASE                                               02230038
+         USING UTRKCALC,R15                                             02240038
+*                                                                       02250038
+*  account for leading GAP + COUNT+ECC                                  02260038
+*                                                                       02270038
+         MR    R10,R0                  bytes for ÝGKE¨GDE               02280038
+*                                                                       02290038
+         AH    R11,DVCOVH1             add GAP + COUNT+ECC overhead     02300038
+         LR    R10,R11                 bytes for GCEÝGKE¨GDE            02310038
+         EJECT ,                                                        02320038
+*---------------------------------------------------------------------- 02330038
+*  Calculate provisional balance                                        02340038
+*---------------------------------------------------------------------- 02350038
+*  Applies to both FUNCTN=TRKBAL and FUNCTN=TRKCAP                      02360038
+*                                                                       02370038
+         CLI   STARR,X'01'             RECORD=1?                        02380038
+         BNE   NOTR1                                                    02390038
+*                                                                       02400038
+** record 1                                                             02410038
+*                                                                       02420038
+         SLR   R11,R11                                                  02430038
+         ICM   R11,3,DVCTRKLN          track balance = track length     02440038
+         STH   R11,STARBAL             also provide to caller           02450038
+*                                                                       02460038
+*  REMOVE=YES only supported by FUNCTN=TRKBAL                           02470038
+*                                                                       02480038
+         TM    STARFLGS,STARREMV       REMOVE=YES?                      02490038
+         BNO   HAVEBAL                 no, br to LEAVE Rec1 on track    02500038
+*                                                                       02510038
+* record 1, remove ... just return track capacity w/ Standard R0        02520038
+*                                                                       02530038
+         LR    R0,R11                  R0 = track balance               02540038
+         SLR   R15,R15                 rc=0                             02550038
+         BR    R14                     return to caller                 02560038
+*                                                                       02570038
+** not record 1                                                         02580038
+*                                                                       02590038
+NOTR1    DS    0H                                                       02600038
+         TM    STARFLGS,STARUBAL       caller provided BALANCE?         02610038
+         BO    HAVEBAL                                                  02620038
+*                                                                       02630038
+*  calculate balance, given record #                                    02640038
+*  R10 = bytes for GCEÝGKE¨GDE per record                               02650038
+CALCBAL  DS    0H                                                       02660038
+         LR    R0,R10                  save bytes/rec                   02670038
+         SLR   R11,R11                                                  02680038
+         IC    R11,STARR               record #                         02690038
+         TM    STARFLGS,STARREMV       REMOVE=YES?                      02700038
+         BO    CALCBAL2                                                 02710038
+         BCTR  R11,0                   remove the record                02720038
+CALCBAL2 DS    0H                                                       02730038
+         MR    R10,R0                  # records * (# bytes/rec)        02740038
+         SLR   R10,R10                                                  02750038
+         ICM   R10,3,DVCTRKLN          track length                     02760038
+         SR    R10,R11                 minus bytes needed               02770038
+         STH   R10,STARBAL             new balance                      02780038
+         LR    R10,R0                  # bytes/rec                      02790038
+*                                                                       02800038
+*  STARBAL SET (via caller or just calculated)                          02810038
+*                                                                       02820038
+HAVEBAL  DS    0H                                                       02830038
+         SLR   R0,R0                                                    02840038
+         ICM   R0,3,STARBAL            track balance                    02850038
+         EJECT ,                                                        02860038
+*---------------------------------------------------------------------- 02870038
+*  Select FUNCTION= routine                                             02880038
+*---------------------------------------------------------------------- 02890038
+         TM    STARFLGS,STARFUNC       FUNCTN=TRKCAP?                   02900038
+         BNO   TRKBAL                  no, br to TRKBAL function        02910038
+         EJECT ,                                                        02920038
+*---------------------------------------------------------------------- 02930038
+*  TRKCAP                                                               02940038
+*                                                                       02950038
+*  Calculates and returns in R0 the number of fixed-length records      02960038
+*  that may be written on a whole track (R=1) or on a partially         02970038
+*  filled track (R not = 1).                                            02980038
+*  TRKCAP does not support REMOVE=YES or MAXSIZE=YES.                   02990038
+*                                                                       03000038
+*  Refer to the TRKCALC macro documentation for further details.        03010038
+*---------------------------------------------------------------------- 03020038
+*  R10 = bytes/rec                                                      03030038
+*  R0  = balance                                                        03040038
+TRKCAP   DS    0H                                                       03050038
+*                                                                       03060038
+*  Does at least one block fit on the space remaining on the track?     03070038
+*                                                                       03080038
+         LR    R11,R0                  balance                          03090038
+         LR    R0,R10                  bytes/rec                        03100038
+         SLR   R10,R10                                                  03110038
+         DR    R10,R0                  balance / (bytes/rec)            03120038
+         LTR   R0,R11                  = # blks/trk                     03130038
+         BNP   CAPNOFIT                doesn't fit; rc=4                03140038
+*                                                                       03150038
+*  R0 contains the number of records that fit on the                    03160038
+*  track if R=1, or # records that fit on the remainder                 03170038
+*  of the track if R not = 1.                                           03180038
+*                                                                       03190038
+         SLR   R15,R15                 fits; rc=0                       03200038
+         BR    R14                     return to caller                 03210038
+*                                                                       03220038
+CAPNOFIT DS    0H                                                       03230038
+         SLR   R0,R0                                                    03240038
+         LA    R15,4                   doesn't fit; rc=4                03250038
+         BR    R14                     return to caller                 03260038
+*                                                                       03270038
+         EJECT ,                                                        03280038
+*---------------------------------------------------------------------- 03290038
+*  TRKBAL                                                               03300038
+*                                                                       03310038
+*  If REMOVE=NO, calculates whether an additional record fits on the    03320038
+*  track and what the new track balance would be if the record          03330038
+*  were added.                                                          03340038
+*                                                                       03350038
+*  If REMOVE=YES, calculates what the new track balance would be if     03360038
+*  a record were removed from the track.                                03370038
+*                                                                       03380038
+*  The record to be added or removed is defined by the RKDD             03390038
+*  (or R, K, and DD) parm(s).                                           03400038
+*                                                                       03410038
+*  If R=1 & REMOVE=NO, R1 is added to an empty track.                   03420038
+*  If R=1 & REMOVE=YES, R1 is removed from the track, leaving an        03430038
+*  empty track.                                                         03440038
+*                                                                       03450038
+*  If R not = 1, the specified record is added/removed from the track.  03460038
+*  The input track balance may be supplied via the BALANCE parm;        03470038
+*  if not supplied, the track is assumed to contain equal-sized         03480038
+*  records as specified by RKDD (or R, K, and DD) parm(s).              03490038
+*                                                                       03500038
+*  Refer to the TRKCALC macro documentation for further details.        03510038
+*---------------------------------------------------------------------- 03520038
+*  R10 = # bytes needed per record                                      03530038
+*  R0  = balance                                                        03540038
+*                                                                       03550038
+TRKBAL   DS    0H                                                       03560038
+         TM    STARFLGS,STARREMV       REMOVE=YES?                      03570038
+         BNO   BALEAVE                                                  03580038
+*                                                                       03590038
+         AR    R0,R10                  reclaim removed rec's space      03600038
+         STH   R0,STARBAL              return new balance to caller     03610038
+         SLR   R15,R15                 rc=0                             03620038
+         BR    R14                     return to caller                 03630038
+*                                                                       03640038
+BALEAVE  CR    R0,R10                  record fits?                     03650038
+         BL    CKMAX                   doesn't fit, check MAXSIZE       03660038
+*                                                                       03670038
+         SR    R0,R10                  fits, calculate new balance      03680038
+         STH   R0,STARBAL              return new balance to caller     03690038
+         SLR   R15,R15                 rc=0                             03700038
+         BR    R14                     return to caller                 03710038
+         EJECT ,                                                        03720038
+*                                                                       03730038
+*  TRKBAL record doesn't fit, see if MAXSIZE specified                  03740038
+*                                                                       03750038
+CKMAX    DS    0H                                                       03760038
+         TM    STARFLGS,STARMAXS       MAXSIZE=YES?                     03770038
+         BNO   NOFITRC                                                  03780038
+*                                                                       03790038
+*  TRKBAL: MAXSIZE=YES, record doesn't fit                              03800038
+*                                                                       03810038
+*  Record does not fit on the track.  MAXSIZE=YES was specified         03820038
+*  and a partial record might fit.  If it does, RC=8, and R0 is         03830038
+*  set to the maximum number of data bytes that fit on the              03840038
+*  remainder of the track with the specified key length.                03850038
+*                                                                       03860038
+*  NOTE: The key length is excluded from the count of                   03870038
+*  maximum data bytes returned to the caller.                           03880038
+*                                                                       03890038
+*  Notation used below:                                                 03900038
+*        Dc = Caller's DL                                               03910038
+*        Dm = MAXSIZE DL                                                03920038
+*                                                                       03930038
+*  Here's the situation visually:                                       03940038
+*                                                                       03950038
+*  ¦-------------track length-----------¦                               03960038
+*  ¦-----old data-----¦-----balance-----¦                               03970038
+*  ¦-----old data-----¦-----GCEÝGKE¨GDcE-----¦                          03980038
+*                                                                       03990038
+*  To calculate the MAXSIZE value, we reduce DL such that               04000038
+*                                                                       04010038
+*  ¦-------------track length-----------¦                               04020038
+*  ¦-----old data-----¦-----balance-----¦                               04030038
+*  ¦-----old data-----¦---GCEÝGKE¨GDmE--¦                               04040038
+*                                                                       04050038
+*  The reduced DL (Dm) is what is returned to the caller.               04060038
+*  STARBAL is not updated in this instance.                             04070038
+*                                                                       04080038
+*  We want BALANCE = GCEÝGKE¨GDmE                                       04090038
+*  such that the returned DL will cause record to use                   04100038
+*  the rest of the track.                                               04110038
+*                                                                       04120038
+*  Some "formulas" to keep in mind:                                     04130038
+*  BALANCE - GCEÝGKE¨ = GDmE                                            04140038
+*  GCEÝGKE¨ = GCEÝGKE¨GDcE - GDcE                                       04150038
+*                                                                       04160038
+*  R10 = GCEÝGKE¨GDcE (caller's DL)                                     04170038
+*  R0  = balance                                                        04180038
+*                                                                       04190038
+*  BALANCE - GCEÝGKE¨ = GDmE                                            04200038
+*  BALANCE - (GCEÝGKE¨GDcE - GDcE) = GDmE                               04210038
+*  BALANCE - (R10 - mod((DL + DVCOVH2), 32)) = GDmE                     04220038
+*  BALANCE - R10 + mod((DL + DVCOVH2),32) = GDmE                        04230038
+*                                                                       04240038
+         SR    R0,R10                  BALANCE - GCEÝGKE¨GDcE           04250038
+*                                                                       04260038
+         SLR   R11,R11                                                  04270038
+         SLR   R10,R10                                                  04280038
+         ICM   R11,3,STARDL            data length                      04290038
+         LH    R1,DVCMOD1              modulo factor                    04300038
+         DROP  R1                                                       04310038
+         AH    R11,DVCOVH2             = GDcE bytes + round up          04320038
+         DR    R10,R1                  R11 = # cells for GDcE           04330038
+         MR    R10,R1                  R11 = GDcE bytes                 04340038
+         AR    R0,R11                  R0 = BALANCE + GDcE = GDmE       04350038
+*                                                                       04360038
+*  R0 now contains GDmE, proceed to calculate Dm:                       04370038
+*  GDE = mod((GAP + DL + 12), 32)                                       04380038
+*  but since we want to use all bytes in each cell, this                04390038
+*  should do the trick (assuming GDmE represents an                     04400038
+*  integral number of cells, which it should):                          04410038
+*  GDmE = GAP + DL + ECC                                                04420038
+*      = (7x32) + DL + 12                                               04430038
+*      = 236 + DL                                                       04440038
+*  GDE - 236 = DL                                                       04450038
+*  To use DVCOVH2 = 267 = 236 + (32 - 1):                               04460038
+*  GDE - DVCOVH2 + DVCMOD1 - 1 = DL                                     04470038
+*                                                                       04480038
+         SH    R0,DVCOVH2              - DVCOVH2                        04490038
+         AR    R0,R1                   + DVCMOD1                        04500038
+         LA    R11,1                                                    04510038
+         SR    R0,R11                  - 1                              04520038
+         BNP   NOFITRC                 still doesn't fit                04530038
+*                                                                       04540038
+NFMAXRC  DS    0H                                                       04550038
+         LA    R15,8                   record d/n fit, MAXSIZE spec'd   04560038
+         BR    R14                     return w/ rc=8, R0=Dm            04570038
+*                                                                       04580038
+*  doesn't fit                                                          04590038
+*                                                                       04600038
+NOFITRC  DS    0H                                                       04610038
+         SLR   R0,R0                                                    04620038
+         LA    R15,4                   rc=4                             04630038
+         BR    R14                     return to caller                 04640038
+*                                                                       04650038
+BADRC12  DS    0H                                                       04660038
+         LA    R15,12                  device type not in system        04670038
+         SLR   R0,R0                                                    04680038
+         BR    R14                                                      04690038
+         EJECT ,                                                        04700038
+*---------------------------------------------------------------------- 04710038
+*  DATA AREAS and PATCH AREA                                            04720038
+*---------------------------------------------------------------------- 04730038
+*                                                                       04740038
+MYBASE   DC    A(UTRKCALC)             base reg value                   04750038
+*                                                                       04760038
+         LTORG ,                                                        04770038
+*                                                                       04780038
+         PRINT DATA                                                     04790038
+PATCH    DC    32S(*)                  patch area                       04800038
+         PRINT NODATA                                                   04810038
+         EJECT ,                                                        04820038
+         IHADVCT2 ,                    DVCT for 3380s & 3390s           04830038
+         EJECT ,                                                        04840038
+STAR     DSECT ,                                                        04850038
+         TRKCALC MF=D                                                   04860038
+         END   ,                                                        04870038

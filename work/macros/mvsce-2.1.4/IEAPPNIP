@@ -1,0 +1,477 @@
+         MACRO ,
+&LABEL   IEAPPNIP &PARM=,&DSECT=NO,&TYPE=ENTRY
+.*****************************************************************
+.*
+.* 2003/04/08 NIP system parameters table generation and mappping.
+.*
+.* Invocation format:
+.*
+.*  label   IEAPPNIP     TYPE= GENERATE | INITIAL | ENTRY | FINAL
+.*                      ,PARM=value
+.*                      ,DSECT= YES | NO
+.*
+.*      Where:
+.*
+.*       label
+.*          is an optional 1 to 8 character alphanumeric character
+.*          input string, starting in column 1 (that is, the assembler
+.*          label on the macro).
+.*          DEFAULT: Null label.
+.*
+.*       TYPE= GENERATE | INITIAL  | ENTRY | FINAL
+.*          describes the type of macro invocation, and is one of:
+.*
+.*          GENERATE
+.*             to generate the entire system parameters table.
+.*             There should only be one occurrence of TYPE=GENERATE
+.*             in IEAVNP03.
+.*
+.*          INITIAL
+.*             to create the initial system parameters table entry.
+.*             TYPE=INITIAL should be coded only in the TYPE=GENERATE
+.*             expansion of the IEAPPNIP macro, and should only
+.*             appear once, prior to all IEAPPNIP macros with
+.*             TYPE=ENTRY.
+.*
+.*          ENTRY
+.*             to create one system parameter table entry.  When
+.*             TYPE=ENTRY is specified, the PARM= parameter must
+.*             also be specified to define the value for the
+.*             parameter table entry.  IEAPPNIP macros with TYPE=ENTRY
+.*             should be coded only in the TYPE=GENERATE expansion of
+.*             the IEAPPNIP macro, between the TYPE=INITIAL macro
+.*             that marks the beginning of the system parameters
+.*             table and the TYPE=FINAL macro that signals the end.
+.*
+.*          FINAL
+.*             to create the final system parameters table entry.
+.*             TYPE=FINAL should be coded only in the TYPE=GENERATE
+.*             expansion of the IEAPPNIP macro, and should only
+.*             appear once, after all IEAPPNIP macros with TYPE=ENTRY.
+.*
+.*          DEFAULT: ENTRY
+.*
+.*       PARM=value
+.*          defines the value for one system parameter table entry.
+.*          PARM is required when TYPE=ENTRY is specified.  "value"
+.*          may be specified in either of two ways:
+.*
+.*          o   As a simple quoted string.  In this case, the
+.*              string is assumed to be a character string that
+.*              is eight or fewer characters.  If the string is
+.*              exactly eight bytes long, a "DC CL8'value'" constant
+.*              is generated.  If the string is shorter than eight
+.*              bytes, a "DC CL7'value'" constant is generated followed
+.*              by a one-byte binary field containing the length of
+.*              the string.
+.*
+.*          o   As a raw string.  The string is considered "raw"
+.*              if the first character of PARM is not a "'".  In
+.*              this case, the entire value of PARM is generated
+.*              as-is without modification as the operand of a "DC".
+.*
+.*          DEFAULT: none
+.*
+.*       DSECT= YES | NO
+.*          is an optional parameter to specify whether the macro
+.*          should generate mapping DSECTs (YES) or actual code (NO).
+.*          If DSECT=YES is specified, no other parameters should
+.*          be specified.  If DSECT=NO is specified or defaulted,
+.*          the TYPE parameter is required, and the PARM parameter
+.*          is also required if TYPE=ENTRY.
+.*          DEFAULT: NO
+.*
+.* Notes:
+.*
+.*      New system parameters must be added in two places:
+.*
+.*          o   To the generated system parameter table after
+.*              label NP3IBMEN.
+.*
+.*          o   To the DSECT that maps the system parameter
+.*              table, after label PPENDIBM.
+.*
+.*      The generated table and the DSECT must match.
+.*
+.* Change activity:
+.*
+.*   Flag  Date        By    Description
+.*   ----  ----------  ----  -----------------------------------
+.*
+.*
+.*****************************************************************
+.*
+         LCLA  &PARMLEN
+.*
+.*---------------------------------------------------------------*
+.*       Test if DSECTs are to be generated.  If so, go to       *
+.*       generate them.                                          *
+.*---------------------------------------------------------------*
+         AIF   ('&DSECT' EQ 'YES').DSECTS
+.*
+.*---------------------------------------------------------------*
+.*       Test for specification of TYPE=GENERATE and go          *
+.*       to generate the table code if so.                       *
+.*---------------------------------------------------------------*
+         AIF   ('&TYPE' EQ 'GENERATE').GEN
+.*
+.*---------------------------------------------------------------*
+.*       Not TYPE=GENERATE.  Test for TYPE=INITIAL, and go       *
+.*       to create the first table entry if TYPE=INITIAL.        *
+.*---------------------------------------------------------------*
+         AIF   ('&TYPE' EQ 'INITIAL').INITIAL
+.*
+.*---------------------------------------------------------------*
+.*       Not TYPE=INITIAL.  Test for TYPE=FINAL, and go          *
+.*       to create the last table entry if TYPE=FINAL.           *
+.*---------------------------------------------------------------*
+         AIF   ('&TYPE' EQ 'FINAL').FINAL
+.*
+.*---------------------------------------------------------------*
+.*       The only remaining valid possibility for TYPE           *
+.*       is TYPE=ENTRY.  Test for that, and exit with            *
+.*       with error if anything else was specified.              *
+.*---------------------------------------------------------------*
+         AIF   ('&TYPE' NE 'ENTRY').E1
+.*
+.*---------------------------------------------------------------*
+.*       TYPE is ENTRY.  PARM is required for TYPE=ENTRY.        *
+.*       Verify that it is present and exit with error           *
+.*       if not.                                                 *
+.*---------------------------------------------------------------*
+         AIF   ('&PARM' EQ '').E2
+.*
+.*---------------------------------------------------------------*
+.*       TYPE is ENTRY.  Test for raw parm value.                *
+.*---------------------------------------------------------------*
+&PARMLEN SETA  K'&PARM
+         AIF   ('&PARM'(1,1) NE '''').ENTRAW
+.*
+.*---------------------------------------------------------------*
+.*       TYPE is ENTRY and PARM value starts with a quote,       *
+.*       so we will assume it's a simple quoted string.          *
+.*       Determine the string length not counting the            *
+.*       enclosing quotes.  If the string is 8 bytes long,       *
+.*       go create an 8 byte entry with no length byte.          *
+.*       Otherwise, go create a 7 byte entry with a 1 byte       *
+.*       length field.                                           *
+.*---------------------------------------------------------------*
+&PARMLEN SETA  K'&PARM-2
+         AIF   (&PARMLEN GT 8).E3
+         AIF   (&PARMLEN EQ 8).ENT8
+         AGO   .ENT7
+.*
+.*---------------------------------------------------------------*
+.*       TYPE=INITIAL.  Create the first table entry.            *
+.*---------------------------------------------------------------*
+.INITIAL ANOP  ,
+&LABEL   DC    X'FF00000000000001' Initial entry
+         MEXIT ,
+.*
+.*---------------------------------------------------------------*
+.*       TYPE=FINAL.  Create the last table entry.               *
+.*---------------------------------------------------------------*
+.FINAL   ANOP  ,
+&LABEL   DC    X'FF00000000000001' Final entry
+         MEXIT ,
+.*
+.*---------------------------------------------------------------*
+.*       TYPE=ENTRY parameter value is a simple quoted           *
+.*       string, and the string is exactly 8 bytes long.         *
+.*       Create 8 byte table entry with no length field.         *
+.*---------------------------------------------------------------*
+.ENT8    ANOP  ,
+&LABEL   DC    CL8&PARM            Parameter value
+         MEXIT ,
+.*
+.*---------------------------------------------------------------*
+.*       TYPE=ENTRY parameter value is a simple quoted           *
+.*       string, and the string is less than 8 bytes long.       *
+.*       Create table entry that is 7 bytes long with a 1        *
+.*       byte length field.                                      *
+.*---------------------------------------------------------------*
+.ENT7    ANOP  ,
+&LABEL   DC    CL7&PARM            Parameter value
+         DC    AL1(&PARMLEN)       Parameter length
+         MEXIT ,
+.*
+.*---------------------------------------------------------------*
+.*       Raw parameter.  Create table entry that is              *
+.*       exactly the specified value.                            *
+.*---------------------------------------------------------------*
+.ENTRAW  ANOP  ,
+&LABEL   DC    &PARM               Parameter value
+         MEXIT ,
+.*
+.*---------------------------------------------------------------*
+.*       TYPE=GENERATE.  Generate code for the entire            *
+.*       parameter table.                                        *
+.*---------------------------------------------------------------*
+.GEN     ANOP  ,
+SYMBSTRT IEAPPNIP TYPE=INITIAL
+*----------------------------------------------------------------*
+*        Start of IBM-defined parameters.  Because IBM           *
+*        NIP modules assume offsets into this table for          *
+*        specific parameters, the IBM-defined parameters         *
+*        must not be changed, reordered or deleted, and          *
+*        new parameters must not be inserted among the           *
+*        IBM-defined parameters.  Place all new parameters       *
+*        following the IBM defined section.                      *
+*----------------------------------------------------------------*
+NP3APF   IEAPPNIP TYPE=ENTRY,PARM='APF='
+NP3APG   IEAPPNIP TYPE=ENTRY,PARM='APG='
+NP3BLDL  IEAPPNIP TYPE=ENTRY,PARM='BLDL='
+NP3BLDLF IEAPPNIP TYPE=ENTRY,PARM='BLDLF='
+NP3CLPA  IEAPPNIP TYPE=ENTRY,PARM='CLPA'
+NP3CMD   IEAPPNIP TYPE=ENTRY,PARM='CMD='
+NP3CNTN  IEAPPNIP TYPE=ENTRY,PARM='CONT'
+NP3CPQE  IEAPPNIP TYPE=ENTRY,PARM='CPQE='
+NP3CSA   IEAPPNIP TYPE=ENTRY,PARM='CSA='
+NP3CVAM  IEAPPNIP TYPE=ENTRY,PARM='CVIO'
+NP3DUMP  IEAPPNIP TYPE=ENTRY,PARM='DUMP='
+NP3FIX   IEAPPNIP TYPE=ENTRY,PARM='FIX='
+NP3HCPY  IEAPPNIP TYPE=ENTRY,PARM='HARDCPY='
+NP3IPS   IEAPPNIP TYPE=ENTRY,PARM='IPS='
+NP3LNK   IEAPPNIP TYPE=ENTRY,PARM='LNK='
+NP3LOGC  IEAPPNIP TYPE=ENTRY,PARM='LOGCLS='
+NP3LOGL  IEAPPNIP TYPE=ENTRY,PARM='LOGLMT='
+NP3MAXUS IEAPPNIP TYPE=ENTRY,PARM='MAXUSER='
+NP3MLPA  IEAPPNIP TYPE=ENTRY,PARM='MLPA='
+NP3NUCM  IEAPPNIP TYPE=ENTRY,PARM='NUCMAP'
+NP3OPI   IEAPPNIP TYPE=ENTRY,PARM='OPI='
+NP3OPT   IEAPPNIP TYPE=ENTRY,PARM='OPT='
+NP3PAGE  IEAPPNIP TYPE=ENTRY,PARM='PAGE='
+NP3DP    IEAPPNIP TYPE=ENTRY,PARM=X'0000000000000001'
+NP3REAL  IEAPPNIP TYPE=ENTRY,PARM='REAL='
+NP3SMF   IEAPPNIP TYPE=ENTRY,PARM='SMF='
+NP3SQA   IEAPPNIP TYPE=ENTRY,PARM='SQA='
+NP3SYSX  IEAPPNIP TYPE=ENTRY,PARM='SYSP='
+NP3VAP   IEAPPNIP TYPE=ENTRY,PARM='VAL='
+NP3VRREG IEAPPNIP TYPE=ENTRY,PARM='VRREGN='
+NP3WTOBF IEAPPNIP TYPE=ENTRY,PARM='WTOBFRS='
+NP3WTORB IEAPPNIP TYPE=ENTRY,PARM='WTORPLY='
+NP3PURGE IEAPPNIP TYPE=ENTRY,PARM='PURGE'
+         IEAPPNIP TYPE=ENTRY,PARM=X'0000000000000007'
+NP3RSU   IEAPPNIP TYPE=ENTRY,PARM='RSU='
+NP3SWAP  IEAPPNIP TYPE=ENTRY,PARM='SWAP='
+NP3PAGNU IEAPPNIP TYPE=ENTRY,PARM='PAGNUM='
+NP3DUPLE IEAPPNIP TYPE=ENTRY,PARM='DUPLEX='
+         SPACE 1
+*----------------------------------------------------------------*
+*        End of IBM-defined parameters.  Additional              *
+*        system parameters should be placed here.                *
+*----------------------------------------------------------------*
+NP3IBMEN EQU   *                   End of IBM-defined parameters
+NP3PRISU IEAPPNIP TYPE=ENTRY,PARM='PRISUB='
+         SPACE 1
+SYMBEND  IEAPPNIP TYPE=FINAL
+.GENDONE MEXIT ,
+.*
+.*---------------------------------------------------------------*
+.*       DSECT=YES was specfied.  Generate DSECTs for NIP        *
+.*       Parameter Area and Parameter Address Table.             *
+.*---------------------------------------------------------------*
+.DSECTS  ANOP  ,
+*      %INCLUDE SYSLIB(IEAPPNIP)                                   */
+*/*  *****************************************************************/
+*/*                          I E A P P N I P                         */
+*/*     MAPPING OF NIP PARAMETER AREA AND PARAMETER ADDRESS TABLE    */
+*/*                                                                  */
+*/*                     DATE=05/22/74,VS2-3 VERSION                  */
+*/*                                                                  */
+*/*  *****************************************************************/
+*/*  *****          NIP  PARAMETER  AREA  (NIPPAREA)            ******/
+*
+*----------------------------------------------------------------*
+*        NIP Parameter Area header.                              *
+*----------------------------------------------------------------*
+NIPPAHD# DSECT ,                   NIP Parameter Area header
+NIPPAQ   DS    A                   Address of next NPA or zero
+NIPPABYT DS    A                   Next available byte
+NIPPAHDR EQU   NIPPAHD#,*-NIPPAHD# Alias with length
+*
+*----------------------------------------------------------------*
+*        NIP Parameter Address Table (PARMTAB).                  *
+*----------------------------------------------------------------*
+PARMTAB# DSECT ,                   BEGIN PARAMETER ADDRESS TAB
+PTABSTRT DS    CL8                 DUMMY HEADER
+*----------------------------------------------------------------*
+*        Start of IBM-defined parameters.  Because IBM           *
+*        NIP modules assume offsets into this table for          *
+*        specific parameters, the IBM-defined parameters         *
+*        must not be changed, reordered or deleted.  New         *
+*        parameters must be placed following the IBM             *
+*        defined section.                                        *
+*----------------------------------------------------------------*
+APF      DS    A                   Authorized program libraries
+         DS    XL4                   Flags and source ID
+APG      DS    A                   Automatic priority group
+         DS    XL4                   Flags and source ID
+BLDL     DS    A                   PARMLIB member for BLDL
+         DS    XL4                   Flags and source ID
+BLDLF    DS    A                   Fixed BLDL list
+         DS    XL4                   Flags and source ID
+CLPA     DS    A                   Create link pack area
+         DS    XL4                   Flags and source ID
+CMD      DS    A                   Canned operator commands
+         DS    XL4                   Flags and source ID
+CONT     DS    A                   Line continuation
+         DS    XL4                   Flags and source ID
+CPQE     DS    A                   Channel prog queue extension
+         DS    XL4                   Flags and source ID
+CSA      DS    A                   Common service area size
+         DS    XL4                   Flags and source ID
+CVIO     DS    A                   Warm start VIO data sets
+         DS    XL4                   Flags and source ID
+DUMP     DS    A                   Tape for SYS1.DUMP
+         DS    XL4                   Flags and source ID
+FIX      DS    A                   Routines in fixed LPA extn
+         DS    XL4                   Flags and source ID
+HARDCPY  DS    A                   Hardcopy log
+         DS    XL4                   Flags and source ID
+IPS      DS    A                   Optimizer IPS group
+         DS    XL4                   Flags and source ID
+LNK      DS    A                   LNKLSTxx values
+         DS    XL4                   Flags and source ID
+LOGCLS   DS    A                   Log class values
+         DS    XL4                   Flags and source ID
+LOGLMT   DS    A                   Log limit values
+         DS    XL4                   Flags and source ID
+MAXUSER  DS    A                   Maximum no. of address spaces
+         DS    XL4                   Flags and source ID
+MLPA     DS    A                   Routines in LPA extension
+         DS    XL4                   Flags and source ID
+NUCMAP   DS    A                   Build another nucmap for DSS
+         DS    XL4                   Flags and source ID
+OPI      DS    A                   Operator intervention
+         DS    XL4                   Flags and source ID
+OPT      DS    A                   Optimizer tuning parameters
+         DS    XL4                   Flags and source ID
+PAGEP    DS    A                   Page DS parms - PARMLIB
+         DS    XL4                   Flags and source ID
+PAGEO    DS    A                   Page DS parms - operator
+         DS    XL4                   Flags and source ID
+REAL     DS    A                   V=R address limit
+         DS    XL4                   Flags and source ID
+SMF      DS    A                   Ptr to SMF parmlib member
+         DS    XL4                   Flags and source ID
+SQA      DS    A                   SQA virtual space
+         DS    XL4                   Flags and source ID
+SYSP     DS    A                   System parameter list
+         DS    XL4                   Flags and source ID
+VAL      DS    A                   Volume attribute processing
+         DS    XL4                   Flags and source ID
+VRREGN   DS    A                   Default V=R space allocated
+         DS    XL4                   Flags and source ID
+WTOBFRS  DS    A                   Number of WTO buffers
+         DS    XL4                   Flags and source ID
+WTORPLY  DS    A                   WTOR reply buffer number
+         DS    XL4                   Flags and source ID
+PURGE    DS    A                   Purge keyword
+         DS    XL4                   Flags and source ID
+NIPPAF   DS    0CL8                PARMLIB read Flags
+NIPPAFLG DS    XL1                 PARMLIB read Flags
+NIPPAFL1 EQU   X'80'               -- Member not found msg suppress
+*        EQU   X'7F'               -- Reserved
+         DS    XL7                 Reserved
+RSU      DS    A                   RSU parm pointer
+         DS    XL4                   Flags and source ID
+SWAP     DS    A                   Swap data sets
+         DS    XL4                   Flags and source ID
+PAGNUM   DS    A                   Page/swap DS additions
+         DS    XL4                   Flags and source ID
+DUPLEX   DS    A                   Common duplex option
+         DS    XL4                   Flags and source ID
+*----------------------------------------------------------------*
+*        End of IBM-defined parameters.  Additional              *
+*        system parameters should be placed here.                *
+*----------------------------------------------------------------*
+PPENDIBM EQU   *                   End of IBM-defined parameters
+PRISUB   DS    A                   Primary job entry subsystem
+         DS    XL4                   Flags and source ID
+.*
+PTABEND  DS    2A                  DUMMY TRAILER
+PARMTAB  EQU   PARMTAB#,*-PARMTAB# ALIAS WITH LENGTH
+         EJECT ,
+*----------------------------------------------------------------*
+*        NIP Parameter Table (PARMTAB) entry mapping.            *
+*----------------------------------------------------------------*
+NIPPTE#  DSECT ,                   Begin PARMTAB entry
+NIPPTADR DS    A                    PARAMETER ORIGIN ADDRESS
+NIPPTOPF DS    XL1                  OPTION FLAGS BYTE
+NIPPTOPI EQU   X'80'                -- OPI OPTION
+NIPPTLST EQU   X'40'                -- LIST REQUEST OPTION
+NIPPTCAN EQU   X'20'                -- CANCEL REQUEST FLAG
+*        EQU   X'1F'                -- UNASSIGNED
+NIPPTATF DS    XL1                  ATTRIBUTE FLAGS BYTE
+NIPPTMRG EQU   X'80'                -- MERGE ATTRIBUTE
+*        EQU   X'7F'                -- UNASSIGNED
+NIPPTSID DS    CL2                  INPUT SOURCE ID
+*                                   -- X'0000' -- OPERATOR
+*                                   -- C'XX'   -- PLIB MEMBER SUFFIX
+NIPPTE   EQU   NIPPTE#,*-NIPPTE#   Alias with length
+*/*  *****    END OF NIP  PARAMETER  ADDRESS  TABLE  ENTRY      ******/
+         EJECT ,
+*----------------------------------------------------------------*
+*        NIP Parameter Area.                                     *
+*----------------------------------------------------------------*
+NIPPARE# DSECT ,                   Start of parameter area
+         DS    CL(L'NIPPAHDR)      PARMAREA HEADER
+*
+*     /***************************************************************/
+*     /*                                                             */
+*     /* HERE BEGINS: FOR INITIAL PARMAREA - INITIAL FIELDS FOR OTHER*/
+*     /* PARMAREAS - RECORD BUFFER AREA                              */
+*     /*                                                             */
+*     /***************************************************************/
+*
+NIPPARC  DS    F                   RETURN CODE FROM IEAPSPIO
+NIPPABDL DS    0CL18               PARMLIB BLDL ENTRY
+NIPPABDH DS    0CL4                BLDL HEADER
+NIPPA2BF DS    CL1                 BEGINNING OF BUFFER AREA
+         DS    CL3                 FILLER
+NIPPANAM DS    CL8                 PARMLIB MEMBER NAME
+NIPPATTR DS    CL3                 MEMBER TTR ENTRY
+         DS    CL3                 RESERVED FOR BLDL ENTRY
+         DS    CL2                 UNASSIGNED
+*      2 NIPPAIOD CHAR(216) BDY(DWORD),/* I/O DATA AREA              */
+NIPPAIOD DS    0C                  I/O DATA AREA              */
+NIPPATXT DS    CL32                CCW'S - READ TEXT RECORDS
+NIPPASID DS    CL5                 SEARCH ID FOR NEXT TEXT RCD
+         DS    CL3                 UNASSIGNED
+NIPPAIOB DS    CL40                PARMLIB IOB
+NIPPADCB DS    CL4                 PARMLIB DCB
+NIPPAECB DS    0CL4                PARMLIB ECB
+NIPPAECC DS    CL1                 - PARMLIB ECB CONDITION CODE
+         DS    CL3                 - REST OF PARMLIB ECB
+NIPPADEB DS    CL48                PARMLIB DEB
+NIPPARCD DS    CL80                READ AREA FOR PARMLIB RCDS
+         DS    CL4                 UNASSIGNED
+NIPPAPTB DS    CL(L'PARMTAB)       PARAMETER ADDR TABLE
+NIPPABUF DS    CL1                 BEGIN INITIAL PARMAREA BUFFER
+NIPPAREA EQU   NIPPARE#,*-NIPPARE# Alias with length
+*/*  *****             END  OF  NIP  PARAMETER  AREA            ******/
+         MEXIT ,                   .End of DSECTs
+.*
+.*---------------------------------------------------------------*
+.*       Error:  TYPE is not GENERATE or ENTRY.                  *
+.*---------------------------------------------------------------*
+.E1      ANOP  ,                   .TYPE not GENERATE or ENTRY
+         MNOTE 8,'INVALID TYPE "&TYPE"'
+         MEXIT ,
+.*
+.*---------------------------------------------------------------*
+.*       Error:  PARM required but not specified.                *
+.*---------------------------------------------------------------*
+.E2      ANOP  ,                   .PARM not specified
+         MNOTE 8,'"PARM" IS REQUIRED ON IEAPPNIP MACRO WITH LABEL "&LAB+
+               EL"'
+         MEXIT ,
+.*
+.*---------------------------------------------------------------*
+.*       Error:  PARM value is longer than eight characters.     *
+.*---------------------------------------------------------------*
+.E3      ANOP  ,                   .PARM is too long
+         MNOTE 8,'"PARM" VALUE EXCEEDS EIGHT CHARACTERS'
+         MEXIT ,
+         MEND  ,

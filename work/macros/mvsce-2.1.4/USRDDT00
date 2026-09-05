@@ -1,0 +1,95 @@
+USRDDT00 TITLE 'USER DEVICE DEFINITION TABLE (DDT)'                     00010038
+USRDDT00 CSECT ,                                                        00020038
+*---------------------------------------------------------------------- 00030038
+*  UDDT3380     DDT ENTRY FOR 3380 DEVICES - SEE AMODGEN(IECDDT) MACRO  00040038
+*---------------------------------------------------------------------- 00050038
+         ENTRY UDDT3380                                                 00060038
+UDDT3380 DC    C'DDT '       +00  DDTNAME   DDT EYECATCHER              00070038
+         DC    X'00'         +04  DDTFL1    LPA INITIALIZED FLAG        00080038
+         DC    X'00'         +05  DDTS1ID   DDTSUB1 FLAG                00090038
+         DC    X'0000'       +06  DDTRSVD1  RESERVED                    00100038
+         DC    X'C6000000'   +08  DDTVALBM  VALIDITY BIT MAP            00110038
+*                80               SIO TRAP VALID (REQUIRED)             00120038
+*                40               TRAP EXIT VALID (REQUIRED)            00130038
+*                04               CCW TABLE ENTRY VALID (REQUIRED)      00140038
+*                02               ERP MSG WRITE EXIT VALID (REQUIRED)   00150038
+         DC    X'02000000'   +0C  DDTLPABM  LPA BIT MAP                 00160038
+*                02               ERP MSG WRITER ENTRY CONTAINS         00170038
+*                                 MODULE SUFFIX INSTEAD OF AN ADDRESS   00180038
+         DC    C'IECL'       +10  DDTLPAPF                              00190038
+*                                 FOUR CHAR PREFIX CONCATENATED WITH    00200038
+*                                 FOUR CHAR SUFFIX TO BULID LPA         00210038
+*                                 MODULE NAMES                          00220038
+         DC    V(IECVXDAS)   +14  DDTSIO    SIO EXIT ADDRESS            00230038
+         DC    V(IECVXDAT)   +18  DDTTRAP   TRAP CODE EXIT ADDRESS      00240038
+         DC    V(IECVXDAU)   +1C  DDTUNIN   UNSOLICITED INTERRUPT       00250038
+*                                           EXIT ADDRESS                00260038
+         DC    A(0)          +20  DDTSENSE  SENSE ROUTINE EXIT ADDRESS  00270038
+         DC    A(0)          +24  DDTEOS    END-OF-SENSE EXIT ADDRESS   00280038
+         DC    V(IECVOPTD)   +28  DDTTCCW   IECVTCCW OP TABLE ADDRESS   00290038
+         DC    C'MSGD'       +2C  DDTERPMS  ERP MSG WRITER EXIT ID      00300038
+         DC    X'00000000'   +30  DDTMIH    MIH INDEX VALUE (REQUIRED)  00310038
+         EJECT ,                                                        00320038
+*---------------------------------------------------------------------- 00330038
+*  UDDT3390     DDT ENTRY FOR 3390 DEVICES - SEE AMODGEN(IECDDT) MACRO  00340038
+*               Added Jan 6, 2002  jmm  same as UDDT3380                00350038
+*---------------------------------------------------------------------- 00360038
+         ENTRY UDDT3390                                                 00370038
+UDDT3390 DC    C'DDT '       +00  DDTNAME   DDT EYECATCHER              00380038
+         DC    X'00'         +04  DDTFL1    LPA INITIALIZED FLAG        00390038
+         DC    X'00'         +05  DDTS1ID   DDTSUB1 FLAG                00400038
+         DC    X'0000'       +06  DDTRSVD1  RESERVED                    00410038
+         DC    X'C6000000'   +08  DDTVALBM  VALIDITY BIT MAP            00420038
+*                80               SIO TRAP VALID (REQUIRED)             00430038
+*                40               TRAP EXIT VALID (REQUIRED)            00440038
+*                04               CCW TABLE ENTRY VALID (REQUIRED)      00450038
+*                02               ERP MSG WRITE EXIT VALID (REQUIRED)   00460038
+         DC    X'02000000'   +0C  DDTLPABM  LPA BIT MAP                 00470038
+*                02               ERP MSG WRITER ENTRY CONTAINS         00480038
+*                                 MODULE SUFFIX INSTEAD OF AN ADDRESS   00490038
+         DC    C'IECL'       +10  DDTLPAPF                              00500038
+*                                 FOUR CHAR PREFIX CONCATENATED WITH    00510038
+*                                 FOUR CHAR SUFFIX TO BULID LPA         00520038
+*                                 MODULE NAMES                          00530038
+         DC    V(IECVXDAS)   +14  DDTSIO    SIO EXIT ADDRESS            00540038
+         DC    V(IECVXDAT)   +18  DDTTRAP   TRAP CODE EXIT ADDRESS      00550038
+         DC    V(IECVXDAU)   +1C  DDTUNIN   UNSOLICITED INTERRUPT       00560038
+*                                           EXIT ADDRESS                00570038
+         DC    A(0)          +20  DDTSENSE  SENSE ROUTINE EXIT ADDRESS  00580038
+         DC    A(0)          +24  DDTEOS    END-OF-SENSE EXIT ADDRESS   00590038
+         DC    V(IECVOPTD)   +28  DDTTCCW   IECVTCCW OP TABLE ADDRESS   00600038
+         DC    C'MSGD'       +2C  DDTERPMS  ERP MSG WRITER EXIT ID      00610038
+         DC    X'00000000'   +30  DDTMIH    MIH INDEX VALUE (REQUIRED)  00620038
+         EJECT ,                                                        00625038
+*---------------------------------------------------------------------- 00630038
+*  UDDT3375     DDT ENTRY FOR 3375 DEVICES - SEE AMODGEN(IECDDT) MACRO  00640038
+*---------------------------------------------------------------------- 00650038
+         ENTRY UDDT3375                                                 00660038
+UDDT3375 DC    C'DDT '       +00  DDTNAME   DDT EYECATCHER              00670038
+         DC    X'00'         +04  DDTFL1    LPA INITIALIZED FLAG        00680038
+         DC    X'00'         +05  DDTS1ID   DDTSUB1 FLAG                00690038
+         DC    X'0000'       +06  DDTRSVD1  RESERVED                    00700038
+         DC    X'C6000000'   +08  DDTVALBM  VALIDITY BIT MAP            00710038
+*                80               SIO TRAP VALID (REQUIRED)             00720038
+*                40               TRAP EXIT VALID (REQUIRED)            00730038
+*                04               CCW TABLE ENTRY VALID (REQUIRED)      00740038
+*                02               ERP MSG WRITE EXIT VALID (REQUIRED)   00750038
+         DC    X'02000000'   +0C  DDTLPABM  LPA BIT MAP                 00760038
+*                02               ERP MSG WRITER ENTRY CONTAINS         00770038
+*                                 MODULE SUFFIX INSTEAD OF AN ADDRESS   00780038
+         DC    C'IECL'       +10  DDTLPAPF                              00790038
+*                                 FOUR CHAR PREFIX CONCATENATED WITH    00800038
+*                                 FOUR CHAR SUFFIX TO BULID LPA         00810038
+*                                 MODULE NAMES                          00820038
+         DC    V(IECVXDAS)   +14  DDTSIO    SIO EXIT ADDRESS            00830038
+         DC    V(IECVXDAT)   +18  DDTTRAP   TRAP CODE EXIT ADDRESS      00840038
+         DC    V(IECVXDAU)   +1C  DDTUNIN   UNSOLICITED INTERRUPT       00850038
+*                                           EXIT ADDRESS                00860038
+         DC    A(0)          +20  DDTSENSE  SENSE ROUTINE EXIT ADDRESS  00870038
+         DC    A(0)          +24  DDTEOS    END-OF-SENSE EXIT ADDRESS   00880038
+         DC    V(IECVOPTD)   +28  DDTTCCW   IECVTCCW OP TABLE ADDRESS   00890038
+         DC    C'MSGD'       +2C  DDTERPMS  ERP MSG WRITER EXIT ID      00900038
+         DC    X'00000000'   +30  DDTMIH    MIH INDEX VALUE (REQUIRED)  00910038
+         TITLE 'IECDDT'                                                 00920038
+         IECDDT ,                                                       00930038
+         END   ,                                                        00940038

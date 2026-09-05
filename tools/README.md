@@ -7,6 +7,7 @@ these exist because they were needed before those landed.
 |---|---|
 | `awstape.py` | Walks an AWS tape image and yields its files and logical records. `python3 awstape.py TAPE.AWS` prints the structure — standard labels, data files, record counts |
 | `pdsunload.py` | Reads an IEBCOPY unload off such a tape **member by member**, directory included. Does what `file370` cannot yet (cc370#113) |
+| `measure-as370.sh` | Assembles a fixed sample with as370 and counts the clean ones, one line per module so two runs can be joined for regressions |
 | `ebcdic2text.py` | Turns `dasdpdsu` output (raw EBCDIC, fixed-length records) into host text. Read its docstring before using it; both traps it handles are silent ones |
 
 `awstape.py` replaces `awsread.py`, which had the AWS record flags backwards —

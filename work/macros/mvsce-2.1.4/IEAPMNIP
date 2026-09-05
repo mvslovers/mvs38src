@@ -1,0 +1,236 @@
+         MACRO                                                          00010000
+&NAME    IEAPMNIP  &TYPE=,&MSGST=,&MSGEND=,&RMSGST=,&RMSGL=,&MOD=,     X00020000
+               &ASYNCH=,&PARAM=,&BUFREL=,&OPT=,&CPUID=,&ADDR=           00030000
+         LCLC  &NB,&LB,&LC,&SX,&LM,&LI,&AU,&RS,&US                      00040000
+.********************************************************************** 00050000
+.*           06/27/74   VS2-3 VERSION                                   00060000
+.*       INITIALIZE ALL FLAG-SETTING SWITCHES TO ZERO                   00070000
+.*                                                                      00080000
+.********************************************************************** 00090000
+&NB      SETC  '0'                    OPEN - NON-NUCLEUS DEB            00100000
+&LB      SETC  '0'                    OPEN - END OF NUCLEUS DEB         00110000
+.*                                    MOUNT - UCB ADDRESS GIVEN         00120000
+&LC      SETC  '0'                    OPEN,MOUNT - CONDITIONAL REQUEST  00130000
+&SX      SETC  '0'                    OPEN - SINGLE EXTENT              00140000
+&LM      SETC  '0'                    OPEN - SUPPRESS OPEN MSGS         00150000
+&LI      SETC  '0'                    OPEN,MOUNT - DS NAME PTR GIVEN    00160000
+&AU      SETC  '0'                    OPEN - AUTHORINZED LIBRARY        00170000
+&RS      SETC  '0'                    OPEN - PERMANENTLY RESIDENT DS    00180000
+&US      SETC  '0'                    MOUNT- UCB SCAN ONLY              00190000
+         AIF   ('&TYPE' EQ 'PLIST').LISTMAC                             00200000
+         AIF   ('&TYPE' EQ 'MOUNTPL').LISTMAC                           00210000
+         AIF   ('&TYPE' EQ 'OPENPL').LISTMAC                            00220000
+         AIF   ('&TYPE' EQ 'SCHEDL').LISTMAC                            00230000
+&NAME    DS    0H                                                       00240000
+         AGO   .EXMACRO                                                 00250000
+.LISTMAC ANOP                                                           00260000
+&NAME    DS    0F                                                       00270000
+.EXMACRO ANOP                                                           00280000
+         AIF   ('&TYPE' NE 'MOUNTPL').NOMPL                             00290000
+.**************                                                         00300000
+.*                                                                      00310000
+.*        NIPMOUNT  PARAMETER  LIST                                     00320000
+.*                                                                      00330000
+.**************                                                         00340000
+         AIF   ('&OPT' NE 'PTR').MNOPTR                                 00350000
+         AIF   (K'&PARAM EQ 0).MNOPRM                                   00360000
+         DC    A(&PARAM)              DATA SET NAME ADDRESS             00370000
+         AGO   .MZER                                                    00380000
+.MNOPRM  ANOP                                                           00390000
+         DC    A(0)                   DATA SET NAME ADDRESS             00400000
+.MZER    ANOP                                                           00410000
+         DC    XL8'0000000000000000'  RESERVED                          00420000
+         AGO   .MPTR                                                    00430000
+.MNOPTR  ANOP                                                           00440000
+         DC    CL12'&PARAM '          DATASET NAME                      00450000
+.MPTR    ANOP                                                           00460000
+         DC    CL6' '                 VOLUME SERIAL OR UCB ADDRESS      00470000
+         DC    XL2'0000'              DEVICE TYPE                       00480000
+         DC    X'00'                  NIPMOUNT FLAGS                    00490000
+         DC    XL3'000000'            UNASSIGNED                        00500000
+         AGO   .MACEND                                                  00510000
+.NOMPL   AIF   ('&TYPE' NE 'OPENPL').NOOPL                              00520000
+.**************                                                         00530000
+.*                                                                      00540000
+.*        NIPOPEN  PARAMETER  LIST                                      00550000
+.*                                                                      00560000
+.**************                                                         00570000
+         AIF   ('&OPT' NE 'PTR').ONOPTR                                 00580000
+         AIF   (K'&PARAM EQ 0).ONOPRM                                   00590000
+         DC    A(&PARAM)              DATA SET NAME ADDRESS             00600000
+         AGO   .OZER                                                    00610000
+.ONOPRM  ANOP                                                           00620000
+         DC    A(0)                   DATA SET NAME ADDRESS             00630000
+.OZER    ANOP                                                           00640000
+         DC    XL8'0000000000000000'  RESERVED                          00650000
+         AGO   .OPTR                                                    00660000
+.ONOPTR  ANOP                                                           00670000
+         DC    CL12'&PARAM '          DATASET NAME                      00680000
+.OPTR    ANOP                                                           00690000
+         DC    A(0)                   DCB ADDRESS                       00700000
+         DC    A(0)                   UCB ADDRESS                       00710000
+         DC    X'00'                  NIPOPEN FLAGS                     00720000
+         DC    X'00'                  NIPOPEN RETURN CODE               00730000
+         DC    XL2'0000'              UNASSIGNED                        00740000
+         AGO   .MACEND                                                  00750000
+.NOOPL   AIF   ('&TYPE' NE 'MOUNT').NOMNT                               00760000
+.**************                                                         00770000
+.*                                                                      00780000
+.*        LINKAGE TO  NIPMOUNT                                          00790000
+.*                                                                      00800000
+.**************                                                         00810000
+         AIF   ('&OPT(1)' NE 'LB').MNOLB                                00820000
+&LB      SETC  '1'                                                      00830000
+.MNOLB   AIF   ('&OPT(2)' NE 'LC').MNOLC                                00840000
+&LC      SETC  '1'                                                      00850000
+.MNOLC   AIF   ('&OPT(3)' NE 'LI').MNOLI                                00860000
+&LI      SETC  '1'                                                      00870000
+.MNOLI   AIF   ('&OPT(4)' NE 'US').MNOUS                                00880000
+&US      SETC  '1'                                                      00890000
+.MNOUS   ANOP                                                           00900000
+         LA    RPARM,&PARAM           LOAD PARM LIST ADDRESS            00910000
+         MVI   NMNTFL(RPARM),B'0000&US&LI&LC&LB'  SET FLAG BITS         00920000
+         AGO   .ELOAD                                                   00930000
+.NOMNT   AIF   ('&TYPE' NE 'OPEN').NOOPN                                00940000
+.**************                                                         00950000
+.*                                                                      00960000
+.*        LINKAGE TO  NIPOPEN                                           00970000
+.*                                                                      00980000
+.**************                                                         00990000
+         AIF   ('&OPT(1)' NE 'NB').NONB                                 01000000
+&NB      SETC  '1'                                                      01010000
+.NONB    AIF   ('&OPT(2)' NE 'LB').NOLB                                 01020000
+&LB      SETC  '1'                                                      01030000
+.NOLB    AIF   ('&OPT(3)' NE 'LC').NOLC                                 01040000
+&LC      SETC  '1'                                                      01050000
+.NOLC    AIF   ('&OPT(4)' NE 'SX').NOSX                                 01060000
+&SX      SETC  '1'                                                      01070000
+.NOSX    AIF   ('&OPT(5)' NE 'LM').NOLM                                 01080000
+&LM      SETC  '1'                                                      01090000
+.NOLM    AIF   ('&OPT(6)' NE 'LI').NOLI                                 01100000
+&LI      SETC  '1'                                                      01110000
+.NOLI    AIF   ('&OPT(7)' NE 'AU').NOAU                                 01120000
+&AU      SETC  '1'                                                      01130000
+.NOAU    AIF   ('&OPT(8)' NE 'RS').NORS                                 01140000
+&RS      SETC  '1'                                                      01150000
+.NORS    ANOP                                                           01160000
+         LA    RPARM,&PARAM           LOAD PARM LIST ADDRESS            01170000
+         MVI   NOPNFL(RPARM),B'&RS&AU&LM&LI&NB&LB&LC&SX' SET FLAG BITS  01180000
+         AGO   .ELOAD                                                   01190000
+.NOOPN   AIF   ('&TYPE' NE 'HEADER').NOHEAD                             01200000
+.**************                                                         01210000
+.*                                                                      01220000
+.*        NIPWTO  MESSAGE  HEADER                                       01230000
+.*                                                                      01240000
+.**************                                                         01250000
+         DC    Y(&MSGEND-&MSGST)      MESSAGE LENGTH                    01260000
+         AIF   ('&OPT(1)' NE 'NHC').NONHC                               01270000
+         AIF   ('&OPT(2)' NE 'NBC').NONBC1                              01280000
+         DC    X'C0'                  FLAG BYTE 1                       01290000
+         AGO   .HEADB2                                                  01300000
+.NONBC1  DC    X'80'                  FLAG BYTE 1                       01310000
+         AGO   .HEADB2                                                  01320000
+.NONHC   AIF ('&OPT(2)' NE 'NBC').NONBC2                                01330000
+         DC    X'40'                 FLAG BYTE 1                        01340000
+         AGO   .HEADB2                                                  01350000
+.NONBC2  DC    X'00'                 FLAG BYTE 1                        01360000
+.HEADB2  DC    X'00'                 FLAG BYTE 2                        01370000
+         AGO   .MACEND                                                  01380000
+.NOHEAD  AIF   ('&TYPE' NE 'PLIST').NOLIST                              01390000
+.**************                                                         01400000
+.*                                                                      01410000
+.*        NIPWTOR  PARAMETER  LIST                                      01420000
+.*                                                                      01430000
+.**************                                                         01440000
+         AIF   ('&RMSGST' EQ 'SQARBUF').ZERRPA                          01450000
+         DC    A(&RMSGST)             REPLY AREA ADDRESS                01460000
+         DC    A(0)                   REPLY ECB ADDRESS                 01470000
+         DC    H'&RMSGL'              REPLY AREA LENGTH                 01480000
+         AIF   ('&ASYNCH' EQ 'YES').ASYN1                               01490000
+         DC    XL1'00'                NIP WTOR FLAGS                    01500000
+         AGO   .PARM1                                                   01510000
+.ASYN1   DC    XL1'80'                NIP WTOR FLAGS                    01520000
+         AGO   .PARM1                                                   01530000
+.ZERRPA  DC    A(0)                   REPLY AREA ADDRESS                01540000
+         DC    A(0)                   REPLY ECB ADDRESS                 01550000
+         DC    H'0'                   REPLY AREA LENGTH                 01560000
+         AIF   ('&ASYNCH' EQ 'YES').ASYN2                               01570000
+         DC    XL1'08'                NIP WTOR FLAGS                    01580000
+         AGO   .PARM1                                                   01590000
+.ASYN2   DC    XL1'88'                NIP WTOR FLAGS                    01600000
+.PARM1   DC    XL1'00'                RESERVED                          01610000
+         DC    A(&MSGST)              WTOR MESSAGE ADDRESS              01620000
+         AGO   .MACEND                                                  01630000
+.********************                                                   01640000
+.*                                                                      01650000
+.*            NIPSCHED PARAMETER LIST                                   01660000
+.*                                                                      01670000
+.**********************                                                 01680000
+.NOLIST  AIF   ('&TYPE' NE 'SCHEDL').NOSCHDL                            01690000
+         AIF   (K'&ADDR EQ 0).SCHDL1                                    01700000
+         DC    A(&ADDR)                                                 01710000
+         AGO   .SCHDL2                                                  01720000
+.SCHDL1  DC    A(0)                                                     01730000
+.SCHDL2  AIF   (K'&PARAM EQ 0).SCHDL3                                   01740000
+         DC     A(&PARAM)                                               01750000
+         AGO    .SCHDL4                                                 01760000
+.SCHDL3  DC     A(0)                                                    01770000
+.SCHDL4  DC     XL2'0000'                                               01780000
+         AGO   .MACEND                                                  01790000
+.********************                                                   01800000
+.*                                                                      01810000
+.*       LINKAGE FOR THE NIPSCHED  ROUTINE                              01820000
+.*                                                                      01830000
+.*********************                                                  01840000
+.NOSCHDL AIF   ('&TYPE' NE 'SCHED').NOSCHED                             01850000
+         LA    RPARM,&PARAM                                             01860000
+         MVC   8(2,RPARM),0(&CPUID)                                     01870000
+         AIF   (K'&ADDR EQ 0).ELOAD                                     01880000
+         ST    &ADDR,0(0,RPARM)                                @YM1995P 01890000
+         AGO   .ELOAD                                                   01900000
+.NOSCHED AIF   ('&TYPE' NE 'PRMPT').NOPRMPT                             01910000
+.*******************************************                            01920000
+.*                                                                      01930000
+.*      LINKAGE FOR THE NIPPRMPT ROUTINE                                01940000
+.*                                                                      01950000
+.******************************************                             01960000
+         LA     RPARM,&PARAM       ADDRESS OF PARAMETER FOR PROMPT      01970000
+         AIF   ('&OPT' NE 'ERROR').PRMPT1                               01980000
+         LCR   RPARM,RPARM         COMPLEMENT PARAM REGISTER (ERROR)    01990000
+.PRMPT1  AGO   .ELOAD                                                   02000000
+.**************                                                         02010000
+.*                                                                      02020000
+.*        LINKAGE  FOR:  NIPSENSE, NIPSWAIT,NIPTIME,NIPUCBFN,           02030000
+.*                       NIPWTO, NIPWTOR, NIPWTOR2                      02040000
+.*                       NIPOPIO,NIPVIRT,NIPREAL,NIPPRMPT               02050000
+.*                                                                      02060000
+.**************                                                         02070000
+.NOPRMPT AIF   ('&TYPE' EQ 'SENSE').PLOAD                               02080000
+         AIF   ('&TYPE' EQ 'SWAIT').ELOAD                               02090000
+         AIF   ('&TYPE' EQ 'OPIO').ELOAD                                02100000
+         AIF   ('&TYPE' EQ 'VIRT').ELOAD                                02110000
+         AIF   ('&TYPE' EQ 'REAL').ELOAD                                02120000
+         AIF   ('&TYPE' NE 'TIME').NTIME                                02130000
+         AIF   ('&PARAM' NE 'DEC').BTIME                                02140000
+         SR    RPARM,RPARM            REQUEST DECIMAL TIME              02150000
+         AGO   .ELOAD                                                   02160000
+.BTIME   LA    RPARM,4(0,0)           REQUEST BINARY TIME      @YM1995P 02170000
+         AGO   .ELOAD                                                   02180000
+.NTIME   AIF   ('&TYPE' EQ 'UCBFN').PLOAD                               02190000
+         AIF   ('&TYPE' EQ 'WTOR2').WTOR2                               02200000
+         LA    RPARM,&PARAM           LOAD PARM REGISTER                02210000
+         AGO   .ELOAD                                                   02220000
+.WTOR2   AIF   ('&BUFREL' NE 'YES').PLOAD                               02230000
+         LCR   RPARM,&PARAM           INDICATE SQA RELEASE              02240000
+         AGO   .ELOAD                                                   02250000
+.PLOAD   AIF   ('&PARAM' EQ 'RPARM').ELOAD                              02260000
+         LR    RPARM,&PARAM           LOAD PARM REGISTER                02270000
+.ELOAD   AIF   ('&MOD' EQ 'NIPM').ELOAD1                                02280000
+         L     RENTRY,NVT&TYPE.(0,RNVT)   LOAD BRANCH ADDRESS  @YM1995P 02290000
+         BALR  REXIT,RENTRY               CALL THE ROUTINE              02300000
+         AGO   .MACEND                                                  02310000
+.ELOAD1  ANOP                                                           02320000
+         L     RENTRY,NVT&TYPE        LOAD BRANCH ADDRESS               02330000
+         BALR  REXIT,RENTRY           BRANCH TO ROUTINE                 02340000
+.MACEND  ANOP                                                           02350000
+         MEND  ,                      */                                02360000

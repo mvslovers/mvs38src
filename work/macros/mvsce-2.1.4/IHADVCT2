@@ -1,0 +1,88 @@
+         MACRO                                                          01000038
+         IHADVCT2 ,                                                     01100038
+*********************************************************************** 01200038
+*        MODULO DASD DEVICE CHARACTERISTICS TABLE                     * 01300038
+*********************************************************************** 01400038
+*                                                                       01500038
+*         These DSECTs are part of the mvs3380 usermod, which           01600038
+*         provides (at least some) support for 3380s and 3390s.         01700038
+*                                                                       01800038
+*         Although MVS38j did have some support for 3380s,              01900038
+*         it never (to my knowledge) had any support for 3390s.         02000038
+*                                                                       02100038
+*         These DSECTs represents the subset of devices mapped          02200038
+*         by IHADVCT which are "modulo" devices, specifically           02300038
+*         the 3380 and 3390 devices.  For non-modulo devices,           02400038
+*         refer to the IHADVCT macro (2314, 3330, 3350, etc.).          02500038
+*                                                                       02600038
+*         The first DSECT, DVCTI, represents the index located          02700038
+*         at the front of the IECZDTAB CSECT (assembled as part         02800038
+*         of Stage2 of an MVS38j sysgen).                               02900038
+*                                                                       03000038
+*         The second DSECT, DVCT, represents an entry located           03100038
+*         via the index in DVCTI.  The entry is also located            03200038
+*         in the IECZDTAB CSECT.                                        03300038
+*                                                                       03400038
+*         The CVT contains a field, CVTZDTAB, which points              03500038
+*         to the IECZDTAB CSECT.  IECZDTAB consists of the              03600038
+*         index, followed immediately by the DVCT entries.              03700038
+*         Only DVCT entries for dasd devices which have been            03800038
+*         generated appear in IECZDTAB.                                 03900038
+*                                                                       04000038
+*         To locate an entry in IECZDTAB:                               04100038
+*                                                                       04200038
+*         1) Extract the device code field UCBTBYT4,                    04300038
+*            from the UCB representing the dasd device.                 04400038
+*                                                                       04500038
+*               DASD device codes (in hex):                             04600038
+*                  01  2311   06  2305-1   0B  3350                     04700038
+*                  02  2301   07  2305-2   0C  3375                     04800038
+*                  03  2303   08  2314     0D  3330-11                  04900038
+*                  04  2302   09  3330     0E  3380                     05000038
+*                  05  2321   0A  3340     0F  3390                     05100038
+*               I've also seen some higher values (maybe in MVT)        05200038
+*               which I think were related to MSS.                      05300038
+*                                                                       05400038
+*         2) Add CVTZDTAB + (low order 4 bits of) the device code.      05500038
+*            This is the address of the DVCTIOFF byte (below).          05600038
+*                                                                       05700038
+*         3) Add CVTZDTAB + DVCTIOFF, which points at the               05800038
+*            related DVCT entry.                                        05900038
+*                                                                       06000038
+*********************************************************************** 06100038
+*  Index into DVCT                                                      06200038
+*********************************************************************** 06300038
+DVCTI    DSECT ,                                                        06400038
+DVCTIOFF DS    XL1                offset to DVCT entry, relative        06500038
+*                                 to IECZDTAB base address              06600038
+*                                 The 0th entry is a flag               06700038
+*********************************************************************** 06800038
+*  DVCT entry for 3380s and 3390s                                       06900038
+*********************************************************************** 07000038
+DVCT     DSECT ,                                                        07100038
+DVCCYL   DS    H        # cylinders per volume (including alternates)   07200038
+DVCTRK   DS    H        # tracks per cylinder                           07300038
+DVCTRKLN DS    XL2      # bytes per track (unsigned)                    07400038
+*                       (excluding space for IBM standard Record0,      07500038
+*                       which is assumed to be present)                 07600038
+DVCOVH1  DS    H        modulo overhead value 1                         07700038
+DVCOVNK  DS    XL1      non-keyed overhead decrement                    07800038
+DVCFLAGS DS    B        Flags:                                          07900038
+DVCMODU  EQU   16          modulo device                                08000038
+DVCOVH2  DS    H        modulo overhead value 2                         08100038
+DVCALT   DS    H        # alternate tracks per volume                   08200038
+DVCENTLG EQU   *-DVCT   length of basic DVCT (excluding RPS + mods)     08300038
+*                                                                       08400038
+DVCRPS   DS    0XL4     RPS section (present when UCBTBYT2.UCBRPS=1)    08500038
+DVCOVR0  DS    H        Record0 overhead bytes                          08600038
+DVCSECT  DS    XL1      # sectors in full track                         08700038
+DVCSECTD EQU   *,1      # data sectors = DVCTRKLN / DVCBPSEC            08800038
+DVCDSECT DS    XL1      # data sectors                                  08900038
+*                                                                       09000038
+DVCBPSEC DS    XL2      # bytes per sector                              09100038
+*                                                                       09200038
+DVCMOD1  DS    XL2      modulo factor                                   09300038
+*---------------------------------------------------------------------- 09400038
+DVCSPAR1 DS    XL2      usermod: spare/alignment; zero                  09500038
+DVCUFIX1 DS    A        usermod: V(UTRKCALC)                            09600038
+         MEND                                                           09700038

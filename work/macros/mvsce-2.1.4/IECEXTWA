@@ -1,0 +1,270 @@
+         MACRO                                                          00050002
+&LABEL   IECEXTWA &EP,&D1=(0),&D2=(0),&ADT=NO                           00100002
+.*                                                                      00150002
+.*       MACRO DELETIONS/CHANGES FOR VS2 RELEASE 2                      00200002
+.*                                                                      00250002
+.*                                                                      00300002
+.********************************************************************** 00350002
+.*                                                                      00400002
+.* MODULE NAME = IECEXTWA (VS2-2)                                       00450002
+.*                                                                      00500002
+.* DESCRIPTIVE NAME = DADSM EXTEND WORK AREA ADDRESSING MACRO           00550002
+.*                                                                      00600002
+.* COPYRIGHT = NONE                                                     00650002
+.*                                                                      00700002
+.* STATUS = CHANGE LEVEL 000                                            00750002
+.*                                                                      00800002
+.* FUNCTION = DADSM EXTEND MACRO WHICH PROVIDES ADDRESSABILITY          00850002
+.*            TO THE 488 DECIMAL BYTE WORK AREA (NOT INCLUDING THE      00900002
+.*            8 WORD PREFIX OR THE 6 WORD RECOVERY ROUTINE PARAMETER    00950002
+.*            LIST) USED BY EXTEND.                                     01000002
+.*                                                                      01050002
+.* NOTES = THIS MACRO IS AN INTERNAL MACRO USED IN THE FOLLOWING        01100002
+.*         DADSM FUNCTIONS:                                             01150002
+.*                                                                      01200002
+.*             EXTEND                                                   01250002
+.*                                                                      01300002
+.*         TO REFERENCE THIS WORK AREA WITHIN THE FUNCTIONS LISTED      01350002
+.*         ABOVE, CODE A USING STATEMENT ON THE LABEL 'EXTNDWKA'.       01400002
+.*                                                                      01450002
+.*      DEPENDENCIES = THIS MACRO IS DESIGNED TO BE USED OPTIONALLY     01500002
+.*                     WITH THE IECSDSL1 DSCB MAPPING MACRO, THE        01550002
+.*                     PREFX MACRO (DEFINED IN THE IECDSECS MACRO)      01600002
+.*                     WHICH DEFINES THE 8 WORD WORK AREA PREFIX,       01650002
+.*                     THE 20 WORD EXTENDED WORK AREA PREFIX, AND       01700002
+.*                     THE 4 WORD DADSM WTG TABLE, AND THE DSMADT       01750002
+.*                     MACRO (ALSO DEFINED IN THE IECDSECS MACRO)       01800002
+.*                     WHICH DEFINES THE 6 WORD DADSM AUDIT TRAIL.      01850002
+.*                                                                      01900002
+.*      RESTRICTIONS = NONE                                             01950002
+.*                                                                      02000002
+.*      REGISTER CONVENTIONS = NOT APPLICABLE                           02050002
+.*                                                                      02100002
+.* PATCH LABEL = NOT APPLICABLE                                         02150002
+.*                                                                      02200002
+.* MODULE TYPE = MACRO                                                  02250002
+.*                                                                      02300002
+.*      PROCESSOR = ASSEMBLER LANGUAGE                                  02350002
+.*                                                                      02400002
+.*      MODULE SIZE = 488 DECIMAL BYTES (NOT INCLUDING THE PREFIX)      02450002
+.*                                                                      02500002
+.*      ATTRIBUTES = NOT APPLICABLE                                     02550002
+.*                                                                      02600002
+.* ENTRY POINT = EXTPREFX                                               02650002
+.*                                                                      02700002
+.*      PURPOSE = THIS MACRO IS CALLED AT ASSEMBLY TIME BY THE          02750002
+.*                FUNCTIONS LISTED UNDER 'NOTES' TO EXPAND THE          02800002
+.*                EXTEND WORK AREA.                                     02850002
+.*                                                                      02900002
+.*      LINKAGE =                                                       02950002
+.*                                                                      03000002
+.*                LABEL IECEXTWA EP,D1=(N),D2=(N),ADT=YES               03050002
+.*                                                                      03100002
+.*      INPUT =                                                         03150002
+.*                                                                      03200002
+.*                OPTIONAL LABEL SPECIFIED AS AN ACCEPTABLE ASSEMBLER   03250002
+.*                LABEL WHICH CAN BE USED BY THE CALLING CSECT TO       03300002
+.*                ESTABLISH ADDRESSABILITY TO THE ENTIRE WORK AREA.     03350002
+.*                                                                      03400002
+.*                EP IS THE FIRST POSITIONAL PARAMETER, SPECIFYING      03450002
+.*                THAT THE LABELS FOR EACH OF THE FIELDS IN THE 8       03500002
+.*                WORD PREFIX, 20 WORD EXTENDED PREFIX, AND THE 4       03550002
+.*                WORD DADSM WTG TABLE ARE TO BE EXPANDED. IF THESE     03600002
+.*                FIELDS ARE NOT TO BE DEFINED, A COMMA MUST BE         03650002
+.*                CODED TO INDICATE THE ABSENCE OF THIS PARAMETER.      03700002
+.*                                                                      03750002
+.*                D1=(N) IS A KEYWORD PARAMETER THAT SPECIFIES THE      03800002
+.*                FORMAT(S) OF THE DSCB(S) TO BE EXPANDED IN THE        03850002
+.*                FIRST 140 BYTE DSCB AREA, USING THE IECSDSL1 MACRO.   03900002
+.*                N CAN BE A NUMBER FROM 0 - 6.  IF N IS 0 OR 4 OR      03950002
+.*                IF THIS KEYWORD IS OMITTED, NO LABELS ARE EXPANDED.   04000002
+.*                IF N IS 1, 2, 3, 5, OR 6, THE CORRESPONDING FORMAT    04050002
+.*                OF THE DSCB WILL BE EXPANDED.  MORE THAN ONE DSCB     04100002
+.*                FORMAT CAN BE MAPPED IN THE FIRST 140 BYTE DSCB       04150002
+.*                AREA BY SEPARATING THE FORMAT NUMBERS BY COMMAS.      04200002
+.*                                                                      04250002
+.*                D2=(N) IS A KEYWORD PARAMETER THAT SPECIFIES          04300002
+.*                THE FORMAT(S) OF THE DSCB(S) TO BE EXPANDED IN THE    04350002
+.*                SECOND 140 BYTE DSCB AREA, USING THE IECSDSL1 MACRO.  04400002
+.*                N CAN BE A NUMBER FROM 0 - 6.  IF N IS 0 OR 4 OR      04450002
+.*                IF THIS KEYWORD IS OMITTED, NO LABELS ARE EXPANDED.   04500002
+.*                IF N IS 1, 2, 3, 5, OR 6, THE CORRESPONDING FORMAT    04550002
+.*                OF THE DSCB WILL BE EXPANDED.  MORE THAN ONE DSCB     04600002
+.*                FORMAT CAN BE MAPPED IN THE SECOND 140 BYTE DSCB      04650002
+.*                AREA BY SEPARATING THE FORMAT NUMBERS BY COMMAS.      04700002
+.*                                                                      04750002
+.*                ADT=YES IS A KEYWORD PARAMETER WHICH SPECIFIES THAT   04800002
+.*                THE LABELS FOR EACH OF THE FIELDS WITHIN THE 6 WORD   04850002
+.*                DADSM AUDIT TRAIL ARE TO BE EXPANDED.                 04900002
+.*                                                                      04950002
+.*      OUTPUT = DADSM EXTEND WORK AREA EXPANSION                       05000002
+.*                                                                      05050002
+.* EXIT-NORMAL = MEND STATEMENT                                         05100002
+.*                                                                      05150002
+.* EXIT-ERROR = ERROR MESSAGES:                                         05200002
+.*                                                                      05250002
+.*      MNOTE 12,***  IHB002 INVALID EP OPERAND SPECIFIED-&EP           05300002
+.*      MNOTE 12,***  IHB002 INVALID ADT OPERAND SPECIFIED-&ADT         05350002
+.*                                                                      05400002
+.*      THE MACRO EXPANSION CONTINUES AS IF THE INVALID PARAMETER       05450002
+.*      WERE NOT SPECIFIED.                                             05500002
+.*                                                                      05550002
+.* EXTERNAL REFERENCES = NONE                                           05600002
+.*                                                                      05650002
+.*      ROUTINES = NONE                                                 05700002
+.*                                                                      05750002
+.*      DATA AREAS = EXTEND WORK AREA                                   05800002
+.*                                                                      05850002
+.*      CONTROL BLOCKS = DSCB                                           05900002
+.*                                                                      05950002
+.* TABLES = NONE                                                        06000002
+.*                                                                      06050002
+.* MACROS = IECDSECS DSMADT                                             06100002
+.*          IECDSECS PREFX                                              06150002
+.*          IECSDSL1                                                    06200002
+.*          IHBERMAC                                                    06250002
+.*                                                                      06300002
+.* CHANGE ACTIVITY = SEE DELETIONS/CHANGES PRECEDING THE MACRO          06350002
+.*                                                                      06400002
+.********************************************************************** 06450002
+.*                                                                      06500002
+         LCLA  &C                                                       06550002
+&LABEL   DSECT                                                          06600002
+*********************************************************************** 06650002
+*                                                                       06700002
+*        EXTEND WORK AREA                                               06750002
+*                                                                       06800002
+*********************************************************************** 06850002
+         SPACE 1                                                        06900002
+*********************************************************************** 06950002
+*        PREFIX, EXTENDED PREFIX, AND WTG TABLE AREA                    07000002
+*********************************************************************** 07050002
+         SPACE 1                                                        07100002
+EXTPREFX DS    8F                       WORK AREA PREFIX                07150002
+EXTNDWKA DS    20F                      EXTENDED PREFIX                 07200002
+EWTGTBL  DS    4F                       DADSM WTG TABLE                 07250002
+         AIF   ('&EP' EQ 'EP').EXT0010                                  07300002
+         AIF   ('&EP' EQ '').EXT0020                                    07350002
+         IHBERMAC 1001,EP,&EP                                           07400002
+         AGO   .EXT0020                                                 07450002
+.EXT0010 ANOP                                                           07500002
+         ORG   EXTPREFX                                                 07550002
+         MNOTE '         IECDSECS PREFX,EXPAND=YES'                     07600002
+         IECDSECS PREFX,EXPAND=YES                                      07650002
+.EXT0020 ANOP                                                           07700002
+         SPACE 1                                                        07750002
+*********************************************************************** 07800002
+*        FIRST 140-BYTE DSCB AREA                                       07850002
+*********************************************************************** 07900002
+         SPACE 1                                                        07950002
+F5DSCB   DS    XL140                    140-BYTE DSCB AREA              08000002
+&C       SETA  1                                                        08100002
+.EXT0050 AIF   (&C GT N'&D1).EXT0060                                    08150002
+         AIF   (&D1(&C) EQ 0 OR &D1(&C) EQ 4).EXT0055                   08200002
+         ORG   F5DSCB                                                   08250002
+         MNOTE '         IECSDSL1 (&D1(&C))'                            08300002
+         IECSDSL1 (&D1(&C))                                             08350002
+.EXT0055 ANOP                                                           08400002
+&C       SETA  &C+1                                                     08450002
+         AGO   .EXT0050                                                 08500002
+.EXT0060 ANOP                                                           08550002
+         SPACE 1                                                        08600002
+*********************************************************************** 08650002
+*        SECOND 140-BYTE DSCB AREA                                      08700002
+*********************************************************************** 08750002
+         SPACE 1                                                        08800002
+F3DSCB   DS    XL140                    140-BYTE DSCB AREA              08850002
+&C       SETA  1                                                        08900002
+.EXT0070 AIF   (&C GT N'&D2).EXT0080                                    08950002
+         AIF   (&D2(&C) EQ 0 OR &D2(&C) EQ 4).EXT0075                   09000002
+         ORG   F3DSCB                                                   09050002
+         MNOTE '         IECSDSL1 (&D2(&C))'                            09100002
+         IECSDSL1 (&D2(&C))                                             09150002
+.EXT0075 ANOP                                                           09200002
+&C       SETA  &C+1                                                     09250002
+         AGO   .EXT0070                                                 09300002
+.EXT0080 ANOP                                                           09350002
+         SPACE 1                                                        09400002
+*********************************************************************** 09450002
+*        DADSM EXTENT TABLE                                             09500002
+*********************************************************************** 09550002
+         SPACE 1                                                        09600002
+EDADSMTB DS    0XL24                    DADSM EXTENT TABLE              09650002
+ETYPEFLG DS    XL1                      SECONDARY ALLOCATION TYPE FLAG  09700002
+*                                                                       09750002
+RSMC     EQU   X'80'                    STEP-MUST-COMPLETE ISSUED       10000002
+*                                                                       10050002
+ENTRYNUM DS    XL1                      NUMBER OF ENTRIES IN DADSMTBL   10100002
+EHOLECTR DS    H                        NUMBER OF USED F0 DSCB'S        10150002
+ENTRIES  DS    5F                       FIVE EXTENT ENTRIES, EACH       10200002
+*                                       CONSISTING OF CCHH              10210002
+         SPACE 1                                                        10250002
+*********************************************************************** 10300002
+*        PUSHDOWN EXTENT LIST                                           10350002
+*********************************************************************** 10400002
+         SPACE 1                                                        10450002
+EPDLIST  DS    0XL20                    FIVE WORD PUSHDOWN LIST         10500002
+EPDLIST1 DS    F                                                        10550002
+EPDLIST2 DS    F                                                        10600002
+EPDLIST3 DS    F                                                        10650002
+EPDLIST4 DS    F                                                        10700002
+EPDLIST5 DS    F                                                        10750002
+         SPACE 1                                                        10800002
+*********************************************************************** 10850002
+*        ABSOLUTE TRACK ADDRESSES                                       10900002
+*********************************************************************** 10950002
+         SPACE 1                                                        11000002
+EVTOCADR DS    XL5                      CCHHR OF F4 DSCB ON CURRENT     11050002
+*                                       VOLUME                          11060002
+EDADSMAD DS    XL5                      CCHHR OF F5 DSCB ON CURRENT     11100002
+*                                       VOLUME                          11110002
+ECOUNT   DS    XL5                      CHANNEL PROGRAM WORK AREA       11150002
+COUNT2   DS    XL5                      CHANNEL PROGRAM WORK AREA       11250002
+ETTRLL   DS    XL5                      TTRLL FOR F1 DSCB OF DATA       11350002
+*                                       SET BEING EXTENDED              11360002
+EIDAREA  DS    XL5                      CHANNEL PROGRAM WORK AREA       11400002
+ENEXTADR DS    XL5                      CHANNEL PROGRAM WORK AREA       11450002
+EXTCCHHR DS    XL5                      CCHHR HOLD AREA                 11460002
+         SPACE 1                                                        11500002
+*********************************************************************** 11550002
+*        INTERNAL EXTEND SWITCHS                                        11600002
+*********************************************************************** 11650002
+         SPACE 1                                                        11700002
+ESWITCH  DS    XL1                      EXTEND F5 DSCB MERGING SWITCH   11750002
+*                                                                       11800002
+ESWBIT0  EQU   X'80'                    WRITE F0 DSCB                   11850002
+ESWBIT1  EQU   X'40'                    F5 DSCB MODIFIED                11900002
+ESWBIT2  EQU   X'20'                    PROCESS CONTROL SWITCH          11950002
+ESWBIT3  EQU   X'10'                    WRITE FINAL F5 DSCB             12000002
+ESWBIT4  EQU   X'08'                    FIRST F5 DSCB IN WORK AREA      12050002
+ESWBIT5  EQU   X'04'                    NEW F5 DSCB HAS BEEN BUILT      12100002
+ESWBIT6  EQU   X'02'                    BYPASS UPDATING DADSMTBL PTR    12150002
+ESWBIT7  EQU   X'01'                    BYPASS UPDATING F5 DSCB PTR     12200002
+         SPACE 1                                                        12400002
+ESWITCH2 DS    XL1                      EXTEND SWITCHES CONTINUED       12410002
+*                                                                       12430002
+EF5ZERO  EQU   X'01'                    F5 DSCB WITH NO EXTENTS         12448502
+*                                       EXISTS ON VTOC                  12457002
+*                                                                       12466002
+         DS    XL2                      ALIGNMENT - NOT USED            12474502
+         SPACE 1                                                        12483002
+*********************************************************************** 12491502
+*        EXTEND RECOVERY ROUTINE AUDIT TRAIL AREA                       12500002
+*********************************************************************** 12550002
+         SPACE 1                                                        12600002
+EXTADTRL DS    6F                       EXTEND AUDIT TRAIL WORDS        12650002
+         AIF   ('&ADT' EQ 'YES').EXT0090                                12700002
+         AIF   ('&ADT' EQ 'NO').EXT0100                                 12750002
+         IHBERMAC 1001,ADT,&ADT                                         12800002
+         AGO   .EXT0100                                                 12850002
+.EXT0090 ANOP                                                           12900002
+         ORG   EXTADTRL                                                 12950002
+         MNOTE '         IECDSECS DSMADT,EXPAND=YES'                    13000002
+         IECDSECS DSMADT,EXPAND=YES                                     13050002
+.EXT0100 ANOP                                                           13100002
+         SPACE 1                                                        13150002
+*********************************************************************** 13200002
+EXTWAEND EQU   *                        EXTEND WORK AREA END            13250002
+EWALNGTH EQU   EXTWAEND-EWTGTBL         WORK AREA LENGTH FOR IECRES GET 13300002
+*********************************************************************** 13350002
+         MEND                                                           13400002
