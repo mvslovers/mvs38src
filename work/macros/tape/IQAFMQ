@@ -1,0 +1,69 @@
+         MACRO  ,                                                       00010000
+         IQAFMQ &DSECT=YES                                              00020000
+*********************************************************************** 00030000
+*********************************************************************** 00040000
+******************          OS/VS2 R2                  **************** 00050000
+******************     DYNAMIC SUPPORT SYSTEM          **************** 00060000
+******************             FMQ                     **************** 00070001
+*********************************************************************** 00080000
+         LCLC  &P                                                       00090000
+         AIF   ('&DSECT' EQ 'YES').DSECT                                00100000
+IQAFMQ   DC    0F'0'                                                    00110000
+         AGO   .NDSECT                                                  00120000
+.DSECT   ANOP  ,                                                        00130000
+FMQ      DSECT ,                                                        00140000
+.NDSECT  ANOP  ,                                                        00150000
+FMQID    DC    C'FMQ'                                                   00160000
+FMQ0003  DC    X'1'                    FMQE ENTRY NUMBER                00170000
+FMQ0004  DC    X'0'                                                     00180000
+FMQ0005  DC    X'0'                                                     00190000
+FMQ0006  DC    X'0'                                                     00200000
+FMQ0007  DC    X'0'                                                     00210000
+FMQ0008  DC    H'0'                                                     00220000
+FMQ000A  DC    H'0'                    ASID                             00230000
+FMQ000C  DC    A(0)                                                     00240000
+FMQ0010  DC    A(0)                                                     00250000
+FMQ0014  DS    0XL2304                                                  00260000
+         DC    256XL9'0'               256 FMQA ENTRIES                 00270000
+FMQ0914  DS    0XL1767                                                  00280000
+         DC    93XL19'0'               93 FMQE ENTRIES                  00290001
+         DC    XL5'0'                                                   00300000
+FMQEND   EQU   *                                                        00310000
+         AIF   ('&DSECT' EQ 'NO').NDSECT1                               00320004
+*                                                                       00330000
+*        FMQ0014 ENTRY                                                  00340000
+*                                                                       00350000
+FMQA     DSECT                                                          00360000
+FMQA00   DS    XL1                     FLAGS                            00370002
+FMQA0080 EQU   X'80'                                                    00380003
+FMQA0040 EQU   X'40'                                                    00390003
+FMQA0020 EQU   X'20'                                                    00400003
+FMQA0010 EQU   X'10'                                                    00410003
+FMQA0008 EQU   X'08'                                                    00420003
+FMQA0004 EQU   X'04'                                                    00430003
+FMQA0002 EQU   X'02'                                                    00440003
+FMQA0001 EQU   X'01'                                                    00450003
+FMQA01   DS    XL2                     ASID                             00460002
+*                                      OR OPCODE AND NEXT BYTE          00470000
+FMQA03   DS    XL2                                                      00480002
+FMQA05   DS    XL4                                                      00490002
+FMQALEN  EQU   *-FMQA                                                   00500000
+*                                                                       00510000
+*        FMQ0914 ENTRY                                                  00520000
+*                                                                       00530000
+FMQE     DSECT                                                          00540000
+FMQE00   DS    XL1                     FLAGS                            00550002
+FMQE0080 EQU   X'80'                                                    00560003
+FMQE0040 EQU   X'40'                                                    00570003
+FMQE0020 EQU   X'20'                                                    00580003
+FMQE0010 EQU   X'10'                                                    00590003
+FMQE0008 EQU   X'08'                                                    00600003
+FMQE0004 EQU   X'04'                                                    00610003
+FMQE0002 EQU   X'02'                                                    00620003
+FMQE0001 EQU   X'01'                                                    00630003
+FMQE01   DS    XL2                     ASID                             00640002
+FMQE03   DS    XL8                     'TCB' 'PRB' 'JOB' 'SVM'          00650002
+FMQE0B   DS    XL8                                                      00660002
+FMQELEN  EQU   *-FMQE                                                   00670000
+.NDSECT1 ANOP  ,                                                        00680004
+         MEND  ,                                                        00690000

@@ -1,0 +1,586 @@
+         MACRO                                                          00010000
+&LBL     HMASMCCA &TYPE=EQU                                             00020000
+*************************************************************           00030000
+*                                                           *           00040000
+*                                                           *           00050000
+*                                                           *           00060000
+*************************************************************           00070000
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00080000
+         AIF   ('&TYPE' EQ 'DC').DC                                     00090000
+CCA      DSECT                                                          00100000
+.DC      ANOP                                                           00110000
+HMASMCCA DS    0CL371                                                   00120000
+CCAID    DS    XL4'0'                                                   00130000
+CCAFBUFR DS    0CL136                                                   00140000
+CCACBFIA DS    AL4(0)                                                   00150000
+CCACBFOA DS    AL4(0)                                                   00160000
+CCAVBFIA DS    AL4(0)                                                   00170000
+CCAVBFOA DS    AL4(0)                                                   00180000
+CCAPBFIA DS    AL4(0)                                                   00190000
+CCAPBFOA DS    AL4(0)                                                   00200000
+CCAQBFIA DS    AL4(0)                                                   00210000
+CCAQBFOA DS    AL4(0)                                                   00220000
+CCAWBFIA DS    AL4(0)                                                   00230000
+CCAWBFOA DS    AL4(0)                                                   00240000
+CCATBFIA DS    AL4(0)                                                   00250000
+CCA4BFIA DS    AL4(0)                                                   00260000
+CCA4BFOA DS    AL4(0)                                                   00270000
+CCAMIDTB DS    FL4'0'                                                   00280000
+CCACBFSZ DS    FL4'0'                                                   00290000
+CCAVBFSZ DS    FL4'0'                                                   00300000
+CCAPBFSZ DS    FL4'0'                                                   00310000
+CCAQBFSZ DS    FL4'0'                                                   00320000
+CCAWBFSZ DS    FL4'0'                                                   00330000
+CCATBFSZ DS    FL4'0'                                                   00340000
+CCA4BFSZ DS    FL4'0'                                                   00350000
+         DS    FL4'0'                                                   00360000
+         DS    FL4'0'                                                   00370000
+CCACBFMX DS    FL2'0'                                                   00380000
+CCAABFMX DS    FL2'0'                                                   00390000
+CCAVBFMX DS    FL2'0'                                                   00400000
+CCAPBFMX DS    FL2'0'                                                   00410000
+CCAMBFMX DS    FL2'0'                                                   00420000
+CCASBFMX DS    FL2'0'                                                   00430000
+CCAQBFMX DS    FL2'0'                                                   00440000
+CCAXBFMX DS    FL2'0'                                                   00450000
+CCA1BFMX DS    FL2'0'                                                   00460000
+CCA2BFMX DS    FL2'0'                                                   00470000
+CCA3BFMX DS    FL2'0'                                                   00480000
+CCA4BFMX DS    FL2'0'                                                   00490000
+CCATBFMX DS    FL2'0'                                                   00500000
+         DS    FL2'0'                                                   00510000
+         DS    FL2'0'                                                   00520000
+         DS    FL2'0'                                                   00530000
+CCADSAD  DS    AL4(0)                                                   00540000
+CCATPAD  DS    AL4(0)                                                   00550000
+CCAFLAG7 DS    0BL4                                                     00560000
+CCACDSP  DS    BL1'0'                                                   00570000
+CCAACDSP EQU   CCACDSP,B'01000000'                                      00580000
+CCASCDSP EQU   CCACDSP,B'00100000'                                      00590000
+CCAPTSP  EQU   CCACDSP,B'00010000'                                      00600000
+CCAMTSP  EQU   CCACDSP,B'00001000'                                      00610000
+CCASTSP  EQU   CCACDSP,B'00000100'                                      00620000
+CCACRQP  EQU   CCACDSP,B'00000010'                                      00630000
+CCAACRQP EQU   CCACDSP,B'00000001'                                      00640000
+CCAWK1P  DS    BL1'0'                                                   00650000
+CCAWK2P  EQU   CCAWK1P,B'01000000'                                      00660000
+CCAWK3P  EQU   CCAWK1P,B'00100000'                                      00670000
+CCAWK4P  EQU   CCAWK1P,B'00010000'                                      00680000
+CCAWK5P  EQU   CCAWK1P,B'00001000'                                      00690000
+CCAUT1P  EQU   CCAWK1P,B'00000100'                                      00700000
+CCAUT2P  EQU   CCAWK1P,B'00000010'                                      00710000
+CCAUT3P  EQU   CCAWK1P,B'00000001'                                      00720000
+CCATLBP  DS    BL1'0'                                                   00730000
+CCAPTFP  EQU   CCATLBP,B'01000000'                                      00740000
+CCAJCLP  EQU   CCATLBP,B'00100000'                                      00750000
+CCALISTP EQU   CCATLBP,B'00010000'                                      00760000
+CCARPTP  EQU   CCATLBP,B'00001000'                                      00770000
+CCASLBP  EQU   CCATLBP,B'00000100'                                      00780000
+CCAOUTP  EQU   CCATLBP,B'00000010'                                      00790000
+CCALOGP  EQU   CCATLBP,B'00000001'                                      00800000
+CCA08B   DS    BL1'0'                                                   00810000
+CCAFIOP  DS    0CL8                                                     00820000
+CCAIOPTR DS    AL4(0)                                                   00830000
+CCAPESIZ DS    AL4(0)                                                   00840000
+CCAFSYS  DS    0CL40                                                    00850000
+CCAIOPCS DS    AL4(0)                                                   00860000
+CCAIOPAS DS    AL4(0)                                                   00870000
+CCAPGLEN DS    FL2'0'                                                   00880000
+CCAPEMAX DS    FL2'0'                                                   00890000
+CCASREL  DS    0CL4                                                     00900000
+CCACSREL DS    XL4'0'                                                   00910000
+CCAASREL DS    XL4'0'                                                   00920000
+CCANUCID DS    XL1'0'                                                   00930000
+CCAFLAGA DS    0BL1                                                     00940000
+CCACSYSF DS    BL1'0'                                                   00950000
+CCAASYSF EQU   CCACSYSF,B'01000000'                                     00960000
+CCAPSYSF EQU   CCACSYSF,B'00100000'                                     00970000
+CCALNLEN DS    FL2'0'                                                   00980000
+CCACDSID DS    XL8'0'                                                   00990000
+CCAACDID DS    XL8'0'                                                   01000000
+CCAFSTA  DS    0CL4                                                     01010000
+CCARVAD  DS    AL4(0)                                                   01020000
+CCAFICT  DS    0CL16                                                    01030000
+CCAICT   DS    AL4(0)                                                   01040000
+CCAICPTF DS    AL4(0)                                                   01050000
+CCAICMOD DS    AL4(0)                                                   01060000
+CCAICLMD DS    AL4(0)                                                   01070000
+CCAFPGM  DS    0CL16                                                    01080000
+CCABLDLP DS    AL4(0)                                                   01090000
+CCADBLDL DS    AL4(0)                                                   01100000
+CCASPDCB DS    AL4(0)                                                   01110000
+CCACLST  DS    AL4(0)                                                   01120000
+CCAFGTP  DS    0CL20                                                    01130000
+CCASEGTP DS    0AL4                                                     01140000
+CCASETAD DS    AL4(0)                                                   01150000
+CCAGTP1  DS    AL4(0)                                                   01160000
+CCAGTP2  DS    AL4(0)                                                   01170000
+CCAGTP3  DS    AL4(0)                                                   01180000
+CCAIFGTP DS    AL4(0)                                                   01190000
+CCAATT   DS    AL4(0)                                                   01200000
+CCA0F8   DS    AL4(0)                                                   01210000
+CCA0FC   DS    AL4(0)                                                   01220000
+CCATBLPA DS    AL4(0)                                                   01230000
+CCA104   DS    AL4(0)                                                   01240000
+CCAFFUNC DS    0CL12                                                    01250000
+CCAFUNCT DS    XL8'0'                                                   01260000
+CCAFLAG1 DS    0BL3                                                     01270000
+         DS    BL1'0'                                                   01280000
+CCAREC   EQU   CCAFLAG1,B'10000000'                                     01290000
+CCAAPPLY EQU   CCAFLAG1,B'01000000'                                     01300000
+CCAACCPT EQU   CCAFLAG1,B'00100000'                                     01310000
+CCAREJ   EQU   CCAFLAG1,B'00010000'                                     01320000
+CCARES   EQU   CCAFLAG1,B'00001000'                                     01330000
+CCAUPDJ  EQU   CCAFLAG1,B'00000100'                                     01340000
+CCAUPDU  EQU   CCAFLAG1,B'00000010'                                     01350000
+CCALIST  EQU   CCAFLAG1,B'00000001'                                     01360000
+         DS    BL1'0'                                                   01370000
+CCACNV   EQU   CCAFLAG1+1,B'10000000'                                   01380000
+CCALOG   EQU   CCAFLAG1+1,B'01000000'                                   01390000
+CCARESET EQU   CCAFLAG1+1,B'00100000'                                   01400000
+CCAUNL   EQU   CCAFLAG1+1,B'00010000'                                   01410000
+CCAF1108 EQU   CCAFLAG1+1,B'00001000'                                   01420000
+CCAF1104 EQU   CCAFLAG1+1,B'00000100'                                   01430000
+CCAF1102 EQU   CCAFLAG1+1,B'00000010'                                   01440000
+CCAF1101 EQU   CCAFLAG1+1,B'00000001'                                   01450000
+         DS    BL1'0'                                                   01460000
+CCAFLAG2 DS    0BL1                                                     01470000
+CCANCPTF DS    BL1'0'                                                   01480000
+CCASVCLB EQU   CCANCPTF,B'01000000'                                     01490000
+CCATERM  EQU   CCANCPTF,B'00100000'                                     01500000
+CCACHECK EQU   CCANCPTF,B'00010000'                                     01510000
+CCAEOFNC EQU   CCANCPTF,B'00000010'                                     01520000
+CCAEOSMP EQU   CCANCPTF,B'00000001'                                     01530000
+CCAFPROC DS    0XL2                                                     01540000
+CCAFLAG3 DS    0BL2                                                     01550000
+CCAUPDP  DS    BL1'0'                                                   01560000
+CCAASIP  EQU   CCAUPDP                                                  01570000
+CCACOPYP EQU   CCAUPDP                                                  01580000
+CCALINKP EQU   CCAUPDP                                                  01590000
+CCAZAPP  EQU   CCAUPDP,B'00001000'                                      01600000
+CCACMPRS EQU   CCAUPDP,B'00000100'                                      01610000
+CCADELP  EQU   CCAUPDP,B'00000010'                                      01620000
+CCAICTOK EQU   CCAUPDP,B'00000001'                                      01630000
+CCADISRQ DS    BL1'0'                                                   01640000
+CCARGNP  EQU   CCADISRQ,B'01000000'                                     01650000
+CCAFDIS  DS    0CL3                                                     01660000
+CCAFLAG4 DS    0BL1                                                     01670000
+CCACDSIS DS    BL1'0'                                                   01680000
+CCAACDIS EQU   CCACDSIS,B'01000000'                                     01690000
+CCACRQIS EQU   CCACDSIS,B'00100000'                                     01700000
+CCAACRIS EQU   CCACDSIS,B'00010000'                                     01710000
+CCAFLAG5 DS    0BL1                                                     01720000
+CCACDSOS DS    BL1'0'                                                   01730000
+CCAACDOS EQU   CCACDSOS,B'01000000'                                     01740000
+CCACRQOS EQU   CCACDSOS,B'00100000'                                     01750000
+CCAACROS EQU   CCACDSOS,B'00010000'                                     01760000
+CCAFLAG6 DS    0BL1                                                     01770000
+CCACDSUP DS    BL1'0'                                                   01780000
+CCAACDUP EQU   CCACDSUP,B'01000000'                                     01790000
+CCACRQUP EQU   CCACDSUP,B'00100000'                                     01800000
+CCAACRUP EQU   CCACDSUP,B'00010000'                                     01810000
+CCAFCNV  DS    0CL1                                                     01820000
+CCAFLAG8 DS    0BL1                                                     01830000
+CCACDSC  DS    BL1'0'                                                   01840000
+CCAACDSC EQU   CCACDSC,B'01000000'                                      01850000
+CCAFCTL  DS    0CL9                                                     01860000
+CCAFLAG9 DS    0BL1                                                     01870000
+CCAPTSNP DS    BL1'0'                                                   01880000
+CCAMTSNP EQU   CCAPTSNP,B'01000000'                                     01890000
+CCASTSNP EQU   CCAPTSNP,B'00100000'                                     01900000
+CCAPTSNJ EQU   CCAPTSNP,B'00010000'                                     01910000
+CCARVEST EQU   CCAPTSNP,B'00001000'                                     01920000
+CCARVCAN EQU   CCAPTSNP,B'00000100'                                     01930000
+CCADATE  DS    XL3'0'                                                   01940000
+CCATIME  DS    XL3'0'                                                   01950000
+CCARPTDS DS    FL1'0'                                                   01960000
+CCALSTDS DS    FL1'0'                                                   01970000
+CCAFMID  DS    XL7'0'                                                   01980000
+CCAFDSNG DS    0CL11                                                    01990000
+CCAFLAGB DS    X'0'                                                     02001005
+CCALOGNG EQU   CCAFLAGB,B'10000000'                                     02010005
+CCAOUTNG EQU   CCAFLAGB,B'01000000'                                     02020005
+CCAFLB20 EQU   CCAFLAGB,B'00100000'                                     02021005
+CCAFLB10 EQU   CCAFLAGB,B'00010000'                                     02022005
+         DS    X'0'                                                     02030000
+CCACURDS DS    FL1'0'                                                   02040000
+CCACURDD DS    XL8'0'                                                   02050000
+CCADATE2 DS    XL3'0'                                                   02060000
+CCAVER   DS    XL5'0'                                                   02070000
+         DS    XL54'0'                                                  02080000
+CCAEND   DS    0C                                                       02090000
+         AIF   ('&TYPE' EQ 'DC').DC1                                    02100000
+*************************************************************           02110000
+*                                                           *           02120000
+*                                                           *           02130000
+*                                                           *           02140000
+*************************************************************           02150000
+CCABLDLL DSECT                                                          02160000
+CCALKDNM DS    XL8'0'       LINK        NAME                            02170000
+CCALKED  DS    A(0)                     ADDRESS                         02180000
+CCALKDSP DS    XL8'0'                   SYSPRINT DD                     02190000
+CCALKDRC DS    F'0'                     RETURN CODE                     02200000
+CCALKDPM DS    F'0'                     PARAMETER                       02210000
+         DS    XL96'0'                  PARM AREA                       02220000
+CCAASMNM DS    XL8'0'       ASSEMBLER   NAME                            02230000
+CCAASM   DS    A(0)                     ADDRESS                         02240000
+CCAASMSP DS    XL8'0'                   SYSPRINT DD                     02250000
+CCAASMRC DS    F'0'                     RETURN CODE                     02260000
+CCAASMPM DS    F'0'                     PARAMETER                       02270000
+         DS    XL96'0'                  PARM AREA                       02280000
+CCACPYNM DS    XL8'0'       COPY        NAME                            02290000
+CCACOPY  DS    A(0)                     ADDRESS                         02300000
+CCACPYSP DS    XL8'0'                   SYSPRINT DD                     02310000
+CCACPYRC DS    F'0'                     RETURN CODE                     02320000
+CCACPYPM DS    F'0'                     PARAMETER                       02330000
+CCACPYPA DS    XL96'0'                  PARM AREA                       02340000
+CCACOMNM DS    XL8'0'       COMPRESS    NAME                            02350000
+CCACOMRS DS    A(0)                     ADDRESS                         02360000
+CCACOMSP DS    XL8'0'                   SYSPRINT DD                     02370000
+CCACOMRC DS    F'0'                     RETURN CODE                     02380000
+CCACOMPM DS    F'0'                     PARAMETER                       02390000
+CCACOMPA DS    XL96'0'                  PARM AREA                       02400000
+CCAZAPNM DS    XL8'0'       ZAP         NAME                            02410000
+CCASPZAP DS    A(0)                     ADDRESS                         02420000
+CCAZAPSP DS    XL8'0'                   SYSPRINT DD                     02430000
+CCAZAPRC DS    F'0'                     RETURN CODE                     02440000
+CCAZAPPM DS    F'0'                     PARAMETER                       02450000
+CCAZAPPA DS    XL96'0'                  PARM AREA                       02460000
+CCASUPNM DS    XL8'0'       IOSUP       NAME                            02470000
+CCAIOSUP DS    A(0)                     ADDRESS                         02480000
+CCASUPSP DS    XL8'0'                   SYSPRINT DD                     02490000
+CCASUPRC DS    F'0'                     RETURN CODE                     02500000
+CCASUPPM DS    F'0'                     PARAMETER                       02510000
+CCASUPPA DS    XL96'0'                  PARM AREA                       02520000
+CCAUPDNM DS    XL8'0'       UPDATE      NAME                            02530000
+CCAUPDTE DS    A(0)                     ADDRESS                         02540000
+CCAUPDSP DS    XL8'0'                   SYSPRINT DD                     02550000
+CCAUPDRC DS    F'0'                     RETURN CODE                     02560000
+CCAUPDPM DS    F'0'                     PARAMETER                       02570000
+CCAUPDPA DS    XL96'0'                  PARM AREA                       02580000
+CCAUXDNM DS    XL8'0'       USER EXIT   NAME                            02590000
+CCAUXD   DS    A(0)                     ADDRESS                         02600000
+CCAUXDSP DS    XL8'0'                   SYSPRINT DD                     02610000
+CCAUXDRC DS    F'0'                     RETURN CODE                     02620000
+CCAUXDPM DS    F'0'                     PARAMETER                       02630000
+CCAUXDPA DS    XL96'0'                  PARM AREA                       02640000
+CCARTYNM DS    XL8'0'       RETRY       NAME                            02650000
+CCARTY   DS    A(0)                     ADDRESS                         02660000
+CCARTYSP DS    XL8'0'                   SYSPRINT DD                     02670000
+CCARTYRC DS    F'0'                     RETURN CODE                     02680000
+CCARTYPM DS    F'0'                     PARAMETER                       02690000
+CCARTYPA DS    XL96'0'                  PARM AREA                       02700000
+.DC1     ANOP                                                           02710000
+         MEXIT                                                          02720000
+.EQU     ANOP  ,                                                        02730000
+CCA      EQU   0                                                        02740000
+CCAFBUFR EQU   CCA+4                                                    02750000
+CCADSAD  EQU   CCAFBUFR+124                                             02760000
+CCATPAD  EQU   CCAFBUFR+128                                             02770000
+CCAFLAG7 EQU   CCAFBUFR+132                                             02780000
+CCAFIOP  EQU   CCA+140                                                  02790000
+CCAIOPTR EQU   CCAFIOP                                                  02800000
+CCAFSYS  EQU   CCA+148                                                  02810000
+CCASREL  EQU   CCAFSYS+12                                               02820000
+CCANUCID EQU   CCAFSYS+20                                               02830000
+CCAFLAGA EQU   CCAFSYS+21                                               02840000
+CCAFSTA  EQU   CCA+188                                                  02850000
+CCARVAD  EQU   CCAFSTA                                                  02860000
+CCAFICT  EQU   CCA+192                                                  02870000
+CCAICT   EQU   CCAFICT                                                  02880000
+CCAICPTF EQU   CCAFICT+4                                                02890000
+CCAICMOD EQU   CCAFICT+8                                                02900000
+CCAICLMD EQU   CCAFICT+12                                               02910000
+CCAFPGM  EQU   CCA+208                                                  02920000
+CCABLDLP EQU   CCAFPGM                                                  02930000
+CCADBLDL EQU   CCAFPGM+4                                                02940000
+CCASPDCB EQU   CCAFPGM+8                                                02950000
+CCAFGTP  EQU   CCA+224                                                  02960000
+CCASEGTP EQU   CCAFGTP                                                  02970000
+CCAATT   EQU   CCA+244                                                  02980000
+CCA0F8   EQU   CCA+248                                                  02990000
+CCA0FC   EQU   CCA+252                                                  03000000
+CCATBLPA EQU   CCA+244+12                                               03010000
+CCA104   EQU   CCA+260                                                  03020000
+CCAFFUNC EQU   CCA+264                                                  03030000
+CCAFLAG1 EQU   CCAFFUNC+8                                               03040000
+CCAACCPT EQU   CCAFLAG1                                                 03050000
+CCARES   EQU   CCAFLAG1                                                 03060000
+CCAFLAG2 EQU   CCAFFUNC+11                                              03070000
+CCANCPTF EQU   CCAFLAG2                                                 03080000
+CCASVCLB EQU   CCAFLAG2                                                 03090000
+CCAFPROC EQU   CCA+276                                                  03100000
+CCAFLAG3 EQU   CCAFPROC                                                 03110000
+CCAZAPP  EQU   CCAFLAG3                                                 03120000
+CCACMPRS EQU   CCAFLAG3                                                 03130000
+CCAFDIS  EQU   CCA+278                                                  03140000
+CCAFLAG4 EQU   CCAFDIS                                                  03150000
+CCAFLAG5 EQU   CCAFDIS+1                                                03160000
+CCAFLAG6 EQU   CCAFDIS+2                                                03170000
+CCAFCNV  EQU   CCA+281                                                  03180000
+CCAFLAG8 EQU   CCAFCNV                                                  03190000
+CCAFCTL  EQU   CCA+282                                                  03200000
+CCAFLAG9 EQU   CCAFCTL                                                  03210000
+CCAMTSNP EQU   CCAFLAG9                                                 03220000
+CCASTSNP EQU   CCAFLAG9                                                 03230000
+CCAFDSNG EQU   CCA+298                                                  03240000
+CCAFLAGB EQU   CCAFDSNG                                                 03250000
+CCADATE2 EQU   CCA+309                                                  03260000
+CCAVER   EQU   CCA+312                                                  03270000
+CCABLDLA EQU   0                                                        03280000
+CCABPGAD EQU   CCABLDLA+8                                               03290000
+CCABLDLL EQU   0                                                        03300000
+CCALKDNM EQU   CCABLDLL+0         LINK        NAME                      03310000
+CCALKED  EQU   CCABLDLL+8                     ADDRESS                   03320000
+CCALKDSP EQU   CCABLDLL+12                    SYSPRINT DD               03330000
+CCALKDRC EQU   CCABLDLL+20                    RETURN CODE               03340000
+CCALKDPM EQU   CCABLDLL+24                    PARAMETER                 03350000
+CCAASMNM EQU   CCABLDLL+124+0     ASSEMBLER   NAME                      03360000
+CCAASM   EQU   CCABLDLL+124+8                 ADDRESS                   03370000
+CCAASMSP EQU   CCABLDLL+124+12                SYSPRINT DD               03380000
+CCAASMRC EQU   CCABLDLL+124+20                RETURN CODE               03390000
+CCAASMPM EQU   CCABLDLL+124+24                PARAMETER                 03400000
+CCACPYNM EQU   CCABLDLL+248+0     COPY        NAME                      03410000
+CCACOPY  EQU   CCABLDLL+248+8                 ADDRESS                   03420000
+CCACPYSP EQU   CCABLDLL+248+12                SYSPRINT DD               03430000
+CCACPYRC EQU   CCABLDLL+248+20                RETURN CODE               03440000
+CCACPYPM EQU   CCABLDLL+248+24                PARAMETER                 03450000
+CCACOMNM EQU   CCABLDLL+372+0     COMPRESS    NAME                      03460000
+CCACOMRS EQU   CCABLDLL+372+8                 ADDRESS                   03470000
+CCACOMSP EQU   CCABLDLL+372+12                SYSPRINT DD               03480000
+CCACOMRC EQU   CCABLDLL+372+20                RETURN CODE               03490000
+CCACOMPM EQU   CCABLDLL+372+24                PARAMETER                 03500000
+CCAZAPNM EQU   CCABLDLL+496+0     ZAP         NAME                      03510000
+CCASPZAP EQU   CCABLDLL+496+8                 ADDRESS                   03520000
+CCAZAPSP EQU   CCABLDLL+496+12                SYSPRINT DD               03530000
+CCAZAPRC EQU   CCABLDLL+496+20                RETURN CODE               03540000
+CCAZAPPM EQU   CCABLDLL+496+24                PARAMETER                 03550000
+CCASUPNM EQU   CCABLDLL+620+0     IOSUP       NAME                      03560000
+CCAIOSUP EQU   CCABLDLL+620+8                 ADDRESS                   03570000
+CCASUPSP EQU   CCABLDLL+620+12                SYSPRINT DD               03580000
+CCASUPRC EQU   CCABLDLL+620+20                RETURN CODE               03590000
+CCASUPPM EQU   CCABLDLL+620+24                PARAMETER                 03600000
+CCAUPDNM EQU   CCABLDLL+744+0     UPDATE      NAME                      03610000
+CCAUPDTE EQU   CCABLDLL+744+8                 ADDRESS                   03620000
+CCAUPDSP EQU   CCABLDLL+744+12                SYSPRINT DD               03630000
+CCAUPDRC EQU   CCABLDLL+744+20                RETURN CODE               03640000
+CCAUPDPM EQU   CCABLDLL+744+24                PARAMETER                 03650000
+CCAUXDNM EQU   CCABLDLL+868+0     USER EXIT   NAME                      03660000
+CCAUXDSP EQU   CCABLDLL+868+12                SYSPRINT DD               03670000
+CCAUXDRC EQU   CCABLDLL+868+20                RETURN CODE               03680000
+CCAUXDPM EQU   CCABLDLL+868+24                PARAMETER                 03690000
+CCARTYNM EQU   CCABLDLL+992+0     RETRY       NAME                      03700000
+CCARTYSP EQU   CCABLDLL+992+12                SYSPRINT DD               03710000
+CCARTYRC EQU   CCABLDLL+992+20                RETURN CODE               03720000
+CCARTYPM EQU   CCABLDLL+992+24                PARAMETER                 03730000
+CCABLDLM EQU   0                                                        03740000
+CCABELMT EQU   CCABLDLM+4                                               03750000
+CCABMPOS EQU   CCABELMT                                                 03760000
+CCADSIDA EQU   0                 DC2DSIDA IN HMASMDC2                   03770000
+*        EQU   CCADSIDA     0    SMPLOG                                 03780000
+*        EQU   CCADSIDA+8   1    SMPCDS                                 03790000
+*        EQU   CCADSIDA+16  2    SYSUT1                                 03800000
+*        EQU   CCADSIDA+24  3    SYSUT1                                 03810000
+*        EQU   CCADSIDA+32  4    MACROLIB                               03820000
+*        EQU   CCADSIDA+40  5    SMPPTS                                 03830000
+*        EQU   CCADSIDA+48  6    SMPJCLIN                               03840000
+*        EQU   CCADSIDA+56  7    SMPCDS                                 03850000
+*        EQU   CCADSIDA+64  8    SMPCNTL                                03860000
+*        EQU   CCADSIDA+72  9    SMPPTFIN                               03870000
+*        EQU   CCADSIDA+80  10   SMPOUT                                 03880000
+*        EQU   CCADSIDA+88  11   SMPACDS                                03890000
+*        EQU   CCADSIDA+96  12   SMPACDS                                03900000
+*        EQU   CCADSIDA+104 13   LSTCMPDD                               03910000
+*        EQU   CCADSIDA+112 14   SMPPUNCH                               03920000
+*        EQU   CCADSIDA+120 15   SYSUT4                                 03930000
+*        EQU   CCADSIDA+128 16   UNUSED                                 03940000
+*        EQU   CCADSIDA+136 17   SMPMTS                                 03950000
+*        EQU   CCADSIDA+144 18   SMPMTS                                 03960000
+*        EQU   CCADSIDA+152 19   SYSPRINT                               03970000
+*        EQU   CCADSIDA+160 20   UNUSED                                 03980000
+*        EQU   CCADSIDA+168 21   LSTSRCDD                               03990000
+*        EQU   CCADSIDA+176 22   SMPPTS                                 04000000
+*        EQU   CCADSIDA+184 23   LSTANYDD                               04010000
+*        EQU   CCADSIDA+192 24   LSTJFCDD                               04020000
+*        EQU   CCADSIDA+200 25   SMPSTS                                 04030000
+*        EQU   CCADSIDA+208 26   SMPSTS                                 04040000
+*        EQU   CCADSIDA+216 27   SMPCRQ                                 04050000
+*        EQU   CCADSIDA+224 28   SMPCRQ                                 04060000
+*        EQU   CCADSIDA+232 29   SMPACRQ                                04070000
+*        EQU   CCADSIDA+240 30   SMPACRQ                                04080000
+*        EQU   CCADSIDA+248 31   SMPTLIB                                04090000
+*        EQU   CCADSIDA+256 32   SMPSCDS                                04100000
+*        EQU   CCADSIDA+264 33   SMPSCDS                                04110000
+*        EQU   CCADSIDA+272 34   SMPWRK1                                04120000
+*        EQU   CCADSIDA+280 35   SMPWRK2                                04130000
+*        EQU   CCADSIDA+288 36   SMPWRK3                                04140000
+*        EQU   CCADSIDA+296 37   SMPWRK4                                04150000
+*        EQU   CCADSIDA+304 38   SMPWRK5                                04160000
+*        EQU   CCADSIDA+312 39   SMPWRKX                                04170000
+*        EQU   CCADSIDA+320 40   SMPRPT                                 04180000
+*        EQU   CCADSIDA+328 41   SMPLIST                                04190000
+*        EQU   CCADSIDA+336 42   SMPADDIN                               04200000
+CCATYPEA EQU   0                 DC2TYPEA IN HMASMDC2                   04210000
+*        EQU   CCATYPEA-8   -1   SMPADDIN                               04220000
+*        EQU   CCATYPEA+0   0    ASSEM                                  04230000
+*        EQU   CCATYPEA+8   1    LMOD                                   04240000
+*        EQU   CCATYPEA+16  2    MACRO                                  04250000
+*        EQU   CCATYPEA+24  3    UPDTE                                  04260000
+*        EQU   CCATYPEA+32  4    MODULE                                 04270000
+*        EQU   CCATYPEA+40  5    DLIB                                   04280000
+*        EQU   CCATYPEA+48  6    SYSTEM                                 04290000
+*        EQU   CCATYPEA+56  7    SOURCE                                 04300000
+*        EQU   CCATYPEA+64  8    SRCUPD                                 04310000
+*        EQU   CCATYPEA+72  9    SMPEOF                                 04320000
+*        EQU   CCATYPEA+80  10   SYSMOD                                 04330000
+*        EQU   CCATYPEA+88  11   SZAP                                   04340000
+*        EQU   CCATYPEA+96  12   XZAP                                   04350000
+*        EQU   CCATYPEA+104 13   FMID                                   04360000
+*        EQU   CCATYPEA+112 14   SYSMOD                                 04370000
+*        EQU   CCATYPEA+120 15   MCS                                    04380000
+*        EQU   CCATYPEA+128 16   MEMBER                                 04390000
+CCABMREC EQU   CCABELMT+10                                              04400000
+CCABPOS  EQU   CCABMPOS+8                                               04410000
+CCABNAME EQU   CCABMPOS                                                 04420000
+CCARUPDT EQU   CCAUPDRC                                                 04430000
+CCARSUP  EQU   CCASUPRC                                                 04440000
+CCARZAP  EQU   CCAZAPRC                                                 04450000
+CCARCOMP EQU   CCACOMRC                                                 04460000
+CCARCOPY EQU   CCACPYRC                                                 04470000
+CCARASM  EQU   CCAASMRC                                                 04480000
+CCARLINK EQU   CCALKDRC                                                 04490000
+CCAEND   EQU   CCA+371                                                  04500000
+CCACURDD EQU   CCAFDSNG+3                                               04510000
+CCACURDS EQU   CCAFDSNG+2                                               04520000
+CCAOUTNG EQU   CCAFLAGB                                                 04530000
+CCALOGNG EQU   CCAFLAGB                                                 04540000
+CCAFMID  EQU   CCA+291                                                  04550000
+CCALSTDS EQU   CCAFCTL+8                                                04560000
+CCARPTDS EQU   CCAFCTL+7                                                04570000
+CCATIME  EQU   CCAFCTL+4                                                04580000
+CCADATE  EQU   CCAFCTL+1                                                04590000
+CCARVCAN EQU   CCAFLAG9                                                 04600000
+CCARVEST EQU   CCAFLAG9                                                 04610000
+CCAPTSNJ EQU   CCAFLAG9                                                 04620000
+CCAPTSNP EQU   CCAFLAG9                                                 04630000
+CCAACDSC EQU   CCAFLAG8                                                 04640000
+CCACDSC  EQU   CCAFLAG8                                                 04650000
+CCAACRUP EQU   CCAFLAG6                                                 04660000
+CCACRQUP EQU   CCAFLAG6                                                 04670000
+CCAACDUP EQU   CCAFLAG6                                                 04680000
+CCACDSUP EQU   CCAFLAG6                                                 04690000
+CCAACROS EQU   CCAFLAG5                                                 04700000
+CCACRQOS EQU   CCAFLAG5                                                 04710000
+CCAACDOS EQU   CCAFLAG5                                                 04720000
+CCACDSOS EQU   CCAFLAG5                                                 04730000
+CCAACRIS EQU   CCAFLAG4                                                 04740000
+CCACRQIS EQU   CCAFLAG4                                                 04750000
+CCAACDIS EQU   CCAFLAG4                                                 04760000
+CCACDSIS EQU   CCAFLAG4                                                 04770000
+CCARGNP  EQU   CCAFLAG3+1                                               04780000
+CCADISRQ EQU   CCAFLAG3+1                                               04790000
+CCAICTOK EQU   CCAFLAG3                                                 04800000
+CCADELP  EQU   CCAFLAG3                                                 04810000
+CCALINKP EQU   CCAFLAG3                                                 04820000
+CCACOPYP EQU   CCAFLAG3                                                 04830000
+CCAASIP  EQU   CCAFLAG3                                                 04840000
+CCAUPDP  EQU   CCAFLAG3                                                 04850000
+CCAEOSMP EQU   CCAFLAG2                                                 04860000
+CCAEOFNC EQU   CCAFLAG2                                                 04870000
+CCACHECK EQU   CCAFLAG2                                                 04880000
+CCATERM  EQU   CCAFLAG2                                                 04890000
+CCACNV   EQU   CCAFLAG1+1,B'10000000'                                   04900004
+CCALOG   EQU   CCAFLAG1+1,B'01000000'                                   04920004
+CCARESET EQU   CCAFLAG1+1,B'00100000'                                   04920104
+CCAUNL   EQU   CCAFLAG1+1,B'00010000'                                   04921004
+CCAF1108 EQU   CCAFLAG1+1,B'00001000'                                   04931004
+CCAF1104 EQU   CCAFLAG1+1,B'00000100'                                   04932004
+CCAF1102 EQU   CCAFLAG1+1,B'00000010'                                   04933004
+CCAF1101 EQU   CCAFLAG1+1,B'00000001'                                   04934004
+CCALIST  EQU   CCAFLAG1                                                 04940000
+CCAUPDU  EQU   CCAFLAG1                                                 04950000
+CCAUPDJ  EQU   CCAFLAG1                                                 04960000
+CCAREJ   EQU   CCAFLAG1                                                 04970000
+CCAAPPLY EQU   CCAFLAG1                                                 04980000
+CCAREC   EQU   CCAFLAG1                                                 04990000
+CCAFUNCT EQU   CCAFFUNC                                                 05000000
+CCAIFGTP EQU   CCAFGTP+16                                               05010000
+CCAGTP3  EQU   CCAFGTP+12                                               05020000
+CCAGTP2  EQU   CCAFGTP+8                                                05030000
+CCAGTP1  EQU   CCAFGTP+4                                                05040000
+CCASETAD EQU   CCASEGTP                                                 05050000
+CCACLST  EQU   CCAFPGM+12                                               05060000
+CCAACDID EQU   CCAFSYS+32                                               05070000
+CCACDSID EQU   CCAFSYS+24                                               05080000
+CCALNLEN EQU   CCAFSYS+22                                               05090000
+CCAPSYSF EQU   CCAFLAGA                                                 05100000
+CCAASYSF EQU   CCAFLAGA                                                 05110000
+CCACSYSF EQU   CCAFLAGA                                                 05120000
+CCAASREL EQU   CCAFSYS+16                                               05130000
+CCACSREL EQU   CCASREL                                                  05140000
+CCAPEMAX EQU   CCAFSYS+10                                               05150000
+CCAPGLEN EQU   CCAFSYS+8                                                05160000
+CCAIOPAS EQU   CCAFSYS+4                                                05170000
+CCAIOPCS EQU   CCAFSYS                                                  05180000
+CCAPESIZ EQU   CCAFIOP+4                                                05190000
+CCA08B   EQU   CCAFLAG7+3                                               05200000
+CCALOGP  EQU   CCAFLAG7+2                                               05210000
+CCAOUTP  EQU   CCAFLAG7+2                                               05220000
+CCASLBP  EQU   CCAFLAG7+2                                               05230000
+CCARPTP  EQU   CCAFLAG7+2                                               05240000
+CCALISTP EQU   CCAFLAG7+2                                               05250000
+CCAJCLP  EQU   CCAFLAG7+2                                               05260000
+CCAPTFP  EQU   CCAFLAG7+2                                               05270000
+CCATLBP  EQU   CCAFLAG7+2                                               05280000
+CCAUT3P  EQU   CCAFLAG7+1                                               05290000
+CCAUT2P  EQU   CCAFLAG7+1                                               05300000
+CCAUT1P  EQU   CCAFLAG7+1                                               05310000
+CCAWK5P  EQU   CCAFLAG7+1                                               05320000
+CCAWK4P  EQU   CCAFLAG7+1                                               05330000
+CCAWK3P  EQU   CCAFLAG7+1                                               05340000
+CCAWK2P  EQU   CCAFLAG7+1                                               05350000
+CCAWK1P  EQU   CCAFLAG7+1                                               05360000
+CCAACRQP EQU   CCAFLAG7                                                 05370000
+CCACRQP  EQU   CCAFLAG7                                                 05380000
+CCASTSP  EQU   CCAFLAG7                                                 05390000
+CCAMTSP  EQU   CCAFLAG7                                                 05400000
+CCAPTSP  EQU   CCAFLAG7                                                 05410000
+CCASCDSP EQU   CCAFLAG7                                                 05420000
+CCAACDSP EQU   CCAFLAG7                                                 05430000
+CCACDSP  EQU   CCAFLAG7                                                 05440000
+CCATBFMX EQU   CCAFBUFR+116                                             05450000
+CCA4BFMX EQU   CCAFBUFR+114                                             05460000
+CCA3BFMX EQU   CCAFBUFR+112                                             05470000
+CCA2BFMX EQU   CCAFBUFR+110                                             05480000
+CCA1BFMX EQU   CCAFBUFR+108                                             05490000
+CCAXBFMX EQU   CCAFBUFR+106                                             05500000
+CCAQBFMX EQU   CCAFBUFR+104                                             05510000
+CCASBFMX EQU   CCAFBUFR+102                                             05520000
+CCAMBFMX EQU   CCAFBUFR+100                                             05530000
+CCAPBFMX EQU   CCAFBUFR+98                                              05540000
+CCAVBFMX EQU   CCAFBUFR+96                                              05550000
+CCAABFMX EQU   CCAFBUFR+94                                              05560000
+CCACBFMX EQU   CCAFBUFR+92                                              05570000
+CCA4BFSZ EQU   CCAFBUFR+80                                              05580000
+CCATBFSZ EQU   CCAFBUFR+76                                              05590000
+CCAWBFSZ EQU   CCAFBUFR+72                                              05600000
+CCAQBFSZ EQU   CCAFBUFR+68                                              05610000
+CCAPBFSZ EQU   CCAFBUFR+64                                              05620000
+CCAVBFSZ EQU   CCAFBUFR+60                                              05630000
+CCACBFSZ EQU   CCAFBUFR+56                                              05640000
+CCAMIDTB EQU   CCAFBUFR+52                                              05650000
+CCA4BFOA EQU   CCAFBUFR+48                                              05660000
+CCA4BFIA EQU   CCAFBUFR+44                                              05670000
+CCATBFIA EQU   CCAFBUFR+40                                              05680000
+CCAWBFOA EQU   CCAFBUFR+36                                              05690000
+CCAWBFIA EQU   CCAFBUFR+32                                              05700000
+CCAQBFOA EQU   CCAFBUFR+28                                              05710000
+CCAQBFIA EQU   CCAFBUFR+24                                              05720000
+CCAPBFOA EQU   CCAFBUFR+20                                              05730000
+CCAPBFIA EQU   CCAFBUFR+16                                              05740000
+CCAVBFOA EQU   CCAFBUFR+12                                              05750000
+CCAVBFIA EQU   CCAFBUFR+8                                               05760000
+CCACBFOA EQU   CCAFBUFR+4                                               05770000
+CCACBFIA EQU   CCAFBUFR                                                 05780000
+CCAID    EQU   CCA                                                      05790000
+         MEND                                                           05800000

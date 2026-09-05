@@ -1,0 +1,173 @@
+//GSPSAMP JOB 1234567,GSPSAMP,MSGLEVEL=1                                00500001
+//SAMPL EXEC FORTGCLG,PARM.FORT=(NODECK,MAP,LOAD)                       01000001
+//FORT.SYSIN DD *                                                       01500001
+C     THIS SAMPLE PROGRAM DRAWS A CIRCLE OF 8 BASIC SIZE X'S WITH A     02000001
+C     LARGE SIZE X AS ITS CENTER. DEPENDING ON THE ATTENTION CREATED,   02500001
+C     THE PROGRAM WILL DO THE FOLLOWING:                                03000001
+C                                                                       03500001
+C                                                                       04000001
+C         1. LIGHT PEN ATTENTION ON CENTER X LABELS OUTER X'S FROM      04500001
+C            NUM1 THROUGH NUM8. (STATEMENT 221).                        05000001
+C                                                                       05500001
+C         2. LIGHT PEN ATTENTION ON OUTER X GENERATES A CIRCLE WHOSE    06000001
+C            CENTER IS THE DETECTED X. (STATEMENT 222).                 06500001
+C                                                                       07000001
+C         3. LIGHT PEN ATTENTION ON CIRCLE AROUND OUTER X MAKES THAT    07500001
+C            CIRCLE INVISIBLE. (STATEMENT 230).                         08000001
+C                                                                       08500001
+C         4. LIGHT PEN ATTENTION ON ANY LABEL MAKES ALL LABELS          09000001
+C            INVISIBLE. (STATEMENT 225).                                09500001
+C                                                                       10000001
+C         5. PROGRAMMED FUNCTION KEY 1 ENDS RUN. (STATEMENT 240).       10500001
+C                                                                       11000001
+C         6. PROGRAMMED FUNCTION KEY 2 MAKES ALL CIRCLES INVISIBLE.     11500001
+C            (STATEMENT 250).                                           12000001
+C                                                                       12500001
+C         7. PROGRAMMED FUNCTION KEY 3 MAKES ALL CIRCLES VISIBLE.       13000001
+C            (STATEMENT 260).                                           13500001
+C                                  BEGIN PROGRAM                        14000001
+C                  SET UP DIMENSION STATEMENT FOR VARIOUS ARRAYS USED.  14500001
+C                                                                       14550001
+C     C635000                                                   A 45402 14600001
+C                                                                       14650001
+      DIMENSION INTARY(10),CIRX(8),CIRY(8),SMALX(8,24),SMALY(8,24),     15000001
+     X LABEL(32),NULL(1)                                                15500001
+C                  INITIALIZE THE GRAPHIC SUBROUTINE PACKAGE. DEFINE    16000001
+C                  THE NULL VARIABLE.                                   16500001
+      NULL(1)=-5                                                        17000001
+      CALL INGSP(IGSP,NULL)                                             17500001
+C                  INITIALIZE THE 2250. ASSIGN IT UNIT NUMBER 10.       18000001
+      CALL INDEV(IGSP,10,I2250)                                         18500001
+C                  INITIALIZE A GRAPHIC DATA SET THAT WILL BE USED TO   19000001
+C                  DISPLAY THE CIRCLE OF X'S AND ITS CENTER X.          19500001
+      CALL INGDS(I2250,IGDS1)                                           20000001
+C                  INITIALIZE A GRAPHIC DATA SET THAT WILL BE USED TO   20500001
+C                  LABEL THE OUTER X'S OF THE CIRCLE.                   21000001
+      CALL INGDS(I2250,IGDS2)                                           21500001
+C                  INITIALIZE A GRAPHIC DATA SET THAT WILL BE USED TO   22000001
+C                  DISPLAY A CIRCLE AROUND ANY OF THE OUTER X'S.        22500001
+      CALL INGDS(I2250,IGDS3)                                           23000001
+C                  CREATE AN ATTENTION LEVEL FOR THE 2250.              23500001
+      CALL CRATL(I2250,IATL)                                            24000001
+C                  ENABLE PROGRAMMED FUNCTION KEYS 1,2, & 3 & LIGHT PEN.24500001
+      CALL ENATN(IATL,1,-3,34)                                          25000001
+      CALL MLITS(I2250,3)                                               25500001
+C                  ALLOW LIGHT PEN ATTENTIONS FOR EACH GRAPHIC DATA SET.26000001
+      CALL SLPAT(IGDS1,1)                                               26500001
+      CALL SLPAT(IGDS2,1)                                               27000001
+      CALL SLPAT(IGDS3,1)                                               27500001
+C                  THE FOLLOWING INFORMATION IS ON CARD RECORDS. DEVICE 28000001
+C                  NUMBER IS 5. CHARACTER X IS LEFT ALIGNED AND APPEARS 28500001
+C                  ON THE CARD RECORD AS XBBB . EIGHT 4-DIGIT LABELS    29000001
+C                  (NUM1,NUM2,ETC.) FOLLOW THE X. STORAGE WAS ALLOCATED 29500001
+C                  FOR THE ARRAY "LABEL" BY THE PREVIOUS DIMENSION STATE30000001
+C                  MENT.                                                30500001
+C                                                                       31000001
+C                  PLACE CHARACTER X IN MAIN STORAGE.                   31500001
+   20 FORMAT(A4)                                                        32000001
+      READ(5,20)X                                                       32500001
+C                  PLACE LABELS IN MAIN STORAGE.                        33000001
+   30 FORMAT(8A4)                                                       33500001
+      READ(5,30)(LABEL(INCR),INCR=1,8)                                  34000001
+C                  SET BEAM POSITION TO CENTER OF CIRCLE.               34500001
+      CX=2047.0                                                         35000001
+      CY=2047.0                                                         35500001
+C                  SET CHARACTER MODE FOR LARGE SIZE, PROTECTED.        36000001
+      CALL SCHAM(IGDS1,2)                                               36500001
+C                  DISPLAY CENTER X.                                    37000001
+      NUM=-1                                                            37500001
+      CALL PTEXT(IGDS1,X,1,NUM,NULL,1,CX,CY)                            38000001
+C                  COMPUTE X AND Y COORDINATES FOR X'S OF OUTER CIRCLE. 38500001
+C                  PLACE THEM IN THE CIRX AND CIRY ARRAYS FOR WHICH MAIN39000001
+C                  STORAGE HAS BEEN ALLOCATED BY DIMENSION STATEMENT.   39500001
+      R=1200.0                                                          40000001
+      C=3.141596/180                                                    40500001
+      THETA=45.0                                                        41000001
+      DO 10 I=1,8                                                       41500001
+      RADIAN=THETA*FLOAT(I)*C                                           42000001
+      CIRX(I)=CX+R*COS(RADIAN)                                          42500001
+   10 CIRY(I)=CY+R*SIN(RADIAN)                                          43000001
+C                  SET CHARACTER MODE FOR BASIC SIZE, PROTECTED X.      43500001
+      CALL SCHAM(IGDS1,1)                                               44000001
+C                  GENERATE AN X IN INCLUDE STATUS. CALCULATE           44500001
+C                  X-COORDINATE OF LABEL ASSOCIATED WITH THAT X.        45000001
+C                  GENERATE LABEL IN INCLUDE STATUS. SET INCR TO NEXT   45500001
+C                  LABEL IN ARRAY. DO THIS 8 TIMES TO COMPLETE CIRCLE.  46000001
+      DO 50 NUM=1,8                                                     46500001
+      CALL PTEXT(IGDS1,X,1,NUM,NULL,1,CIRX(NUM),CIRY(NUM))              47000001
+      CXNUM=CIRX(NUM)+300.0                                             47500001
+   50 CALL PTEXT(IGDS2,LABEL(NUM),4,NUM,NULL,1,CXNUM,CIRY(NUM))         48000001
+C                  COMPUTE COORDINATES FOR CIRCLES AROUND OUTER X'S.    48500001
+C                  PLACE THEM IN SMALX AND SMALY ARRAYS FOR WHICH MAIN  49000001
+C                  STORAGE HAS BEEN ALLOCATED BY DIMENSION STATEMENT.   49500001
+      R=200.0                                                           50000001
+      THETA=360.0/24.0                                                  50500001
+      DO 105 N=1,24                                                     51000001
+      RADIAN=THETA*FLOAT(N)*C                                           51500001
+      DO 105 I=1,8                                                      52000001
+      SMALX(I,N)=CIRX(I)+R*COS(RADIAN)                                  52500001
+  105 SMALY(I,N)=CIRY(I)+R*SIN(RADIAN)                                  53000001
+C                  GENERATE CIRCLES AROUND OUTER X'S IN OMIT STATUS.    53500001
+      DO 110 NUM=1,8                                                    54000001
+      CALL STPOS(IGDS3,CIRX(NUM)+200.0,CIRY(NUM))                       54500001
+  110 CALL PLINE(IGDS3,SMALX(NUM,1),SMALY(NUM,1),NUM,NULL,2,24,8,8)     55000001
+C                  OMIT LABELS FROM THE DISPLAY.                        55500001
+      CALL OMIT(IGDS2)                                                  56000001
+C                  EXECUTE ALL GRAPHIC DATA PRODUCED.                   56500001
+      CALL EXEC(IGDS1)                                                  57000001
+      CALL EXEC(IGDS2)                                                  57500001
+      CALL EXEC(IGDS3)                                                  58000001
+C                  REQUEST ATTENTION INFORMATION TO DETERMINE WHETHER   58500001
+C                  2250 OPERATOR WANTS TO CHANGE OR END THE DISPLAY.    59000001
+C                  WAIT FOR AN ATTENTION TO OCCUR.                      59500001
+  200 CALL RQATN(IATL,INTCD,2,INTARY,1,2,3,34)                          60000001
+C                  IF LIGHT PEN ATTENTION, GO TO 210.                   60500001
+C                  IF PROGRAMMED FUNCTION KEY ATTENTION, GO TO 235.     61000001
+      IF (INTCD-34) 235,210,210                                         61500001
+C                  IF LIGHT PEN ATTENTION WAS ASSOCIATED WITH IGDS1, GO 62000001
+C                  TO 220. IF IGDS2, GO TO 225. IF IGDS3, GO TO 230.    62500001
+  210 IF(INTARY(1)-IGDS1) 201,220,201                                   63000001
+  201 IF(INTARY(1)-IGDS2) 202,225,202                                   63500001
+  202 IF(INTARY(1)-IGDS3) 200,230,200                                   64000001
+C                  IF LIGHT PEN ATTENTION WAS ON CENTER OF LARGE CIRCLE,64500001
+C                  GO TO 221. IF ON OUTER CIRCLE, GO TO 222.            65000001
+  220 IF(INTARY(4)) 221,222,222                                         65500001
+C                  DISPLAY LABELS AND WAIT FOR ANOTHER ATTENTION.       66000001
+  221 CALL INCL(IGDS2)                                                  66500001
+      GO TO 200                                                         67000001
+C                  DISPLAY A CIRCLE AROUND THE OUTER X DETECTED AND WAIT67500001
+C                  FOR ANOTHER ATTENTION.                               68000001
+  222 NUM=INTARY(4)                                                     68500001
+      CALL INCL(IGDS3,NUM)                                              69000001
+      GO TO 200                                                         69500001
+C                  REMOVE LABELS FROM DISPLAY. AWAIT NEW ATTENTION.     70000001
+  225 CALL OMIT(IGDS2)                                                  70500001
+      GO TO 200                                                         71000001
+C                  REMOVE DETECTED CIRCLE FROM DISPLAY. AWAIT ATTENTION.71500001
+  230 NUM=INTARY(4)                                                     72000001
+      CALL OMIT(IGDS3,NUM)                                              72500001
+      GO TO 200                                                         73000001
+C                  IF PROGRAMMED FUNCTION KEY 1 DEPRESSED, GO TO 240.   73500001
+C                  IF KEY 2, GO TO 250. IF KEY 3, GO TO 260.            74000001
+  235 GO TO (240,250,260),INTCD                                         74500001
+C                  TERMINATE THE PROGRAM RUN.                           75000001
+  240 CALL TMGSP(IGSP)                                                  75500001
+      CALL EXIT                                                         76000001
+C                  REMOVE ALL CIRCLES AROUND OUTER X'S. AWAIT ATTENTION.76500001
+  250 DO 251 I=1,8                                                      77000001
+  251 CALL OMIT(IGDS3,I)                                                77500001
+      GO TO 200                                                         78000001
+C                  DISPLAY ALL CIRCLES AROUND OUTER X'S. AWAIT ATTENTION78500001
+  260 DO 261 I=1,8                                                      79000001
+  261 CALL INCL(IGDS3,I)                                                79500001
+      GO TO 200                                                         80000001
+      END                                                               80500001
+//LKED.SYSIN DD *                                                       81500001
+ INCLUDE SYSLIB(IHCGSP01)                                               81550001
+ INCLUDE SYSLIB(IHCGSP02)                                               81600001
+ INCLUDE SYSLIB(IHCGSP03)                                               82000001
+//GO.SYSABEND  DD SYSOUT=A                                              83000001
+//GO.FT10F001  DD  UNIT=(2250-1)                                        83500001
+//GO.SYSIN    DD *                                                      84000001
+X                                                                       84500001
+NUM1NUM2NUM3NUM4NUM5NUM6NUM7NUM8                                        85000001

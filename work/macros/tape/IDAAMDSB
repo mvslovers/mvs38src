@@ -1,0 +1,158 @@
+*/********************************************************************/ 00050003
+*/*                                                                  */ 00100003
+*/*   MACRO NAME = IDAAMDSB                                          */ 00150003
+*/*                                                                  */ 00200003
+*/*   DESCRIPTIVE NAME =DATA SET CHARACTERISTICS                     */ 00250003
+*/*              AND STATISTICS BLOCK                                */ 00300003
+*/*                                                                  */ 00320003
+*/*   FUNCTION = CONTAINS DATA SET CHARACTERISTICS AND STATISTICS    */ 00350003
+*/*                                                                  */ 00400003
+*/*   CONTROL BLOCK STRUCTURE = THE IDAAMDSB IS POINTED TO BY IDAAMB */ 00450003
+*/*                                                                  */ 00500003
+*/*   INCLUDED MACROS = NONE                                         */ 00550003
+*/*                                                                  */ 00600003
+*/*   METHOD OF ACCESS = PL/S - NO DECLARES NECESSARY                */ 00650003
+*/*                                                                  */ 00700003
+*/*   CREATED BY = VSAM OPEN                                         */ 00750003
+*/*                                                                  */ 00800003
+*/*   STATUS = VS/1 RELEASE 4  (CHANGE FLAG @X04SVXX)                */ 00850003
+*/*                                                                  */ 00900003
+*/*   DATE OF LAST CHANGE = 8 AUG 74                                 */ 00950003
+*/*                                                                  */ 01000003
+*/********************************************************************/ 01050003
+*        DCL 1 IDAAMDSB BASED,/* DATA SET CHAR./STATISTICS BLOCK     */ 02000003
+*              2 AMDSBID      CHAR(1),  /* CONTROL BLOCK ID          */ 04000003
+*              2 AMDATTR      CHAR(1),  /* ATTRIBUTES                */ 06000003
+*                3 AMDDST     BIT(1),   /* KEY, CHRONOLOGIC          */ 08000003
+*                3 AMDWCK     BIT(1),   /* WRITE CHECK               */ 10000003
+*                3 AMDSDT     BIT(1),   /* SEQ SET WITH DATA         */ 12000003
+*                3 AMDREPL BIT(1),      /* REPLICATION               */ 14000003
+*                3 AMDORDER   BIT(1),   /* USE VOLS IN LIST ORDER    */ 16000003
+*                3 AMDRANGE   BIT(1),   /* KEY RANGE DATA SET        */ 18000003
+*                3 AMDRRDS    BIT(1),   /* RELATIVE RECORD DATA SET     18050003
+*                                                            @X04SVLC*/ 18060003
+*                3 AMDSPAN    BIT(1),   /* SPANNED RECORDS ARE ALLOWED  18100003
+*                                                            @X04SVLC*/ 18150003
+*              2 AMDLEN FIXED(15),      /* LENGTH OF AMDSB           */ 20000003
+*              2 AMDNEST      FIXED(15),/* NO OF ENTRIES IN IDX SECTN*/ 22000003
+*                3 AMDAXRKP   FIXED(15),/* RELATIVE KEY POSITION OF     22050003
+*                                            ALTERNATE KEY   @X04SVLC*/ 22100003
+*              2 AMDRKP       FIXED(15),/* RELATIVE KEY POSITION     */ 24000003
+*              2 AMDKEYLN     FIXED(15),/* KEY LENGTH                */ 26000003
+*              2 AMDPCTCA PTR(8),       /* % FREE CI IN CA           */ 28000003
+*              2 AMDPCTCI PTR(8),       /* % FREE BYTES IN CI        */ 30000003
+*              2 AMDCIPCA FIXED(15),    /* TOTAL NO. OF CIS PER CA   */ 32000003
+*              2 AMDFSCA      FIXED(15),/* NO OF FREE CIS PER CA     */ 34000003
+*              2 AMDFSCI      FIXED(31),/* NO OF FREE BYTES PER CI   */ 36000003
+*              2 AMDCINV      FIXED(31),/* CONTROL INTERVAL SIZE     */ 38000003
+*              2 AMDLRECL     FIXED(31),/* MAXIMUM RECORD SIZE       */ 40000003
+*              2 AMDHLRBA     FIXED(32),/* RBA OF HIGH LEVEL IDX REC */ 42000003
+*                3 AMDNSLOT   FIXED(31),/* NO. OF RECORD SLOTS PER CI   42050003
+*                                                            @X04SVLC*/ 42100003
+*              2 AMDSSRBA     FIXED(32),/* RBA OF FIRST SEQ SET REC  */ 44000003
+*                3 AMDMAXRR   FIXED(31),/* MAX RELATIVE RECORD NUMBER   44050003
+*                                                            @X04SVLC*/ 44150003
+*              2 AMDPARDB     PTR(31),  /* PTR TO FIRST ARDB         */ 46000003
+*              2 AMDATTR3   BIT(8),     /* ATTRIBUTES        @X04SVLC*/ 50050003
+*                3 AMDUNQ     BIT(1),  /* ON=NON-UNIQUE KEYS @X04SVLC   50100003
+*                                         OFF=UNIQUE KEYS    @X04SVLC*/ 50102003
+*                3 AMDFAULT   BIT(1),  /* ON=CYLINDER FAULT ON SS1      50110003
+*                                         OFF=STAGE THE DATA SET        50130003
+*                                         (DEFAULT)          @X04SVLC*/ 50140003
+*                3 AMDBIND    BIT(1),  /* ON=BIND THE DATA SET ON SS1   50142003
+*                                         OFF=DO NOT BIND (DEFAULT)     50146003
+*                                                            @X04SVLC*/ 50148003
+*                3 AMDWAIT    BIT(1),  /* ON=WAIT ON A RELINQUISH       50148403
+*                                         OFF=DO NOT WAIT (DEFAULT)     50149203
+*                                                            @X04SVLC*/ 50149603
+*                3 AMDLM      BIT(1),   /* ON=DATA SET LOADED           50149703
+*                                          OFF=LOAD MODE OR NOT LOADED  50149803
+*                                                            @X04SVLC*/ 50149903
+*                3 *          BIT(3),   /* UNUSED            @X04SVLC*/ 50150003
+*              2 *          CHAR(7),    /* UNUSED            @X04SVLC*/ 50200003
+*              2 AMDSTAT      BDY(WORD),/* STATISTICS        @X04SVLC*/ 50250003
+*                3 AMDSTSP    CHAR(8),  /*    SYSTEM TIME STAMP      */ 52000003
+*                3 AMDNIL     FIXED(15),/* NUMBER INDEX LEVELS       */ 54000003
+*                3 AMDNEXT    FIXED(15),/* NUMBER OF EXTENTS         */ 56000003
+*                3 AMDNLR     FIXED(31),/* NUMBER LOGICAL RECORDS    */ 58000003
+*                3 AMDDELR    FIXED(31),/* NUMBER DELETED RECORDS    */ 60000003
+*                3 AMDIREC    FIXED(31),/* NUMBER INSERTED RECORDS   */ 62000003
+*                3 AMDUPR     FIXED(31),/* NUMBER UPDATED RECORDS    */ 64000003
+*                3 AMDRETR    FIXED(31),/* NUMBER RETRIEVED RECORDS  */ 66000003
+*                3 AMDASPA    FIXED(31),/* BYTES OF FREE SPACE IN DS */ 68000003
+*                3 AMDNCIS    FIXED(31),/* NUMBER OF CI SPLITS       */ 70000003
+*                3 AMDNCAS    FIXED(31),/* NUMBER OF CA SPLITS       */ 72000003
+*                3 AMDEXCP    FIXED(31);/* NUMBER OF EXCPS           */ 74000003
+*                                                                       76000003
+*                                                                       78000003
+*                                                                       80000003
+*%  DCL  (AMDKSDS,AMDCSDS) CHAR;                                        82000003
+*%       AMDKSDS = '''1''B';            /* KEY SEQUENTIAL DATA SET   */ 84000003
+*%       AMDCSDS = '''0''B';            /* CHRONOLOGIC SEQ DATA SET  */ 86000003
+*%       AMDSBLEN = 'LENGTH(IDAAMDSB)'; /* LENGTH OF AMDSB           */ 88000003
+         MACRO ,                                                        90000100
+         IDAAMDSB ,                                                     90000200
+*                                                                       90000300
+*         ASSEMBLER DSECT FOR AMDSB                                     90000400
+*         COPIED FROM SYM601.F01 AND MANUALLY CONVERTED TO ASM          90000500
+*                                                                       90000600
+IDAAMDSB DSECT ,                         DATA SET CHAR/STATISTICS BLOCK 90000700
+AMDSBID  DS    XL1                       CONTROL BLOCK ID               90000800
+AMDIDVAL EQU   X'60'                     ID OF AMDSB (SEE IGG0CLDA)     90000900
+AMDATTR  DS    XL1                       ATTRIBUTES                     90001000
+AMDDST   EQU   X'80'                     KEY, CHRONOLOGIC               90001100
+*AMDKSDS                                 ON=KEY SEQUENTIAL DATA SET     90001200
+*AMDCSDS                                 OFF=CHRONOLOGIC SEQ DATA SET   90001300
+AMDWCK   EQU   X'40'                     WRITE CHECK                    90001400
+AMDSDT   EQU   X'20'                     SEQ SET WITH DATA              90001500
+AMDREPL  EQU   X'10'                     REPLICATION                    90001600
+AMDORDER EQU   X'08'                     USE VOLS IN LIST ORDER         90001700
+AMDRANGE EQU   X'04'                     KEY RANGE DATA SET             90001800
+AMDRRDS  EQU   X'02'                     RELATIVE RECORD DATA SET       90001900
+AMDSPAN  EQU   X'01'                     SPANNED RECORDS ARE ALLOWED    90002000
+AMDLEN   DS    XL2                       LENGTH OF AMDSB                90002100
+AMDNEST  DS    0XL2                      NO OF ENTRIES IN IDX SECTN     90002200
+AMDAXRKP DS    XL2                       RELATIVE KEY POSITION OF       90002300
+*                                          ALTERNATE KEY                90002400
+AMDRKP   DS    XL2                       RELATIVE KEY POSITION          90002500
+AMDKEYLN DS    XL2                       KEY LENGTH                     90002600
+AMDPCTCA DS    XL1                       % FREE CI IN CA                90002700
+AMDPCTCI DS    XL1                       % FREE BYTES IN CI             90002800
+AMDCIPCA DS    H                         TOTAL NO. OF CIS PER CA        90002900
+AMDFSCA  DS    H                         NO OF FREE CIS PER CA          90003000
+AMDFSCI  DS    A                         NO OF FREE BYTES PER CI        90003100
+AMDCINV  DS    A                         CONTROL INTERVAL SIZE          90003200
+AMDLRECL DS    A                         MAXIMUM RECORD SIZE            90003300
+AMDHLRBA DS    0A                        RBA OF HIGH LEVEL IDX REC      90003400
+AMDNSLOT DS    A                         NO. OF RECORD SLOTS PER CI     90003500
+AMDSSRBA DS    0A                        RBA OF FIRST SEQ SET REC       90003600
+AMDMAXRR DS    A                         MAX RELATIVE RECORD NUMBER     90003700
+AMDPARDB DS    A                         PTR TO FIRST ARDB              90003800
+AMDATTR3 DS    XL1                       ATTRIBUTES                     90003900
+AMDUNQ   EQU   X'80'                     ON=NON-UNIQUE KEYS             90004000
+*                                        OFF=UNIQUE KEYS                90004100
+AMDFAULT EQU   X'40'                     ON=CYLINDER FAULT ON SS1       90004200
+*                                        OFF=STAGE THE DATA SET         90004300
+*                                        (DEFAULT)                      90004400
+AMDBIND  EQU   X'20'                     ON=BIND THE DATA SET ON SS1    90004500
+*                                        OFF=DO NOT BIND (DEFAULT)      90004600
+AMDWAIT  EQU   X'10'                     ON=WAIT ON A RELINQUISH        90004700
+*                                        OFF=DO NOT WAIT (DEFAULT)      90004800
+AMDLM    EQU   X'08'                     ON=DATA SET LOADED             90004900
+*                                        OFF=LOAD MODE OR NOT LOADED    90005000
+         DS    XL7                       UNUSED                         90005100
+AMDSTAT  DS    0F                        STATISTICS                     90005200
+AMDSTSP  DS    D                            SYSTEM TIME STAMP           90005300
+AMDNIL   DS    H                         NUMBER INDEX LEVELS            90005400
+AMDNEXT  DS    H                         NUMBER OF EXTENTS              90005500
+AMDNLR   DS    A                         NUMBER LOGICAL RECORDS         90005600
+AMDDELR  DS    A                         NUMBER DELETED RECORDS         90005700
+AMDIREC  DS    A                         NUMBER INSERTED RECORDS        90005800
+AMDUPR   DS    A                         NUMBER UPDATED RECORDS         90005900
+AMDRETR  DS    A                         NUMBER RETRIEVED RECORDS       90006000
+AMDASPA  DS    A                         BYTES OF FREE SPACE IN DS      90006100
+AMDNCIS  DS    A                         NUMBER OF CI SPLITS            90006200
+AMDNCAS  DS    A                         NUMBER OF CA SPLITS            90006300
+AMDEXCP  DS    A                         NUMBER OF EXCPS                90006400
+AMDSBLEN EQU   *-IDAAMDSB                                               90006500
+         MEND  ,                                                        90006600

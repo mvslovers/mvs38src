@@ -1,0 +1,24 @@
+         MACRO ,                                                        00000100
+         BLSFP ,                                                        00000200
+*********************************************************************** 00000300
+*                                                                     * 00000400
+*********************************************************************** 00000500
+FPBLOK   EQU   0                                                        00000600
+FPPDDS   EQU   FPBLOK                                                   00000700
+FPRES1   EQU   FPBLOK+44                                                00000800
+FPDSDS   EQU   FPBLOK+48                                                00000900
+FPRES2   EQU   FPBLOK+92                                                00001000
+FPPIDP   EQU   FPBLOK+96                                                00001100
+FPRES3   EQU   FPBLOK+99                                                00001200
+FPDBPIDP EQU   FPBLOK+100                                               00001300
+FPRES4   EQU   FPBLOK+103                                               00001400
+FPSYSID  EQU   FPBLOK+104                                               00001500
+FPGRPID  EQU   FPBLOK+112                                               00001600
+FPADMNM  EQU   FPBLOK+120                                               00001700
+FPADMID  EQU   FPADMNM                                                  00001800
+FPADMLN  EQU   FPADMNM+7                                                00001900
+FPDELNM  EQU   FPBLOK+128                                               00002000
+FPDELID  EQU   FPDELNM                                                  00002100
+FPDELLN  EQU   FPDELNM+7                                                00002200
+FPRES6   EQU   FPBLOK+136                                               00002300
+         MEND  ,                                                        00002400

@@ -1,0 +1,196 @@
+*/********************************************************************/ 00050003
+*/*                                                                  */ 00100003
+*/*   MACRO NAME = IDAAMBL                                           */ 00150003
+*/*                                                                  */ 00200003
+*/*   DESCRIPTIVE NAME = ACCESS METHOD BLOCK LIST.                   */ 00250003
+*/*                                                                  */ 00300003
+*/*   FUNCTION = THE AMBL DESCRIBES A VSAM CLUSTER AND POINTS TO THE */ 00350003
+*/*              CLUSTER'S DATA SET AND INDEX AMB'S. WHEN THE CLUSTER*/ 00400003
+*/*              IS OPENED, AN AMBL IS BUILT TO DESCRIBE THE CLUSTER.*/ 00450003
+*/*              IF THE CLUSTER IS SHARED WITH OTHER USERS, THE      */ 00500003
+*/*              EXISTING AMB'S ADDRESSES ARE PUT INTO THE AMBL.     */ 00550003
+*/*                                                                  */ 00600003
+*/*   CONTROL BLOCK STRUCTURE = THE AMBL IS POINTED TO BY AN ACB     */ 00650003
+*/*                             (ACBAMBL).                           */ 00700003
+*/*                                                                  */ 00750003
+*/*   INCLUDED MACROS = NONE                                         */ 00800003
+*/*                                                                  */ 00850003
+*/*   METHOD OF ACCESS = PL/S - RESPECIFY IDAAMBL BASED.             */ 00900003
+*/*                                                                  */ 00950003
+*/*   CREATED BY: VSAM OPEN MODULE IDA0192F.                         */ 01000003
+*/*                                                                  */ 01050003
+*/*   STATUS = VS1 RELEASE 4, VS2 RELEASE 3,  (CHANGE FLAGS @X04SVXX)*/ 01100004
+*/*                                                                  */ 01150003
+*/*   DATE OF LAST CHANGE = 29/07/75                         @Z40WSRL*/ 01200004
+*/*                                                                  */ 01250003
+*/********************************************************************/ 01300003
+*        DCL 1 IDAAMBL BASED,                                           64546803
+*              2 AMBLPCHN     PTR(31),  /* PRIMARY CHAIN POINTER    */  64800003
+*              2 AMBLSCHN     PTR(31),  /* SECONDARY CHAIN POINTER  */  65400003
+*              2 AMBLACB      PTR(31),  /* POINTER TO ACB           */  66000003
+*              2 AMBLEOV      FIXED(31),/* EOV/RM INTERFACE         */  66600003
+*                3 AMBLEFLG   CHAR(1),  /* EOV FLAGS                */  67200003
+*                  4 AMBLWAIT BIT(1),   /* EOV IS WAITING           */  67800003
+*                  4 AMBLESET BIT(1),   /* EOV RESET CONTROL BLOCKS. */ 68400003
+*                3 AMBLCOMP   CHAR(1),  /* EOV LOCK                 */  69000003
+*                3 *          CHAR(2),  /* NOT USED                 */  69600003
+*              2 AMBLDDNM     CHAR(8),  /* DDNAME FROM ACB          */  70200003
+*                3 AMBLIDF    CHAR(8),  /* CLUSTER ID        @X04SVLC*/ 70250003
+*                  4 AMBLCACB PTR(31)BDY(BYTE),/* CAT ACB    @X04SVLC*/ 70300003
+*                  4 AMBLDCI  FIXED(24)BDY(BYTE),/* CI NBR   @X04SVLC*/ 70350003
+*                  4 AMBLQ    BIT(8),   /* QUALIFIER         @X04SVLC*/ 70450003
+*                   5 AMBLDDC BIT(1),/* DD CONNECT ONLY      @X04SVLC*/ 70500003
+*                   5 AMBLGSR BIT(1),/* OPENED FOR GSR       @X04SVLC*/ 70550003
+*                   5 AMBLLSR BIT(1),/* OPENED FOR LSR       @X04SVLC*/ 70600003
+*                   5 AMBLFSTP BIT(1),/* OPENED FOR FAST PATH           70650003
+*                                                            @X04SVLC*/ 70700003
+*                   5 AMBLUBF BIT(1),/* OPENED FOR USER BFR  @X04SVLC*/ 70750003
+*                   5 AMBLKSDS BIT(1),/* OPENED AS KSDS      @X04SVLC*/ 70760003
+*                   5 AMBLESDS BIT(1),/* OPENED AS ESDS      @X04SVLC*/ 70770003
+*                   5 AMBLDFR BIT(1),/* OPENED WITH DEFER OPTION        70780003
+*                                                            @X04SVLC*/ 70790003
+*              2 AMBLXPT      PTR(31),  /* PTR FR BASE AMBL TO PATH     70800003
+*                                          AMBL & VICE-VERSA @X04SVLC*/ 70850003
+*              2 AMBLVC       FIXED(15),/* VALID AMBL TABLE  @X04SVLC*/ 70950003
+*                3 AMBLVRT    FIXED(8), /* RELATIVE VAT      @X04SVLC*/ 71000003
+*                3 AMBLENO    FIXED(8), /* OFFSET WITHIN VAT @X04SVLC*/ 71050003
+*              2 AMBLTYPE     BIT(8),   /* STRUCTURE TYPE    @X04SVLC*/ 71060003
+*                3 AMBLPATH   BIT(1),   /* ACB IS FOR PATH   @X04SVLC*/ 71070003
+*                3 AMBLUPGR   BIT(1),   /* ACB FOR UPGRADE   @X04SVLC*/ 71080003
+*                3 AMBLAIX    BIT(1),   /* ACB FOR AIX END USE-IMPLIES  71090003
+*                                          AMBLBASE ON       @X04SVLC*/ 71090403
+*                3 AMBLBASE   BIT(1),   /* ACB FOR BASE      @X04SVLC*/ 71092003
+*                3 AMBLFIX BIT(1),      /* STRUCTURE FIXED BY           71092403
+*                                          OPEN              @X04SVLC*/ 71092803
+*                3 *          BIT(3),   /* UNUSED            @X04SVLC*/ 71094003
+*              2 *            CHAR(1),  /* UNUSED            @X04SVLC*/ 71100003
+*              2 AMBLID       CHAR(1),  /* AMBL IDENTIFER           */  73200003
+*              2 AMBLSHAR     BIT(8),   /* SHARING INDICATORS       */  73800003
+*                3 AMBLPRIM   BIT(1),   /* P-AMBL INDICATOR         */  74400003
+*                3 AMBLCATO   BIT(1),   /* CATALOG OPEN IND IS ON   */  75000003
+*                3 AMBLWRIT   BIT(1),   /* OUTPUT/UPDATE SPECIFIED  */  75600003
+*                3 *          BIT(5),   /* RESERVED                 */  76200003
+*              2 AMBLLEN      PTR(8),   /* AMBL LENGTH              */  76800003
+*              2 AMBLFLG1     BIT(8),   /* FLAG BYTE ONE            */  77400003
+*                3 AMBLFULL   BIT(1),   /* FULL ACCESS OK           */  78000003
+*                3 AMBLCINV   BIT(1),   /* CINV ACCESS OK           */  78600003
+*                3 AMBLUPD    BIT(1),   /* UPDATE ACCESS OK         */  79200003
+*                3 AMBLVVIC   BIT(1),   /* AMBL FOR VVIC DATA SET       79800003
+*                                                            @X04SVRP*/ 79810003
+*                  4 AMBLSDS  BIT(1),   /* AMBL FOR SYSTEM DATA SET     79820004
+*                                                            @Z40WSRL*/ 79830004
+*                3 AMBLSCRA   BIT(1),   /* AMBL FOR SYSTEM CATALOG      79850003
+*                                          RECOVERY AREA     @X04SVRP*/ 79900003
+*                3 AMBLUCRA   BIT(1),   /* AMBL FOR USER CATALOG        79950003
+*                                          RECOVERY AREA     @X04SVRP*/ 80000003
+*                3 AMBLCAT    BIT(1),   /* IND ACB FOR A CATALOG    */  80400003
+*                3 AMBLDUMY   BIT(1),   /* DD DUMMY SPECIFIED       */  81000003
+*                                       /* TO SIMPLIFY TESTING  FOR  */ 81050003
+*                                       /* SPECIAL DATA SETS IN      */ 81100003
+*                                       /* EXISTING CODE THE AMBLCAT */ 81150003
+*                                       /* AMBLVVIC AND AMBLSCRA     */ 81200003
+*                                       /* BITS ARE SET AS FOLLOWS:  */ 81250003
+*                                       /* VVIC SCRA X CAT TYPE OF   */ 81300003
+*                                       /*                 DATA SET  */ 81350003
+*                                       /*   0    0   X 0  CATALOG   */ 81400003
+*                                       /*   1    0   X 1  VVIC      */ 81450003
+*                                       /*   0    1   X 1  SCRA      */ 81500003
+*              2 AMBLFLG2     BIT(8),   /* FLAG BYTE TWO            */  81600003
+*                3 *          BIT(3),   /* RESERVED          @Z30SSDT*/ 82860003
+*                3 AMBLSTAG   BIT(1),   /* CLUSTER IS STAGED @X04ACPS*/ 82870003
+*                3 *          BIT(4),   /* RESERVED          @X04ACPS*/ 82900003
+*              2 AMBLNST      CHAR(1),  /* NUMBER OF STRINGS         */ 83400003
+*              2 AMBLNUM      FIXED(15),/* NUMBER OF AMB PTRS IN    */  84000003
+*                                       /* AMBL                     */  84600003
+*              2 *            CHAR(1),  /* RESERVED                 */  85250003
+*              2 AMBLNIDS     PTR(8),   /* NUMBER IF IDS            */  85300003
+*              2 AMBLMIDS(5)  CHAR(2),  /* IDS OF MODULES LOADED    */  85350003
+*              2 AMBLDTA      PTR(31),  /* POINTER TO DATA AMB      */  85400003
+*              2 AMBLIX       PTR(31),  /* POINTER TO INDEX AMB     */  85450003
+*              2 AMBLBIB      PTR(31),  /* PTR TO BIB        @X04SVLC*/ 89410003
+*              2 AMBLCMB      PTR(31);  /* PTR TO CMB        @X04SVRP*/ 89460003
+         MACRO ,                                                        90000100
+         IDAAMBL ,                                                      90000200
+*                                                                       90000300
+*         ASSEMBLER DSECT FOR AMBL                                      90000400
+*         COPIED FROM SYM601.F01 AND MANUALLY CONVERTED TO ASM          90000500
+*                                                                       90000600
+IDAAMBL  DSECT ,                         ACCESS METHOD BLOCK LIST       90000700
+AMBLPCHN DS    A                         PRIMARY CHAIN POINTER          90000800
+AMBLSCHN DS    A                         SECONDARY CHAIN POINTER        90000900
+AMBLACB  DS    A                         POINTER TO ACB                 90001000
+AMBLEOV  DS    0A                        EOV/RM INTERFACE               90001100
+AMBLEFLG DS    XL1                       EOV FLAGS                      90001200
+AMBLWAIT EQU   X'80'                     EOV IS WAITING                 90001300
+AMBLESET EQU   X'40'                     EOV RESET CONTROL BLOCKS.      90001400
+AMBLCOMP DS    XL1                       EOV LOCK                       90001500
+         DS    XL2                       NOT USED                       90001600
+AMBLDDNM DS    0CL8                      DDNAME FROM ACB                90001700
+AMBLIDF  DS    0CL8                      CLUSTER ID                     90001800
+AMBLCACB DS    A                         CAT ACB                        90001900
+AMBLDCI  DS    XL3                       CI NBR                         90002000
+AMBLQ    DS    XL1                       QUALIFIER                      90002100
+AMBLDDC  EQU   X'80'                     DD CONNECT ONLY                90002200
+AMBLGSR  EQU   X'40'                     OPENED FOR GSR                 90002300
+AMBLLSR  EQU   X'20'                     OPENED FOR LSR                 90002400
+AMBLFSTP EQU   X'10'                     OPENED FOR FAST PATH           90002500
+AMBLUBF  EQU   X'08'                     OPENED FOR USER BFR            90002600
+AMBLKSDS EQU   X'04'                     OPENED AS KSDS                 90002700
+AMBLESDS EQU   X'02'                     OPENED AS ESDS                 90002800
+AMBLDFR  EQU   X'01'                     OPENED WITH DEFER OPTION       90002900
+AMBLXPT  DS    A                         PTR FR BASE AMBL TO PATH       90003000
+*                                        AMBL & VICE-VERSA              90003100
+AMBLVC   DS    0H                        VALID AMBL TABLE               90003200
+AMBLVRT  DS    XL1                       RELATIVE VAT                   90003300
+AMBLENO  DS    XL1                       OFFSET WITHIN VAT              90003400
+AMBLTYPE DS    XL1                       STRUCTURE TYPE                 90003500
+AMBLPATH EQU   X'80'                     ACB IS FOR PATH                90003600
+AMBLUPGR EQU   X'40'                     ACB FOR UPGRADE                90003700
+AMBLAIX  EQU   X'20'                     ACB FOR AIX END USE-IMPLI      90003800
+*                                        AMBLBASE ON                    90003900
+AMBLBASE EQU   X'10'                     ACB FOR BASE                   90004000
+AMBLFIX  EQU   X'08'                     STRUCTURE FIXED BY             90004100
+         DS    XL1                       UNUSED                         90004200
+AMBLID   DS    XL1                       AMBL IDENTIFER                 90004300
+IDXAMBL  EQU   X'05'                     SEE IDA0192F                   90004400
+AMBLSHAR DS    XL1                       SHARING INDICATORS             90004500
+AMBLPRIM EQU   X'80'                     P-AMBL INDICATOR               90004600
+AMBLCATO EQU   X'40'                     CATALOG OPEN IND IS ON         90004700
+AMBLWRIT EQU   X'20'                     OUTPUT/UPDATE SPECIFIED        90004800
+AMBLLEN  DS    XL1                       AMBL LENGTH                    90004900
+AMBLFLG1 DS    XL1                       FLAG BYTE ONE                  90005000
+AMBLFULL EQU   X'80'                     FULL ACCESS OK                 90005100
+AMBLCINV EQU   X'40'                     CINV ACCESS OK                 90005200
+AMBLUPD  EQU   X'20'                     UPDATE ACCESS OK               90005300
+AMBLVVIC EQU   X'10'                     AMBL FOR VVIC DATA SET         90005400
+AMBLSDS  EQU   X'10'                     AMBL FOR SYSTEM DATA SET       90005500
+AMBLSCRA EQU   X'08'                     AMBL FOR SYSTEM CATALOG        90005600
+*                                        RECOVERY AREA                  90005700
+AMBLUCRA EQU   X'04'                     AMBL FOR USER CATALOG          90005800
+*                                        RECOVERY AREA                  90005900
+AMBLCAT  EQU   X'02'                     IND ACB FOR A CATALOG          90006000
+AMBLDUMY EQU   X'01'                     DD DUMMY SPECIFIED             90006100
+*                                        TO SIMPLIFY TESTING  FOR       90006200
+*                                        SPECIAL DATA SETS IN           90006300
+*                                        EXISTING CODE THE AMBLCAT      90006400
+*                                        AMBLVVIC AND AMBLSCRA          90006500
+*                                        BITS ARE SET AS FOLLOWS:       90006600
+*                                        VVIC SCRA X CAT TYPE OF        90006700
+*                                                        DATA SET       90006800
+*                                          0    0   X 0  CATALOG        90006900
+*                                          1    0   X 1  VVIC           90007000
+*                                          0    1   X 1  SCRA           90007100
+AMBLFLG2 DS    XL1                       FLAG BYTE TWO                  90007200
+AMBLSTAG EQU   X'10'                     CLUSTER IS STAGED              90007300
+AMBLNST  DS    XL1                       NUMBER OF STRINGS              90007400
+AMBLNUM  DS    XL2                       NUMBER OF AMB PTRS IN          90007500
+*                                        AMBL                           90007600
+         DS    XL1                       RESERVED                       90007700
+AMBLNIDS DS    XL1                       NUMBER IF IDS                  90007800
+AMBLMIDS DS    5CL2                      IDS OF MODULES LOADED          90007900
+AMBLDTA  DS    A                         POINTER TO DATA AMB            90008000
+AMBLIX   DS    A                         POINTER TO INDEX AMB           90008100
+AMBLBIB  DS    A                         PTR TO BIB                     90008200
+AMBLCMB  DS    A                         PTR TO CMB                     90008300
+AMBLLENG EQU   *-IDAAMBL                                                90008400
+         MEND  ,                                                        90008500

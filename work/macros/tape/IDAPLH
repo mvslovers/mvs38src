@@ -1,0 +1,469 @@
+*/********************************************************************/ 00050037
+*/*                                                                  */ 00100037
+*/*   MACRO NAME = IDAPLH                                            */ 00150037
+*/*                                                                  */ 00200037
+*/*   DESCRIPTIVE NAME = VSAM PLACE HOLDER                           */ 00250004
+*/*                                                                  */ 00300037
+*/*   FUNCTION = THIS MACRO CONTAINS:                                */ 00350037
+*/*              IDAPLHDR = PLACE HOLDER HEADER - CONTAINS THE       */ 00360037
+*/*               NUMBER OF PLACE HOLDERS AND STATISTICS             */ 00370037
+*/*              IDAPLH = CONTAINS POSITION INFORMATION              */ 00380037
+*/*              PLHEXTEN = PLH EXTENSION PRESENT WHEN LSR OR GSR    */ 00390037
+*/*               OPTIONS ARE IN EFFECT                              */ 00392037
+*/*              PLHKEY = CONTAINS THE CURRENT KEY                   */ 00394037
+*/*               THIS MACRO ALSO CONTAINS VARIOUS DECLARES FOR      */ 00396004
+*/*               JOURNALING                                         */ 00398004
+*/*                                                                  */ 00400037
+*/*   CONTROL BLOCK STRUCTURE = THE IDAPLHDR IS POINTED TO BY THE    */ 00450037
+*/*              IDAAMB. THE FIRST IDAPLH IS ADJACENT TO THE         */ 00460037
+*/*              IDAPLHDR. SUBSEQUENT IDAPLHS ARE POINTED TO BY      */ 00470037
+*/*              PLHCHAIN.                                           */ 00480037
+*/*                                                                  */ 00500037
+*/*   INCLUDED MACROS = NONE                                         */ 00550037
+*/*                                                                  */ 00600037
+*/*   METHOD OF ACCESS = PL/S - NO DECLARES NECESSARY                */ 00650037
+*/*                                                                  */ 00700037
+*/*   CREATED BY = VSAM OPEN                                         */ 00750037
+*/*                                                                  */ 00800037
+*/*   STATUS = VS/2 RELEASE 4.1  (CHANGE FLAG @Z40GSXX)              */ 00850004
+*/*                                                                  */ 00900037
+*/*   DATE OF LAST CHANGE = 15 AUGUST 75                             */ 00950004
+*/*                         3 JAN 77                          ZA14811*/ 00956037
+*/*                         02 FEB 77               @XA16338,@ZA14830*/ 00970037
+*/*                         04 APR 78                        @ZA32757*/ 00980037
+*/*                                                                  */ 01000037
+*/********************************************************************/ 01050037
+*  DCL  1 IDAPLHDR BASED,                  /* LEVEL 1 DECLARE      */   09600037
+*         2 PLHID CHAR(1),                 /* PLH ID '30'X         */   10000037
+*         2 PLHCNT PTR(8),                 /* NUMBER OF PLH ENTRIES*/   10400037
+*         2 PLHELTH PTR(15),               /* LENGTH OF EACH ENTRY */   10800037
+*         2 PLHDRREQ FIXED(31),     /* DEFER REQUEST COUNT   @X04SVLC*/ 10810037
+*         2 PLHDRMAX FIXED(15),     /* MAX NBR PLH IN CONCURRENT USE    10830037
+*                                                            @X04SVLC*/ 10840037
+*         2 PLHDRCUR FIXED(15),     /* CURRENT NBR OF ACTIVE PLHS       10842037
+*                                                            @X04SVLC*/ 10844037
+*         2 PLHIOSDQ PTR(31);       /* I/O SUPPORT DEFERRAL QUEUE       10850037
+*                                      HEADER                @X04SVLC*/ 10860037
+*/********************************************************************/ 10870037
+*/* VSAM PLACE HOLDER                                                */ 10910037
+*/********************************************************************/ 10960037
+*  DCL  1 IDAPLH BASED,                    /* ENTRY DEFINITION     */   11200037
+*         2 PLHAVL CHAR(1),                /* 0 IF ENTRY AVAILABLE */   11600037
+*         2 PLHATV CHAR(1),                /* 0 IF NO ACTIVE REQ   */   12000037
+*         2 PLHFLG1 BIT(8),                /* PROCESS FLAGS--BYTE 1*/   12400037
+*           3 PLHEOVW BIT(1),              /* EOV WAITING          */   12800037
+*           3 PLHENDRQ BIT(1),             /* ON IF ENDREQ ISSUED  */   13200037
+*           3 PLHASKBF BIT(1),             /* LESS THAN MAX BFRS   */   13600037
+*           3 PLHSSR BIT(1),               /* SEQ SET REQ          */   14000037
+*           3 PLHRDEXC BIT(1),             /* PLH IN READ EXCL MODE*/   14400037
+*           3 PLHASYRQ BIT(1),             /* IRB EXECUTION NEEDED */   14800037
+*           3 PLHDRPND BIT(1),             /* DEFERRED REQ PENDING */   15200037
+*           3 PLHSR BIT(1),           /* SUSPEND/RESUME PROCESSING IN   15600004
+*                                        PLACE OF WAIT/POST @Z40GSDT*/  15650004
+*         2 PLHFLG2 BIT(8),                /* PROCESS FLAGS--BYTE 2*/   16000037
+*           3 PLHUPD BIT(1),               /* LAST REQUEST GET UPD */   16400037
+*           3 PLHSQINS BIT(1),             /* SEQ INSERT MODE      */   16800037
+*           3 PLHKEYMD BIT(1),             /* KEYED MODE             */ 17200037
+*           3 PLHADDTE BIT(1),             /* ADD TO END PROCESSING*/   17600037
+*           3 PLHKRE   BIT(1),             /* END OF KEY RANGE     */   18000037
+*           3 PLHCIINS BIT(1),             /* CI SPLIT INSERT      */   18400037
+*           3 PLHSVADV BIT(1),             /* SAVE PLHNOADV--SCANDATA*/ 18800037
+*           3 PLHIWAIT BIT(1),             /* IDAWAIT TEST         */   18850037
+*         2 PLHEFLGS BIT(16),              /* EXCEPTION FLAGS--1   */   19200037
+*           3 PLHNOSPC BIT(1),             /* NO SPACE--CREATE MODE*/   19600037
+*           3 PLH1ST   BIT(1),             /* 1ST REQ AFTER OPEN   */   20000037
+*           3 PLHSKPER BIT(1),             /* SKIP ACROSS ERROR CNV*/   20400037
+*           3 PLHSRINV BIT(1),      /* SPAN RCD EXCEPTION    @X04SVLC*/ 20800037
+*           3 PLHNOADV BIT(1),             /* DONT ADVANCE PLH     */   21200037
+*           3 PLHEODX BIT(1),              /* EODAD TAKEN          */   21600037
+*           3 PLHINVAL BIT(1),             /* ON IF INVALID        */   22000037
+*           3 PLHDSCAN BIT(1),             /* SCAN DATA AFTER RD EX*/   22400037
+*           3 PLHRSTRT BIT(1),      /* RESTART FLAG          @X04SVLC*/ 22450037
+*           3 * BIT(7),             /* RESERVED              @X04SVLC*/ 22800037
+*         2 PLHFLG3 BIT(8),         /* FLAGS -- BYTE 3       @X04SVLC*/ 23200037
+*           3 PLHSRBSG BIT(1),      /* SPAN RCD SEGS ARE INCONSISTANT   23250037
+*                                                            @X04SVLC*/ 23300037
+*           3 PLHRAHD BIT(1),       /* READ-AHEAD            @X04SVLC*/ 23310037
+*           3 PLHSLVLD BIT(1),      /* ON IF 2ND LVL IDX VALID          23320037
+*                                                            @X04SVLC*/ 23322037
+*           3 PLHBWD BIT(1),        /* PREV REQ SPEC BWD DIRECTION      23330037
+*                                                            @X04SVLC*/ 23342037
+*           3 PLHRVRS BIT(1),       /* I/0 CHAIN REVERSED IF ON         23344037
+*                                                            @X04SVLC*/ 23346037
+*           3 PLHEOVDF BIT(1),     /* EOV DEFER ON IRB FLAG  @ZA10850*/ 23350037
+*         2 PLHAFLGS BIT(8),       /* MORE FLAGS-NOT CLEARED @X04SVLC*/ 23370037
+*           3 PLHDRLM BIT(1),       /* DIRECT REQ ISSUED DURING         23400037
+*                                      CREATE                @X04SVLC*/ 23450037
+*           3 PLHIOSRQ BIT(1),      /* I/O SUPPORT REQUEST   @ZA04719*/ 23500037
+*           3 PLHVAMB BIT(1),       /* PLHAMB IS VALID       @X04SVLC*/ 23550037
+*           3 PLHDBDC BIT(1),       /* PLH FROM SHR POOL     @X04SVLC*/ 23560037
+*           3 PLHIOSID BIT(1),      /* I/O SUPPORT ID        @X04SVLC*/ 23570037
+*           3 PLHRABWD BIT(1),      /* RA ENTERED IN BWD     @X04SVLC*/ 23580037
+*           3 PLHRAE   BIT(1),      /* RA KEY EQUAL HIT      @ZA14811*/ 23590037
+*         2 PLHACB   PTR(31),              /* POINTER TO ACB         */ 23600037
+*         2 PLHDSTYP CHAR(1),              /* DATA SET TYPE          */ 24000037
+*                                          /*     01 FOR DATA        */ 24400037
+*                                          /*     02 FOR INDEX       */ 24800037
+*         2 PLHRMIN  PTR(8),               /* READ THRESHOLD         */ 25200037
+*         2 PLHFRCNT PTR(8),               /* FREE BFRS IN ENTRY   */   25600037
+*         2 PLHBFRNO PTR(8),               /* TOTAL NO OF BFRS     */   26000037
+*         2 PLHMRPL PTR(31),               /* ADDR OF HEADER RPL   */   26400037
+*         2 PLHCRPL PTR(31),               /* ADDR OF CURRENT RPL  */   26800037
+*         2 PLHDSIDA PTR(31),              /* PTR TO DSID          */   27200037
+*         2 PLHCRBA PTR(32),               /* CURRENT RBA          */   27600037
+*           3 PLHJORBA PTR(32),            /* JRNAD CHANGE--OLD RBA*/   28000037
+*               5 PLHUPECB PTR(31),        /* UPAD ADDR ECB  @ZA07549*/ 28400037
+*         2 PLHJRNLL FIXED(31),            /* JRNAD--LENGTH OF DATA*/   28500137
+*         2 PLHJNRBA PTR(32),              /* JRNAD CHANGE--NEW RBA*/   28800037
+*         2 PLHJCODE CHAR(1),              /* JRNAD ENTRY CODE     */   29000037
+*           3 PLHUCODE CHAR(1),            /* UPAD EXIT CODE @ZA07549*/ 29200037
+*         2 PLHRCODE PTR(8),               /* PREVIOUS REQUEST CODE*/   29600037
+*         2 PLHEOVR CHAR(1),               /* EOV REQ CODE--ALLOC/MNT*/ 30000037
+*         2 PLHRSCS BIT(8),              /* RESOURCE BITS AND FEEDBACK  30400037
+*                                           CODE INDICATORS  @ZA32757*/ 30410037
+*           3 PLHINEOV BIT(1),           /* EOV IN PROCESS   @ZA32757*/ 30420037
+*           3 PLHBUFHD BIT(1),           /* PLH LOCKED DATA BUFC        30430037
+*                                           HEADER           @ZA32757*/ 30440037
+*           3 * BIT(2),                  /* RESERVED         @ZA32757*/ 30450037
+*           3 PLHASYER BIT(1),           /* ASYNCH DEFERRED REQUEST     30460037
+*                                           CANNOT BE RESTARTED BY      30470037
+*                                           TERMRPL          @ZA32757*/ 30480037
+*           3 PLHDSERR BIT(1),           /* POSSIBLE DATA SET ERROR     30520037
+*                                           CONDITION DETECTED BY       30530037
+*                                           TERMRPL:  (1) INCOMPLETE    30540037
+*                                           I/O OR, (2) BUFFER IN MUST  30550037
+*                                           WRITE STATUS     @ZA32757*/ 30560037
+*           3 PLHDBPER BIT(1),           /* ERROR IN PLH DATA BUFC      30600037
+*                                           POINTER DETECTED BY         30640037
+*                                           TERMRPL          @ZA32757*/ 30680037
+*           3 * BIT(1),                  /* RESERVED         @ZA32757*/ 30720037
+*         2 PLHARDB    PTR(31),            /* CURRENT DATA ARDB PTR*/   30800037
+*         2 PLHLRECL PTR(31),              /* LENGTH OF LAST RECORD*/   31200037
+*         2 PLHDBUFC PTR(31),              /* PTR TO CURR DATA BUFC*/   31600037
+*         2 PLHNBUFC PTR(31),              /* PTR TO NEXT READ BUFC*/   32000037
+*         2 PLHRECP PTR(31),               /* BUFC CURR REC POINTER*/   32400037
+*         2 PLHFSP PTR(31),                /* FREE SPACE POINTER   */   32800037
+*         2 PLHRDFP PTR(31),               /* PTR TO CURRENT RDF   */   33200037
+*         2 PLHRDFC PTR(15),               /* CURR RDF REPLIC CNT  */   33600037
+*         2 PLHSRSID PTR(16),        /* SPAN RCD SEG ID      @X04SVLC*/ 34000037
+*         2 PLHDIOB PTR(31),               /* PTR TO DATA IOB      */   34400037
+*           3 PLHIIOB PTR(31),       /* PTR TO INDEX IOB     @X04SVLC*/ 34450037
+*         2 PLHARET PTR(31),               /* ASYNCH RTN RETURN ADR*/   34800037
+*    /* PLHSAVE1 - PLHSAVE6 ARE NOT TO BE USED BY BUFFER MANAGER,       34850037
+*       I/O MANAGER, IDADRQ, OR IDATJXIT                     @X04SVLC*/ 34860037
+*         2 PLHSAVE1 PTR(31),              /* REGISTER SAVE 1      */   35200037
+*         2 PLHSAVE2 PTR(31),              /* REGISTER SAVE 2      */   35600037
+*         2 PLHSAVE3 PTR(31),              /* REGISTER SAVE 3      */   36000037
+*         2 PLHSAVE4 PTR(31),              /* REGISTER SAVE 4      */   36400037
+*         2 PLHSAVE5 PTR(31),              /* REGISTER SAVE 5      */   36800037
+*         2 PLHSAVE6 PTR(31),              /* REGISTER SAVE 6      */   37200037
+*         2 PLHAMB PTR(31),          /* IDADRQ-IDATJXIT AMB SAVE AREA   37250037
+*                                                            @X04SVLC*/ 37260037
+*         2 PLHCHAIN PTR(31),        /* CHAIN PTR            @X04SVLC*/ 37300037
+*         2 PLHRETO FIXED(15),             /* OFFSET TO CURR RETURN*/   37600037
+*         2 PLHRETOS FIXED(15),      /* INITIAL OFFSET       @ZA16007*/ 38000037
+*         2 PLHRET1(11) PTR(31),           /* 11 RETURN REGS         */ 38400037
+*         2 PLHASAVE PTR(31),              /* ASYNCH SAVEAREA START*/   42800037
+*         2 * PTR(31),                     /* 13 TH  RETURN REG    */   43200037
+*         2 * PTR(31),                     /* 14 TH  RETURN REG    */   43600037
+*         2 PLHAR14 PTR(31),               /* RETURN FROM ASYNCH     */ 44000037
+*         2 PLHEOVPT PTR(31),              /* PTR TO RBA FOR EOV     */ 44400037
+*           3 PLHDDDD PTR(32),             /* PREVIOUS REQUEST RBA   */ 44800037
+*         2 PLHNRBA    PTR(32),            /* NEXT RBA               */ 45200037
+*         2 PLHIBUFC PTR(31),              /* PTR TO INDEX BUFC      */ 45600037
+*         2 PLHRBUFC PTR(31),        /* IDADRQ-IDATJXIT RBUFC SAVE AREA 46050037
+*                                                            @X04SVLC*/ 46060037
+*         2 PLHISPLP   PTR(31),            /* INDEX SEARCH PARML PTR */ 46400037
+*         2 PLHIXSPL BDY(WORD),            /* INDEX SEARCH PARM LIST */ 46800037
+*           3 PLHSSRBA PTR(32),            /* INDEX CINV RBA         */ 47200037
+*             4 PLHHIREC FIXED(32), /* HI-RECORD RBA         @X04SVLC*/ 47250037
+*           3 PLHIXBFC PTR(31),            /* PTR TO IX SRCH BUFC    */ 47600037
+*           3 *        CHAR(24),           /*                        */ 48000037
+*         2 PLHWAX PTR(31),         /* PTR TO PATH WORK AREA @X04SVLC*/ 48150037
+*           3 PLHXPLH PTR(31),      /* PTR TO AIX PLH FR BASE           48154037
+*                                                            @X04SVLC*/ 48156037
+*         2 PLHLLOR PTR(31),        /* PTR LEAST LEN SEGMENT @X04SVLC*/ 48350037
+*         2 PLHNOSEG FIXED(15),     /* NBR SEG SPAN RCD      @X04SVLC*/ 48352037
+*         2 PLHSRCSG FIXED(15),     /* CUR SEG NBR SPAN RCD  @X04SVLC*/ 48354037
+*         2 PLHSLRBA FIXED(32),     /* RBA 2ND LEVEL INDEX   @X04SVLC*/ 48356037
+*         2 PLHKEYPT PTR(31),       /* PTR TO CUR KEY        @X04SVLC*/ 48358437
+*         2 PLHDRRSC PTR(31),       /* ADDR OF DEFERRED REQUEST         48359637
+*                                      FLAG BYTE             @X04SVLC*/ 48359737
+*         2 PLHPARM1 PTR(31),       /* IDADRQ-IDATJXIT RPARM1 SAVE      48361737
+*                                      AREA                  @X04SVLC*/ 48385537
+*         2 PLHR13 PTR(31),         /* IDADRQ-I/O MGR R13 SAVE AREA     48407637
+*                                                            @X04SVLC*/ 48429437
+*         2 PLHDRMSK BIT(8),        /* MASK FOR DEFERRED REQUEST        48516637
+*                                            RESOURCE TEST   #X04SVLC*/ 48538437
+*         2 PLHTMRPL BIT(8),        /* TERMRPL PROCESS BITS  @ZA32757*/ 48744637
+*           3 PLHTERM BIT(1),       /* TERMRPL IN PROCESS    @ZA32757*/ 48745437
+*           3 PLHTMBUF BIT(1),    /* TERMRPL FREED BUFC HDR  @ZA32757*/ 48746237
+*           3 PLHTMDIW BIT(1),      /* TERMRPL FREED DIWA    @ZA32757*/ 48747037
+*           3 PLHTMDTA BIT(1),      /* TERMRPL FREED DATA BUFC          48747837
+*                                                            @ZA32757*/ 48748637
+*           3 PLHTMINX BIT(1),      /* TERMRPL FREED INDEX BUFC         48749437
+*                                                            @ZA32757*/ 48750237
+*           3 PLHTMIOB BIT(1),      /* TERMRPL FREED IOMB    @ZA32757*/ 48751037
+*           3 * BIT(2),             /* RESERVED              @ZA32757*/ 48751837
+*         2 * PTR(16),              /* RESERVED              @ZA32757*/ 48752637
+*      /* CROSS - REGION POST PARM LIST                      @X04SVLC*/ 48754637
+*         2 PLHECB PTR(31),         /* ADDR OF ECB           @X04SVLC*/ 48756437
+*         2 PLHASCB PTR(31),        /* ADDR OF ASCB          @X04SVLC*/ 48758437
+*         2 PLHERRET PTR(31),       /* ADDR OF ERROR RETURN  @X04SVLC*/ 48760437
+*         2 PLHEND CHAR(*);         /* PLH END               @X04SVLC*/ 48766437
+*/********************************************************************/ 48768437
+*/* VSAM PLACE HOLDER EXTENSION                                      */ 48770437
+*/********************************************************************/ 48772437
+*  DCL 1 PLHEXTEN DEFINED(PLHEND),  /* LSR/GSR EXTENSION     @X04SVLC*/ 48776437
+*         2 PLHRESR1 PTR(31),        /* ADDR OF SERIAL RESOURCE HELD    48776537
+*                                                            @X04SVLC*/ 48776637
+*         2 * BIT(8),                /* UNUSED               @X04SVLC*/ 48776737
+*         2 PLHBMWRK BIT(8),         /* BUFFER MANAGER WORK FLAGS       48776837
+*                                                            @X04SVLC*/ 48779637
+*           3 PLHBMRDF BIT(1),       /* RBA FOUND FLAG       @X04SVLC*/ 48781637
+*           3 PLHBEUC BIT(1),        /* END OF USE CHAIN     @X04SVLC*/ 48782037
+*           3 PLHBMSOV BIT(1),       /* START OVER FLAG      @X04SVLC*/ 48782537
+*         2 PLHRDCNT FIXED(15),      /* SA FOR AMBRDCNT      @X04SVLC*/ 48838837
+*        2 PLHBMSV1 PTR(31),         /* BFR MGR SA           @X04SVLC*/ 48875937
+*        2 PLHBMSV2 PTR(31),         /*                      @X04SVLC*/ 48922237
+*        2 PLHBMSV3 PTR(31),         /*                      @X04SVLC*/ 48968537
+*        2 PLHBMSV4 PTR(31),         /*                      @X04SVLC*/ 49014837
+*        2 PLHBMSV5 PTR(31);         /*                      @X04SVLC*/ 49061137
+*/********************************************************************/ 49071137
+*/* VSAM PLACE HOLDER KEY                                            */ 49081137
+*/********************************************************************/ 49091137
+*  DCL PLHKEY CHAR(*)BASED(PLHKEYPT);         /* CURRENT KEY #X04SVLC*/ 49107437
+*  DCL PLHRRN PTR(31) BASED(PLHKEYPT);/* PREV RELATIVE NUMBER@ZA14830*/ 49112437
+*/********************************************************************/ 49117437
+*/* VSAM PLACE HOLDER PUSH DOWN LIST                                 */ 49118437
+*/********************************************************************/ 49119437
+*  DCL PLHPDL (20) PTR(31) BASED;    /* R14 SAVE AREA        @ZA16007*/ 49120437
+*  DCL PLHPDLE PTR(31)BASED(ADDR(PLHRET1)+PLHRETO);/* NXT SA @ZA16007*/ 49121437
+*/********************************************************************/ 49122437
+*/* VSAM JOURNALING CONSTANTS                                        */ 49127437
+*/********************************************************************/ 49137437
+*  DCL PLHTDATA BIT(8) CONSTANT('00000001'B); /* DATA  DS TYPE CODE  */ 49153737
+*  DCL PLHTIDX  BIT(8) CONSTANT('00000010'B); /* INDEX DS TYPE CODE  */ 49200037
+*  DCL PLHJGET BIT(8) CONSTANT('00000000'B); /* JRNAD ENTRY FOR GET  */ 49600037
+*  DCL PLHJPUT BIT(8) CONSTANT('00000100'B); /* JRNAD ENTRY FOR PUT  */ 50000037
+*  DCL PLHJERS BIT(8) CONSTANT('00001000'B); /* ERASE JRNAD ENTRY  */   50400037
+*  DCL PLHJRBAC BIT(8) CONSTANT('00001100'B); /* RBA CHANGE--JRNAD */   50800037
+*  DCL PLHJCAS BIT(8) CONSTANT('00100000'B); /* START OF CA SPLIT       50850037
+*                                    JRNAD CODE              @X04SVLC*/ 50900037
+*  DCL PLHJIER BIT(8) CONSTANT('00100100'B); /* PHYSICAL INPUT ERROR    50950037
+*                                    JRNAD CODE              @X04SVLC*/ 51000037
+*  DCL PLHJOER BIT(8) CONSTANT('00101000'B); /* PHYSICAL OUTPUT ERROR   51050037
+*                                    JRNAD CODE              @X04SVLC*/ 51100037
+*  DCL PLHJIXM BIT(8) CONSTANT('00101100'B); /* INDEX MODIFICATION      51150037
+*                                    JRNAD CODE              @X04SVLC*/ 51160037
+*  DCL PLHRSRSG BIT(8)CONSTANT('00010000'B);/* READ SPANNED RECORD      51170037
+*                                       SEGMENT              @X04SVLC*/ 51180037
+*  DCL PLHWSRSG BIT(8)CONSTANT('00010100'B);/* WRITE SPANNED RECORD     51190037
+*                                       SEGMENT              @X04SVLC*/ 51192037
+*/********************************************************************/ 54192037
+*/* VSAM UPAD EXIT CONSTANTS                                 @ZA07549*/ 57192037
+*/********************************************************************/ 60192037
+*  DCL PLHUWAIT BIT(8) CONSTANT('00000000'B); /* UPAD WAIT EXIT CODE    63192037
+*                                                            @ZA07549*/ 66192037
+         MACRO  ,                                                       90000100
+         IDAPLH ,                                                       90000200
+*                                                                       90000300
+*         ASSEMBLER DSECT FOR PLH                                       90000400
+*         COPIED FROM SYM601.F01 AND MANUALLY CONVERTED TO ASM          90000500
+*                                                                       90000600
+IDAPLHDR DSECT ,                         VSAM PLACE HOLDER HEADER       90000700
+PLHID    DS    C                         PLH ID '30'X                   90000800
+IDXPLH   EQU   X'30'                                                    90000900
+PLHCNT   DS    X                         NUMBER OF PLH ENTRIES          90001000
+PLHELTH  DS    H                         LENGTH OF EACH ENTRY           90001100
+PLHDRREQ DS    A                         DEFER REQUEST COUNT            90001200
+PLHDRMAX DS    A                         MAX NBR PLH IN CONCURRENT USE  90001300
+PLHDRCUR DS    A                         CURRENT NBR OF ACTIVE PLHS     90001400
+PLHIOSDQ DS    A                         I/O SUPPORT DEFERRAL QUEUE     90001500
+*                                        HEADER                         90001600
+PLHDLEN  EQU   *-IDAPLHDR                                               90001700
+*                                                                       90001800
+*   VSAM PLACE HOLDER                                                   90001900
+*                                                                       90002000
+IDAPLHD  DSECT ,                         VSAM PLACE HOLDER              90002100
+PLHAVL   DS    XL1                       0 IF ENTRY AVAILABLE           90002200
+PLHATV   DS    XL1                       0 IF NO ACTIVE REQ             90002300
+PLHFLG1  DS    XL1                       PROCESS FLAGS--BYTE 1          90002400
+PLHEOVW  EQU   X'80'                     EOV WAITING                    90002500
+PLHENDRQ EQU   X'40'                     ON IF ENDREQ ISSUED            90002600
+PLHASKBF EQU   X'20'                     LESS THAN MAX BFRS             90002700
+PLHSSR   EQU   X'10'                     SEQ SET REQ                    90002800
+PLHRDEXC EQU   X'08'                     PLH IN READ EXCL MODE          90002900
+PLHASYRQ EQU   X'04'                     IRB EXECUTION NEEDED           90003000
+PLHDRPND EQU   X'02'                     DEFERRED REQ PENDING           90003100
+PLHSR    EQU   X'01'                     SUSPEND/RESUME PROCESSING IN   90003200
+*                                        PLACE OF WAIT/POST             90003300
+PLHFLG2  DS    XL1                       PROCESS FLAGS--BYTE 2          90003400
+PLHUPD   EQU   X'80'                     LAST REQUEST GET UPD           90003500
+PLHSQINS EQU   X'40'                     SEQ INSERT MODE                90003600
+PLHKEYMD EQU   X'20'                     KEYED MODE                     90003700
+PLHADDTE EQU   X'10'                     ADD TO END PROCESSING          90003800
+PLHKRE   EQU   X'08'                     END OF KEY RANGE               90003900
+PLHCIINS EQU   X'04'                     CI SPLIT INSERT                90004000
+PLHSVADV EQU   X'02'                     SAVE PLHNOADV--SCANDATA        90004100
+PLHIWAIT EQU   X'01'                     IDAWAIT TEST                   90004200
+PLHEFLGS DS    XL2                       EXCEPTION FLAGS--1             90004300
+PLHNOSPC EQU   X'80'                     NO SPACE--CREATE MODE          90004400
+PLH1ST   EQU   X'40'                     1ST REQ AFTER OPEN             90004500
+PLHSKPER EQU   X'20'                     SKIP ACROSS ERROR CNV          90004600
+PLHSRINV EQU   X'10'                     SPAN RCD EXCEPTION             90004700
+PLHNOADV EQU   X'08'                     DONT ADVANCE PLH               90004800
+PLHEODX  EQU   X'04'                     EODAD TAKEN                    90004900
+PLHINVAL EQU   X'02'                     ON IF INVALID                  90005000
+PLHDSCAN EQU   X'01'                     SCAN DATA AFTER RD EX          90005100
+PLHRSTRT EQU   X'80'                     RESTART FLAG                   90005200
+PLHFLG3  DS    XL1                       FLAGS -- BYTE 3                90005300
+PLHSRBSG EQU   X'80'                     SPAN RCD SEGS ARE INCONSISTANT 90005400
+PLHRAHD  EQU   X'40'                     READ-AHEAD                     90005500
+PLHSLVLD EQU   X'20'                     ON IF 2ND LVL IDX VALID        90005600
+PLHBWD   EQU   X'10'                     PREV REQ SPEC BWD DIRECTION    90005700
+PLHRVRS  EQU   X'08'                     I/0 CHAIN REVERSED IF ON       90005800
+PLHEOVDF EQU   X'04'                     EOV DEFER ON IRB FLAG          90005900
+PLHAFLGS DS    XL1                       MORE FLAGS-NOT CLEARED         90006000
+PLHDRLM  EQU   X'80'                     DIRECT REQ ISSUED DURINGION    90006100
+*                                        CREATE                         90006200
+PLHIOSRQ EQU   X'40'                     I/0 CHAIN REVERSED             90006300
+PLHVAMB  EQU   X'20'                     PLHAMB IS VALID                90006400
+PLHDBDC  EQU   X'10'                     PLH FROM SHR POOL              90006500
+PLHIOSID EQU   X'08'                     I/O SUPPORT ID                 90006600
+PLHRABWD EQU   X'04'                     RA ENTERED IN BWD              90006700
+PLHRAE   EQU   X'02'                     RA KEY EQUAL HIT               90006800
+PLHACB   DS    A                         POINTER TO ACB                 90006900
+PLHDSTYP DS    XL1                       DATA SET TYPE                  90007000
+PLHTDATA EQU   1                         DATA DS TYPE CODE              90007100
+PLHTIDX  EQU   2                         INDEX DS TYPE CODE             90007200
+PLHRMIN  DS    XL1                       READ THRESHOLD                 90007300
+PLHFRCNT DS    XL1                       FREE BFRS IN ENTRY             90007400
+PLHBFRNO DS    XL1                       TOTAL NO OF BFRS               90007500
+PLHMRPL  DS    A                         ADDR OF HEADER RPL             90007600
+PLHCRPL  DS    A                         ADDR OF CURRENT RPL            90007700
+PLHDSIDA DS    A                         PTR TO DSID                    90007800
+PLHCRBA  DS    0A                        CURRENT RBA                    90007900
+PLHJORBA DS    0A                        JRNAD CHANGE--OLD RBA          90008000
+PLHUPECB DS    A                         UPAD ADDR ECB                  90008100
+PLHJRNLL DS    A                         JRNAD--LENGTH OF DATA          90008200
+PLHJNRBA DS    A                         JRNAD CHANGE--NEW RBA          90008300
+PLHJCODE DS    0XL1                      JRNAD ENTRY CODE               90008400
+PLHJGET  EQU   B'00000000'               JRNAD ENTRY FOR GET            90008500
+PLHJPUT  EQU   B'00000100'               JRNAD ENTRY FOR PUT            90008600
+PLHJERS  EQU   B'00001000'               ERASE JRNAD ENTRY              90008700
+PLHJRBAC EQU   B'00001100'               RBA CHANGE--JRNAD              90008800
+PLHJCAS  EQU   B'00100000'               START OF CA SPLIT              90008900
+PLHJIER  EQU   B'00100100'               PHYSICAL INPUT ERROR           90009000
+PLHJOER  EQU   B'00101000'               PHYSICAL OUTPUT ERROR          90009100
+PLHJIXM  EQU   B'00101100'               INDEX MODIFICATION             90009200
+PLHRSRSG EQU   B'00010000'               READ SPANNED RECORD SEGMENT    90009300
+PLHWSRSG EQU   B'00010100'               WRITE SPANNED RECORD SEGMENT   90009400
+PLHUCODE DS    XL1                       UPAD EXIT CODE                 90009500
+PLHUWAIT EQU   B'00000000'               UPAD WAIT EXIT CODE            90009600
+PLHRCODE DS    XL1                       PREVIOUS REQUEST CODE          90009700
+PLHEOVR  DS    XL1                       EOV REQ CODE--ALLOC/MNT        90009800
+PLHRSCS  DS    XL1                       RESOURCE BITS AND FEEDBACK     90009900
+*                                        CODE INDICATORS                90010000
+PLHINEOV EQU   X'80'                     EOV IN PROCESS                 90010100
+PLHBUFHD EQU   X'40'                     PLH LOCKED DATA BUFC           90010200
+*                                        HEADER                         90010300
+PLHASYER EQU   X'08'                     ASYNCH DEFERRED REQUEST        90010400
+*                                        CANNOT BE RESTARTED BY         90010500
+*                                        TERMRPL                        90010600
+PLHDSERR EQU   X'04'                     POSSIBLE DATA SET ERROR        90010700
+*                                        CONDITION DETECTED BY          90010800
+*                                        TERMRPL:  (1) INCOMPLETE       90010900
+*                                        I/O OR, (2) BUFFER IN MUST     90011000
+*                                        WRITE STATUS                   90011100
+PLHDBPER EQU   X'02'                     ERROR IN PLH DATA BUFC         90011200
+*                                        POINTER DETECTED BY            90011300
+*                                        TERMRPL                        90011400
+PLHARDB  DS    A                         CURRENT DATA ARDB PTR          90011500
+PLHLRECL DS    A                         LENGTH OF LAST RECORD          90011600
+PLHDBUFC DS    A                         PTR TO CURR DATA BUFC          90011700
+PLHNBUFC DS    A                         PTR TO NEXT READ BUFC          90011800
+PLHRECP  DS    A                         BUFC CURR REC POINTER          90011900
+PLHFSP   DS    A                         FREE SPACE POINTER             90012000
+PLHRDFP  DS    A                         PTR TO CURRENT RDF             90012100
+PLHRDFC  DS    H                         CURR RDF REPLIC CNT            90012200
+PLHSRSID DS    H                         SPAN RCD SEG ID                90012300
+PLHDIOB  DS    0A                        PTR TO DATA IOB                90012400
+PLHIIOB  DS    A                         PTR TO INDEX IOB               90012500
+PLHARET  DS    A                         ASYNCH RTN RETURN ADR          90012600
+*       PLHSAVE1 - PLHSAVE6 ARE NOT TO BE USED BY BUFFER MANAGER        90012700
+*       I/O MANAGER, IDADRQ, OR IDATJXIT                                90012800
+PLHSAVE1 DS    A                         REGISTER SAVE 1                90012900
+PLHSAVE2 DS    A                         REGISTER SAVE 2                90013000
+PLHSAVE3 DS    A                         REGISTER SAVE 3                90013100
+PLHSAVE4 DS    A                         REGISTER SAVE 4                90013200
+PLHSAVE5 DS    A                         REGISTER SAVE 5                90013300
+PLHSAVE6 DS    A                         REGISTER SAVE 6                90013400
+PLHAMB   DS    A                         IDADRQ-IDATJXIT AMB SAVE AREA  90013500
+PLHCHAIN DS    A                         CHAIN PTR                      90013600
+PLHRETO  DS    H                         OFFSET TO CURR RETURN          90013700
+PLHRETOS DS    H                         INITIAL OFFSET                 90013800
+PLHRET1  DS    11A                       11 RETURN REGS                 90013900
+PLHASAVE DS    A                         ASYNCH SAVEAREA START          90014000
+         DS    A                         13 TH  RETURN REG              90014100
+         DS    A                         14 TH  RETURN REG              90014200
+PLHAR14  DS    A                         RETURN FROM ASYNCH             90014300
+PLHEOVPT DS    0A                        PTR TO RBA FOR EOV             90014400
+PLHDDDD  DS    A                         PREVIOUS REQUEST RBA           90014500
+PLHNRBA  DS    A                         NEXT RBA                       90014600
+PLHIBUFC DS    A                         PTR TO INDEX BUFC              90014700
+PLHRBUFC DS    A                         IDADRQ-IDATJXIT RBUFC SAVEAREA 90014800
+PLHISPLP DS    A                         INDEX SEARCH PARML PTR         90014900
+*                                                                       90015000
+PLHIXSPL DS    0A                        INDEX SEARCH PARM LIST         90015100
+PLHSSRBA DS    0A                        INDEX CINV RBA                 90015200
+PLHHIREC DS    A                         HI-RECORD RBA                  90015300
+PLHIXBFC DS    A                         PTR TO IX SRCH BUFC            90015400
+         DS    XL24                                                     90015500
+*                                                                       90015600
+PLHWAX   DS    0A                        PTR TO PATH WORK AREA          90015700
+PLHXPLH  DS    A                         PTR TO AIX PLH FR BASE         90015800
+PLHLLOR  DS    A                         PTR LEAST LEN SEGMENT          90015900
+PLHNOSEG DS    H                         NBR SEG SPAN RCD               90016000
+PLHSRCSG DS    H                         CUR SEG NBR SPAN RCD           90016100
+PLHSLRBA DS    A                         RBA 2ND LEVEL INDEX            90016200
+PLHKEY   DS    0A                        CURRENT KEY                    90016300
+PLHRRN   DS    0A                        PREV RELATIVE NUMBER           90016400
+PLHKEYPT DS    A                         PTR TO CUR KEY                 90016500
+PLHDRRSC DS    A                         ADDR OF DEFERRED REQUEST       90016600
+*                                        FLAG BYTE                      90016700
+PLHPARM1 DS    A                         IDADRQ-IDATJXIT RPARM1 SAVE    90016800
+*                                        AREA                           90016900
+PLHR13   DS    A                         IDADRQ-I/O MGR R13 SAVE AREA   90017000
+PLHDRMSK DS    XL1                       MASK FOR DEFERRED REQUEST      90017100
+*                                        RESOURCE TEST                  90017200
+PLHTMRPL DS    XL1                       TERMRPL PROCESS BITS           90017300
+PLHTERM  EQU   X'80'                     TERMRPL IN PROCESS             90017400
+PLHTMBUF EQU   X'40'                     TERMRPL FREED BUFC HDR         90017500
+PLHTMDIW EQU   X'20'                     TERMRPL FREED DIWA             90017600
+PLHTMDTA EQU   X'10'                     TERMRPL FREED DATA BUFC        90017700
+PLHTMINX EQU   X'08'                     TERMRPL FREED INDEX BUFC       90017800
+PLHTMIOB EQU   X'04'                     TERMRPL FREED IOMB             90017900
+         DS    XL2                       RESERVED                       90018000
+*         CROSS - REGION POST PARM LIST                                 90018100
+PLHECB   DS    A                         ADDR OF ECB                    90018200
+PLHASCB  DS    A                         ADDR OF ASCB                   90018300
+PLHERRET DS    A                         ADDR OF ERROR RETURN           90018400
+PLHEND   EQU   *                         PLH END                        90018500
+*  ******************************************************************   90018600
+*   VSAM PLACE HOLDER EXTENSION                                         90018700
+*  ******************************************************************   90018800
+PLHEXTEN DS    0A                        LSR/GSR EXTENSION              90018900
+PLHRESR1 DS    A                         ADDR OF SERIAL RESOURCE HELD   90019000
+         DS    XL1                       UNUSED                         90019100
+PLHBMWRK DS    XL1                       BUFFER MANAGER WORK FLAGS      90019200
+PLHBMRDF EQU   X'80'                     RBA FOUND FLAG                 90019300
+PLHBEUC  EQU   X'40'                     END OF USE CHAIN               90019400
+PLHBMSOV EQU   X'20'                     START OVER FLAG                90019500
+PLHRDCNT DS    A                         SA FOR AMBRDCNT                90019600
+PLHBMSV1 DS    A                         BFR MGR SA                     90019700
+PLHBMSV2 DS    A                                                        90019800
+PLHBMSV3 DS    A                                                        90019900
+PLHBMSV4 DS    A                                                        90020000
+PLHBMSV5 DS    A                                                        90020100
+         MEND  ,                                                        90020200

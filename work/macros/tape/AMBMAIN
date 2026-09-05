@@ -1,0 +1,46 @@
+DCBERAEX DC    A(DCBERREX)         EXIT MSG                             02000018
+         DC    F'33'               SIZE                                 04000018
+OPENERR1 DC    A(OPENERR)          OPEN MSG                             06000018
+         DC    F'28'               SIZE                                 08000018
+DMSG920X DC    A(DMSG920)          CORE MSG                             10000018
+         DC    F'44'               SIZE                                 12000018
+DMSG921X DC    A(DMSG921)          INP BFR MSG                          14000018
+         DC    F'39'               SIZE                                 16000018
+DMSG922X DC    A(DMSG922)          OUT BFR MSG                          18000018
+         DC    F'47'               SIZE                                 20000018
+DMSG923X DC    A(DMSG923)          MOVE RTN MSG                         22000018
+         DC    F'34'               SIZE                                 24000018
+DMSG924X DC    A(DMSG924)          DCB MSG                              26000018
+         DC    F'33'               SIZE                                 28000018
+DMSG925X DC    A(DMSG925)          CCW MSG                              30000018
+         DC    F'33'               SIZE                                 32000018
+DMSG926X DC    A(DMSG926)          JOB MSG                              34000018
+         DC    F'33'               SIZE                                 36000018
+DMSG927X DC    A(DMSG927)          CCW MSG                              38000018
+         DC    F'33'               SIZE                                 40000018
+DMSG928X DC    A(DMSG928)          SEQ MSG                              42000018
+         DC    F'35'               SIZE                                 44000018
+DCBERREX DC    CL27'IER044I - EXIT E   INVALID '   EXIT MSG             46000018
+         DC    CL06'OPTION'                        OPTION               48000018
+OPENERR  DC    CL28'IER063A - OPEN ERR'            OPEN MSG             50000018
+DMSG920  DC    CL29'IER920I - GENERATED CORE END ' CORE MSG             52000018
+         DC    CL07'ADDR - '                       ADDR                 54000018
+DMSG920A DC    CL8'        '                       ACT ADDR             56000018
+DMSG921  DC    CL31'IER921I - INPUT BFR TBL ADDR -' BFR MSG             58000018
+DMSG921A DC    CL8'        '                       ACT ADDR             60000018
+DMSG922  DC    CL28'IER922I - OUTPUT BFR ADDR - '  BFR MSG              62000018
+DMSG922A DC    CL8'        '                       ACT ADDR             64000018
+         DC    CL03' , '                           COMMA                66000018
+DMSG922B DC    CL8'        '                       ACT ADDR             68000018
+DMSG923  DC    CL26'IER923I - MOVE RTN ADDR - '    MOVE RTN MSG         70000018
+DMSG923A DC    CL8'        '                       ACT ADDR             72000018
+DMSG924  DC    CL25'IER924I - DCB TBL ADDR - '     DCB MSG              74000018
+DMSG924A DC    CL8'        '                       ACT ADDR             76000018
+DMSG925  DC    CL25'IER925I - O/P CCW ADDR - '     CCW MSG              78000018
+DMSG925A DC    CL8'        '                       ACT ADDR             80000018
+DMSG926  DC    CL25'IER926I - IOB TBL ADDR - '     IOB MSG              82000018
+DMSG926A DC    CL8'        '                       ADDR                 84000018
+DMSG927  DC    CL25'IER927I - I/P CCW ADDR - '     CCW MSG              86000018
+DMSG927A DC    CL8'        '                       CT ADDR              88000018
+DMSG928  DC    CL27'IER928I - TOTAL NO. SEQ - '    SEQ MSG              90000018
+DMSG928A DC    CL8'        '                       ACT ADDR             94000018

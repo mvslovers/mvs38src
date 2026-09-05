@@ -1,0 +1,27 @@
+         MACRO                                                          00010000
+&LABEL   HMASMPRL &TYPE=EQU                                             00020000
+*************************************************************           00030000
+*                                                           *           00040000
+*                                                           *           00050000
+*                                                           *           00060000
+*************************************************************           00070000
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00080000
+         AIF   ('&TYPE' EQ 'BLOCK').BLOCK                               00090000
+.EQU     ANOP                                                           00100000
+HMASMPRL EQU   0                                                        00110000
+PRLSPAN  EQU   HMASMPRL+2                                               00120000
+PRLFLGS  EQU   PRLSPAN                                                  00130000
+PRLBLANK EQU   PRLFLGS                                                  00140000
+PRLDATE  EQU   HMASMPRL+4                                               00150000
+PRLTIME  EQU   HMASMPRL+7                                               00160000
+PRLEND   EQU   HMASMPRL+10                                              00170000
+PRLDATA  EQU   PRLEND                                                   00180000
+PRLCONC  EQU   PRLTIME+2                                                00190000
+PRLHDADR EQU   PRLDATE                                                  00200000
+PRLHEADO EQU   PRLFLGS                                                  00210000
+PRLHEAD  EQU   PRLFLGS                                                  00220000
+PRLRLEN  EQU   HMASMPRL                                                 00230000
+         MEXIT                                                          00240000
+.BLOCK   ANOP                                                           00250000
+&LABEL   DC    XL10'0'                                                  00260000
+         MEND                                                           00270000

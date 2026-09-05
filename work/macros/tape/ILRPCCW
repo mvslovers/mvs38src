@@ -1,0 +1,27 @@
+         MACRO                                                          00010000
+         ILRPCCW ,                                                      00020000
+PCCW     EQU   0                                                        00030000
+PCCWSECT EQU   PCCW+1                                                   00040000
+PCCWFLGS EQU   PCCW+2                                                   00050000
+PCCWFERR EQU   PCCWFLGS                                                 00060000
+PCCWPCCW EQU   PCCW+4                                                   00070000
+PCCWAIA  EQU   PCCW+8                                                   00080000
+PCCWIORB EQU   PCCW+12                                                  00090000
+PCCWCHHR EQU   PCCW+16                                                  00100000
+PCCWCC   EQU   PCCWCHHR+3                                               00110000
+PCCWHH   EQU   PCCWCHHR+5                                               00120000
+PCCWSEEK EQU   PCCW+24                                                  00130000
+PCCWSK   EQU   PCCWSEEK                                                 00140000
+PCCWSSEC EQU   PCCW+32                                                  00150000
+PCCWSS   EQU   PCCWSSEC                                                 00160000
+PCCWSSAD EQU   PCCWSSEC+1                                               00170000
+PCCWSRCH EQU   PCCW+40                                                  00180000
+PCCWTIC  EQU   PCCW+48                                                  00190000
+PCCWRW   EQU   PCCW+56                                                  00200000
+PCCWRDWT EQU   PCCWRW                                                   00210000
+PCCWADDR EQU   PCCWRW+1                                                 00220000
+PCCWNOP  EQU   PCCW+64                                                  00230000
+PCCWN    EQU   PCCWNOP                                                  00240000
+PCCWNAD  EQU   PCCWNOP+1                                                00250000
+PCCWNFG  EQU   PCCWNOP+4                                                00260000
+         MEND                                                           00270000

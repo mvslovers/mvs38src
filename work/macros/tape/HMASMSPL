@@ -1,0 +1,17 @@
+         MACRO                                                          00010000
+         HMASMSPL &TYPE=EQU                                             00020000
+*************************************************************           00030000
+*                                                           *           00040000
+*        SUBROUTINE PARAMETER LIST                          *           00050000
+*                                                           *           00060000
+*************************************************************           00070000
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00080000
+HMASMSPL DS    0CL5                                                     00090000
+SPLPMAD  DC    AL4(0)                                                   00100000
+SPLFUNCT DC    FL1'0'                                                   00110000
+         MEXIT                                                          00120000
+.EQU     ANOP  ,                                                        00130000
+HMASMSPL EQU   0                                                        00140000
+SPLPMAD  EQU   HMASMSPL                                                 00150000
+SPLFUNCT EQU   HMASMSPL+4                                               00160000
+         MEND                                                           00170000

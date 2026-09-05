@@ -1,0 +1,40 @@
+         MACRO                                                          00010000
+         HMASMVLP &TYPE=EQU                                             00020000
+*************************************************************           00030000
+*                                                           *           00040000
+*        VARIABLE LIST PARAAMETER                           *           00050000
+*                                                           *           00060000
+*************************************************************           00070000
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00080000
+HMASMVLP DS    0XL52                                                    00090000
+VLPFUNCT DC    FL1'0'                                                   00100000
+VLPRETRN DC    FL1'0'                                                   00110000
+VLPFLAG  DS    0BL1                                                     00120000
+VLPFMSG  DC    BL1'0'      B'10000000'                                  00130000
+VLPFRSV  EQU   VLPFLAG+0                                                00140000
+VLPDLEN  DC    FL1'0'                                                   00150000
+VLPSNTRY DS    0CL9                                                     00160000
+VLPDATA  DC    XL8'0'                                                   00170000
+VLPTYPE  DC    FL1'0'                                                   00180000
+         DC    XL3'0'                                                   00190000
+VLPLPTR  DC    AL4(0)                                                   00200000
+VLPMTYPE DC    XL8'0'                                                   00210000
+VLPMNAME DC    XL8'0'                                                   00220000
+VLPSTYPE DC    XL16'0'                                                  00230000
+         MEXIT                                                          00240000
+.EQU     ANOP  ,                                                        00250000
+HMASMVLP EQU   0                                                        00260000
+VLPFUNCT EQU   HMASMVLP                                                 00270000
+VLPRETRN EQU   HMASMVLP+1                                               00280000
+VLPFLAG  EQU   HMASMVLP+2                                               00290000
+VLPFMSG  EQU   VLPFLAG                                                  00300000
+VLPDLEN  EQU   HMASMVLP+3                                               00310000
+VLPSNTRY EQU   HMASMVLP+4                                               00320000
+VLPDATA  EQU   VLPSNTRY                                                 00330000
+VLPTYPE  EQU   VLPSNTRY+8                                               00340000
+VLPLPTR  EQU   HMASMVLP+16                                              00350000
+VLPMTYPE EQU   HMASMVLP+20                                              00360000
+VLPMNAME EQU   HMASMVLP+28                                              00370000
+VLPSTYPE EQU   HMASMVLP+36                                              00380000
+VLPFRSV  EQU   VLPFLAG     B'10000000'                                  00390000
+         MEND                                                           00400000

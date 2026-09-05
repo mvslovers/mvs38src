@@ -1,0 +1,33 @@
+         MACRO  ,                                                       00010000
+&LBL     IQARTR &RTN=,&RTR=,&BASE=                                      00020000
+.********************************************************************** 00030000
+.********************************************************************** 00040000
+.*****************          OS/VS2 R2                  **************** 00050000
+.*****************     DYNAMIC SUPPORT SYSTEM          **************** 00060000
+.*****************        FUNCTION ROUTER              **************** 00070000
+.********************************************************************** 00080000
+.********************************************************************** 00090000
+         AIF   (T'&RTN EQ 'O').ERRTN                                    00100000
+         AIF   (T'&RTR EQ 'O').ERRTR                                    00110000
+         AIF   (T'&LBL EQ 'O').NOLBL                                    00120000
+         ENTRY &LBL                                                     00130000
+&LBL     DS    0H                                                       00140000
+.NOLBL   ANOP  ,                                                        00150000
+         AIF   (T'&BASE EQ 'O').NOBALR                                  00160000
+         AIF   ('&BASE' NE 'BALR').ERBASE                               00170000
+         BALR  R15,0                   Base register                    00180002
+.NOBALR  ANOP  ,                                                        00190000
+         USING *,R15                                                    00200000
+         B     &RTR                    Branch to router                 00210002
+         DROP  R15                                                      00220000
+         DC    AL2(&RTN-*+4)           Routine offset                   00230002
+         MEXIT ,                                                        00240000
+.ERRTN   ANOP  ,                                                        00250000
+         MNOTE 8,'IQARTR - RTN= MUST BE SPECIFIED'                      00260000
+         MEXIT ,                                                        00270000
+.ERRTR   ANOP  ,                                                        00280000
+         MNOTE 8,'IQARTR - RTR= MUST BE SPECIFIED'                      00290000
+         MEXIT ,                                                        00300000
+.ERBASE  ANOP  ,                                                        00310000
+         MNOTE 8,'IQARTR - BASE= MUST BE BALR OR OMITTED'               00320000
+         MEND  ,                                                        00330000

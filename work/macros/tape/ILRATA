@@ -1,0 +1,75 @@
+         MACRO                                                          00010000
+         ILRATA ,                                                       00020000
+*************************************************************           00030000
+*                                                           *           00040000
+*                                                           *           00050000
+*                                                           *           00060000
+*************************************************************           00070000
+ATA      EQU   0                                                        00080000
+ATAMODID EQU   ATA                                                      00090000
+ATAMPGIO EQU   1                                                        00100000
+ATAMPGCM EQU   2                                                        00110000
+ATAMSWAP EQU   3                                                        00120000
+ATAMTRPG EQU   4                                                        00130000
+ATAMSWPD EQU   5                                                        00140000
+ATAMGOS  EQU   6                                                        00150000
+ATAMPTM  EQU   7                                                        00160000
+ATAMSRBC EQU   8                                                        00170000
+ATAMCMPD EQU   9                                                        00180000
+*        EQU   10                                                       00190000
+*        EQU   11                                                       00200000
+ATAMCMP  EQU   12                                                       00210000
+ATASFLGS EQU   ATA+1                                                    00220000
+ATARFLGS EQU   ATA+4                                                    00230000
+ATARCRSN EQU   ATA+6                                                    00240000
+ATARCODE EQU   ATA+7                                                    00250000
+ATACLEAR EQU   ATA+8                                                    00260000
+ATAWORKA EQU   ATACLEAR                                                 00270000
+ATAWORKB EQU   ATACLEAR+4                                               00280000
+ATAEPATH EQU   ATACLEAR+4                                               00290000
+ATAEPTHA EQU   ATACLEAR+12                                              00300000
+ATAWORD1 EQU   ATACLEAR+8                                               00310000
+ATAWORD2 EQU   ATACLEAR+12                                              00320000
+ATAIOSB  EQU   ATACLEAR                                                 00330000
+ATAPCCWQ EQU   ATACLEAR+4                                               00340000
+ATACOMPQ EQU   ATACLEAR+8                                               00350000
+ATACPCCW EQU   ATACLEAR+12                                              00360000
+ATAAIA   EQU   ATACLEAR                                                 00370000
+ATAACE   EQU   ATAAIA                                                   00380000
+ATAASCB  EQU   ATACLEAR+4                                               00390000
+ATALGE   EQU   ATAASCB                                                  00400000
+ATASAVE  EQU   ATACLEAR                                                 00410000
+ATAACEQ  EQU   ATACLEAR+4                                               00420000
+ATAACEQ1 EQU   ATACLEAR+8                                               00430000
+ATAAIAQ  EQU   ATALGE                                                   00440000
+ATAAIACE EQU   ATACLEAR                                                 00450000
+ATASARTE EQU   ATACLEAR+4                                               00460000
+ATASCCW  EQU   ATACLEAR+8                                               00470000
+ATAIORB  EQU   ATACLEAR+12                                              00480000
+ATARMPL  EQU   ATACLEAR                                                 00490000
+ATARCRF8 EQU   ATARCRSN                                                 00500000
+ATARCRF7 EQU   ATARCRSN                                                 00510000
+ATARCRF6 EQU   ATARCRSN                                                 00520000
+ATARCRF5 EQU   ATARCRSN                                                 00530000
+ATARCRF4 EQU   ATARCRSN                                                 00540000
+ATARCRF3 EQU   ATARCRSN                                                 00550000
+ATARCRF2 EQU   ATARCRSN                                                 00560000
+ATARCRF1 EQU   ATARCRSN                                                 00570000
+ATARSV2  EQU   ATARFLGS                                                 00580000
+ATABADPK EQU   ATARFLGS                                                 00590000
+ATASCCWP EQU   ATARFLGS                                                 00600000
+ATASGNST EQU   ATARFLGS                                                 00610000
+ATARSV1  EQU   ATASFLGS+1                                               00620000
+ATASRT   EQU   ATASFLGS+1                                               00630000
+ATASWPDR EQU   ATASFLGS+1                                               00640000
+ATATRPAG EQU   ATASFLGS+1                                               00650000
+ATASWAP  EQU   ATASFLGS+1                                               00660000
+ATAPAGCM EQU   ATASFLGS                                                 00670000
+ATAPAGIO EQU   ATASFLGS                                                 00680000
+ATAPOS   EQU   ATASFLGS                                                 00690000
+ATAPCOMP EQU   ATASFLGS                                                 00700000
+ATAVIOCM EQU   ATASFLGS                                                 00710000
+ATASCOMP EQU   ATASFLGS                                                 00720000
+ATASLSQA EQU   ATASFLGS                                                 00730000
+ATAQIOE  EQU   ATASFLGS                                                 00740000
+         MEND                                                           00750000

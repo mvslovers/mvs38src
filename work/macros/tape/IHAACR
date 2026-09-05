@@ -1,0 +1,89 @@
+*********************************************************************** 00010000
+*                                                                     * 00020000
+*        ALTERNATE CPU RECOVERY SAVE AREA                             * 00030000
+*              POINTED TO BY LCCACPUS -> WSACACR -> ACR               * 00040000
+*              SEE IECVTACR AND IECVTCR1                              * 00050000
+*                                                                     * 00060000
+*********************************************************************** 00070000
+ACR      DSECT ,                    OFFSET                              00080000
+ACRFLPT0 DS    0D                      000                              00090000
+ACRLMFSV DS    0D                      000                              00100000
+ACRSA    DS    0D                      000                              00110000
+ACRSVBSE DS    D                       000                              00120000
+ACRFLPT2 DS    D                       008                              00130000
+ACRFLPT4 DS    D                       010                              00140000
+ACRFLPT6 DS    D                       018                              00150000
+ACRGPR0  DS    0A                      020                              00160000
+ACRLMGSV DS    A                       020                              00170000
+ACRGPR1  DS    A                       024                              00180000
+ACRGPR2  DS    A                       028                              00190000
+ACRGPR3  DS    A                       02C                              00200000
+ACRGPR4  DS    A                       030                              00210000
+ACRGPR5  DS    A                       034                              00220000
+ACRGPR6  DS    A                       038                              00230000
+ACRGPR7  DS    A                       03C                              00240000
+ACRGPR8  DS    A                       040                              00250000
+ACRGPR9  DS    A                       044                              00260000
+ACRGPR10 DS    A                       048                              00270000
+ACRGPR11 DS    A                       04C                              00280000
+ACRGPR12 DS    A                       050                              00290000
+ACRGPR13 DS    A                       054                              00300000
+ACRGPR14 DS    A                       058                              00310000
+ACRGPR15 DS    A                       05C                              00320000
+ACRMCHEB DS    0A                      060                              00330000
+ACRRRPLP DS    A                       060                              00340000
+ACRCTRG1 DS    A                       064                              00350000
+ACRACRSV DS    0XL64                   068                              00360000
+ACRSVR0  DS    A                       068                              00370000
+ACRSVR1  DS    A                       06C                              00380000
+ACRSVR2  DS    A                       070                              00390000
+ACRSVR3  DS    A                       074                              00400000
+ACRSVR4  DS    A                       078                              00410000
+ACRSVR5  DS    A                       07C                              00420000
+ACRSVR6  DS    A                       080                              00430000
+ACRSVR7  DS    A                       084                              00440000
+ACRSVR8  DS    A                       088                              00450000
+ACRSVR9  DS    A                       08C                              00460000
+ACRSVR10 DS    A                       090                              00470000
+ACRSVR11 DS    A                       094                              00480000
+ACRSVR12 DS    A                       098                              00490000
+ACRSVR13 DS    A                       09C                              00500000
+ACRSVR14 DS    A                       0A0                              00510000
+ACRSVR15 DS    A                       0A4                              00520000
+ACRSVLMR DS    D                       0A8                              00530000
+ACRRRPL  DS    16A                     0B0                              00540000
+ACRLMRTN DS    D                       0F0                              00550000
+ACRACRWA DS    6A                      0F8                              00560000
+ACRFLCSV DS    0D                      110                              00570000
+ACRRPSW  DS    D                       110                              00580000
+ACREOPSW DS    0D                      118                              00590000
+ACROPSW  DS    D                       118                              00600000
+ACRSOPSW DS    D                       120                              00610000
+ACRPOPSW DS    D                       128                              00620000
+ACRMOPSW DS    D                       130                              00630000
+ACRIOPSW DS    D                       138                              00640000
+ACRCSW   DS    D                       140                              00650000
+ACRCAW   DS    A                       148                              00660000
+ACRCVT2  DS    A                       14C                              00670000
+ACRTIMER DS    A                       150                              00680000
+ACRTRACE DS    A                       154                              00690000
+ACREPSWS DS    0D                      158                              00700000
+ACRSPAD  DS    XL2                     158                              00710000
+ACREICOD DS    XL3                     15A                              00720000
+ACRSVILC DS    XL1                     15D                              00730000
+ACRSVCN  DS    XL3                     15E                              00740000
+ACRPIILC DS    XL1                     161                              00750000
+ACRPICOD DS    XL2                     162                              00760000
+ACRTEA   DS    XL5                     164                              00770000
+ACRMCNUM DS    XL1                     169                              00780000
+ACRPERCD DS    XL2                     16A                              00790000
+ACRPER   DS    XL5                     16C                              00800000
+ACRMTRCD DS    XL7                     171 +3 +5 IEAVTACR               00810000
+ACRCAFM  DS    0A                      178                              00820000
+ACRCPIDS DS    XL2                     178                              00830000
+ACRCPUAD DS    XL2                     17A                              00840000
+ACR17C   DS    A                       17C                              00850000
+ACR180   DS    A                       180                              00860000
+ACR184   DS    A                       184                              00870000
+ACR188   DS    A                       188 +0 +1 +3 IEAVTACR            00880000
+ACRSAEND EQU   *                       18C AWSAEND                      00890000

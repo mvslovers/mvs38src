@@ -1,0 +1,39 @@
+         MACRO  ,                                                       00010000
+&LBL     IQACVT &FUNCT=,&LENGTH=                                        00020000
+*********************************************************************** 00030000
+*********************************************************************** 00040000
+******************          OS/VS2 R2                  **************** 00050000
+******************     DYNAMIC SUPPORT SYSTEM          **************** 00060000
+******************          CONVERT VALUE              **************** 00070000
+*********************************************************************** 00080000
+*********************************************************************** 00090000
+         LCLA  &F                                                       00100000
+         AIF   (T'&FUNCT EQ 'O').ERRF                                   00110000
+         AIF   (T'&LENGTH EQ 'O').ERRL                                  00120000
+         AIF   ('&FUNCT' EQ 'HEX').CVTH                                 00130000
+         AIF   ('&FUNCT' EQ 'CHAR').CVTC                                00140000
+         AIF   ('&FUNCT' EQ 'NUM').CVTN                                 00150000
+         AIF   ('&FUNCT' EQ '0').GEN                                    00160000
+         AGO   .ERRFUN                                                  00170000
+.CVTH    ANOP  ,                                                        00180000
+&F       SETA  1                                                        00190000
+         AGO   .GEN                                                     00200000
+.CVTC    ANOP  ,                                                        00210000
+&F       SETA  2                                                        00220000
+         AGO   .GEN                                                     00230000
+.CVTN    ANOP  ,                                                        00240000
+&F       SETA  3                                                        00250000
+         AGO   .GEN                                                     00260000
+.GEN     ANOP  ,                                                        00270000
+&LBL     DC    AL1(&F),AL3(&LENGTH)                                     00280000
+         MEXIT ,                                                        00290000
+.ERRF    ANOP ,                                                         00300000
+         MNOTE 8,'IQACVT - FUNCT= REQUIRED'                             00310000
+         MEXIT ,                                                        00320000
+.ERRL    ANOP ,                                                         00330000
+         MNOTE 8,'IQACVT - LENGTH= REQUIRED'                            00340000
+         MEXIT ,                                                        00350000
+.ERRFUN  ANOP ,                                                         00360000
+         MNOTE 8,'IQACVT - FUNCT= INVALID ''&FUNCT'''                   00370000
+         MEXIT ,                                                        00380000
+         MEND  ,                                                        00390000

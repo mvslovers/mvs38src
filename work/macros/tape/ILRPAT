@@ -1,0 +1,15 @@
+         MACRO                                                          00010000
+         ILRPAT ,                                                       00020000
+PAT      EQU   0          PAGE ALLOCATION TABLE                         00030000
+PATHDR   EQU   PAT        PAT HEADER                                    00040000
+PATIDENT EQU   PATHDR     'PAT' IDENTIFIER                              00050000
+PATPART  EQU   PATHDR+4   POINTER TO THE PART ENTRY                     00060000
+PATCYLNO EQU   PATHDR+8   NUMBER OF CYL MAPS IN THIS PAT                00070000
+PATCYLSZ EQU   PATHDR+10  NUMBER OF SLOTS PER CYL                       00080000
+PATCYLMW EQU   PATHDR+12  NUMBER OF WORDS TO MAP ONE CYL                00090000
+PATRSV1  EQU   PATHDR+14  RESERVED                                      00100000
+PATMAP   EQU   PAT+16     SLOT ALLOC BIT MAP SIZE DETERMININED BY NIP   00110000
+PATCYLS  EQU   PATMAP     CYL MAP WORDS MOST DEVICES 1 WORD CYL SLOTS   00120000
+PATCYLMP EQU   0                        3330 REQUIRE 2 WORDS PER CYL    00130000
+PATCYL   EQU   0                                                        00140000
+         MEND                                                           00150000

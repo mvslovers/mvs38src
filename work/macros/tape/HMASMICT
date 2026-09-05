@@ -1,0 +1,334 @@
+*************************************************************           00000100
+*                                                           *           00000200
+*                                                           *           00000300
+*                                                           *           00000400
+*************************************************************           00000500
+HMASMICT EQU   0                                                        00000600
+ICTCORE  EQU   HMASMICT                                                 00000700
+ICTPSPLN EQU   ICTCORE                                                  00000800
+ICTMSPLN EQU   ICTCORE+4                                                00000900
+ICTLSPLN EQU   ICTCORE+8                                                00001000
+ICTGMSPL EQU   0                                                        00001100
+ICTPTF   EQU   0                                                        00001200
+ICTPTFS  EQU   ICTPTF                                                   00001300
+ICTPFLG1 EQU   ICTPTF+7                                                 00001400
+ICTPFLG3 EQU   ICTPTF+8                                                 00001500
+ICTPPROC EQU   ICTPFLG3                                                 00001600
+ICTPROCS EQU   ICTPPROC                                                 00001700
+ICTPNOGO EQU   ICTPFLG3                                                 00001800
+ICTPFLG5 EQU   ICTPTF+9                                                 00001900
+ICTPFLG6 EQU   ICTPTF+11                                                00002000
+ICTPFLF  EQU   ICTPFLG6                                                 00002100
+ICTPFLG2 EQU   ICTPTF+12                                                00002200
+ICTPFLG4 EQU   ICTPTF+13                                                00002300
+ICTPFLG8 EQU   ICTPTF+14                                                00002400
+ICTPECPL EQU   ICTPFLG8                                                 00002500
+ICTPFLG9 EQU   ICTPTF+15                                                00002600
+ICTPFLGA EQU   ICTPTF+16                                                00002700
+ICTPUSR1 EQU   ICTPFLGA                                                 00002800
+ICTPCHN  EQU   ICTPTF+64                                                00002900
+ICTPRCHN EQU   ICTPTF+68                                                00003000
+ICTPSCHN EQU   ICTPTF+72                                                00003100
+ICTPPCHN EQU   ICTPTF+76                                                00003200
+ICTPICHN EQU   ICTPTF+80                                                00003300
+ICTPNCHN EQU   ICTPTF+84                                                00003400
+ICTPVCHN EQU   ICTPTF+88                                                00003500
+ICTPDCHN EQU   ICTPTF+92                                                00003600
+ICTPBCHN EQU   ICTPTF+96                                                00003700
+ICTP064  EQU   ICTPTF+100                                               00003800
+ICTIXPF  EQU   0                                                        00003900
+ICTENTLS EQU   0                                                        00004000
+ICTENTNT EQU   ICTENTLS                                                 00004100
+ICTENTNM EQU   ICTENTNT                                                 00004200
+ICTENTST EQU   ICTENTNT+7                                               00004300
+ICTREQLS EQU   0                                                        00004400
+ICTREQNT EQU   ICTREQLS                                                 00004500
+ICTREQNM EQU   ICTREQNT                                                 00004600
+ICTREQST EQU   ICTREQNT+7                                               00004700
+ICTSUPLS EQU   0                                                        00004800
+ICTSUPNT EQU   ICTSUPLS                                                 00004900
+ICTSUPNM EQU   ICTSUPNT                                                 00005000
+ICTPRELS EQU   0                                                        00005100
+ICTPRENT EQU   ICTPRELS                                                 00005200
+ICTPRENM EQU   ICTPRENT                                                 00005300
+ICTPREST EQU   ICTPRENT+7                                               00005400
+ICTIRQLS EQU   0                                                        00005500
+ICTIRQNT EQU   ICTIRQLS                                                 00005600
+ICTIRQNM EQU   ICTIRQNT                                                 00005700
+ICTIRQST EQU   ICTIRQNT+7                                               00005800
+ICTCSRST EQU   ICTIRQNT+15                                              00005900
+ICTNPRLS EQU   0                                                        00006000
+ICTNPRNT EQU   ICTNPRLS                                                 00006100
+ICTNPRNM EQU   ICTNPRNT                                                 00006200
+ICTVRSLS EQU   0                                                        00006300
+ICTVRSNT EQU   ICTVRSLS                                                 00006400
+ICTVRSNM EQU   ICTVRSNT                                                 00006500
+ICTDELLS EQU   0                                                        00006600
+ICTDELNT EQU   ICTDELLS                                                 00006700
+ICTDELNM EQU   ICTDELNT                                                 00006800
+ICTDELST EQU   ICTDELNT+7                                               00006900
+ICTSBYLS EQU   0                                                        00007000
+ICTSBYNT EQU   ICTSBYLS                                                 00007100
+ICTSBYNM EQU   ICTSBYNT                                                 00007200
+ICTMOD   EQU   0                                                        00007300
+ICTMNAME EQU   ICTMOD                                                   00007400
+ICTMEND  EQU   ICTMNAME                                                 00007500
+ICTMFLG2 EQU   ICTMOD+8                                                 00007600
+ICTMPROC EQU   ICTMFLG2                                                 00007700
+ICTMNOGO EQU   ICTMFLG2   B'01000000'                                   00007800
+ICTMCPL  EQU   ICTMFLG2   B'00100000'                                   00007900
+ICTMFLG1 EQU   ICTMOD+9                                                 00008000
+ICTMMODR EQU   ICTMFLG1                                                 00008100
+ICTMMACR EQU   ICTMFLG1   B'00001000'                                   00008200
+ICTMMACU EQU   ICTMFLG1   B'00000100'                                   00008300
+ICTMSRCR EQU   ICTMFLG1   B'00000010'                                   00008400
+ICTMSRCU EQU   ICTMFLG1   B'00000001'                                   00008500
+ICTMFLG3 EQU   ICTMOD+10                                                00008600
+ICTMPRMS EQU   ICTMFLG3   B'00000010'                                   00008700
+ICTMALIS EQU   ICTMFLG3   B'00000100'                                   00008800
+ICTMWRK  EQU   ICTMFLG3   B'00001000'                                   00008900
+ICTMTRX  EQU   ICTMFLG3   B'00010000'                                   00009000
+ICTMRELF EQU   ICTMFLG3   B'00100000'                                   00009100
+ICTLIBTX EQU   ICTMFLG3   B'01000000'                                   00009200
+ICTLIBLK EQU   ICTMFLG3   B'10000000'                                   00009300
+ICTMFLG4 EQU   ICTMOD+11                                                00009400
+ICTMISEL EQU   ICTMFLG4   B'10000000'                                   00009500
+ICTMTSEL EQU   ICTMFLG4   B'00000010'                                   00009600
+ICTMDSTE EQU   ICTMFLG4   B'00000100'                                   00009700
+ICTMMIDE EQU   ICTMFLG4   B'00001000'                                   00009800
+ICTMASOC EQU   ICTMFLG4   B'00010000'                                   00009900
+ICTMSELM EQU   ICTMFLG4   B'00100000'                                   00010000
+ICTMIDEL EQU   ICTMFLG4   B'01000000'                                   00010100
+ICTMFLG5 EQU   ICTMOD+12                                                00010200
+ICTMNORL EQU   ICTMFLG5                                                 00010300
+ICTMELCK EQU   ICTMFLG5                                                 00010400
+ICTMCOPY EQU   ICTMFLG5                                                 00010500
+ICTMPASS EQU   ICTMFLG5                                                 00010600
+ICTMODF4 EQU   ICTMOD+13                                                00010700
+ICTMLEP1 EQU   ICTMODF4                                                 00010800
+ICTMODF5 EQU   ICTMOD+14                                                00010900
+ICTMLEP2 EQU   ICTMODF5                                                 00011000
+ICTMODF6 EQU   ICTMOD+15                                                00011100
+ICTMLEP3 EQU   ICTMODF6                                                 00011200
+ICTMODF7 EQU   ICTMOD+16                                                00011300
+ICTMLEP4 EQU   ICTMODF7                                                 00011400
+ICTMACF4 EQU   ICTMOD+17                                                00011500
+ICTMACF5 EQU   ICTMOD+18                                                00011600
+ICTMLANG EQU   ICTMOD+20                                                00011700
+ICTMRELN EQU   ICTMOD+22                                                00011800
+ICTFMLIB EQU   ICTMOD+24                                                00011900
+ICTTOLIB EQU   ICTMOD+32                                                00012000
+ICTMASLB EQU   ICTMOD+40                                                00012100
+ICTMDSTL EQU   ICTMOD+48                                                00012200
+ICTMSYSL EQU   ICTMOD+56                                                00012300
+ICTMDOBJ EQU   ICTMOD+64                                                00012400
+ICTMSSI  EQU   ICTMOD+72                                                00012500
+ICTMRMID EQU   ICTMOD+80                                                00012600
+ICTMFMID EQU   ICTMOD+88                                                00012700
+ICTPPTR  EQU   ICTMOD+96                                                00012800
+ICTMCHN  EQU   ICTMOD+100                                               00012900
+ICTMICHN EQU   ICTMOD+104                                               00013000
+ICTMICHA EQU   ICTMOD+108                                               00013100
+ICTMACHN EQU   ICTMOD+112                                               00013200
+ICTMTCHN EQU   ICTMOD+116                                               00013300
+ICTMVCHN EQU   ICTMOD+120                                               00013400
+ICTMUCHN EQU   ICTMOD+124                                               00013500
+ICTM080  EQU   ICTMOD+128                                               00013600
+ICTM084  EQU   ICTMOD+132                                               00013700
+ICTIXMF  EQU   0                                                        00013800
+ICTMIDLS EQU   0                                                        00013900
+ICTMID   EQU   ICTMIDLS                                                 00014000
+ICTMODID EQU   ICTMID                                                   00014100
+ICTMODST EQU   ICTMID+7                                                 00014200
+ICTASMLS EQU   0                                                        00014300
+ICTASMAD EQU   ICTASMLS                                                 00014400
+ICTTALLS EQU   0                                                        00014500
+ICTTALNM EQU   ICTTALLS                                                 00014600
+ICTMVRLS EQU   0                                                        00014700
+ICTMVRNT EQU   ICTMVRLS                                                 00014800
+ICTMVRNM EQU   ICTMVRNT                                                 00014900
+ICTMUMLS EQU   0                                                        00015000
+ICTMUMNT EQU   ICTMUMLS                                                 00015100
+ICTMUMNM EQU   ICTMUMNT                                                 00015200
+ICTLMOD  EQU   0                                                        00015300
+ICTLMNAM EQU   ICTLMOD                                                  00015400
+ICTLNAME EQU   ICTLMNAM                                                 00015500
+ICTLEND  EQU   ICTLNAME                                                 00015600
+ICTLFLG4 EQU   ICTLMOD+8                                                00015700
+ICTLPROC EQU   ICTLFLG4    B'10000000'                                  00015800
+ICTLNOGO EQU   ICTLFLG4    B'01000000'                                  00015900
+ICTLCPL  EQU   ICTLFLG4    B'00100000'                                  00016000
+ICTLFLG1 EQU   ICTLMOD+9                                                00016100
+ICTLDC   EQU   ICTLFLG1    B'00000010'                                  00016200
+ICTLREFR EQU   ICTLFLG1    B'00000100'                                  00016300
+ICTLOVLY EQU   ICTLFLG1    B'00001000'                                  00016400
+ICTLSCTR EQU   ICTLFLG1    B'00010000'                                  00016500
+ICTLREUS EQU   ICTLFLG1    B'00100000'                                  00016600
+ICTLRENT EQU   ICTLFLG1    B'01000000'                                  00016700
+ICTLAPF  EQU   ICTLFLG1    B'10000000'                                  00016800
+ICTLFLG5 EQU   ICTLMOD+10                                               00016900
+ICTLPAGA EQU   ICTLFLG5    B'01000000'                                  00017000
+ICTLNE   EQU   ICTLFLG5    B'10000000'                                  00017100
+ICTLAM24 EQU   ICTLFLG5    B'00100000'                                  00017200
+ICTLAM31 EQU   ICTLFLG5    B'00010000'                                  00017300
+ICTLAMA  EQU   ICTLFLG5    B'00001000'                                  00017400
+ICTLRM24 EQU   ICTLFLG5    B'00000100'                                  00017500
+ICTLRMA  EQU   ICTLFLG5    B'00000010'                                  00017600
+ICTLFLG6 EQU   ICTLMOD+11                                               00017700
+ICTLFLG7 EQU   ICTLMOD+12                                               00017800
+ICTLFLG2 EQU   ICTLMOD+13                                               00017900
+ICTLDEL  EQU   ICTLFLG2    B'00001000'                                  00018000
+ICTLTDEL EQU   ICTLFLG2    B'00100000'                                  00018100
+ICTLINK  EQU   ICTLFLG2    B'01000000'                                  00018200
+ICTCOPY  EQU   ICTLFLG2    B'10000000'                                  00018300
+ICTLFLG3 EQU   ICTLMOD+14                                               00018400
+ICTLZAP  EQU   ICTLFLG3    B'00000100'                                  00018500
+ICTLLKD  EQU   ICTLFLG3    B'00001000'                                  00018600
+ICTLCPY  EQU   ICTLFLG3    B'00010000'                                  00018700
+ICTLXPND EQU   ICTLFLG3    B'00100000'                                  00018800
+ICTTIND2 EQU   ICTLFLG3    B'01000000'                                  00018900
+ICTTIND1 EQU   ICTLFLG3    B'10000000'                                  00019000
+ICTLCHN  EQU   ICTLMOD+34                                               00019100
+ICTIXLF  EQU   0                                                        00019200
+ICTIXL   EQU   ICTIXLF                                                  00019300
+ICTENDNT EQU   ICTENDCH                                                 00019400
+ICTENDIX EQU   ICTENDCH                                                 00019500
+ICTLTTR  EQU   ICTLMOD+31                                               00019600
+ICTTG2   EQU   ICTLMOD+23                                               00019700
+ICTTG1   EQU   ICTLMOD+15                                               00019800
+ICTLPASS EQU   ICTLFLG4                                                 00019900
+ICTLDDCK EQU   ICTLFLG4                                                 00020000
+ICTLMSG  EQU   ICTLFLG4                                                 00020100
+ICTMUMND EQU   ICTMUMNM                                                 00020200
+ICTMVRND EQU   ICTMVRNM                                                 00020300
+ICTTALND EQU   ICTTALNM                                                 00020400
+ICTASMND EQU   ICTASMAD                                                 00020500
+ICTMIDTY EQU   ICTMODST                                                 00020600
+ICTMIDAM EQU   ICTMODST                                                 00020700
+ICTMIDRG EQU   ICTMODST                                                 00020800
+ICTMIDF1 EQU   ICTMODST                                                 00020900
+ICTMIDPL EQU   ICTMODST                                                 00021000
+ICTMIDPS EQU   ICTMODST                                                 00021100
+ICTMIDND EQU   ICTMODID                                                 00021200
+ICTIXM   EQU   ICTIXMF                                                  00021300
+ICTMZMPR EQU   ICTMACF4   B'00000001'  ?                                00021400
+ICTMZOMZ EQU   ICTMACF4   B'00000010'  ?                                00021500
+ICTMDOAS EQU   ICTMACF4   B'00000100'  ?                                00021600
+ICTMXUPD EQU   ICTMACF4   B'00001000'  ?                                00021700
+ICTMFXC  EQU   ICTMACF4   B'00010000'  ?                                00021800
+ICTMFXBS EQU   ICTMACF4   B'00100000'  ?                                00021900
+ICTMHASM EQU   ICTMACF4   B'01000000'                                   00022000
+ICTMACDL EQU   ICTMACF4   B'10000000'  ?                                00022100
+ICTMPAGA EQU   ICTMLEP2                                                 00022200
+ICTMNE   EQU   ICTMLEP2                                                 00022300
+ICTMDC   EQU   ICTMLEP1                                                 00022400
+ICTMREFR EQU   ICTMLEP1                                                 00022500
+ICTMOVLY EQU   ICTMLEP1                                                 00022600
+ICTMSCTR EQU   ICTMLEP1                                                 00022700
+ICTMREUS EQU   ICTMLEP1                                                 00022800
+ICTMRENT EQU   ICTMLEP1                                                 00022900
+ICTMAPF  EQU   ICTMLEP1                                                 00023000
+ICTMXPND EQU   ICTMFLG1                                                 00023100
+ICTMZAP  EQU   ICTMFLG1                                                 00023200
+ICTMASM  EQU   ICTMMODR                                                 00023300
+ICTMMOD  EQU   ICTMMODR                                                 00023400
+ICTMMIDU EQU   ICTMFLG2   B'00000100'                                   00023500
+ICTMDEL  EQU   ICTMFLG2   B'00001000'                                   00023600
+ICTMMSG  EQU   ICTMFLG2   B'00010000'                                   00023700
+ICTSBYND EQU   ICTSBYNM                                                 00023800
+ICTDELEX EQU   ICTDELST                                                 00023900
+ICTDELND EQU   ICTDELNM                                                 00024000
+ICTVRSND EQU   ICTVRSNM                                                 00024100
+ICTNPRND EQU   ICTNPRNM                                                 00024200
+ICTCSRF  EQU   ICTCSRST                                                 00024300
+ICTCSRNM EQU   ICTIRQNT+8                                               00024400
+ICTIREQT EQU   ICTIRQST                                                 00024500
+ICTIREQI EQU   ICTIRQST                                                 00024600
+ICTIREQB EQU   ICTIRQST                                                 00024700
+ICTIREQS EQU   ICTIRQST                                                 00024800
+ICTIRQND EQU   ICTIRQNM                                                 00024900
+ICTPREQT EQU   ICTPREST                                                 00025000
+ICTPREQI EQU   ICTPREST                                                 00025100
+ICTPREQB EQU   ICTPREST                                                 00025200
+ICTPREQS EQU   ICTPREST                                                 00025300
+ICTPREND EQU   ICTPRENM                                                 00025400
+ICTSUPND EQU   ICTSUPNM                                                 00025500
+ICTRREQT EQU   ICTREQST                                                 00025600
+ICTRREQI EQU   ICTREQST                                                 00025700
+ICTRREQB EQU   ICTREQST                                                 00025800
+ICTRREQS EQU   ICTREQST                                                 00025900
+ICTREQND EQU   ICTREQNM                                                 00026000
+ICTEREQT EQU   ICTENTST                                                 00026100
+ICTEREQI EQU   ICTENTST                                                 00026200
+ICTEREQB EQU   ICTENTST                                                 00026300
+ICTEREQS EQU   ICTENTST                                                 00026400
+ICTENTND EQU   ICTENTNM                                                 00026500
+ICTIXP   EQU   ICTIXPF                                                  00026600
+ICTPTPFX EQU   ICTPTF+38                                                00026700
+ICTPRELN EQU   ICTPTF+36                                                00026800
+ICTPRECT EQU   ICTPTF+33                                                00026900
+ICTPRECD EQU   ICTPTF+30                                                00027000
+ICTPVERN EQU   ICTPTF+29                                                00027100
+ICTPFMID EQU   ICTPTF+22                                                00027200
+ICTPSUPN EQU   ICTPTF+20                                                00027300
+ICTPONUM EQU   ICTPTF+18                                                00027400
+ICTPTYPE EQU   ICTPTF+17                                                00027500
+ICTPUSR8 EQU   ICTPFLGA                                                 00027600
+ICTPUSR7 EQU   ICTPFLGA                                                 00027700
+ICTPUSR6 EQU   ICTPFLGA                                                 00027800
+ICTPUSR5 EQU   ICTPFLGA                                                 00027900
+ICTPUSR4 EQU   ICTPFLGA                                                 00028000
+ICTPUSR3 EQU   ICTPFLGA                                                 00028100
+ICTPUSR2 EQU   ICTPFLGA                                                 00028200
+ICTPPASS EQU   ICTPUSR1                                                 00028300
+ICTPRQBY EQU   ICTPFLG9                                                 00028400
+ICTPRQOK EQU   ICTPFLG9                                                 00028500
+ICTPRQCK EQU   ICTPFLG9                                                 00028600
+ICTPPDEL EQU   ICTPFLG9                                                 00028700
+ICTPWRKO EQU   ICTPFLG9                                                 00028800
+ICTPMSL  EQU   ICTPFLG9                                                 00028900
+ICTPDCPL EQU   ICTPFLG8                                                 00029000
+ICTPGCPL EQU   ICTPFLG8                                                 00029100
+ICTPGELM EQU   ICTPFLG4                                                 00029200
+ICTPDIMP EQU   ICTPFLG4                                                 00029300
+ICTPDEXP EQU   ICTPFLG4                                                 00029400
+ICTPREDO EQU   ICTPFLG4                                                 00029500
+ICTPCDSE EQU   ICTPFLG4                                                 00029600
+ICTPRCND EQU   ICTPFLG2                                                 00029700
+ICTPTPS  EQU   ICTPFLG2                                                 00029800
+ICTPTR1  EQU   ICTPFLG2                                                 00029900
+ICTPVRSP EQU   ICTPFLG2                                                 00030000
+ICTFLF   EQU   ICTPFLF                                                  00030100
+ICTPDBYP EQU   ICTPFLG6                                                 00030200
+ICTPSBYP EQU   ICTPFLG6                                                 00030300
+ICTPMDLP EQU   ICTPFLG5+1                                               00030400
+ICTPADDP EQU   ICTPFLG5+1                                               00030500
+ICTPLRFP EQU   ICTPFLG5   B'00000001'                                   00030600
+ICTPJCLP EQU   ICTPFLG5   B'00000010'                                   00030700
+ICTPSUPP EQU   ICTPFLG5   B'00000100'                                   00030800
+ICTPREQP EQU   ICTPFLG5   B'00001000'                                   00030900
+ICTPPREP EQU   ICTPFLG5   B'00010000'                                   00031000
+ICTPNPRP EQU   ICTPFLG5   B'00100000'                                   00031100
+ICTPIRQP EQU   ICTPFLG5   B'01000000'                                   00031200
+ICTPDELP EQU   ICTPFLG5   B'10000000'                                   00031300
+ICTPSLST EQU   ICTPFLG3                                                 00031400
+ICTPNOLB EQU   ICTPFLG3                                                 00031500
+ICTPVERJ EQU   ICTPFLG3                                                 00031600
+ICTPMSG  EQU   ICTPFLG3                                                 00031700
+ICTPCPL  EQU   ICTPFLG3                                                 00031800
+ICTREGEN EQU   ICTPFLG1                                                 00031900
+ICTBYP   EQU   ICTPFLG1                                                 00032000
+ICTDUMMP EQU   ICTPFLG1                                                 00032100
+ICTERROR EQU   ICTPFLG1                                                 00032200
+ICTACC   EQU   ICTPFLG1                                                 00032300
+ICTRES   EQU   ICTPFLG1                                                 00032400
+ICTAPP   EQU   ICTPFLG1                                                 00032500
+ICTPEND  EQU   ICTPTFS                                                  00032600
+ICTLEN   EQU   ICTGMSPL+1                                               00032700
+ICTSP    EQU   ICTGMSPL                                                 00032800
+ICTLLEN  EQU   ICTLSPLN+1                                               00032900
+ICTLSP   EQU   ICTLSPLN                                                 00033000
+ICTMLEN  EQU   ICTMSPLN+1                                               00033100
+ICTMSP   EQU   ICTMSPLN                                                 00033200
+ICTPLEN  EQU   ICTPSPLN+1                                               00033300
+ICTPSP   EQU   ICTPSPLN                                                 00033400

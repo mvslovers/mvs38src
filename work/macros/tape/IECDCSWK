@@ -1,0 +1,90 @@
+* % GO TO CSWKPLS1;       /*GO TO THE PLS VERSION   */                  00050064
+         MACRO                                                          00100064
+         IECDCSWK ,                                                     00150064
+* %CSWKPLS1: ;                                                          00200064
+*/* **************************************************************** */ 00250064
+*/* CSCRWA - CHANNEL SET CHANNEL RECOVERY WORK AREA                  */ 00300064
+*/*          THE CST CHANNEL RECOVERY WORK AREA PROVIDES DATA AREAS  */ 00350064
+*/*          USED TO CONTROL CHANNEL ERROR RECOVERY FOR A CHANNEL    */ 00400064
+*/*          SET.  THERE EXISTS ONE WORK AREA FOR EACH CHANNEL SET.  */ 00450064
+*/*          EACH WORK AREA CONTAINS THREE AREAS USED BY CHANNEL     */ 00460064
+*/*          RECOVERY TO SCHEDULE AND CONTROL CHANNEL RECOVERY       */ 00470064
+*/*          FUNCTIONS.                                              */ 00480064
+*/* COPYRIGHT       = NONE                                           */ 00500064
+*/* FUNCTION        = MAP THE CHANNEL SET CHANNEL RECOVERY WORK AREA */ 00550064
+*/* DEPENDENCIES    = SRB MUST BE DECLARED FIRST             @ZM49377*/ 00600064
+*/* MODULE TYPE     = PLS/DSECT                                      */ 00650064
+*/* PROCESSOR       = PLS COMPILER OR ASM                            */ 00700064
+*/* CHANGE ACTIVITY = NONE                                           */ 00750064
+*/*A-000000-999999                                           @G64BPLP*/ 00800064
+*/* **************************************************************** */ 00850064
+*     %GOTO CSWKPLS2;                                                   00900064
+CSCRWKA  DSECT                                                          00950064
+CSCRWSRB DS    CL44          SRB TO SCHEDULE IECVIRST/IECVRSTI @ZM49596 01000064
+*                             NOTE: THIS MUST BE FIRST IN      @ZM49377 01010064
+*                                   CSCRWKA                    @ZM49377 01040064
+         DS    0F                                                       01070064
+CSCRCSID DS    H              CHANNEL SET ON WHICH FAILURE OCCURRED     01100064
+CSCRWLOC DS    C              SRB SCHEDULE LOCK (FOR TEST & SET)        01130064
+CSCRFLG0 DS    C              RECOVERY STATUS FLAG BYTE                 01160064
+CSCRWXDM EQU   X'80'          MORE CHANNELS LOST ON THIS CHANNEL SET    01250064
+*                             WHILE RECOVERY WAS IN EXECUTION           01300064
+CSCRWRUN EQU   X'20'          RECOVERY IS IN EXECUTION.                 01380064
+CSCRSETD EQU   X'10'          A SETDIE HAS BEEN ISSUED. RECOVERY WILL   01410064
+*                             CONTINUE WHEN TIME INTERVAL HAS EXPIRED.  01440064
+CSCRSCHD EQU   X'08'          THE TIME INTERVAL HAS EXPIRED. AN SRB     01470064
+*                             HAS BEEN SCHEDULED TO CONTINUE RECOVERY   01500064
+CSCRSTSM DS    C              USED FOR STNSM/STOSM BY RECOVERY.         01530064
+         DS    CL3            RESERVED                                  01539064
+         DS    F              RESERVED                                  01620064
+CSCRWKAL EQU   *-CSCRWKA      LENGTH OF CHANNEL RECOVERY WORK AREA      01630064
+         SPACE                                                          01640064
+CSCRWA   DSECT                CHANNEL SET CHANNEL RECOVERY WORK AREA    01650064
+CSCRIRST DS    CL(CSCRWKAL)   IECVIRST CHANNEL RECOVERY WORK AREA       01660064
+*                             CSCRIRST IS AVAILABLE WHEN       @ZM49377 01670064
+*                             CSCRWLOC = 0 AND CSCRWRUN = 0.   @ZM49377 01680064
+CSCRRSTI DS    CL(CSCRWKAL)   IECVRSTI CHANNEL RECOVERY WORK AREA       01690064
+*                             CSCRRSTI IS AVAILABLE WHEN       @ZM49377 01700064
+*                             CSCRWLOC = 0.                    @ZM49377 01710064
+CSCRCCH  DS    CL(CSCRWKAL)   CCH CHANNEL RECOVERY WORK AREA            01720064
+*                             CSCRCCH IS AVAILABLE WHEN        @ZM49377 01730064
+*                             CSCRWLOC = 0.                    @ZM49377 01740064
+         MEND                                                           01800064
+*%CSWKPLS2: ;                                                           01850064
+*                                                                       01900064
+*DECLARE                                                                01950064
+*  1 CSCRWKA      BASED(SRBPTR),                                        02000064
+*    2 CSCRWSRB      CHAR(44),/* SRB TO SCHEDULE CHANNEL RECOVERY       02050064
+*                                    NOTE: THIS MUST BE FIRST IN        02060064
+*                                    THE CSCRWKA    @ZM49596 @ZM49377*/ 02070064
+*    2 CSCRCSID     FIXED(15),/* CHANNEL SET WHERE FAILURE OCCURRED  */ 02100064
+*    2 CSCRWLOC       CHAR(1),/* SRB SCHEDULE LOCK (FOR TEST & SET)  */ 02150064
+*    2 CSCRFLG0       CHAR(1),/* RECOVERY IN STATUS FLAG BYTE        */ 02200064
+*      3 CSCRWXDM      BIT(1),   /* MORE CHANNELS LOST ON THIS          02250064
+*                                CHANNEL SET WHILE RECOVERY WAS IN      02280064
+*                                EXECUTION                   @ZM49397*/ 02310064
+*      3 *             BIT(1),   /* RESERVED                 @ZM49377*/ 02370064
+*      3 CSCRWRUN      BIT(1),   /* RECOVERY IS IN EXECUTION @ZM49377*/ 02420064
+*      3 CSCRSETD      BIT(1),   /* A SETDIE HAS BEEN ISSUED.           02470064
+*                                RECOVERY WILL CONTINUE WHEN TIME       02520064
+*                                INTERVAL HAS EXPIRED        @ZM49377*/ 02570064
+*      3 CSCRSCHD      BIT(1),   /* THE TIME INTERVAL HAS EXPIRED.      02620064
+*                                AN SRB HAS BEEN SCHEDULED TO           02670064
+*                                CONTINUE RECOVERY.          @ZM49377*/ 02720064
+*      3 *             BIT(3),/* RESERVED                            */ 02770064
+*    2 CSCRSTSM       CHAR(1),/* USED FOR STNSM/STOSM BY RECOVERY    */ 02820064
+*    2 *              CHAR(3),/* RESERVED                            */ 02830064
+*    2 *            FIXED(32);/* RESERVED                            */ 02870064
+*DECLARE                                                                02920064
+*  1 CSCRWA BASED(CSTIOWRK),         /*CHANNEL SET RECOVERY WORK AREA*/ 02970064
+*    2 CSCRIRST CHAR(LENGTH(CSCRWKA)),/* IECVIRST CHANNEL RECOVERY      03020064
+*                                        WORK AREA. CSCRIRST IS         03070064
+*                                        AVAILABLE WHEN CSCRWLOC = 0.   03120064
+*                                        AND CSCRWRUN = 0    @ZM49377*/ 03170064
+*    2 CSCRRSTI CHAR(LENGTH(CSCRWKA)),/* IECVRSTI CHANNEL RECOVERY      03220064
+*                                        WORK AREA. CSCRRSTI IS         03270064
+*                                        AVAILABLE WHEN CSCRWLOC = 0.   03320064
+*                                        @ZM49377*/                     03370064
+*    2 CSCRCCH  CHAR(LENGTH(CSCRWKA));/* CCH CHANNEL RECOVERY WORK      03420064
+*                                        AREA. CSCRCCH IS AVAILABLE     03470064
+*                                        WHEN CSCRWLOC = 0.  @ZM49377*/ 03520064

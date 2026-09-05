@@ -1,0 +1,67 @@
+         MACRO                                                          00010000
+&L       BLSCFREF &R,&LV=,&A=                                           00020000
+.*** START OF SPECIFICATIONS *****************************************/ 00030000
+.**                                                                  */ 00040000
+.** MODULE NAME= BLSCFREF                                            */ 00050000
+.**                                                                  */ 00060000
+.** DESCRIPTIVE NAME= IPCS DAS STORAGE DEALLOCATION MACRO.           */ 00070000
+.**                                                                  */ 00080000
+.** COPYRIGHT=                                                       */ 00090000
+.**                                                                  */ 00100000
+.** STATUS= SU57 RELEASE 1, LEVEL 0                                  */ 00110000
+.**                                                                  */ 00120000
+.** FUNCTION=  BLSCFREF RETURNS THE STORAGE ALLOCATED BY THE         */ 00130000
+.**            BLSCGETF MACRO TO THE FREE STORAGE POOL               */ 00140000
+.**            IN THE DMCB.                                          */ 00150000
+.**                                                                  */ 00160000
+.** NOTES= SEE BELOW                                                 */ 00170000
+.**                                                                  */ 00180000
+.**    REGISTER CONVENTIONS=                                         */ 00190000
+.**                                                                  */ 00200000
+.**       @01 - REG  1 - INITIALLY CONTAINS THE ADDRESS OF STORAGE   */ 00210000
+.**                      TO BE RETURNED.                             */ 00220000
+.**                                                                  */ 00230000
+.**       @13 - REG 13 - USED TO ADDRESS SAVE AREA BELONGING TO      */ 00240000
+.**                      BLSCFREF INVOKER                            */ 00250000
+.**                                                                  */ 00260000
+.**       @14 - REG 14 - USED TO ADDRESS DMCB DURING STORAGE         */ 00270000
+.**                      ALLOCATION.  NOT RESTORED BY MACRO.         */ 00280000
+.**                                                                  */ 00290000
+.** MODULE TYPE= MACRO                                               */ 00300000
+.**                                                                  */ 00310000
+.**    PROCESSOR= ASSEMBLER                                          */ 00320000
+.**                                                                  */ 00330000
+.**    MODULE SIZE= TO BE COMPLETED                                  */ 00340000
+.**                                                                  */ 00350000
+.** ENTRY POINT= BLSCFREF                                            */ 00360000
+.**                                                                  */ 00370000
+.**    PURPOSE= SEE FUNCTION                                         */ 00380000
+.**                                                                  */ 00390000
+.**    LINKAGE=                                                      */ 00400000
+.**             R01 LOADED WITH ADDRESS OF STORAGE TO BE FREED.      */ 00410000
+.**                                                                  */ 00420000
+.**             THIS MACRO IS INVOKED BY THE EPILOGUE CODE  IN LIEU  */ 00430000
+.**             OF FREEMAIN FOR THE IPCS DAS MODULES:                */ 00440000
+.**                                                                  */ 00450000
+.**               BLSCFREE, BLSCHOK,  BLSDWAIT, BLSCVALT, BLSCRFM,   */ 00460000
+.**               BLSCADST, BLSCRTCB, BLSCGMF,  BLSCANLE, BLSCFAMS,  */ 00470000
+.**               AND BLSCFDYN.                                      */ 00480000
+.**                                                                  */ 00490000
+.** EXIT NORMAL=                                                     */ 00500000
+.**                                                                  */ 00510000
+.**             REGISTER 1 CONTAINS THE ADDRESS OF THE AREA WHICH    */ 00520000
+.**             WAS FREED.                                           */ 00530000
+.**             REGISTER 14 POINTS TO THE DMCB.                      */ 00540000
+.**                                                                  */ 00550000
+.** EXTERNAL REFERENCES=                                             */ 00560000
+.**                                                                  */ 00570000
+.**    CONTROL BLOCKS=  DATA ACCESS SERVICES CONTROL BLOCK (DMCB)    */ 00580000
+.**                                                                  */ 00590000
+.** CHANGE ACTIVITY= AS FOLLOWS:                                     */ 00600000
+.*         THIS MACRO RECONSTRUCTED FOR MVS SOURCE RECONSTITUTION    */ 00610000
+.**                                                                  */ 00620000
+.*** END OF SPECIFICATIONS *******************************************/ 00630000
+&L       L     @14,24(,@13)      GET R1 FROM SAVE AREA                  00640000
+         L     @14,0(,@14)       PICK UP DMCB PTR FROM PARMS            00650000
+         ST    @01,DMCBFRE(,@14) RESTORE NEXT FREE AREA ADDRESS         00660000
+         MEND                                                           00670000

@@ -1,0 +1,28 @@
+         MACRO                                                          00000100
+&LBL     HMASMFVP &TYPE=DC                                              00000200
+*************************************************************           00000300
+*                                                           *           00000400
+*        HMASMFVL PARAMETER LIST                            *           00000500
+*                                                           *           00000600
+*************************************************************           00000700
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00000800
+         DC    0A(0)                                                    00000900
+HMASMFVP DC    0XL15'0'                                                 00001000
+FVPARRAD DC    A(0)                                                     00001100
+FVPLSTAD DC    A(0)                                                     00001200
+FVPLNLEN DC    FL2'0'                                                   00001300
+FVPOFFST DC    FL2'0'                                                   00001400
+FVPVERN  DC    FL1'0'                                                   00001500
+FVPDSID  DC    FL1'0'                                                   00001600
+FVPRETRN DC    FL1'0'                                                   00001700
+         MEXIT                                                          00001800
+.EQU     ANOP  ,                                                        00001900
+HMASMFVP EQU   0                                                        00002000
+FVPARRAD EQU   HMASMFVP                                                 00002100
+FVPLSTAD EQU   HMASMFVP+4                                               00002200
+FVPLNLEN EQU   HMASMFVP+8                                               00002300
+FVPOFFST EQU   HMASMFVP+10                                              00002400
+FVPVERN  EQU   HMASMFVP+12                                              00002500
+FVPDSID  EQU   HMASMFVP+13                                              00002600
+FVPRETRN EQU   HMASMFVP+14                                              00002700
+         MEND                                                           00002800

@@ -1,0 +1,79 @@
+         MACRO                                                          00010000
+         HMASMSET &TYPE=EQU                                             00020000
+*************************************************************           00030000
+*                                                           *           00040000
+*                                                           *           00050000
+*                                                           *           00060000
+*************************************************************           00070000
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00080000
+HMASMSET DS    0CL12                                                    00090000
+SELSTENT DS    0CL10                                                    00100000
+SELSTFLG DS    0BL2                                                     00110000
+         DC    BL1'0'                                                   00120000
+SEMCS    EQU   SELSTFLG+0                                               00130000
+SESMD    EQU   SELSTFLG+0                                               00140000
+SESRC    DC    BL1'0'       B'10000000'                                 00150000
+SEDLB    EQU   SELSTFLG+1   B'01000000'                                 00160000
+SEMOD    EQU   SELSTFLG+1   B'00100000'                                 00170000
+SEMAC    EQU   SELSTFLG+1   B'00010000'                                 00180000
+SELMD    EQU   SELSTFLG+1   B'00001000'                                 00190000
+SEASM    EQU   SELSTFLG+1   B'00000100'                                 00200000
+SEFMD    EQU   SELSTFLG+1   B'00000010'                                 00210000
+SESYS    EQU   SELSTFLG+1   B'00000001'                                 00220000
+SENAME   DS    0CL8                                                     00230000
+SESMDNO  DS    0CL7                                                     00240000
+SEPTFNO  DC    XL7'0'                                                   00250001
+         DC    XL1'0'                                                   00260001
+SEFLAGS  DS    0BL1                                                     00270000
+SEGROUP  DC    BL1'0'                                                   00280000
+SESELECT EQU   SEFLAGS+0                                                00290000
+SEEXCLUD EQU   SEFLAGS+0                                                00300000
+SENOJCL  EQU   SEFLAGS+0                                                00310000
+SEFMID   EQU   SEFLAGS+0                                                00320000
+SEFOUND  EQU   SEFLAGS+0                                                00330000
+SEFLAG2  DS    0BL1                                                     00340000
+SEFLAG2A DC    BL1'0'                                                   00350000
+SEFLAG2B EQU   SEFLAG2+0                                                00360000
+SEFLAG2C EQU   SEFLAG2+0                                                00370000
+SEFLAG2D EQU   SEFLAG2+0                                                00380000
+SEFLAG2E EQU   SEFLAG2+0                                                00390000
+SEFLAG2F EQU   SEFLAG2+0                                                00400000
+SEFLAG2G EQU   SEFLAG2+0                                                00410000
+SEFLAG2H EQU   SEFLAG2+0                                                00420000
+         MEXIT                                                          00430000
+.EQU     ANOP  ,                                                        00440000
+HMASMSET EQU   0                                                        00450000
+SELSTENT EQU   HMASMSET                                                 00460000
+SELSTFLG EQU   SELSTENT                                                 00470000
+SESRC    EQU   SELSTFLG+1                                               00480000
+SEMOD    EQU   SELSTFLG+1                                               00490000
+SEMAC    EQU   SELSTFLG+1                                               00500000
+SEASM    EQU   SELSTFLG+1                                               00510000
+SENAME   EQU   SELSTENT+2                                               00520000
+SESMDNO  EQU   SENAME                                                   00530000
+SEFLAGS  EQU   HMASMSET+10                                              00540000
+SESELECT EQU   SEFLAGS                                                  00550000
+SEFLAG2  EQU   HMASMSET+11                                              00560000
+SELMNAME EQU   0                                                        00570000
+SELMTYPE EQU   0                                                        00580000
+SEFLAG2H EQU   SEFLAG2                                                  00590000
+SEFLAG2G EQU   SEFLAG2                                                  00600000
+SEFLAG2F EQU   SEFLAG2                                                  00610000
+SEFLAG2E EQU   SEFLAG2                                                  00620000
+SEFLAG2D EQU   SEFLAG2                                                  00630000
+SEFLAG2C EQU   SEFLAG2                                                  00640000
+SEFLAG2B EQU   SEFLAG2                                                  00650000
+SEFLAG2A EQU   SEFLAG2                                                  00660000
+SEFOUND  EQU   SEFLAGS                                                  00670000
+SEFMID   EQU   SEFLAGS                                                  00680000
+SENOJCL  EQU   SEFLAGS                                                  00690000
+SEEXCLUD EQU   SEFLAGS                                                  00700000
+SEGROUP  EQU   SEFLAGS                                                  00710000
+SEPTFNO  EQU   SESMDNO                                                  00720000
+SESYS    EQU   SELSTFLG+1                                               00730000
+SEFMD    EQU   SELSTFLG+1                                               00740000
+SELMD    EQU   SELSTFLG+1                                               00750000
+SEDLB    EQU   SELSTFLG+1                                               00760000
+SESMD    EQU   SELSTFLG                                                 00770000
+SEMCS    EQU   SELSTFLG                                                 00780000
+         MEND                                                           00790000

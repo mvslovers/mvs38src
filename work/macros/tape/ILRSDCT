@@ -1,0 +1,20 @@
+         MACRO                                                          00010000
+         ILRSDCT ,                                                      00020000
+SDCT     EQU   0          SWAP DEVICE CHARACTERISTICS TABLE             00030000
+SDCHDR   EQU   SDCT       HEADER FOR SDCT                               00040000
+SDCID    EQU   SDCHDR     SDCT IDENTIFIER SET TO C'SDCT'                00050000
+SDCSIZE  EQU   SDCHDR+4   NUMBER OF SDCTE'S                             00060000
+SDCRSV1  EQU   SDCHDR+6   RESERVED                                      00070000
+SDCENTS  EQU   SDCT+8     SDC ENTRY SECTION                             00080000
+SDCTE    EQU   0          SWAP DEVICE CHARACTERISTICS TABLE ENTRIES     00090000
+SDCDEVTP EQU   SDCTE      EBCDIC DEVICE TYPE INDICATOR                  00100000
+SDCDTYPX EQU   SDCTE+6    DEVICE TYPE IN BINARY                         00110000
+SDCSLTRK EQU   SDCTE+8    NUMBER OF SLOTS PER TRACK                     00120000
+SDCCYLSZ EQU   SDCTE+10   NUMBER OF SLOTS PER CYLINDER                  00130000
+SDCCMASK EQU   SDCTE+12   MASK FOR SAT CYLINDER MAP INIT                00140000
+SDCSSECT EQU   SDCTE+16   SWAP SECTOR VALUE FOR THIS DEVICE TYPE        00150000
+SDCMPEXP EQU   SDCTE+17   POWER OF 2 REPRESENTING NUM OF BYTES          00160000
+*                         REQUIRED TO MAP A SINGLE CYLINDER FOR         00170000
+*                         THIS DEVICE TYPE (ZERO ORIGINED)              00180000
+SDCRESV  EQU   SDCTE+18   RESERVED                                      00190000
+         MEND                                                           00200000

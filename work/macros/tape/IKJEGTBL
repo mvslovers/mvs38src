@@ -1,0 +1,25 @@
+         IKJEGSUB (ASSIGN,,IKJEGPCH),                                  X00000100
+               (AT,,IKJEGAT),                                          X00000200
+               (CALL,,IKJEGCAL),                                       X00000300
+               (COPY,C,IKJEGCPY),                                      X00000400
+               (DELETE,DEL,IKJEGDEL),                                  X00000500
+               (DROP,,IKJEGDRP),                                       X00000600
+               (END,,IKJEGEND),                                        X00000700
+               (EQUATE,EQ,IKJEGEQU),                                   X00000800
+               (FREEMAIN,FREE,IKJEGFRE),                               X00000900
+               (GETMAIN,GET,IKJEGGET),                                 X00001000
+               (GO,,IKJEGGO),                                          X00001100
+               (HELP,H,IKJEGCIV),                                      X00001200
+               (LIST,L,IKJEGLST),                                      X00001300
+               (LISTDCB,,IKJEGDCB),                                    X00001400
+               (LISTDEB,,IKJEGDEB),                                    X00001500
+               (LISTMAP,,IKJEGMAP),                                    X00001600
+               (LISTPSW,,IKJEGPSW),                                    X00001700
+               (LISTTCB,,IKJEGTCB),                                    X00001800
+               (LOAD,,IKJEGLOD),                                       X00001900
+               (OFF,,IKJEGOFF),                                        X00002000
+               (QUALIFY,Q,IKJEGQFY),                                   X00002100
+               (RUN,R,IKJEGRUN),                                       X00002200
+               (WHERE,W,IKJEGWHR),                                     X00002300
+               CSECT=IBM                                                00002400
+         IKJEGSUB CSECT=USER                                            00002500

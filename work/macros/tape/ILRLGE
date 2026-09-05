@@ -1,0 +1,16 @@
+         MACRO                                                          00010000
+         ILRLGE ,                                                       00020000
+LGE      EQU   0                                                        00030000
+LGEPROCQ EQU   LGE                                                      00040000
+LGEPROCF EQU   LGEPROCQ                                                 00050000
+LGEPROCL EQU   LGEPROCQ+4                                               00060000
+LGEFLAG1 EQU   LGE+8                                                    00070000
+LGEWRKPD EQU   LGEFLAG1                                                 00080000
+LGEGRINP EQU   LGEFLAG1                                                 00090000
+LGERELLG EQU   LGEFLAG1                                                 00100000
+LGESAVRQ EQU   LGEFLAG1                                                 00110000
+LGESLTCT EQU   LGE+10                                                   00120000
+LGEASPCT EQU   LGE+12                                                   00130000
+LGENEXT  EQU   LGE+16                                                   00140000
+LGELGID  EQU   LGE+20                                                   00150000
+         MEND                                                           00160000

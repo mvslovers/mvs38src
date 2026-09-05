@@ -1,0 +1,194 @@
+         MACRO                                                          00500013
+         SMPPI                                                          01000013
+         TITLE '      IERRCA - OS/360 SORT/MERGE - 360S-SM023 04/01/66' 01500013
+IERRCA   DSECT                     PHASE-TO-PHASE INFORMATION AREA      02000013
+PPISVARE DC    XL32'0'             SYSTEM REGISTER SAVE AREA            02500013
+         DC    XL32'0'                                                  03000013
+         DC    XL8'0'                                                   03500013
+PPIWKARE DS    0CL256              STARTING ADDRESS OF SORT WORK AREA   04000013
+PPIPDWA  DS    0CL64               MERGE NETWORK PRIME AREA             04500013
+PPIP1GC  DC    XL4'0'              SIZE OF SORT PHASE GEN. CORE         05000013
+PPIP1ASZ DC    XL4'0'              PHASE 1 ASSIGNMENT SIZE              05500013
+PPISKPRD DC    XL4'0'              SKIP RECORD COUNT                    06000013
+PPIATP1E DC    XL4'0'              ADDRESS OF ATTACH'ORS PHASE 1 EXIT   06500013
+PPIIPBLK DC    XL4'0'              INPUT BLOCKING                       07000013
+PPIBUF1  DC    XL4'0'              NUMBER OF BUFFERS - PHASE 1          07500013
+PPIEXTSZ DC    XL4'0'              SIZE OF EXTRACT ROUTINE              08000013
+PPIFFF   DC    XL4'0'              DISPLACEMENT OF F FIELD              08500013
+PPIPBUFF DC    XL4'0'              DISPLACEMENT OF PACKING BUFFER       09000013
+         DC    XL4'0'                                                   09500013
+PPINUMCF DC    XL2'0'              NUMBER OF CONTROL FIELDS             10000013
+PPIPCF01 DC    XL3'0'              CONTROL FIELD 01 - POSITION          10500013
+PPIMCF01 DC    XL2'0'                               - MEASUREMENT       11000013
+PPIFCF01 DC    XL1'0'                               - FORMAT + SEQUENCE 11500013
+PPIPCF02 DC    XL3'0'              CONTROL FIELD 02 - POSITION          12000013
+PPIMCF02 DC    XL2'0'                               - MEASUREMENT       12500013
+PPIFCF02 DC    XL1'0'                               - FORMAT + SEQUENCE 13000013
+PPIPCF03 DC    XL3'0'              CONTROL FIELD 03 - POSITION          13500013
+PPIMCF03 DC    XL2'0'                               - MEASUREMENT       14000013
+PPIFCF03 DC    XL1'0'                               - FORMAT + SEQUENCE 14500013
+PPIPCF04 DC    XL3'0'              CONTROL FIELD 04 - POSITION          15000013
+PPIMCF04 DS    0CL2                                 - MEASUREMENT       15500013
+         DC    XL1'0'                                                   16000013
+PPIPSVA  DS    0CL64               MERGE NETWORK PRIME SAVE AREA        16500013
+         DC    XL1'0'                                                   17000013
+PPIFCF04 DC    XL1'0'                               - FORMAT + SEQUENCE 17500013
+PPIPCF05 DC    XL3'0'              CONTROL FIELD 05 - POSITION          18000013
+PPIMCF05 DC    XL2'0'                               - MEASUREMENT       18500013
+PPIFCF05 DC    XL1'0'                               - FORMAT + SEQUENCE 19000013
+PPIPCF06 DC    XL3'0'              CONTROL FIELD 06 - POSITION          19500013
+PPIMCF06 DC    XL2'0'                               - MEASUREMENT       20000013
+PPIFCF06 DC    XL1'0'                               - FORMAT + SEQUENCE 20500013
+PPIPCF07 DS    0CL3                CONTROL FIELD 07 - POSITION          21000013
+         DC    XL2'0'                                                   21500013
+PPIDSKED DS    0CL48               THIS AREA IS USED FOR UP TO 17       22000013
+         DC    XL1'0'                DIRECT ACCESS ADDRESSES            22500013
+PPIMCF07 DC    XL2'0'                               - MEASUREMENT       23000013
+PPIFCF07 DC    XL1'0'                               - FORMAT + SEQUENCE 23500013
+PPIPCF08 DC    XL3'0'              CONTROL FIELD 08 - POSITION          24000013
+PPIMCF08 DC    XL2'0'                               - MEASUREMENT       24500013
+PPIFCF08 DC    XL1'0'                               - FORMAT + SEQUENCE 25000013
+PPIPCF09 DC    XL3'0'              CONTROL FIELD 09 - POSITION          25500013
+PPIMCF09 DC    XL2'0'                               - MEASUREMENT       26000013
+PPIFCF09 DC    XL1'0'                               - FORMAT + SEQUENCE 26500013
+PPIPCF10 DC    XL3'0'              CONTROL FIELD 10 - POSITION          27000013
+PPIMCF10 DC    XL2'0'                               - MEASUREMENT       27500013
+PPIFCF10 DC    XL1'0'                               - FORMAT + SEQUENCE 28000013
+PPIPCF11 DC    XL3'0'              CONTROL FIELD 11 - POSITION          28500013
+PPIMCF11 DC    XL2'0'                               - MEASUREMENT       29000013
+PPIFCF11 DC    XL1'0'                               - FORMAT + SEQUENCE 29500013
+PPIPCF12 DC    XL3'0'              CONTROL FIELD 12 - POSITION          30000013
+PPIMCF12 DC    XL2'0'                               - MEASUREMENT       30500013
+PPIFCF12 DC    XL1'0'                               - FORMAT + SEQUENCE 31000013
+         DC    XL14'0'                                                  31500013
+PPILAB01 DS    0CL64               UTILITY STORAGE POSITION 1           32000013
+         DC    XL32'0'                                                  32500013
+         DC    XL12'0'                                                  33000013
+PPITPPT  DC    XL4'0'              TAPE TABLE POINTER                   33500013
+PPITPTBL DS    0CL136              TAPE TABLE                           34000013
+         DC    XL32'0'                                                  34500013
+PPIDIRAD DC    XL8'0'              DISK DIRECTORY ADDRESS               35000013
+PPIODOM  DS    0CL64               ODOMETER TABLE FOR OSCILLATING       35500013
+PPISTAR  DC    XL32'0'             DIRECT ACCESS STARTING ADDRESSES     36000013
+         DC    XL32'0'                                                  36500013
+         DC    XL32'0'               ONE ENTRY FOR EACH OF 3 TO 17      37000013
+         DC    XL32'0'                                                  37500013
+         DC    XL8'0'                EXTENTS                            38000013
+PPIENDAR DC    XL32'0'             DIRECT ACCESS ENDING ADDRESSES       38500013
+         DC    XL32'0'                                                  39000013
+         DC    XL32'0'               RESET FROM PPIDSKED FOR 2301/2311  39500013
+         DC    XL32'0'                                                  40000013
+         DC    XL8'0'                PH.3 STARTING DISK ADDRESSES FOR   40500013
+*                                      2314 READ PRIMING (-9GC)         41000013
+PPISW1   DC    XL8'0'              SW1                                  41500013
+PPIMODEX DC    XL4'0'              MODIFICATION EXITS ACTIVATED         42000013
+PPILINK  DC    XL4'0'              MOD EXIT LINK EDIT INFO SET BY RCH   42500013
+PPICOUNT DC    XL4'0'              RECORD COUNTER                       43000013
+PPIDELCT DC    XL4'0'              DELETE COUNTER                       43500013
+PPIINSCT DC    XL4'0'              INSERT COUNTER                       44000013
+PPIRCDCT DC    XL4'0'              RECORD COUNTER                       44500013
+PPISEQCT DC    XL12'0'             SEQUENCE COUNTERS                    45000013
+PPIFILSZ DC    XL4'0'              FILE SIZE                            45500013
+PPIBINSZ DC    XL4'0'              BIN SIZE                             46000013
+PPINMAX  DC    XL4'0'              N(MAX)                               46500013
+PPIRMAX  DC    XL4'0'              CALCULATED BY ALG                    47000013
+PPISRTG  DC    XL4'0'              G-NO. RECORDS IN RSA; SET BY B/G     47500013
+PPISRTBL DC    XL2'0'              B-SORT BLOCKING; SET BY B/G          48000013
+PPIOPBLK DC    XL2'0'              OUTPUT BLOCKING                      48500013
+PPIBUF23 DC    XL2'0'              NUMBER OF BUFFERS - PHASE 2 AND 3    49000013
+         DS    0F                                                       49500013
+PPIOPFMP DC    XL8'0'              OUTPUT UNIT FOR PHASE 3              50000013
+PPIDEPHO DC    XL8'0'              OUTPUT UNIT ADDRESS                  50500013
+PPIRCDL1 DC    XL2'0'              F - INPUT RECORD LENGTH              51000013
+PPIRCDL2 DC    XL2'0'              F - SORT RECORD LENGTH               51500013
+PPIRCDL3 DC    XL2'0'              F - OUTPUT RECORD LENGTH             52000013
+PPIRCDL4 DC    XL2'0'              F - NOT USED                         52500013
+PPIRCDL5 DC    XL2'0'              F - NOT USED                         53000013
+PPIMRGMX DC    XL2'0'              MAXIMUM MERGE ORDER                  53500013
+PPIMRGAL DC    XL2'0'              ALTERNATE MERGE ORDER                54000013
+PPIMRGOP DC    XL2'0'              OPTIMUM MERGE ORDER                  54500013
+PPIDD0L1 DC    XL4'0'              MERGE NETWORK'S MAJOR CONTROL FIELD  55000013
+PPIAXERT DC    XL4'0'              ADDRESS OF EQUALS OR EXTRACT ROUTINE 55500013
+PPIUSER  DC    XL4'0'              USER COMMUNICATION AREA              56000013
+PPILEXFD DC    XL2'0'              LENGTH OF EXTRACTED FIELDS FOR COMPA 56500013
+PPILEXFF DC    XL2'0'              LENGTH OF EXTRACTED FIELDS FULL      57000013
+PPINDSKA DC    XL2'0'              NUMBER OF DISK AREAS                 57500013
+PPIBPTRK DC    XL2'0'              BLOCKS PER TRACK FOR DIRECT ACCESS   58000013
+PPILAB03 DC    XL4'0'              SET BY B/G TO INPUT BUFF SIZE        58500013
+PPILAB07 DC    XL4'0'              SET BY B/G TO OUTPUT BUFFER SIZE     59000013
+PPIDOUO  DS    0CL4                USER OPTION FOR SEQUENCE CKECK       59500013
+PPILAB09 DC    XL4'0'              SET BY B/G                           60000013
+PPIP2GC  DC    XL4'0'              SIZE OF MERGE PHASE GENERATED CORE,  60500013
+PPIP3GC  DC    XL4'0'              SIZE OF FINAL MERGE PHASE GENERATED  61000013
+PPIP3ASZ DC    XL4'0'              USED FOR MESSAGE INDEX -SET BY RCV   61500013
+PPIATP3E DC    XL4'0'              ADDRESS OF ATTACH'ORS PHASE 3 EXIT   62000013
+PPITAVLC DC    XL4'0'             SORT PHASE AVAILABLE CORE             62500013
+PPITREND DC    XL4'0'              ENDING ADDRESS OF TREE               63000013
+PPISPGN1 DC    XL4'0'              ADDRS OF NEXT AVAILABLE BYTE IN      63500013
+PPILAB02 DC    XL4'0'              ADDRESS OF INPUT BUFFER TABLE        64000013
+PPILAB04 DC    XL4'0'              ADDRESS OF OUTPUT BUFFER 1           64500013
+PPILAB05 DC    XL4'0'              ADDRESS OF OUTPUT BUFFER 2           65000013
+PPILAB06 DC    XL4'0'              ADDRESS OF CONTROL BUFFER            65500013
+PPIDOOBA DS    0CL4                ADDRESS OF RECORD FOR SEQUENCE CHECK 66000013
+PPILAB08 DC    XL4'0'              BYTE 1 - NO. ENTRIES IN RSA TABLE    66500013
+PPIBDSVA DC    XL16'0'             BLOCK/DEBLOCK SAVE AREA              67000013
+PPISTDCB DC    XL4'0'              STARTING ADDRESS OF DCB TABLE        67500013
+PPISBLCT DC    XL4'0'              ADDRESS OF BLOCK COUNT TABLE         68000013
+PPISTIOB DC    XL4'0'              STARTING ADDRESS OF IOB TABLE        68500013
+PPIUNTCT DC    XL4'0'              OSC ONLY-ADDRS OF UNIT COUNT TABLE   69000013
+PPILAB10 DC    XL4'0'              OSC ONLY-ADDRS OF INPUT BUFFER TABLE 69500013
+PPIGETMN DC    XL4'0'              ADDRESS OF GETMAIN TABLE OF ADDRESS. 70000013
+PPIGETSZ DC    XL4'0'              ADDRESS OF GETMAIN TABLE OF SIZES    70500013
+PPISORCE DC    XL8'0'              DDNAME OF USER MOD LIBRARY           71000013
+*                                    DCB ADDRESSES OF SYSLMOD-USER LIB  71500013
+PPISLIB  DC    XL4'0'              DCB ADDRESS OF SORT LIBRARY          72000013
+PPIRCV   DC    XL4'0'              SORT SYSTEM CONTROL FOR RUNNING PGM. 72500013
+PPIADSSC DC    XL4'0'                                                   73000013
+PPIALG   DC    XL8'0'              ALGORITHM  -PH 1 AND PH 2            73500013
+PPIDEB   DC    XL8'0'              DEBLOCK  -PH 1 AND PH 3              74000013
+PPINET   DC    XL8'0'              NETWORK  -PH 1 AND PH 3              74500013
+PPIBLK   DC    XL8'0'              BLOCK  -PH 1 AND PH3                 75000013
+PPIWRT   DC    XL8'0'              WRITE  -PH 1 AND PH2                 75500013
+PPIVMV   DC    XL8'0'              VAR MOVE - SORT PHASE                76000013
+PPIRD    DC    XL8'0'              READ  -PH 2 AND PH3                  76500013
+PPIDEB2  DC    XL8'0'              DEBLOCK PH2 - PRIME RTN.             77000013
+PPINETM  DC    XL8'0'              MERGE NETWORK  -PH 2                 77500013
+PPIBLK2  DC    XL8'0'              BLOCK/DEBLOCK  PH 2                  78000013
+PPIINT   DC    XL8'0'              INITIALIZE SORT AND TREE - OSC.      78500013
+PPICONV  DC    XL8'0'              CONVERT HEX. TO CHAR. FOR MESSAGE    79000013
+PPIEOF   DC    XL8'0'              EODAD FOR QSAM IN P1 AND MRG ONLY    79500013
+PPIRMA   DC    XL8'0'              MESSAGES FOR PH1 RUNNING PGM.        80000013
+PPIRMC   DS    0CL8                MESSAGES FOR PH3 RUNNING PGM.        80500013
+PPIRMB   DC    XL8'0'              MESSAGES FOR PH2 RUNNING PGM.        81000013
+PPIAMA   DC    XL8'0'              MESSAGES FOR PH1 ASSIGNMENT PGM.     81500013
+PPIAMC   DS    0CL8                MESSAGES FOR PH3 ASSIGNMENT PGM.     82000013
+PPIAMB   DC    XL8'0'              MESSAGES FOR PH2 ASSIGNMENT PGM.     82500013
+PPIOPEN  DC    XL8'0'              OPEN LIST -PH1, PH2, AND PH3         83000013
+PPIX11   DC    XL8'0'              EXIT FOR                             83500013
+PPIX31   DS    0CL8                  USER INITIALIZATION                84000013
+PPIX21   DC    XL8'0'                FUNCTIONS                          84500013
+PPIX15   DC    XL8'0'              EXIT FOR                             85000013
+PPIX35   DS    0CL8                  LOGICAL                            85500013
+PPIX25   DC    XL8'0'                RECORD MODIFICATION                86000013
+PPIX17   DC    XL8'0'              EXIT FOR                             86500013
+PPIX37   DS    0CL8                  CLOSING USER DATA SETS             87000013
+PPIX27   DC    XL8'0'                AT END OF PHASE                    87500013
+PPIX18   DC    XL8'0'              EXIT FOR                             88000013
+PPIX38   DS    0CL8                  READ ERROR                         88500013
+PPIX28   DC    XL8'0'                                                   89000013
+PPIX19   DC    XL8'0'              EXIT FOR                             89500013
+PPIX39   DS    0CL8                  WRITE ERROR                        90000013
+PPIX29   DC    XL8'0'                                                   90500013
+PPIX61   DC    XL8'0'              EXIT FOR EXTRACT                     91000013
+PPIX16   DC    XL8'0'              EXIT FOR NMAX                        91500013
+PPIADDCF DC    XL4'0'              ADDRESS OF C.F. INFO FOR MORE THAN   92000013
+*                                    TWELVE CONTROL FIELDS              92500013
+PPIDDSRT DC    CL4'SORT'           FOUR LETTER IDENT. FROM PARM. FIELD  93000013
+*                                    OF EXECUTE CARD. USED WHEN SORT    93500013
+*                                    IS LINK OR ATTACHED.               94000013
+         DC    XL1'2'              PPI VERSION NUMBER 2                 94500013
+         DC    XL3'0'              NOT USED                             94600017
+PPICHKAD DC    XL4'0'              CHECKPOINT MODULE ADDRESS            94700017
+PPIDCBIN DC    XL2'0'              SIZE OF SORTIN DCB            A26453 94800019
+PPIDCBOU DC    XL2'0'              SIZE OF SORTOUT DCB           A26453 94900019
+         MEND                                                           95000013

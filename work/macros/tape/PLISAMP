@@ -1,0 +1,162 @@
+//PL1SAMP  JOB  ,,MSGLEVEL=1,REGION=100K                                00500000
+//STEP   EXEC  PL1LFCLG,PARM.PL1L='SIZE=100000,L,E,A,X,M,S2'            01000000
+//PL1L.SYSIN   DD   *                                                   01500000
+ PL1SAMP: PROC OPTIONS(MAIN);                                           02000000
+ /* THIS SAMPLE PROGRAM DRAWS A CIRCLE OF 8 BASIC SIZE X'S WITH A LARGE 02500000
+    X AS ITS CENTER. DEPENDING ON THE ATTENTION CREATED, THE PROGRAM WIL03000000
+    THE FOLLOWING:                                                      03500000
+      1. LIGHT PEN ATTENTION ON CENTER X LABELS OUTER X'S FROM NUM1     04000000
+         THROUGH NUM8.                                                  04500000
+      2. LIGHT PEN ATTENTION ON OUTER X GENERATES A CIRCLE WHOSE CENTER 05000000
+         IS THE DETECTED X.                                             05500000
+      3. LIGHT PEN ATTENTION ON CIRCLE AROUND OUTER X MAKES THAT CIRCLE 06000000
+         INVISIBLE.                                                     06500000
+      4. LIGHT PEN ATTENTION ON ANY LABEL MAKES ALL LABELS INVISIBLE.   07000000
+      5. PROGRAMMED FUNCTION KEY 1 ENDS RUN.                            07500000
+      6. PROGRAMMED FUNCTION KEY 2 MAKES ALL CIRCLES INVISIBLE.         08000000
+      7. PROGRAMMED FUNCTION KEY 3 MAKES ALL CIRCLES VISIBLE. */        08500000
+ /*       BEGIN PROGRAM                                                 09000000
+  SET UP DECLARE STATEMENTS FOR VALUES TO BE USED.*/                    09500000
+       DCL LABEL(8)CHAR(4);                                             10000000
+    DCL  (CIRX(8),CIRY(8),SMALX(8,24),SMALY(8,24))  FLOAT BIN;          10500000
+     DCL (THETA,RADIAN,R,C,CX) FLOAT BIN;                               11000000
+    DCL STPOS ENTRY(,FLOAT BIN,FLOAT BIN);                              11500000
+ DCL(IGSP,I0,I2250,IGDS1,IGDS2,IGDS3,IATL,IX,J,K,L,M,N,IV,JV,NUM,       12000000
+   NULL,INTCD,I) FIXED BIN (31,0);                                      12500000
+       DCL X CHAR(1), INTARY(10) FIXED BIN(31,0);                       13000000
+        X='X';                                                          13500000
+        LABEL(1)='NUM1';                                                14000000
+        LABEL(2)='NUM2';                                                14500000
+        LABEL(3)='NUM3';                                                15000000
+        LABEL(4)='NUM4';                                                15500000
+        LABEL(5)='NUM5';                                                16000000
+        LABEL(6)='NUM6';                                                16500000
+        LABEL(7)='NUM7';                                                17000000
+        LABEL(8)='NUM8';                                                17500000
+ /* DEFINE THE NULL VARIABLE.*/                                         18000000
+     NULL=-4;                                                           18500000
+          ON ERROR  SNAP  CALL  IHEDUMP;                                19000000
+      CALL INGSP(IGSP,NULL);                                            19500000
+ /*            INITIALIZE THE 2250. ASSIGN IT UNIT NUMBER 10.*/         20000000
+      I0=10; CALL INDEV(IGSP,I0,I2250);                                 20500000
+ /*            INITIALIZE A GRAPHIC DATA SET THAT WILL BE USED TO       21000000
+               DISPLAY THE CIRCLE OF X'S AND ITS CENTER X.*/            21500000
+      CALL INGDS(I2250,IGDS1);                                          22000000
+ /* INITIALIZE A GRAPHIC DATA SET THAT WILL BE USED TO                  22500000
+  LABEL THE OUTER X'S OF THE CIRCLE.*/                                  23000000
+      CALL INGDS(I2250,IGDS2);                                          23500000
+ /* INITIALIZE A GRAPHIC DATA SET THAT WILL BE USED TO                  24000000
+ DISPLAY A CIRCLE AROUND ANY OF THE OUTER X'S,*/                        24500000
+      CALL INGDS(I2250,IGDS3);                                          25000000
+ /* CREATE AN ATTENTION LEVEL FOR THE 2250.*/                           25500000
+      CALL CRATL(I2250,IATL);                                           26000000
+ /* ENABLE PROGRAMMED FUNCTION KEYS 1,2, +3 +LIGHT PEN.*/               26500000
+           J=-3; K=34; L=3;  M=2; N=4; IV=24;   JV=8; IX=1;             27000000
+      CALL ENATN(IATL,IX,J,K);                                          27500000
+      CALL MLITS(I2250,L);                                              28000000
+ /* ALLOW LIGHT PEN ATTENTIONS FOR EACH GRAPHIC DATA SET. */            28500000
+      CALL SLPAT(IGDS1,IX);                                             29000000
+      CALL SLPAT(IGDS2,IX);                                             29500000
+      CALL SLPAT(IGDS3,IX);                                             30000000
+ /* SET BEAM POSITION TO CENTER OF CIRCLE. */                           30500000
+      CX=2047.0;                                                        31000000
+      CY=2047.0;                                                        31500000
+ /* SET CHARACTER MODE FOR LARGE SIZE, PROTECTED. */                    32000000
+      CALL SCHAM(IGDS1,M);                                              32500000
+      NUM=-1;                                                           33000000
+      CALL PTEXT(IGDS1,X,IX,NUM,NULL,IX,CX,CY);                         33500000
+  /*           COMPUTE X AND Y COORDINATES FOR X'S OF OUTER CIRCLE.*/   34000000
+ /* PLACE THEM IN THE CIRX AND CIRY ARRAYS. */                          34500000
+      R=1200.0;                                                         35000000
+      C=3.141596/180;                                                   35500000
+      THETA=45.0;                                                       36000000
+  TEN:DO I=1 TO 8;                                                      36500000
+      RADIAN=THETA*FLOAT(I)*C;                                          37000000
+      CIRX(I)=CX+R*COS(RADIAN);                                         37500000
+      CIRY(I)=CY+R*SIN(RADIAN);                                         38000000
+      END TEN;                                                          38500000
+ /* SET CHARACTER MODE FOR BASIC SIZE, PROTECTED. */                    39000000
+      CALL SCHAM(IGDS1,IX);                                             39500000
+ /* GENERATE AN X IN INCLUDE STATUS. CALCULATE                          40000000
+  X-COORDINATE OF LABEL ASSOCIATED WITH THAT X.                         40500000
+  GENERATE LABEL IN INCLUDE STATUS. SET INCR TO                         41000000
+  NEXT LABEL IN ARRAY. DO THIS 8 TIMES                                  41500000
+  TO COMPLETE CIRCLE. */                                                42000000
+ FIVE:DO NUM=1 TO 8;                                                    42500000
+      CALL PTEXT(IGDS1,X,IX,NUM,NULL,IX,CIRX(NUM),CIRY(NUM));           43000000
+      CXNUM=CIRX(NUM)+300.0;                                            43500000
+      CALL PTEXT(IGDS2,LABEL(NUM),N,NUM,NULL,IX,CXNUM,CIRY(NUM));       44000000
+      END FIVE;                                                         44500000
+ /*            COMPUTE COORDINATES FOR CIRCLES AROUND OUTER X'S.*/      45000000
+ /* PLACE THEM IN SMALX AND SMALY ARRAYS. */                            45500000
+      R=200.0;                                                          46000000
+      THETA=360.0/24.0;                                                 46500000
+  ONE:DO N=1 TO 24;                                                     47000000
+      RADIAN=THETA*FLOAT(N)*C;                                          47500000
+  TWO:DO I=1 TO 8;                                                      48000000
+      SMALX(I,N)=CIRX(I)+R*COS(RADIAN);                                 48500000
+      SMALY(I,N)=CIRY(I)+R*SIN(RADIAN);                                 49000000
+      END ONE;                                                          49500000
+ /*            GENERATE CIRCLES AROUND OUTER X'S IN OMIT STATUS.*/      50000000
+  SIX:DO NUM=1 TO 8;                                                    50500000
+      CALL STPOS(IGDS3,CIRX(NUM)+200.0,CIRY(NUM));                      51000000
+      CALL PLINE(IGDS3,SMALX(NUM,IX),SMALY(NUM,IX),NUM,NULL,            51500000
+      M,IV,IX,IX);                                                      52000000
+       END SIX;                                                         52500000
+ /*            OMIT LABELS FROM THE DISPLAY. */                         53000000
+      CALL OMIT(IGDS2);                                                 53500000
+ /*            EXECUTE ALL GRAPHIC DATA PRODUCED. */                    54000000
+      CALL EXEC(IGDS1);                                                 54500000
+      CALL EXEC(IGDS2);                                                 55000000
+      CALL EXEC(IGDS3);                                                 55500000
+ /*            REQUEST ATTENTION INFORMATION. WAIT FOR ATTN TO OCCUR. */56000000
+ HERE:CALL RQATN(IATL,INTCD,M,INTARY(1),IX,M,L,K);                      56500000
+ /* IF LIGHT PEN ATTENTION, GO TO NEXT.                                 57000000
+  IF PROGRAMMED FUNCTION KEY ATTENTION, GO TO CONT. */                  57500000
+      IF INTCD=34 THEN GO TO NEXT; ELSE GO TO CONT;                     58000000
+ /*            CHECK WHICH DATA SET ATTENTION OCCURRED IN. */           58500000
+ NEXT:IF INTARY(1)=IGDS1 THEN GO TO SO;                                 59000000
+      IF INTARY(1)=IGDS2 THEN GO TO TO;                                 59500000
+      IF INTARY(1)=IGDS3 THEN GO TO MO; ELSE GO TO HERE;                60000000
+ /*            IF LPEN ATTN WAS ON CENTER OF LARGE CIRCLE, GO TO IN.    60500000
+               IF ON OUTER CIRCLE, GO TO OUT. */                        61000000
+  SO: IF INTARY(4)>=0 THEN GO TO OUT;                                   61500000
+ /*            DISPLAY LABELS AND WAIT FOR ANOTHER ATTN. */             62000000
+   IN:CALL INCL(IGDS2);                                                 62500000
+      GO TO HERE;                                                       63000000
+   OUT:NUM=INTARY(4);                                                   63500000
+     CALL INCL(IGDS3,NUM);                                              64000000
+       GO TO HERE;                                                      64500000
+ /*            REMOVE LABELS FROM DISPLAY. AWAIT NEW ATTN.*/            65000000
+   TO: CALL OMIT(IGDS2);                                                65500000
+       GO TO HERE;                                                      66000000
+ /*            REMOVE DETECTED CIRCLE FROM DISPLAY. AWAIT ATTN.*/       66500000
+   MO: NUM=INTARY(4);                                                   67000000
+       CALL OMIT(IGDS3,NUM);                                            67500000
+       GO TO HERE;                                                      68000000
+ /*            IF PFK1 DEPRESSED, GO TO THRE. IF PFK2, GO TO FOUR.      68500000
+               IF PFK3, GO TO FINI. */                                  69000000
+ CONT:IF INTCD=1 THEN GO TO THRE;                                       69500000
+      IF INTCD=2 THEN GO TO FOUR;                                       70000000
+      IF INTCD=3 THEN GO TO FINI;                                       70500000
+ /*            TERMINATE THE PROGRAM RUN. */                            71000000
+ THRE:CALL TMGSP(IGSP);                                                 71500000
+      GO TO EXIT;                                                       72000000
+ /*            REMOVE ALL CIRCLES AROUND OUTER X'S. AWAIT ATTN. */      72500000
+ FOUR:DO I=1 TO 8;                                                      73000000
+      CALL OMIT(IGDS3,I);                                               73500000
+      END FOUR;                                                         74000000
+      GO TO HERE;                                                       74500000
+ /*            DISPLAY ALL CIRCLES AROUND OUTER X'S. AWAIT ATTN. */     75000000
+ FINI:DO I=1 TO 8;                                                      75500000
+      CALL INCL(IGDS3,I);                                               76000000
+      END FINI;                                                         76500000
+      GO TO HERE;                                                       77000000
+ EXIT: END PL1SAMP;                                                     77500000
+//LKED.SYSIN   DD   *                                                   78500000
+  INCLUDE  SYSLIB(IHEGSP01)                                             79000000
+  INCLUDE  SYSLIB(IHEGSP02)                                             79500000
+  INCLUDE  SYSLIB(IHEGSP03)                                             80000000
+//GO.PL1DUMP   DD   SYSOUT=A                                            81000000
+//GO.FT10F001 DD UNIT=2250-1                                            81500000
+//GO.SYSUDUMP  DD   SYSOUT=A                                            82000000

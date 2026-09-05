@@ -1,0 +1,56 @@
+         MACRO                                                          00010000
+&LABEL   HMASMGTP &TYPE=EQU                                             00020000
+*************************************************************           00030000
+*                                                           *           00040000
+*                                                           *           00050000
+*                                                           *           00060000
+*************************************************************           00070000
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00080000
+         AIF   ('&TYPE' EQ 'BLOCK').BLOCK                               00090000
+HMASMGTP DS    0XL28                                                    00100000
+GTPFUNCT DC    FL1'0'                                                   00110000
+GTPRETRN DC    FL1'0'                                                   00120000
+FTP002   DC    XL2'0'                                                   00130000
+GTPRCDLN DC    FL2'0'                                                   00140000
+GTPKEYLN DC    FL2'0'                                                   00150000
+GTPWKAD  DC    AL4(0)                                                   00160000
+GTPBUFAD DC    AL4(0)                                                   00170000
+GTPRESTR DS    0XL10                                                    00180000
+GTPPAG   DC    AL4(0)                                                   00190000
+GTPRCD   DC    AL4(0)                                                   00200000
+GTPPOS   DC    FL2'0'                                                   00210000
+GTPFLGS1 DS    0BL1                                                     00220000
+GTPNOSPM DC    BL1'0'        B'10000000'                                00230000
+GTPRCDNF EQU   GTPFLGS1      B'01000000'                                00240000
+GTPPSIZE EQU   GTPFLGS1      B'00000001'                                00250000
+GTP4K    EQU   GTPFLGS1      B'00000111'                                00260000
+GTP2K    EQU   GTPFLGS1      B'00000011'                                00270000
+GTP1K    EQU   GTPFLGS1      B'00000010'                                00280000
+GTP512B  EQU   GTPFLGS1      B'00000001'                                00290000
+         DC    XL1'0'                                                   00300000
+         MEXIT                                                          00310000
+.BLOCK   ANOP  ,                                                        00320000
+&LABEL   DC    XL28'0'                                                  00330000
+         MEXIT                                                          00340000
+.EQU     ANOP  ,                                                        00350000
+HMASMGTP EQU   0                                                        00360000
+GTPFUNCT EQU   HMASMGTP                                                 00370000
+GTPRETRN EQU   HMASMGTP+1                                               00380000
+GTP002   EQU   HMASMGTP+2                                               00390000
+GTPRCDLN EQU   HMASMGTP+4                                               00400000
+GTPKEYLN EQU   HMASMGTP+6                                               00410000
+GTPWKAD  EQU   HMASMGTP+8                                               00420000
+GTPBUFAD EQU   HMASMGTP+12                                              00430000
+GTPRESTR EQU   HMASMGTP+16                                              00440000
+GTPFLGS1 EQU   HMASMGTP+26                                              00450000
+GTPPSIZE EQU   GTPFLGS1      B'00000001'                                00460000
+GTPRCDNF EQU   GTPFLGS1      B'01000000'                                00470000
+GTPNOSPM EQU   GTPFLGS1      B'10000000'                                00480000
+GTP4K    EQU   GTPFLGS1      B'00000111'                                00490000
+GTP2K    EQU   GTPFLGS1      B'00000011'                                00500000
+GTP1K    EQU   GTPFLGS1      B'00000010'                                00510000
+GTP512B  EQU   GTPFLGS1      B'00000001'                                00520000
+GTPPOS   EQU   GTPRESTR+8                                               00530000
+GTPRCD   EQU   GTPRESTR+4                                               00540000
+GTPPAG   EQU   GTPRESTR                                                 00550000
+         MEND                                                           00560000

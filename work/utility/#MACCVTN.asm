@@ -1,0 +1,322 @@
+ACB                                                                             
+BUFC=IDABUFC                                                                    
+IDABUFC                                                                         
+BUFD=IDABUFDR                                                                   
+IDABUFDR                                                                        
+CTGFL                                                                           
+IXH=IDAIXH                                                                      
+IDAIXH                                                                          
+IDAPLHDR                                                                        
+PLHID=IDAPLHDR                                                                  
+PLHCNT=IDAPLHDR                                                                 
+PLHELTH=IDAPLHDR                                                                
+PLHDRREQ=IDAPLHDR                                                               
+PLHDRMAX=IDAPLHDR                                                               
+PLHDRCUR=IDAPLHDR                                                               
+PLHIOSDQ=IDAPLHDR                                                               
+PLH=IDAPLHD                                                                     
+IDAPLHD                                                                         
+IDAPLH                                                                          
+IOM=IOMB                                                                        
+-GDAPTR                                                                         
+-LDAPTR                                                                         
+-NVTPTR                                                                         
+-XPTEPTR                                                                        
+-PLHPTR                                                                         
+GVSMFLAG=GDA                                                                    
+GDAFLAGS=GDA                                                                    
+=NIPFOURK=GDAFLAGS                                                              
+=SQATHRS1=GDAFLAGS                                                              
+=SQATHRS2=GDAFLAGS                                                              
+=WAITQUE=GDAFLAGS                                                               
+VRDREG=GDA                                                                      
+CSAPQEP=GDA                                                                     
+VRPQEP=GDA                                                                      
+PASTRT=GDA                                                                      
+PASIZE=GDA                                                                      
+SQASPQEP=GDA                                                                    
+SQASPLFT=GDA                                                                    
+VRPOSTQ=GDA                                                                     
+VRPFEL=GDA                                                                      
+VRPLEL=GDA                                                                      
+VRWAITQ=GDA                                                                     
+VRWFEL=GDA                                                                      
+VRWLEL=GDA                                                                      
+PFSTCPAB=GDA                                                                    
+CSASPQEP=GDA                                                                    
+GLBLCELL=GDA                                                                    
+GBLCELCT=GDA                                                                    
+GDA                                                                             
+SCVT=SCVTSECT                                                                   
+DSV                                                                             
+SPQEAD=SPQESECT                                                                 
+SPQEPTR=SPQESECT                                                                
+SPDQEPTR=SPQESECT                                                               
+SPDQEAD=SPQESECT                                                                
+SPQEFLGS=SPQESECT                                                               
+=SPSHARE=SPQEFLGS                                                               
+=LASTSPQE=SPQEFLGS                                                              
+=SPQEOWN=SPQEFLGS                                                               
+SPQERES1=SPQESECT                                                               
+SPQEID=SPQESECT                                                                 
+SPQEKEY=SPQESECT                                                                
+SPQERES2=SPQESECT                                                               
+SPQESECT                                                                        
+LDASTART=LDA                                                                    
+LVSMFLAG=LDA                                                                    
+LDAFLAGS=LDA                                                                    
+=LDAFPFM=LDAFLAGS                                                               
+=LDABRSW=LDAFLAGS                                                               
+LDARES=LDA                                                                      
+PASCBSV=LDA                                                                     
+ASDPQE=LDA                                                                      
+LDATCB=LDA                                                                      
+LDARQSTA=LDA                                                                    
+LDACBSP=LDA                                                                     
+LDARES2=LDA                                                                     
+GMFMWKAR=LDA                                                                    
+BRANCHSV=LDA                                                                    
+SAVEREG2=LDA                                                                    
+BSAVE=LDA                                                                       
+FSAVE=LDA                                                                       
+G4KSAVE=LDA                                                                     
+FBQSAVE=LDA                                                                     
+GMREPSAV=LDA                                                                    
+GFRESAVE=LDA                                                                    
+OBFRSAVE=LDA                                                                    
+CSAVE=LDA                                                                       
+CFAPWKAR=LDA                                                                    
+LSQAPTR=LDA                                                                     
+VVREGSZ=LDA                                                                     
+CURRGNTP=LDA                                                                    
+LDASRPQE=LDA                                                                    
+LDARSVPT=LDA                                                                    
+LDALIMIT=LDA                                                                    
+LCLCELL=LDA                                                                     
+LCLCELCT=LDA                                                                    
+LDAEND=LDA                                                                      
+LDA                                                                             
+LLECHN=LLE                                                                      
+LLECDPT=LLE                                                                     
+LLECOUNT=LLE                                                                    
+LLESYSCT=LLE                                                                    
+LLE                                                                             
+LPDECHN=LPDE                                                                    
+LPDERBP=LPDE                                                                    
+LPDENAME=LPDE                                                                   
+LPDENTP=LPDE                                                                    
+LPDEXLP=LPDE                                                                    
+LPDEUSE=LPDE                                                                    
+LPDERES1=LPDE                                                                   
+LPDEATTR=LPDE                                                                   
+=LPDENIP=LPDEATTR                                                               
+=LPDEREN=LPDEATTR                                                               
+=LPDESER=LPDEATTR                                                               
+=LPDEMIN=LPDEATTR                                                               
+=LPDENLR=LPDEATTR                                                               
+LPDEATT2=LPDE                                                                   
+=LPDEXLE=LPDEATT2                                                               
+=LPDERLC=LPDEATT2                                                               
+=LPDESYSL=LPDEATT2                                                              
+=LPDEAUTH=LPDEATT2                                                              
+LPDEATT3=LPDE                                                                   
+LPDEMJNM=LPDE                                                                   
+LPDEXTLN=LPDE                                                                   
+LPDEXTAD=LPDE                                                                   
+LPDE                                                                            
+CDCHAIN=CDENTRY                                                                 
+CDRRBP=CDENTRY                                                                  
+CDNAME=CDENTRY                                                                  
+CDENTPT=CDENTRY                                                                 
+CDXLMJP=CDENTRY                                                                 
+CDUSE=CDENTRY                                                                   
+CDATTRB=CDENTRY                                                                 
+=CDIDENTY=CDATTRB                                                               
+=CDCONTMN=CDATTRB                                                               
+CDRESV1=CDENTRY                                                                 
+CDATTR=CDENTRY                                                                  
+=CDNIP=CDATTR                                                                   
+=CDNIC=CDATTR                                                                   
+=CDREN=CDATTR                                                                   
+=CDSER=CDATTR                                                                   
+=CDNFN=CDATTR                                                                   
+=CDMIN=CDATTR                                                                   
+=CDJPA=CDATTR                                                                   
+=CDNLR=CDATTR                                                                   
+CDATTR2=CDENTRY                                                                 
+=CDSPZ=CDATTR2                                                                  
+=CDREL=CDATTR2                                                                  
+=CDXLE=CDATTR2                                                                  
+=CDRLC=CDATTR2                                                                  
+=CDOLY=CDATTR2                                                                  
+=CDSYSLIB=CDATTR2                                                               
+=CDAUTH=CDATTR2                                                                 
+CDATTR3=CDENTRY                                                                 
+CDENTRY                                                                         
+PQEFFBQE=PQESECT                                                                
+PQEBFBQE=PQESECT                                                                
+PQEFPQE=PQESECT                                                                 
+PQEBPQE=PQESECT                                                                 
+PQETCB=PQESECT                                                                  
+PQESIZE=PQESECT                                                                 
+PQEREGN=PQESECT                                                                 
+PQERFLGS=PQESECT                                                                
+PQEHRID=PQESECT                                                                 
+PQESECT                                                                         
+FWDPTR=FBQESECT                                                                 
+BCKPTR=FBQESECT                                                                 
+SIZE=FBQESECT                                                                   
+FBQAREA=FBQESECT                                                                
+FBQESECT                                                                        
+DQFQEPTR=DQESECT                                                                
+DQEPTR=DQESECT                                                                  
+DQEHRID=DQESECT                                                                 
+DQEBLKAD=DQESECT                                                                
+DQELNTH=DQESECT                                                                 
+DQESECT                                                                         
+FQTYPE=FQESECT                                                                  
+=FQERGNFL=FQTYPE                                                                
+=FQECPB=FQTYPE                                                                  
+FQEPTR=FQESECT                                                                  
+FQELNTH=FQESECT                                                                 
+FQAREA=FQESECT                                                                  
+FQERSVD=FQESECT                                                                 
+FQESECT                                                                         
+PIEPICA=PIE                                                                     
+PIEFLGS=PIE                                                                     
+=PIENOPI=PIEFLGS                                                                
+PIEPICAA=PIE                                                                    
+PIEPSW=PIE                                                                      
+PIEGR14=PIE                                                                     
+PIEGR15=PIE                                                                     
+PIEGR0=PIE                                                                      
+PIEGR1=PIE                                                                      
+PIEGR2=PIE                                                                      
+PIE                                                                             
+NWTOHDR                                                                         
+NWTOLNG=NWTOHDR                                                                 
+NWTOFL=NWTOHDR                                                                  
+=NWTOFLNH=NWTOFL                                                                
+=NWTOFLNC=NWTOFL                                                                
+NWTORLST                                                                        
+NWTORRPA=NWTORLST                                                               
+NWTORECB=NWTORLST                                                               
+NMTORRDL=NWTORLST                                                               
+NWTORFL=NWTORLST                                                                
+=NWTORFLA=NWTORFL                                                               
+=NWTORFLB=NWTORFL                                                               
+NWTORMSG=NWTORLST                                                               
+NIPSPE                                                                          
+NIPSPEQ=NIPSPE                                                                  
+NIPSPEA=NIPSPE                                                                  
+NIPMNTPL                                                                        
+NMNTDSA=NIPMNTPL                                                                
+NMNTDS=NIPMNTPL                                                                 
+NMNTUCB=NIPMNTPL                                                                
+NMNTV=NIPMNTPL                                                                  
+NMNTDT=NIPMNTPL                                                                 
+NMNTFL=NIPMNTPL                                                                 
+=NMNTFUS=NMNTFL                                                                 
+=NMNTFLI=NMNTFL                                                                 
+=NMNTFLC=NMNTFL                                                                 
+=NMNTFLB=NMNTFL                                                                 
+NIPOPNPL                                                                        
+NOPNDSA=NIPOPNPL                                                                
+NOPNDS=NIPOPNPL                                                                 
+NOPNDCB=NIPOPNPL                                                                
+NOPNUCB=NIPOPNPL                                                                
+NOPNFL=NIPOPNPL                                                                 
+=NOPNFRS=NOPNFL                                                                 
+=NOPNFAU=NOPNFL                                                                 
+=NOPNFLM=NOPNFL                                                                 
+=NOPNFLI=NOPNFL                                                                 
+=NOPNFLNB=NOPNFL                                                                
+=NOPNFLLB=NOPNFL                                                                
+=NOPNFLLC=NOPNFL                                                                
+=NOPNFLSX=NOPNFL                                                                
+NOPNRC=NIPOPNPL                                                                 
+NIPSCHDL                                                                        
+NSCHDPTR=NIPSCHDL                                                               
+NSCHDPRM=NIPSCHDL                                                               
+NSCHDCPU=NIPSCHDL                                                               
+NIPPAHDR                                                                        
+NIPPAQ=NIPPAHDR                                                                 
+NIPPABYT=NIPPAHDR                                                               
+NIPPAREA                                                                        
+NIPPARC=NIPPAREA                                                                
+NIPPABDL=NIPPAREA                                                               
+NIPPABDH=NIPPAREA                                                               
+NIPPA2BF=NIPPAREA                                                               
+NIPPANAM=NIPPAREA                                                               
+NIPPATTR=NIPPAREA                                                               
+NIPPAIOD=NIPPAREA                                                               
+NIPPATXT=NIPPAREA                                                               
+NIPPASID=NIPPAREA                                                               
+NIPPAIOB=NIPPAREA                                                               
+NIPPADCB=NIPPAREA                                                               
+NIPPAECB=NIPPAREA                                                               
+NIPPAECC=NIPPAREA                                                               
+NIPPADEB=NIPPAREA                                                               
+NIPPARCD=NIPPAREA                                                               
+NIPPAPTB=NIPPAREA                                                               
+NIPPABUF=NIPPAREA                                                               
+PARMTABF                                                                        
+PTABSTRT=PARMTABF                                                               
+NIPPAFLG=PARMTABF                                                               
+=NIPPAFL1=NIPPAFLG                                                              
+PTABEND=PARMTABF                                                                
+NIPPTE                                                                          
+NIPPTADR=NIPPTE                                                                 
+NIPPTOPF=NIPPTE                                                                 
+NIPPTOPI=NIPPTE                                                                 
+NIPPTLST=NIPPTE                                                                 
+NIPPTCAN=NIPPTE                                                                 
+NIPPTATF=NIPPTE                                                                 
+NIPPTMRG=NIPPTE                                                                 
+NIPPTSID=NIPPTE                                                                 
+=NVTNPREN=NVTNPATR                                                              
+=NVTNPREU=NVTNPATR                                                              
+=NVTFLSLB=NVTFLLB                                                               
+=NVTFLAC=NVTFLCN                                                                
+=NVTFLIOC=NVTFLCN                                                               
+=NVTMP=NVTFLCN                                                                  
+=NVTFLASM=NVTFLCN                                                               
+=NVTFLNHC=NVTFLCN                                                               
+=NVTFLNCK=NVTFLCN                                                               
+=NVTFLRAC=NVTFLCN                                                               
+=NVTCLKER=NVTFLCN                                                               
+=NVTFLLST=NVTFLPO                                                               
+=NVTSYSP=NVTFLPO                                                                
+=NVTFLQS=NVTFLPO                                                                
+=NVTFLWS=NVTFLPO                                                                
++         IDAIOMB  ,                                           IOMB             
++         IDAPLH   ,                                           IDAPLHDR         
++         IDAPLH   ,                                           IDAPLHD          
++         IEZCTGFL ,                                           CTGFL            
++         IDAIXH   ,                                           IDAIXH           
++         IDABUFD  ,                                           IDABUFDR         
++         IDABUFC  ,                                           IDABUFC          
++         IFGACB   ,                                           ACB              
++         IEAPPNIP WTOHDR=YES                                  NWTOHDR          
++         IEAPPNIP WTORLST=YES                                 NWTORLST         
++         IEAPPNIP SPE=YES                                     NIPSPE           
++         IEAPPNIP MNTPL=YES                                   NIPMNTPL         
++         IEAPPNIP OPNPL=YES                                   NIPOPNPL         
++         IEAPPNIP SCHDL=YES                                   NIPSCHDL         
++         IEAPPNIP PAHDR=YES                                   NIPPAHDR         
++         IEAPPNIP PAREA=YES                                   NIPPAREA         
++         IEAPPNIP PARMTAB=YES                                 PARMTABF         
++         IEAPPNIP PTE=YES                                     NIPPTE           
++         IHACDE  ,                                            CDENTRY          
++         IHADQE  ,                                            DQESECT          
++         IHAFBQE ,                                            DQESECT          
++         IHAFQE  ,                                            FQESECT          
++         IHALPDE ,                                            LPDE             
++         IHALLE  ,                                            LLE              
++         IHALDA  ,                                            LDA              
++         IHAGDA  ,                                            GDA              
++         IHAPIE  ,                                            PIE              
++         IHAPQE  ,                                            PQESECT          
++         IHASCVT LIST=YES                                     SCVTSECT         
++         IHASPQE ,                                            SPQESECT         
++         IQADSV  ,                                            DSV              

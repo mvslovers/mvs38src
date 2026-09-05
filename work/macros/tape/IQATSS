@@ -1,0 +1,93 @@
+         MACRO  ,                                                       00010000
+         IQATSS &TYPE=LOCK,&ERR=,&SAVE=YES,&SA=R13,&VCON=,&REGS=        00020006
+.********************************************************************** 00030000
+.********************************************************************** 00040000
+.*****************          OS/VS2 R2                  **************** 00050000
+.*****************     DYNAMIC SUPPORT SYSTEM          **************** 00060000
+.*****************       IQATSS LOCK/UNLOCK            **************** 00070003
+.********************************************************************** 00080000
+.********************************************************************** 00090000
+         LCLC  &V,&B1,&B2,&B3                                           00100004
+&V       SETC  'TSSA&SYSNDX'                                            00110005
+&B1      SETC  'TSSB&SYSNDX'                                            00120005
+&B2      SETC  'TSSC&SYSNDX'                                            00130005
+&B3      SETC  'TSSE&SYSNDX'                                            00140005
+         AIF   ('&TYPE' EQ 'LOCK').LCK                                  00150004
+         AIF   ('&TYPE' EQ 'UNLOCK').UNL                                00160005
+         MNOTE 8,'IQATSS - TYPE INVALID'                                00170003
+         MEXIT ,                                                        00180003
+.*                                                                      00190005
+.LCK     ANOP  ,                                                        00200004
+         AIF   (T'&ERR NE 'O').LCKGEN                                   00210004
+         MNOTE 8,'IQATSS - ERR REQUIRED'                                00220004
+         MEXIT ,                                                        00230004
+.LCKGEN  ANOP  ,                                                        00240004
+         STM   R14,R1,PSADSSTS         Save registers                   00250006
+         AIF   (T'&VCON NE 'O').LCKVC1                                  00260005
+         B     &B1                     Branch around VCON               00270006
+&V       DC    V(IQATSS00)             IQATSS00 address                 00280006
+&B1      DS    0H                                                       00290004
+         L     R15,&V                  Get IQATSS00 address             00300006
+         AGO   .LCKVC2                                                  00310005
+.LCKVC1  ANOP  ,                                                        00320005
+         L     R15,&VCON               Get IQATSS00 address             00330006
+.LCKVC2  ANOP  ,                                                        00340005
+         BALR  R14,R15                 Call IQATSS00                    00350006
+         LTR   R15,R15                 Call successful                  00360006
+         LM    R14,R0,PSADSSTS         Restore registers                00370006
+         BE    &B2                     Request was successful           00380006
+         L     R1,PSADSSTS+3*4         Restore R1                       00390006
+         B     &ERR                    Error exit                       00400006
+&B2      DS    0H                                                       00410004
+         AIF   ('&SAVE' NE 'YES').LCKNS1                                00420004
+         STM   R0,R15,0(R1)            Save registers                   00430006
+         LR    R13,R1                  Current save area                00440006
+         L     R1,PSADSSTS+3*4         Restore R1                       00450006
+         ST    R1,4(R13)               Chain save areas                 00460006
+.LCKNS1  ANOP  ,                                                        00470004
+         MEXIT ,                                                        00480005
+.*                                                                      00490005
+.UNL     ANOP  ,                                                        00500005
+         AIF   (T'&REGS EQ 'O').UNLSVOK                                 00510006
+         AIF   ('&REGS' EQ 'R0R1').UNLSVOK                              00520006
+         MNOTE 8,'IQATSS - REGS INVALID'                                00530006
+         MEXIT ,                                                        00540006
+.UNLSVOK ANOP  ,                                                        00550006
+         AIF   (T'&VCON NE 'O').UNLVC1                                  00560005
+         B     &B1                     Branch around VCON               00570006
+&V       DC    V(IQATSS01)             IQATSS01 address                 00580006
+&B1      DS    0H                                                       00590005
+.UNLVC1  ANOP  ,                                                        00600005
+         AIF   ('&SAVE' EQ 'YES').UNLNS1                                00610005
+         STM   R14,R1,PSADSSTS         Save registers                   00620006
+.UNLNS1  ANOP  ,                                                        00630005
+         AIF   (T'&VCON NE 'O').UNLVC2                                  00640005
+         L     R15,&V                  Get IQATSS01 address             00650006
+         AGO   .UNLVC3                                                  00660005
+.UNLVC2  ANOP  ,                                                        00670005
+         L     R15,&VCON               Get iQATSS01 address             00680006
+.UNLVC3  ANOP  ,                                                        00690006
+         AIF   ('&SAVE' NE 'YES').UNLNS2                                00700005
+         LR    R1,&SA                  Save passed save area            00710006
+         L     R0,0(R1)                Get R0 from save area            00720006
+         LM    R2,R14,8(R1)            Load callers R2-R14              00730006
+         STM   R14,R1,PSADSSTS         Save registers                   00740006
+         AIF   (T'&REGS EQ 'O').UNLSV1                                  00750006
+         MVC   PSADSSTS+8(8),0(R1)     Save R0 and R1                   00760006
+         AGO   .UNLSV2                                                  00770006
+.UNLSV1  ANOP  ,                                                        00780006
+         MVC   PSADSSTS+12(4),4(R1)    Save R1                          00790006
+.UNLSV2  ANOP  ,                                                        00800006
+         MVC   PSADSSTS+4(4),60(R1)    Save R15                         00810006
+         LR    R0,R1                   Save area address                00820006
+         AGO   .UNLNS3                                                  00830005
+.UNLNS2  ANOP  ,                                                        00840005
+         LR    R0,&SA                  Save area address                00850006
+.UNLNS3  ANOP  ,                                                        00860005
+         BALR  R14,R15                 Call IQATSS01                    00870006
+         LM    R14,R1,PSADSSTS         Restore registers                00880006
+         AIF   ('&SAVE' EQ 'YES').UNLNS4                                00890005
+         AIF   ('&SA' EQ 'R1').UNLNS4                                   00900005
+         LR    &SA,R0                  Restore save area address        00910006
+.UNLNS4  ANOP  ,                                                        00920005
+         MEND ,                                                         00930000

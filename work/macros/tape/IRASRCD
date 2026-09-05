@@ -1,0 +1,14 @@
+         MACRO                                                          00000100
+         IRASRCD ,                                                      00000200
+*  SWAP REASON  FROM GC28-0886-0 AND IRA***** MODULES                   00000300
+SRCDTOSC EQU    X'01'            OUTPUT TERMINAL WAIT                   00000400
+SRCDTISC EQU    X'02'            INPUT TERMINAL WAIT                    00000500
+SRCDLWSC EQU    X'03'            LONG WAIT                              00000600
+SRCDXSSC EQU    X'04'            AUXILIARY STORAGE SHORTAGE             00000700
+SRCDRSSC EQU    X'05'            REAL PAGEABLE STORAGE SHORTAGE         00000800
+SRCDDWSC EQU    X'06'            DETECTED WAIT                          00000900
+SRCDRQSC EQU    X'07'            REQUESTED BY THE ADDRESS SPACE         00001000
+SRCDNQSC EQU    X'08'            ENQUEUE EXCHANGE                       00001100
+SRCDEXSC EQU    X'09'            EXCHANGE ON RECOMMENDATION VALUE       00001200
+SRCDUSSC EQU    X'0A'            UNILATERAL SWAP-OUT                    00001300
+         MEND                                                           00001400

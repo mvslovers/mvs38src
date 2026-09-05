@@ -1,0 +1,25 @@
+         MACRO                                                          03000000
+&NAME    BUILDS &BUFLIST,&NUMSIZE                                       06000000
+         AIF   ('&BUFLIST' NE '(1)' OR '&NUMSIZE' NE '(0)').NOGOOD      09000000
+&NAME    STM   RC,RE,12(RN)        SAVE REGS                            12000000
+         L     RC,0(0,RB)          FIRST BUFFER ADDRESS-8               15000000
+         LR    RD,RA               MOVE # OF BUFFERS AND LENGTH TO RD   18000000
+         LA    RD,3(0,RD)          UP IT BY 3                           21000000
+         ST    RD,4(0,RC)          STORE IN FIRST BUFFER-4              24000000
+         NI    7(RC),X'FC'         ROUND LENGTH TO FULL WORD            27000000
+         LA    RE,8(0,RC)          RE POINTS TO ACTUAL BUFFER           30000000
+         ST    RE,0(0,RC)          STORE BUFFER ADDRESS IN 8 BYTE CONT. 33000000
+         SRL   RD,16               POSITION # OF BUFFERS                36000000
+BLDCONT  BCT   RD,BLDLOOP          ARE WE DONE                          39000000
+         B     BUILDEND            YES                                  42000000
+BLDLOOP  LA    RB,4(0,RB)          NO - UP POINTER TO PARAMETER LIST    45000000
+            L     RC,0(0,RB)          GET ADDRESS OF NEXT BUFFER        48000000
+         ST    RC,0(0,RE)          LINK BUFFERS                         51000000
+         LR    RE,RC               KEEP ADDRESS OF NEW BUFFER           54000000
+         B     BLDCONT             CONTINUE BUILDING                    57000000
+BUILDEND SR    RC,RC                                                    60000000
+         ST    RC,0(0,RE)          PUT ZERO'S IN LAST LINK LOCATION     63000000
+         LM    RC,RE,12(RN)        RESTORE REGISTERS                    66000000
+         MEXIT                                                          69000000
+.NOGOOD  MNOTE 'OPERAND OF BUILDS MACRO MUST BE ''(1),80)'''            72000000
+         MEND                                                           75000000

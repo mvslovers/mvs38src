@@ -1,6 +1,6 @@
 # TODO — MVS 3.8j source recovery
 
-As of 2026-09-04. The working list for [`docs/workplan.md`](docs/workplan.md).
+As of 2026-09-05. The working list for [`docs/workplan.md`](docs/workplan.md).
 The plan says *why* and *where to*; this list says *what next*.
 
 **Key:** 🔒 blocks other work · ⚡ runs in parallel, blocks nothing ·
@@ -10,29 +10,30 @@ The plan says *why* and *where to*; this list says *what next*.
 
 ## Start here tomorrow
 
-**The one thing that moves the needle:** find `TXLIB(SYM20104)` on Dave's tape
-and extract the `PVTMAC` macros. Missing component-private macros are the first
-cause for roughly half the as370 failures, and all the ones spot-checked are on
-that tape as `++MAC(name) SYSLIB(PVTMAC)` elements in `MVSSRC.BLD.SMP.LIB`.
+**Re-extract `SYS1.MACLIB` and `SYS1.AMODGEN` from MVS/CE.** Dave Kreiss'
+inventory lists 554 `++MAC` elements with `DISTLIB(AMACLIB)`; our extract has
+475 of them. 79 are missing, and two of them (`IHADECB`, `IEZCTGPL`) are among
+the 40 modules that still do not assemble. Before anything is read into the
+73 %, that extraction has to be known-good — it is our own pipeline, not MVS/CE.
 
-Where things stand: `SMP.LIB` is tape file 2 of `BLDMVS.AWS`; it de-blocks to
-readable text with the reader in the scratch notes, and the `++MAC` statements
-are findable. The macro *text* is not inline — it lives in a TXLIB named
-`SYM20104`, which still has to be located.
+Then the two open ends of the macro work, both small:
 
-Two routes if that stalls:
+1. `IHANVT`, `UCBDADVC`, `IECDCST` have **no `++MAC` element at all** in the
+   inventory. Find out what they are — members of another library, or COPY code
+   that only exists inline somewhere.
+2. `ACCESS` (`TXLIB(COBOLMAC)`) is the only one of the 623 private macros that
+   is nowhere on this machine. One name, park it.
 
-1. **Let MVS do it.** Copy `BLDMVS.AWS` to `mvsdev`, add a tape drive to
-   `MVSCE-EXP`'s `conf/local/custom.cnf`, mount it, and run Dave's `$$$LOAD` JCL
-   to load the libraries into PDSs. Then fetch members over mvsMF. This is the
-   path his instructions are written for, and it sidesteps the unload parser
-   entirely. Needs the user's agreement to touch EXP's config.
-2. **Wait for [cc370#113](https://github.com/mvslovers/cc370/issues/113)** — a
-   real MVS IEBCOPY unload of an FB source library currently parses to zero
-   members in `file370`.
+**Then `cmplmd370` ([cc370#110](https://github.com/mvslovers/cc370/issues/110))
+becomes the critical path again** — no comparison runs without it. Read
+`COMPLMD` first; `tools/pdsunload.py` now gets it out of `MVSSRC.BLD.UTILITY.ASM`
+(tape file 5, 64 members) without needing cc370#113.
 
-Then re-run the as370 measurement (`work/`-side scripts are in the scratch
-directory, not yet committed) and see where the 49 % goes.
+Yesterday's lever is spent, and the answer is written up in
+[`docs/private-macros.md`](docs/private-macros.md): `SYM20104` is a **DD name**
+for an IBM RELFILE Dave Kreiss had locally, not a library on the tape. Loading
+the tape under MVS would not have produced those macros either — **no reason to
+touch `MVSCE-EXP`'s config for this.**
 
 ---
 
@@ -172,10 +173,11 @@ run and gives the comparator a reference implementation to check against.
 - [x] **The tape is readable without Hercules.** `BLDMVS.AWS` is a plain AWS
       tape; a 40-line host reader walks it. Structure confirmed: standard labels,
       15 data files, `UTL.ASM` is file 5 (914 blocks, 4.19 MB, an IEBCOPY unload)
-- [ ] Get the members out of that unload — currently blocked on
-      [cc370#113](https://github.com/mvslovers/cc370/issues/113): `file370`
-      recognises the container but parses zero members from a real MVS unload of
-      an FB source library
+- [x] **Get the members out of that unload — done, 2026-09-05.**
+      [`tools/pdsunload.py`](tools/pdsunload.py) reads the unload member by
+      member; `UTL.ASM` yields 64 members. cc370#113 stays open for `file370`,
+      but it no longer blocks us. The header layout and the control case are in
+      [`docs/private-macros.md`](docs/private-macros.md)
 - [ ] Read `COMPLMD` before implementing #110 — especially how it decides what
       counts as a difference
 - [ ] Keep the extract as reference material; **no MBT project, no port**
@@ -364,70 +366,58 @@ form, so re-appliable. In no case do we have to redo his work.
 
 ### 7. 🚪 as370 gap analysis (M2)
 
-> **Measured 2026-09-04 — the gate holds. 49 % assemble cleanly.**
+> **Measured 2026-09-05 — the gate holds clearly. 73 % assemble cleanly.**
 >
-> 150 modules drawn at random from `MVSBLD/`, assembled with `as370 V1.0`
-> (confirmed current: no change under `as370/src/` since that build):
+> Same 150 modules drawn at random from `MVSBLD/`, same as370 build, counted per
+> module on exit code 0:
 >
-> | Macro set | Assembled cleanly |
+> | Macro set | Macros | Assembled |
+> |---|---:|---:|
+> | `SYS1.MACLIB` + `AMODGEN` + `APVTMACS` | 1,269 | 73 (49 %) |
+> | + the private macros off Dave Kreiss' tape | 1,383 | 83 (55 %) |
+> | **+ the private macros from the web mirrors** | **1,702** | **110 (73 %)** |
+>
+> The first row reproduces the 2026-09-04 measurement exactly, so the runs are
+> comparable. **No regressions** — no module that assembled with the small macro
+> set fails with the large one. Details, provenance and the caveat on the mirror
+> macros: [`docs/private-macros.md`](docs/private-macros.md).
+>
+> ### What the remaining 40 failures are made of
+>
+> Counted **per module**, by first cause.
+>
+> | First cause | Modules |
 > |---|---:|
-> | `SYS1.MACLIB` only (742 macros) | 56 (37 %) |
-> | **+ `SYS1.AMODGEN` + `SYS1.APVTMACS` (1,269 macros)** | **73 (49 %)** |
+> | undefined operation code (still a missing macro) | 11 |
+> | addressability — no active `USING` | 11 |
+> | undefined symbol | 7 |
+> | relocatable duplication factor | 3 |
+> | `DC/DS` type `S` — [cc370#108](https://github.com/mvslovers/cc370/issues/108) | 3 |
+> | single cases (`START`, `ISEQ`, continuation, IFO158, IFO231) | 5 |
 >
-> Macros extracted from a pristine MVS/CE 2.1.4 on `mvsdev` with `dasdpdsu`.
+> **Missing macros are no longer the dominant cause.** What is left of them is
+> not one pool either: `IHADECB` and `IEZCTGPL` are `DISTLIB(AMACLIB)`, so they
+> belong in `SYS1.MACLIB` — **our extract of it is missing 79 of 554 elements.**
+> That is a defect in our extraction, not in MVS/CE, and it is the first item
+> for tomorrow.
 >
-> ### Two traps in the extraction, both hit and both worth writing down
+> ### The two extraction traps, still valid
 >
 > **1. `dasdpdsu` writes raw EBCDIC with no record separators.** The members are
 > RECFM=FB 80, so the output must be split into 80-byte records and translated.
 > Feeding it raw makes the rate *drop* to 28.
 >
-> **2. Convert to a single-byte encoding, never UTF-8.** This one cost a
-> wrongly-filed issue. Writing the members as UTF-8 turns EBCDIC `X'5F'` (`¬`)
-> into two bytes, and every column after it shifts right. In `WTO` that pushed a
-> comment's last character into byte column 72 — the continuation column — and
-> as370 correctly reported a continuation that consumed the next statement. The
-> fix is latin-1, where `¬` stays one byte. **Column positions are the whole
-> contract in fixed-format assembler; any multi-byte encoding destroys them.**
+> **2. Convert to a single-byte encoding, never UTF-8.** Writing the members as
+> UTF-8 turns EBCDIC `X'5F'` (`¬`) into two bytes, and every column after it
+> shifts right. In `WTO` that pushed a comment's last character into byte column
+> 72 — the continuation column — and as370 correctly reported a continuation
+> that consumed the next statement. The fix is latin-1, where `¬` stays one
+> byte. **Column positions are the whole contract in fixed-format assembler.**
 >
-> as370 catching this is worth noting rather than resenting: its deliberate
-> stance that a statement-losing continuation is an error and not a severity-4
-> warning (`270b22d`) surfaced a data-corruption bug in our conversion. A warning
-> would have let 150 modules assemble against mangled macros and be compared in
-> good faith.
->
-> ### What the remaining 77 failures are made of
->
-> Counted **per module**, by first cause — not per message. (An earlier note
-> counted error lines and badly overstated `GOIF`: one module can raise it 79
-> times. Only **two** modules fail on `GOIF`/`SET`/`DSW`, and both are the
-> assembler itself, `IFNX3A` and `IFOX0I`.)
->
-> | First cause | Modules |
-> |---|---:|
-> | missing macro `IEDHJN` (TCAM) | 10 |
-> | undefined symbol | 7 |
-> | missing macro `SMPPI` | 5 |
-> | missing macro `BLSUALLS` (IPCS) | 4 |
-> | addressability — no active `USING` | 4 |
-> | relocatable duplication factor | 3 |
-> | `DC/DS` type `S` — [cc370#108](https://github.com/mvslovers/cc370/issues/108) | 3 |
-> | missing macros `JHEAD`, `IGGDEBD`, `IEEVRSWA`, `HMASMMGP` | 3 each |
-> | missing macros `IHANVT`, `IEHPRE`, `HEWAPT`, … | 2 each |
->
-> It is a **long tail of component-private macros**, not one blocker.
->
-> **And all of them are on Dave Kreiss' tape.** Spot-checked ten of the missing
-> names against `MVSSRC.BLD.SMP.LIB` in the 2023 package: every one appears as
-> `++MAC(name) … SYSLIB(PVTMAC) DISTLIB(APVTMAC)`. His `PVTMAC` library is the
-> answer for the whole tail, exactly as his documentation says — macros "which
-> are in none of the distributed maclibs".
->
-> **One catch:** the elements carry `TXLIB(SYM20104)`, so the macro text is not
-> inline in the MCS. Where `SYM20104` lives still has to be found.
->
-> **Conclusion:** as370 is not the bottleneck. The dominant cause is macros we do
-> not have yet — an extraction problem, not a development problem.
+> A third one found on 2026-09-05: **`MVSBLD/` was converted with a different
+> code page than ours.** `X'5F'` is `^` there and `¬` here — IBM-1047 against
+> cp037. Same byte, different character; a comparison across both sources has to
+> normalise it.
 
 - [x] **Extract `SYS1.AMODGEN` and `SYS1.APVTMACS`** — done on `mvsdev`
 - [x] Reconcile `SYS1.MACLIB` from MVS/CE against `~/repos/mvs/sys1.maclib` —
@@ -435,11 +425,17 @@ form, so re-appliable. In no case do we have to redo his work.
 - [x] Repeat the measurement with the full macro set — 43 %
 - [x] **Located Dave Kreiss' `PVTMAC`** — the missing macros are all on his tape,
       as `++MAC(…) SYSLIB(PVTMAC)` elements in `MVSSRC.BLD.SMP.LIB`
-- [ ] **Find `TXLIB(SYM20104)`** — the elements reference it rather than carrying
-      the macro text inline, so the text is somewhere else on the tape
-- [ ] Extract the macros and re-measure. This is the single biggest lever on the
-      rate: missing macros are the first cause for roughly half the failures
-- [ ] Re-measure once those macros are in, and again after cc370#115
+- [x] **`TXLIB(SYM20104)` resolved** — a DD name for `MVSSRC.SYM201.F04`, an IBM
+      RELFILE Dave Kreiss had locally. Not on the tape, and not reachable by
+      loading the tape under MVS either
+- [x] **Extracted the private macros** — 114 from `NEW.ASM` on the tape, 319 from
+      the web mirrors; 433 of 436. In `work/macros/`, kept apart by provenance
+- [x] **Re-measured: 49 % → 73 %**, no regressions
+- [ ] **Re-extract `SYS1.MACLIB`/`AMODGEN`** — 79 of 554 `AMACLIB` elements are
+      missing from our copy
+- [ ] Replace the mirror macros with DLIB-level ones before the first
+      byte-identity comparison, or make the comparator able to name them
+- [ ] Re-measure again after cc370#115
 - [ ] Implement `DC/DS` type `S` in as370 — the only gap reported by name in the
       pre-measurement
 - [ ] Run as370 over a cross-section of `MVSBLD/*.ASM` and `IKJ/*.asm`

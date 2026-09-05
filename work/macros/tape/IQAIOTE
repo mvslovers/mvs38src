@@ -1,0 +1,264 @@
+         MACRO  ,                                                       00010000
+&LBL     IQAIOTE &DSECT=YES,&NAME=,&TYPE=,&FLAG=,&AM=,&ERR=             00020000
+*********************************************************************** 00030000
+*********************************************************************** 00040000
+******************          OS/VS2 R2                  **************** 00050000
+******************     DYNAMIC SUPPORT SYSTEM          **************** 00060000
+******************        I/O TABLE ENTRY              **************** 00070000
+*********************************************************************** 00080000
+*********************************************************************** 00090000
+         LCLC  &P                                                       00100000
+         AIF   ('&DSECT' EQ 'YES').DSECT                                00110000
+&P       SETC  '&LBL'                                                   00120000
+IQAIOT&P DC    0F'0'                                                    00130000
+         AIF   ('&NAME' EQ 'CARD').NAMOK                                00140000
+         AIF   ('&NAME' EQ 'CMDT').NAMOK                                00150000
+         AIF   ('&NAME' EQ 'LOG').NAMOK                                 00160000
+         AIF   ('&NAME' EQ 'PRINT1').NAMOK                              00170000
+         AIF   ('&NAME' EQ 'PRINT2').NAMOK                              00180000
+         AIF   ('&NAME' EQ 'PUNCH').NAMOK                               00190000
+         AIF   ('&NAME' EQ 'TIN').NAMOK                                 00200000
+         AIF   ('&NAME' EQ 'TOUT1').NAMOK                               00210000
+         AIF   ('&NAME' EQ 'TOUT2').NAMOK                               00220000
+         AIF   ('&NAME' EQ 'CONSOLE').NAMOK                             00230000
+         AIF   ('&NAME' EQ 'SPAG').NAMOK                                00240000
+         AIF   ('&NAME' EQ 'DPAG').NAMOK                                00250000
+         AIF   ('&NAME' EQ 'IERR').NAMOK                                00260000
+         MNOTE 8,'IQAIOTE NAME INVALID &NAME'                           00270000
+         MEXIT ,                                                        00280000
+.NAMOK   ANOP  ,                                                        00290000
+         AIF   ('&TYPE' EQ 'CONSOLE').TYPOK                             00300000
+         AIF   ('&TYPE' EQ 'DASD').TYPOK                                00310000
+         AIF   ('&TYPE' EQ 'READER').TYPOK                              00320000
+         AIF   ('&TYPE' EQ 'PRINTER').TYPOK                             00330000
+         AIF   ('&TYPE' EQ 'PUNCH').TYPOK                               00340000
+         AIF   ('&TYPE' EQ 'READPUNCH').TYPOK                           00350000
+         AIF   ('&TYPE' EQ 'LOG').TYPOK                                 00360000
+         MNOTE 8,'IQAIOTE TYPE INVALID &TYPE'                           00370000
+         MEXIT ,                                                        00380000
+.TYPOK   ANOP  ,                                                        00390000
+         AIF   ('&AM' EQ 'PAM').AMOK                                    00400000
+         AIF   ('&AM' EQ 'CAM').AMOK                                    00410000
+         AIF   ('&AM' EQ 'DAM').AMOK                                    00420000
+         MNOTE 8,'IQAIOTE AM INVALID &AM'                               00430000
+         MEXIT ,                                                        00440000
+.AMOK    ANOP  ,                                                        00450000
+         AIF   ('&ERR' EQ 'DAS').ERROK                                  00460000
+         AIF   ('&ERR' EQ 'ERP').ERROK                                  00470000
+         MNOTE 8,'IQAIOTE ERR INVALID &ERR'                             00480000
+         MEXIT ,                                                        00490000
+.ERROK   ANOP  ,                                                        00500000
+         AIF   ('&FLAG' EQ '00').FLGOK                                  00510000
+         AIF   ('&FLAG' EQ '40').FLGOK                                  00520000
+         AIF   ('&FLAG' EQ '80').FLGOK                                  00530000
+         MNOTE 8,'IQAIOTE FLAG INVALID &FLAG'                           00540000
+         MEXIT ,                                                        00550000
+.FLGOK   ANOP  ,                                                        00560000
+         AGO   .NDSECT                                                  00570000
+.DSECT   ANOP  ,                                                        00580000
+         AIF   (T'&LBL EQ 'O').DFLTD                                    00590000
+         AIF   (K'&LBL LE 4).USELB                                      00600000
+         MNOTE 8,'IQAIOTE LABEL MORE THAN 4 CHARACTERS - &LBL'          00610000
+         MEXIT ,                                                        00620000
+.USELB   ANOP  ,                                                        00630000
+&P       SETC  '&LBL'                                                   00640000
+         AGO   .DODSCT                                                  00650000
+.DFLTD   ANOP  ,                                                        00660000
+&P       SETC  'IOTE'                                                   00670000
+.DODSCT  ANOP  ,                                                        00680000
+&P       DSECT ,                                                        00690000
+.NDSECT  ANOP  ,                                                        00700000
+&P.000   DC    C'IOT'                                                   00710001
+&P.003   DC    X'00'                                                    00720001
+         AIF   ('&DSECT' EQ 'YES').NAMDSCT                              00730000
+&P.004   DC    CL8'&NAME'                                               00740000
+         AGO   .NAMEND                                                  00750000
+.NAMDSCT ANOP ,                                                         00760000
+&P.004   DC    CL8' '                                                   00770001
+.NAMEND  ANOP ,                                                         00780000
+&P.00C   DC    A(0)                    BUFFER                           00790001
+&P.010   DC    A(0)                                                     00800001
+&P.014   DC    A(0)                    LRECL                            00810001
+&P.018   DC    A(0)                    BLKSIZE                          00820001
+&P.01C   DC    A(0)                                                     00830001
+&P.020   DC    X'0'                                                     00840001
+         AIF   ('&DSECT' EQ 'YES').DEVDSCT                              00850000
+&P.021   DC    XL3'FFFFFFF'            DEVICE ADDRESS                   00860000
+         AGO   .DEVEND                                                  00870000
+.DEVDSCT ANOP  ,                                                        00880000
+&P.021   DC    XL3'0'                  DEVICE ADDRESS                   00890001
+.DEVEND  ANOP  ,                                                        00900000
+&P.024   DC    A(0)                                                     00910001
+&P.028   DC    X'0'                                                     00920001
+&P.029   DC    X'0'                                                     00930001
+&P.02A   DC    H'0'                                                     00940001
+&P.02C   DC    X'0'                                                     00950001
+         AIF   ('&DSECT' NE 'YES').NEQU2C                               00960002
+IOT02C80 EQU   X'80'                                                    00970001
+IOT02C40 EQU   X'40'                                                    00980001
+IOT02C20 EQU   X'20'                                                    00990001
+IOT02C10 EQU   X'10'                                                    01000001
+IOT02C08 EQU   X'08'                                                    01010001
+IOT02C04 EQU   X'04'                                                    01020001
+IOT02C02 EQU   X'02'                                                    01030001
+IOT02C01 EQU   X'01'                                                    01040001
+.NEQU2C  ANOP  ,                                                        01050001
+&P.02D   DC    X'0'                                                     01060001
+         AIF   ('&DSECT' NE 'YES').NEQU2D                               01070002
+IOT02D80 EQU   X'80'                                                    01080001
+IOT02D40 EQU   X'40'                                                    01090001
+IOT02D20 EQU   X'20'                                                    01100001
+IOT02D10 EQU   X'10'                                                    01110001
+IOT02D08 EQU   X'08'                                                    01120001
+IOT02D04 EQU   X'04'                                                    01130001
+IOT02D02 EQU   X'02'                                                    01140001
+IOT02D01 EQU   X'01'                                                    01150001
+.NEQU2D  ANOP  ,                                                        01160001
+&P.02E   DC    X'0'                                                     01170001
+         AIF   ('&DSECT' NE 'YES').NEQU2E                               01180003
+IOT02E80 EQU   X'80'                                                    01190003
+IOT02E40 EQU   X'40'                                                    01200003
+IOT02E20 EQU   X'20'                                                    01210003
+IOT02E10 EQU   X'10'                                                    01220003
+IOT02E08 EQU   X'08'                                                    01230003
+IOT02E04 EQU   X'04'                                                    01240003
+IOT02E02 EQU   X'02'                                                    01250003
+IOT02E01 EQU   X'01'                                                    01260003
+.NEQU2E  ANOP  ,                                                        01270003
+         AIF   ('&DSECT' EQ 'YES').FLGDSCT                              01280000
+&P.02F   DC    X'&FLAG'                                                 01290000
+         AGO   .FLGEND                                                  01300000
+.FLGDSCT ANOP ,                                                         01310000
+&P.02F   DC    X'0'                                                     01320001
+IOT02F80 EQU   X'80'                                                    01330003
+IOT02F40 EQU   X'40'                                                    01340003
+IOT02F20 EQU   X'20'                                                    01350003
+IOT02F10 EQU   X'10'                                                    01360003
+IOT02F08 EQU   X'08'                                                    01370003
+IOT02F04 EQU   X'04'                                                    01380003
+IOT02F02 EQU   X'02'                                                    01390003
+IOT02F01 EQU   X'01'                                                    01400003
+.FLGEND  ANOP ,                                                         01410000
+&P.030   DC    X'0'                                                     01420001
+&P.031   DC    X'0'                                                     01430001
+&P.032   DC    X'0'                                                     01440001
+&P.033   DC    X'0'                                                     01450001
+&P.034   DC    A(0)                    UCB ADDRESS                      01460001
+         AIF   ('&DSECT' EQ 'YES').TYPDSCT                              01470000
+         AIF   ('&TYPE' EQ 'CONSOLE').TYPCN                             01480000
+         AIF   ('&TYPE' EQ 'DASD').TYPDA                                01490000
+         AIF   ('&TYPE' EQ 'READER').TYPRD                              01500000
+         AIF   ('&TYPE' EQ 'PRINTER').TYPPR                             01510000
+         AIF   ('&TYPE' EQ 'PUNCH').TYPPU                               01520000
+         AIF   ('&TYPE' EQ 'READPUNCH').TYPRP                           01530000
+         AIF   ('&TYPE' EQ 'LOG').TYPLG                                 01540000
+         MNOTE 12,'IQAIOTE TYPE INTERNAL ERROR'                         01550000
+         MEXIT ,                       SHOULD NOT OCCUR                 01560000
+.TYPCN   ANOP ,                                                         01570000
+&P.038   DC    A(A001BC0)              CONSOLE UCBTBYT3/4               01580000
+         AGO   .TYPEND                                                  01590000
+.TYPDA   ANOP ,                                                         01600000
+&P.038   DC    A(A001BCA)              DASD UCBTBYT3/4                  01610000
+         AGO   .TYPEND                                                  01620000
+.TYPRD   ANOP ,                                                         01630000
+&P.038   DC    A(A001BDC)              READER UCBTBYT3/4                01640000
+         AGO   .TYPEND                                                  01650000
+.TYPPR   ANOP ,                                                         01660000
+&P.038   DC    A(A001BE8)              PRINTER UCBTBYT3/4               01670000
+         AGO   .TYPEND                                                  01680000
+.TYPPU   ANOP ,                                                         01690000
+&P.038   DC    A(A001BF0)              PUNCH UCBTBYT3/4                 01700000
+         AGO   .TYPEND                                                  01710000
+.TYPRP   ANOP ,                                                         01720000
+&P.038   DC    A(A001BFA)              READPUNCH UCBTBYT3/4             01730000
+         AGO   .TYPEND                                                  01740000
+.TYPLG   ANOP ,                                                         01750000
+&P.038   DC    A(A001C00)              LOG UCBTBYT3/4                   01760000
+         AGO   .TYPEND                                                  01770000
+.TYPDSCT ANOP ,                                                         01780000
+&P.038   DC    A(0)                    LIST OF UCBTBYT3/4               01790001
+.TYPEND  ANOP ,                                                         01800000
+         AIF   ('&DSECT' EQ 'YES').AMDSCT                               01810000
+&P.03C   DC    V(IQA&AM.00)            SERVICE ROUTINE                  01820000
+         AGO   .AMEND                                                   01830000
+.AMDSCT  ANOP ,                                                         01840000
+&P.03C   DC    A(0)                    SERVICE ROUTINE                  01850001
+.AMEND   ANOP ,                                                         01860000
+         AIF   ('&DSECT' EQ 'YES').ERRDSCT                              01870000
+&P.040   DC    V(IQA&ERR.00)                                            01880000
+         AGO   .ERREND                                                  01890000
+.ERRDSCT ANOP ,                                                         01900000
+&P.040   DC    A(0)                                                     01910001
+.ERREND  ANOP ,                                                         01920000
+&P.044   DC    A(0)                                                     01930001
+&P.048   DC    A(0)                                                     01940001
+&P.04C   DC    A(0)                                                     01950001
+&P.050   DC    A(0)                                                     01960001
+&P.054   DC    A(0)                                                     01970001
+&P.058   DC    XL2'0'                                                   01980001
+&P.05A   DC    X'0'                                                     01990001
+&P.05B   DC    XL2'0'                                                   02000001
+&P.05D   DC    XL2'0'                                                   02010001
+&P.05F   DC    XL2'0'                                                   02020001
+&P.061   DC    X'0'                                                     02030001
+&P.062   DC    XL2'0'                                                   02040001
+&P.064   DC    A(0)                                                     02050001
+&P.068   DC    X'0'                                                     02060001
+&P.069   DC    X'0'                                                     02070001
+&P.06A   DC    X'0'                                                     02080001
+&P.06B   DC    X'0'                    DEVTYPE                          02090001
+&P.06C   DC    A(0)                                                     02100001
+&P.070   DC    X'0'                                                     02110001
+&P.071   DC    X'0'                                                     02120001
+&P.072   DC    X'0'                                                     02130001
+&P.073   DC    X'0'                                                     02140001
+&P.074   DC    H'0'                                                     02150001
+&P.076   DC    X'0'                                                     02160001
+&P.077   DC    X'0'                                                     02170001
+&P.078   DC    A(0)                                                     02180001
+&P.07C   DC    A(0)                                                     02190001
+&P.080   DC    D'0'                    CSW                              02200001
+&P.088   DC    X'0'                                                     02210001
+         AIF   ('&DSECT' NE 'YES').NEQU88                               02220002
+IOT08880 EQU   X'80'                                                    02230001
+IOT08840 EQU   X'40'                                                    02240001
+IOT08820 EQU   X'20'                                                    02250001
+IOT08810 EQU   X'10'                                                    02260001
+IOT08808 EQU   X'08'                                                    02270001
+IOT08804 EQU   X'04'                                                    02280001
+IOT08802 EQU   X'02'                                                    02290001
+IOT08801 EQU   X'01'                                                    02300001
+.NEQU88  ANOP  ,                                                        02310001
+&P.089   DC    X'0'                                                     02320001
+         AIF   ('&DSECT' NE 'YES').NEQU89                               02330002
+IOT08980 EQU   X'80'                                                    02340001
+IOT08940 EQU   X'40'                                                    02350001
+IOT08920 EQU   X'20'                                                    02360001
+IOT08910 EQU   X'10'                                                    02370001
+IOT08908 EQU   X'08'                                                    02380001
+IOT08904 EQU   X'04'                                                    02390001
+IOT08902 EQU   X'02'                                                    02400001
+IOT08901 EQU   X'01'                                                    02410001
+.NEQU89  ANOP  ,                                                        02420001
+&P.08A   DC    X'0'                                                     02430001
+&P.08B   DC    X'0'                                                     02440001
+&P.08C   DC    A(0)                                                     02450001
+&P.090   DC    A(0)                                                     02460001
+&P.094   DC    A(0)                                                     02470001
+&P.098   DC    X'0'                                                     02480001
+&P.099   DC    X'0'                                                     02490001
+&P.09A   DC    X'0'                                                     02500001
+&P.09B   DC    X'0'                                                     02510001
+&P.09C   DC    H'0'                                                     02520001
+&P.09E   DC    H'0'                                                     02530001
+&P.0A0   DC    A(0)                                                     02540001
+&P.0A4   DC    XL3'0'                                                   02550001
+&P.0A7   DC    XL3'0'                                                   02560001
+&P.0AA   DC    H'0'                                                     02570001
+&P.0AC   DC    A(0)                                                     02580001
+&P.0B0   DC    A(0)                                                     02590001
+&P.0B4   DC    A(0)                                                     02600001
+         AIF   ('&DSECT' NE 'YES').IOTEND                               02610000
+&P.LEN   EQU   *-&P                                                     02620000
+.IOTEND  ANOP  ,                                                        02630000
+         MEND ,                                                         02640000

@@ -1,0 +1,43 @@
+         MACRO                                                          00010000
+         ILRACE ,                                                       00020000
+ACE      EQU   0                                                        00030000
+ACEFQPA  EQU   ACE                                                      00040000
+ACEBQPA  EQU   ACE+4                                                    00050000
+ACEOP    EQU   ACE+8                                                    00060000
+ACETRPAG EQU   4          TRANSFER PAGE DECIMAL '04' - IEAVAMSI         00070000
+ACEASGLG EQU   8          ASSIGN LGN DECIMAL '08'    - ILRGOS (ASSIGN)  00080000
+ACERELLG EQU   12         RELEASE LG DECIMAL '12'                       00090000
+ACESVLGN EQU   16         SAVE L6/LGN DECIMAL '16'                      00100000
+ACEACT   EQU   20         ACTIVATE LG DECIMAL '20'                      00110000
+ACEDEACT EQU   28         DEACTIVATE LG DECIMAL '28'                    00120000
+ACEFLG1  EQU   ACE+9                                                    00130000
+ACERSV5  EQU   ACEFLG1                                                  00140000
+ACERSV4  EQU   ACEFLG1                                                  00150000
+ACERSV3  EQU   ACEFLG1                                                  00160000
+ACERSV2  EQU   ACEFLG1                                                  00170000
+ACENOACT EQU   ACEFLG1                                                  00180000
+ACEOVRID EQU   ACEFLG1                                                  00190000
+ACETRPWT EQU   ACEFLG1                                                  00200000
+ACEUSYM  EQU   ACEFLG1                                                  00210000
+ACEFLG2  EQU   ACE+10                                                   00220000
+ACEFLG3  EQU   ACE+11                                                   00230000
+ACEGRPRQ EQU   ACEFLG3                                                  00240000
+ACERSV10 EQU   ACEFLG3                                                  00250000
+ACERSV9  EQU   ACEFLG3                                                  00260000
+ACERSV8  EQU   ACEFLG3                                                  00270000
+ACELPMEC EQU   ACEFLG3                                                  00280000
+ACERSV7  EQU   ACEFLG3                                                  00290000
+ACERSV6  EQU   ACEFLG3                                                  00300000
+ACEPRINO EQU   ACEFLG3                                                  00310000
+ACELGE   EQU   ACE+12                                                   00320000
+ACELGN   EQU   ACE+16                                                   00330000
+ACELGID  EQU   ACELGN                                                   00340000
+ACERPN   EQU   ACELGN+4                                                 00350000
+ACETLPME EQU   ACERPN                                                   00360000
+ACESYM   EQU   ACE+24                                                   00370000
+ACESRCID EQU   ACESYM                                                   00380000
+ACEVLSID EQU   ACESRCID+1                                               00390000
+ACEAIAPT EQU   ACESYM+4                                                 00400000
+ACEECB   EQU   ACE+32                                                   00410000
+ACESRBWK EQU   ACE+36                                                   00420000
+         MEND                                                           00430000

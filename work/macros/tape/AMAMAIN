@@ -1,0 +1,74 @@
+DCBERAEX DC    A(DCBERREX)         EXT MSG                              01000018
+         DC    F'33'               SIZE                                 02000018
+OPENERR1 DC    A(OPENERR)          OPEN MSG                             03000018
+         DC    F'28'               SIZE                                 04000018
+DMSG900X DC    A(DMSG900)          CORE MSG                             05000018
+         DC    F'44'               SIZE                                 06000018
+*                                                                       07000013
+DMSG901X DC    A(DMSG901)          BFR MSG                              08000018
+         DC    F'39'               SIZE                                 09000018
+*                                                                       10000013
+DMSG902X DC    A(DMSG902)          BFR MSG                              11000018
+         DC    F'47'               SIZE                                 12000018
+*                                                                       13000013
+DMSG903X DC    A(DMSG903)          RSA MSG                              14000018
+         DC    F'33'               SIZE                                 15000018
+*                                                                       16000013
+DMSG904X DC    A(DMSG904)          TREE MSG                             17000018
+         DC    F'44'               SIZE                                 18000018
+*                                                                       19000013
+DMSG905X DC    A(DMSG905)          MOVE MSG                             20000018
+         DC    F'34'               SIZE                                 21000018
+*                                                                       22000013
+DMSG906X DC    A(DMSG906)          DCB MSG                              23000018
+         DC    F'33'               SIZE                                 24000018
+*                                                                       25000013
+DMSG907X DC    A(DMSG907)          CCW MSG                              26000018
+         DC    F'33'               SIZE                                 27000018
+*                                                                       28000013
+DMSG908X DC    A(DMSG908)          IOB MSG                              29000018
+         DC    F'36'               SIZE                                 30000018
+*                                                                       31000013
+DMSG909X DC    A(DMSG909)          OPEN LIST MSG                        32000018
+         DC    F'35'               SIZE                                 33000018
+*                                                                       34000013
+DCBERREX DC    CL27'IER044I - EXIT E   INVALID '     EXIT MSG           35000018
+         DC    CL06'OPTION'                          OPTION             36000018
+OPENERR  DC    CL28'IER063A - OPEN ERR'              OPEN MSG           37000018
+*                                                                       38000013
+DMSG900  DC    CL29'IER900I - GENERATED CORE END '   CORE MSG           39000018
+         DC    CL07'ADDR - '                         ADDR               40000018
+DMSG900A DC    CL8'        '                         ACT ADDR           41000018
+*                                                                       42000013
+DMSG901  DC    CL31'IER901I - INPUT BFR TBL ADDR - ' BFR MSG            43000018
+DMSG901A DC    CL8'        '                         ACT ADDR           44000018
+*                                                                       45000013
+DMSG902  DC    CL28'IER902I - OUTPUT BFR ADDR - '    BFR MSG            46000018
+DMSG902A DC    CL8'        '                         ACT ADDR           47000018
+         DC    CL03' , '                             COMMA              48000018
+DMSG902B DC    CL8'        '                         ACT ADDR           49000018
+*                                                                       50000013
+*                                                                       51000013
+DMSG903  DC    CL25'IER903I - RSA TBL ADDR - '       RSA MSG            52000018
+DMSG903A DC    CL8'        '                         ACT ADDR           53000018
+*                                                                       54000013
+DMSG904  DC    CL24'IER904I - TREE ADR FROM '        TREE MSG           55000018
+DMSG904A DC    CL8'        '                         ACT ADDR           56000018
+         DC    CL04' TO '                            TO                 57000018
+DMSG904B DC    CL8'        '                         ACT ADDR           58000018
+*                                                                       59000013
+DMSG905  DC    CL26'IER905I - MOVE RTN ADDR - '      MOVE MSG           60000018
+DMSG905A DC    CL8'        '                         ACT ADDR           61000018
+*                                                                       62000013
+DMSG906  DC    CL25'IER906I - DCB TBL ADDR - '       DCB MSG            63000018
+DMSG906A DC    CL8'        '                         ACT ADDR           63600018
+*                                                                       65000013
+DMSG907  DC    CL25'IER907I - O/P CCW ADDR - '       CCW MSG            66000018
+DMSG907A DC    CL8'        '                         ACT ADDR           67000018
+*                                                                       68000013
+DMSG908  DC    CL28'IER908I - OUTPUT IOB ADDR - '    IOB MSG            69000018
+DMSG908A DC    CL8'        '                         ACT ADDR           70000018
+*                                                                       71000013
+DMSG909  DC    CL27'IER909I - OPEN LIST ADDR - '                        72000018
+DMSG909A DC    CL8'        '                         ACT ADDR           73000018
+*                                                                       74000013

@@ -1,0 +1,74 @@
+*************************************************************           00010000
+*                                                           *           00020000
+*                                                           *           00030000
+*                                                           *           00040000
+*************************************************************           00050000
+MCBPTFMP EQU   0                                                        00060000
+MCBVERMP EQU   0                                                        00070000
+MCBVEND  EQU   MCBVERMP+8                                               00080000
+MCBIFMP  EQU   0                                                        00090000
+MCBIEND  EQU   MCBIFMP+8                                                00100000
+MCBELEMP EQU   0                                                        00110000
+MCBELEPM EQU   MCBELEMP+136                                             00120000
+MCBEFLG1 EQU   MCBELEPM                                                 00130000
+MCBEFLG2 EQU   MCBELEPM+1                                               00140000
+MCBEFLG3 EQU   MCBELEPM+2                                               00150000
+MCBEFLG4 EQU   MCBELEPM+3                                               00160000
+MCBEFLG5 EQU   MCBELEMP+140                                             00170000
+MCBEEND  EQU   MCBELEMP+141                                             00180000
+MCBVVLST EQU   MCBVEND                                                  00190000
+MCBVNTRY EQU   MCBVVLST                                                 00200000
+MCBVNUM  EQU   MCBVNTRY                                                 00210000
+MCBIVLST EQU   MCBIEND                                                  00220000
+MCBINTRY EQU   MCBIVLST                                                 00230000
+MCBINUM  EQU   MCBINTRY                                                 00240000
+MCBEVLST EQU   MCBEEND                                                  00250000
+MCBENTRY EQU   MCBEVLST                                                 00260000
+MCBENUM  EQU   MCBENTRY                                                 00270000
+MCBEIND  EQU   MCBEVLST+8                                               00280000
+MCBEND   EQU   MCBENUM                                                  00290000
+MCBIIND  EQU   MCBIVLST+8                                               00300000
+MCBIND   EQU   MCBINUM                                                  00310000
+MCBVIND  EQU   MCBVVLST+8                                               00320000
+MCBVND   EQU   MCBVNUM                                                  00330000
+MCBEDEL  EQU   MCBEFLG5                                                 00340000
+MCBESTD  EQU   MCBEFLG5                                                 00350000
+MCBERMA  EQU   MCBEFLG2       B'00000010'                               00360000
+MCBERM24 EQU   MCBEFLG2       B'00000100'                               00370000
+MCBEAMA  EQU   MCBEFLG2       B'00001000'                               00380000
+MCBEAM31 EQU   MCBEFLG2       B'00010000'                               00390000
+MCBEAM24 EQU   MCBEFLG2       B'00100000'                               00400000
+MCBEPAGA EQU   MCBEFLG2       B'01000000'                               00410000
+MCBENE   EQU   MCBEFLG2       B'10000000'                               00420000
+MCBEDC   EQU   MCBEFLG1                                                 00430000
+MCBEREFR EQU   MCBEFLG1                                                 00440000
+MCBEOVLY EQU   MCBEFLG1                                                 00450000
+MCBESCTR EQU   MCBEFLG1                                                 00460000
+MCBEREUS EQU   MCBEFLG1                                                 00470000
+MCBERENT EQU   MCBEFLG1                                                 00480000
+MCBEAPF  EQU   MCBEFLG1                                                 00490000
+MCBERMID EQU   MCBELEMP+129                                             00500000
+MCBELLKD EQU   MCBELEMP+128                                             00510000
+MCBEJLKD EQU   MCBELEMP+116                                             00520000
+MCBELUPI EQU   MCBELEMP+115                                             00530000
+MCBEJUPI EQU   MCBELEMP+103                                             00540000
+MCBELCPY EQU   MCBELEMP+102                                             00550000
+MCBEJCPY EQU   MCBELEMP+90                                              00560000
+MCBELASM EQU   MCBELEMP+89                                              00570000
+MCBEJASM EQU   MCBELEMP+77                                              00580000
+MCBERLF  EQU   MCBELEMP+73                                              00590000
+MCBESSI  EQU   MCBELEMP+65                                              00600000
+MCBEDALS EQU   MCBELEMP+57                                              00610000
+MCBEASLB EQU   MCBELEMP+49                                              00620000
+MCBELKLB EQU   MCBELEMP+41                                              00630000
+MCBETXLB EQU   MCBELEMP+33                                              00640000
+MCBESYS  EQU   MCBELEMP+25                                              00650000
+MCBEDOBJ EQU   MCBELEMP+17                                              00660000
+MCBEDIST EQU   MCBELEMP+9                                               00670000
+MCBENAME EQU   MCBELEMP+1                                               00680000
+MCBIFENV EQU   MCBIFMP+1                                                00690000
+MCBSFMID EQU   MCBVERMP+1                                               00700000
+MCBPTP   EQU   MCBPTFMP+10                                              00710000
+MCBPRELN EQU   MCBPTFMP+8                                               00720000
+MCBPNO   EQU   MCBPTFMP+1                                               00730000
+MCBTYPE  EQU   MCBPTFMP                                                 00740000

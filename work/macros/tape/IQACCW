@@ -1,0 +1,23 @@
+         MACRO  ,                                                       00010000
+         IQACCW ,                                                       00020000
+*********************************************************************** 00030000
+*********************************************************************** 00040000
+******************          OS/VS2 R2                  **************** 00050000
+******************     DYNAMIC SUPPORT SYSTEM          **************** 00060000
+******************      CHANNEL COMMAND WORD           **************** 00070001
+*********************************************************************** 00080000
+*********************************************************************** 00090000
+CCWDS    DSECT ,                                                        00100000
+CCW      DS    0D                                                       00110000
+CCWCMD   DS    XL1                     Command Code                     00120000
+CCWADR   DS    AL3                     Data Address                     00130000
+CCWFLG   DS    X                       Flags                            00140000
+CCWDC    EQU   X'80'                   Data Chaining                    00150000
+CCWCC    EQU   X'40'                   Command Chaining                 00160000
+CCWSLI   EQU   X'20'                   Suppress Incorrect Length        00170000
+CCWSKIP  EQU   X'10'                   Suppress Data Transfer           00180000
+CCWPCI   EQU   X'08'                   Program Controlled Interrupt     00190000
+CCWIDA   EQU   X'04'                   Indirect Addressing              00200000
+         DS    X                                                        00210000
+CCWLEN   DS    H                       Length                           00220000
+         MEND  ,                                                        00230000

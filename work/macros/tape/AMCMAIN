@@ -1,0 +1,47 @@
+DCBERAEX DC    A(DCBERREX)         ADD OF EXIT MSG                      02000018
+         DC    F'33'               LENGTH 33                            04000018
+*                                                                       06000013
+OPENERR1 DC    A(OPENERR)          OPEN ERR MSG                         08000018
+         DC    F'28'               LENGTH 28                            10000018
+DMSG940X DC    A(DMSG940)          CORE MSG                             12000018
+         DC    F'44'               LENGTH 44                            14000018
+*                                                                       16000013
+DMSG941X DC    A(DMSG941)          BFR MSG                              18000018
+         DC    F'39'               LENGTH 39                            20000018
+*                                                                       22000013
+DMSG942X DC    A(DMSG942)          BFR MSG                              24000018
+         DC    F'47'               LENGTH 47                            26000018
+*                                                                       28000013
+DMSG943X DC    A(DMSG943)          MOVE RTN MSG                         30000018
+         DC    F'34'               LENGTH 34                            32000018
+*                                                                       34000013
+DMSG944X DC    A(DMSG944)          DCB MSG                              36000018
+         DC    F'33'               LENGTH 33                            38000018
+*                                                                       40000013
+DMSG945X DC    A(DMSG945)          CCW MSG                              42000018
+         DC    F'33'               LENGTH 33                            44000018
+*                                                                       46000013
+DCBERREX DC    CL27'IER044I - EXIT E   INVALID ' EXIT ERR MSG           48000018
+         DC    CL06'OPTION'        OPTION                               50000018
+*                                                                       52000013
+OPENERR  DC    CL28'IER063A - OPEN ERR'  OPENERR MSG                    54000018
+DMSG940  DC    CL29'IER940I - GENERATED CORE END ' CORE MSG             56000018
+         DC    CL07'ADDR - '       ADDR                                 58000018
+DMSG940A DC    CL8'        '       ACT ADDR                             60000018
+*                                                                       62000013
+DMSG941  DC    CL31'IER941I - INPUT BFR TBL ADDR - ' BUFR MSG           64000018
+DMSG941A DC    CL8'        '       ACT ADDR                             66000018
+*                                                                       68000013
+DMSG942  DC    CL28'IER942I - OUTPUT BFR ADDR - '    BUFR MSG           70000018
+DMSG942A DC    CL8'        '       ACT ADDR                             72000018
+         DC    CL03' , '           COMMA                                74000018
+DMSG942B DC    CL8'        '           SECOND ACT ADDR                  76000018
+*                                                                       78000013
+DMSG943  DC    CL26'IER943I - MOVE RTN ADDR - '  MOVE MSG               80000018
+DMSG943A DC    CL8'        '       ACT ADDR                             82000018
+*                                                                       84000013
+DMSG944  DC    CL25'IER944I - DCB TBL ADDR - '   DCB MSG                86000018
+DMSG944A DC    CL8'        '       ACT ADDR                             88000018
+DMSG945  DC    CL25'IER945I - I/P CCW ADDR - '   CCW MSG                90000018
+DMSG945A DC    CL8'        '       ACT ADDR                             92000018
+*                                                                       94000013

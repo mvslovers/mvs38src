@@ -1,0 +1,44 @@
+*************************************************************           00010000
+*                                                           *           00020000
+*                                                           *           00030000
+*                                                           *           00040000
+*************************************************************           00050000
+ARLPARM  EQU   0                                                        00060000
+ARLFLAGS EQU   ARLPARM+8                                                00070000
+ARLFLG1  EQU   ARLFLAGS                                                 00080000
+ARLFLG2  EQU   ARLFLAGS+2                                               00090000
+ARLFLG3  EQU   ARLFLAGS+3                                               00100000
+ARLFLG4  EQU   ARLFLAGS+5                                               00110000
+ARLFLG5  EQU   ARLFLAGS+7                                               00120000
+ARLICTOK EQU   ARLFLG5                                                  00130000
+ARLBPFM  EQU   ARLFLG4                                                  00140000
+ARLBPIRQ EQU   ARLFLG4                                                  00150000
+ARLBPREQ EQU   ARLFLG4                                                  00160000
+ARLBPPRE EQU   ARLFLG4                                                  00170000
+ARLBPID  EQU   ARLFLG4                                                  00180000
+ARLSTS   EQU   ARLFLG3                                                  00190000
+ARLMTS   EQU   ARLFLG3                                                  00200000
+ARLPTS   EQU   ARLFLG3                                                  00210000
+ARLACRQ  EQU   ARLFLG3                                                  00220000
+ARLCRQ   EQU   ARLFLG3                                                  00230000
+ARLSCDS  EQU   ARLFLG3                                                  00240000
+ARLACDS  EQU   ARLFLG3                                                  00250000
+ARLCDS   EQU   ARLFLG3                                                  00260000
+ARLMASS  EQU   ARLFLG2                                                  00270000
+ARLFMID  EQU   ARLFLG2                                                  00280000
+ARLGROUP EQU   ARLFLG2                                                  00290000
+ARLEXC   EQU   ARLFLG2                                                  00300000
+ARLSEL   EQU   ARLFLG2                                                  00310000
+ARLDISW  EQU   ARLFLG1+1                                                00320000
+ARLDISR  EQU   ARLFLG1+1                                                00330000
+ARLDISN  EQU   ARLFLG1+1                                                00340000
+ARLNOJCL EQU   ARLFLG1                                                  00350000
+ARLFLUSH EQU   ARLFLG1                                                  00360000
+ARLUSER  EQU   ARLFLG1                                                  00370000
+ARLAPAR  EQU   ARLFLG1                                                  00380000
+ARLCOMP  EQU   ARLFLG1                                                  00390000
+ARLASSEM EQU   ARLFLG1                                                  00400000
+ARLCHECK EQU   ARLFLG1                                                  00410000
+ARLNOAPP EQU   ARLFLG1                                                  00420000
+ARLNUCID EQU   ARLPARM+4                                                00430000
+ARLJCLGT EQU   ARLPARM                                                  00440000

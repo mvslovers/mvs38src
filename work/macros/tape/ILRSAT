@@ -1,0 +1,16 @@
+         MACRO                                                          00010000
+         ILRSAT ,                                                       00020000
+SAT      EQU   0                                                        00030000
+SATHDR   EQU   SAT                                                      00040000
+SATID    EQU   SATHDR                                                   00050000
+SATSARTE EQU   SATHDR+4                                                 00060000
+SATMAPLN EQU   SATHDR+8                                                 00070000
+SATBYTCL EQU   SATHDR+10                                                00080000
+SATOFFST EQU   SATHDR+12                                                00090000
+SATMASK  EQU   SATHDR+14                                                00100000
+SATSCAN  EQU   SATHDR+16                                                00110000
+SATSLTNO EQU   SATHDR+20                                                00120000
+SATASGN  EQU   SATHDR+24                                                00130000
+SATMAPS  EQU   SAT+32                                                   00140000
+SATCYLMP EQU   0                                                        00150000
+         MEND                                                           00160000

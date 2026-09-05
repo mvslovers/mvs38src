@@ -1,0 +1,508 @@
+         MACRO                                                          00010000
+&LABEL   HMASMIOP &TYPE=EQU,&FORMAT=SHORT                               00020000
+         LCLA  &LEN                                                     00030000
+*************************************************************           00040000
+*                                                           *           00050000
+*                                                           *           00060000
+*                                                           *           00070000
+*************************************************************           00080000
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00090000
+         AIF   ('&TYPE' EQ 'BLOCK').BLOCK                               00100000
+.EQU     ANOP                                                           00110000
+HMASMIOP EQU   0                                                        00120000
+IOPDSID  EQU   HMASMIOP                                                 00130000
+IOPHLDS  EQU   1             IOPDSID=LOG                                00140000
+IOPCDS   EQU   2             IOPDSID=CDS                                00150000
+IOPSCR1  EQU   3             IOPDSID=SYSUT1 SCR1 DATA SET               00160000
+IOPSCR2  EQU   4             IOPDSID=SYSUT1 SCR2 DATA SET               00160010
+IOPMACL  EQU   5             IOPDSID=MACRO LIBRARY                      00170000
+IOPPTS   EQU   6             IOPDSID=PTS                                00180000
+IOPCDSD  EQU   8             IOPDSID=CDS DIRECTORY                      00190000
+IOPPTFIN EQU   10            IOPDSID=PTFIN                              00200000
+IOPPRINT EQU   11            IOPDSID=PRINT                              00210000
+IOPACDS  EQU   12            IOPDSID=ACDS                               00220000
+IOPACDSD EQU   13            IOPDSID=ACDS DIRECTORY                     00230000
+IOPDDNM  EQU   14            IOPDSID=ANY DD CARD                        00240000
+IOPSYS4  EQU   16            IOPDSID=SYSUT4                             00240010
+IOPMTS   EQU   18            IOPDSID=MTS                                00250000
+IOPSYSPT EQU   20            IOPDSID=SYSPRINT DATA SET                  00260000
+IOPSRCL  EQU   22            IOPDSID=SOURCE LIBRARY                     00270000
+IOPTXTDD EQU   24            IOPDSID=TEXTLIB DD                         00280000
+IOPANYDD EQU   24            IOPDSID=OTHER VARIABLE DD                  00290000
+IOPJFCB  EQU   25            IOPDSID=REQUEST FOR JFCB                   00300000
+IOPSTS   EQU   26            IOPDSID=STS                                00310000
+IOPCRQ   EQU   28            IOPDSID=CRQ                                00320000
+IOPCRQD  EQU   29            IOPDSID=CRQ DIRECTORY                      00330000
+IOPACRQ  EQU   30            IOPDSID=ACRQ                               00340000
+IOPACRQD EQU   31            IOPDSID=ACRQ DIRECTORY                     00350000
+IOPLRF   EQU   32            IOPDSID=LRF                                00360000
+IOPSCDS  EQU   33            IOPDSID=SCDS                               00370000
+IOPWK1   EQU   35            IOPDSID=WK1                                00380000
+IOPWK2   EQU   36            IOPDSID=WK2                                00390000
+IOPWK3   EQU   37            IOPDSID=WK3                                00400000
+IOPWK4   EQU   38            IOPDSID=WK4                                00410000
+IOPWK5   EQU   39            IOPDSID=WK5                                00420000
+IOPWKX   EQU   40            IOPDSID=WKX                                00430000
+IOPRPT   EQU   41            IOPDSID=SMPRPT                             00440000
+IOPLIST  EQU   42            IOPDSID=SMPLIST                            00440010
+IOPNUMDS EQU   43            IOPDSID=INVALID DSID                       00450000
+IOPFUNCT EQU   HMASMIOP+1                                               00460000
+IOPOPEN  EQU   0             IOPFUNCT=SPECIFIC OPEN                     00470000
+IOPREAD  EQU   1             IOPFUNCT=READ                              00480000
+IOPPOSI  EQU   2             IOPFUNCT=POSITION INPUT                    00490000
+IOPLOC   EQU   3             IOPFUNCT=LOCATE                            00500000
+IOPBLDL  EQU   4             IOPFUNCT=BLDL                              00510000
+IOPJFCSI EQU   5             IOPFUNCT=CHANGE TO MEM OF PDS FOR INPUT    00520000
+IOPJFCBP EQU   6             IOPFUNCT=CHANGE BACK TO PDS                00530000
+IOPXTND  EQU   7             IOPFUNCT=EXTEND NTRY                       00540000
+IOPINIT  EQU   8             IOPFUNCT=INIT IN-STORE-DIR                 00550000
+IOPFREE  EQU   9             IOPFUNCT=FREE IN-STORE-DIR                 00560000
+IOPGETN  EQU   10            IOPFUNCT=GET NEXT                          00670000
+IOPGETNC EQU   11            IOPFUNCT=GET NEXT WITH CNT                 00680000
+IOPCLOSH EQU   12            IOPFUNCT=CLOSE NEXT                        00690000
+IOPALC   EQU   13            IOPFUNCT=ALLOCATE                          00700000
+IOPDALC  EQU   14            IOPFUNCT=DE-ALLOCATE                       00710000
+IOPDEL   EQU   15            IOPFUNCT=DELETE                            00720000
+IOPNCODE EQU   16            IOPFUNCT=ENCODE OPERATION                  00730000
+IOPCLOSE EQU   80            IOPFUNCT=CLOSE                             00740000
+IOPWRITE EQU   81            IOPFUNCT=WRITE OPERATION                   00750000
+IOPSTOWC EQU   82            IOPFUNCT=STOW CHANGE                       00760000
+IOPSTOWD EQU   83            IOPFUNCT=STOW DELETE                       00770000
+IOPSTOWR EQU   84            IOPFUNCT=STOW (REPLACE)                    00780000
+IOPPOSO  EQU   85            IOPFUNCT=POSITION FOR OUTPUT               00780010
+IOPUDEO  EQU   86            IOPFUNCT=UPDATE DIRECT ONLY                00790000
+IOPCLOSA EQU   87            IOPFUNCT=CLOSE ALL                         00800000
+IOPJFCSO EQU   88            IOPFUNCT=CHANGE TO MEM OF PDS FOR OUTPUT   00810000
+IOPWRDIR EQU   89            IOPFUNCT=WRITE DIR                         00820000
+IOPRETRN EQU   HMASMIOP+2                                               00830000
+IOPTYPE  EQU   HMASMIOP+3                                               00840000
+IOPASM   EQU   1             IOPTYPE=                                   00850000
+IOPLMD   EQU   2             IOPTYPE=                                   00860000
+IOPMAC   EQU   3             IOPTYPE=                                   00870000
+IOPMCU   EQU   4             IOPTYPE=MAC UPDATE                         00880000
+IOPMOD   EQU   5             IOPTYPE=                                   00890000
+IOPDLB   EQU   6             IOPTYPE=                                   00900000
+IOPSYS   EQU   7             IOPTYPE=                                   00910000
+IOPSRC   EQU   8             IOPTYPE=                                   00920000
+IOPSCU   EQU   9             IOPTYPE=SRC UPDATE                         00930000
+IOPDND   EQU   10            IOPTYPE=DUMMY CDSEOF                       00940000
+IOPSMD   EQU   11            IOPTYPE=                                   00950000
+IOPZAP   EQU   12            IOPTYPE=                                   00960000
+IOPXZP   EQU   13            IOPTYPE=EXPAND                             00970000
+IOPFMD   EQU   14            IOPTYPE=                                   00980000
+IOPCSR   EQU   15            IOPTYPE=                                   00990000
+IOPMCS   EQU   16            IOPTYPE=                                   01000000
+IOPMEM   EQU   17            IOPTYPE=NON-SMP DATASET MEMBER             01010000
+IOPNAME  EQU   HMASMIOP+4                                               01020000
+IOPDDNAM EQU   HMASMIOP+24                                              01030000
+IOP020   EQU   HMASMIOP+32                                              01040000
+IOPBUFAD EQU   HMASMIOP+52                                              01050000
+IOPDRMAP EQU   HMASMIOP+56                                              01060000
+IOPINAME EQU   IOPDRMAP                                                 01070000
+IOPINAM  EQU   IOPINAME                                                 01080000
+IOPITYP  EQU   IOPINAM                                                  01090000
+IOPUSERL EQU   IOPDRMAP+11                                              01100000
+IOPALIS  EQU   IOPUSERL                                                 01110000
+IOPEND   EQU   IOPDRMAP+12                                              01120000
+IOPLMCTL EQU   0                                                        01130000
+IOPQSMIF EQU   0                                                        01140000
+IOPQSMLS EQU   IOPQSMIF+8                                               01150000
+IOPQSMNM EQU   IOPQSMLS                                                 01160000
+IOPBS01  EQU   0                                                        01170000
+IOPBS02  EQU   0                                                        01180000
+IOPBS2EP EQU   IOPBS02                                                  01190000
+IOPBS2NM EQU   IOPBS02+3                                                01200000
+IOPBS03  EQU   0                                                        01210000
+IOPBS04  EQU   0                                                        01220000
+IOPBAPF  EQU   IOPBS04                                                  01230000
+IOPUDATA EQU   IOPEND                                                   01240000
+IOPINAM3 EQU   IOPINAME                                                 01250000
+IOPSTCMP EQU   IOPUDATA                                                 01260000
+IOPDYNDT EQU   IOPUDATA                                                 01270000
+IOPSPACE EQU   IOPDYNDT+44                                              01280000
+IOPDTYPE EQU   IOPDYNDT+50                                              01290000
+IOPNTMAX EQU   IOPDRMAP                                                 01300000
+IOPNTMAP EQU   IOPDRMAP                                                 01310000
+IOPCDMAP EQU   IOPNTMAP                                                 01320000
+IOPPTMAP EQU   IOPCDMAP                                                 01330000
+IOPSCMAP EQU   IOPPTMAP                                                 01340000
+IOPDIRCT EQU   IOPSCMAP+12                                              01350000
+IOPCDMAX EQU   IOPDIRCT                                                 01360000
+IOPCQMAP EQU   IOPDRMAP                                                 01370000
+IOPASMNT EQU   IOPUDATA                                                 01380000
+IOPASMDR EQU   IOPASMNT                                                 01390000
+IOPABUNT EQU   IOPASMDR+1                                               01400000
+IOPLMDNT EQU   IOPUDATA                                                 01410000
+IOPLMDDR EQU   IOPLMDNT                                                 01420000
+IOPLMLEP EQU   IOPLMDDR+1                                               01430000
+IOPLMDF1 EQU   IOPLMLEP                                                 01440000
+IOPFLGS2 EQU   IOPLMDF1                                                 01450000
+IOPLMDF2 EQU   IOPLMLEP+1                                               01460000
+IOPLMDF3 EQU   IOPLMLEP+2                                               01470000
+IOPLMDF4 EQU   IOPLMLEP+3                                               01480000
+IOPLMDF5 EQU   IOPLMDDR+5                                               01490000
+IOPFLGS3 EQU   IOPLMDF5                                                 01500000
+IOPLMDFX EQU   IOPLMDNT+24                                              01510000
+IOPLNTRY EQU   IOPLMDFX+8                                               01520000
+IOPLSYS  EQU   IOPLNTRY                                                 01530000
+IOPSYSLB EQU   IOPLSYS                                                  01540000
+IOPMACNT EQU   IOPUDATA                                                 01550000
+IOPMACDR EQU   IOPMACNT                                                 01560000
+IOPRMIDE EQU   IOPMACDR+1                                               01570000
+IOPRMID  EQU   IOPRMIDE                                                 01580000
+IOPRMST  EQU   IOPRMIDE+7                                               01590000
+IOPFMIDE EQU   IOPMACDR+9                                               01600000
+IOPFMID  EQU   IOPFMIDE                                                 01610000
+IOPMACFX EQU   IOPMACNT+24                                              01620000
+IOPBUNT  EQU   IOPMACFX                                                 01630000
+IOPMCEND EQU   IOPMACNT+104                                             01640000
+IOPMACVR EQU   IOPMCEND                                                 01650000
+IOPMCENT EQU   IOPMACVR                                                 01660000
+IOPMCDTA EQU   IOPMCENT                                                 01670000
+IOPMCASM EQU   IOPMCDTA                                                 01680000
+IOPMACID EQU   IOPMCASM                                                 01690000
+IOPMACND EQU   IOPMACID                                                 01700000
+IOPMACST EQU   IOPMCASM+7                                               01710000
+IOPMCIND EQU   IOPMCENT+8                                               01720000
+IOPEOFNT EQU   IOPUDATA                                                 01730000
+IOPSRCNT EQU   IOPUDATA                                                 01740000
+IOPSRCDR EQU   IOPSRCNT                                                 01750000
+IOPSRCFX EQU   IOPSRCNT+24                                              01760000
+IOPSREND EQU   IOPSRCNT+104                                             01770000
+IOPSRCVR EQU   IOPSREND                                                 01780000
+IOPSNTRY EQU   IOPSRCVR                                                 01790000
+IOPSRDTA EQU   IOPSNTRY                                                 01800000
+IOPSRCID EQU   IOPSRDTA                                                 01810000
+IOPSRCST EQU   IOPSRDTA+7                                               01820000
+IOPMODNT EQU   IOPUDATA                                                 01830000
+IOPMODDR EQU   IOPMODNT                                                 01840000
+IOPMODFX EQU   IOPMODNT+24                                              01850000
+IOPMDLEP EQU   IOPMODFX+8                                               01860000
+IOPMODF1 EQU   IOPMDLEP                                                 01870000
+IOPMODF2 EQU   IOPMDLEP+1                                               01880000
+IOPMODF3 EQU   IOPMDLEP+2                                               01890000
+IOPMODF4 EQU   IOPMDLEP+3                                               01900000
+IOPMDEND EQU   IOPMODNT+104                                             01910000
+IOPMODVR EQU   IOPMDEND                                                 01920000
+IOPMNTRY EQU   IOPMODVR                                                 01930000
+IOPMDDTA EQU   IOPMNTRY                                                 01940000
+IOPLMODS EQU   IOPMDDTA                                                 01950000
+IOPMODID EQU   IOPLMODS                                                 01960000
+IOPMODST EQU   IOPLMODS+7                                               01970000
+IOPDLBNT EQU   IOPUDATA                                                 01980000
+IOPDLBDR EQU   IOPDLBNT                                                 01990000
+IOPDLBFX EQU   IOPDLBNT+24                                              02000000
+IOPDLEND EQU   IOPDLBNT+104                                             02010000
+IOPDLBVR EQU   IOPDLEND                                                 02020000
+IOPDNTRY EQU   IOPDLBVR                                                 02030000
+IOPDSYS  EQU   IOPDNTRY                                                 02040000
+IOPSYSNT EQU   IOPUDATA                                                 02050000
+IOPSYSDR EQU   IOPSYSNT                                                 02060000
+IOPSYSF1 EQU   IOPSYSDR+4                                               02070000
+IOPFLGS7 EQU   IOPSYSF1                                                 02080000
+IOPSYSFX EQU   IOPSYSNT+24                                              02090000
+IOP0F3   EQU   IOPSYSNT+175                                             02100000
+IOP0FB   EQU   IOPSYSNT+183                                             02110000
+IOPSYEND EQU   IOPSYSNT+184                                             02120000
+IOPSYSVR EQU   IOPSYEND                                                 02130000
+IOPSYSTR EQU   IOPSYSVR                                                 02140000
+IOPSYNTR EQU   IOPSYSTR                                                 02150000
+IOPPTFNT EQU   IOPUDATA                                                 02160000
+IOPPTFDR EQU   IOPPTFNT                                                 02170000
+IOPPSTAT EQU   IOPPTFDR+2                                               02180000
+IOPPTFF1 EQU   IOPPSTAT                                                 02190000
+IOPFLGS5 EQU   IOPPTFF1                                                 02200000
+IOPPTFF2 EQU   IOPPSTAT+1                                               02210000
+IOPPTFF3 EQU   IOPPSTAT+3                                               02220000
+IOPPTFFX EQU   IOPPTFNT+24                                              02230000
+IOPPDTES EQU   IOPPTFFX+41                                              02240000
+IOPPTPFX EQU   IOPPDTES+6                                               02250000
+IOPDATES EQU   IOPPTPFX                                                 02260000
+IOPPTEND EQU   IOPPTFNT+104                                             02270000
+IOPPTFVR EQU   IOPPTEND                                                 02280000
+IOPPNTRY EQU   IOPPTFVR                                                 02290000
+IOPPMODS EQU   IOPPNTRY                                                 02300000
+IOPENTNT EQU   IOPUDATA+104                                             02310000
+IOPSRLNT EQU   IOPUDATA+104                                             02320000
+IOPPRENT EQU   IOPUDATA+104                                             02330000
+IOPNPRNT EQU   IOPUDATA+104                                             02340000
+IOPSUPNT EQU   IOPUDATA+104                                             02350000
+IOPREQNT EQU   IOPUDATA+104                                             02360000
+IOPIRQNT EQU   IOPUDATA+104                                             02370000
+IOPFIDNT EQU   IOPUDATA+104                                             02380000
+IOPDELNT EQU   IOPUDATA+104                                             02390000
+IOPVERNT EQU   IOPUDATA+104                                             02400000
+IOPSBYNT EQU   IOPUDATA+104                                             02410000
+IOPQSMNT EQU   IOPUDATA                                                 02420000
+IOPQSMDR EQU   IOPQSMNT                                                 02430000
+IOPQFMNT EQU   IOPUDATA                                                 02440000
+IOPQFMDR EQU   IOPQFMNT                                                 02450000
+IOPQFEND EQU   IOPQFMNT+2                                               02460000
+IOPQFMVR EQU   IOPQFEND                                                 02470000
+IOPQFMLS EQU   IOPQFMVR                                                 02480000
+IOPQFMNM EQU   IOPQFMLS                                                 02490000
+IOPPTSYS EQU   IOPUDATA                                                 02500000
+IOPPTSDR EQU   IOPPTSYS                                                 02510000
+IOPPTSFX EQU   IOPPTSYS+24                                              02520000
+IOPDSSPC EQU   IOPPTSFX                                                 02530000
+IOPPTFG1 EQU   IOPPTSFX+34                                              02540000
+IOPPSEND EQU   IOPPTSYS+1064                                            02550000
+IOPPTSVR EQU   IOPPSEND                                                 02560000
+IOPPTNTR EQU   IOPPTSVR                                                 02570000
+IOPPTFMD EQU   IOPPTNTR                                                 02580000
+IOPPTREL EQU   IOPPTFMD                                                 02590000
+IOPBPDS  EQU   IOPUDATA                                                 02600000
+IOPBLEP1 EQU   IOPBPDS+8                                                02610000
+IOPBSCTR EQU   IOPBLEP1                                                 02620000
+IOPBLEP2 EQU   IOPBPDS+9                                                02630000
+IOPBSEPA EQU   IOPBPDS+15                                               02640000
+IOPBFTB0 EQU   IOPBPDS+18                                               02650000
+IOPBFTB1 EQU   IOPBFTB0                                                 02660000
+IOPBAOSL EQU   IOPBFTB1                                                 02670000
+IOPBSSI  EQU   IOPBFTB1                                                 02680000
+IOPBAPFP EQU   IOPBFTB1                                                 02690000
+IOPBCEND EQU   IOPBPDS+21                                               02700000
+IOPBFTB3 EQU   IOPBFTB0+2                                               02710000
+IOPBFTB2 EQU   IOPBFTB0+1                                               02720000
+IOPBPAGA EQU   IOPBFTB1                                                 02730000
+IOPBFTBL EQU   IOPBPDS+13                                               02740000
+IOPBSTOR EQU   IOPBPDS+10                                               02750000
+IOPBREFR EQU   IOPBLEP2                                                 02760000
+IOPBLEF  EQU   IOPBLEP2                                                 02770000
+IOPBTEST EQU   IOPBLEP2                                                 02780000
+IOPBNE   EQU   IOPBLEP2                                                 02790000
+IOPBDC   EQU   IOPBLEP2                                                 02800000
+IOPBOL   EQU   IOPBLEP1                                                 02810000
+IOPBOVLY EQU   IOPBLEP1                                                 02820000
+IOPBREUS EQU   IOPBLEP1                                                 02830000
+IOPBRENT EQU   IOPBLEP1                                                 02840000
+IOPBNL   EQU   IOPBPDS+7                                                02850000
+IOPBTTRN EQU   IOPBPDS+4                                                02860000
+IOPBZERO EQU   IOPBPDS+3                                                02870000
+IOPBTTRT EQU   IOPBPDS                                                  02880000
+IOPPTIND EQU   IOPPTNTR+8                                               02890000
+IOPPTSND EQU   IOPPTREL                                                 02900000
+IOP3D5   EQU   IOPPTSFX+889                                             02910000
+IOP3D4   EQU   IOPPTSFX+888                                             02920000
+IOP3CC   EQU   IOPPTSFX+880                                             02930000
+IOP3C4   EQU   IOPPTSFX+872                                             02940000
+IOPSYZPP EQU   IOPPTSFX+772                                             02950000
+IOPSYZPR EQU   IOPPTSFX+771                                             02960000
+IOPSYZPS EQU   IOPPTSFX+763                                             02970000
+IOPSYZAP EQU   IOPPTSFX+755                                             02980000
+IOPSYUPP EQU   IOPPTSFX+655                                             02990000
+IOPSYUPR EQU   IOPPTSFX+654                                             03000000
+IOPSYUPS EQU   IOPPTSFX+646                                             03010000
+IOPSYUPD EQU   IOPPTSFX+638                                             03020000
+IOPSYSPP EQU   IOPPTSFX+538                                             03030000
+IOPSYSPR EQU   IOPPTSFX+537                                             03040000
+IOPSYSPS EQU   IOPPTSFX+529                                             03050000
+IOPSYSUP EQU   IOPPTSFX+521                                             03060000
+IOPSYLKP EQU   IOPPTSFX+421                                             03070000
+IOPSYLKR EQU   IOPPTSFX+420                                             03080000
+IOPSYLKS EQU   IOPPTSFX+412                                             03090000
+IOPSYLKD EQU   IOPPTSFX+404                                             03100000
+IOPSYCPP EQU   IOPPTSFX+304                                             03110000
+IOPSYCPR EQU   IOPPTSFX+303                                             03120000
+IOPSYCPS EQU   IOPPTSFX+295                                             03130000
+IOPSYCPY EQU   IOPPTSFX+287                                             03140000
+IOPSYCOP EQU   IOPPTSFX+187                                             03150000
+IOPSYCOR EQU   IOPPTSFX+186                                             03160000
+IOPSYCOS EQU   IOPPTSFX+178                                             03170000
+IOPSYCOM EQU   IOPPTSFX+170                                             03180000
+IOPSYASP EQU   IOPPTSFX+70                                              03190000
+IOPSYASR EQU   IOPPTSFX+69                                              03200000
+IOPSYASS EQU   IOPPTSFX+61                                              03210000
+IOPSYASM EQU   IOPPTSFX+53                                              03220000
+IOPPTSNJ EQU   IOPPTFG1                                                 03230000
+IOPPTSNP EQU   IOPPTFG1                                                 03240000
+IOPSYPLN EQU   IOPPTSFX+32                                              03250000
+IOPDSPFX EQU   IOPPTSFX+6                                               03260000
+IOPDSDIR EQU   IOPDSSPC+4                                               03270000
+IOPDSSEC EQU   IOPDSSPC+2                                               03280000
+IOPDSPRM EQU   IOPDSSPC                                                 03290000
+IOPPTPEM EQU   IOPPTSDR+2                                               03300000
+IOPPCNVL EQU   IOPPTSDR+1                                               03310000
+IOPQFMTP EQU   IOPQFMLS+8                                               03320000
+IOPQFMND EQU   IOPQFMNM                                                 03330000
+IOPSBYST EQU   IOPSBYNT+7                                               03340000
+IOPSBYNM EQU   IOPSBYNT                                                 03350000
+IOPVERST EQU   IOPVERNT+7                                               03360000
+IOPVERNM EQU   IOPVERNT                                                 03370000
+IOPDELST EQU   IOPDELNT+7                                               03380000
+IOPDELNM EQU   IOPDELNT                                                 03390000
+IOPFIDST EQU   IOPFIDNT+7                                               03400000
+IOPFIDNM EQU   IOPFIDNT                                                 03410000
+IOPIRQST EQU   IOPIRQNT+7                                               03420000
+IOPIRQNM EQU   IOPIRQNT                                                 03430000
+IOPREQST EQU   IOPREQNT+7                                               03440000
+IOPREQNM EQU   IOPREQNT                                                 03450000
+IOPSUPST EQU   IOPSUPNT+7                                               03460000
+IOPSUPNM EQU   IOPSUPNT                                                 03470000
+IOPNPRST EQU   IOPNPRNT+7                                               03480000
+IOPNPRNM EQU   IOPNPRNT                                                 03490000
+IOPPREST EQU   IOPPRENT+7                                               03500000
+IOPPRENM EQU   IOPPRENT                                                 03510000
+IOPSRLST EQU   IOPSRLNT+7                                               03520000
+IOPSRLNM EQU   IOPSRLNT                                                 03530000
+IOPENTST EQU   IOPENTNT+7                                               03540000
+IOPENTNM EQU   IOPENTNT                                                 03550000
+IOPPIND  EQU   IOPPNTRY+8                                               03560000
+IOPPTFND EQU   IOPPMODS                                                 03570000
+IOPPFMID EQU   IOPPTFFX+73                                              03580000
+IOPUCLT  EQU   IOPDATES+21                                              03590000
+IOPUCLD  EQU   IOPDATES+18                                              03600000
+IOPACCT  EQU   IOPDATES+15                                              03610000
+IOPACCD  EQU   IOPDATES+12                                              03620000
+IOPRSTT  EQU   IOPDATES+9                                               03630000
+IOPRSTD  EQU   IOPDATES+6                                               03640000
+IOPAPPT  EQU   IOPDATES+3                                               03650000
+IOPAPPD  EQU   IOPDATES                                                 03660000
+IOPRECT  EQU   IOPPDTES+3                                               03670000
+IOPRECD  EQU   IOPPDTES                                                 03680000
+IOPPRELN EQU   IOPPTFFX                                                 03690000
+IOPSBYNO EQU   IOPPTFDR+13                                              03700000
+IOPDBYNO EQU   IOPPTFDR+6                                               03710000
+IOPFLF   EQU   IOPPTFF3                                                 03720000
+IOPDBYP  EQU   IOPPTFF3                                                 03730000
+IOPSBYP  EQU   IOPPTFF3                                                 03740000
+IOPPMDLP EQU   IOPPTFF2+1                                               03750000
+IOPPADDP EQU   IOPPTFF2+1                                               03760000
+IOPLRFP  EQU   IOPPTFF2                                                 03770000
+IOPJCLP  EQU   IOPPTFF2                                                 03780000
+IOPSUPP  EQU   IOPPTFF2                                                 03790000
+IOPREQP  EQU   IOPPTFF2                                                 03800000
+IOPPREP  EQU   IOPPTFF2                                                 03810000
+IOPNPRP  EQU   IOPPTFF2                                                 03820000
+IOPIRQP  EQU   IOPPTFF2                                                 03830000
+IOPDELP  EQU   IOPPTFF2                                                 03840000
+IOPREGEN EQU   IOPFLGS5                                                 03850000
+IOPBYP   EQU   IOPFLGS5                                                 03860000
+IOPDUMMP EQU   IOPFLGS5                                                 03870000
+IOPERROR EQU   IOPFLGS5                                                 03880000
+IOPACC   EQU   IOPFLGS5                                                 03890000
+IOPRES   EQU   IOPFLGS5                                                 03900000
+IOPAPP   EQU   IOPFLGS5                                                 03910000
+IOPPTYPE EQU   IOPPTFDR+1                                               03920000
+IOPSYSTP EQU   IOPSYSTR+8                                               03930000
+IOPSYSND EQU   IOPSYNTR                                                 03940000
+IOPSYSID EQU   IOPSYSFX+13                                              03950000
+IOPNUCID EQU   IOPSYSFX+12                                              03960000
+IOPSREL  EQU   IOPSYSFX+8                                               03970000
+IOPSYNG  EQU   IOPFLGS7                                                 03980000
+IOPSYDL  EQU   IOPFLGS7                                                 03990000
+IOPSTSNP EQU   IOPFLGS7                                                 04000000
+IOPMTSNP EQU   IOPFLGS7                                                 04010000
+IOPPEMAX EQU   IOPSYSDR+2                                               04020000
+IOPSCNVL EQU   IOPSYSDR+1                                               04030000
+IOPDLIND EQU   IOPDNTRY+8                                               04040000
+IOPDLBND EQU   IOPDSYS                                                  04050000
+IOPMDIND EQU   IOPMNTRY+8                                               04060000
+IOPMODND EQU   IOPMODID                                                 04070000
+IOPDLIB  EQU   IOPMODFX+72                                              04080000
+IOPMPAGA EQU   IOPMODF2                                                 04090000
+IOPMNE   EQU   IOPMODF2                                                 04100000
+IOPMDC   EQU   IOPMODF1                                                 04110000
+IOPMREFR EQU   IOPMODF1                                                 04120000
+IOPMOVLY EQU   IOPMODF1                                                 04130000
+IOPMSCTR EQU   IOPMODF1                                                 04140000
+IOPMREUS EQU   IOPMODF1                                                 04150000
+IOPMRENT EQU   IOPMODF1                                                 04160000
+IOPMAPF  EQU   IOPMODF1                                                 04170000
+IOPSRIND EQU   IOPSNTRY+8                                               04180000
+IOPSRCND EQU   IOPSRCID                                                 04190000
+IOPSRDLB EQU   IOPSRCFX+72                                              04200000
+IOPSRSYS EQU   IOPSRCFX+64                                              04210000
+IOPSRLNG EQU   IOPSRCDR+17                                              04220000
+IOPEOFND EQU   IOPEOFNT                                                 04230000
+IOPMCTYP EQU   IOPMCIND                                                 04240000
+IOPMCDLB EQU   IOPMACFX+72                                              04250000
+IOPMCSYS EQU   IOPMACFX+64                                              04260000
+IOPBUTYP EQU   IOPBUNT+7                                                04270000
+IOPBUSMD EQU   IOPBUNT                                                  04280000
+IOPMCLNG EQU   IOPMACDR+17                                              04290000
+IOPFMST  EQU   IOPFMIDE+7                                               04300000
+IOPRMASM EQU   IOPRMST                                                  04310000
+IOPLMIND EQU   IOPLNTRY+8                                               04320000
+IOPLMDND EQU   IOPSYSLB                                                 04330000
+IOPCHREP EQU   IOPFLGS3      B'00100000'                                04340000
+IOPLINK  EQU   IOPFLGS3      B'01000000'                                04350000
+IOPCOPY  EQU   IOPFLGS3      B'10000000'                                04360000
+IOPRMANY EQU   IOPLMDF2      B'00000010'                                04370000
+IOPRM24  EQU   IOPLMDF2      B'00000100'                                04380000
+IOPAMANY EQU   IOPLMDF2      B'00001000'                                04390000
+IOPAM31  EQU   IOPLMDF2      B'00010000'                                04400000
+IOPAM24  EQU   IOPLMDF2      B'00100000'                                04410000
+IOPPAGA  EQU   IOPLMDF2      B'01000000'                                04420000
+IOPNE    EQU   IOPLMDF2      B'10000000'                                04430000
+IOPDC    EQU   IOPFLGS2      B'00000010'                                04440000
+IOPREFR  EQU   IOPFLGS2      B'00000100'                                04450000
+IOPOVLY  EQU   IOPFLGS2      B'00001000'                                04460000
+IOPSCTR  EQU   IOPFLGS2      B'00010000'                                04470000
+IOPREUS  EQU   IOPFLGS2      B'00100000'                                04480000
+IOPRENT  EQU   IOPFLGS2      B'01000000'                                04490000
+IOPAPF   EQU   IOPFLGS2      B'10000000'                                04500000
+IOPABUTP EQU   IOPABUNT+7                                               04510000
+IOPABUPT EQU   IOPABUNT                                                 04520000
+IOPNTLVL EQU   IOPASMDR                                                 04530000
+IOPALLOC EQU   IOPUDATA+4                                               04540000
+IOPUSED  EQU   IOPUDATA                                                 04550000
+IOPTPSEQ EQU   IOPUDATA+8                                               04560000
+IOPVLSER EQU   IOPUDATA+2                                               04570000
+IOPBLKSI EQU   IOPUDATA                                                 04580000
+IOPCQMAX EQU   IOPCQMAP+12                                              04590000
+IOPPTMAX EQU   IOPCDMAX                                                 04600000
+IOPDIRMX EQU   IOPNTMAX+12                                              04610000
+IOPDMOD  EQU   IOPDTYPE                                                 04620000
+IOPDJCL  EQU   IOPDTYPE                                                 04630000
+IOPDSRC  EQU   IOPDTYPE                                                 04640000
+IOPDMAC  EQU   IOPDTYPE                                                 04650000
+IOPSDIR  EQU   IOPSPACE+4                                               04660000
+IOPSSCND EQU   IOPSPACE+2                                               04670000
+IOPSPRIM EQU   IOPSPACE                                                 04680000
+IOPDSN   EQU   IOPDYNDT                                                 04690000
+IOPNTYPE EQU   IOPSTCMP+17                                              04700000
+IOPNNAME EQU   IOPSTCMP+9                                               04710000
+IOPOTYPE EQU   IOPSTCMP+8                                               04720000
+IOPONAME EQU   IOPSTCMP                                                 04730000
+IOPISEQ3 EQU   IOPINAM3+6                                               04740000
+IOPITYP3 EQU   IOPINAM3+5                                               04750000
+IOPIPTF3 EQU   IOPINAM3                                                 04760000
+IOPBS04E EQU   IOPBS04+2                                                04770000
+IOPBAPFC EQU   IOPBAPF+1                                                04780000
+IOPBAPFL EQU   IOPBAPF                                                  04790000
+IOPQSMTP EQU   IOPQSMLS+8                                               04800000
+IOPQSMND EQU   IOPQSMNM                                                 04810000
+IOPQSMFM EQU   IOPQSMIF                                                 04820000
+IOPLMCRD EQU   IOPLMCTL+9                                               04830000
+IOPLMCRN EQU   IOPLMCTL+1                                               04840000
+IOPLMCC  EQU   IOPLMCTL                                                 04850000
+IOPTTR   EQU   IOPDRMAP+8                                               04860000
+IOPINAM2 EQU   IOPINAM+1                                                04870000
+IOPITYP2 EQU   IOPITYP                                                  04880000
+IOPDELDD EQU   IOPDDNAM                                                 04890000
+IOPSEQNO EQU   HMASMIOP+12+8                                            04900000
+IOPPTFNM EQU   HMASMIOP+12                                              04910000
+IOPNAM17 EQU   IOPNAME                                                  04920000
+         MEXIT                                                          04930000
+.BLOCK   ANOP                                                           04940000
+         AIF   ('&FORMAT' EQ 'SHORT').FMT020                            04950000
+         AIF   ('&FORMAT' EQ 'LONG').FMT030                             04960000
+&LEN     SETA  &FORMAT                                                  04970000
+&LABEL   DS    0XL&FORMAT                                               04980000
+.FMT010A ANOP                                                           04990000
+         AIF   (&LEN LT 256).FMT010B                                    05000000
+         DC    XL256'0'                                                 05010000
+&LEN     SETA  &LEN-256                                                 05020000
+         AGO   .FMT010A                                                 05030000
+.FMT010B ANOP                                                           05040000
+         AIF   (&LEN LT 1).FMT010C                                      05050000
+         DC    XL&LEN'0'                                                05060000
+.FMT010C ANOP                                                           05070000
+         MEXIT                                                          05080000
+.FMT020  ANOP                                                           05090000
+&LABEL   DC    XL68'0'                                                  05100000
+         MEXIT                                                          05110000
+.FMT030  ANOP                                                           05120000
+&LABEL   DC    XL104'0'                                                 05130000
+         MEND                                                           05140000

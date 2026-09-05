@@ -1,0 +1,29 @@
+MSGP3A01 DC    A(MSGP3M01)         **M                                  04000018
+         DC    F'21'                  E                                 08000018
+MSGP3A03 DC    A(MSGP3M03)             S                                12000018
+         DC    F'13'                    S                               16000018
+MSGP3A04 DC    A(MSGP3M04)               A                              20000018
+         DC    F'20'                      G                             24000018
+MSGP3A05 DC    A(MSGP3M05)                 E                            28000018
+         DC    F'36'                        S                           32000018
+MSGP3A06 DC    A(MSGP3M06)                   A                          36000018
+         DC    F'39'                          D                         40000018
+MSGP3A07 DC    A(MSGP3M07)                     D                        44000018
+         DC    F'28'                            R**                     48000018
+*                                                                       52000013
+MSGP3M01 DC    CL21'IER047A - RCD CNT OFF'    **M                       56000018
+MSGP3M03 DC    CL13'IER052I - EOJ'              E                       60000018
+MSGP3M04 DC    CL20'IER053A - OUT OF SEQ'       S                       64000018
+MSGP3M05 DC    CL25'IER054I - RCD IN        ,'  S                       68000018
+         DC    CL11'OUT        '                A                       72000018
+MSGP3M06 DC    CL17'IER055I - INSERT '          G                       76000018
+MSGP3MA6 DC    CL15'       ,DELETE '            E                       80000018
+MSGP3MB6 DC    CL07'       '                    S                       84000018
+MSGP3M07 DC    CL28'IER063A - OPEN ERR'         ***                     86000018
+*                                                                       89000017
+MSGP3A08 DC    A(MSGP3M08)                                              90000018
+         DC    F'29'                            SS                      91000018
+*                                                                       92000017
+MSGP3M08 DC    CL27'IER068A - OUT OF SEQ SORTIN' AG                     93000018
+MSGP3MA8 DC    CL02'  '                           ES*                   94000018
+*                                                                       95000017

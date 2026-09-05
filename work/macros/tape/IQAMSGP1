@@ -1,0 +1,107 @@
+         MACRO  ,                                                       00010000
+&LBL     IQAMSGP1 &DSECT=NO,&FLG=,&VAR=,&MSG=                           00020000
+*********************************************************************** 00030000
+*********************************************************************** 00040000
+******************          OS/VS2 R2                  **************** 00050000
+******************     DYNAMIC SUPPORT SYSTEM          **************** 00060000
+******************       MESSAGE PARAMETER 1           **************** 00070000
+*********************************************************************** 00080000
+*********************************************************************** 00090000
+         LCLA  &I                                                       00100000
+         LCLB  &F(8)                                                    00110000
+         LCLB  &V(8)                                                    00120000
+         LCLB  &FL,&VA                                                  00130000
+         AIF   ('&DSECT' EQ 'YES').DSECT                                00140000
+         AIF   (T'&MSG EQ 'O').ERRV                                     00150000
+         AIF   (T'&FLG EQ 'O').FLGDON                                   00160000
+&I       SETA  1                                                        00170000
+.FLGSCN  ANOP  ,                                                        00180000
+         AIF   ('&FLG(&I)' EQ 'CUA').VAR80                              00190000
+         AIF   ('&FLG(&I)' EQ 'CSW').VAR40                              00200000
+         AIF   ('&FLG(&I)' EQ 'SENSE').VAR20                            00210000
+         AIF   ('&FLG(&I)' EQ 'CAW').VAR10                              00220000
+         AIF   ('&FLG(&I)' EQ 'CCW').VAR08                              00230000
+         AIF   ('&FLG(&I)' EQ '80').FLG80                               00240000
+         AIF   ('&FLG(&I)' EQ '40').FLG40                               00250000
+         AIF   ('&FLG(&I)' EQ 'WARN').FLG20                             00260000
+         AIF   ('&FLG(&I)' EQ 'ERR').FLG10                              00270000
+         AIF   ('&FLG(&I)' EQ 'ATTN').FLG08                             00280000
+         AIF   ('&FLG(&I)' EQ '04').FLG04                               00290000
+         AIF   ('&FLG(&I)' EQ '02').FLG02                               00300000
+         AIF   ('&FLG(&I)' EQ '01').FLG01                               00310000
+         AGO   .ERRFLG                                                  00320000
+.VAR80   ANOP  ,                                                        00330000
+&V(1)    SETB  1                                                        00340000
+         AGO   .FLGNXT                                                  00350000
+.VAR40   ANOP  ,                                                        00360000
+&V(2)    SETB  1                                                        00370000
+         AGO   .FLGNXT                                                  00380000
+.VAR20   ANOP  ,                                                        00390000
+&V(3)    SETB  1                                                        00400000
+         AGO   .FLGNXT                                                  00410000
+.VAR10   ANOP  ,                                                        00420000
+&V(4)    SETB  1                                                        00430000
+         AGO   .FLGNXT                                                  00440000
+.VAR08   ANOP  ,                                                        00450000
+&V(5)    SETB  1                                                        00460000
+         AGO   .FLGNXT                                                  00470000
+.FLG80   ANOP  ,                                                        00480000
+&F(1)    SETB  1                                                        00490000
+         AGO   .FLGNXT                                                  00500000
+.FLG40   ANOP  ,                                                        00510000
+&F(2)    SETB  1                                                        00520000
+         AGO   .FLGNXT                                                  00530000
+.FLG20   ANOP  ,                                                        00540000
+&F(3)    SETB  1                                                        00550000
+         AGO   .FLGNXT                                                  00560000
+.FLG10   ANOP  ,                                                        00570000
+&F(4)    SETB  1                                                        00580000
+         AGO   .FLGNXT                                                  00590000
+.FLG08   ANOP  ,                                                        00600000
+&F(5)    SETB  1                                                        00610000
+         AGO   .FLGNXT                                                  00620000
+.FLG04   ANOP  ,                                                        00630000
+&F(6)    SETB  1                                                        00640000
+         AGO   .FLGNXT                                                  00650000
+.FLG02   ANOP  ,                                                        00660000
+&F(7)    SETB  1                                                        00670000
+         AGO   .FLGNXT                                                  00680000
+.FLG01   ANOP  ,                                                        00690000
+&F(8)    SETB  1                                                        00700000
+.FLGNXT  ANOP  ,                                                        00710000
+&I       SETA  &I+1                                                     00720000
+         AIF   (&I LE N'&FLG).FLGSCN                                    00730000
+.FLGDON  ANOP  ,                                                        00740000
+&LBL     DC    B'&F(1)&F(2)&F(3)&F(4)&F(5)&F(6)&F(7)&F(8)'              00750000
+         DC    B'&V(1)&V(2)&V(3)&V(4)&V(5)&V(6)&V(7)&V(8)'              00760000
+         DC    AL2(&MSG)               MESSAGE NUMBER                   00770000
+         MEXIT ,                                                        00780000
+.DSECT   ANOP  ,                                                        00790000
+MSGP1    DSECT ,                                                        00800000
+MSGP1F   DC    X'0'                    FLAGS                            00810000
+MSGP1F80 EQU   X'80'                   FORMAT VARIABLE(S) REQUEST       00820000
+MSGP1F40 EQU   X'40'                                                    00830000
+MSGP1F20 EQU   X'20'                   WARNING                          00840000
+MSGP1F10 EQU   X'10'                   ERROR                            00850000
+MSGP1F08 EQU   X'08'                   ATTENTION INTERRUPT              00860000
+MSGP1F04 EQU   X'04'                   ?                                00870000
+MSGP1F02 EQU   X'02'                   ?                                00880000
+MSGP1F01 EQU   X'01'                                                    00890000
+MSGP1V   DC    X'0'                    VARIABLES                        00900000
+MSGP1V80 EQU   X'80'                   CUA=                             00910000
+MSGP1V40 EQU   X'40'                   CSW=                             00920000
+MSGP1V20 EQU   X'20'                   SENSE=                           00930000
+MSGP1V10 EQU   X'10'                   CAW=                             00940000
+MSGP1V08 EQU   X'08'                   CCW=                             00950000
+MSGP1V04 EQU   X'04'                                                    00960000
+MSGP1V02 EQU   X'02'                                                    00970000
+MSGP1V01 EQU   X'01'                                                    00980000
+MSGP1NO  DC    XL2'0'                  MESSAGE NUMBER                   00990000
+         MEXIT ,                                                        01000000
+.ERRFLG  ANOP ,                                                         01010000
+         MNOTE 8,'IQAMSGP1 - FLG= INVALID ''&FLG(&I)'''                 01020000
+         MEXIT ,                                                        01030000
+.ERRV    ANOP ,                                                         01040000
+         MNOTE 8,'IQAMSGP1 - MSG= REQUIRED'                             01050000
+         MEXIT ,                                                        01060000
+         MEND  ,                                                        01070000

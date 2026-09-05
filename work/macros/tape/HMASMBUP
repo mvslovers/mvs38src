@@ -1,0 +1,30 @@
+         MACRO                                                          00010000
+&LBL     HMASMBUP &TYPE=EQU                                             00020000
+*************************************************************           00030000
+*                                                           *           00040000
+*                                                           *           00050000
+*                                                           *           00060000
+*************************************************************           00070000
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00080000
+BUPPARM  DS    0CL20                                                    00090000
+BUPFUNCT DC    FL1'0'                                                   00100000
+BUPTYPE  DC    FL1'0'                                                   00110000
+BUPSTYPE DC    FL1'0'                                                   00120000
+BUPFLAGS DS    0BL1                                                     00130000
+BUPREDO  DC    BL1'0'                                                   00140000
+BUPSYSMD DC    XL7'0'                                                   00150000
+         DC    XL1'0'                                                   00160000
+BUPIOPAD DC    AL4'0'                                                   00170000
+BUPGTPAD DC    AL4'0'                                                   00180000
+         MEXIT                                                          00190000
+.EQU     ANOP  ,                                                        00200000
+BUPPARM  EQU   0                                                        00210000
+BUPFUNCT EQU   BUPPARM                                                  00220000
+BUPFLAGS EQU   BUPPARM+3                                                00230000
+BUPSYSMD EQU   BUPPARM+4                                                00240000
+BUPGTPAD EQU   BUPPARM+16                                               00250000
+BUPIOPAD EQU   BUPPARM+12                                               00260000
+BUPREDO  EQU   BUPFLAGS                                                 00270000
+BUPSTYPE EQU   BUPPARM+2                                                00280000
+BUPTYPE  EQU   BUPPARM+1                                                00290000
+         MEND                                                           00300000

@@ -1,0 +1,53 @@
+********************************************************************    00010000
+*                                                                  *    00020000
+*   COMMON NAME: ASM CONTROL AREA                                  *    00030000
+*   MACRO ID: ILRACA                                               *    00040000
+*   DSECT NAME: ACA                                                *    00050000
+*   CREATED BV: USER (RSM OR VBP)                                  *    00060000
+*   SUBPOOL AND KEY: NUCLEUS OR 236 OR 237 AND KEY 0               *    00070000
+*   SIZE: 24 BYTES                                                 *    00080000
+*   POINTED TO BV: REGISTER 1 ON ENTRY TO ASM                      *    00090000
+*   SERIALIZATION: NONE                                            *    00100000
+*   FUNCTION: THE ACA IS INITIALIZED AS THE RESULT OF ASM          *    00110000
+*   FUNCTION OPERATORS IN ANTICIPATION OF THE INPUT/OUTPUT         *    00120000
+*   REQUESTS FOR PAGES OF THE LOGICAL GROUP THAT IS BEING          *    00130000
+*   ESTABLISHED. THE ACA IS CONTAINED IN THE PVT FIELD,            *    00140000
+*   PVTACA.                                                        *    00150000
+*                                                                  *    00160000
+********************************************************************    00170000
+         MACRO                                                          00180000
+         ILRACA ,                                                       00190000
+ACA      DSECT                                                          00200000
+ACAOP    DS    X     0PERATION FLAG                                     00210000
+*        EQU   4     TRANSFER PAGE DECIMAL '04' - ACETRPAG              00220000
+*        EQU   8     ASSIGN LGN DECIMAL '08'    - ACEASGLGASSIGN)       00230000
+*        EQU   12    RELEASE LG DECIMAL '12'    - ACERELLG              00240000
+*        EQU   16    SAVE L6/LGN DECIMAL '16'   - ACESVLGN              00250000
+*        EQU   20    ACTIVATE LG DECIMAL '20'   - ACEACT                00260000
+*        EQU   28    DEACTIVATE LG DECIMAL '28' - ACEDEACT              00270000
+ACAFLG1  DS    X     FLAG FIELD                                         00280000
+ACAFMEM  EQU   X'80' ON = VIRTUAL MEMORY ELSE VIO                       00290000
+ACARSV5  EQU   X'40' RESERVED                                           00300000
+ACAFFIX  EQU   X'20' ON = FIXED                                         00310000
+ACAFSPL  EQU   X'10' RESERVED                                           00320000
+ACAFSYM  EQU   X'08' ON STORAGE LOCATER ELSE LGN IN ACALGN              00330000
+ACARSVL  EQU   X'04' RESERVED                                           00340000
+ACARSV2  EQU   X'02' RESERVED                                           00350000
+ACARSV3  EQU   X'01' RESERVED                                           00360000
+ACAASID  DS    H     ASID OF LOGICAL GROUP                              00370000
+ACARSV4  DS    XL4   RESERVED                                           00380000
+ACALGN   DS    0XL8  LOGICAL GROUP NUMBER                               00390000
+ACALPID  DS    0XL8  LPID OF PAGE                                       00400000
+ACALGID  DS    0XL4  LOGICAL GROUP ID                                   00410000
+ACAFLSID DS    0XL4  SOURCE LSID FOR PAGE                               00420000
+         DS    XL4                                                      00430000
+ACARPN   DS    0XL4  RELATIVE PAGE NUMBER                               00440000
+ACAAIAP  DS    0XL4  AIA ADDRESS                                        00450000
+         DS    XL4                                                      00460000
+ACASYM   DS    0XL8  LOCATOR SYMBOL GROUP                               00470000
+ACATOLP  DS    0XL8  TARGET LPID                                        00480000
+ACAT0L6I DS    0XL4  LOGICAL GROUP ID                                   00490000
+ACAHAXPN DS    0XL4  LARGEST PAGE NUMBER ALLOWED                        00500000
+         DS    XL4                                                      00510000
+ACATORPN DS    XL4   RELATIVE PAGE NUMBER                               00520000
+         MEND                                                           00530000

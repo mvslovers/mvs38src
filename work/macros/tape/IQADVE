@@ -1,0 +1,120 @@
+         MACRO  ,                                                       00010000
+         IQADVE &DSECT=YES                                              00020000
+*********************************************************************** 00030000
+*********************************************************************** 00040000
+******************          OS/VS2 R2                  **************** 00050000
+******************     DYNAMIC SUPPORT SYSTEM          **************** 00060000
+******************    ENVIRONMENT VECTOR TABLE         **************** 00070000
+*********************************************************************** 00080000
+*********************************************************************** 00090000
+         AIF   ('&DSECT' EQ 'YES').DSECT                                00100000
+DVE      DC    0F'0'                                                    00110000
+         AGO   .NDSECT                                                  00120000
+.DSECT   ANOP  ,                                                        00130000
+DVE      DSECT ,                                                        00140000
+.NDSECT  ANOP  ,                                                        00150000
+DVEID    DC    C'DVE'                                                   00160000
+DVE003   DC    X'00'                   UNNUSED                          00170008
+         AIF   ('&DSECT' EQ 'YES').DSECT1                               00180000
+DVEDSV   DC    C'PMAA'                 DSV ADDRESS PMAA GOT TO BE JUNK  00190005
+         AGO   .DSECT2                                                  00200000
+.DSECT1  ANOP  ,                                                        00210000
+DVEDSV   DC    A(0)                    DSV ADDRESS                      00220000
+.DSECT2  ANOP  ,                                                        00230000
+DVE008   DC    A(0)                    CONTROL REGISTER 1               00240006
+DVESTTAD DC    V(IQASTT00)                                              00250000
+DVE010   DC    D'0'                    LOCK FOR IQATSS0/1               00260006
+DVE018   DC    X'04080000' *********** EXTERNAL                         00270006
+DVEEIHAD DC    V(IQAEIH00)           *  NEW PSW                         00280006
+DVE020   DC    X'04080000'           * SVC                              00290006
+DVESIHAD DC    V(IQASIH00)           *  NEW PSW                         00300006
+DVE028   DC    X'00080000'           * PROGRAM                          00310006
+DVEPIHAD DC    V(IQAPIH00) ***********  NEW PSW                         00320006
+DVE030   DC    X'04080000'             I/O                              00330006
+DVEIINAD DC    V(IQAIIH00)              NEW PSW                         00340006
+DVE038   DC    X'00800000'             CONTROL R0                       00350006
+DVE03C   DC    X'0F000000'              AND R1                          00360006
+DVE040   DC    A(0)                    CPU MASK                         00380006
+DVE044   DC    A(0)                    CPU MASK                         00400007
+DVE048   DC    A(0)                    CPU MASK                         00410007
+DVE04C   DC    X'00'                   BLOCKS PER TRACK                 00420002
+DVE04D   DC    X'00'                   TRACKS PER CYLINDER              00430002
+DVE04E   DC    X'00'                                                    00440002
+DVE04F   DC    X'00'                                                    00450002
+DVE050   DC    AL1(6)                                                   00460008
+DVE051   DC    AL1(0)                                                   00470003
+DVE05180 EQU   X'80'                                                    00471003
+DVE05140 EQU   X'40'                                                    00472004
+DVE05120 EQU   X'20'                                                    00473004
+DVE05110 EQU   X'10'                                                    00474004
+DVE05108 EQU   X'08'                                                    00475004
+DVE05104 EQU   X'04'                                                    00476004
+DVE05102 EQU   X'02'                                                    00477004
+DVE05101 EQU   X'01'                                                    00478004
+DVE052   DC    AL1(0)                                                   00480003
+DVE05280 EQU   X'80'                                                    00481003
+DVE05240 EQU   X'40'                                                    00482004
+DVE05220 EQU   X'20'                                                    00483004
+DVE053   DC    X'D7'                   UNNUSED                          00490008
+DVEWQLAD DC    V(IQAWQL00)                                              00500000
+DVEFMQAD DC    V(IQAFMQ00)                                              00510000
+DVEERRAD DC    V(IQAERR00)                                              00520000
+DVESBCAD DC    V(IQASBC02)                                              00530000
+DVE64    DC    A(0)                    UNNUSED                          00540008
+DVESTKAD DC    V(IQASTK00)                                              00550000
+DVE06C   DC    A(0)                    UNNUSED                          00560008
+DVEIOTCD DC    V(IQAIOTCD)                                              00570000
+DVEIOTSP DC    V(IQAIOTSP)                                              00580000
+DVEIOTCO DC    V(IQAIOTCO)                                              00590000
+DVE07C   DC    V(IQAIOTCD)                                              00600002
+DVEIOTTI DC    V(IQAIOTTI)                                              00610000
+DVEIOTLG DC    V(IQAIOTLG)                                              00620000
+DVE088   DC    A(0)                                                     00630002
+DVECTLAD DC    V(IQACTL00)                                              00640000
+DVEPAMAD DC    V(IQAPAM00)                                              00650000
+DVEPAGAD DC    V(IQAPAG00)                                              00660000
+DVEPAG01 DC    V(IQAPAG01)                                              00670000
+DVEPAG03 DC    V(IQAPAG03)                                              00680000
+DVECAMAD DC    V(IQACAM00)                                              00690000
+DVESTTP0 DC    V(IQASTTP0)                                              00700000
+DVESTTX0 DC    V(IQASTTX0)                                              00710000
+DVESTTPF DC    V(IQASTTPF)                                              00720000
+DVEEXTAD DC    V(IQAEXT00)                                              00730000
+DVEDDTAD DC    V(IQADDT00)                                              00740000
+DVE0B8   DC    A(0)                                                     00750002
+DVETSKAD DC    V(IQATSS00)                                              00760000
+DVETSK01 DC    V(IQATSS01)                                              00770000
+DVEERKAD DC    V(IQAERM00)                                              00780000
+DVEERK01 DC    V(IQAERM01)                                              00790000
+DVEEXK01 DC    V(IQAEXT01)                                              00800000
+DVEEXTLP DC    V(EXTLPSW)                                               00810000
+DVEPDHD1 DC    V(IOTPDHD1)                                              00820000
+DVEPDHD2 DC    V(IOTPDHD2)                                              00830000
+DVE0DC   DC    A(0)                                                     00840002
+DVE0E0   DC    A(0)                                                     00850002
+DVE0E4   DC    A(0)                                                     00860002
+DVE0E8   DC    A(0)                                                     00870002
+DVE0EC   DC    A(0)                                                     00880002
+DVE0F0   DC    A(0)                                                     00890002
+DVE0F4   DC    A(0)                                                     00900002
+DVE0F8   DC    A(0)                                                     00910002
+DVE0FC   DC    A(0)                                                     00920002
+DVE100   DC    A(0)                                                     00930002
+DVE104   DC    A(0)                                                     00940002
+DVE108   DC    A(0)                                                     00950002
+DVE10C   DC    A(0)                                                     00960002
+DVE110   DC    A(0)                                                     00970002
+DVE114   DC    A(0)                                                     00980002
+DVE118   DC    A(0)                                                     00990002
+DVE11C   DC    A(0)                                                     01000002
+DVE120   DC    X'FF000000'                                              01010002
+DVE124   DC    A(0)                                                     01020002
+DVE128   DC    A(0)                                                     01030002
+DVE12C   DC    A(0)                                                     01040002
+DVE130   DC    A(0)                                                     01050002
+DVE134   DC    A(0)                                                     01060002
+DVEDUM02 DC    X'10'                                                    01070000
+         DC    VL3(IQADUM02)                                            01080000
+DVE13C   DC    A(0)                                                     01090002
+DVEEND   EQU   *                       END OF DVE                       01100000
+         MEND  ,                                                        01110000

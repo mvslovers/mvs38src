@@ -1,0 +1,82 @@
+         MACRO  ,                                                       00010000
+         IQADVL &DSECT=YES                                              00020000
+*********************************************************************** 00030000
+*********************************************************************** 00040000
+******************          OS/VS2 R2                  **************** 00050000
+******************     DYNAMIC SUPPORT SYSTEM          **************** 00060000
+******************      LANGUAGE VECTOR TABLE          **************** 00070000
+*********************************************************************** 00080000
+*********************************************************************** 00090000
+*        DSVLANLO -> DVL                                              * 00100000
+*        DSVLANHI -> DVL END                                          * 00110000
+*********************************************************************** 00120000
+         AIF   ('&DSECT' EQ 'YES').DSECT0A                              00130001
+         AGO   .DSECT0B                                                 00140001
+.DSECT0A ANOP  ,                                                        00150001
+DVL      DSECT ,                                                        00160001
+.DSECT0B ANOP  ,                                                        00170001
+DVLID    DC    C'DVL'                                                   00180001
+DVL003   DC    X'0'                    NUCLEUS ID                       00190001
+DVL004   DC    X'0'                                                     00200000
+DVL005   DC    X'0'                                                     00210001
+DVL006   DC    X'0'                                                     00220001
+DVL007   DC    X'0'                                                     00230000
+DVL008   DC    A(0)                                                     00240001
+DVL00C   DC    X'0000FFFF'                                              00250001
+         AIF   ('&DSECT' EQ 'YES').DSECT1A                              00260001
+DVLXPTE0 DC    V(IQAXPTE0)                                              00270001
+         AGO   .DSECT1B                                                 00280001
+.DSECT1A ANOP  ,                                                        00290001
+DVLXPTE0 DC    A(0)                    V(IQAXPTE0)                      00300004
+.DSECT1B ANOP  ,                                                        00310001
+DVL014   DC    A(0)                                                     00320001
+         AIF   ('&DSECT' EQ 'YES').DSECT2A                              00330001
+DVLRTR00 DC    V(IQARTR00)                                              00331001
+         AGO   .DSECT2B                                                 00350001
+.DSECT2A ANOP  ,                                                        00360001
+DVLRTR00 DC    A(0)                    V(IQARTR00)                      00370004
+.DSECT2B ANOP  ,                                                        00380001
+         AIF   ('&DSECT' EQ 'YES').DSECT3A                              00390001
+DVLALL00 DC    V(IQAALL00)                                              00400001
+         AGO   .DSECT3B                                                 00410001
+.DSECT3A ANOP  ,                                                        00420001
+DVLALL00 DC    A(0)                    V(IQAALL00)                      00430004
+.DSECT3B ANOP  ,                                                        00440001
+         AIF   ('&DSECT' EQ 'YES').DSECT4A                              00450001
+DVLDAL00 DC    V(IQADAL00)                                              00451001
+         AGO   .DSECT4B                                                 00470001
+.DSECT4A ANOP  ,                                                        00480001
+DVLDAL00 DC    A(0)                    V(IQADAL00)                      00490004
+.DSECT4B ANOP  ,                                                        00500001
+         AIF   ('&DSECT' EQ 'YES').DSECT5A                              00510001
+DVLARC00 DC    V(IQAARC00)                                              00520001
+         AGO   .DSECT5B                                                 00530001
+.DSECT5A ANOP  ,                                                        00540001
+DVLARC00 DC    A(0)                    V(IQAARC00)                      00541004
+.DSECT5B ANOP  ,                                                        00560001
+         AIF   ('&DSECT' EQ 'YES').DSECT6A                              00570001
+DVLFAB01 DC    V(IQAFAB01)                                              00580001
+         AGO   .DSECT6B                                                 00590001
+.DSECT6A ANOP  ,                                                        00600001
+DVLFAB01 DC    A(0)                    V(IQAFAB01)                      00601004
+.DSECT6B ANOP  ,                                                        00620001
+         AIF   ('&DSECT' EQ 'YES').DSECT7A                              00630001
+DVLMSG00 DC    V(IQAMSG00)                                              00640001
+         AGO   .DSECT7B                                                 00650001
+.DSECT7A ANOP  ,                                                        00660001
+DVLMSG00 DC    A(0)                    V(IQAMSG00)                      00661004
+.DSECT7B ANOP  ,                                                        00680001
+         AIF   ('&DSECT' EQ 'YES').DSECT8A                              00690001
+DVLLOG00 DC    V(IQALOG00)                                              00700001
+         AGO   .DSECT8B                                                 00710001
+.DSECT8A ANOP  ,                                                        00720001
+DVLLOG00 DC    A(0)                    V(IQALOG00)                      00731004
+.DSECT8B ANOP  ,                                                        00740001
+DVL034   DC    A(0)                                                     00750000
+DVL038   DC    A(0)                                                     00760001
+DVLDVE   DC    A(0)                    V(IQADVL00)                      00770004
+DVL040   DC    A(0)                                                     00780000
+DVL044   DC    A(0)                                                     00790000
+DVL048   DC    A(0)                                                     00800000
+DVLEND   EQU   *                       END OF DVL                       00810000
+         MEND  ,                                                        00820000

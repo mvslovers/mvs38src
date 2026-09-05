@@ -1,0 +1,55 @@
+         MACRO                                                          00010000
+&LBL     HMASMMGP &VARNUM=1,&TYPE=DC                                    00020000
+*************************************************************           00030000
+*                                                           *           00040000
+*                                                           *           00050000
+*                                                           *           00060000
+*************************************************************           00070000
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00080000
+         LCLA  &SIZE,&LEN                                               00090000
+&SIZE    SETA  &VARNUM*4                                                00100000
+&LEN     SETA  &SIZE+12                                                 00110000
+         AIF   ('&TYPE' EQ 'BLOCK').BLOCK                               00120000
+HMASMMGP DS    0CL(&LEN)                                                00130000
+MGPFIXED DS    0CL12                                                    00140000
+MGPCLEAR DS    0CL6                                                     00150000
+MGPMGNO1 DC    FL2'0'                                                   00160000
+MGPMGNO2 DC    FL2'0'                                                   00170000
+MGPMGNO3 DC    FL2'0'                                                   00180000
+MGPFLAGS DS    0BL2                                                     00190000
+MGPPRINT DC    BL1'0'       B'10000000'                                 00200000
+MGPLIST  EQU   MGPFLAGS+0   B'01000000'                                 00210000
+MGPRPT   EQU   MGPFLAGS+0   B'00100000'                                 00220000
+MGPHLDS  EQU   MGPFLAGS+0   B'00010000'                                 00230000
+MGPWTOR  EQU   MGPFLAGS+0   B'00001000'                                 00240000
+MGPWTO   EQU   MGPFLAGS+0   B'00000100'                                 00250000
+MGPWTP   EQU   MGPFLAGS+0   B'00000010'                                 00260000
+         DC    BL1'0'                                                   00270000
+MGPTYPE  DC    FL1'0'                                                   00280000
+         DC    XL3'0'                                                   00290000
+MGPVAR   DS    0XL(&SIZE)                                               00300000
+MGPVARPT DC    (&VARNUM)A(0)                                            00310000
+         MEXIT                                                          00320000
+.BLOCK   ANOP  ,                                                        00330000
+&LBL     DS    CL(&LEN)                                                 00340000
+         MEXIT                                                          00350000
+.EQU     ANOP  ,                                                        00360000
+HMASMMGP EQU   0                                                        00370000
+MGPFIXED EQU   HMASMMGP                                                 00380000
+MGPCLEAR EQU   MGPFIXED                                                 00390000
+MGPMGNO1 EQU   MGPCLEAR                                                 00400000
+MSGNDX   EQU   MGPMGNO1                                                 00410000
+MGPMGNO3 EQU   MGPCLEAR+4                                               00420000
+MGPMGNO2 EQU   MGPCLEAR+2                                               00430000
+MGPFLAGS EQU   MGPFIXED+6                                               00440000
+MGPPRINT EQU   MGPFLAGS     B'10000000'                                 00450000
+MGPLIST  EQU   MGPFLAGS     B'01000000'                                 00460000
+MGPRPT   EQU   MGPFLAGS     B'00100000'                                 00470000
+MGPHLDS  EQU   MGPFLAGS     B'00010000'                                 00480000
+MGPWTOR  EQU   MGPFLAGS     B'00001000'                                 00490000
+MGPWTO   EQU   MGPFLAGS     B'00000100'                                 00500000
+MGPWTP   EQU   MGPFLAGS     B'00000010'                                 00510000
+MGPTYPE  EQU   MGPFIXED+8                                               00520000
+MGPVAR   EQU   HMASMMGP+12                                              00530000
+MGPVARPT EQU   MGPCAR                                                   00540000
+         MEND                                                           00550000

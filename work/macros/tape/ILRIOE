@@ -1,0 +1,11 @@
+         MACRO                                                          00010000
+         ILRIOE ,                                                       00020000
+IOE      EQU   0                                                        00030000
+IOENXT   EQU   IOE                                                      00040000
+IOELSIDA EQU   IOE+4                                                    00050000
+IOENXTGT EQU   IOELSIDA                                                 00060000
+IOEAIA   EQU   IOE+8                                                    00070000
+IOEWORK  EQU   IOE+12                                                   00080000
+IOEBKPTR EQU   IOEWORK                                                  00090000
+IOENXTLE EQU   IOENXT                                                   00100000
+         MEND                                                           00110000

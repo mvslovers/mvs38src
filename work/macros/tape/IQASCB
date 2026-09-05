@@ -1,0 +1,197 @@
+         MACRO  ,                                                       00010000
+&LBL     IQASCB &DSECT=NO,&NEXT=0,&LINK=0,&TKN=,&BUF=,&CODE=00,        *00020000
+               &FL1=00,&LEN=00,&FL2=00,&FL3=00,&FL4=00,&FL5=00,&FL6=00,*00030000
+               &CODE1=0,&CODE2=0,&PREFIX=SCB                            00040000
+*********************************************************************** 00050000
+*********************************************************************** 00060000
+******************          OS/VS2 R2                  **************** 00070000
+******************     DYNAMIC SUPPORT SYSTEM          **************** 00080000
+******************       SCAN CONTROL BLOCK            **************** 00090005
+*********************************************************************** 00100000
+*********************************************************************** 00110000
+         LCLC  &B,&T,&L                                                 00120000
+         AIF   ('&DSECT' EQ 'YES').DSECT                                00130000
+         AIF   (T'&LINK EQ 'O').ERRLK                                   00140000
+         AIF   (T'&NEXT EQ 'O').ERRNX                                   00150000
+         AIF   (T'&FL1 EQ 'O').ERRI1                                    00160000
+         AIF   (T'&LEN EQ 'O').ERRI2                                    00170000
+         AIF   (T'&FL2 EQ 'O').ERRI3                                    00180000
+         AIF   (T'&FL3 EQ 'O').ERRI4                                    00190000
+         AIF   (T'&FL4 EQ 'O').ERRI5                                    00200000
+         AIF   (T'&FL5 EQ 'O').ERRI6                                    00210000
+         AIF   (T'&FL6 EQ 'O').ERRI7                                    00220000
+         AIF   (T'&CODE EQ 'O').ERRCD                                   00230000
+         AIF   (T'&CODE1 EQ 'O').ERRCD1                                 00240000
+         AIF   (T'&CODE2 EQ 'O').ERRCD2                                 00250000
+.*                                                                      00260000
+         AIF   (T'&BUF EQ 'O').BFDF                                     00270000
+         AIF   ('&BUF' EQ 'BLANK').BFBL                                 00280000
+&B       SETC  'A&BUF'                                                  00290000
+         AGO   .BFND                                                    00300000
+.BFBL    ANOP  ,                                                        00310000
+&B       SETC  'CL8'' '''                                               00320000
+         AGO   .BFND                                                    00330000
+.BFDF    ANOP  ,                                                        00340000
+&B       SETC  '2A(0)'                                                  00350000
+.BFND    ANOP  ,                                                        00360000
+.*                                                                      00370000
+         AIF   (T'&TKN EQ 'O').TKDF                                     00380000
+         AIF   ('&TKN' EQ 'ZEROS').TK00                                 00390000
+&T       SETC  'CL8''&TKN'''                                            00400000
+         AGO   .TKND                                                    00410000
+.TK00    ANOP  ,                                                        00420000
+&T       SETC  'XL8''0'''                                               00430000
+         AGO   .TKND                                                    00440000
+.TKDF    ANOP  ,                                                        00450000
+&T       SETC  'CL8'' '''                                               00460000
+.TKND    ANOP  ,                                                        00470000
+.*                                                                      00480000
+&LBL     DC    0A(0)                                                    00490000
+         DC    X'&FL1'                 FL1                              00500000
+         DC    AL1(&LEN)               LEN                              00510000
+         DC    X'&FL2'                 FL2                              00520004
+         DC    X'&FL3'                 FL3                              00530004
+         DC    A(&LINK)                LINK                             00540000
+         DC    A(&NEXT)                NEXT                             00550000
+         AIF   (&LEN EQ 12).NOTKN                                       00560000
+         DC    X'&FL4'                 FL4                              00570004
+         DC    X'&FL5'                 FL5                              00580004
+         DC    X'&FL6'                 FL6                              00590004
+         DC    X'&CODE'                CODE                             00600000
+         DC    &B                      BUF                              00610000
+         DC    A(&CODE1)               CODE1                            00620000
+         DC    A(&CODE2)               CODE2                            00630000
+         AIF   ('&TKN' EQ 'NULL').NOTKN                                 00640000
+         DC    &T                      TKN                              00650000
+.NOTKN   ANOP  ,                                                        00660000
+         MEXIT ,                                                        00670000
+.DSECT   ANOP  ,                                                        00680000
+&L       SETC  'SCB'                                                    00690000
+         AIF   (T'&PREFIX EQ 'O').GEND                                  00700000
+         AIF   (K'&PREFIX GT 4).ERRLBL                                  00710000
+&L       SETC  '&PREFIX'                                                00720000
+.GEND    ANOP  ,                                                        00730000
+&L.      DSECT ,                                                        00740000
+&L.FL1   DC    X'00'                   FL1                              00750000
+         AIF   ('&PREFIX' NE 'SCB').NOFL1                               00750102
+&L.FL101 EQU   X'01'                                                    00751001
+&L.FL102 EQU   X'02'                                                    00752001
+&L.FL104 EQU   X'04'                                                    00753001
+&L.FL108 EQU   X'08'                                                    00754001
+&L.FL110 EQU   X'10'                                                    00755001
+&L.FL120 EQU   X'20'                                                    00756001
+&L.FL140 EQU   X'40'                                                    00757001
+&L.FL180 EQU   X'80'                                                    00758001
+.NOFL1   ANOP  ,                                                        00759002
+&L.LEN   DC    AL1(0)                  LEN                              00760000
+&L.FL2   DC    X'00'                   FL2                              00770000
+         AIF   ('&PREFIX' NE 'SCB').NOFL2                               00770102
+&L.FL201 EQU   X'01'                                                    00771001
+&L.FL202 EQU   X'02'                                                    00772001
+&L.FL204 EQU   X'04'                                                    00773001
+&L.FL208 EQU   X'08'                                                    00774001
+&L.FL210 EQU   X'10'                                                    00775001
+&L.FL220 EQU   X'20'                                                    00776001
+&L.FL240 EQU   X'40'                                                    00777001
+&L.FL280 EQU   X'80'                                                    00778001
+.NOFL2   ANOP  ,                                                        00779002
+&L.FL3   DC    X'00'                   FL3                              00780000
+         AIF   ('&PREFIX' NE 'SCB').NOFL3                               00780102
+&L.FL301 EQU   X'01'                                                    00781001
+&L.FL302 EQU   X'02'                                                    00782001
+&L.FL304 EQU   X'04'                                                    00783001
+&L.FL308 EQU   X'08'                                                    00784001
+&L.FL310 EQU   X'10'                                                    00785001
+&L.FL320 EQU   X'20'                                                    00786001
+&L.FL340 EQU   X'40'                                                    00787001
+&L.FL380 EQU   X'80'                                                    00788001
+.NOFL3   ANOP  ,                                                        00789002
+&L.LINK  DC    A(0)                    LINK                             00790000
+&L.NEXT  DC    A(0)                    NEXT                             00800000
+&L.FL4   DC    X'00'                   FL4                              00810000
+         AIF   ('&PREFIX' NE 'SCB').NOFL4                               00810102
+&L.FL401 EQU   X'01'                                                    00811001
+&L.FL402 EQU   X'02'                                                    00812001
+&L.FL404 EQU   X'04'                                                    00813001
+&L.FL408 EQU   X'08'                                                    00814001
+&L.FL410 EQU   X'10'                                                    00815001
+&L.FL420 EQU   X'20'                                                    00816001
+&L.FL440 EQU   X'40'                                                    00817001
+&L.FL480 EQU   X'80'                                                    00818001
+.NOFL4   ANOP  ,                                                        00819002
+&L.FL5   DC    X'00'                   FL5                              00820000
+         AIF   ('&PREFIX' NE 'SCB').NOFL5                               00820102
+&L.FL501 EQU   X'01'                                                    00821001
+&L.FL502 EQU   X'02'                                                    00822001
+&L.FL504 EQU   X'04'                                                    00823001
+&L.FL508 EQU   X'08'                                                    00824001
+&L.FL510 EQU   X'10'                                                    00825001
+&L.FL520 EQU   X'20'                                                    00826001
+&L.FL540 EQU   X'40'                                                    00827001
+&L.FL580 EQU   X'80'                                                    00828001
+.NOFL5   ANOP  ,                                                        00829002
+&L.FL6   DC    X'00'                   FL6                              00830000
+         AIF   ('&PREFIX' NE 'SCB').NOFL6                               00830102
+&L.FL601 EQU   X'01'                                                    00831001
+&L.FL602 EQU   X'02'                                                    00832001
+&L.FL604 EQU   X'04'                                                    00833001
+&L.FL608 EQU   X'08'                                                    00834001
+&L.FL610 EQU   X'10'                                                    00835001
+&L.FL620 EQU   X'20'                                                    00836001
+&L.FL640 EQU   X'40'                                                    00837001
+&L.FL680 EQU   X'80'                                                    00838001
+.NOFL6   ANOP  ,                                                        00839002
+&L.CODE  DC    X'00'                   CODE                             00840000
+         AIF   ('&PREFIX' NE 'SCB').NOCOD                               00841003
+*        EQU   X'11'                     &PATCH                         00850000
+*        EQU   X'12'                     &AT                            00860000
+*        EQU   X'13'                     &ON                            00870000
+*        EQU   X'14'                     &PROC                          00880000
+*        EQU   X'15'                     &SYM                           00890000
+*        EQU   X'16'                     &QT                            00900000
+.NOCOD   ANOP  ,                                                        00901003
+&L.BUF   DC    XL8'0'                  BUF                              00910000
+&L.COD1  DC    A(0)                    CODE1                            00920000
+&L.COD2  DC    A(0)                    CODE2                            00930000
+&L.TKN   DC    CL8' '                  TKN                              00940000
+         MEXIT ,                                                        00950000
+.ERRLK   ANOP ,                                                         00960000
+         MNOTE 8,'IQASCB - LINK= REQUIRED'                              00970000
+         MEXIT ,                                                        00980000
+.ERRNX   ANOP ,                                                         00990000
+         MNOTE 8,'IQASCB - NEXT= REQUIRED'                              01000000
+         MEXIT ,                                                        01010000
+.ERRCD   ANOP ,                                                         01020000
+         MNOTE 8,'IQASCB - CODE= REQUIRED'                              01030000
+         MEXIT ,                                                        01040000
+.ERRCD1  ANOP ,                                                         01050000
+         MNOTE 8,'IQASCB - CODE1= REQUIRED'                             01060000
+         MEXIT ,                                                        01070000
+.ERRCD2  ANOP ,                                                         01080000
+         MNOTE 8,'IQASCB - CODE2= REQUIRED'                             01090000
+         MEXIT ,                                                        01100000
+.ERRI1   ANOP ,                                                         01110000
+         MNOTE 8,'IQASCB - FL1= REQUIRED'                               01120000
+         MEXIT ,                                                        01130000
+.ERRI2   ANOP ,                                                         01140000
+         MNOTE 8,'IQASCB - LEN= REQUIRED'                               01150000
+         MEXIT ,                                                        01160000
+.ERRI3   ANOP ,                                                         01170000
+         MNOTE 8,'IQASCB - FL2= REQUIRED'                               01180000
+         MEXIT ,                                                        01190000
+.ERRI4   ANOP ,                                                         01200000
+         MNOTE 8,'IQASCB - FL3= REQUIRED'                               01210000
+         MEXIT ,                                                        01220000
+.ERRI5   ANOP ,                                                         01230000
+         MNOTE 8,'IQASCB - FL4= REQUIRED'                               01240000
+         MEXIT ,                                                        01250000
+.ERRI6   ANOP ,                                                         01260000
+         MNOTE 8,'IQASCB - FL5= REQUIRED'                               01270000
+         MEXIT ,                                                        01280000
+.ERRI7   ANOP ,                                                         01290000
+         MNOTE 8,'IQASCB - FL6= REQUIRED'                               01300000
+         MEXIT ,                                                        01310000
+.ERRLBL  ANOP ,                                                         01320000
+         MNOTE 8,'IQASCB - PREFIX LENGTH GREATER THAN 4'                01330000
+         MEXIT ,                                                        01340000
+         MEND  ,                                                        01350000

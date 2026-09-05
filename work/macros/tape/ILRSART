@@ -1,0 +1,197 @@
+         MACRO                                                          00000100
+         ILRSART ,                                                      00000200
+         AGO   .GEN                                                     00000300
+*/********************************************************************/ 00000400
+*/*                                                                  */ 00000500
+*/*  NAME:  ILRSART                                                  */ 00000600
+*/*                                                                  */ 00000700
+*/*  FUNCTION:  SWAP ACTIVITY REFERENCE TABLE                        */ 00000800
+*/*                                                                  */ 00000900
+*/*  STATUS:  OS/VS2 RELEASE 4.1, LEVEL 0                            */ 00001000
+*/*                                                                  */ 00001100
+*/*  EXTERNAL REFERENCES: SARTPTR - USER DEFINED POINTER TO SART     */ 00001200
+*/*                                                                  */ 00001300
+*/*  REGISTERS USED:  N/A                                            */ 00001400
+*/*                                                                  */ 00001500
+*/*  REGISTERS CLOBBERED:  N/A                                       */ 00001600
+*/*                                                                  */ 00001700
+*/*  NOTES:  THIS MAPPING MACRO DESCRIBES THE CONTROL BLOCK USED BY  */ 00001800
+*/*          THE SWAP ROUTINES OF ASM I/O CONTROL TO MANAGE THE SWAP */ 00001900
+*/*          DATA SETS. THE SART CONSISTS OF A HEADER SECTION AND    */ 00002000
+*/*          AND A SART ENTRY(SARTE) FOR EACH SWAP DATA SET. IT IS   */ 00002100
+*/*          BUILT IN SQA AND BASED IN THE ASMVT BY THE ASM RIM. A   */ 00002200
+*/*          SARTE IS INITIALIZED FOR EACH SWAP DATA SET OPENED BY   */ 00002300
+*/*          THE RIM. ADDITIONAL SARTES ARE BUILT BUT NOT            */ 00002400
+*/*          INITIALIZED, TO SUPPORT THE USER SPECIFIED EXPANSION    */ 00002500
+*/*          EXPECTATIONS.                                           */ 00002600
+*/*                                                                  */ 00002700
+*/*          THE ERROR COUNT AND DATA SET BAD FLAGS MUST BE AT THE   */ 00002800
+*/*          SAME OFFSETS IN BOTH THE SARTE AND PARTE TO ALLOW       */ 00002900
+*/*          EFFICIENT PROCESSING IN ILRIOC00.                       */ 00003000
+*/*                                                                  */ 00003100
+*/*          THE SART AND PART CONTAIN MANY SIMILAR FIELDS.   WHERE  */ 00003200
+*/*          THE SAME FIELD EXISTS IN BOTH CONTROL BLOCKS, THEY MUST */ 00003300
+*/*          REMAIN AT MATCHING OFFSETS.  THESE FIELDS ARE ALWAYS    */ 00003400
+*/*          THE FIRST FIELDS IN BOTH THE HEADER AND ENTRY MAPPINGS. */ 00003500
+*/*          THE SARTE CURRENTLY DOES NOT CONTAIN ANY UNIQUE FIELDS. */ 00003600
+*/*                                                                  */ 00003700
+*/*  METHOD OF ACCESS:                                               */ 00003800
+*/*          PL/S - DCL SARTPTR PTR                                  */ 00003900
+*/*          %INCLUDE SYSLIB(ILRSART)                                */ 00004000
+*/*                                                                  */ 00004100
+*/********************************************************************/ 00004200
+*                                                               02S0044 00004300
+*   DECLARE                                                     02S0044 00004400
+*     1 SART BASED(SARTPTR) BDY(DWORD),/* SWAP ACTIVITY REFERENCE       00004500
+*                                      TABLE                         */ 00004600
+*      2 SARTHDR CHAR(80) BDY(DWORD),/* SART HEADER                  */ 00004700
+*        4 SARID CHAR(4),           /* SART IDENTIFIER. SET TO 'SART'*/ 00004800
+*        4 SARSIZE FIXED(31),       /* NO. OF SARTES IN THIS SART    */ 00004900
+*        4 SARUSE FIXED(31),        /* NUMBER OF SARTES IN USE       */ 00005000
+*        4 * CHAR(4),               /* RESERVED, USED IN PART HEADER    00005100
+*                                      MAPPING                       */ 00005200
+*        4 SARFXDNX PTR(31),        /* ADDRESS OF NEXT SARTE FROM       00005300
+*                                      WHICH TO ALLOCATE SWAP SETS ON   00005400
+*                                      A FIXED HEAD FILE             */ 00005500
+*        4 SARMOVNX PTR(31),        /* ADDRESS OF NEXT SARTE FORM       00005600
+*                                      WHICH TO ALLOCATE SWAP SETS ON   00005700
+*                                      A MOVABLE HEAD FILE           */ 00005800
+*        4 SARDSNL PTR(31),         /* ADDRESS OF DATA SET NAME LIST    00005900
+*                                      IN CSA FOR THE SWAP DATA SETS */ 00006000
+*        4 SARSDCT PTR(31),         /* ADDRESS OF SWAP DEVICE TABLE  */ 00006100
+*/* THE FOLLOWING NAMES ARE UNIQUE FOR THE SART HEADER               */ 00006200
+*                                                               02S0044 00006300
+*        4 SARSCCWQ PTR(31),        /* QUEUE OF AVAILABLE SCCWS      */ 00006400
+*        4 SARSETCT FIXED(31),      /* NUMBER OF SWAP SETS CURRENTLY    00006500
+*                                      AVAILABLE ON ALL SWAP DATA       00006600
+*                                      SETS                          */ 00006700
+*        4 SARWAITQ CHAR(8) BDY(DWORD),/* WAIT QUEUE OF AIAS WAITING    00006800
+*                                      FOR AVAILABLE SWAP RESOURCES  */ 00006900
+*          6 SARWAITF PTR(31),      /* ADDRESS OF FIRST AIA ON QUEUE */ 00007000
+*          6 SARWAITL PTR(31),      /* ADDRESS OF LAST AIA ON QUEUE  */ 00007100
+*        4 SARSRBP PTR(31),         /* ADDRESS OF SRB USED TO   02S0044 00007200
+*                                      SCHEDULE SWAP DRIVER          */ 00007300
+*        4 SARSRBCT FIXED(31),      /* COUNT OF SRBS SCHEDULED FOR      00007400
+*                                      SWAP DRIVER WHICH HAVE NOT       00007500
+*                                      BEEN DISPATCHED-EITHER ZERO OR   00007600
+*                                      ONE.                          */ 00007700
+*        4 SARSETSZ FIXED(31),      /* NO. OF PAGES/SLOTS IN SWAP SET*/ 00007800
+*        4 * CHAR(20),              /* RESERVED                      */ 00007900
+*      2 SARENTS(*) CHAR(48) BDY(DWORD);/* SART ENTRIES              */ 00008000
+*/********************************************************************/ 00008100
+*/*                                                                  */ 00008200
+*/*  THIS STRUCTURE MAPS A SART ENTRY. A SARTE EXISTS FOR EACH OPEN  */ 00008300
+*/*  OR POTENTIAL SWAP DATA SET. THE MAXIMUN NUMBER OF SARTES IS 25. */ 00008400
+*/*                                                                  */ 00008500
+*/********************************************************************/ 00008600
+*                                                               02S0045 00008700
+*   DECLARE                                                     02S0045 00008800
+*     1 SARTE BASED(SAREPTR) BDY(DWORD),/* SART ENTRY                */ 00008900
+*      2 SRENEXT PTR(31),           /* NEXT SARTE IN CIRCULAR CHAIN  */ 00009000
+*      2 SRELOCK FIXED(31),         /* C&S LOCK TO SERIALIZE SWAP       00009100
+*                                      DRIVER PROCESSING             */ 00009200
+*      2 * CHAR(1),                 /* RESERVED                      */ 00009300
+*      2 SREFLG CHAR(1),            /* SARTE FLAGS                   */ 00009400
+*        4 SRENUSE BIT(1),          /* 1 = SARTE CURRENTLY NOT IN USE   00009500
+*                                      0 = THIS SARTE IN USE         */ 00009600
+*        4 SREDSBD BIT(1),          /* 1 = ASM HAS DETECTED ERRORS      00009700
+*                                      PRECLUDING USE OF THIS DATA      00009800
+*                                      SET 0 = SWAP DATA SET    02S0045 00009900
+*                                      SATISFACTORY FOR USE          */ 00010000
+*        4 SREDRIVE BIT(1),         /* SWAP DRIVER REDRIVE FLAG      */ 00010100
+*        4 SREFIXED BIT(1),         /* FIXED HEAD FILE FLAG 1 = SARTE   00010200
+*                                      FOR FIXED HEAD DEVICE 0 =        00010300
+*                                      SARTE FOR MOVABLE HEAD DEVICE */ 00010400
+*        4 * BIT(4),                /* RESERVED                      */ 00010500
+*      2 SRENN FIXED(15),           /* SARTE NUMBER FOR THIS SARTE   */ 00010600
+*      2 SRESCCW PTR(31),           /* FIRST IN A CHAIN OF ONE OR       00010700
+*                                      MORE SCCWS WAITING TO BE 02S0045 00010800
+*                                      STARTED                       */ 00010900
+*      2 SRETOTSL FIXED(31),        /* TOTAL NUMBER OF SWAP SETS ON     00011000
+*                                      THIS DATA SET                 */ 00011100
+*      2 SREAVLSL FIXED(31),        /* COUNT OF AVAILABLE SWAP SETS     00011200
+*                                      ON THIS DATA SET              */ 00011300
+*      2 SRERRCNT FIXED(31),        /* COUNT OF ERROR SWAP SETS ON      00011400
+*                                      THIS DATA SET                 */ 00011500
+*      2 SREIORB PTR(31),           /* FIRST IORB FOR THIS DATA SET  */ 00011600
+*      2 SRESAT PTR(31),            /* PTR TO SAT FOR THIS DATA SET  */ 00011700
+*      2 SRESDCTE PTR(31),          /* PTR TO SDCTE FOR THIS DATA SET*/ 00011800
+*      2 SREEDB PTR(31),            /* PTR TO EDB FOR THIS DATA SET  */ 00011900
+*      2 SREUCB PTR(31);            /* PTR TO UCB FOR THIS DATA SET  */ 00012000
+.GEN     ANOP                                                           00012100
+SART     DSECT                                                          00012200
+**********************************************************************  00012300
+*                                                                    *  00012400
+*        SWAP ACTIVITY REFERENCE TABLE                               *  00012500
+*                                                                    *  00012600
+**********************************************************************  00012700
+SARTHDR  DS    0XL80                   SART HEADER                      00012800
+SARID    DS    CL4                     SART IDENTIFIER. SET TO 'SART'   00012900
+SARSIZE  DS    F                       NO. OF SARTES IN THIS SART       00013000
+SARUSE   DS    F                       NUMBER OF SARTES IN USE          00013100
+         DS    XL4                     RESERVED, USED IN PART HEADER    00013200
+*                                      MAPPING                          00013300
+SARFXDNX DS    A                       ADDRESS OF NEXT SARTE FROM       00013400
+*                                      WHICH TO ALLOCATE SWAP SETS ON   00013500
+*                                      A FIXED HEAD FILE                00013600
+SARMOVNX DS    A                       ADDRESS OF NEXT SARTE FORM       00013700
+*                                      WHICH TO ALLOCATE SWAP SETS ON   00013800
+*                                      A MOVABLE HEAD FILE              00013900
+SARDSNL  DS    A                       ADDRESS OF DATA SET NAME LIST    00014000
+*                                      IN CSA FOR THE SWAP DATA SETS    00014100
+SARSDCT  DS    A                       ADDRESS OF SWAP DEVICE TABLE     00014200
+SARSCCWQ DS    A                       QUEUE OF AVAILABLE SCCWS         00014300
+SARSETCT DS    F                       NUMBER OF SWAP SETS CURRENTLY    00014400
+*                                      AVAILABLE ON ALL SWAP DATA       00014500
+*                                      SETS                             00014600
+SARWAITQ DS    0D                      WAIT QUEUE OF AIAS WAITING       00014700
+*                                      FOR AVAILABLE SWAP RESOURCES     00014800
+SARWAITF DS    A                       ADDRESS OF FIRST AIA ON QUEUE    00014900
+SARWAITL DS    A                       ADDRESS OF LAST AIA ON QUEUE     00015000
+SARSRBP  DS    A                       ADDRESS OF SRB USED TO           00015100
+*                                      SCHEDULE SWAP DRIVER             00015200
+SARSRBCT DS    F                       COUNT OF SRBS SCHEDULED FOR      00015300
+*                                      SWAP DRIVER WHICH HAVE NOT       00015400
+*                                      BEEN DISPATCHED-EITHER ZERO OR   00015500
+*                                      ONE.                             00015600
+SARSETSZ DS    F                       NO. OF PAGES/SLOTS IN SWAP SET   00015700
+         DS    XL20                    RESERVED                         00015800
+SARENTS  DS    XL48                    SART ENTRIES                     00015900
+SARTE    DSECT                                                          00016000
+**********************************************************************  00016100
+*                                                                    *  00016200
+*    THIS STRUCTURE MAPS A SART ENTRY. A SARTE EXISTS FOR EACH OPEN  *  00016300
+*    OR POTENTIAL SWAP DATA SET. THE MAXIMUN NUMBER OF SARTES IS 25  *  00016400
+*                                                                    *  00016500
+**********************************************************************  00016600
+SRENEXT  DS    A                       NEXT SARTE IN CIRCULAR CHAIN     00016700
+SRELOCK  DS    F                       C&S LOCK TO SERIALIZE SWAP       00016800
+*                                      DRIVER PROCESSING                00016900
+         DS    X                       RESERVED                         00017000
+SREFLG   DS    X                       SARTE FLAGS                      00017100
+SRENUSE  EQU   X'80'                   1 = SARTE CURRENTLY NOT IN USE   00017200
+*                                      0 = THIS SARTE IN USE            00017300
+SREDSBD  EQU   X'40'                   1 = ASM HAS DETECTED ERRORS      00017400
+*                                      PRECLUDING USE OF THIS DATA      00017500
+*                                      SET 0 = SWAP DATA SET            00017600
+*                                      SATISFACTORY FOR USE             00017700
+SREDRIVE EQU   X'20'                   SWAP DRIVER REDRIVE FLAG         00017800
+SREFIXED EQU   X'10'                   FIXED HEAD FILE FLAG 1 = SARTE   00017900
+*                                      FOR FIXED HEAD DEVICE 0 =        00018000
+*                                      SARTE FOR MOVABLE HEAD DEVICE    00018100
+SRENN    DS    H                       SARTE NUMBER FOR THIS SARTE      00018200
+SRESCCW  DS    A                       FIRST IN A CHAIN OF ONE OR       00018300
+*                                      MORE SCCWS WAITING TO BE         00018400
+*                                      STARTED                          00018500
+SRETOTSL DS    F                       TOTAL NUMBER OF SWAP SETS ON     00018600
+*                                      THIS DATA SET                    00018700
+SREAVLSL DS    F                       COUNT OF AVAILABLE SWAP SETS     00018800
+*                                      ON THIS DATA SET                 00018900
+SRERRCNT DS    F                       COUNT OF ERROR SWAP SETS ON      00019000
+*                                      THIS DATA SET                    00019100
+SREIORB  DS    A                       FIRST IORB FOR THIS DATA SET     00019200
+SRESAT   DS    A                       PTR TO SAT FOR THIS DATA SET     00019300
+SRESDCTE DS    A                       PTR TO SDCTE FOR THIS DATA SET   00019400
+SREEDB   DS    A                       PTR TO EDB FOR THIS DATA SET     00019500
+SREUCB   DS    A                       PTR TO UCB FOR THIS DATA SET     00019600
+         MEND                                                           00019700

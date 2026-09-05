@@ -1,0 +1,26 @@
+*************************************************************           00010000
+*                                                           *           00020000
+*                                                           *           00030000
+*                                                           *           00040000
+*************************************************************           00050000
+RVAPARM  EQU   0                                                        00060000
+RVAINFO  EQU   RVAPARM                                                  00070000
+RVAPASS  EQU   RVAPARM+12                                               00080000
+RVASTAE  EQU   RVAPARM+20                                               00090000
+RVAEPRNM EQU   RVASTAE+4                                                00100000
+RVAFLAGS EQU   RVASTAE+24                                               00110000
+RVAEND   EQU   RVASTAE+25                                               00120000
+RVASDWFD EQU   RVAFLAGS                                                 00130000
+RVAVS1   EQU   RVAFLAGS                                                 00140000
+RVAMVS   EQU   RVAFLAGS                                                 00150000
+RVAUSRCH EQU   RVASTAE+20+2                                             00160000
+RVASYSCH EQU   RVASTAE+20                                               00170000
+RVAUSRCD EQU   RVASTAE+16+2                                             00180000
+RVASYSCD EQU   RVASTAE+16                                               00190000
+RVAABNDC EQU   RVASTAE+12                                               00200000
+RVASDWAP EQU   RVASTAE                                                  00210000
+RVAREC   EQU   RVAPASS+4                                                00220000
+RVATBL   EQU   RVAPASS                                                  00230000
+RVAMAJNM EQU   RVAINFO+8                                                00240000
+RVACCAP  EQU   RVAINFO+4                                                00250000
+RVAHDR   EQU   RVAINFO                                                  00260000

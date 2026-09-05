@@ -1,0 +1,18 @@
+MSGP2A01 DC    A(MSGP2R01)         MESSAGE ADDRESS                      05000018
+         DC    F'32'               MESSAGE LENGTH                       10000018
+MSGP2A02 DC    A(MSGP2R02)         MESSAGE ADDRESS                      15000018
+         DC    F'44'               MESSAGE LENGTH                       20000018
+MSGP2A04 DC    A(MSGP2R04)         MESSAGE ADDRESS                      25000018
+         DC    F'22'               MESSAGE LENGTH                       30000018
+MSGP2A05 DC    A(MSGP2R05)         MESSAGE ADDRESS                      35000018
+         DC    F'24'               MESSAGE LENGTH                       40000018
+*                                                                       45000013
+MSGP2R01 DC    CL32'IER046A - SORT CAPACITY EXCEEDED'           MSG.    50000018
+MSGP2R02 DC    CL24'IER047A - RCD CNT OFF,IN'                   MSG.    55000018
+         DC    CL20'        ,OUT       '                        MSG.    60000018
+MSGP2R04 DC    CL22'IER050I - END MERGE PH'                     MSG.    65000018
+MSGP2R05 DC    CL24'IER051A - UNENDING MERGE'                   MSG.    70000018
+MSGP2A06 DC    A(MSGP2R06)         MESSAGE ADDRESS                      75000018
+         DC    F'31'               MESSAGE LENGTH                       80000018
+MSGP2R06 DC    CL31'IER066A - APROX RCD CNT        '            MSG.    85000018
+*                                                                       90000013

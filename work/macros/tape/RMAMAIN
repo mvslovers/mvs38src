@@ -1,0 +1,21 @@
+MSGP1A01 DC    A(MSGP1R01)         ADDR OF MSG R01                      04000018
+         DC    F'21'               MESSAGE LENGTH                       08000018
+MSGP1A02 DC    A(MSGP1R02)         ADDR OF MSG R02                      12000018
+         DC    F'32'               MSG LENGTH                           16000018
+MSGP1A03 DC    A(MSGP1R03)         ADDR OF MSG R03                      20000018
+         DC    F'44'               MSG LENGTH                           24000018
+MSGP1A04 DC    A(MSGP1R04)         ADDR OF MSG R04                      28000018
+         DC    F'23'               MSG LENGTH                           32000018
+MSGP1A05 DC    A(MSGP1R05)         ADDR OF MSG R05                      36000018
+         DC    F'23'               MSG LENGTH                           40000018
+*                                                                       44000013
+MSGP1R01 DC    CL21'IER045I - END SORT PH'                  MESSAGE     48000018
+MSGP1R02 DC    CL32'IER046A - SORT CAPACITY EXCEEDED'       MESSAGE     52000018
+MSGP1R03 DC    CL24'IER047A - RCD CNT OFF,IN'                           56000018
+         DC    CL20'        ,OUT        '                   MESSAGE     60000018
+MSGP1R04 DC    CL23'IER048I - NMAX EXCEEDED'                            64000018
+MSGP1R05 DC    CL23'IER049I - SKIP MERGE PH'                MESSAGE     68000018
+*                                                                       72000013
+MSGP1A06 DC    A(MSGP1R06)         ADDR OF MSG R06                      76000018
+         DC    F'31'               MSG LENGTH                           80000018
+MSGP1R06 DC    CL31'IER066A - APROX RCD CNT        '        MESSAGE     89000018

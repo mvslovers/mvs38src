@@ -1,0 +1,171 @@
+         MACRO                                                          00000100
+&LBL     HMASMTBX &TYPE=EQU                                             00000200
+*************************************************************           00000300
+*                                                           *           00000400
+*                                                           *           00000500
+*                                                           *           00000600
+*************************************************************           00000700
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00000800
+TBLXPARM DS    0XL124                                                   00000900
+TBLXHDR  DC    XL4'0'                                                   00001000
+TBLXINDX DS    0XL12                                                    00001100
+TBLXCUR  DC    AL4(0)                                                   00001200
+TBLXSTRT DC    AL4(0)                                                   00001300
+TBLXEND  DC    AL4(0)                                                   00001400
+TBLXIOP2 DC    AL4(0)                                                   00001500
+TBLXIOPF DC    AL4(0)                                                   00001600
+TBLXSEGT DC    AL4(0)                                                   00001700
+TBLXTBL  DC    AL4(0)                                                   00001800
+TBLXTOP  DC    AL4(0)                                                   00001900
+TBLXNULL DC    AL4(0)                                                   00002000
+TBLXIFGT DC    AL4(0)                                                   00002100
+TBLXASGT DC    AL4(0)                                                   00002200
+TBLXSREL DC    XL4'0'                                                   00002300
+TBLXSCGT DC    AL4(0)                                                   00002400
+TBLXLMGT DC    AL4(0)                                                   00002500
+TBLXCDSI DC    FL1'0'                                                   00002600
+TBLXCRQI DC    FL1'0'                                                   00002700
+         DC    FL2'0'                                                   00002800
+TBLXFUNC DC    XL8'0'                                                   00002900
+TBLXFUND DC    XL8'0'                                                   00003000
+TBLXFLG1 DC    BL1'0'                                                   00003100
+TBLXTCRC EQU   TBLXFLG1+0                                               00003200
+         DC    BL1'0'                                                   00003300
+         DC    BL1'0'                                                   00003400
+         DC    BL1'0'                                                   00003500
+TBLXTSLP DC    AL4(0)                                                   00003600
+TBLXIBGN DC    AL4(0)                                                   00003700
+TBLXRC   DS    0XL4                                                     00003800
+TBLXTRC  DC    FL1'0'                                                   00003900
+TBLXLRC  DC    FL1'0'                                                   00004000
+TBLXIRC  DC    FL1'0'                                                   00004100
+         DC    FL1'0'                                                   00004200
+TBLXDLGT DC    AL4(0)                                                   00004300
+TBLXD2GT DC    AL4(0)                                                   00004400
+TBLXIOP3 DC    AL4(0)                                                   00004500
+         DC    XL16'0'                                                  00004600
+TBLXEND0 DS    0X                                                       00004700
+TBLXOPTS DS    0XL16                                                    00004800
+*                                                                       00004900
+TBLPARM  DS    0XL16                                                    00005000
+TBLJCLGT DC    AL4(0)                                                   00005100
+TBLNUCID DC    XL1'0'                                                   00005200
+         DC    XL3'0'                                                   00005300
+TBLFLAGS DS    0CL8                                                     00005400
+TBLFLG1  DS    0BL2                                                     00005500
+         DC    BL1'0'                                                   00005600
+TBLNOAPP EQU   TBLFLG1+0  B'10000000'                                   00005700
+TBLCHECK EQU   TBLFLG1+0  B'01000000'                                   00005800
+TBLASSEM EQU   TBLFLG1+0  B'00100000'                                   00005900
+TBLCOMP  EQU   TBLFLG1+0  B'00010000'                                   00006000
+TBLAPAR  EQU   TBLFLG1+0  B'00001000'                                   00006100
+TBLUSER  EQU   TBLFLG1+0  B'00000100'                                   00006200
+TBLFLUSH EQU   TBLFLG1+0  B'00000010'                                   00006300
+TBLNOJCL EQU   TBLFLG1+0  B'00000001'                                   00006400
+         DC    BL1'0'                                                   00006500
+TBLDISN  EQU   TBLFLG1+1  B'10000000'                                   00006600
+TBLDISR  EQU   TBLFLG1+1  B'01000000'                                   00006700
+TBLDISW  EQU   TBLFLG1+1  B'00100000'                                   00006800
+TBLFLG2  DC    BL1'0'                                                   00006900
+TBLSEL   EQU   TBLFLG2+0  B'10000000'                                   00007000
+TBLEXC   EQU   TBLFLG2+0  B'01000000'                                   00007100
+TBLGROUP EQU   TBLFLG2+0  B'00100000'                                   00007200
+TBLFMID  EQU   TBLFLG2+0  B'00010000'                                   00007300
+TBLMASS  EQU   TBLFLG2+0  B'00000001'                                   00007400
+TBLFLG3  DS    0BL2                                                     00007500
+         DC    BL1'0'                                                   00007600
+TBLCDS   EQU   TBLFLG3+0  B'10000000'                                   00007700
+TBLACDS  EQU   TBLFLG3+0  B'01000000'                                   00007800
+TBLSCDS  EQU   TBLFLG3+0  B'00100000'                                   00007900
+TBLCRQ   EQU   TBLFLG3+0  B'00010000'                                   00008000
+TBLACRQ  EQU   TBLFLG3+0  B'00001000'                                   00008100
+TBLPTS   EQU   TBLFLG3+0  B'00000100'                                   00008200
+TBLMTS   EQU   TBLFLG3+0  B'00000010'                                   00008300
+TBLSTS   EQU   TBLFLG3+0  B'00000001'                                   00008400
+         DC    BL1'0'                                                   00008500
+TBLFLG4  DS    0BL2                                                     00008600
+         DC    BL1'0'                                                   00008700
+TBLBPID  EQU   TBLFLG4+0  B'10000000'                                   00008800
+TBLBPPRE EQU   TBLFLG4+0  B'01000000'                                   00008900
+TBLBPREQ EQU   TBLFLG4+0  B'00100000'                                   00009000
+TBLBPIRQ EQU   TBLFLG4+0  B'00010000'                                   00009100
+TBLBPFM  EQU   TBLFLG4+0  B'00000100'                                   00009200
+         DC    BL1'0'                                                   00009300
+TBLFLG5  DC    BL1'0'                                                   00009400
+TBLICTOK EQU   TBLFLG5+0                                                00009500
+         MEXIT                                                          00009600
+.EQU     ANOP  ,                                                        00009700
+TBLXOPTS EQU   0                                                        00009800
+TBLJCLGT EQU   TBLXOPTS                                                 00009900
+TBLNUCID EQU   TBLXOPTS+4                                               00010000
+TBLFLAGS EQU   TBLXOPTS+8                                               00010100
+TBLFLG1  EQU   TBLFLAGS                                                 00010200
+TBLFLG2  EQU   TBLFLAGS+2                                               00010300
+TBLFLG3  EQU   TBLFLAGS+3                                               00010400
+TBLFLG4  EQU   TBLFLAGS+5                                               00010500
+TBLFLG5  EQU   TBLFLAGS+7                                               00010600
+*                                                                       00010700
+TBLXPARM EQU   0                                                        00010800
+TBLXINDX EQU   TBLXPARM+4                                               00010900
+TBLXIOP2 EQU   TBLXPARM+16                                              00011000
+TBLXTBL  EQU   TBLXPARM+28                                              00011100
+TBLXTOP  EQU   TBLXPARM+32                                              00011200
+TBLXNULL EQU   TBLXPARM+36                                              00011300
+TBLXCDSI EQU   TBLXPARM+60                                              00011400
+TBLXFLG1 EQU   TBLXPARM+80                                              00011500
+TBLXRC   EQU   TBLXPARM+92                                              00011600
+TBLXEND0 EQU   TBLXPARM+124                                             00011700
+TBLXIOP3 EQU   TBLXPARM+104                                             00011800
+TBLXD2GT EQU   TBLXPARM+100                                             00011900
+TBLXDLGT EQU   TBLXPARM+96                                              00012000
+TBLXIRC  EQU   TBLXRC+2                                                 00012100
+TBLXLRC  EQU   TBLXRC+1                                                 00012200
+TBLXTRC  EQU   TBLXRC                                                   00012300
+TBLXIBGN EQU   TBLXPARM+88                                              00012400
+TBLXTSLP EQU   TBLXPARM+84                                              00012500
+TBLXTCRC EQU   TBLXFLG1                                                 00012600
+TBLXFUND EQU   TBLXPARM+72                                              00012700
+TBLXFUNC EQU   TBLXPARM+64                                              00012800
+TBLXCRQI EQU   TBLXPARM+61                                              00012900
+TBLXLMGT EQU   TBLXPARM+56                                              00013000
+TBLXSCGT EQU   TBLXPARM+52                                              00013100
+TBLXSREL EQU   TBLXPARM+48                                              00013200
+TBLXASGT EQU   TBLXPARM+44                                              00013300
+TBLXIFGT EQU   TBLXPARM+40                                              00013400
+TBLXSEGT EQU   TBLXPARM+24                                              00013500
+TBLXIOPF EQU   TBLXPARM+20                                              00013600
+TBLXEND  EQU   TBLXINDX+8                                               00013700
+TBLXSTRT EQU   TBLXINDX+4                                               00013800
+TBLXCUR  EQU   TBLXINDX                                                 00013900
+TBLXHDR  EQU   TBLXPARM                                                 00014000
+TBLICTOK EQU   TBLFLG5                                                  00014100
+TBLBPFM  EQU   TBLFLG4                                                  00014200
+TBLBPIRQ EQU   TBLFLG4                                                  00014300
+TBLBPREQ EQU   TBLFLG4                                                  00014400
+TBLBPPRE EQU   TBLFLG4                                                  00014500
+TBLBPID  EQU   TBLFLG4                                                  00014600
+TBLSTS   EQU   TBLFLG3                                                  00014700
+TBLMTS   EQU   TBLFLG3                                                  00014800
+TBLPTS   EQU   TBLFLG3                                                  00014900
+TBLACRQ  EQU   TBLFLG3                                                  00015000
+TBLCRQ   EQU   TBLFLG3                                                  00015100
+TBLSCDS  EQU   TBLFLG3                                                  00015200
+TBLACDS  EQU   TBLFLG3                                                  00015300
+TBLCDS   EQU   TBLFLG3                                                  00015400
+TBLMASS  EQU   TBLFLG2                                                  00015500
+TBLFMID  EQU   TBLFLG2                                                  00015600
+TBLGROUP EQU   TBLFLG2                                                  00015700
+TBLEXC   EQU   TBLFLG2                                                  00015800
+TBLSEL   EQU   TBLFLG2                                                  00015900
+TBLDISW  EQU   TBLFLG1+1                                                00016000
+TBLDISR  EQU   TBLFLG1+1                                                00016100
+TBLDISN  EQU   TBLFLG1+1                                                00016200
+TBLNOJCL EQU   TBLFLG1                                                  00016300
+TBLFLUSH EQU   TBLFLG1                                                  00016400
+TBLUSER  EQU   TBLFLG1                                                  00016500
+TBLAPAR  EQU   TBLFLG1                                                  00016600
+TBLCOMP  EQU   TBLFLG1                                                  00016700
+TBLASSEM EQU   TBLFLG1                                                  00016800
+TBLCHECK EQU   TBLFLG1                                                  00016900
+TBLNOAPP EQU   TBLFLG1                                                  00017000
+         MEND                                                           00017100

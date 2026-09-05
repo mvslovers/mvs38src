@@ -1,0 +1,46 @@
+         MACRO                                                          00010000
+         HMASMSCP &TYPE=EQU                                             00020000
+*************************************************************           00030000
+*                                                           *           00040000
+*                                                           *           00050000
+*                                                           *           00060000
+*************************************************************           00070000
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00080000
+HMASMSCP DS    0CL26                                                    00090000
+SCPCHAR  DC    AL4(0)                                                   00100000
+SCPSRCH  DC    AL4(0)                                                   00110000
+SCPWKAR  DC    AL4(0)                                                   00120000
+SCPIORTN DC    AL4(0)                                                   00130000
+SCPIOPAD DC    AL4(0)                                                   00140000
+SCPINLN  DC    FL2'0'                                                   00150000
+SCPPMLN  DC    FL2'0'                                                   00160000
+SCPEOR   DS    0BL1                                                     00170000
+SCPCONT  DS    BL1          B'10000000'                                 00180000
+SCPNOCT  EQU   SCPEOR+0     B'01000000'                                 00190000
+SCPCOMNT EQU   SCPEOR+0     B'00100000'                                 00200000
+SCPRTERR EQU   SCPEOR+0     B'00010000'                                 00210000
+SCPNOSUC EQU   SCPEOR+0     B'00001000'                                 00220000
+SCPNORT  EQU   SCPEOR+0     B'00000100'                                 00230000
+SCPRETRN DS    0FL1                                                     00240000
+SCPRET   DC    FL1'0'                                                   00250000
+         MEXIT                                                          00260000
+.EQU     ANOP  ,                                                        00270000
+HMASMSCP EQU   0                                                        00280000
+SCPCHAR  EQU   HMASMSCP                                                 00290000
+SCPSRCH  EQU   HMASMSCP+4                                               00300000
+SCPWKAR  EQU   HMASMSCP+8                                               00310000
+SCPIORTN EQU   HMASMSCP+12                                              00320000
+SCPIOPAD EQU   HMASMSCP+16                                              00330000
+SCPINLN  EQU   HMASMSCP+20                                              00340000
+SCPPMLN  EQU   HMASMSCP+22                                              00350000
+SCPEOR   EQU   HMASMSCP+24                                              00360000
+SCPCONT  EQU   SCPEOR       B'10000000'                                 00370000
+SCPCOMNT EQU   SCPEOR       B'00100000'                                 00380000
+SCPRTERR EQU   SCPEOR       B'00010000'                                 00390000
+SCPNOSUC EQU   SCPEOR       B'00001000'                                 00400000
+SCPNOCT  EQU   SCPEOR       B'01000000'                                 00410000
+SCPNORT  EQU   SCPEOR       B'00000100'                                 00420000
+SCPRETRN EQU   HMASMSCP+25                                              00430000
+SCPRET   EQU   SCPRETRN                                                 00440000
+SCPSTRNG EQU   0                                                        00450000
+         MEND                                                           00460000

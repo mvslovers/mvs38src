@@ -1,0 +1,39 @@
+         MACRO                                                          00010000
+         ILRTPARB ,                                                     00020000
+TPARTBLE EQU   0                                                        00030000
+TPARHEAD EQU   TPARTBLE                                                 00040000
+TPARIDNT EQU   TPARHEAD      C'TPARTBLE'                                00050000
+TPARFLAG EQU   TPARHEAD+8    FLAGS                                      00060000
+TPARWARM EQU   TPARFLAG      B'10000000' WARM START                     00070000
+TPARUSE  EQU   TPARHEAD+12   ENTRIES IN USE NOW                         00080000
+TPARNPGS EQU   TPARHEAD+16   NUMBER OF DATA SETS ACTIVE                 00090000
+TPAREXPD EQU   TPARHEAD+20   EXPANSION # FOR PAGES                      00100000
+TPARPCTQ EQU   TPARHEAD+24   ADDRESS OF PCT                             00110000
+TPARTIME EQU   TPARHEAD+32   TIMESTAMP                                  00120000
+TPARPENT EQU   TPARTBLE+64   TPARB ENTRIES (TPARENT) PAGE ENTRIES       00130000
+TPARSENT EQU   TPARTBLE+6208               (TPAS)    SWAP ENTRIES       00140000
+TPARENT  EQU   0                                                        00150000
+TPAETYPE EQU   TPARENT       DEVICE TYPE                                00160000
+TPAESTAT EQU   TPARENT+2     STATUS                                     00170000
+TPAEPARM EQU   TPAESTAT      B'10000000' LAST IPL                       00180000
+TPAEPRVI EQU   TPAESTAT      B'01000000' STATUS ON                      00190000
+TPAEXPND EQU   TPAESTAT      B'00100000' ADDED BY PAGE EXPANSION        00200000
+TPAESKIP EQU   TPAESTAT      B'00010000' SKIP ENTRY                     00210000
+TPAEVALD EQU   TPAESTAT      B'00001000' VALID LAST IPL                 00220000
+TPAECLAS EQU   TPARENT+3     CLASS                                      00230000
+TPAEPLPA EQU   TPAECLAS      B'10000000' PLPA DATA SET                  00240000
+TPAECOMM EQU   TPAECLAS      B'01000000' COMMON DATA SET                00250000
+TPAEDPLX EQU   TPAECLAS      B'00100000' DUPLEX DATA SET                00260000
+TPAELOCL EQU   TPAECLAS      B'00010000' LOCAL DATA SET                 00270000
+TPAEDSNL EQU   TPARENT+4     DATA SET NAME LENGTH                       00280000
+TPAEDSN  EQU   TPARENT+8     DATA SET NAME                              00290000
+TPAEEDB  EQU   TPARENT+52    EDB ADDRESS FOR DATA SET                   00300000
+TPAEUCB  EQU   TPARENT+56    UCB ADDRESS FOR DATA SET                   00310000
+TPAEPCT  EQU   TPARENT+60    PCT ADDRESS FOR DEVICE                     00320000
+TPAESZSL EQU   TPARENT+64    NUMBER OF SLOTS                            00330000
+TPAEPATB EQU   TPARENT+68    LENGTH OF PAT                              00340000
+TPAEPATP EQU   TPARENT+72    PAT ADDRESS FOR DATA SET                   00350000
+TPAEIORB EQU   TPARENT+76    NUMBER OF IORBS                            00360000
+TPASENT  EQU   0                                                        00370000
+TPASDSN  EQU   TPASENT+4     SWAP DATA SET NAME                         00380000
+         MEND                                                           00390000

@@ -1,0 +1,61 @@
+         MACRO                                                          00050046
+&LABEL   IOSTHLD    &OPERAND,&SAVE                                      00100046
+         AIF       ('&LABEL' EQ '').S0                                  00150046
+&LABEL   DS    0H                                                       00200046
+.S0      ANOP                                                           00250046
+****************************************************************        00300046
+*                                                              *        00350046
+*        THE IOSTHLD MACRO TESTS TO SEE IF                     *        00400046
+*        I/O REQUESTS ARE HELD.                                *        00450046
+*                                                              *        00500046
+****************************************************************        00550046
+.*       WITH THE OPERAND 'CURRENT' ONLY THE CURRENT REQUEST   *        00600046
+.*       IS CHECKED.  WITH THE OPERAND 'ANY' A CHECK IS MADE   *        00650046
+.*       TO SEE IF ANY REQUESTS ARE HELD FOR THE DEVICE.       *        00700046
+.*       THE SECOND OPERAND IS USED ONLY WITH 'CURRENT'. THE   *        00750046
+.*       MACRO EXPANSION USES REGISTERS 14 AND 15 TO CALL THE  *        00800046
+.*       SUBROUTINE WHEN 'CURRENT' IS SPECIFIED; IF 'SAVE' IS  *        00850046
+.*       SPECIFIED THESE REGISTERS WILL BE SAVED AND RESTORED. *        00900046
+.*       IF 'SAVE' IS NOT CODED THESE REGISTERS ARE NOT SAVED. *        00950046
+.*                                                             *        01000046
+.*       NOTE: 1. A DSECT OF THE UCB (WITH PREFIX=YES) MUST    *        01050046
+.*                BE INCLUDED IN THE ASSEMBLY WITH IOSTHLD     *        01100046
+.*                WHEN THE OPERAND 'ANY' IS USED. A DSECT FOR  *        01150046
+.*                IOCOM IS NEEDED IF 'CURRENT' IS SPECIFIED.   *        01200046
+.*             2. AN 'ENTRY' MACRO MUST BE INCLUDED IN THE     *        01250046
+.*                ASSEMBLY TO PROVIDE EQUATES.                 *        01300046
+.*                                                             *        01350046
+.***************************************************************        01400046
+         AIF        ('&OPERAND' EQ 'CURRENT').S1                        01450046
+.*                                           OPERAND CURRENT?           01500046
+         AIF        ('&OPERAND' EQ 'ANY').S4                            01550046
+.*                                           OPERAND ANY?               01600046
+         IHBERMAC   1014,FIRST                                          01650046
+.*                                          * INVALID FIRST             01700046
+.*                                          * PARAMETER SPECIFIED       01750046
+         MEXIT                                                          01800046
+.S1      ANOP                                CURRENT IS THE OPERAND     01850046
+         AIF        ('&SAVE' EQ '').S3       NO REGS SAVED              01900046
+         AIF        ('&SAVE' EQ 'SAVE').S2   SAVE REGS                  01950046
+         IHBERMAC   1014,SECOND              INVALID SECOND PARAMETER   02000046
+         MEXIT                                                          02050046
+.S2      ANOP                                                           02100046
+         AIF    (N'&SYSLIST GT 2).S5         MORE THEN CURRENT,SAVE?    02150046
+         ST    14,64(,SAVER)       * SAVE                               02200046
+         ST    15,68(,SAVER)       * REGISTERS                          02250046
+         L     15,IOCTHLD-IOCOM(,IOCOMR) * GET ADDRESS OF TEST          02300046
+         BALR  14,15                     * HOLD RTN, GO THERE           02350046
+         L     14,64(,SAVER)       * RESTORE                            02400046
+         L     15,68(,SAVER)       * REGISTERS                          02450046
+         MEXIT                                                          02500046
+.S3      ANOP                                                           02550046
+         AIF      (N'&SYSLIST GT 1).S5     MORE THAN CURRENT?           02600046
+         L     15,IOCTHLD-IOCOM(,IOCOMR) * GET ADDRESS OF TEST          02650046
+         BALR  14,15                     * HOLD RTN, GO THERE           02700046
+         MEXIT                                                          02750046
+.S4      ANOP                                 ANY IS THE OPERAND        02800046
+         AIF   (N'&SYSLIST GT 1).S5      MORE THAN ANY?                 02850046
+         TM    UCBFL4-UCB(UCBR),UCBHOLD  ANY REQUESTS HELD?             02900046
+         MEXIT                                                          02950046
+.S5      IHBERMAC   1012,OPERAND              TOO MANY OPERANDS         03000046
+         MEND                                                           03050046

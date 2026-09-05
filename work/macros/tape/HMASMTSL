@@ -1,0 +1,129 @@
+         MACRO                                                          00010000
+&LABEL   HMASMTSL &TYPE=EQU                                             00020000
+*************************************************************           00030000
+*                                                           *           00040000
+*                                                           *           00050000
+*                                                           *           00060000
+*************************************************************           00070000
+         AIF   ('&TYPE' EQ 'DC').DC                                     00080000
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00090000
+         AIF   ('&TYPE' EQ 'BLOCK').BLOCK                               00100000
+.EQU     ANOP                                                           00110000
+TSLPARMS EQU   0                                                        00120000
+TSLTBLXP EQU   TSLPARMS                                                 00130000
+TSLPMLAD EQU   TSLPARMS+4                                               00140000
+TSLFUNCT EQU   TSLPARMS+8                                               00150000
+TSLRETRN EQU   TSLPARMS+9                                               00160000
+*                                                                       00170000
+TSLICTSR EQU   0                                                        00180000
+TSLISMD  EQU   TSLICTSR                                                 00190000
+TSLIOPTF EQU   TSLICTSR+7                                               00200000
+TSLICTP  EQU   TSLICTSR+8                                               00210000
+TSLICTF  EQU   TSLICTSR+12                                              00220000
+TSLIFND  EQU   TSLICTF                                                  00230000
+TSLIOK   EQU   TSLICTF                                                  00240000
+TSLISUP  EQU   TSLICTF                                                  00250000
+*                                                                       00260000
+TSLLSTSR EQU   0                                                        00270000
+TSLLSMD  EQU   TSLLSTSR                                                 00280000
+TSLLOPTF EQU   TSLLSTSR+7                                               00290000
+TSLLONXT EQU   TSLLOPTF                                                 00300000
+TSLLOFST EQU   TSLLSTSR+8                                               00310000
+TSLLRTNP EQU   TSLLSTSR+12                                              00320000
+*                                                                       00330000
+TSLGET   EQU   0                                                        00340000
+TSLGOPTF EQU   TSLGET+7                                                 00350000
+*                                                                       00360000
+TSLSICDS EQU   0                                                        00370000
+TSLSSMD  EQU   TSLSICDS                                                 00380000
+TSLSOPTF EQU   TSLSICDS+7                                               00390000
+TSLSOICT EQU   TSLSOPTF                                                 00400000
+TSLSOCDS EQU   TSLSOPTF                                                 00410000
+TSLSIOPP EQU   TSLSICDS+12                                              00420000
+TSLSICTF EQU   TSLSICDS+16                                              00430000
+TSLSIOK  EQU   TSLSICTF                                                 00440000
+TSLSISUP EQU   TSLSICTF                                                 00450000
+TSLSCDSF EQU   TSLSICDS+18                                              00460000
+TSLSCFND EQU   TSLSCDSF                                                 00470000
+TSLSCOK  EQU   TSLSCDSF                                                 00480000
+TSLSCSUP EQU   TSLSCDSF                                                 00490000
+TSLSCDEL EQU   TSLSCDSF                                                 00500000
+*                                                                       00510000
+TSLENTSR EQU   0                                                        00520000
+TSLETYPE EQU   TSLENTSR                                                 00530000
+TSLEVER# EQU   TSLENTSR+1                                               00540000
+TSLEOPTF EQU   TSLENTSR+2                                               00550000
+TSLEONXT EQU   TSLEOPTF                                                 00560000
+TSLEBGNP EQU   TSLENTSR+8                                               00570000
+TSLEFNDP EQU   TSLENTSR+12                                              00580000
+TSL010   EQU   TSLENTSR+X'10'   TSLLSMD                                 00590000
+TSL010A  EQU   TSLENTSR+X'10'                                           00600000
+TSL017   EQU   TSLENTSR+X'17'   TSLLONXT B'10000000'                    00610000
+TSL018   EQU   TSLENTSR+X'18'   TSLLOFST                                00620000
+TSL01C   EQU   TSLENTSR+X'1C'   TSLLRTNP                                00630000
+TSL020   EQU   TSLENTSR+X'20'   TSLGSMD                                 00640000
+TSL027   EQU   TSLENTSR+X'27'   TSLGOXTD B'00001000'                    00650000
+TSL028   EQU   TSLENTSR+X'28'   TSLGIOPP                                00660000
+TSL02C   EQU   TSLENTSR+X'2C'   TSLGDSID                                00670000
+TSL030   EQU   TSLENTSR+X'30'   TSLSICDS                                00680000
+TSL037   EQU   TSLENTSR+X'37'   TSLSOICT B'11000000'                    00690000
+TSL038   EQU   TSLENTSR+X'38'   TSLSICTP                                00700000
+TSL03C   EQU   TSLENTSR+X'3C'   TSLSIOPP                                00710000
+TSL040   EQU   TSLENTSR+X'40'   TSLSIOK  B'01000000'                    00720000
+TSL042   EQU   TSLENTSR+X'42'   TSLSCFND B'10000000'                    00730000
+*                               TSLSCOK  B'01000000'                    00740000
+*                               TSLSCSUP B'00100000'                    00750000
+*                               TSLSCDEL B'00010000'                    00760000
+*                               TSLSCERR B'00000010'                    00770000
+TSL044   EQU   TSLENTSR+X'44'   TSLETYPE                                00780000
+TSL044A  EQU   TSLENTSR+X'44'                                           00790000
+TSL045   EQU   TSLENTSR+X'45'   TSLEVER#                                00800000
+TSL046   EQU   TSLENTSR+X'46'   TSLEONXT B'10000000'                    00810000
+TSL048   EQU   TSLENTSR+X'48'   TSLENMEP                                00820000
+TSL04C   EQU   TSLENTSR+X'4C'                                           00830000
+TSL050   EQU   TSLENTSR+X'50'                                           00840000
+TSL054   EQU   TSLENTSR+X'54'   TSLMTYPE                                00850000
+TSL055   EQU   TSLENTSR+X'55'   TSLMSMDE                                00860000
+*                                                                       00870000
+TSLMFUNC EQU   0                                                        00880000
+*                                                                       00890000
+TSLRELM  EQU   0                                                        00900000
+TSLRRTNP EQU   TSLRELM+12                                               00910000
+TSLRAPTR EQU   TSLRELM+8                                                00920000
+TSLRSMD  EQU   TSLRELM                                                  00930000
+TSLMSMD  EQU   TSLMFUNC+1                                               00940000
+TSLMTYPE EQU   TSLMFUNC                                                 00950000
+TSLENMEP EQU   TSLENTSR+4                                               00960000
+TSLSDUM  EQU   TSLSCDSF                                                 00970000
+TSLSCERR EQU   TSLSCDSF                                                 00980000
+TSLSISLS EQU   TSLSICTF                                                 00990000
+TSLSINOG EQU   TSLSICTF                                                 01000000
+TSLSIDLI EQU   TSLSICTF                                                 01010000
+TSLSIDLE EQU   TSLSICTF                                                 01020000
+TSLSIDEL EQU   TSLSICTF                                                 01030000
+TSLSIFND EQU   TSLSICTF                                                 01040000
+TSLSICTP EQU   TSLSICDS+8                                               01050000
+TSLSOXTD EQU   TSLSOPTF                                                 01060000
+TSLSOMSG EQU   TSLSOPTF                                                 01070000
+TSLSOALL EQU   TSLSOPTF                                                 01080000
+TSLGDSID EQU   TSLGET+12                                                01090000
+TSLGIOPP EQU   TSLGET+8                                                 01100000
+TSLGOXTD EQU   TSLGOPTF                                                 01110000
+TSLGOMSG EQU   TSLGOPTF                                                 01120000
+TSLGSMD  EQU   TSLGET                                                   01130000
+TSLINOG  EQU   TSLICTF                                                  01140000
+TSLIDLI  EQU   TSLICTF                                                  01150000
+TSLIDLE  EQU   TSLICTF                                                  01160000
+TSLIDEL  EQU   TSLICTF                                                  01170000
+TSLIONXT EQU   TSLIOPTF                                                 01180000
+         MEXIT                                                          01190000
+.DC      ANOP                                                           01200000
+TSLPARMS DS    0XL10                                                    01210000
+TSLTBLXP DC    AL4(0)                                                   01220000
+TSLPMLAD DC    AL4(0)                                                   01230000
+TSLFUNCT DC    FL1'0'                                                   01240000
+TSLRETRN DC    FL1'0'                                                   01250000
+         MEXIT                                                          01260000
+.BLOCK   ANOP                                                           01270000
+&LABEL   DC    XL10'0'                                                  01280000
+         MEND                                                           01290000

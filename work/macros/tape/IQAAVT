@@ -1,0 +1,40 @@
+         MACRO  ,                                                       00010000
+         IQAAVT &DSECT=YES                                              00020000
+*********************************************************************** 00030000
+*********************************************************************** 00040000
+******************          OS/VS2 R2                  **************** 00050000
+******************     DYNAMIC SUPPORT SYSTEM          **************** 00060000
+******************         AOS VECTOR TABLE            **************** 00070000
+*********************************************************************** 00080000
+*********************************************************************** 00090000
+*                                                                     * 00100000
+* FUNCTION:                                                           * 00110000
+*    THE AOS VECTOR TABLE 1 ENTRY PER PROCESSOR                       * 00120000
+*    (APPARENTLY ONLY CPU 0 AND 1 SUPPORTED)                          * 00130000
+*    ADDRESSABLE FROM DSVAVT                                          * 00140000
+*                                                                     * 00150000
+*********************************************************************** 00160000
+         AIF   ('&DSECT' EQ 'YES').DSECT                                00170000
+IQAAVT00 CSECT                                                          00180000
+         AGO   .NDSECT                                                  00190000
+.DSECT   ANOP  ,                                                        00200000
+AVT      DSECT ,                                                        00210000
+.NDSECT  ANOP  ,                                                        00220000
+AVTS0    DC    V(IQAAOS0)         PROCESSOR 0 ENTRY                     00230000
+AVTS1    DC    V(IQAAOS1)         PROCESSOR 1 ENTRY                     00240000
+AVTS2    DC    A(0)               PROCESSOR 2 ENTRY                     00250000
+AVTS3    DC    A(0)               PROCESSOR 3 ENTRY                     00260000
+AVTS4    DC    A(0)               PROCESSOR 4 ENTRY                     00270000
+AVTS5    DC    A(0)               PROCESSOR 5 ENTRY                     00280000
+AVTS6    DC    A(0)               PROCESSOR 6 ENTRY                     00290000
+AVTS7    DC    A(0)               PROCESSOR 7 ENTRY                     00300000
+AVTS8    DC    A(0)               PROCESSOR 8 ENTRY                     00310000
+AVTS9    DC    A(0)               PROCESSOR 9 ENTRY                     00320000
+AVTSA    DC    A(0)               PROCESSOR A ENTRY                     00330000
+AVTSB    DC    A(0)               PROCESSOR B ENTRY                     00340000
+AVTSC    DC    A(0)               PROCESSOR C ENTRY                     00350000
+AVTSD    DC    A(0)               PROCESSOR D ENTRY                     00360000
+AVTSE    DC    A(0)               PROCESSOR E ENTRY                     00370000
+AVTSF    DC    A(0)               PROCESSOR F ENTRY                     00380000
+AVTEND   EQU   *                                                        00390000
+         MEND  ,                                                        00400000

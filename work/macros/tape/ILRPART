@@ -1,0 +1,378 @@
+         MACRO                                                          00000100
+         ILRPART ,                                                      00000200
+         AGO   .GEN                                                     00000300
+*/********************************************************************/ 00000400
+*/*                                                                  */ 00000500
+*/*  NAME:  ILRPART                                                  */ 00000600
+*/*                                                                  */ 00000700
+*/*  FUNCTION:  PAGING ACTIVITY REFERENCE TABLE                      */ 00000800
+*/*                                                                  */ 00000900
+*/*  STATUS:  OS/VS2 RELEASE 4.1, LEVEL 0                            */ 00001000
+*/*                                                                  */ 00001100
+*/*  EXTERNAL REFERENCES:  PARTPTR - USER DEFINED POINTER TO PART    */ 00001200
+*/*                        PAREPTR - USER DEFINED POINTER TO PART    */ 00001300
+*/*                                  ENTRY                           */ 00001400
+*/*                                                                  */ 00001500
+*/*  REGISTERS USED:  N/A                                            */ 00001600
+*/*                                                                  */ 00001700
+*/*  REGISTERS CLOBBERED:  N/A                                       */ 00001800
+*/*                                                                  */ 00001900
+*/*  NOTES:  THE PART IS USED BY I/O SUBSYSTEM TO MANAGE THE PAGE    */ 00002000
+*/*          DATA SETS IN USE. THE PART IS BUILT DURING ASM INTIALI- */ 00002100
+*/*          ZATION IN SQA, AND IS BASED IN THE ASMVT.  THE ASM RIM  */ 00002200
+*/*          BUILDS AN ENTRY (PARTE) FOR EACH PAGE DATA SET THAT IT  */ 00002300
+*/*          OPENS PLUS THE NUMBER OF ENTRIES THAT ARE REQUIRED TO   */ 00002400
+*/*          SUPPORT PAGE EXPANSION AS SPECIFIED ON THE PAGNUM       */ 00002500
+*/*          PARAMETER.                                              */ 00002600
+*/*                                                                  */ 00002700
+*/*          THE ERROR COUNT AND DATA SET BAD FLAG MUST BE AT THE    */ 00002800
+*/*          SAME OFFSETS IN BOTH THE PARTE AND SARTE, TO ALLOW      */ 00002900
+*/*          EFFICIENT PROCESSING IN ILRIOC00.                       */ 00003000
+*/*                                                                  */ 00003100
+*/*          THE PART AND SART CONTAIN MANY SIMILAR FIELDS.  WHERE   */ 00003200
+*/*          THE SAME FIELD EXISTS IN BOTH CONTROL BLOCKS, THEY MUST */ 00003300
+*/*          REMAIN AT MATCHING OFFSETS.  THESE FIELDS ARE ALWAYS THE*/ 00003400
+*/*          FIRST FIELDS IN BOTH THE HEADER AND ENTRY MAPPINGS.     */ 00003500
+*/*                                                                  */ 00003600
+*/********************************************************************/ 00003700
+*/********************************************************************/ 00003800
+*/*                                                                  */ 00003900
+*/*                    PART NUMBER CONSTANTS                         */ 00004000
+*/*                                                                  */ 00004100
+*/********************************************************************/ 00004200
+*                                                               02S0041 00004300
+*   DECLARE                                                     02S0041 00004400
+*     PARTPLPN FIXED(8) CONSTANT(0),/* PART NUMBER OF PLPA PARTE     */ 00004500
+*     PARTCOMN FIXED(8) CONSTANT(1),/* PART NUMBER OF COMMON PARTE   */ 00004600
+*     PARTDUPN FIXED(8) CONSTANT(2),/* PART NUMBER OF DUPLEX PARTE   */ 00004700
+*     PARTLOCN FIXED(8) CONSTANT(3),/* PART NUMBER OF FIRST LOCAL       00004800
+*                                      PARTE                         */ 00004900
+*     PAREFSPC BIT(32) CONSTANT('80000000'X);/* CONSTANT USED TO SET    00005000
+*                                      PAREFSIP FLAG                 */ 00005100
+*/********************************************************************/ 00005200
+*/*                                                                  */ 00005300
+*/*                            PART MAPPING                          */ 00005400
+*/*                                                                  */ 00005500
+*/********************************************************************/ 00005600
+*                                                               02S0042 00005700
+*   DECLARE                                                     02S0042 00005800
+*     1 PART BASED(PARTPTR) BDY(DWORD),/* PAGING ACTIVITY REFERENCE     00005900
+*                                      TABLE                         */ 00006000
+*       3 PARTHDR CHAR(80) BDY(DWORD),/* PART HEADER WHICH CONTAINS     00006100
+*                                      GENERAL INFORMATION ABOUT THE    00006200
+*                                      PAGE DATA SETS                */ 00006300
+*         5 PARTIDEN CHAR(4),       /* 'PART' IDENTIFIER             */ 00006400
+*         5 PARTSIZE FIXED(31),     /* THE TOTAL NUMBER OF PART 02S0042 00006500
+*                                      ENTRIES (PARTE'S) CONTAINED IN   00006600
+*                                      THIS PART                     */ 00006700
+*         5 PARTEUSE FIXED(31),     /* NUMBER OF PARTE'S IN USE      */ 00006800
+*         5 PARTAIAE PTR(31),       /* AIA ERROR QUEUE USED BY I/O      00006900
+*                                      CONTROL AND THE I/O SUBSYSTEM    00007000
+*                                      TO TEMPORARILY SAVE ERROR        00007100
+*                                      AIA'S THAT COULD NOT BE  02S0042 00007200
+*                                      IMMEDIATELY RETURNED TO RSM   */ 00007300
+*/* THE FOLLOWING TWO QUEUES POINT TO CIRCULAR PARTE QUEUES FOR 02S0042 00007400
+*   LOCAL PAGE DATA SETS.                                            */ 00007500
+*                                                               02S0042 00007600
+*         5 PARTCIR1 PTR(31),       /* POINTER TO NEXT PARTE FROM       00007700
+*                                      WHICH TO ALLOCATE SLOTS FOR      00007800
+*                                      FIXED HEAD FILES              */ 00007900
+*         5 PARTCIR2 PTR(31),       /* POINTER TO NEXT PARTE FROM       00008000
+*                                      WHICH TO ALLOCATE SLOTS FOR      00008100
+*                                      MOVABLE HEAD FILES            */ 00008200
+*         5 PARTTPAR PTR(31),       /* ADDRESS OF TPARTBLE FOR USE BY   00008300
+*                                      TASK MODE INITIALIZATION      */ 00008400
+*           7 PARTDSNL PTR(31),     /* ADDRESS OF DATA SET NAME LIST    00008500
+*                                      IN CSA FOR PAGE DATA SETS.       00008600
+*                                      THIS ADDRESS REPLACES THE        00008700
+*                                      TPARTBLE POINTER WHEN THE DATA   00008800
+*                                      SET NAME LIST IS BUILT AT TMI    00008900
+*                                      TIME.                         */ 00009000
+*         5 PARTPCTQ PTR(31),       /* ADDRESS OF FIRST IN CHAIN OF     00009100
+*                                      ONE OR MORE PCT'S THAT HAVE      00009200
+*                                      BEEN BUILT FOR THE DEVICE        00009300
+*                                      TYPES CONTAINING OPEN PAGE       00009400
+*                                      DATA SETS                     */ 00009500
+*/* THE FOLLOWING FIELDS ARE UNIQUE FOR THE PART HEADER              */ 00009600
+*                                                               02S0042 00009700
+*         5 PARTLCNT FIXED(15),     /* COUNT OF ACTIVE LOCAL PAGE       00009800
+*                                      DATA SETS                     */ 00009900
+*         5 * CHAR(6),              /* RESERVED                      */ 00010000
+*         5 PARTLKUP FIXED(31),     /* WORD FOR RECOVERY LOCKING USED   00010100
+*                                      AS A COUNTER TO GENERATE LOCK    00010200
+*                                      COUNT USED IN PARTE'S         */ 00010300
+*         5 PARTLOCK FIXED(31),     /* LOCK WORD USED WITH ASM CLASS    00010400
+*                                      LOCK TO SERIALIZE THE FIFO       00010500
+*                                      WRITE QUEUES                  */ 00010600
+*         5 PARTCOMQ CHAR(8) BDY(DWORD),/* COMMON WRITE QUEUE.  02S0042 00010700
+*                                      CONTAINS IOE'S FOR WRITE 02S0042 00010800
+*                                      OPERATIONS TO THE PLPA(ON COLD   00010900
+*                                      START ONLY) OR COMMON PAGE       00011000
+*                                      DATA SETS                     */ 00011100
+*           7 PARTCOMF PTR(31),     /* ADDRESS OF FIRST IOE          */ 00011200
+*           7 PARTCOML PTR(31),     /* ADDRESS OF LAST IOE           */ 00011300
+*         5 PARTSPLQ CHAR(8) BDY(DWORD),/* SPILL WRITE QUEUE.   02S0042 00011400
+*                                      CONTAINS IOES FOR WRITE  02S0042 00011500
+*                                      OPERATIONS ONLY WHEN COMMON      00011600
+*                                      DATA SET IS FULL AND ASM IS      00011700
+*                                      SPILLING WRITE REQUESTS TO THE   00011800
+*                                      PLPA DATA SET.                */ 00011900
+*           7 PARTSPLF PTR(31),     /* ADDRESS OF FIRST IOE          */ 00012000
+*           7 PARTSPLL PTR(31),     /* ADDRESS OF LAST IOE           */ 00012100
+*         5 PARTDUPQ CHAR(8) BDY(DWORD),/* DUPLEX WRITE QUEUE.  02S0042 00012200
+*                                      CONTAINS IOE'S FOR WRITE 02S0042 00012300
+*                                      OPERATIONS TO THE DUPLEX PAGE    00012400
+*                                      DATA SET WHEN DUPLEXING IS       00012500
+*                                      ACTIVE                        */ 00012600
+*           7 PARTDUPF PTR(31),     /* ADDRESS OF FIRST IOE          */ 00012700
+*           7 PARTDUPL PTR(31),     /* ADDRESS OF LAST IOE           */ 00012800
+*         5 PARTLOCQ CHAR(8) BDY(DWORD),/* LOCAL WRITE QUEUE.   02S0042 00012900
+*                                      CONTAINS IOE'S FOR WRITE 02S0042 00013000
+*                                      OPERATIONS TO THE LOCAL DATA     00013100
+*                                      SETS                          */ 00013200
+*           7 PARTLOCF PTR(31),     /* ADDRESS OF FIRST IOE          */ 00013300
+*           7 PARTLOCL PTR(31),     /* ADDRESS OF LAST IOE           */ 00013400
+*       3 PARTENTS(*) CHAR(64) BDY(DWORD);/* THE PART ENTRIES. ONE      00013500
+*                                      PARTE REPRESENTS ONE PAGE DATA   00013600
+*                                      SET. A PARTE IS BUILT FOR EACH   00013700
+*                                      PAGE DATA SET OPENED AT IPL      00013800
+*                                      TIME AND FOR EACH POTENTIAL      00013900
+*                                      DATA SET THAT CAN BE ADDED       00014000
+*                                      LATER UP TO A MAXIMUM OF 64      00014100
+*                                      TOTAL ENTRIES.                */ 00014200
+*/********************************************************************/ 00014300
+*/*                                                                  */ 00014400
+*/*  THIS STRUCTURE MAPS A PART ENTRY.                               */ 00014500
+*/*                                                                  */ 00014600
+*/********************************************************************/ 00014700
+*                                                               02S0043 00014800
+*   DECLARE                                                     02S0043 00014900
+*     1 PARTENT BASED(PAREPTR) BDY(DWORD) CHAR(64),/* PART ENTRY     */ 00015000
+*       3 PAREPARE PTR(31),         /* POINTER TO NEXT PARTE IN USE  */ 00015100
+*       3 PARELKUP FIXED(31),       /* WORD FOR LOCKING THIS PARTE   */ 00015200
+*         5 PARELKFL BIT(8),        /* LOCK FLAG BYTE                */ 00015300
+*           7 PAREFSIP BIT(1),      /* SLOT SORT IN PROGRESS FLAG       00015400
+*                                      1=SLOT SORT CURRENTLY    02S0043 00015500
+*                                      PROCESSING THIS PARTE 0=SLOT     00015600
+*                                      SORT NOT IN PROGRESS FOR THIS    00015700
+*                                      PARTE                         */ 00015800
+*           7 * BIT(7),             /* RESERVED                      */ 00015900
+*         5 PAREIORN FIXED(8),      /* NUMBER OF IORB'S BUILT FOR       00016000
+*                                      THIS PARTE                    */ 00016100
+*         5 PARECPCT FIXED(16),     /* LOCK COUNT USED FOR RECOVERY  */ 00016200
+*       3 PARETYPE CHAR(1),         /* PAGE DATA SET TYPE FLAGS      */ 00016300
+*         5 PAREPLPA BIT(1),        /* PARTE FOR PLPA DATA SET       */ 00016400
+*         5 PARECOMM BIT(1),        /* PARTE FOR COMMON DATA SET     */ 00016500
+*         5 PAREDPLX BIT(1),        /* PARTE FOR DUPLEX DATA SET     */ 00016600
+*         5 PARELOCL BIT(1),        /* PARTE FOR LOCAL DATA SET      */ 00016700
+*         5 * BIT(4),               /* UNUSED                        */ 00016800
+*       3 PAREFLG1 CHAR(1),         /* PARTE FLAGS                   */ 00016900
+*         5 PARENUSE BIT(1),        /* PARTE NOT IN USE FLAG 1=PARTE    00017000
+*                                      NOT IN USE 0=PARTE IN USE     */ 00017100
+*         5 PAREDSBD BIT(1),        /* DATA SET BAD FLAG 1=ASM HAS      00017200
+*                                      DETECTED ERRORS INDICATING       00017300
+*                                      THIS PAGE DATA SET IS NOT        00017400
+*                                      USEFUL FOR PAGING. IT IS 02S0043 00017500
+*                                      EFFECTIVELY NOT IN USE. 0=PAGE   00017600
+*                                      DATA SET SATISFACTORY FOR USE.*/ 00017700
+*         5 PAREINCP BIT(1),        /* INTERCEPTED FLAG. MEANINGFUL     00017800
+*                                      ONLY IF DUPLEXING ACTIVE 02S0043 00017900
+*                                      1=PLPA OR COMMON DATA SET        00018000
+*                                      TEMPORARILY NOT AVAILABLE,       00018100
+*                                      READ REQUESTS SHOULD BE  02S0043 00018200
+*                                      DIRECTED TO DUPLEX DATA SET      00018300
+*                                      0=NORMAL PROCESSING IN EFFECT */ 00018400
+*         5 * BIT(5),               /* UNUSED                        */ 00018500
+*       3 PARENN FIXED(15),         /* PART NUMBER FOR THIS PARTE    */ 00018600
+*       3 PAREIOEQ PTR(31),         /* ADDRESS OF FIRST IOE ON  02S0043 00018700
+*                                      UNSORTED READ QUEUE           */ 00018800
+*       3 PARESZSL FIXED(31),       /* SIZE OF PAGE DATA SET IN 02S0043 00018900
+*                                      NUMBER OF SLOTS               */ 00019000
+*       3 PARESLTA FIXED(31),       /* NUMBER OF SLOTS AVAILABLE FOR    00019100
+*                                      ALLOCATION                    */ 00019200
+*       3 PARERRCT FIXED(31),       /* COUNT OF THE NUMBER OF   02S0043 00019300
+*                                      PERMANENT I/O ERRORS SUFFERED    00019400
+*                                      ON THIS PAGE DATA SET.        */ 00019500
+*       3 PAREIORB PTR(31),         /* POINTER TO FIRST IORB FOR THIS   00019600
+*                                      PAGE DATA SET                 */ 00019700
+*       3 PAREPATP PTR(31),         /* POINTER TO PAT FOR THIS PAGE     00019800
+*                                      DATA SET                      */ 00019900
+*       3 PAREPCTP PTR(31),         /* POINTER TO PCT FOR THIS PAGE     00020000
+*                                      DATA SET TYPE                 */ 00020100
+*       3 PAREEDBP PTR(31),         /* POINTER TO EDP FOR PAGE DATA     00020200
+*                                      SET                           */ 00020300
+*       3 PAREUCBP PTR(31),         /* POINTER TO UCB FOR PAGE DATA     00020400
+*                                      SET                           */ 00020500
+*/* THE FOLLOWING ARE UNIQUE FOR THE PARTE                           */ 00020600
+*                                                               02S0043 00020700
+*       3 PARENODE PTR(31),         /* SORTED READ QUEUE OF IOE'S       00020800
+*                                      THIS FIELD IS ANCHOR FOR 02S0043 00020900
+*                                      SORTED TREE OF IOE'S USED BY     00021000
+*                                      SLOT SORT                     */ 00021100
+*       3 PAREWTQE PTR(31),         /* POINTER TO WRITE Q FOR THIS      00021200
+*                                      PARTE                         */ 00021300
+*       3 PARERQTM FIXED(31),       /* CORRECTION VALUE, USED IN        00021400
+*                                      COMPUTING SERVICE BURST FOR      00021500
+*                                      THIS PAGE DATA SET            */ 00021600
+*       3 PARELCYL FIXED(15),       /* LAST RELATIVE CYLINDER ON THIS   00021700
+*                                      PAGE DATA SET PROCESSED BY       00021800
+*                                      SLOT SORT                     */ 00021900
+*       3 * CHAR(2);                /* RESERVED                      */ 00022000
+*                                                               02S0044 00022100
+.GEN     ANOP                                                           00022200
+PART     DSECT                                                          00022300
+********************************************************************    00022400
+*                                                                  *    00022500
+*        PAGING ACTIVITY REFERENCE TABLE                           *    00022600
+*                                                                  *    00022700
+********************************************************************    00022800
+PARTHDR  DS    0XL80                   PART HEADER WHICH CONTAINS       00022900
+*                                      GENERAL INFORMATION ABOUT THE    00023000
+*                                      PAGE DATA SETS                   00023100
+PARTIDEN DS    CL4                     'PART' IDENTIFIER                00023200
+PARTSIZE DS    F                       THE TOTAL NUMBER OF PART         00023300
+*                                      ENTRIES (PARTE'S) CONTAINED IN   00023400
+*                                      THIS PART                        00023500
+PARTEUSE DS    F                       NUMBER OF PARTE'S IN USE         00023600
+PARTAIAE DS    A                       AIA ERROR QUEUE USED BY I/O      00023700
+*                                      CONTROL AND THE I/O SUBSYSTEM    00023800
+*                                      TO TEMPORARILY SAVE ERROR        00023900
+*                                      AIA'S THAT COULD NOT BE          00024000
+*                                      IMMEDIATELY RETURNED TO RSM      00024100
+PARTCIR1 DS    A                       POINTER TO NEXT PARTE FROM       00024200
+*                                      WHICH TO ALLOCATE SLOTS FOR      00024300
+*                                      FIXED HEAD FILES                 00024400
+PARTCIR2 DS    A                       POINTER TO NEXT PARTE FROM       00024500
+*                                      WHICH TO ALLOCATE SLOTS FOR      00024600
+*                                      MOVABLE HEAD FILES               00024700
+PARTTPAR DS    0A                      ADDRESS OF TPARTBLE FOR USE BY   00024800
+*                                      TASK MODE INITIALIZATION         00024900
+PARTDSNL DS    A                       ADDRESS OF DATA SET NAME LIST    00025000
+*                                      IN CSA FOR PAGE DATA SETS.       00025100
+*                                      THIS ADDRESS REPLACES THE        00025200
+*                                      TPARTBLE POINTER WHEN THE DATA   00025300
+*                                      SET NAME LIST IS BUILT AT TMI    00025400
+*                                      TIME.                            00025500
+PARTPCTQ DS    A                       ADDRESS OF FIRST IN CHAIN OF     00025600
+*                                      ONE OR MORE PCT'S THAT HAVE      00025700
+*                                      BEEN BUILT FOR THE DEVICE        00025800
+*                                      TYPES CONTAINING OPEN PAGE       00025900
+*                                      DATA SETS                        00026000
+PARTLCNT DS    H                       COUNT OF ACTIVE LOCAL PAGE       00026100
+*                                      DATA SETS                        00026200
+         DS    XL6                     RESERVED                         00026300
+PARTLKUP DS    F                       WORD FOR RECOVERY LOCKING USED   00026400
+*                                      AS A COUNTER TO GENERATE LOCK    00026500
+*                                      COUNT USED IN PARTE'S            00026600
+PARTLOCK DS    F                       LOCK WORD USED WITH ASM CLASS    00026700
+*                                      LOCK TO SERIALIZE THE FIFO       00026800
+*                                      WRITE QUEUES                     00026900
+PARTCOMQ DS    0D                      COMMON WRITE QUEUE.              00027000
+*                                      CONTAINS IOE'S FOR WRITE         00027100
+*                                      OPERATIONS TO THE PLPA(ON COLD   00027200
+*                                      START ONLY) OR COMMON PAGE       00027300
+*                                      DATA SETS                        00027400
+PARTCOMF DS    A                       ADDRESS OF FIRST IOE             00027500
+PARTCOML DS    A                       ADDRESS OF LAST IOE              00027600
+PARTSPLQ DS    0D                      SPILL WRITE QUEUE.               00027700
+*                                      CONTAINS IOES FOR WRITE          00027800
+*                                      OPERATIONS ONLY WHEN COMMON      00027900
+*                                      DATA SET IS FULL AND ASM IS      00028000
+*                                      SPILLING WRITE REQUESTS TO THE   00028100
+*                                      PLPA DATA SET.                   00028200
+PARTSPLF DS    A                       ADDRESS OF FIRST IOE             00028300
+PARTSPLL DS    A                       ADDRESS OF LAST IOE              00028400
+PARTDUPQ DS    0D                      DUPLEX WRITE QUEUE.              00028500
+*                                      CONTAINS IOE'S FOR WRITE         00028600
+*                                      OPERATIONS TO THE DUPLEX PAGE    00028700
+*                                      DATA SET WHEN DUPLEXING IS       00028800
+*                                      ACTIVE                           00028900
+PARTDUPF DS    A                       ADDRESS OF FIRST IOE             00029000
+PARTDUPL DS    A                       ADDRESS OF LAST IOE              00029100
+PARTLOCQ DS    0D                      LOCAL WRITE QUEUE.               00029200
+*                                      CONTAINS IOE'S FOR WRITE         00029300
+*                                      OPERATIONS TO THE LOCAL DATA     00029400
+*                                      SETS                             00029500
+PARTLOCF DS    A                       ADDRESS OF FIRST IOE             00029600
+PARTLOCL DS    A                       ADDRESS OF LAST IOE              00029700
+PARTENTS DS    0XL64                   THE PART ENTRIES. ONE            00029800
+*                                      PARTE REPRESENTS ONE PAGE DATA   00029900
+*                                      SET. A PARTE IS BUILT FOR EACH   00030000
+*                                      PAGE DATA SET OPENED AT IPL      00030100
+*                                      TIME AND FOR EACH POTENTIAL      00030200
+*                                      DATA SET THAT CAN BE ADDED       00030300
+*                                      LATER UP TO A MAXIMUM OF 64      00030400
+*                                      TOTAL ENTRIES.                   00030500
+********************************************************************    00030600
+*                                                                  *    00030700
+*        PAGING ACTIVITY REFERENCE TABLE ENTRY                     *    00030800
+*                                                                  *    00030900
+********************************************************************    00031000
+PARTE    DSECT                                                          00031100
+PARTENT  DS    0XL64                   PART ENTRY                       00031200
+PAREPARE DS    A                       POINTER TO NEXT PARTE IN USE     00031300
+PARELKUP DS    0F                      WORD FOR LOCKING THIS PARTE      00031400
+PARELKFL DS    X                       LOCK FLAG BYTE                   00031500
+PAREFSIP EQU   X'80'                   SLOT SORT IN PROGRESS FLAG       00031600
+*                                      1=SLOT SORT CURRENTLY            00031700
+*                                      PROCESSING THIS PARTE 0=SLOT     00031800
+*                                      SORT NOT IN PROGRESS FOR THIS    00031900
+*                                      PARTE                            00032000
+PAREIORN DS    AL1                     NUMBER OF IORB'S BUILT FOR       00032100
+*                                      THIS PARTE                       00032200
+PARECPCT DS    AL2                     LOCK COUNT USED FOR RECOVERY     00032300
+PARETYPE DS    X                       PAGE DATA SET TYPE FLAGS         00032400
+PAREPLPA EQU   X'80'                   PARTE FOR PLPA DATA SET          00032500
+PARECOMM EQU   X'40'                   PARTE FOR COMMON DATA SET        00032600
+PAREDPLX EQU   X'20'                   PARTE FOR DUPLEX DATA SET        00032700
+PARELOCL EQU   X'10'                   PARTE FOR LOCAL DATA SET         00032800
+PAREFLG1 DS    X                       PARTE FLAGS                      00032900
+PARENUSE EQU   X'80'                   PARTE NOT IN USE FLAG 1=PARTE    00033000
+*                                      NOT IN USE 0=PARTE IN USE        00033100
+PAREDSBD EQU   X'40'                   DATA SET BAD FLAG 1=ASM HAS      00033200
+*                                      DETECTED ERRORS INDICATING       00033300
+*                                      THIS PAGE DATA SET IS NOT        00033400
+*                                      USEFUL FOR PAGING. IT IS         00033500
+*                                      EFFECTIVELY NOT IN USE. 0=PAGE   00033600
+*                                      DATA SET SATISFACTORY FOR USE.   00033700
+PAREINCP EQU   X'20'                   INTERCEPTED FLAG. MEANINGFUL     00033800
+*                                      ONLY IF DUPLEXING ACTIVE         00033900
+*                                      1=PLPA OR COMMON DATA SET        00034000
+*                                      TEMPORARILY NOT AVAILABLE,       00034100
+*                                      READ REQUESTS SHOULD BE          00034200
+*                                      DIRECTED TO DUPLEX DATA SET      00034300
+*                                      0=NORMAL PROCESSING IN EFFECT    00034400
+PARENN   DS    H                       PART NUMBER FOR THIS PARTE       00034500
+PAREIOEQ DS    A                       ADDRESS OF FIRST IOE ON          00034600
+*                                      UNSORTED READ QUEUE              00034700
+PARESZSL DS    F                       SIZE OF PAGE DATA SET IN         00034800
+*                                      NUMBER OF SLOTS                  00034900
+PARESLTA DS    F                       NUMBER OF SLOTS AVAILABLE FOR    00035000
+*                                      ALLOCATION                       00035100
+PARERRCT DS    F                       COUNT OF THE NUMBER OF           00035200
+*                                      PERMANENT I/O ERRORS SUFFERED    00035300
+*                                      ON THIS PAGE DATA SET.           00035400
+PAREIORB DS    A                       POINTER TO FIRST IORB FOR THIS   00035500
+*                                      PAGE DATA SET                    00035600
+PAREPATP DS    A                       POINTER TO PAT FOR THIS PAGE     00035700
+*                                      DATA SET                         00035800
+PAREPCTP DS    A                       POINTER TO PCT FOR THIS PAGE     00035900
+*                                      DATA SET TYPE                    00036000
+PAREEDBP DS    A                       POINTER TO EDP FOR PAGE DATA     00036100
+*                                      SET                              00036200
+PAREUCBP DS    A                       POINTER TO UCB FOR PAGE DATA     00036300
+*                                      SET                              00036400
+PARENODE DS    A                       SORTED READ QUEUE OF IOE'S       00036500
+*                                      THIS FIELD IS ANCHOR FOR         00036600
+*                                      SORTED TREE OF IOE'S USED BY     00036700
+*                                      SLOT SORT                        00036800
+PAREWTQE DS    A                       POINTER TO WRITE Q FOR THIS      00036900
+*                                      PARTE                            00037000
+PARERQTM DS    F                       CORRECTION VALUE, USED IN        00037100
+*                                      COMPUTING SERVICE BURST FOR      00037200
+*                                      THIS PAGE DATA SET               00037300
+PARELCYL DS    H                       LAST RELATIVE CYLINDER ON THIS   00037400
+*                                      PAGE DATA SET PROCESSED BY       00037500
+*                                      SLOT SORT                        00037600
+         DS    XL2                     RESERVED                         00037700
+         MEND                                                           00037800

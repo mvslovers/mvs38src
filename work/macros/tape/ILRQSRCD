@@ -1,0 +1,21 @@
+         MACRO                                                          00010000
+         ILRQSRCD ,                                                     00020000
+QSR      EQU   0             QUICK START RECORD                         00030000
+QSRHDR   EQU   QSR                                                      00040000
+QSRIDNT  EQU   QSRHDR        C'QSRECORD'                                00050000
+QSRLPAHA EQU   QSRHDR+8      PLPA INFO                                  00060000
+QSRLPALO EQU   QSRHDR+12     LOW RANGE OF PLPA                          00070000
+QSRLPAHI EQU   QSRHDR+16     HIGH RANGE OF PLPA                         00080000
+QSRFLAGS EQU   QSRHDR+20                                                00090000
+QSRPLPAF EQU   QSRFLAGS      B'10000000' LPA FULL                       00100000
+QSRCOMMF EQU   QSRFLAGS      B'01000000' COMMON FULL                    00110000
+QSRSYNCH EQU   QSRHDR+24     TIMESTAMP                                  00120000
+QSRMAP   EQU   QSR+32        1ST PLPA MAP                               00130000
+QSRENTRY EQU   0                                                        00140000
+QSRLSID  EQU   QSRENTRY                                                 00150000
+QSRPTNN  EQU   QSRLSID+1                                                00160000
+QSRSLOT  EQU   QSRLSID+2                                                00170000
+QSRLSID2 EQU   QSRENTRY+4                                               00180000
+QSRPTNN2 EQU   QSRLSID2+1                                               00190000
+QSRSLOT2 EQU   QSRLSID2+2                                               00200000
+         MEND                                                           00210000

@@ -1,0 +1,33 @@
+         MACRO                                                          00000100
+&LBL     HMASMMPP &FORMAT=LONG,&TYPE=EQU                                00000200
+*************************************************************           00000300
+*                                                           *           00000400
+*         MODIFICATION CONTROL STATEMENT PARSE PARAMETERS   *           00000500
+*                                                           *           00000600
+*************************************************************           00000700
+         AIF   ('&TYPE' EQ 'EQU').EQU                                   00000800
+         AIF   ('&FORMAT' EQ 'LONG').FMT010                             00000900
+MPPPARM  DS    0XL23                                                    00001000
+         AGO   .FMT020                                                  00001100
+.FMT010  ANOP  ,                                                        00001200
+MPPPARM  DS    0XL48                                                    00001300
+.FMT020  ANOP  ,                                                        00001400
+MPPIOPAD DC    AL4(0)                                                   00001500
+MPPMCBAD DC    AL4(0)                                                   00001600
+MPPCRDAD DC    AL4(0)                                                   00001700
+MPPCRDPM DC    AL4(0)                                                   00001800
+MPPSMDNM DC    XL7'0'                                                   00001900
+         AIF   ('&FORMAT' NE 'LONG').FMT030                             00002000
+         DC    XL21'0'                                                  00002100
+MPPGTP   DC    A(0)                                                     00002200
+.FMT030  ANOP  ,                                                        00002300
+         MEXIT ,                                                        00002400
+.EQU     ANOP  ,                                                        00002500
+MPPPARM  EQU   0                                                        00002600
+MPPIOPAD EQU   MPPPARM                                                  00002700
+MPPMCBAD EQU   MPPPARM+4                                                00002800
+MPPCRDAD EQU   MPPPARM+8                                                00002900
+MPPCRDPM EQU   MPPPARM+12                                               00003000
+MPPSMDNM EQU   MPPPARM+16                                               00003100
+MPPGTP   EQU   MPPPARM+44                                               00003200
+         MEND  ,                                                        00003300

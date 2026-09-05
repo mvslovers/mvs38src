@@ -1,0 +1,189 @@
+         MACRO                                                          00500013
+         SMCPI                                                          01000013
+         TITLE ' IERRC5 - OS/360 SORT/MERGE - 360S-SM-023 02/28/65 '    01500013
+*        MODULE NAME *** IERRC5 ***                                     02000013
+*                                                                       02500013
+*        THIS IS THE SORT'S CONTROL PHASE INFORMATION AREA (CPIA).      03000013
+*        THROUGH IT ARE COMMUNICATED PARAMETERS THAT ARE NEEDED BY      03500013
+*        THE GENERAL ASSIGNMENT ROUTINES.                               04000013
+*                                                                       04500013
+IERRC5   DSECT                                                          05000013
+         DC    XL32'0'                                                  05500013
+         DC    XL32'0'                                                  06000013
+         DC    XL8'0'                                                   06500013
+CPINUMCF DC    XL2'0'              NUMBER OF CONTROL FIELDS             07000013
+CPIPCF01 DC    XL32'0'             CONTROL FIELD INFORMATION            07500013
+         DC    XL32'0'                                                  08000013
+         DC    XL8'0'                                                   08500013
+CPISW1   DC    XL8'0'              SW1                                  09000013
+*                                   1. FIXED                            09500013
+*                                   2. VARIABLE                         10000013
+*                                   3. SINGLE CONTROL FIELD             10500013
+*                                   4. MULTIPLE CONTROL FIELDS          11000013
+*                                   5. BALANCED                         11500013
+*                                   6. POLYPHASE                        12000013
+*                                   7. OSCILLATING                      12500013
+*                                   8. 1 TO 8                           13000013
+*                                   9. 1 TO 16                          13500013
+*                                  10. TAPE                             14000013
+*                                  11. DISK                             14500013
+*                                  12. NO DATA CHAINING                 15000013
+*                                  13. DATA CHAINING INPUT              15500013
+*                                  14. DATA CHAINING OUTPUT             16000013
+*                                  15. NO MODS                          16500013
+*                                  16. MODS                             17000013
+*                                  17. .LE. 256                         17500013
+*                                  18. .GT. 256                         18000013
+*                                  19. SKIP OPTION                      18500013
+*                                  20. PHASE 1                          19000013
+*                                  21. PHASE 2                          19500013
+*                                  22. PHASE 3                          20000013
+*                                  23. MERGE ONLY                       20500013
+*                                  24. CHECKPOINT                       21000013
+*                                  25. EQUALS                           21500013
+*                                  26. EXTRACT                          22000013
+*                                  27. USER'S OUTPUT SEQUENCE           22500013
+*                                  28. PHASE 1 COLLATING ORDER OR       23000013
+*                                      MERGE INPUT ORDER                23500013
+*                                  29. DISK MERGE TABLE COLLATING ORDER 24000013
+*                                  30. ATTACHED, LINKED OR EXECUTED     24500013
+*                                  31. FILESIZE ESTIMATED OR NOT        25000013
+*                                  32. ASSGN OR RUNNING PROGRAM EOF     25500013
+*                                  33. E-TYPE CONTROL FIELDS PRESENT    26000013
+*                                  34. SORT CARD PRESENT                26500013
+*                                  35. MERGE CARD PRESENT               27000013
+*                                  36. RECORD CARD PRESENT              27500013
+*                                  37. MODS CARD PRESENT                28000013
+*                                  38. EXECUTE ENTIRE SYSTEM SEARCH     28500013
+*                                  39. DOUBLE WORD ALIGNMENT FOR BUFS   29000013
+*                                  40. SINGLE WORD ALIGNMENT FOR BUFS   29500013
+*                                  41. READ ERROR FLAG                  30000013
+*                                  42. WRITE ERROR FLAG                 30500013
+*                                  43. EVEN/ODD SWITCH FOR BALANCED     31000013
+*                                  44 AND 45                            31500013
+*                                    00 - 1 MPLX                        32000013
+*                                    01 - 1 MPLX + 1 SEL OR 1 SEL       32500013
+*                                    10 - 1 MPLX + N SEL OR N SEL       33000013
+*                                  46. INPUT  A WORK UNIT               33500013
+*                                  47. SWITCH OR TAU                    34000013
+*                                  48. N CHANNEL ENVIRONMENT            34500013
+*                            +6    49. DEBLOCK BACKWARD                 35000013
+*                                      SET BY ALG, USED BY SORT DEF.    35500013
+*                                  50. READ FORWARD                     36000013
+*                                      SET BY ALG, USED BY SORT DEF.    36500013
+*                                  51. CLOSE WITH REWIND                37000013
+*                                      SET BY ALG., USED BY EOP         37500013
+*                                  52. BLOCK FORWARD                    38000013
+*                                      SET BY ALG, USED BY SORT DEF.    38500013
+*                                  53. READ FORWARD LATER               39000013
+*                                      SET BY ALG.  USED BY ALG         39500013
+*                                  54. DRUM                             40000013
+*                                  55. 2314                             40500013
+*                                  56. DIAGNOSTIC                       41000013
+*                                      1=DIAGNOSTICS                    41500013
+*                                      0=NO DIAGNOSTICS                 42000013
+*                            +7    57. USER EOF (OSC/2314), SET BY      42500013
+*                                        DEBLOCK, USED BY ALG           43000013
+*                                  58. RMAX REACHED (DCS ONLY) SET BY   43500013
+*                                        DEBLOCK, USED BY ALG           44000013
+*                                  59. USER INSERT IN PROCESS -OSC/2314 44500013
+*                                        SET BY BLOCK, USED BY ALG      45000013
+*                                  60. TRACK TAPE                       45500013
+*                                        0=9 TRK                        46000013
+*                                        1=7 TRK OR 7-9 MIX             46500013
+*                                  61. CRCX TECH. HAS BEEN REQUESTED    47000017
+*                                  62. 2311'S USING 2314 TECH.          47500013
+*                                  63. VALUE COUNT OF 256 FOR FIELDS    48000013
+*                                      PARAMETER - SET BY -RCD FOR -RCE 48500013
+*                                      LATER USED BY RCN TO INDICATE    48600017
+*                                      BALN TECH. ON 2314 - 1=YES,0=NO  48700017
+*                                  64. ACCEPT/SKIP OPTION ACTIVATED-    49000013
+*                                      READ I/O ERROR TO -RCV INTERFACE 49500013
+CPILAB09 DC    XL4'0'              RESERVED FOR CALCULATION ROUTINE     50000013
+CPINWKU  DC    XL2'0'              NUMBER OF WORK UNITS                 50500013
+CPIP1ASZ DC    XL2'0'              SIZE OF PHASE 1 ASSIGNMENT MODULES   51000013
+CPIIPBLK DC    XL2'0'              INPUT BLOCKING                       51500013
+CPIFFF   DC    XL2'0'              DISPLACEMENT OF F FIELD              52000013
+CPIPBUFF DC    XL2'0'              DISPLACEMENT OF PACKING BUFFER       52500013
+CPIP2ASZ DC    XL2'0'              SIZE OF PHASE 2 ASSIGNMENT MODULES   53000013
+CPIP3ASZ DC    XL2'0'              SIZE OF PHASE 3 ASSIGNMENT MODULES   53500013
+CPIOPBLK DC    XL2'0'              OUTPUT BLOCKING                      54000013
+CPIBUF23 DC    XL2'0'              NUMBER OF BUFFERS - PHASE 2 AND 3    54500013
+CPISRTBL DC    XL2'0'              B                                    55000013
+CPIRCDL1 DC    XL2'0'              F - INPUT RECORD LENGTH              55500013
+*                                  V - MAX INPUT RECORD LENGTH          56000013
+CPIRCDL2 DC    XL2'0'              F - SORT RECORD LENGTH               56500013
+*                                  V - MAX SORT RECORD LENGTH           57000013
+CPIRCDL3 DC    XL2'0'              F - OUTPUT RECORD LENGTH             57500013
+*                                  V - MAX OUTPUT RECORD LENGTH         58000013
+CPIRCDL4 DC    XL2'0'              F - NOT USED                         58500013
+*                                  V - MIN SORT RECORD LENGTH           59000013
+CPIRCDL5 DC    XL2'0'              F - NOT USED                         59500013
+*                                  V - MODAL RECORD LENGTH.             60000013
+CPILAB03 DC    XL2'0'              NUMBER AND SIZE OF INPUT BUFFERS     60500013
+CPILAB07 DC    XL2'0'              NUMBER AND SIZE OF OUTPUT BUFFERS    61000013
+CPIEXTSZ DC    XL2'0'              SIZE OF EXTRACT ROUTINE              61500013
+CPIBINSZ DC    XL2'0'              BIN SIZE                             62000013
+CPISKPRD DC    XL3'0'              SKIP RECORD COUNT                    62500013
+CPIATP1E DC    XL3'0'              ADDRESS OF ATTACH'ORS PHASE 1 EXIT   63000013
+CPIMODEX DC    XL3'0'              MODIFICATION EXITS ACTIVATED         63500013
+*                                   1. E11                              64000013
+*                                   2. E15                              64500013
+*                                   3. E16                              65000013
+*                                   4. E17                              65500013
+*                                   5. E18                              66000013
+*                                   6. E21                              66500013
+*                                   7. E25                              67000013
+*                                   8. E27                              67500013
+*                                   9. E28                              68000013
+*                                  10. E31                              68500013
+*                                  11. E35                              69000013
+*                                  12. E37                              69500013
+*                                  13. E38                              70000013
+*                                  14. E61                              70500013
+*                                  15. E19                              71000013
+*                                  16. E29                              71500013
+*                                  17. E39                              72000013
+*                                  18 THRU 22. NOT USED                 72100017
+*                                  23. VRE ON INPUT                     72200017
+*                                  24. VRE ON OUTPUT                    72300017
+CPIATP3E DC    XL3'0'              ADDRESS OF ATTACH'ORS PHASE 3 EXIT   72500013
+CPITAVLC DC    XL3'0'              TOTAL AVAILABLE CORE                 73000013
+CPIFILSZ DC    XL3'0'              FILE SIZE                            73500013
+CPISRTG  DC    XL3'0'              G                                    74000013
+CPINMAX  DC    XL3'0'              N(MAX)                               74500013
+CPIP1GC  DS    0CL3                SIZE OF SORT PHASE GEN. CORE         75000013
+CPIP1RSZ DC    XL3'0'              SIZE OF PHASE 1 RUNNING MODULES      75500013
+CPIP2GC  DS    0CL3                SIZE OF MERGE PHASE GENERATED CORE,  76000013
+CPIP2RSZ DC    XL3'0'              SIZE OF PHASE 2 RUNNING MODULES      76500013
+CPIP3GC  DS    0CL3                SIZE OF FINAL MERGE PHASE GENERATED  77000013
+CPIP3RSZ DC    XL3'0'              SIZE OF PHASE 3 RUNNING MODULES      77500013
+CPIBUF1  DC    XL1'0'              NUMBER OF BUFFERS - PHASE 1          78000013
+CPIMRGMX DC    XL1'0'              MAXIMUM MERGE ORDER                  78500013
+CPIMRGAL DC    XL1'0'              ALTERNATE MERGE ORDER                79000013
+CPILINK  DC    XL3'0'              MOD EXIT LINK EDIT INFO SET BY RCH   79500013
+*                                    BITS1-17 REPRESENT EXITS IN ORDER  80000013
+*                                      SPECIFIED IN PPIMODEX            80500013
+*                                      1=EXIT RTN WAS LINK EDITED BY US 81000013
+*                                      0=NOT LINK EDITED BY US          81500013
+*                                    BIT18-1=E11 LINK EDITED SEPARATELY 82000013
+*                                      BY US                            82500013
+*                                    BIT19-1=E21 LINK EDITED SEPARATELY 83000013
+*                                      BY US                            83500013
+*                                    BIT20-1=E31 LINK EDITED SEPARATELY 84000013
+*                                      BY US                            84500013
+*                                    BIT21-1=THERE WAS A LINK EDIT      85000013
+*                                    BIT22-NOT USED                     85100017
+*                                    BIT23-1=LINK EDIT ERROR. SET BY    85200017
+*                                      RCO-CHECKED BY RCZ.              85300017
+*                                    BIT24-NOT USED                     85400017
+         SPACE 2                                                        85500013
+CPIADDCF DC    XL3'0'              ADDRESS OF C.F. INFO FOR MORE THAN   86000013
+*                                    TWELVE CONTROL FIELDS              86500013
+CPISORCE DC    XL8'0'              DDNAME OF USER LIBRARY               87000013
+CPIDDSRT DC    CL4'SORT'           FOUR LETTER IDENT. FROM PARM. FIELD  87500013
+*                                    OF EXECUTE CARD. USED WHEN SORT    88000013
+*                                    IS LINK OR ATTACHED.               88500013
+CPIDCBIN DC    XL2'0'              SIZE OF SORTIN DCB            A26453 88600019
+CPIDCBOU DC    XL2'0'              SIZE OF SORTOUT DCB           A26453 88800019
+         MEND                                                           89000013

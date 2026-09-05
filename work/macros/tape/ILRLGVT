@@ -1,0 +1,15 @@
+         MACRO                                                          00010000
+         ILRLGVT ,                                                      00020000
+LGVT     EQU   0                                                        00030000
+LGVIDENT EQU   LGVT                                                     00040000
+LGVLGVEP EQU   LGVT+4                                                   00050000
+LGVMAXLG EQU   LGVT+8                                                   00060000
+LGVSIZE  EQU   LGVT+12                                                  00070000
+LGVENTRS EQU   LGVT+16                                                  00080000
+LGVTE    EQU   0                                                        00090000
+LGVLGVTE EQU   LGVTE                                                    00100000
+LGVELGEP EQU   LGVLGVTE                                                 00110000
+LGVENEXT EQU   LGVELGEP                                                 00120000
+LGVEASCB EQU   LGVLGVTE+4                                               00130000
+LGVELGID EQU   LGVEASCB                                                 00140000
+         MEND                                                           00150000
