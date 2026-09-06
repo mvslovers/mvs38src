@@ -90,3 +90,57 @@ to standard output and never touches a file name:
 dasdcat -i smp000.3350 "SYS1.SMPACDS/*"     > acds.bin    # all members
 dasdcat -i smp000.3350 "SYS1.SMPACDS/*:?"                 # the member list
 ```
+
+---
+
+## Addendum: the local modification layer, and a route that closes
+
+2026-09-06, later. Two questions followed from the section-length work: how large
+is MVS/CE's own usermod layer, and can the SPZAP records be turned from a
+correlation into a cause.
+
+### MVS/CE modifies 28 modules, all of them nameable
+
+`SYS1.SMPPTS` holds 3,089 members. Reading them out with `dasdcat` and picking
+the sysmod headers:
+
+| | |
+|---|---|
+| `++ZAP` | **22**: `HEWLFAPT` `HEWLFINT` `HEWLFOUT` `IEAVAD51` `IEAVPRT0` `IECIOSAM` `IEECVETV` `IEFAB4A2` `IEFSD263` `IEFVEA` `IEFVJA` `IFOX0F` `IKJEFF52` `IKJEFLA` `IKJEFT25` `IKT0009C` `IKTCAS41` `IKTIIOM` `IKTLOGR` `IKTVTPUT` `ILRSLOTC` `ISTZBF0L` |
+| `++USERMOD` | 1: `ZP60018` |
+| `SYS1.UMODSRC` | 5: `IEFACTRT` `IEFU29` `IKJEFF53` `IKJEFTE2` `IKJEFTE8` — SMF and TSO exits |
+
+That is the whole local layer: **28 modules**, listed in
+[`../work/measurements/mvsce-local-mods.txt`](../work/measurements/mvsce-local-mods.txt).
+The workplan treated it as a large unknown ("Moseley's ~69 usermods"). It is
+small and enumerable, and **none of the 28 appears among our 102 pairs** — so
+nothing measured so far is affected by it.
+
+### The zap hypothesis cannot be settled from this system
+
+`SYS1.SMPPTS` also carries the zap data itself — `NAME` / `VER` / `REP`
+statements with offsets. If a `REP` offset fell on a byte where our deck and the
+member disagree, the difference would have a named cause instead of a
+correlation.
+
+It does not. **25 CSECTs carry zap instructions, and not one of them is among
+the 17 modules that differ.** The zaps in `SMPPTS` are the local layer above; the
+IBM-era zaps that left the `X'04'` IDR records in 71 % of the members happened
+during IBM's own service process, and their data is not on this system.
+
+So the correlation stays a correlation. Among the length-equal modules, 9 of 11
+that differ only inside generated text are zapped, against a base rate of 57 % —
+suggestive, mechanistically plausible, and on eleven modules not more than that.
+
+**And it names a limit of the project.** Where IBM changed shipped object with a
+zap and never changed the source, no source can assemble to that object. Those
+modules are not recoverable in the strict sense; they can only be identified and
+their zap reproduced as a separate layer. How many there are is not known — 71 %
+of members carry a zap record, but a zap record does not prove the instructions
+were changed.
+
+### A note on method
+
+Both readings came out of `dasdcat` over whole data sets. `dasdpdsu` cannot read
+`SMPPTS` or the CDS data sets at all — see the trap above — and it silently
+truncates rather than failing.
