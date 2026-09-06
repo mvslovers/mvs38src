@@ -10,32 +10,29 @@ The plan says *why* and *where to*; this list says *what next*.
 
 ## Start here tomorrow
 
-**1. Merge decision on cc370.** `refactor/libobj370-readers` (`6bf8019`) is
-pushed and validated — `file370 -v` byte-identical over 114 real files, 111 IBM
-object decks plus 3 DLIB members. The cc370 session is holding for two decisions
-that are the user's: merge it, and whether the **load-module record walk** comes
-next. It does need to come next — the DLIB members are load modules, so that walk
-is the primary path for `cmplmd370`.
+**572 modules are byte-identical to the shipped object code**, and 281 more
+differ only in `DS` holes — 853 of 3,888, measured tree-wide. See
+[`docs/tree-wide-run.md`](docs/tree-wide-run.md). The question is no longer how
+to compare. It is what the **2,079 length differences** are made of.
 
-**2. The 49.** Of 102 modules that assemble and have a distribution-library
-member, **49 already match in section names and lengths** — see
-[`docs/dlib-distance.md`](docs/dlib-distance.md). Those are the first candidates
-for a real verdict, and the first thing to point `cmplmd370` at.
+**1. Rule out our own macro provenance first.** 319 of our macros come from web
+mirrors with an unestablished maintenance level, and a macro one PTF behind
+generates a different length from perfectly correct source. That is the one
+variable we introduced ourselves, and until it is closed every length difference
+has two possible explanations. The route is Dave Kreiss' built `PVTMAC`/
+`APVTMAC` on his rebuilt install tape — asked for on 2026-09-06.
 
-**3. ✅ Which sysmods were ACCEPTed — answered.** The distribution libraries carry
-essentially the full IBM maintenance: 5,529 `UZ` PTFs against 5,655 in the target
-zone, so **139 PTFs (2.5 %) were APPLYed but not ACCEPTed**. See
-[`docs/accept-status.md`](docs/accept-status.md). Two consequences: the DLIB
-yardstick is sound, and the 52 length differences can **not** be hoped away as
-distribution effects — they are more likely genuine source gaps.
+**2. Then the 589 that differ only in generated text.** Real differences at the
+right length: the recovery work proper. Sorted by cluster count, the smallest
+first.
 
-**4. The macro remainder:** 14 of the 554 `AMACLIB` elements are not in
-`SYS1.AMACLIB`; `IHANVT`, `UCBDADVC` and `IECDCST` have no `++MAC` element at
-all; `ACCESS`, `IQAMOD` and `IQAQAL` are nowhere on this machine.
+**3. And the 1,256 that do not assemble** are outside the measurement entirely.
+Their first causes were categorised on the 150-module sample; that categorisation
+should be redone on the full set now that it is cheap.
 
-Waiting on other people: Dave Kreiss' rebuilt install tape, which was asked to
-carry his built `PVTMAC`/`APVTMAC` — the only route to settling the provenance of
-319 of our macros.
+Still open and unchanged: the 14 `AMACLIB` elements missing from
+`SYS1.AMACLIB`; `IHANVT`, `UCBDADVC`, `IECDCST` with no `++MAC` element;
+`ACCESS`, `IQAMOD`, `IQAQAL` nowhere on this machine.
 
 ---
 
