@@ -1,6 +1,6 @@
 # TODO — MVS 3.8j source recovery
 
-As of 2026-09-06 (evening). The working list for [`docs/workplan.md`](docs/workplan.md).
+As of 2026-09-06 (late). The working list for [`docs/workplan.md`](docs/workplan.md).
 The plan says *why* and *where to*; this list says *what next*.
 
 **Key:** 🔒 blocks other work · ⚡ runs in parallel, blocks nothing ·
@@ -10,29 +10,39 @@ The plan says *why* and *where to*; this list says *what next*.
 
 ## Start here tomorrow
 
-**572 modules are byte-identical to the shipped object code**, and 281 more
-differ only in `DS` holes — 853 of 3,888, measured tree-wide. See
-[`docs/tree-wide-run.md`](docs/tree-wide-run.md). The question is no longer how
-to compare. It is what the **2,079 length differences** are made of.
+**832 modules are byte-identical to the shipped object code**, 431 more differ
+only in `DS` holes — **1,263 of 4,107**, measured tree-wide with the current
+tools. [`docs/tree-wide-run.md`](docs/tree-wide-run.md).
 
-**1. Rule out our own macro provenance first.** 319 of our macros come from web
-mirrors with an unestablished maintenance level, and a macro one PTF behind
-generates a different length from perfectly correct source. That is the one
-variable we introduced ourselves, and until it is closed every length difference
-has two possible explanations. The route is Dave Kreiss' built `PVTMAC`/
-`APVTMAC` on his rebuilt install tape — asked for on 2026-09-06.
+The assembler is no longer a suspect. Six `as370` defects were closed today,
+every one of them against IFOX00 running under MVS/CE, and the direct
+`as370`-against-IFOX comparison now runs per module
+([`docs/ifox-oracle.md`](docs/ifox-oracle.md)). **What remains is project work,
+not tool work.**
 
-**2. Then the 589 that differ only in generated text.** Real differences at the
-right length: the recovery work proper. Sorted by cluster count, the smallest
-first.
+**1. Rule out our own macro provenance.** 319 of our macros come from web mirrors
+with an unestablished maintenance level, and a macro one PTF behind produces a
+different length from perfectly correct source. It is the one variable we
+introduced ourselves, and until it is closed every length difference has two
+explanations. The route is Dave Kreiss' built `PVTMAC`/`APVTMAC` on his rebuilt
+install tape, asked for on 2026-09-06. **1,360 of the 2,147 length differences
+use no mirror macro at all** and can be worked on regardless —
+[`docs/what-is-not-blocked.md`](docs/what-is-not-blocked.md).
 
-**3. And the 1,256 that do not assemble** are outside the measurement entirely.
-Their first causes were categorised on the 150-module sample; that categorisation
-should be redone on the full set now that it is cheap.
+**2. The 433 that differ only inside generated text.** Right length, real
+differences, no hole excuse — the recovery work proper. Smallest cluster count
+first, and now attributable with certainty: run the module through IFOX as well,
+and if `as370` == IFOX the difference belongs to the source.
 
-Still open and unchanged: the 14 `AMACLIB` elements missing from
+**3. Extend the direct IFOX comparison** from five modules to the whole
+assembling tree. That is what turns "the assembler is probably fine" into a
+measurement, and the pipeline exists: macros are uploaded to
+`IBMUSER.PVTMAC` on `MVSCE-EXP`, `SYSPUNCH` comes back byte-exact over FTP.
+
+Small and named, still open: the 14 `AMACLIB` elements missing from
 `SYS1.AMACLIB`; `IHANVT`, `UCBDADVC`, `IECDCST` with no `++MAC` element;
-`ACCESS`, `IQAMOD`, `IQAQAL` nowhere on this machine.
+`ACCESS`, `IQAMOD`, `IQAQAL` nowhere on this machine; and the 22 members whose
+`X'10'` scatter record is now read but never verified against a rebuild.
 
 ---
 
@@ -110,31 +120,32 @@ v2.1.4. mvsMF on LAB and EXP has been updated by the user and now reports
       If the DLIB hypothesis holds this hardly matters — but it should be settled
       rather than drifting.
 
-### 1c. ⚡ libc370 release and the four relinks — not on our critical path
+### 1c. ✅ libc370 v1.0.4 released, all four packages relinked
 
-Deprioritized 2026-09-04. This entered the list as a prerequisite for asking
-mainframed767 for newer packages, which in turn was driven by the retcode
-problem. That problem turned out to be our own job cards, so the chain is gone.
+Done 2026-09-06. The SYNAD fix is in — an I/O error used to end the address
+space with `S001` instead of being passed up as `ferror()`+`EIO`.
 
-**We build no C programs for MVS.** libc370's fixes matter to httpd/mvsMF/ftpd —
-good ecosystem hygiene, and the SYNAD fix is real (an I/O error used to kill the
-address space with S001) — but nothing here waits on it.
-
-- [ ] Cut libc370 v1.0.4 and relink httpd, ufsd, ftpd, mvsmf **when convenient**
+- [x] Cut libc370 v1.0.4 and relink httpd, ufsd, ftpd, mvsmf
 - [ ] Give mvsmf a stable `v1.0.0` rather than only the `v1.0.0-dev` pre-release
 
-### 1d. ⚡ Ask mainframed767 for an MVS/CE 3.0.1 — weaker case now
+Never was on our critical path — we build no C programs for MVS — but it is the
+precondition for item 1d, which is now sent.
 
-Draft in `~/repos/MVSSRC/WORK/doc/mail-mainframed767-mvsce-301.md`.
+### 1d. ✅ Asked mainframed767 for an MVS/CE 3.0.1 — sent 2026-09-06
 
-**The regression argument is withdrawn.** There is no JES2 regression in v3.0.0;
-that was our broken job cards. What remains is worth reporting but is not urgent:
+Sent after 1c, so the version table names current releases rather than stale
+ones. Draft kept in `~/repos/MVSSRC/WORK/doc/mail-mainframed767-mvsce-301.md`.
 
-- [ ] Package levels lag the current releases (update the version table first)
-- [ ] `SCRIPTS/SHUTDOWN.RC` stops neither HTTPD nor FTPD
-- [ ] Nothing starts them either — no `S HTTPD` anywhere in the repo
-- [ ] Which HTTPD actually lands in the build: `MVP/desc/HTTPD` says 4.0.0, but
-      `MVS-sysgen/SOFTWARE/HTTPD` holds `HTTPD330` from 2025-02-13
+**The regression argument was withdrawn before sending** — there is no JES2
+regression in v3.0.0, that was our own broken job cards. What went out is the
+package-level lag plus three operational findings:
+
+- `SCRIPTS/SHUTDOWN.RC` stops neither HTTPD nor FTPD
+- nothing starts them either — no `S HTTPD` anywhere in the repository
+- which HTTPD lands in the build is ambiguous: `MVP/desc/HTTPD` says 4.0.0,
+  `MVS-sysgen/SOFTWARE/HTTPD` holds `HTTPD330` from 2025-02-13
+
+- [ ] Follow up once after ~4 weeks, then let it rest
 
 ### 2. ✅ Repo created
 
@@ -146,20 +157,39 @@ that was our broken job cards. What remains is worth reporting but is not urgent
 - [x] `.gitignore`: DASD images, `*.AWS`, web mirrors stay out
 - [ ] Repo stays **private** (see item 1); no remote until then
 
-### 2b. ✅ cc370 issues filed for the tools we need
+### 2b. ✅ The cc370 toolchain — built, not just requested
 
-Five issues in `mvslovers/cc370`, so another agent can pick them up:
+What was five issues on 2026-09-04 is largely working code on 2026-09-06.
 
-| # | Tool | Note |
+| # | | State |
 |---|---|---|
-| [#108](https://github.com/mvslovers/cc370/issues/108) | as370: `DC/DS` type `S` | measured gap; #53 fixed the silent failure, the type is still unimplemented |
-| [#109](https://github.com/mvslovers/cc370/issues/109) | `libobj370` / `libmvs370` | roadmap phase 0 — **the other three depend on it** |
-| [#110](https://github.com/mvslovers/cc370/issues/110) | `cmplmd370` | the comparator; our success criterion |
-| [#111](https://github.com/mvslovers/cc370/issues/111) | `idrdump370` | IDR records + eyecatchers per CSECT |
-| [#112](https://github.com/mvslovers/cc370/issues/112) | `dasm370` | disassembler + alignment-diff mode |
+| [#109](https://github.com/mvslovers/cc370/issues/109) | `libobj370` / `libmvs370` | **readers done**; the emitters remain and are on nobody's path |
+| [#110](https://github.com/mvslovers/cc370/issues/110) | `cmplmd370` | **built and in use** — comparison, `--clearrld`, `--csect`, `--difin`/`--difout`, `--json`, hole classification |
+| [#113](https://github.com/mvslovers/cc370/issues/113) | reading a foreign IEBCOPY unload | **solved**, and the format is documented in [`docs/private-macros.md`](docs/private-macros.md) |
+| [#111](https://github.com/mvslovers/cc370/issues/111) | `idrdump370` | open — the 102-member dataset for it is committed |
+| [#112](https://github.com/mvslovers/cc370/issues/112) | `dasm370` | open, and still not needed until case D is sized |
 
-Only #109 and #110 are on the critical path for the measurements in items 5b–5d.
-#112 can wait until we know how large case D actually is.
+**Six `as370` defects closed the same day**, every one measured against IFOX00
+rather than argued from the manual:
+
+| | | modules unlocked |
+|---|---|---:|
+| #127 | `START` not implemented | 75 with #128 |
+| #128 | `ISEQ` not implemented | " |
+| #108 | `DC/DS` type `S` | 44 |
+| #132 | **`&SYSECT` expanded to nothing, silently** | 39 — *and it corrected 80 decks that already assembled* |
+| #133 | cross-section duplication factor silently zero | 0 — it changes a return code, not bytes |
+| #136 | **each control section needs its own location counter** | ~80, and the `IDCCD*` family came back |
+| #138 | base-register tie broken the wrong way | 3 |
+
+`START`, `ISEQ`, `DC/DS` type `S` and the location counter behave like blockers —
+close them and modules go through. **`&SYSECT` and the base-register tie
+unlocked almost nothing and mattered most**, because they corrected object code
+the assembler was already producing, silently and wrongly. See
+[`docs/as370-gaps.md`](docs/as370-gaps.md).
+
+One issue in that series, #131, was **wrong**: filed from an error message
+without reproducing the case. It is closed with that stated.
 
 ### 2c. Dave Kreiss' utilities — extract, read, do not port
 
@@ -287,6 +317,34 @@ The original checklist, with what actually happened:
 
 ---
 
+## What exists now that did not on 2026-09-04
+
+Written up rather than remembered, because most of it is method rather than
+result:
+
+| Document | What it settles |
+|---|---|
+| [`docs/tree-wide-run.md`](docs/tree-wide-run.md) | the two tree-wide runs, and the numbers that count |
+| [`docs/ifox-oracle.md`](docs/ifox-oracle.md) | how to ask the real Assembler XF a question, and every answer so far |
+| [`docs/as370-gaps.md`](docs/as370-gaps.md) | six assembler defects, what each was worth, and one issue that was wrong |
+| [`docs/private-macros.md`](docs/private-macros.md) | where the private macros are, and how to read an IEBCOPY unload |
+| [`docs/complmd-spec.md`](docs/complmd-spec.md) | `COMPLMD` read as the specification for `cmplmd370` |
+| [`docs/accept-status.md`](docs/accept-status.md) | the DLIBs carry the maintenance; MVS/CE modifies 28 modules |
+| [`docs/dlib-distance.md`](docs/dlib-distance.md) | section lengths, `SPZAP` records, and whether another source copy fits better |
+| [`docs/what-is-not-blocked.md`](docs/what-is-not-blocked.md) | how much of the backlog does *not* wait on Dave Kreiss' tape |
+
+And the tooling in [`tools/`](tools): `awstape.py`, `pdsunload.py` (reads a real
+MVS unload member by member), `measure-as370.sh`, `ebcdic2text.py`.
+
+**A method worth carrying into every measurement here**, learned about ten times
+in one day and in both sessions: *something delivers less than it should and does
+not say so.* A truncated listing, an unquoted shell variable, a fixed array of
+64, an implausible mutant, a listing that decides nothing because both hypotheses
+give the same answer, `dasdcat` writing to stderr, `dasdpdsu` stopping at the
+first illegal filename. **Every one was caught by a control case, never by the
+tool.** Before a number is believed, construct the case whose answer is already
+known and run it on both sides.
+
 ## Then: inventory and feasibility
 
 ### 5b. 🚪 Measure the DLIB hypothesis: MVS/CE against TK5
@@ -377,6 +435,14 @@ validated against known material. **If it turns out badly**, his actual PTFs are
 on the `BLDMVS.AWS` tape as `MVSSRC.BLD.SMP.LIB` through `.LIB5` — in IEBUPDTE
 form, so re-appliable. In no case do we have to redo his work.
 
+> **Partly answered 2026-09-06 without the 747 having been isolated.** The
+> tree-wide run compared **all** 4,107 pairable modules, his marked ones among
+> them: 832 are byte-identical and 431 differ only in `DS` holes. So the answer
+> to "can we build on his work" is already **yes** — it turned out well, at a
+> rate of roughly one module in three, and the toolchain is validated against
+> known material. What identifying the 747 would still buy is the *split*: how
+> much of that 30 % is his marked work and how much came right by itself.
+
 ### 6. Inventory and the two tables (M1)
 
 - [ ] Inventory across all system libraries — **target libraries AND
@@ -387,92 +453,38 @@ form, so re-appliable. In no case do we have to redo his work.
       `www.stben.net/`, `mvssrc/mainframe.eu/`, `NEW.ASM`, `MVT.ASM`
 - [ ] Join → table A (ported) and table B (missing)
 
-### 7. 🚪 as370 gap analysis (M2)
+### 7. ✅ as370 gap analysis (M2) — the gate is passed and the tool is fixed
 
-> **Measured 2026-09-05 — the gate holds clearly. 73 % assemble cleanly.**
->
-> Same 150 modules drawn at random from `MVSBLD/`, same as370 build, counted per
-> module on exit code 0:
->
-> | Macro set | Macros | Assembled |
-> |---|---:|---:|
-> | `SYS1.MACLIB` + `AMODGEN` + `APVTMACS` | 1,269 | 73 (49 %) |
-> | + the private macros off Dave Kreiss' tape | 1,383 | 83 (55 %) |
-> | **+ the private macros from the web mirrors** | **1,702** | **110 (73 %)** |
->
-> The first row reproduces the 2026-09-04 measurement exactly, so the runs are
-> comparable. **No regressions** — no module that assembled with the small macro
-> set fails with the large one. Details, provenance and the caveat on the mirror
-> macros: [`docs/private-macros.md`](docs/private-macros.md).
->
-> ### What the remaining 40 failures are made of
->
-> Counted **per module**, by first cause.
->
-> | First cause | Modules |
-> |---|---:|
-> | undefined operation code (still a missing macro) | 11 |
-> | addressability — no active `USING` | 11 |
-> | undefined symbol | 7 |
-> | relocatable duplication factor | 3 |
-> | `DC/DS` type `S` — [cc370#108](https://github.com/mvslovers/cc370/issues/108) | 3 |
-> | single cases (`START`, `ISEQ`, continuation, IFO158, IFO231) | 5 |
->
-> **Missing macros are no longer the dominant cause.** What is left of them is
-> not one pool either: `IHADECB` and `IEZCTGPL` are `DISTLIB(AMACLIB)`, so they
-> belong in `SYS1.MACLIB` — **our extract of it is missing 79 of 554 elements.**
-> That is a defect in our extraction, not in MVS/CE, and it is the first item
-> for tomorrow.
->
-> ### The two extraction traps, still valid
->
-> **1. `dasdpdsu` writes raw EBCDIC with no record separators.** The members are
-> RECFM=FB 80, so the output must be split into 80-byte records and translated.
-> Feeding it raw makes the rate *drop* to 28.
->
-> **2. Convert to a single-byte encoding, never UTF-8.** Writing the members as
-> UTF-8 turns EBCDIC `X'5F'` (`¬`) into two bytes, and every column after it
-> shifts right. In `WTO` that pushed a comment's last character into byte column
-> 72 — the continuation column — and as370 correctly reported a continuation
-> that consumed the next statement. The fix is latin-1, where `¬` stays one
-> byte. **Column positions are the whole contract in fixed-format assembler.**
->
-> A third one found on 2026-09-05: **`MVSBLD/` was converted with a different
-> code page than ours.** `X'5F'` is `^` there and `¬` here — IBM-1047 against
-> cp037. Same byte, different character; a comparison across both sources has to
-> normalise it.
+**Measured tree-wide 2026-09-06: 4,510 of 5,528 modules assemble (82 %).**
+The 150-module sample that opened this item is superseded; the numbers below are
+the population.
 
-- [x] **Extract `SYS1.AMODGEN` and `SYS1.APVTMACS`** — done on `mvsdev`
-- [x] Reconcile `SYS1.MACLIB` from MVS/CE against `~/repos/mvs/sys1.maclib` —
-      both have 742 members, so the local copy was genuine
-- [x] Repeat the measurement with the full macro set — 43 %
-- [x] **Located Dave Kreiss' `PVTMAC`** — the missing macros are all on his tape,
-      as `++MAC(…) SYSLIB(PVTMAC)` elements in `MVSSRC.BLD.SMP.LIB`
-- [x] **`TXLIB(SYM20104)` resolved** — a DD name for `MVSSRC.SYM201.F04`, an IBM
-      RELFILE Dave Kreiss had locally. Not on the tape, and not reachable by
-      loading the tape under MVS either
-- [x] **Extracted the private macros** — 114 from `NEW.ASM` on the tape, 319 from
-      the web mirrors; 433 of 436. In `work/macros/`, kept apart by provenance
-- [x] **Re-measured: 49 % → 73 %**, no regressions
-- [x] **Corpus moved to DLIB level** (2026-09-06). The old one mixed target and
-      distribution libraries. 111 of 150 now, no regressions; the `AMACLIB` gap
-      went from 79 to 14
-- [ ] The mirror macros **cannot** be replaced from any MVS/CE — the private
-      macros are not in the DLIBs (3 of 623). Only Dave Kreiss' built `APVTMAC`
-      or the IBM RELFILEs can settle their level
-- [ ] Re-measure again after cc370#115
-- [ ] Implement `DC/DS` type `S` in as370 — the only gap reported by name in the
-      pre-measurement
-- [ ] Run as370 over a cross-section of `MVSBLD/*.ASM` and `IKJ/*.asm`
-- [ ] Categorize failures: missing directive, macro, expression syntax,
-      addressing, other
-- [ ] Check the known gaps specifically: `START`, `PUNCH`, `REPRO`, `ICTL`,
-      `OPSYN`, `DXD`
-- [ ] Close the "frequent and cheap" ones in as370 straight away
-- [ ] Cross-check one module against IFOX00 on MVS
+| | first run | after the six fixes |
+|---|---:|---:|
+| assemble | 4,270 | **4,510** |
+| paired against a DLIB member | 3,888 | **4,107** |
+| **byte-identical** | 572 | **832** |
+| only `DS` holes differ | 281 | **431** |
+| length differs | 2,079 | 2,147 |
+| only generated text differs | 589 | 433 |
 
-**Gate.** If the rate comes out poorly, as370 takes priority over everything
-else — this item then becomes the main project for a while.
+**257 modules gained byte-identity, none lost it.** Full account in
+[`docs/tree-wide-run.md`](docs/tree-wide-run.md), the assembler work in
+[`docs/as370-gaps.md`](docs/as370-gaps.md).
+
+- [x] Extract `SYS1.AMODGEN`, `SYS1.APVTMACS`, and the whole DLIB macro set
+- [x] Recover the private macros — 433 of 436, tape and mirrors
+- [x] Categorise failures by first cause over all 1,256 (now 1,018)
+- [x] Close six `as370` gaps against IFOX00
+- [x] **Cross-check against IFOX00 directly** — the pipeline exists and four of
+      five sampled modules produce byte-identical decks
+- [ ] Extend that cross-check to the whole assembling tree — item 3 of *Start
+      here*
+- [ ] Re-categorise the remaining 1,018 failures; the last categorisation was
+      before the six fixes
+
+**The gate verdict:** `as370` is not the bottleneck and is no longer a suspect.
+What the remaining differences are made of is a source question.
 
 ### 8. Re-check Dave's "finished" modules (M3)
 
