@@ -1,0 +1,98 @@
+ MACRO                                                                  00020000
+ SGIEH401                                                               00040000
+.********************************************************************** 00040499
+.*                                                                      00040599
+.*              CHANGES THIS MODULE                                     00040699
+.*              LATEST FIRST.                                           00040799
+.*                                                                      00040899
+.********************************************************************** 00040999
+.*                                                                      00041099
+.*D        IEHDASDR VIOLATES APF RULES                         @ZA38791 00041199
+.*                                                                      00041599
+.********************************************************************** 00041699
+.*              OLD CHANGES                                             00041799
+.********************************************************************** 00041899
+.*C 035280                                                     @ZM42083 00041999
+.*C035280                                                      @Z40UAY1 00042003
+.*A036514-036782                                               @Z40UAY1 00042403
+.* 001670,011200,012800-013000,015200,017600,019800,021200,        I276 00043019
+.* 023200,030400,045370-825370                                     I276 00046019
+.*                                                               YM0373 00048000
+.*                                                               YM2140 00048400
+.*                                                               XM9151 00048802
+.*                                                               XM0208 00049202
+.*2768017800                                                       8429 00050018
+.*2768011400                                                       VF0I 00053018
+.*2768035400                                                       DT0I 00056018
+.* 023800-024200                                                 A20878 00058018
+.* MACRO CHANGED IN RELEASE 19 FOR UTILITIES TRANSFER                   00658019
+.* MACRO CHANGED FOR AOS/1 AND AOS/2 (JAN 1972).                        00708000
+.* MACRO CHANGED FOR MVM (3/22/73).                             YM01031 00758002
+.*                                                                      00808099
+.********************************************************************** 00858099
+ COPY SGGBLPAK                                                          01258019
+&SGCTRLC(7)  SETC '&SGCTRLC(32)'   VOLNO LINKLIB                        01858019
+&SGCTRLC(8)   SETC '&SGCTRLC(31)'  UNITNAME LINKLIB                     02458019
+&SGCTRLC(6) SETC 'IEHDASDR'                                             03520500
+&SGCTRLC(9) SETC 'LINKLIB'                                       YM2769 03520900
+&SGCTRLC(10) SETC ',REUS'                                               03521516
+&SGCTRLC(11) SETC ',LET'                                                03522016
+ COPY SGLEDPK1                                                          03522317
+ PUNCH '//AOSU0 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSU0'  Y01036 03522600
+ COPY SGLEDPK2                                                          03522917
+ PUNCH ' INCLUDE AOSU0(IEHDASDR)'                                Y01036 03523200
+ PUNCH ' SETCODE AC(1)'                                          YM0373 03523300
+ PUNCH ' NAME IEHDASDR(R)'                                              03523516
+ PUNCH ' INCLUDE AOSU0(IEHDASDS,IEHDCONS)'                       Y01036 03524000
+ PUNCH ' ENTRY IEHDASDS'                                                03524217
+ PUNCH ' NAME IEHDASDS(R)'                                              03524399
+ PUNCH ' INCLUDE AOSU0(IEHDPRNT,IEHDDATE)'                       Y01036 03524699
+ PUNCH ' ENTRY IEHDPRNT'                                                03524999
+ PUNCH ' NAME IEHDPRNT(R)'                                              03525299
+ PUNCH ' INCLUDE AOSU0(IEHDMSGB,IEHDMSGS)'                       Y01036 03525599
+ PUNCH ' ENTRY IEHDMSGB'                                                03525899
+ PUNCH ' NAME IEHDMSGB(R)'                                              03526199
+ PUNCH ' INCLUDE AOSU0(IEHDSCAN)'                                Y01036 03526499
+ PUNCH ' NAME IEHDSCAN(R)'                                              03527516
+ PUNCH ' INCLUDE AOSU0(IEHDREST,IEHDINIT)'                     @ZM42083 03528003
+ PUNCH ' INCLUDE AOSU0(IEHDRVID)'                               ZM00000 03538003
+ PUNCH ' ENTRY IEHDINIT'                                        YM01031 03565402
+ PUNCH ' NAME IEHDREST(R)'                                              03604199
+ PUNCH ' INCLUDE AOSU0(IEHDDUMP,IEHDEXCP,IEHDDOIO)'                     03654199
+ PUNCH ' ENTRY IEHDDUMP'                                                03704199
+ PUNCH ' NAME IEHDDUMP(R)'                                              03754199
+ PUNCH ' INCLUDE AOSU0(IEHDAOUT)'                                Y01036 03804199
+ PUNCH ' NAME IEHDAOUT(R)'                                              03854199
+ PUNCH ' INCLUDE AOSU0(IEHDANAL)'                                Y01036 03904199
+ PUNCH ' NAME IEHDANAL(R)'                                              03954199
+ PUNCH ' INCLUDE AOSU0(IEHDVTOC)'                                Y01036 04004199
+ PUNCH ' NAME IEHDVTOC(R)'                                              04054199
+ PUNCH ' INCLUDE AOSU0(IEHDLABL)'                                Y01036 04104199
+ PUNCH ' NAME IEHDLABL(R)'                                              04154199
+ PUNCH ' INCLUDE AOSU0(IEHDGETA)'                                Y01036 04204199
+ PUNCH ' NAME IEHDGETA(R)'                                              04254199
+ PUNCH ' INCLUDE AOSU0(IEHDPASS)'                                Y01036 04304199
+ PUNCH ' NAME IEHDPASS(R)'                                              04354199
+ PUNCH ' INCLUDE AOSU0(IEHDRCVR)'                                Y01036 04404199
+ PUNCH ' NAME IEHDRCVR(R)'                                              04454199
+ PUNCH ' INCLUDE AOSU0(IEHDIPLI)'                                4063   04504199
+ PUNCH ' NAME IEHDIPLI(R)'                                       4063   05636600
+ PUNCH '/*'                                                             06536600
+&SGCTRLC(9) SETC 'LINKLIB'                                       YM2769 06586600
+&SGCTRLC(10)  SETC ',RENT'                                              39537019
+&SGCTRLC(11)  SETC ',REFR'                                              43537019
+ COPY SGLEDPK1                                                          47537019
+ PUNCH '//AOSU0 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSU0'  Y01036 51537000
+ COPY SGLEDPK2                                                          55537019
+ PUNCH ' INCLUDE AOSU0(IEHATLAS,IEHMESS)'                        Y01036 59537000
+ PUNCH ' ENTRY  IEHATLAS'                                               63537019
+ PUNCH ' SETCODE AC(1)'                                          YM2140 63587000
+ PUNCH ' NAME   IEHATLAS(R)'                                            67537019
+ PUNCH ' INCLUDE AOSU0(IAPCNTRL,IAPBLDIO,IAPCHKIO,IAPTIMER)'   @Z30GSLM 71887004
+ PUNCH ' INCLUDE AOSU0(IAPABNAP,IAPPFXAP)'                     @Z30GSLM 74887004
+ PUNCH ' ENTRY  IAPCNTRL'                                      @Z30GSLM 77887004
+ PUNCH ' ALIAS  IAPTIMER'                                      @Z30GSLM 80887004
+ PUNCH ' SETCODE AC(1)'                                        @Z30GSLM 83887004
+ PUNCH ' NAME   IAPAP100(R)'                                   @Z30GSLM 86887004
+ PUNCH '/*'                                                             89887004
+ MEND                                                              DT0I 92887004

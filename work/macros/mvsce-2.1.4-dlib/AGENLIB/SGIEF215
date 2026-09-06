@@ -1,0 +1,510 @@
+         MACRO                                                          00050002
+         SGIEF215   &DUMMY=                                    @G64IPSJ 00070064
+.*C001000,002000,049000, A049050-049400                        @YM08650 00110002
+.*A000000-999999                                                 Y02670 00120002
+         COPY  SGGBLPAK                                                 00150002
+         LCLA  &I,&A                                                    00200002
+         LCLA  &CMPTIND,&NUMBENT,&COMPATS(500),&G,&K,&N        &G64IPSJ 00210064
+         LCLB  &GENERB                                         &G64IPSJ 00220064
+         LCLC  &WORKSTR,&DEVCLS,&TEMPVAL                       &G64IPSJ 00230064
+.********************************************************************** 00300002
+.*                                                                      00350002
+.*  MACRO - SGIEF215                                                    00357064
+.*                                                                      00364064
+.*  STATUS - VS2 SYSTEM CONTROL PROGRAM 2                      @G64IPSJ 00371064
+.*                                                                      00378064
+.*  DESCRIPTION -                                                       00385064
+.*                                                                      00392064
+.*  THIS MACRO PERFORM ALL SPECIAL-CASE PROCESSING ASSOCIATED WITH      00400002
+.*  THE EDTTAB. (AS DESCRIBED BELOW)                                    00450002
+.*                                                                      00500002
+.*  (SEE CHART 9.1 AND SUBORDINATE CHARTS IN DEVICE ALLOCATION CHARTS)  00550002
+.*                                                                      00600002
+.*  INPUTS ARE SGSCHVC, SGUNNVC, AND THE GENERIC TYPE CODES   @G64IPSJ  00650064
+.*  OF TAPE AND DA DEVICES ON THE SYSTEM.                     @G64IPSJ  00700064
+.*                                                                      00850002
+.*  THIS MACRO GENERATES TAPE NAMES ACCORDING TO THE PRESENCE OR        00900002
+.*  ABSENCE OF CERTAIN TAPE TYPES ON SYSTEM. MULTIPLE GENERIC TYPES     00950002
+.*  ARE MADE ELEGIBLE TO TAPE NAMES UNDER SAME RULES AS NAME            01000002
+.*  GENERATION.                                                         01050002
+.*                                                                      01100002
+.*  PRECEDENCE OF GENERIC NAMES IS PROCESSED, USER SPECIFIED NAMES      01150002
+.*  DERIVED FROM SGSCHVC AND IBM DEFAULT IS OBTAINED VIA SGIEF216 CALL. 01200002
+.*                                                                      01250002
+.*  VAM ELIGIBLE NAMES ARE DERIVED FROM SGUNNVC AND TRANSMITTED TO      01300002
+.*  STAGE 2.                                                            01350002
+.*                                                                      01400002
+.*  OUTPUTS ARE PUNCHED MACRO STATEMENTS OF THE FOLLOWING FORM:         01450002
+.*                                                                      01500002
+.*       ONE SGIEF014 FOR EACH UNIT NAME TO BE KNOWN TO THE SYSTEM,     01550002
+.*           WITH TYP PARAM INDICATING TYPE OF  NAME.                   01600002
+.*           (ALL GENERICS ARE PROCESSED BEFORE ESOTERICS AND THE       01650002
+.*           ORDER THEY APPEAR ON SGIEF014 STATEMENTS BECOMES THE       01700002
+.*           INSTALLATION GENERIC PRECEDENCE.)                          01750002
+.*                                                                      01800002
+.*       ONE SGIEF019 FOR EACH NAME SPECIFIED BY USER AS VAM-ELIGIBLE.  01850002
+.*                                                                      01900002
+.*       ONE SGIEF015 FOR EACH GENERATED NAME/GENERIC ELIGIBILITY.      01950002
+.*           TYP=L FOR ESOTERICS (CURRENTLY ONLY SYSALLDA).             02000002
+.*           TYP=GG FOR GENERATED TAPE NAMES.                           02050002
+.*           TYP=X FOR EXPANDED ELIGIBILITY TO TAPE NAMES NATIVE TO     02100002
+.*           SYSTEM.                                                    02150002
+.********************************************************************** 02200002
+         AGO   .P0       CALL PRECEDENCE GENERATOR.                     02350002
+.MAIN20  ANOP                                                           02400002
+         AGO   .P100     CALL GENERIC GENERATOR.                        02450002
+.MAIN40  ANOP                                                           02500002
+         AGO   .GE100    PROCESS GEN'ED  ESOTERICS AND EXPANDED GENRICS 02550002
+.MAIN50  ANOP                                                           02600002
+         AGO   .V100     PROCESS VAM.                                   02650002
+.MAIN60  ANOP                                                           02700002
+         MEXIT                                                          02750002
+.*                                                                      02800002
+.*                                                                      02850002
+.*                                                                      02900002
+.*                                                                      02950002
+.*                                                                      04150002
+.*    PASS USER-DEFINED GENERIC PRECEDENCE TO STAGE 2                   04200002
+.P0      ANOP                                                           04250002
+&I       SETA  0                                                        04300002
+.P1      ANOP                                                           04350002
+&I       SETA  &I+1                                                     04400002
+         AIF   (&I GT 30).P2                                            04450002
+         AIF   ('&SGSCHVC(&I)'  EQ  '').P2                              04500002
+ PUNCH ' SGIEF014  TYP=G,&SGSCHVC(&I)'                                  04550002
+         AGO   .P1                                                      04600002
+.*                                                                      04650002
+.*    PASS IBM DEFAULT PRECEDENCE TO STAGE 2                            04700002
+.*                                                                      04750002
+.P2      ANOP                                                           04800002
+         SGIEF216                                                       04850002
+.*                                                             @YM08650 04900002
+.* INCLUDE DUMMY DEVICE GENERICS IN PRECEDENCE TABLE           @YM08650 04905002
+.*                                                             @YM08650 04910002
+&A       SETA  &DUMMY                                          @YM08650 04915002
+.NEXTDUM AIF   (&A EQ 0).ENDDUM                                @YM08650 04920002
+ PUNCH ' SGIEF014  TYP=G,DMY&A'                                @YM08650 04925002
+&A       SETA  &A-1                                            @YM08650 04930002
+         AGO   .NEXTDUM                                        @YM08650 04935002
+.ENDDUM  ANOP                                                  @YM08650 04940002
+         AGO   .MAIN20                                                  04950002
+.*                                                                      05000002
+.*                                                                      05050002
+.*     PROCESS  GENERATED GENERICS AND ESOTERICS                        05070064
+.*                                                                      05150002
+.P100    ANOP                                                           05200002
+&I       SETA  0                                                        05250002
+.P101    ANOP                                PUNCH MACRO                05270064
+&I       SETA   &I+1                           CALL FOR                 05300064
+         AIF   (&I GT &SGCNTRA(4)).P102         ALL ESOTERIC            05350064
+ PUNCH ' SGIEF014  TYP=E,&SGUNNMC(&I)'            NAMES                 05400064
+         AGO   .P101                                ***                 05450064
+.P102    ANOP                                                  @G64IPSJ 05500064
+.*                                                                      05520064
+.*                                                             @G64IPSJ 05540064
+.*  THIS SECTION OF CODE SCANS THE DEVICE INFORMATION TABLES   @G64IPSJ 05560064
+.*  (DIT) FOR ENTRIES THAT ARE COMPATIBLE WITH                 @G64IPSJ 05580064
+.*  OTHER DEVICE TYPES. IF THESE UPWARD COMPATIBLE TYPES ARE   @G64IPSJ 05600064
+.*  SYSGENED, THE CURRENT DEVICE-TYPE IS GENERATED AND         @G64IPSJ 05620064
+.*  CONTAINS ENTRIES FOR THE COMPATIBLE DEVICE TYPES. THE      @G64IPSJ 05640064
+.*  INFORMATION IS SAVED AND USED LATER IN THIS ROUTINE FOR    @G64IPSJ 05660064
+.*  COMPATIBLE DEVICE PROCESSING.                              @G64IPSJ 05680064
+.*                                                             @G64IPSJ 05700064
+&A       SETA  0                       INITIALIZE INDEX        @G64IPSJ 05720064
+&CMPTIND SETA  1                       INITIALIZE INDEX        @G64IPSJ 05740064
+.P201    ANOP                          LOOP TO SCAN DIT        @G64IPSJ 05760064
+&A       SETA  &A+1                    INCREMENT INDEX         @G64IPSJ 05780064
+         AIF   (&A GT &SGDITDA).P202   IF NO MORE DIT ENTRIES  @G64IPSJ 05800064
+.*                                       EXIT                  @G64IPSJ 05820064
+&NUMBENT SETA  K'&SGGCTXC(&A)/3        FIND NUMBER OF COMPATS  @G64IPSJ 05840064
+         AIF   (&NUMBENT LE 0).P201    IF NO COMPATS, CONTINUE @G64IPSJ 05860064
+&COMPATS(&CMPTIND) SETA &A+&NUMBENT*X'10000'                   @G64IPSJ 05880064
+.*                                     PUT CURRENT ID IN RIGHT @G64IPSJ 05900064
+.*                                     HALF AND NUMBER OF      @G64IPSJ 05920064
+.*                                     COMPATIBLE TYPES IN     @G64IPSJ 05940064
+.*                                     LEFT HALF OF ELEMENT    @G64IPSJ 05960064
+&I       SETA  0                       INITIALIZE SCAN INDEX   @G64IPSJ 05980064
+&GENERB  SETB  0                       INITIALIZE SCAN INDEX   @G64IPSJ 06000064
+&WORKSTR SETC  '&SGGCTXC(&A)'          MOVE ID TO WORK AREA    @G64IPSJ 06020064
+.P301     ANOP                         LOOP TO LOCATE COMPATS  @G64IPSJ 06040064
+&I       SETA  &I+1                    INCREMENT SCAN INDEX    @G64IPSJ 06060064
+         AIF   (&I GT &NUMBENT).P302   IF NO MORE, EXIT LOOP   @G64IPSJ 06080064
+&TEMPVAL SETC  '&WORKSTR'(&I*3-2,3)    OBTAIN COMPAT ID        @G64IPSJ 06100064
+&K       SETA  &TEMPVAL                CONVERT TO HEX          @G64IPSJ 06120064
+&COMPATS(&CMPTIND+&I) SETA &K          SAVE CONVERTED VALUE    @G64IPSJ 06140064
+         AIF   (NOT &SGGENDB(&K)).P301 IF COMPAT NOT GENED,    @G64IPSJ 06160064
+.*                                     GET NEXT ENTRY          @G64IPSJ 06180064
+&GENERB  SETB  1                       IF COMPAT TYPE SYSGENED @G64IPSJ 06200064
+.*                                     SET GENERATE SWITCH ON  @G64IPSJ 06220064
+         AGO   .P301                   CONTINUE TO LOCATE      @G64IPSJ 06240064
+.*                                       COMPATS               @G64IPSJ 06260064
+.P302    ANOP                          EXIT FOR LOCATE COMPATS @G64IPSJ 06280064
+         AIF   (NOT &GENERB OR &SGGENDB(&A)).P304    IF NO     @G64IPSJ 06300064
+.*                                     COMPATS GENERATED OR    @G64IPSJ 06320064
+.*                                     ALREADY GENERATED,      @G64IPSJ 06340064
+.*                                     TRY NEXT ENTRY          @G64IPSJ 06360064
+.*                                     OBTAIN GENERATED ID     @G64IPSJ 06380064
+         PUNCH ' SGIEF014  TYP=GG,&SGGNRIC(&A),X''&SGDTYPC(&A)'''       06400064
+.*                                     PUNCH CALL FOR          @G64IPSJ 06420064
+.*                                     GENERATED DEVICE ID     @G64IPSJ 06440064
+&I       SETA  0                       INITIALIZE INDEX        @G64IPSJ 06460064
+.P303    ANOP                          LOOP FOR COMPAT PUNCH   @G64IPSJ 06480064
+&I       SETA  &I+1                                            @G64IPSJ 06500064
+         AIF   (&I GT &NUMBENT).P304   IF NO NORE COMPATS,     @G64IPSJ 06520064
+.*                                       EXIT                  @G64IPSJ 06540064
+&G       SETA  &COMPATS(&CMPTIND+&I)   OBTAIN COMPATIBLE DEV   @G64IPSJ 06560064
+.*                                       DIT INDEX             @G64IPSJ 06580064
+         AIF   (NOT &SGGENDB(&G)).P303 IF COMPAT NOT GENED,    @G64IPSJ 06600064
+.*                                     GET NEXT ENTRY          @G64IPSJ 06620064
+         PUNCH ' SGIEF015 TYP=GG,N=0,G=&G '                    @G64IPSJ 06640064
+.*                                     PUNCH COMPATIBLE DEV    @G64IPSJ 06660064
+.*                                       INFORMATION           @G64IPSJ 06680064
+         AGO   .P303                   CONTINUE TO COMPAT      @G64IPSJ 06700064
+.*                                       PUNCH                 @G64IPSJ 06720064
+.P304    ANOP                          EXIT FOR COMPAT PUNCH   @G64IPSJ 06740064
+&CMPTIND SETA  &CMPTIND+&NUMBENT+1     UP DATE COMPATS INDEX   @G64IPSJ 06760064
+         AGO   .P201                   LOOP TO SCAN DIT        @G64IPSJ 06780064
+.P202    ANOP                          EXIT FOR SCAN DIT       @G64IPSJ 06800064
+.*   ALL GENERATED GENERICS PROCESSED                                   07036064
+.*                                                                      07050002
+         AGO   .MAIN40                                                  07100002
+.*                                                                      07150002
+.*   TELL STAGE 2 ALL GENERIC ASSOCIATIONS OF THE 'SYSALLDA' NAME       07200002
+.*                                                                      07250002
+.*                                                                      07300002
+.GE100   ANOP                                                           07350002
+&I       SETA  0                                                        07400002
+.GE101   ANOP                                                           07450002
+&I       SETA  &I+1                                                     07500002
+         AIF   (&I GT &SGDITDA).GX100  IF NO MORE DIT ENTRIES  @G64IPSJ 07508064
+.*                                       EXIT                  @G64IPSJ 07518064
+         AIF   ('&SGDTYPC(&I)' EQ '').GE101 IF NULL, GET NEXT  @G64IPSJ 07528064
+&WORKSTR SETC  '&SGDTYPC(&I)'          MOVE DEV TYPE TO WORK   @G64IPSJ 07538064
+&DEVCLS  SETC  '&WORKSTR'(5,2)         OBTAIN CLASS OF DEVICE  @G64IPSJ 07548064
+         AIF   ('&DEVCLS' NE '20').GE101 IF NOT DA CLASS,      @G64IPSJ 07558064
+.*                                       GET NEXT DEV TYPE     @G64IPSJ 07568064
+         PUNCH ' SGIEF015 TYP=L,N=SYSALLDA,G=&I '              @G64IPSJ 07578064
+.*                                     PUNCH IN FOR SYSALLDA   @G64IPSJ 07588064
+         AGO   .GE101                  LOOP TO NEXT DIT ENTRY  @G64IPSJ 07598064
+.********************************************************************** 07700002
+.*  ANY OTHER IBM-GENERATED ESOTERICS SHOULD BE GEN'ED HERE           * 07750002
+.*  BY PUNCHING  015'S TYP=L  AS FOR SYSALLDA.   G IS DEVICE TYPE AS  * 07800002
+.*  STORED IN  SGDADRA BOXES.                                         * 07850002
+.********************************************************************** 07900002
+.*                                                             @G64IPSJ 07908064
+.*  THIS SECTION OF CODE PUNCHS THE DATA FOR GENERIC TYPES     @G64IPSJ 07918064
+.*  THAT ALLOWS SUBSTITUTION OF NON-NATIVE DEVICE TYPES.       @G64IPSJ 07928064
+.*  THE DATA WAS COMPILED BY THE GENRATED GENERIC ROUTINE      @G64IPSJ 07938064
+.*  AND SAVED IN LOCAL DATA AREAS                              @G64IPSJ 07948064
+.*                                                             @G64IPSJ 07958064
+.GX100   ANOP                                                  @G64IPSJ 07968064
+&A       SETA  1                       INITIALIZE COMPATS IND  @G64IPSJ 07978064
+.GX101   ANOP                          LOOP FOR COMPATS        @G64IPSJ 07988064
+         AIF   (&A GE &CMPTIND).GX102  IF NO MORE, EXIT        @G64IPSJ 07998064
+&NUMBENT SETA  &COMPATS(&A)/X'10000'   OBTAIN NUMBER OF COMPAT @G64IPSJ 08008064
+&N       SETA  &COMPATS(&A)-&COMPATS(&A)/X'10000'*X'10000'     @G64IPSJ 08018064
+.*                                     OBTAIN COMPAT ID        @G64IPSJ 08028064
+         AIF   (NOT &SGGENDB(&N)).GX201 IF NOT GENERATED,      @G64IPSJ 08038064
+.*                                     DO NOT PROCESS          @G64IPSJ 08048064
+&I       SETA  0                       INITIALIZE INDEX        @G64IPSJ 08058064
+.GX200   ANOP                          LOOP FOR SUB-ENTRIES    @G64IPSJ 08068064
+&I       SETA  &I+1                    INCREMENT INDEX         @G64IPSJ 08078064
+         AIF   (&I GT &NUMBENT).GX201  IF NO MORE, EXIT        @G64IPSJ 08088064
+&G       SETA  &COMPATS(&A+&I)         OBTAIN COMPAT ID        @G64IPSJ 08098064
+         AIF   (NOT &SGGENDB(&G)).GX200 IF COMPAT NOT GENED,   @G64IPSJ 08108064
+.*                                     GET NEXT ENTRY          @G64IPSJ 08118064
+         PUNCH ' SGIEF015 TYP=X,N=&N,G=&G '                    @G64IPSJ 08128064
+.*                                     PUNCH DATA CALL         @G64IPSJ 08138064
+         AGO   .GX200                  LOOP TO NEXT ENTRY      @G64IPSJ 08148064
+.GX201   ANOP                          EXIT FOR COMPAT         @G64IPSJ 08158064
+&A       SETA  &A+&NUMBENT+1           INCREMENT TO NEXT       @G64IPSJ 08168064
+.*                                       ENTRY SET             @G64IPSJ 08178064
+         AGO   .GX101                  PROCESS NEXT ENTRY SET  @G64IPSJ 08188064
+.********************************************************************** 08450002
+.*                                                                    * 08500002
+.*  ANY OTHER GENERIC TYPES FOR WHICH IBM ALLOWS SUBSTITUTION         * 08550002
+.*  OF NON-NATIVE TYPES IN ALLOCATION SHOULD BE GEN'ED HERE BY        * 08600002
+.*  PUNCHING   SGIEF015 TYP=X  CARDS, ONE FOR EACH SUBSTITUTION       * 08650002
+.*  ALLOWED.                                                          * 08700002
+.*                  N  -  IS CODE FOR NATIVE TYPE                     * 08750002
+.*                  G  -  IS CODE ALTERNATIVE ELIGIBLE TYPE.          * 08800064
+.*                                                                    * 08850002
+.*     NOTE=    NEITHER TYPE NEED BE ON SYSTEM TO PUNCH THESE         * 08900002
+.*              CARDS, IF ABSENCE OF THE TYPE RESULTS IN              * 08950002
+.*              PUNCHING A ZERO.                                      * 09000002
+.*                                                                    * 09050002
+.********************************************************************** 09100002
+.GX102   ANOP                          EXIT FOR COMPAT LOOP    @G64IPSJ 09120064
+         AGO   .MAIN50                                                  09150002
+.V100    ANOP                                                           09200002
+.*  TRANSMIT VAM-ELIGIBLE NAMES TO STAGE 2                              09250002
+&I       SETA   0                                                       09300002
+.V101    ANOP                                                           09350002
+&I       SETA  &I+1                                                     09400002
+         AIF   ('&SGUNNVC(&I)' EQ '').V102                              09450002
+ PUNCH ' SGIEF019 &SGUNNVC(&I) '                                        09500002
+         AGO   .V101                                                    09550002
+.V102    ANOP                                                           09600002
+.*                                                                    * 09650002
+.********************************************************************** 09700002
+.*       STAGE 2 WILL RESOLVE TYPE OF   NAMES BY SCANNING             * 09750002
+.*       GLOBALS IN STAGE 2 THAT STORE NAMES.                         * 09800002
+.*                                                                    * 09850002
+         AGO   .MAIN60                                                  09900002
+         MEND                                                         * 09950002
+         MACRO                                                          10000064
+         SGIEF215   &DUMMY=                                    @G64IPSJ 10050064
+.*C001000,002000,049000, A049050-049400                        @YM08650 10100064
+.*A000000-999999                                                 Y02670 10150064
+         COPY  SGGBLPAK                                                 10200064
+         LCLA  &I,&A                                                    10250064
+         LCLA  &CMPTIND,&NUMBENT,&COMPATS(500),&G,&K,&N        &G64IPSJ 10300064
+         LCLB  &GENERB                                         &G64IPSJ 10350064
+         LCLC  &WORKSTR,&DEVCLS,&TEMPVAL                       &G64IPSJ 10400064
+.********************************************************************** 10450064
+.*                                                                      10500064
+.*  MACRO - SGIEF215                                                    10550064
+.*                                                                      10600064
+.*  STATUS - VS2 SYSTEM CONTROL PROGRAM 2                      @G64IPSJ 10650064
+.*                                                                      10700064
+.*  DESCRIPTION -                                                       10750064
+.*                                                                      10800064
+.*  THIS MACRO PERFORM ALL SPECIAL-CASE PROCESSING ASSOCIATED WITH      10850064
+.*  THE EDTTAB. (AS DESCRIBED BELOW)                                    10900064
+.*                                                                      10950064
+.*  (SEE CHART 9.1 AND SUBORDINATE CHARTS IN DEVICE ALLOCATION CHARTS)  11000064
+.*                                                                      11050064
+.*  INPUTS ARE SGSCHVC, SGUNNVC.  PARAMETERS ARE THE GENERIC TYPE CODES 11100064
+.*  OF TAPE AND DA DEVICES ON THE SYSTEM. POSITIONAL PARAMS ARE         11150064
+.*  PROVIDED FOR EACH TAPE GENERIC CLASS. THE DATYP KEYWORD PARAM       11200064
+.*  IS A LIST OF DA TYPE CODES.                                         11250064
+.*                                                                      11300064
+.*  THIS MACRO GENERATES TAPE NAMES ACCORDING TO THE PRESENCE OR        11350064
+.*  ABSENCE OF CERTAIN TAPE TYPES ON SYSTEM. MULTIPLE GENERIC TYPES     11400064
+.*  ARE MADE ELEGIBLE TO TAPE NAMES UNDER SAME RULES AS NAME            11450064
+.*  GENERATION.                                                         11500064
+.*                                                                      11550064
+.*  PRECEDENCE OF GENERIC NAMES IS PROCESSED, USER SPECIFIED NAMES      11600064
+.*  DERIVED FROM SGSCHVC AND IBM DEFAULT IS OBTAINED VIA SGIEF216 CALL. 11650064
+.*                                                                      11700064
+.*  VAM ELIGIBLE NAMES ARE DERIVED FROM SGUNNVC AND TRANSMITTED TO      11750064
+.*  STAGE 2.                                                            11800064
+.*                                                                      11850064
+.*  OUTPUTS ARE PUNCHED MACRO STATEMENTS OF THE FOLLOWING FORM:         11900064
+.*                                                                      11950064
+.*       ONE SGIEF014 FOR EACH UNIT NAME TO BE KNOWN TO THE SYSTEM,     12000064
+.*           WITH TYP PARAM INDICATING TYPE OF  NAME.                   12050064
+.*           (ALL GENERICS ARE PROCESSED BEFORE ESOTERICS AND THE       12100064
+.*           ORDER THEY APPEAR ON SGIEF014 STATEMENTS BECOMES THE       12150064
+.*           INSTALLATION GENERIC PRECEDENCE.)                          12200064
+.*                                                                      12250064
+.*       ONE SGIEF019 FOR EACH NAME SPECIFIED BY USER AS VAM-ELIGIBLE.  12300064
+.*                                                                      12350064
+.*       ONE SGIEF015 FOR EACH GENERATED NAME/GENERIC ELIGIBILITY.      12400064
+.*           TYP=L FOR ESOTERICS (CURRENTLY ONLY SYSALLDA).             12450064
+.*           TYP=GG FOR GENERATED TAPE NAMES.                           12500064
+.*           TYP=X FOR EXPANDED ELIGIBILITY TO TAPE NAMES NATIVE TO     12550064
+.*           SYSTEM.                                                    12600064
+.********************************************************************** 12650064
+         AGO   .P0       CALL PRECEDENCE GENERATOR.                     12700064
+.MAIN20  ANOP                                                           12750064
+         AGO   .P100     CALL GENERIC GENERATOR.                        12800064
+.MAIN40  ANOP                                                           12850064
+         AGO   .GE100    PROCESS GEN'ED  ESOTERICS AND EXPANDED GENRICS 12900064
+.MAIN50  ANOP                                                           12950064
+         AGO   .V100     PROCESS VAM.                                   13000064
+.MAIN60  ANOP                                                           13050064
+         MEXIT                                                          13100064
+.*                                                                      13150064
+.*                                                                      13200064
+.*                                                                      13250064
+.*                                                                      13300064
+.*                                                                      13350064
+.*    PASS USER-DEFINED GENERIC PRECEDENCE TO STAGE 2                   13400064
+.P0      ANOP                                                           13450064
+&I       SETA  0                                                        13500064
+.P1      ANOP                                                           13550064
+&I       SETA  &I+1                                                     13600064
+         AIF   (&I GT 30).P2                                            13650064
+         AIF   ('&SGSCHVC(&I)'  EQ  '').P2                              13700064
+ PUNCH ' SGIEF014  TYP=G,&SGSCHVC(&I)'                                  13750064
+         AGO   .P1                                                      13800064
+.*                                                                      13850064
+.*    PASS IBM DEFAULT PRECEDENCE TO STAGE 2                            13900064
+.*                                                                      13950064
+.P2      ANOP                                                           14000064
+         SGIEF216                                                       14050064
+.*                                                             @YM08650 14100064
+.* INCLUDE DUMMY DEVICE GENERICS IN PRECEDENCE TABLE           @YM08650 14150064
+.*                                                             @YM08650 14200064
+&A       SETA  &DUMMY                                          @YM08650 14250064
+.NEXTDUM AIF   (&A EQ 0).ENDDUM                                @YM08650 14300064
+ PUNCH ' SGIEF014  TYP=G,DMY&A'                                @YM08650 14350064
+&A       SETA  &A-1                                            @YM08650 14400064
+         AGO   .NEXTDUM                                        @YM08650 14450064
+.ENDDUM  ANOP                                                  @YM08650 14500064
+         AGO   .MAIN20                                                  14550064
+.*                                                                      14600064
+.*                                                                      14650064
+.*     PROCESS  GENERATED GENERICS AND ESOTERICS                        14700064
+.*                                                                      14750064
+.P100    ANOP                                                           14800064
+&I       SETA  0                                                        14850064
+.P101    ANOP                                PUNCH MACRO                14900064
+&I       SETA   &I+1                           CALL FOR                 14950064
+         AIF   (&I GT &SGCNTRA(4)).P102         ALL ESOTERIC            15000064
+ PUNCH ' SGIEF014  TYP=E,&SGUNNMC(&I)'            NAMES                 15050064
+         AGO   .P101                                ***                 15100064
+.P102    ANOP                                                  @G64IPSJ 15150064
+.*                                                                      15200064
+.*                                                             @G64IPSJ 15250064
+.*  THIS SECTION OF CODE SCANS THE DEVICE INFORMATION TABLES   @G64IPSJ 15300064
+.*  (DIT) FOR ENTRIES THAT ARE COMPATIBLE WITH                 @G64IPSJ 15350064
+.*  OTHER DEVICE TYPES. IF THESE UPWARD COMPATIBLE TYPES ARE   @G64IPSJ 15400064
+.*  SYSGENED, THE CURRENT DEVICE-TYPE IS GENERATED AND         @G64IPSJ 15450064
+.*  CONTAINS ENTRIES FOR THE COMPATIBLE DEVICE TYPES. THE      @G64IPSJ 15500064
+.*  INFORMATION IS SAVED AND USED LATER IN THIS ROUTINE FOR    @G64IPSJ 15550064
+.*  COMPATIBLE DEVICE PROCESSING.                              @G64IPSJ 15600064
+.*                                                             @G64IPSJ 15650064
+&A       SETA  0                       INITIALIZE INDEX        @G64IPSJ 15700064
+&CMPTIND SETA  1                       INITIALIZE INDEX        @G64IPSJ 15750064
+.P201    ANOP                          LOOP TO SCAN DIT        @G64IPSJ 15800064
+&A       SETA  &A+1                    INCREMENT INDEX         @G64IPSJ 15850064
+         AIF   (&A GT &SGDITDA).P202   IF NO MORE DIT ENTRIES  @G64IPSJ 15900064
+.*                                       EXIT                  @G64IPSJ 15950064
+&NUMBENT SETA  K'&SGGCTXC(&A)/3        FIND NUMBER OF COMPATS  @G64IPSJ 16000064
+         AIF   (&NUMBENT LE 0).P201    IF NO COMPATS, CONTINUE @G64IPSJ 16050064
+&COMPATS(&CMPTIND) SETA &A+&NUMBENT*X'10000'                   @G64IPSJ 16100064
+.*                                     PUT CURRENT ID IN RIGHT @G64IPSJ 16150064
+.*                                     HALF AND NUMBER OF      @G64IPSJ 16200064
+.*                                     COMPATIBLE TYPES IN     @G64IPSJ 16250064
+.*                                     LEFT HALF OF ELEMENT    @G64IPSJ 16300064
+&I       SETA  0                       INITIALIZE SCAN INDEX   @G64IPSJ 16350064
+&GENERB  SETB  0                       INITIALIZE SCAN INDEX   @G64IPSJ 16400064
+&WORKSTR SETC  '&SGGCTXC(&A)'          MOVE ID TO WORK AREA    @G64IPSJ 16450064
+.P301     ANOP                         LOOP TO LOCATE COMPATS  @G64IPSJ 16500064
+&I       SETA  &I+1                    INCREMENT SCAN INDEX    @G64IPSJ 16550064
+         AIF   (&I GT &NUMBENT).P302   IF NO MORE, EXIT LOOP   @G64IPSJ 16600064
+&TEMPVAL SETC  '&WORKSTR'(&I*3-2,3)    OBTAIN COMPAT ID        @G64IPSJ 16650064
+&K       SETA  &TEMPVAL                CONVERT TO HEX          @G64IPSJ 16700064
+&COMPATS(&CMPTIND+&I) SETA &K          SAVE CONVERTED VALUE    @G64IPSJ 16750064
+         AIF   (NOT &SGGENDB(&K)).P301 IF COMPAT NOT GENED,    @G64IPSJ 16800064
+.*                                     GET NEXT ENTRY          @G64IPSJ 16850064
+&GENERB  SETB  1                       IF COMPAT TYPE SYSGENED @G64IPSJ 16900064
+.*                                     SET GENERATE SWITCH ON  @G64IPSJ 16950064
+         AGO   .P301                   CONTINUE TO LOCATE      @G64IPSJ 17000064
+.*                                       COMPATS               @G64IPSJ 17050064
+.P302    ANOP                          EXIT FOR LOCATE COMPATS @G64IPSJ 17100064
+         AIF   (NOT &GENERB OR &SGGENDB(&A)).P304    IF NO     @G64IPSJ 17150064
+.*                                     COMPATS GENERATED OR    @G64IPSJ 17200064
+.*                                     ALREADY GENERATED,      @G64IPSJ 17250064
+.*                                     TRY NEXT ENTRY          @G64IPSJ 17300064
+.*                                     OBTAIN GENERATED ID     @G64IPSJ 17350064
+         PUNCH ' SGIEF014  TYP=GG,&SGGNRIC(&A),X''&SGDTYPC(&A)'''       17400064
+.*                                     PUNCH CALL FOR          @G64IPSJ 17450064
+.*                                     GENERATED DEVICE ID     @G64IPSJ 17500064
+&I       SETA  0                       INITIALIZE INDEX        @G64IPSJ 17550064
+.P303    ANOP                          LOOP FOR COMPAT PUNCH   @G64IPSJ 17600064
+&I       SETA  &I+1                                            @G64IPSJ 17650064
+         AIF   (&I GT &NUMBENT).P304   IF NO NORE COMPATS,     @G64IPSJ 17700064
+.*                                       EXIT                  @G64IPSJ 17750064
+&G       SETA  &COMPATS(&CMPTIND+&I)   OBTAIN COMPATIBLE DEV   @G64IPSJ 17800064
+.*                                       DIT INDEX             @G64IPSJ 17850064
+         AIF   (NOT &SGGENDB(&G)).P303 IF COMPAT NOT GENED,    @G64IPSJ 17900064
+.*                                     GET NEXT ENTRY          @G64IPSJ 17950064
+         PUNCH ' SGIEF015 TYP=GG,N=0,G=&G '                    @G64IPSJ 18000064
+.*                                     PUNCH COMPATIBLE DEV    @G64IPSJ 18050064
+.*                                       INFORMATION           @G64IPSJ 18100064
+         AGO   .P303                   CONTINUE TO COMPAT      @G64IPSJ 18150064
+.*                                       PUNCH                 @G64IPSJ 18200064
+.P304    ANOP                          EXIT FOR COMPAT PUNCH   @G64IPSJ 18250064
+&CMPTIND SETA  &CMPTIND+&NUMBENT+1     UP DATE COMPATS INDEX   @G64IPSJ 18300064
+         AGO   .P201                   LOOP TO SCAN DIT        @G64IPSJ 18350064
+.P202    ANOP                          EXIT FOR SCAN DIT       @G64IPSJ 18400064
+.*   ALL GENERATED GENERICS PROCESSED                                   18450064
+.*                                                                      18500064
+         AGO   .MAIN40                                                  18550064
+.*                                                                      18600064
+.*   TELL STAGE 2 ALL GENERIC ASSOCIATIONS OF THE 'SYSALLDA' NAME       18650064
+.*                                                                      18700064
+.*                                                                      18750064
+.GE100   ANOP                                                           18800064
+&I       SETA  0                                                        18850064
+.GE101   ANOP                                                           18900064
+&I       SETA  &I+1                                                     18950064
+         AIF   (&I GT &SGDITDA).GX100  IF NO MORE DIT ENTRIES  @G64IPSJ 19000064
+.*                                       EXIT                  @G64IPSJ 19050064
+         AIF   ('&SGDTYPC(&I)' EQ '').GE101 IF NULL, GET NEXT  @G64IPSJ 19100064
+&WORKSTR SETC  '&SGDTYPC(&I)'          MOVE DEV TYPE TO WORK   @G64IPSJ 19150064
+&DEVCLS  SETC  '&WORKSTR'(5,2)         OBTAIN CLASS OF DEVICE  @G64IPSJ 19200064
+         AIF   ('&DEVCLS' NE '20').GE101 IF NOT DA CLASS,      @G64IPSJ 19250064
+.*                                       GET NEXT DEV TYPE     @G64IPSJ 19300064
+         PUNCH ' SGIEF015 TYP=L,N=SYSALLDA,G=&I '              @G64IPSJ 19350064
+.*                                     PUNCH IN FOR SYSALLDA   @G64IPSJ 19400064
+         AGO   .GE101                  LOOP TO NEXT DIT ENTRY  @G64IPSJ 19450064
+.********************************************************************** 19500064
+.*  ANY OTHER IBM-GENERATED ESOTERICS SHOULD BE GEN'ED HERE           * 19550064
+.*  BY PUNCHING  015'S TYP=L  AS FOR SYSALLDA.   G IS DEVICE TYPE AS  * 19600064
+.*  STORED IN  SGDADRA BOXES.                                         * 19650064
+.********************************************************************** 19700064
+.*                                                             @G64IPSJ 19750064
+.*  THIS SECTION OF CODE PUNCHS THE DATA FOR GENERIC TYPES     @G64IPSJ 19800064
+.*  THAT ALLOWS SUBSTITUTION OF NON-NATIVE DEVICE TYPES.       @G64IPSJ 19850064
+.*  THE DATA WAS COMPILED BY THE GENRATED GENERIC ROUTINE      @G64IPSJ 19900064
+.*  AND SAVED IN LOCAL DATA AREAS                              @G64IPSJ 19950064
+.*                                                             @G64IPSJ 20000064
+.GX100   ANOP                                                  @G64IPSJ 20050064
+&A       SETA  1                       INITIALIZE COMPATS IND  @G64IPSJ 20100064
+.GX101   ANOP                          LOOP FOR COMPATS        @G64IPSJ 20150064
+         AIF   (&A GE &CMPTIND).GX102  IF NO MORE, EXIT        @G64IPSJ 20200064
+&NUMBENT SETA  &COMPATS(&A)/X'10000'   OBTAIN NUMBER OF COMPAT @G64IPSJ 20250064
+&N       SETA  &COMPATS(&A)-&COMPATS(&A)/X'10000'*X'10000'     @G64IPSJ 20300064
+.*                                     OBTAIN COMPAT ID        @G64IPSJ 20350064
+         AIF   (NOT &SGGENDB(&N)).GX201 IF NOT GENERATED,      @G64IPSJ 20400064
+.*                                     DO NOT PROCESS          @G64IPSJ 20450064
+&I       SETA  0                       INITIALIZE INDEX        @G64IPSJ 20500064
+.GX200   ANOP                          LOOP FOR SUB-ENTRIES    @G64IPSJ 20550064
+&I       SETA  &I+1                    INCREMENT INDEX         @G64IPSJ 20600064
+         AIF   (&I GT &NUMBENT).GX201  IF NO MORE, EXIT        @G64IPSJ 20650064
+&G       SETA  &COMPATS(&A+&I)         OBTAIN COMPAT ID        @G64IPSJ 20700064
+         AIF   (NOT &SGGENDB(&G)).GX200 IF COMPAT NOT GENED,   @G64IPSJ 20750064
+.*                                     GET NEXT ENTRY          @G64IPSJ 20800064
+         PUNCH ' SGIEF015 TYP=X,N=&N,G=&G '                    @G64IPSJ 20850064
+.*                                     PUNCH DATA CALL         @G64IPSJ 20900064
+         AGO   .GX200                  LOOP TO NEXT ENTRY      @G64IPSJ 20950064
+.GX201   ANOP                          EXIT FOR COMPAT         @G64IPSJ 21000064
+&A       SETA  &A+&NUMBENT+1           INCREMENT TO NEXT       @G64IPSJ 21050064
+.*                                       ENTRY SET             @G64IPSJ 21100064
+         AGO   .GX101                  PROCESS NEXT ENTRY SET  @G64IPSJ 21150064
+.********************************************************************** 21200064
+.*                                                                    * 21250064
+.*  ANY OTHER GENERIC TYPES FOR WHICH IBM ALLOWS SUBSTITUTION         * 21300064
+.*  OF NON-NATIVE TYPES IN ALLOCATION SHOULD BE GEN'ED HERE BY        * 21350064
+.*  PUNCHING   SGIEF015 TYP=X  CARDS, ONE FOR EACH SUBSTITUTION       * 21400064
+.*  ALLOWED.                                                          * 21450064
+.*                  N  -  IS CODE FOR NATIVE TYPE                     * 21500064
+.*                  G  -  IS CODE ALTERNATIVE ELIGIBLE TYPE.          * 21550064
+.*                                                                    * 21600064
+.*     NOTE=    NEITHER TYPE NEED BE ON SYSTEM TO PUNCH THESE         * 21650064
+.*              CARDS, IF ABSENCE OF THE TYPE RESULTS IN              * 21700064
+.*              PUNCHING A ZERO.                                      * 21750064
+.*                                                                    * 21800064
+.********************************************************************** 21850064
+.GX102   ANOP                          EXIT FOR COMPAT LOOP    @G64IPSJ 21900064
+         AGO   .MAIN50                                                  21950064
+.V100    ANOP                                                           22000064
+.*  TRANSMIT VAM-ELIGIBLE NAMES TO STAGE 2                              22050064
+&I       SETA   0                                                       22100064
+.V101    ANOP                                                           22150064
+&I       SETA  &I+1                                                     22200064
+         AIF   ('&SGUNNVC(&I)' EQ '').V102                              22250064
+ PUNCH ' SGIEF019 &SGUNNVC(&I) '                                        22300064
+         AGO   .V101                                                    22350064
+.V102    ANOP                                                           22400064
+.*                                                                    * 22450064
+.********************************************************************** 22500064
+.*       STAGE 2 WILL RESOLVE TYPE OF   NAMES BY SCANNING             * 22550064
+.*       GLOBALS IN STAGE 2 THAT STORE NAMES.                         * 22600064
+.*                                                                    * 22650064
+         AGO   .MAIN60                                                  22700064
+         MEND                                                         * 22750064

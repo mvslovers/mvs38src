@@ -1,0 +1,117 @@
+         MACRO                                                          02000001
+         SGIKJ4EF                                                       04000001
+.*C397500-411500, D432500-446500                               @Y30PQTH 04050003
+.*A821000-822500                     CALL COMMAND              @ZA45113 04100003
+.* D940500                                                @ZA51233      04125003
+         COPY   SGGBLPAK                                         Y02953 04150003
+         AIF ('&SGCMDSC(1)' EQ 'NO').TSOCMD    IF TSO COMMANDS ARE      04200003
+.*                                             NOT WANTED THE SKIP      04250003
+.*                                             TO .TSOCMD        Y02953 06000003
+&SGCTRLC(7)    SETC      '&SGCTRLC(23)'                          Y02953 06050003
+&SGCTRLC(8)    SETC      '&SGCTRLC(24)'                          Y02953 06100003
+&SGCTRLC(9)    SETC      'CMDLIB'                                Y02953 08000003
+&SGCTRLC(10)   SETC      ',LET'                                  Y02953 08050003
+&SGCTRLC(11)   SETC      ',REUS'                                 Y02953 08100003
+&SGCTRLC(12)   SETC      ',RENT'                                 Y02953 10000003
+         COPY  SGLEDPK1                                          Y02953 10050003
+         PUNCH '//ACMDLIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.ACMDX12000003
+               LIB'                                              Y02953 12050003
+         PUNCH '//AOST4 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOST4' 12100003
+         COPY  SGLEDPK2                                          Y02953 14000003
+.*    SEND                                                       Y02953 14050003
+         PUNCH '    INCLUDE ACMDLIB(IKJEES10,IKJEES11)'          Y02953 14100003
+         PUNCH '    INCLUDE AOST4(IKJEES20)'                     Y02953 16000003
+         PUNCH '    INCLUDE AOST4(IEEVSDIO)'                     Y02953 16050003
+         PUNCH '    ORDER IKJEES10(P),IKJEES11'                  Y02953 18000003
+         PUNCH '    ORDER IEEVSDIO,IKJEES20'                     Y02953 18050003
+         PUNCH '    ENTRY IKJEES10'                              Y02953 18100003
+         PUNCH '    ALIAS SE'                                    Y02953 20000003
+         PUNCH ' NAME SEND(R)'                                   Y02953 20050003
+.*    OPERATOR                                                   Y02953 20100003
+         PUNCH '    INCLUDE ACMDLIB(IKJEE100,IKJEE1A0,IKJEE150)' Y02953 20150003
+         PUNCH '    ENTRY IKJEE100'                              Y02953 20200003
+         PUNCH '    ALIAS OPER'                                  Y02953 20250003
+         PUNCH ' NAME OPERATOR(R)'                               Y02953 20300003
+.*    WHEN                                                       Y02953 20350003
+         PUNCH '    INCLUDE ACMDLIB(IKJEFE11,IKJEFE15,IKJEFE16)' Y02953 20400003
+         PUNCH '    ENTRY IKJEFE11'                              Y02953 20450003
+         PUNCH '    ALIAS END,WHEN'                              Y02953 20500003
+         PUNCH ' NAME IKJEFE11(R)'                               Y02953 20550003
+.*    HELP                                                       Y02953 28000003
+         PUNCH '    INCLUDE ACMDLIB(IKJEFH01,IKJEFH00,IKJEFH02)' Y02953 28050003
+         PUNCH '    INCLUDE ACMDLIB(IKJEFH03)'                   Y02953 28100003
+         PUNCH '    INCLUDE AOST4(IKJEFF02)'                     Y02953 30000003
+         PUNCH '    ENTRY IKJEFH01'                              Y02953 30050003
+         PUNCH '    ALIAS H'                                     Y02953 30100003
+         PUNCH ' NAME HELP(R)'                                   Y02953 30150003
+.*    TERMINAL                                                   Y02953 30200003
+         PUNCH '    INCLUDE ACMDLIB(IKJEFT80)'                   Y02953 34000003
+         PUNCH '    ALIAS TERM'                                  Y02953 34050003
+         PUNCH ' NAME TERMINAL(R)'                               Y02953 34100003
+.*    PROFILE                                                    Y02953 36000003
+         PUNCH '    INCLUDE ACMDLIB(IKJEFT82)'                   Y02953 36050003
+         PUNCH '    ALIAS PROF'                                  Y02953 36100003
+         PUNCH ' NAME PROFILE(R)'                                Y02953 38000003
+.*    EXEC                                                       Y02953 38050003
+         PUNCH '    INCLUDE AOST4(IKJCT430,IKJCT431)'          @Y30PQTH 38100003
+         PUNCH '    INCLUDE AOST4(IKJCT432,IKJCT435)'          @Y30PQTH 40000003
+         PUNCH '    ENTRY IKJCT430'                            @Y30PQTH 40050003
+         PUNCH '    ALIAS EX'                                    Y02953 40100003
+         PUNCH ' NAME EXEC(R)'                                   Y02953 42000003
+.*    SUBMIT                                                     Y02953 44000003
+         PUNCH '    INCLUDE ACMDLIB(IKJEFF01)'                   Y02953 46000003
+         PUNCH '    ENTRY IKJEFF01'                              Y02953 54000003
+         PUNCH '    ALIAS SUB'                                   Y02953 54050003
+         PUNCH ' NAME SUBMIT(R)'                                 Y02953 54100003
+.*    STATUS                                                     Y02953 56000003
+         PUNCH '    INCLUDE AOST4(IKJEFF56)'                     Y02953 56050003
+         PUNCH '    ALIAS IKJEFFCA,ST'                           Y02953 56100003
+         PUNCH ' NAME STATUS(R)'                                 Y02953 56150003
+.*    LISTBC                                                     Y02953 56200003
+         PUNCH '    INCLUDE AOST4(IKJEES70,IKJEES74,IKJEES75)'   Y02953 56250003
+         PUNCH '    ENTRY IKJEES70'                              Y02953 56300003
+         PUNCH '    ALIAS LISTB'                                 Y02953 56350003
+         PUNCH ' NAME LISTBC(R)'                                 Y02953 56400003
+.*    FREE                                                       Y02953 56450003
+         PUNCH '    INCLUDE ACMDLIB(IKJEFD20)'                   Y02953 56500003
+         PUNCH '    ENTRY IKJEFD20'                              Y02953 64000003
+         PUNCH ' NAME FREE(R)'                                   Y02953 64050003
+.*    RUN                                                        Y02953 66000003
+         PUNCH '    INCLUDE ACMDLIB(IKJEFR00)'                   Y02953 66050003
+         PUNCH '    ENTRY IKJEFR00'                              Y02953 66100003
+         PUNCH '    ALIAS R'                                     Y02953 70000003
+         PUNCH ' NAME RUN(R)'                                    Y02953 70050003
+.*    ALLOCATE                                                   Y02953 70100003
+         PUNCH '    INCLUDE AOST4(IKJEFD30)'                     Y02953 72000003
+         PUNCH '    INCLUDE AOST4(IKJEFD31)'                     Y02953 72050003
+         PUNCH '    INCLUDE AOST4(IKJEFD32)'                     Y02953 72100003
+         PUNCH '    INCLUDE AOST4(IKJEFD33)'                     Y02953 72150003
+         PUNCH '    INCLUDE AOST4(IKJEFD34)'                     Y02953 72200003
+         PUNCH '    INCLUDE AOST4(IKJEFD35)'                     Y02953 72250003
+         PUNCH '    INCLUDE AOST4(IKJEFD36)'                     Y02953 72300003
+         PUNCH '    INCLUDE AOST4(IKJEFD37)'                     Y02953 72350003
+         PUNCH '    ENTRY IKJEFD30'                              Y02953 74000003
+         PUNCH '    ALIAS ALLOC'                                 Y02953 74050003
+         PUNCH ' NAME ALLOCATE(R)'                               Y02953 74100003
+.*    LOGON CP                                                   Y02953 76000003
+         PUNCH '    INCLUDE ACMDLIB(IKJEFL00)'                   Y02953 76050003
+         PUNCH '    ALIAS LOGON'                                 Y02953 76100003
+         PUNCH ' NAME LOGOFF(R)'                                 Y02953 78000003
+.*    ATTRIB                                                     Y02953 78400003
+         PUNCH '    INCLUDE ACMDLIB(IKJEFATT) '                  Y02953 79500003
+         PUNCH '    ALIAS ATTR '                                 Y02953 80200003
+         PUNCH '    ENTRY IKJEFATT '                             Y02953 80250003
+         PUNCH ' NAME ATTRIB(R) '                                Y02953 80300003
+.*    OUTPUT                                                     Y02953 80350003
+         PUNCH '    INCLUDE AOST4(IKJCT466) '                    Y02953 80400003
+         PUNCH '    ALIAS OUT '                                  Y02953 80450003
+         PUNCH '    ENTRY IKJCT466 '                             Y02953 80500003
+         PUNCH ' NAME OUTPUT(R) '                                Y02953 82000003
+.*    CALL COMMAND                                              ZA45113 82050003
+         PUNCH ' INCLUDE ACMDLIB(IKJEFG00)'                     ZA45113 82100003
+         PUNCH ' ENTRY IKJEFG00 '                               ZA45113 82150003
+         PUNCH ' ALIAS CALL'                                    ZA45113 82200003
+         PUNCH ' NAME IKJEFG00(R)'                              ZA45113 82250003
+         PUNCH '/* '                                             Y02953 82300003
+.TSOCMD  ANOP                                                    Y02953 82350003
+         MEND                                                           94000001

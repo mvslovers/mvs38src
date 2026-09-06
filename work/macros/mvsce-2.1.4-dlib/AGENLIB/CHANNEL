@@ -1,0 +1,126 @@
+         MACRO                                                          00050000
+&NAME    CHANNEL &ADDRESS=,&TYPE=                                       00100000
+         COPY  SGGBLPAK                                                 00150000
+         LCLA  &A,&B                                                    00200000
+         LCLB  &E                                                       00250000
+         LCLC  &ID                                                      00300000
+.***** START OF SPECIFICATIONS **************************************   00350000
+.*                                                                      00400000
+.* MODULE NAME - CHANNEL                                                00450000
+.*                                                                      00500000
+.* DESCRIPTIVE NAME - CHANNEL                                           00550000
+.*                                                                      00600000
+.* COPYRIGHT - NONE                                                     00650000
+.*                                                                      00700000
+.* STATUS - CHANGE LEVEL 02                                             00750000
+.*                                                                      00800000
+.* FUNCTION -                                                           00850000
+.*       THE CHANNEL MACRO IS USED TO DESCRIBE THE CHANNELS THAT ARE    00900000
+.*       GOING TO BE IN THE SYSTEM.                                     00950000
+.*                                                                      01000000
+.* NOTES - N/A                                                          01050000
+.*                                                                      01100000
+.* MODULE TYPE - MACRO                                                  01150000
+.*                                                                      01200000
+.* ENTRY POINT - N/A                                                    01250000
+.*                                                                      01300000
+.* INPUT - THE FOLLOWING PARAMETERS ARE ALLOWED ON CHANNEL              01350000
+.*             &ADDRESS - SPECIFIES AN ADDRESS OR GROUP OF ADDRESSES    01400000
+.*                        TO BE ASSOCIATED WITH THIS &TYPE CHANNEL      01450000
+.*             &TYPE    - SPECIFIES THE TYPE OF CHANNEL TO BE           01500000
+.*                        ASSOCIATED WITH THE ADDRESSES SPECIFIED.      01550000
+.*                                                                      01600000
+.* OUTPUT -                                                             01650000
+.*       GLOBALS USED ARE -                                             01700000
+.*             &SGMENTB(2)  - CHANNEL MACRO SPECIFIED                   01750000
+.*             &SGMENTB(68) - BLKMPXR IN SYSTEM                         01800000
+.*             &SGCNTRA(1)  - COUNT OF ADDRESSES SPECIFIED              01850000
+.*             &SGCHANA     - CHANNEL MACRO COUNT                       01900000
+.*             &SGCHANB     - THIS CHANNEL IN SYSTEM                    01950000
+.*             &HEX         - ADDRESS SPECIFIED IN HEXADECIMAL          02000000
+.*             &SGQUITB     - QUIT SWITCH                               02050000
+.*                                                                      02100000
+.*       LOCALS USED ARE -                                              02150000
+.*             &A      - USED AS COUNT OF ADDRESSES SPECIFIED           02200000
+.*             &B      - SET TO HEX VALUE OF THE ADDRESS SPECIFIED *15  02250000
+.*                       AND USED AS SUBSCRIPT TO SGSCHANB GLOBAL       02300000
+.*             &E      - SET IF ERROR IN TYPE PARAMETER                 02350000
+.*             &ID     - USED AS CODING ERROR IDENTIFIER                02400000
+.*                                                                      02450000
+.* EXIT, NORMAL - N/A                                                   02500000
+.*                                                                      02550000
+.* EXIT, ERROR - N/A                                                    02600000
+.*                                                                      02650000
+.* EXTERNAL REFERENCES - N/A                                            02700000
+.*                                                                      02750000
+.* TABLES - N/A                                                         02800000
+.*                                                                      02850000
+.* MACROS - NONE                                                        02900000
+.*                                                                      02950000
+.* CHANGE ACTIVITY -                                                    03000000
+.*                                                                      03050000
+.****** END OF SPECIFICATIONS ***************************************   03100000
+&SGMENTB(2)    SETB 1                        CHANNEL ENTRY SWITCH       03150000
+&SGCHANA SETA  &SGCHANA+1                    CHANNEL MACRO COUNT        03200000
+         AIF   ('&NAME' EQ '').NONE          BR IF NAME NOT SPECIFIED   03250000
+&ID      SETC  '&NAME'                                                  03300000
+         AGO   .NULL                                                    03350000
+.NONE    ANOP                                                           03400000
+&ID      SETC  'CHAN.#&SGCHANA'              BUILD CHANNEL ID           03450000
+.NULL    AIF   (T'&ADDRESS EQ 'O').E2        MUST BE SPECIFIED          03500000
+.TEST    AIF   (N'&ADDRESS EQ &A).MEND       BR AT END OF SCAN          03550000
+         AIF   (&SGCNTRA(1) GE 16).E1        EXCEED 16 CHANNELS         03600000
+&A       SETA  &A+1                          &A-INDEX TO ADDRESS        03650000
+&SGCNTRA(1)    SETA &SGCNTRA(1)+1            CHANNEL ADDRESS COUNT      03700000
+         AIF   (K'&ADDRESS(&A) NE 1).E3      ERROR ON NUMBER OF DIGITS  03750000
+         AIF   (NOT(('&ADDRESS(&A)' GE '0' AND '&ADDRESS(&A)' LE '9')ORX03800000
+               ('ADDRESS(&A)' GE 'A' AND '&ADDRESS(&A)' LE 'F'))).E3    03850000
+         CONVERT TO=HEX,DIGITS=1,VALUE=&ADDRESS(&A)                     03900000
+&B       SETA  &HEX*15                       POINTER TO CHANNEL BITLIST 03950000
+         AIF   (&SGCHANB(&B+1)).E4           CHANNEL PREVIOUSLY SPEC'D  04000000
+    MNOTE *,'     CHANNEL &ADDRESS(&A) SPECIFIED'                       04050000
+&SGCHANB(&B+1) SETB 1                        CHANNEL PRESENT BIT        04100000
+.TYPE    AIF   (&E).TEST                     PREVIOUS TYPE ERROR        04150000
+         AIF   (T'&TYPE EQ 'O').E5           MUST BE SPECIFIED          04200000
+         AIF   (N'&TYPE NE 1).E6             MUST BE ONLY ONE           04250000
+         AIF   ('&TYPE' NE 'MULTIPLEXOR').T1                            04300000
+&SGCHANB(&B+2) SETB 1                        MULTIPLEXOR BIT            04350000
+         AGO   .M1                                                      04400000
+.T1      AIF   ('&TYPE' NE 'SELECTOR').T2                               04450000
+&SGCHANB(&B+3) SETB 1                        SELECTOR BIT               04500000
+         AGO   .M1                                                      04550000
+.T2      AIF   ('&TYPE' NE 'HISPEEDMPXR').T3                            04600000
+&SGCHANB(&B+4) SETB 1                        HISPEEDMPXR BIT            04650000
+         AGO   .M1                                                      04700000
+.T3      AIF   ('&TYPE' NE 'BLKMPXR').E7                                04750000
+&SGMENTB(68)   SETB 1                                                   04800000
+&SGCHANB(&B+6) SETB 1                        BLKMPXR BIT                04850000
+.M1 MNOTE *,'        IT IS A &TYPE CHANNEL'                             04900000
+         AGO   .TEST                                                    04950000
+.E1 MNOTE 5,'* * * IEICHA101 &ID-CHANNEL ADDRESS &ADDRESS(&A+1) EXCEEDSX05000000
+                MAXIMUM OF 16 CHANNELS'                                 05050000
+&SGQUITB SETB  1                                                        05100000
+         AGO   .MEND                         CHECK AS MUCH AS POSSIBLE  05150000
+.E2 MNOTE 5,'* * * IEICHA102 &ID-ADDRESS VALUE NOT SPECIFIED'           05200000
+&SGQUITB SETB  1                                                        05250000
+         AGO   .TYPE                                                    05300000
+.E3 MNOTE 5,'* * * IEICHA103 &ID-ADDRESS VALUE &ADDRESS(&A) INVALID'    05350000
+&SGQUITB SETB  1                                                        05400000
+         AGO   .TYPE                                                    05450000
+.E4 MNOTE 5,'* * * IEICHA104 &ID-CHANNEL &ADDRESS(&A) PREVIOUSLY SPECIFX05500000
+               IED'                                                     05550000
+&SGQUITB SETB  1                                                        05600000
+         AGO   .TYPE                                                    05650000
+.E5 MNOTE 5,'* * * IEICHA105 &ID-TYPE VALUE NOT SPECIFIED'              05700000
+&SGQUITB SETB  1                                                        05750000
+&E       SETB  1                                                        05800000
+         AGO   .TEST                                                    05850000
+.E6 MNOTE 5,'* * * IEICHA106 &ID-TOO MANY TYPE VALUES'                  05900000
+&SGQUITB SETB  1                                                        05950000
+&E       SETB  1                                                        06000000
+         AGO   .TEST                                                    06050000
+.E7 MNOTE 5,'* * * IEICHA107 &ID-TYPE VALUE &TYPE INVALID'              06100000
+&SGQUITB SETB  1                                                        06150000
+&E       SETB  1                                                        06200000
+         AGO   .TEST                                                    06250000
+.MEND    MEND                                                           06300000

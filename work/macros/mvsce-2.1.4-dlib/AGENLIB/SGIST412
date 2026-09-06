@@ -1,0 +1,281 @@
+* /* START OF SPECIFICATIONS ****                                       00050000
+*                                                                       00600000
+*01*  MODULE-NAME = SGIST412                                            01200000
+*                                                                       01800000
+*01*  DESCRIPTIVE-NAME = SYSGEN MACRO FOR VS2                           02400000
+*                                                                       03000000
+*01*  COPYRIGHT = XXXX-XXX COPYRIGHT IBM CORP 1973                      03600000
+*                                                                       04200000
+*01*  STATUS = RELEASE 3                                                04800000
+*                                                                       05400000
+*01*  FUNCTION = THIS MACRO IS CALLED BY THE GENERATE MACRO. IT WILL DO 06000000
+*     SELECTIVE LINK EDITING OF MODULES ON SYS1.AOS26 INTO              06600000
+*     SYS1.LINKLIB.                                                     07200000
+*                                                                       07800000
+*01*  NOTES = NONE                                                      08400000
+*                                                                       09000000
+*02*    CHARACTER-CODE-DEPENDENCIES = NONE                              09600000
+*                                                                       10200000
+*02*    DEPENDENCIES = VS2 SYSTEM ONLY                                  10800000
+*                                                                       11400000
+*02*    RESTRICTIONS = NONE                                             12000000
+*                                                                       12600000
+*02*    REGISTER-CONVENTIONS = NONE                                     13200000
+*                                                                       13800000
+*02*    PATCH-LABEL = NONE                                              14400000
+*                                                                       15000000
+*01*  MODULE-TYPE = MACRO                                               15600000
+*                                                                       16200000
+*02*    PROCESSOR = ASSEMBLER                                           16800000
+*                                                                       17400000
+*02*    MACRO-SIZE = TOTAL NUMBER OF STATEMENTS                         18000000
+*                                                                       18600000
+*02*    ATTRIBUTES = LIST                                               19800000
+*                                                                       20400000
+*01*  ENTRY-POINT = NA                                                  21000000
+*                                                                       21600000
+*01*  EXIT-NORMAL = NA                                                  22200000
+*                                                                       22800000
+*01*  EXIT-ERROR = NA                                                   23400000
+*                                                                       24000000
+*01*  EXTERNAL-REFERENCES = NONE                                        24600000
+*                                                                       25200000
+*02*    DATA-AREA = NONE                                                25800000
+*                                                                       26400000
+*02*    CONTROL-BLOCKS-SYSTEM = NONE                                    27000000
+*                                                                       27600000
+*02*    CONTROL-BLOCKS-ATCAM = NONE                                     28200000
+*                                                                       28800000
+*01*  TABLES = NONE                                                     29400000
+*                                                                       30000000
+*01*  INNER-MACROS = SGGBLPAK, SGLEDPK1, SGLEDPK2                       30600000
+*                                                                       31200000
+*01*  SYSTEM-MACROS = NONE                                              31800000
+*                                                                       32400000
+*01*  CHANGE-ACTIVITY = SNA2,DCR 3878.50,@ZM41216                       33600000
+*                                                                       33650000
+**** END OF SPECIFICATIONS ***/                                         34200000
+              MACRO                                                     34800000
+              SGIST412                                                  35400000
+              COPY  SGGBLPAK                                            36000000
+&SGCTRLC(7)  SETC  '&SGCTRLC(32)'     SET VOLUME FOR LINKLIB            36600000
+&SGCTRLC(8)  SETC  '&SGCTRLC(31)'     SET UNIT NAME FOR LINKLIB         37200000
+&SGCTRLC(9)  SETC  'LINKLIB'          DSNAME FOR OUTPUT                 37800000
+&SGCTRLC(6)  SETC  ''                 SET NULL PROG NAME                38400000
+&SGCTRLC(10) SETC  ',LET'             PARM FIELD OPTIONS                39000000
+&SGCTRLC(11) SETC  ',REUS'                                              39600000
+&SGCTRLC(12) SETC  ',SIZE=(500K,64K)'                          @ZM32268 40500000
+              COPY  SGLEDPK1                                            40550000
+  PUNCH '//AOS26 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS26'        40800000
+              COPY  SGLEDPK2                                            41400000
+  PUNCH ' INCLUDE AOS26(ISTINM01)'                                      42000000
+  PUNCH ' INCLUDE AOS26(ISTINMAD)'                                      42600000
+  PUNCH ' INCLUDE AOS26(ISTINMAL)'                                      43200000
+  PUNCH ' INCLUDE AOS26(ISTINMAV)'                                      43800000
+  PUNCH ' INCLUDE AOS26(ISTINCAW)'                                      44400000
+  PUNCH ' INCLUDE AOS26(ISTINCA0)'                                      45000000
+  PUNCH ' INCLUDE AOS26(ISTINCBL)'                                      46400000
+  PUNCH ' INCLUDE AOS26(ISTINCCC)'                                      46500000
+  PUNCH ' INCLUDE AOS26(ISTINCCF)'                                      46800000
+  PUNCH ' INCLUDE AOS26(ISTINCCL)'                                      47400000
+  PUNCH ' INCLUDE AOS26(ISTINCDL)'                                      48000000
+  PUNCH ' INCLUDE AOS26(ISTINCDU)'                                      48600000
+  PUNCH ' INCLUDE AOS26(ISTINCD0)'                                      49200000
+  PUNCH ' INCLUDE AOS26(ISTINCD1)'                             @Z40GKE7 49850000
+  PUNCH ' INCLUDE AOS26(ISTINCD2)'                             @Z40GKE7 49900000
+  PUNCH ' INCLUDE AOS26(ISTINCD3)'                             @Z40GKE7 49950000
+  PUNCH ' INCLUDE AOS26(ISTINCD4)'                             @Z40GKE7 50000000
+  PUNCH ' INCLUDE AOS26(ISTINCD5)'                            @Z40GKE7  50050000
+  PUNCH ' INCLUDE AOS26(ISTINCD6)'                            @Z40GKE7  50100000
+  PUNCH ' INCLUDE AOS26(ISTINCD7)'                            @Z40GKE7  50150000
+  PUNCH ' INCLUDE AOS26(ISTINCD8)'                            @Z40GKE7  50200000
+  PUNCH ' INCLUDE AOS26(ISTINCD9)'                            @Z40GKE7  50250000
+  PUNCH ' INCLUDE AOS26(ISTINCE0)'                            @Z40GKE7  50300000
+  PUNCH ' INCLUDE AOS26(ISTINCE1)'                            @Z40GKE7  50350000
+  PUNCH ' INCLUDE AOS26(ISTINCE2)'                            @Z40GKE7  50400000
+  PUNCH ' INCLUDE AOS26(ISTINCE3)'                            @Z40GKE7  50450000
+  PUNCH ' INCLUDE AOS26(ISTINCE4)'                            @Z40GKE7  50500000
+  PUNCH ' INCLUDE AOS26(ISTINCE5)'                            @Z40GKE7  50550000
+  PUNCH ' INCLUDE AOS26(ISTINCE6)'                            @Z40GKE7  50560000
+  PUNCH ' INCLUDE AOS26(ISTINCE7)'                            @Z40GKE7  50570000
+  PUNCH ' INCLUDE AOS26(ISTINCE8)'                            @Z40GKE7  50580000
+  PUNCH ' INCLUDE AOS26(ISTINCE9)'                            @Z40GKE7  50590000
+  PUNCH ' INCLUDE AOS26(ISTINCFS)'                                      50595000
+  PUNCH ' INCLUDE AOS26(ISTINCFM)'                            @Z40GKE7  50650000
+  PUNCH ' INCLUDE AOS26(ISTINCF1)'                            @Z40GKE7  50700000
+  PUNCH ' INCLUDE AOS26(ISTINCF3)'                            @Z40GKE7  50750000
+  PUNCH ' INCLUDE AOS26(ISTINCF4)'                            @Z40GKE7  50760000
+  PUNCH ' INCLUDE AOS26(ISTINCF9)'                                      50780000
+  PUNCH ' INCLUDE AOS26(ISTINCHT)'                                      50800000
+  PUNCH ' INCLUDE AOS26(ISTINCIB)'                                      51000000
+  PUNCH ' INCLUDE AOS26(ISTINCIO)'                                      51600000
+  PUNCH ' INCLUDE AOS26(ISTINCIT)'                                      52200000
+  PUNCH ' INCLUDE AOS26(ISTINCLF)'                                      52800000
+  PUNCH ' INCLUDE AOS26(ISTINCL0)'                            @Z40GKE7  54050000
+  PUNCH ' INCLUDE AOS26(ISTINCL1)'                            @Z40GKE7  54100000
+  PUNCH ' INCLUDE AOS26(ISTINCL2)'                            @Z40GKE7  54150000
+  PUNCH ' INCLUDE AOS26(ISTINCL3)'                            @Z40GKE7  54200000
+  PUNCH ' INCLUDE AOS26(ISTINCL4)'                            @Z40GKE7  54250000
+  PUNCH ' INCLUDE AOS26(ISTINCL5)'                            @Z40GKE7  54300000
+  PUNCH ' INCLUDE AOS26(ISTINCL6)'                            @Z40GKE7  54350000
+  PUNCH ' INCLUDE AOS26(ISTINCL7)'                            @Z40GKE7  54400000
+  PUNCH ' INCLUDE AOS26(ISTINCL8)'                            @Z40GKE7  54450000
+  PUNCH ' INCLUDE AOS26(ISTINCMD)'                            @Z40GKE7  54500000
+  PUNCH ' INCLUDE AOS26(ISTINCMR)'                                      54550000
+  PUNCH ' INCLUDE AOS26(ISTINCMY)'                                      54600000
+  PUNCH ' INCLUDE AOS26(ISTINCNS)'                                      54900000
+  PUNCH ' INCLUDE AOS26(ISTINCOE)'                                      55200000
+  PUNCH ' INCLUDE AOS26(ISTINCOI)'                                      56100000
+  PUNCH ' INCLUDE AOS26(ISTINCOS)'                                      56400000
+  PUNCH ' INCLUDE AOS26(ISTINCPD)'                                      57000000
+  PUNCH ' INCLUDE AOS26(ISTINCPH)'                                      57600000
+  PUNCH ' INCLUDE AOS26(ISTINCQB)'                                      58200000
+  PUNCH ' INCLUDE AOS26(ISTINCQE)'                                      58800000
+  PUNCH ' INCLUDE AOS26(ISTINCRD)'                                      59400000
+  PUNCH ' INCLUDE AOS26(ISTINCRF)'                                      60000000
+  PUNCH ' INCLUDE AOS26(ISTINCRR)'                                      60600000
+  PUNCH ' INCLUDE AOS26(ISTINCRS)'                                      61200000
+  PUNCH ' INCLUDE AOS26(ISTINCSD)'                                      61800000
+  PUNCH ' INCLUDE AOS26(ISTINCSM)'                                      62400000
+  PUNCH ' INCLUDE AOS26(ISTINCST)'                                      62700000
+  PUNCH ' INCLUDE AOS26(ISTINCS1)'                            @Z40GKE7  63050000
+  PUNCH ' INCLUDE AOS26(ISTINCTE)'                                      63100000
+  PUNCH ' INCLUDE AOS26(ISTINCTM)'                                      63600000
+  PUNCH ' INCLUDE AOS26(ISTINCTR)'                                      64200000
+  PUNCH ' INCLUDE AOS26(ISTINCUA)'                            @Z40GKE7  64810000
+  PUNCH ' INCLUDE AOS26(ISTINCUB)'                            @Z40GKE7  64820000
+  PUNCH ' INCLUDE AOS26(ISTINCUM)'                            @Z40GKE7  64830000
+  PUNCH ' INCLUDE AOS26(ISTINCUQ)'                            @Z40GKE7  64840000
+  PUNCH ' INCLUDE AOS26(ISTINCU0)'                            @Z40GKE7  64842000
+  PUNCH ' INCLUDE AOS26(ISTINCU1)'                            @Z40GKE7  64844000
+  PUNCH ' INCLUDE AOS26(ISTINCU2)'                            @Z40GKE7  64846000
+  PUNCH ' INCLUDE AOS26(ISTINCU3)'                            @Z40GKE7  64848000
+  PUNCH ' INCLUDE AOS26(ISTINCU4)'                            @Z40GKE7  64848400
+  PUNCH ' INCLUDE AOS26(ISTINCU5)'                            @Z40GKE7  64848800
+  PUNCH ' INCLUDE AOS26(ISTINCU6)'                            @Z40GKE7  64849200
+  PUNCH ' INCLUDE AOS26(ISTINCU7)'                            @Z40GKE7  64849600
+  PUNCH ' INCLUDE AOS26(ISTINCU8)'                            @Z40GKE7  64849700
+  PUNCH ' INCLUDE AOS26(ISTINCVA)'                                      64899700
+  PUNCH ' INCLUDE AOS26(ISTINCVI)'                                      65400000
+  PUNCH ' INCLUDE AOS26(ISTINCVO)'                                      66000000
+  PUNCH ' INCLUDE AOS26(ISTINCVP)'                                      66100000
+  PUNCH ' INCLUDE AOS26(ISTINCVS)'                                      66200000
+  PUNCH ' INCLUDE AOS26(ISTINCVX)'                                      66300000
+  PUNCH ' INCLUDE AOS26(ISTINCV2)'                            @Z40GKE7  66450000
+  PUNCH ' INCLUDE AOS26(ISTINCV3)'                            @Z40GKE7  66500000
+  PUNCH ' INCLUDE AOS26(ISTINCV4)'                            @Z40GKE7  66550000
+  PUNCH ' INCLUDE AOS26(ISTINCV5)'                            @Z40GKE7  66560000
+  PUNCH ' INCLUDE AOS26(ISTINCV6)'                            @Z40GKE7  66570000
+  PUNCH ' INCLUDE AOS26(ISTINCV8)'                            @Z40GKE7  66580000
+  PUNCH ' INCLUDE AOS26(ISTINCV9)'                            @Z40GKE7  66590000
+  PUNCH ' INCLUDE AOS26(ISTINCW0)'                            @Z40GKE7  66592000
+  PUNCH ' INCLUDE AOS26(ISTINCW2)'                            @Z40GKE7  66594000
+  PUNCH ' INCLUDE AOS26(ISTINCW4)'                            @Z40GKE7  66598000
+  PUNCH ' INCLUDE AOS26(ISTINCW5)'                            @Z40GKE7  66598400
+  PUNCH ' INCLUDE AOS26(ISTINCW6)'                            @Z40GKE7  66598800
+  PUNCH ' INCLUDE AOS26(ISTINCW7)'                            @Z40GKE7  66599200
+  PUNCH ' INCLUDE AOS26(ISTINCW8)'                            @Z40GKE7  66599600
+  PUNCH ' INCLUDE AOS26(ISTINCW9)'                            @Z40GKE7  66599700
+  PUNCH ' INCLUDE AOS26(ISTINCXR)'                                      66599800
+  PUNCH ' INCLUDE AOS26(ISTINCX0)'                            @Z40GKE7  66650000
+  PUNCH ' INCLUDE AOS26(ISTINCX1)'                            @Z40GKE7  66700000
+  PUNCH ' INCLUDE AOS26(ISTINCX2)'                            @Z40GKE7  66750000
+  PUNCH ' INCLUDE AOS26(ISTINCX3)'                            @Z40GKE7  66800000
+  PUNCH ' INCLUDE AOS26(ISTINCX6)'                            @Z40GKE7  66850000
+  PUNCH ' INCLUDE AOS26(ISTINCX7)'                            @Z40GKE7  66900000
+  PUNCH ' INCLUDE AOS26(ISTINCX8)'                            @Z40GKE7  66950000
+  PUNCH ' INCLUDE AOS26(ISTINCX9)'                            @Z40GKE7  67000000
+  PUNCH ' INCLUDE AOS26(ISTINCY3)'                            @Z40GKE7  67050000
+  PUNCH ' INCLUDE AOS26(ISTINCY4)'                            @Z40GKE7  67100000
+  PUNCH ' INCLUDE AOS26(ISTINCY5)'                            @Z40GKE7  67150000
+  PUNCH ' INCLUDE AOS26(ISTINC02)'                                      67170000
+  PUNCH ' INCLUDE AOS26(ISTCFCDP)'                                      67200000
+  PUNCH ' INCLUDE AOS26(ISTCFMMI)'                                      67800000
+  PUNCH ' INCLUDE AOS26(ISTINFIC)'                                      67810000
+  PUNCH ' INCLUDE AOS26(ISTVTLOD)'                                      68400000
+  PUNCH ' INCLUDE AOS26(ISTINCR1)'                                      69000000
+  PUNCH ' INCLUDE AOS26(ISTINCR2)'                                      69200000
+  PUNCH ' INCLUDE AOS26(ISTSDCAP)'                                      69400000
+  PUNCH ' INCLUDE AOS26(ISTSDCBU)'                                      69800000
+  PUNCH ' INCLUDE AOS26(ISTSDCCB)'                                      70200000
+  PUNCH ' INCLUDE AOS26(ISTSDCCL)'                                      70800000
+  PUNCH ' INCLUDE AOS26(ISTSDCC1)'                                      71400000
+  PUNCH ' INCLUDE AOS26(ISTSDCC2)'                                      72000000
+  PUNCH ' INCLUDE AOS26(ISTSDCC3)'                                      72600000
+  PUNCH ' INCLUDE AOS26(ISTSDCC4)'                                      73200000
+  PUNCH ' INCLUDE AOS26(ISTSDCC5)'                                      73800000
+  PUNCH ' INCLUDE AOS26(ISTSDCC7)'                                      74400000
+  PUNCH ' INCLUDE AOS26(ISTSDCDS)'                                      75000000
+  PUNCH ' INCLUDE AOS26(ISTSDCD1)'                                      75600000
+  PUNCH ' INCLUDE AOS26(ISTSDCD2)'                                      76200000
+  PUNCH ' INCLUDE AOS26(ISTSDCD3)'                                      76800000
+  PUNCH ' INCLUDE AOS26(ISTSDCGE)'                                      77400000
+  PUNCH ' INCLUDE AOS26(ISTSDCGP)'                                      78000000
+  PUNCH ' INCLUDE AOS26(ISTSDCHS)'                                      78600000
+  PUNCH ' INCLUDE AOS26(ISTSDCIN)'                                      79200000
+  PUNCH ' INCLUDE AOS26(ISTSDCLN)'                                      79800000
+  PUNCH ' INCLUDE AOS26(ISTSDCLP)'                            @Z40GKE7  80450000
+  PUNCH ' INCLUDE AOS26(ISTSDCLU)'                                      80500000
+  PUNCH ' INCLUDE AOS26(ISTSDCML)'                                      80700000
+  PUNCH ' INCLUDE AOS26(ISTSDCMT)'                                      81000000
+  PUNCH ' INCLUDE AOS26(ISTSDCPA)'                            @Z40GKE7  81650000
+  PUNCH ' INCLUDE AOS26(ISTSDCPC)'                                      81700000
+  PUNCH ' INCLUDE AOS26(ISTSDCPU)'                            @Z40GKE7  82250000
+  PUNCH ' INCLUDE AOS26(ISTSDCP1)'                                      82300000
+  PUNCH ' INCLUDE AOS26(ISTSDCP2)'                                      82800000
+  PUNCH ' INCLUDE AOS26(ISTSDCP3)'                                      83400000
+  PUNCH ' INCLUDE AOS26(ISTSDCP4)'                                      84000000
+  PUNCH ' INCLUDE AOS26(ISTSDCP5)'                                      84600000
+  PUNCH ' INCLUDE AOS26(ISTSDCP6)'                                      85200000
+  PUNCH ' INCLUDE AOS26(ISTSDCRC)'                                      85500000
+  PUNCH ' INCLUDE AOS26(ISTSDCRN)'                                      85800000
+  PUNCH ' INCLUDE AOS26(ISTSDCRS)'                                      86400000
+  PUNCH ' INCLUDE AOS26(ISTSDCSB)'                                      87000000
+  PUNCH ' INCLUDE AOS26(ISTSDCSC)'                                      87600000
+  PUNCH ' INCLUDE AOS26(ISTSDCSS)'                                      88200000
+  PUNCH ' INCLUDE AOS26(ISTSDCSU)'                                      88800000
+  PUNCH ' INCLUDE AOS26(ISTSDCTM)'                                      89400000
+  PUNCH ' INCLUDE AOS26(ISTSDCVB)'                            @Z40GKE7  90050000
+  PUNCH ' INCLUDE AOS26(ISTSDCVG)'                            @Z40GKE7  90100000
+  PUNCH ' INCLUDE AOS26(ISTCFCR2)'                            @Z40GKE7  90150000
+  PUNCH ' INCLUDE AOS26(ISTINCR3)'                            @Z40GKE7  90200000
+  PUNCH ' INCLUDE AOS26(ISTINCR5)'                            @Z40GKE7  90250000
+  PUNCH ' INCLUDE AOS26(ISTINCVN)'                            @Z40GKE7  90300000
+  PUNCH ' INCLUDE AOS26(ISTSDCVI)'                                      90350000
+  PUNCH ' ENTRY ISTINM01'                                               90600000
+  PUNCH ' ORDER ISTINM01'                                      @ZM31536 91200000
+  PUNCH ' NAME ISTINM01(R)'                                             91220000
+  PUNCH ' INCLUDE AOS26(ISTINCR4)'                                      91800000
+  PUNCH ' ENTRY ISTINCR4'                                               91806000
+  PUNCH ' ORDER ISTINCR4'                                               91812000
+  PUNCH ' NAME ISTINCR4(R)'                                             91818000
+  PUNCH ' INCLUDE AOS26(ISTINCR6)'                                      91824000
+  PUNCH ' ENTRY ISTINCR6'                                               91830000
+  PUNCH ' ORDER ISTINCR6'                                               91836000
+  PUNCH ' NAME ISTINCR6(R)'                                             91842000
+  PUNCH ' INCLUDE AOS26(ISTINCY0)'                                      91842800
+  PUNCH ' INCLUDE AOS26(ISTINCY1)'                                      91843600
+  PUNCH ' ENTRY ISTINCY0'                                               91844400
+  PUNCH ' ORDER ISTINCY0'                                               91845200
+  PUNCH ' ORDER ISTINCY1'                                               91846000
+  PUNCH ' NAME ISTINCY0(R)'                                             91846800
+  PUNCH ' INCLUDE AOS26(ISTINC05)'                                      91848000
+  PUNCH ' INCLUDE AOS26(ISTINMN8)'                                      91860000
+  PUNCH ' PAGE ISTINMN8'                                                91920000
+  PUNCH ' ENTRY ISTINC05'                                               91920200
+  PUNCH ' ORDER ISTINC05'                                      @ZM31536 91920500
+  PUNCH ' NAME ISTINC05(R)'                                             91930500
+  PUNCH ' INCLUDE AOS26(ISTINFXI)'                                      91960000
+  PUNCH ' INCLUDE AOS26(ISTINMN8)'                                      92000000
+  PUNCH ' PAGE ISTINMN8'                                                92010000
+  PUNCH ' ENTRY ISTINFXI'                                               92010200
+  PUNCH ' ORDER ISTINFXI'                                      @ZM31536 92020000
+  PUNCH ' NAME ISTINCXI(R)'                                             92021000
+  PUNCH ' INCLUDE AOS26(ISTINCRP)'                                      92040000
+  PUNCH ' NAME ISTINCRP(R)'                                             92080000
+  PUNCH ' INCLUDE AOS26(ISTINCXM)'                                      92120000
+  PUNCH ' NAME ISTINCXM(R)'                                             92160000
+  PUNCH ' INCLUDE AOS26(ISTINC32)'                                      92160500
+  PUNCH '  NAME ISTINC32(R)'                                            92260900
+  PUNCH '/*'                                                            92310900
+            MEND                                                        92360900

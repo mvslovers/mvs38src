@@ -1,0 +1,125 @@
+//SMFE15 JOB   MSGLEVEL=1                                               00050002
+//STEPA  EXEC  ASMFCL                                                   00100002
+//ASM.SYSIN DD  *                                                       00150002
+         TITLE 'SMFE15-E15SMF'                                          00200002
+* STATUS - CHANGE LEVEL 1                                               00250002
+* FUNCTION -                                                            00300002
+*    ROUTINE IS USED DURING THE SORTING OF SETS CREATED BY SYSTEM       00350002
+*    MANAGEMENT FACILITIES.IT EXTRACTS NON-JOB ORIENTED RECS FROM       00400002
+*    SORT INPUT SET AND RETAINS THE EXTRACTED RECS IN A TEMP SET.       00450002
+*    NON-JOB ORIENTED RECORDS ARE RE-INSERTED INTO THE OUTPUT SET       00500002
+*    BY AN E35 EXIT ROUTINE.                                            00550002
+*    THIS ROUTINE IS DEFINED ONLY FOR RECORD TYPES 0-13.       @YM00552 00560002
+* ENTRY POINTS -                                                        00600002
+*         E15                                                           00650002
+* INPUT - REGISTER 1 POINTS TO A ONE WORD PARAMER LIST.THIS LIST        00700002
+*    CONTAINS THE ADDRESS OF THE NEW RECORD.                            00750002
+* OUTPUT - A TEMPORARY DATA SET CONTAINING THOSE RECORDS DELETED        00800002
+*    FROM THE SORT BY THIS ROUTINE.                                     00850002
+* EXTERNAL REFERENCES - NONE                                            00900002
+* EXITS,NORMAL -   TO OS/SORT                                           00950002
+*    RETURN CODES USED                                                  01000002
+*    RC=0   NO ACTION                                                   01050002
+*    RC=4   DELETE                                                      01100002
+*    RC=8   DO NOT RETURN                                               01150002
+* EXITS,ERROR - NONE                                                    01200002
+* TABLES/WORK AREAS - DSECT FOR RECORD FORM                             01250002
+* ATTRIBUTES - STANDARD                                                 01300002
+* CHARACTER CODE DEPENDENCY - NONE                                      01350002
+* NOTES - ENTERED FROM OS/SORT                                          01400002
+R00      EQU   0                        REGISTERS 0                     01450002
+R01      EQU   1                        1                               01500002
+R02      EQU   2                        2                               01550002
+R09      EQU   9                        9                               01600002
+R10      EQU   10                       10                              01650002
+DCBREG   EQU   11                       DCB REG                         01700002
+R12      EQU   12                       12                              01750002
+R13      EQU   13                       13                              01800002
+R15      EQU   15                       15                              01850002
+HDRID    EQU   X'02'                    HEADER ID                       01900002
+TLRID    EQU   X'03'                    TRAILER ID                      01950002
+STERMID  EQU   X'04'                    STEP TERM ID                    02000002
+JTERMID  EQU   X'05'                    JOB TERM ID                     02050002
+OPFORMID EQU   X'06'                    OP FORM ID                      02100002
+D4       EQU   4                        DISP OF 4                       02200002
+D8       EQU   8                        DISP OF 8                       02250002
+D24      EQU   24                       DISP OF 24                      02300002
+L8       EQU   8                        LENGTH OF 8                     02350002
+X10      EQU   X'10'                    TEST FOR OPEN                   02400002
+E15      CSECT                          EXIT 15                         02450002
+*D 021500,038000,038500                                        @YM00552 02460002
+*A 005600                                                      @YM00552 02470002
+         USING *,R12                    DECLARE BASE                    02500002
+         SAVE  (14,12)                  SAVE SORTS REGS                 02550002
+         LR    R12,R15                  SET UP BASE                     02600002
+         USING RECDFORM,R10             BASE FOR REC'D FORM             02650002
+         LA    DCBREG,E15DCB            SET UP DCB BASE                 02700002
+         USING IHADCB,DCBREG            DECLARE BASE FOR DCBD           02750002
+         ST    R13,SAVDS+D4             CHAIN SORT &  E15 SAVE AREA     02800002
+         LR    R02,R13                                                  02850002
+         LA    R13,SAVDS                PRIME SAVE REGISTER             02900002
+         ST    R13,D8(R02)              CHAIN E15 & SORT SAVE AREA      02950002
+         L     R10,0(R01)               LOAD PARAMETER FROM SORT        03000002
+         TM    DCBOFLGS,X10             IS DATA SET OPEN                03050002
+         BO    E15NOPEN                 YES,GO AROUND OPED PROCESSING   03100002
+         OPEN  (E15DCB,(OUTPUT),E15DCBA,(OUTPUT))                       03150002
+E15NOPEN LTR   R10,R10                  TEST FOR END OF DATA            03200002
+         BZ    E15NORTN                 YES,GO CLOSE OUT                03250002
+         CLI   RECDID,HDRID             IS THIS DUMP HDR                03300002
+         BE    E15XCPTA                 YES,COMPARE WITH PREVIOUS       03350002
+         CLI   RECDID,TLRID             IS THIS DUMP TRAILER            03400002
+         BE    E15XCPTC                 YES,PLACE ON E15DCBA            03450002
+         CLI   RECDID,STERMID           IS RECD STEP TERMINATE          03500002
+         BE    E15NOACT                 YES,GO MAKE NORMAL RETURN       03550002
+         CLI   RECDID,JTERMID           IS RECD JOB TERMINATE           03600002
+         BE    E15NOACT                 YES,GO TO NORMAL RETURN         03650002
+         CLI   RECDID,OPFORMID          IS RECD O/P FORMS               03700002
+         BE    E15NOACT                 YES,GO TO NORMAL RETURN         03750002
+         LR    R00,R10                                                  03900002
+         PUT   E15DCB,(0)               SAVE SYSTEM RECORDS             03950002
+*                                       TEMPORARY SET                   04000002
+E15DELET L     R13,SAVDS+D4             ADDRESS OF SORT SAVEAREA        04050002
+         RETURN (14,12),RC=4            DELETE RCD FROM TO-BE-SORTED    04100002
+E15NOACT L     R13,SAVDS+D4             ADDRESS OF SORT'S SAVEAREA      04150002
+         ST    R10,D24(R13)             ADDRESS OF CURRENT RECD TO SAVE 04200002
+         RETURN (14,12),RC=0            RETAIN TASK RCDS FOR SORTING    04250002
+E15XCPTA L     R09,HDRTIME              LOAD PREV RECDS TIMESTMP        04300002
+         LTR   R09,R09                  IS IT ZERO (FIRST TIME THRU)    04350002
+         BZ    E15XCPTB                 YES,BRANCH AROUND COMPARISONS   04400002
+         CLC   HDRDATE,RSTPDATE         COMPARE PREVIOUS & CURRENT DATE 04450002
+         BH    E15WARN                  PREVIOUS DATE HI,ISSUE WARNING  04500002
+         CLC   HDRTIME,RSTPTIME         COMPARE PREVIOUS & CURRENT TIME 04550002
+         BH    E15WARN                  PREVIOUS TIME HI,ISSUE WARNING  04600002
+E15XCPTB MVC   HDRTIME(L8),RSTPTIME     RETAIN DATE/TIME FOR COMPARE    04650002
+E15XCPTC LR    R00,R10                  @ OF RECORD TO REGISTER 0       04700002
+         PUT   E15DCBA,(0)              EXECUTE I/O, SAVE HDR & TRL     04750002
+         B     E15DELET                 RETURN TO SORT W/DELETE CODE    04800002
+E15WARN  WTO   'SMFX001-INPUT NOT IN CHRONOLOGICAL SEQUENCE'            04850002
+         B     E15XCPTB                 CONTINUE PROCESSING             04900002
+E15NORTN CLOSE (E15DCB,,E15DCBA)        CLOSE BOTH TEMPORARY DATA SETS  04950002
+         L     R13,SAVDS+D4                                             05000002
+         RETURN (14,12),RC=8            RETURN & DON'T COME BACK        05050002
+         DS    0D                                                       05100002
+SAVDS    DS    18F                      SAVE AREA                       05150002
+HDRTIME  DC    F'0'                     HEADER TIME                     05200002
+HDRDATE  DC    F'0'                     HEADER DATE                     05250002
+E15DCB   DCB   DSORG=PS,MACRF=PM,DDNAME=SORDATA                         05300002
+E15DCBA  DCB   DSORG=PS,MACRF=PM,DDNAME=HDRDATA                         05350002
+DCBFORM  DCBD  DSORG=PS                                                 05400002
+RECDFORM DSECT                          RECORD                          05450002
+RLNGTH   DS    F                        LENGTH                          05500002
+RCONT    DS    C                        CONT                            05550002
+RECDID   DS    C                        ID                              05600002
+RSTPTIME DS    CL4                      STEP TIME                       05650002
+RSTPDATE DS    CL4                      STEP DATE                       05700002
+RCPUID   DS    CL4                      CPU ID                          05750002
+         DS    CL32                     SPACING                         05800002
+RJOBNAME DS    CL8                      JOB NAME                        05850002
+RSTRTIME DS    CL4                      START TIME                      05900002
+RSTRTDAT DS    CL4                      START DATE                      05950002
+RSTPNUM  DS    C                        STEP NUMBER                     06000002
+         END                                                            06050002
+//LKED.SYSLMOD DD   DSNAME=SMF1.EXITS,DISP=(NEW,KEEP),UNIT=2314,       *06100002
+//             VOLUME=SER=231400,SPACE=(TRK,(10,5,1))                   06150002
+//LKED.SYSIN   DD *                                                     06200002
+ NAME E15(R)                                                            06250002

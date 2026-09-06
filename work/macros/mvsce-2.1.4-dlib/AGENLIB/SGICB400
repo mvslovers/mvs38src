@@ -1,0 +1,73 @@
+         MACRO                                                          00050003
+         SGICB400                                                       00100003
+.* /* START OF SPECIFICATIONS ****                            @Y30LB27  00150003
+.*                                                            @Y30LB27  00200003
+.*01  MODULE-NAME = SGICB400                                  @Y30LB27  00250003
+.*                                                            @Y30LB27  00300003
+.*01  DESCRIPTIVE-NAME = MSVC MVS SYSGEN LINKLIB LINKEDIT     @G24LB04  00350042
+.*                       MACRO                                @G24LB04  00360042
+.*                                                            @Y30LB27  00400003
+.*01  STATUS = MVS                                            @G24LB04  00450042
+.*                                                            @Y30LB27  00550003
+.*01  FUNCTION = SGICB400 LINK EDITS ICBVVI00, ICBVDR00,      @G24LB04  00600042
+.*               ICB2MSG,ICBMSG05 AND ICBVDR01 INTO THE       @G24LB04  00610042
+.*               TARGET SYS1.LINKLIB FROM THE SYSGEN          @G24LB04  00650042
+.*               DISTRIBUTION LIBRARY SYS1.AOSD0.             @G24LB04  00700042
+.*                                                            @Y30LB25  00750003
+.*                                                            @Y30LB27  00800003
+.*01  OPERATION = VIA THE ASSEMBLER PUNCH COMMAND, LINKAGE    @G24LB04  00850042
+.*                EDITOR INCLUDE STATEMENTS ARE GENERATED FOR @G24LB04  00900042
+.*                THE MODULES.                                @G24LB04  00902042
+.*                                                            @Y30LB27  00950003
+.*01  MODULE-TYPE = MACRO                                     @Y30LB27  01000003
+.*02    PROCESSOR = ASSEMBLER XF                              @Y30LB27  01050003
+.*02    MACRO-SIZE = 35 STATEMENTS                            @G24LB04  01100042
+.*                                                            @Y30LB27  01150003
+.*01  OUTPUT = LINKAGE EDITOR JCL AND CONTROL STATEMENTS      @Y30LB27  01200003
+.*                                                            @Y30LB27  01250003
+.*01  INNER-MACRO = SGGBLPAK - DEFINE SYSTEM GLOBALS          @Y30LB27  01300003
+.*                  SGLEDPK1 - GENERATE LINKEDIT JCL          @Y30LB27  01350003
+.*                  SGLEDPK2 - GENERATE LINKEDIT SYSIN JCL    @Y30LB27  01400003
+.*                                                            @Y30LB27  01450003
+.*01  MESSAGES = NONE                                         @Y30LB27  01500003
+.*                                                            @Y30LB27  01550003
+.*01  CHANGE-ACTIVITY                                         @Z40LB25  01560003
+.*  CHANGE 02 10/1/75   DISPLAY 3850                          @Z40LB25  01562042
+.*  CHANGE 01 10/1/75   NULLIFYC SERVICE AID                  @Z40LB25  01570003
+.*  CHANGE 03 04/27/76  ALLOCATE TO MOUNTED VOLUMES @G24LB04  @G24LB04  01572042
+.*  CHANGE 04 04/27/76  POST IPL MSS INITIALIZATION @G24LB04  @G24LB04  01574042
+.*                                                            @Z40LB25  01580003
+.**** END OF SPECIFICATIONS ***/                              @Y30LB27  01600003
+         COPY  SGGBLPAK                DEFINE SYSTEM GLOBAL VARIABLES   01650003
+&SGCTRLC(6)    SETC ''                 SYSLMOD MEMBER         @Y30LB27  01700003
+&SGCTRLC(7)    SETC '&SGCTRLC(32)'     SYSLMOD VOLUME         @Y30LB27  01710003
+&SGCTRLC(8)    SETC '&SGCTRLC(31)'     SYSLMOD UNIT           @Y30LB27  01750003
+&SGCTRLC(9)    SETC 'LINKLIB'          SYSLMOD DSNAME         @Y30LB27  01800003
+&SGCTRLC(10)   SETC ''                                        @Y30LB27  01850003
+&SGCTRLC(11)   SETC ''                                        @Y30LB27  01900003
+         COPY  SGLEDPK1               GENERATE LINK EDIT STEP @Y30LB27  01950003
+ PUNCH '//AOSD0 DD DSNAME=SYS1.AOSD0,VOLUME=(,RETAIN),DISP=SHR'         02000003
+         COPY  SGLEDPK2               LINK EDIT SYSIN STAGE   @Y30LB27  02050003
+ PUNCH ' INCLUDE AOSD0(ICBVCR00,ICBVMT00,ICBVDM00,ICBVSP00)'  @Y30LB27  02100003
+ PUNCH ' INCLUDE AOSD0(ICBVUT00,ICBVUT01,ICBVUT03,ICBVMS00)'  @Z40LB25  02150003
+ PUNCH ' INCLUDE AOSD0(ICBVIN00,ICBVIO00,ICBVJL00,ICBVOP00)'  @Z40LB25  02160003
+ PUNCH ' INCLUDE AOSD0(ICBVMG00,ICBVRR00,ICBVUP00,ICBVSL00)'  @G24LB04  02170042
+ PUNCH ' INCLUDE AOSD0(ICBVTP00,ICBVEX00,ICBVTM00,ICBVPR00)'  @G24LB04  02220042
+ PUNCH ' ENTRY ICBVCR00'                                      @Y30LB27  02250003
+ PUNCH ' NAME ICBVVI00(R)'                                    @Y30LB27  02300003
+ PUNCH ' INCLUDE AOSD0(ICBVDR00)'                             @Y30LB27  02350003
+ PUNCH ' ENTRY ICBVDR00'                                      @Y30LB27  02400003
+ PUNCH ' SETCODE AC(1)'                                       @Y30LB27  02410003
+ PUNCH ' NAME ICBVDR00(R)'                                    @Y30LB27  02450003
+ PUNCH ' INCLUDE AOSD0(ICBVDR01)'                             @Y30LB27  02500003
+ PUNCH ' ENTRY ICBVDR01'                                      @Y30LB27  02550003
+ PUNCH ' SETCODE AC(1)'                                       @Y30LB27  02600003
+ PUNCH ' NAME ICBVDR01(R)'                                    @Y30LB27  02650003
+ PUNCH ' INCLUDE AOSD0(ICB2MSG,ICBMSG56)'                     @Z40LB25  02700003
+ PUNCH ' ENTRY ICB2MSG'                                       @Y30LB25  02710003
+ PUNCH ' NAME ICB2MSG(R)'                                     @Y30LB25  02730003
+ PUNCH ' INCLUDE AOSD0(ICBMSG05)'                             @G24LB04  02740042
+ PUNCH ' ENTRY ICBMSG05'                                      @G24LB04  02742042
+ PUNCH ' NAME ICBMSG05(R)'                                    @G24LB04  02744042
+ PUNCH '/*'                                                   @Y30LB27  02750003
+         MEND                                                           03350003

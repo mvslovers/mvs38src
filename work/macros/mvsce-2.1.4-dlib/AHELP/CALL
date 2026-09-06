@@ -1,0 +1,13 @@
+)F FUNCTION                                                             10000000
+  THE CALL COMMAND LOADS AND EXECUTES PROGRAMS IN EXECUTABLE FORM.      20000000
+)X SYNTAX -                                                             30000000
+         CALL   'DSNAME(MEMBER)' ''PARM''                               40000000
+  REQUIRED   EITHER DSNAME OR MEMBER NAME OR BOTH.                      50000001
+  DEFAULTS   USERID.LOAD IF NO DATASET NAME. TEMPNAME IF NO MEMBER NAME 60000000
+             SPECIFIED.                                                 60050000
+)O OPERANDS -                                                           80050000
+  'DSNAME(MEMBER)'                                                      80100000
+           - NAME OF PARTITIONED DATA SET AND THE MEMBER WHICH IS       80150000
+             TO BE EXCECUTED                                            80200000
+  ''PARM'' - SPECIFIES A PARAMETER STRING (UP TO 100 CHARACTERS)        80250000
+             PASSED TO THE PROGRAM TO BE EXECUTED.                      80300000

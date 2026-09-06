@@ -1,0 +1,13 @@
+)F FUNCTION -                                                           10000020
+  LOGOFF TERMINATES THE USER'S CURRENT TERMINAL SESSION                 20000020
+)X SYNTAX -                                                             30000020
+         LOGOFF  DISCONNECT/HOLD                                        40000002
+  DEFAULT - DISCONNECT                                                  40050002
+)O OPERANDS -                                                           50000020
+))DISCONNECT                                                            60000002
+           - SPECIFIES THAT THE LINE IS TO BE DROPPED WHEN LOGGED OFF.  60050002
+))HOLD                                                                  60100002
+           - SPECIFIES THAT THE LINE IS NOT TO BE DROPPED.  THE USER    60150002
+             MAY RELOGON WITHOUT REDIALING INTO THE SYSTEM.             60200002
+             NOTE:  THE 'HOLD' OPERAND IS NOT SUPPORTED WITH TMP        60250003
+                    LOGOFF FROM TERMINALS USING TSO/VTAM.               60300003

@@ -1,0 +1,79 @@
+         MACRO                                                          00060002
+         SGIEA501                                                       00070002
+.*  LAST UPDATE = 05/21/73                                       Y02952 00072002
+.*              = 08/21/75                                     @ZA03861 00074004
+.*              = 03/28/77                                     @G33VPXG 00075033
+.*              = 06/12/78                                     @G64DPXR 00075564
+.*                                                                      00076004
+         COPY  SGGBLPAK                                          Y02952 00080002
+.*                                                               Y02952 00122002
+.*  FOR AN I/O ONLY SYSGEN, SKIP TO SECTION WHICH COPIES         Y02952 00124002
+.*  DEVICE DEPENDENT MODULES                                     Y02952 00126002
+         AIF   (&GETB(3)).IOGEN                                  Y02952 00128002
+.*                                                               Y02952 00128402
+.***********************************************************     Y02952 00130002
+.* LPALIB - FROM AOSC5                                           Y02952 00140002
+.***********************************************************     Y02952 00142002
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOSC5'                   Y02952 00144002
+.*                                                               Y02952 00146002
+.*                                                               Y02952 00148002
+.*                                                               Y02952 00148402
+.**** DISPLAY SUPPORT *****                                      Y02952 00148802
+.*                                                               Y02952 00149202
+.* REMOVE COPIES OF IEE10110,IEE11110,IEE12110,                @G64DPXR 00149664
+.*                  IEE20110,IEE21110,IEE22110,                @G64DPXR 00157664
+.*                  IEE23110,IEE40110                          @G64DPXR 00165664
+.*                                                               Y02952 00182602
+.***** EMULATOR SUPPORT *****                                    Y02952 00183002
+.*                                                               Y02952 00183102
+         PUNCH ' SELECT MEMBER=(IGC0008H)'                       Y02952 00183202
+.*                                                               Y02952 00188802
+.**** RECOVERY/TERMINATION MODULES*****                          Y02952 00189202
+         PUNCH ' SELECT MEMBER=(IEAVTMTR,IEAVTMTC)'              Y02952 00189602
+         PUNCH ' SELECT MEMBER=(IEAVTSDR)'                     @G33VPXG 00189833
+         PUNCH ' SELECT MEMBER=((IEAVSTA0,IGC0006{))'            Y02952 00190402
+.*                                                               Y02952 00190802
+.***** COMM TASK MODULES*****                                    Y02952 00191202
+         PUNCH ' SELECT MEMBER=((IEAVXDOM,IGC0008G))'            Y02952 00191602
+         PUNCH ' SELECT MEMBER=(IEAVVRP2,IEAVMNTR)'              Y02952 00192002
+.*                                                               Y02952 00192402
+.**** RPTS(RADIX PARTITION TREE SERVICES)**********              Y02952 00192502
+         PUNCH ' SELECT MEMBER=(IGARPT01)'                       Y02952 00192602
+.*                                                               Y02952 00192802
+.*                                                               Y02952 00193202
+.***********************************************************     Y02952 00193602
+.* LPALIB - FROM AOSD0                                           Y02952 00194002
+.***********************************************************     Y02952 00194102
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOSD0'                   Y02952 00194202
+.***** ASCII SUPPORT *****                                       Y02952 00194302
+.*                                                               Y02952 00208202
+         PUNCH ' SELECT MEMBER=(IGC0010C)'                       Y02952 00218202
+.***********************************************************     Y02952 00222202
+.*                                                               Y02952 00350002
+.*                                                               Y02952 01350002
+.* THE FOLLOWING MODULES ARE COPIED IF A 2740 HAS BEEN SPECIFIED Y02952 01400002
+.* AS A CONSOLE AND IF BTAM HAS NOT BEEN SELECTED                Y02952 01450002
+.* AS AN ACCESS METHOD                                           Y02952 01460002
+.*                                                               Y02952 01500002
+.***********************************************************     Y02952 01550002
+.*                                                               Y02952 01600002
+.IOGEN   ANOP                                                    Y02952 01650002
+.***********************************************************     Y02952 01700002
+.* LPALIB - FROM AOS20                                           Y02952 01750002
+.***********************************************************     Y02952 01800002
+.*                                                               Y02952 01850002
+         AIF   (NOT &SGSCHDB(13)).NOBTAM                         Y02952 01900002
+         AIF   (&SGDMGTB(4)).NOBTAM                              Y02952 01950002
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOS20'                   Y02952 02000002
+.*                                                               Y02952 02050002
+.***** BTAM MODULES *****                                        Y02952 02100002
+.*                                                               Y02952 02150002
+         PUNCH ' SELECT MEMBER=(IGG019M0,IGE0004A,IGE0904B)'   @ZA03861 02170004
+         PUNCH ' SELECT MEMBER=(IGE0104A,IGE0204A,IGE0304A,IGE0404A)'   02250002
+         PUNCH ' SELECT MEMBER=(IGE0504A,IGE0604A,IGE0704A,IGE0804A)'   02300002
+         PUNCH ' SELECT MEMBER=(IGE0904A,IGE0004B,IGE0104B,IGE0204B)'   02350002
+         PUNCH ' SELECT MEMBER=(IGE0304B,IGE0404B,IGE0504B,IGE0604B)'   02400002
+         PUNCH ' SELECT MEMBER=(IGE0804B)'                     @ZA03861 02420004
+.*                                                               Y02952 02650002
+.NOBTAM  ANOP                                                    Y02952 03050002
+         MEND                                                    Y02952 05450002

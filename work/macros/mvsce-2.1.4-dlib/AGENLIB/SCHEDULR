@@ -1,0 +1,299 @@
+         MACRO                                                          00320002
+    SCHEDULR &TAVR=800,&HARDCPY=SYSLOG,                                *00370002
+               &BCLMT=100,&DEVPREF=,&PRISUB=JES2,&SUBSYS=               00420002
+         COPY  SGSYSPAK                                                 01200000
+         LCLA  &A,&E,&F,&G,&H,&N,&MAT,&V,&VD                            01550002
+         LCLC  &C,&D                                                    02050002
+.***** START OF SPECIFICATIONS *************************************    02060002
+.*                                                                      02070002
+.* MODULE NAME - SCHEDULR                                               02080002
+.*                                                                      02090002
+.* DESCRIPTIVE NAME - SCHEDULER GENERATION                              02092002
+.*                                                                      02094002
+.* COPYRIGHT - NONE                                                     02096002
+.*                                                                      02098002
+.* STATUS - CHANGE LEVEL 02                                             02098402
+.*                                                                      02098802
+.*                                                                      02100002
+.* FUNCTION -                                                           02110002
+.*       THE SCHEDULR MACRO IS USED TO SPECIFY THE JOB SCHEDULER        02150002
+.*       AND MASTER SCHEDULER OPTIONS.                                  02160002
+.*                                                                      02162002
+.* NOTES - N/A                                                          02164002
+.*                                                                      02166002
+.* MODULE TYPE - MACRO                                                  02168002
+.*                                                                      02168402
+.* ENTRY POINT - N/A                                                    02168802
+.*                                                                      02169202
+.* INPUT - THE FOLLOWING PARAMETERS ARE VALID ON SCHEDULR               02169602
+.*             &BCLMT   - SPECIFIES THE NUMBER OF 130 BYTE RECORDS      02170002
+.*                        THAT WILL BE SET AS MESSAGES IN               02180002
+.*                        SYS1.BROADCAST DATA SET.                      02190002
+.*             &TAVR    - SPECIFIES THE STANDARD DENSITY FOR 7-TRACK    02192002
+.*                        TAPE VOLUMES FOR AUTOMATIC VOLUME             02194002
+.*                        RECOGNITION.                                  02196002
+.*             &HARDCPY - SPECIFIES THE HARDCOPY LOG USED TO RECORD     02198002
+.*                        OPERATOR COMMANDS, SYSTEM COMMANDS AND        02198402
+.*                        RESPONSES, AND WRITE TO OPERATOR MESSAGES.    02198802
+.*             &PRISUB  - SPECIFIES THE NAME OF THE PRIMARY JOB         02199202
+.*                        ENTRY SUBSYSTEM. DEFAULT IS JES2.             02199602
+.*             &SUBSYS  - SPECIFIES THE JOB ENTRY SUBSYSTEM NAMES TO    02199702
+.*                        BE USED IN THE SYSTEM BEING BUILT. DEFAULTS   02199802
+.*                        TO PRISUB NAME IN SCHEDULR INNER MACRO.       02199902
+.*             &DEVPREF - SPECIFIES THE LIST OF GENERIC NAMES THAT      02249902
+.*                        WILL BE USED TO GENERATE THE INSTALLATION     02259902
+.*                        DEVICE PREFERENCE TABLE.                      02269902
+.*                                                                      02279902
+.* OUTPUT -                                                             02281902
+.*       GLOBALS USED ARE -                                             02289902
+.*             &SGSCHDA(13) - BROADCAST LIMIT FOR RES OR TSO            02291902
+.*             &SGSCHDB(7)  - FULL SYSTEM MANAGEMENT FACILITY           02293902
+.*             &SGSCHDB(8)  - CONVERSATIONAL REMOTE JOB ENTRY           02295902
+.*             &SGSCHDB(13) - 2740 SPECIFIED AS CONSOLE                 02297902
+.*             &SGSCHDB(14) - AUTOMATIC VOLUME RECOGNITION              02298302
+.*             &SGSCHDB(15) - ESV                                       02298702
+.*             &SGSCHDB(23) - 7-TRACK TAPE DENSITY AT 556 BPI           02299102
+.*             &SGSCHDB(24) - 7-TRACK TAPE DENSITY AT 800 BPI           02299502
+.*             &SGSCHDB(26) - REMOTE ENTRY SUBSYSTEM                    02299602
+.*             &SGSCHDB(31) - ESV                                       02299702
+.*             &SGSCHDB(34) - MULTIPLE CONSOLE SUPPORT                  02299802
+.*             &SGSCHDB(35) - EXIT OPTION OF MCS                        02333202
+.*             &SGSCHDB(36) - SYSLOG USED AS HARD COPY LOG              02343202
+.*             &SGSCHDB(37) - ALL SYSTEM COMMANDS TO HARD COPY LOG      02353202
+.*             &SGSCHDB(42) - HARD COPY COMMANDS                        02363202
+.*             &SGSCHDB(43) - COMMANDS AND STATIC DISPLAYS              02365202
+.*             &SGSCHDB(44) - TSO MACRO SPEC FOR SCHEDULER INTERFACE    02365602
+.*                                                                      02366002
+.*             &SGSCHDC(4)  - START READER DATA SET NAME                02366402
+.*             &SGSCHDC(5)  - START WRITER DATA SET NAME                02366502
+.*             &SGSCHDC(7)  - START READER VOLUME SERIAL                02377602
+.*             &SGSCHDC(8)  - START WRITER VOLUME SERIAL                02387602
+.*             &SGSCHDC(14) - OUTPUT DEVICE ADDRESS FOR HARD COPY LOG   02388002
+.*             &SGSCHDC(15) - EVA                                       02388402
+.*             &SGSCHHB(1-16) - WTO/WTORS WITH SPECIFIED ROUTCODES      02388802
+.*                              TO BE RECEIVED BY HARD COPY LOG         02392502
+.*             &SGSCHRB(16)  - ROUTE CODE 1 AND 2 ALWAYS RECEIVED       02394502
+.*             &SGSCHVC(1-30) - GENERIC NAME PREFERENCE LIST            02394902
+.*             &SGSUBSC(1-15) - JOB ENTRY SUBSYSTEM NAMES               02395302
+.*             &SGSPRIC(1)  - PRIMARY JOB ENTRY SUBSYSTEM               02395702
+.*                                                                      02396102
+.*       LOCALS USED ARE -                                              02396202
+.*             &V  - INDEX FOR &SUBSYS                                  02409602
+.*             &VD - USED TO LOOK AT NEXT IN LIST                       02419602
+.*             &A  - INDEX USED FOR DEVPREF                             02421602
+.*             &E  - START CHAR FOR DEVPREF INDEXED                     02422002
+.*             &N  - NUMBER OF HARD COPY ENTRIES                        02422402
+.*             &D  - SINGLE ROUTE CODE                                  02422802
+.*             &G  - COUNT OF DIGITS                                    02422902
+.*             &F  - FIRST DIGIT OF NUMBER                              02423002
+.*             &H  - START CHAR FOR HARDCPY INDEXED                     02423102
+.*             &C  - CHARACTER USED TO SCAN FOR '(' OR ','              02427602
+.*             &D  - ROUTE CODE SPECIFIED                               02429602
+.*                                                                      02431602
+.* EXIT, NORMAL - N/A                                                   02432002
+.*                                                                      02436502
+.* EXIT, ERROR - N/A                                                    02438502
+.*                                                                      02440502
+.* EXTERNAL REFERENCES - N/A                                            02440902
+.*                                                                      02452702
+.* TABLES - N/A                                                         02462702
+.*                                                                      02463102
+.* MACROS - NONE                                                        02463502
+.*                                                                      02463902
+.* CHANGE ACTIVITY - MODIFIED FOR Y02036,OZ04242,OZ09190                02464303
+.*                                                                      02464402
+.***** END OF SPECIFICATIONS  ***************************************** 02464502
+         AIF   (&SGMENTB(6)).V1              SCHEDULR ENTRY SWITCH      02472502
+&SGMENTB(6)  SETB 1                                                     02476402
+&SGSCHDB(7)  SETB 1                          SMF-STANDARD OPTION        02488202
+&SGSCHDB(34) SETB 1                          MCS-STANDARD OPTION        02500002
+&SGSCHDB(14)   SETB 1                  SET VLMOUNT                      02550002
+.****************SUBSYS***********************                          02560002
+&V  SETA 1                                                              02570002
+&MAT     SETA  1                                                        02580002
+    AIF  (T'&SUBSYS NE 'O').CKLNG                                       02590002
+.*  AIF  (K'&PRISUB GT 4).E6            REMOVED                @AZ09190 02592003
+    AGO  .PRI                                                           02594002
+.CKLNG   AIF   (K'&SUBSYS(&V) GT 4).E1                                  02596002
+&VD      SETA  &V+1                                                     02596102
+.CKNXT   AIF   (&VD GT N'&SUBSYS).CKMT        CHECK FOR END OF LIST     02596402
+         AIF   ('&SUBSYS(&V)' NE '&SUBSYS(&VD)').BUMP                   02596802
+   MNOTE 0,'* * * IEISCH910 &SUBSYS(&VD) DUPLICATED IN SUBSYS LIST'     02597202
+.BUMP    ANOP                                                           02597602
+&VD      SETA  &VD+1                                                    02597702
+         AGO   .CKNXT                                                   02597802
+.CKMT    AIF   ('&PRISUB' EQ '&SUBSYS(&V)').NOSET                       02597902
+&SGSUBSC(&V)   SETC  '&SUBSYS(&V)'                                      02647902
+.NOSET   ANOP                                                           02657902
+&V       SETA  &V+1                                                     02667902
+         AIF   ('&SUBSYS(&V)' EQ '').PRI                                02677902
+         AIF   (&V GT 15).E2                                            02687902
+         AGO   .CKLNG                                                   02689902
+.******************PRISUB*************************                      02691902
+.PRI     AIF   (K'&PRISUB GT 4).E6                             @AZ09190 02693903
+&SGSPRIC(1) SETC  '&PRISUB'                                             02694703
+.******************DEVPREF************************                      02695503
+.DEV     AIF   (T'&DEVPREF EQ 'O').TA                          @AZ09190 02696303
+&A       SETA  1                                                        02697102
+.LEL     AIF   (N'&DEVPREF LT &A).TA                                    02697502
+         AIF   (&A GT 30).E5                                            02697602
+&E       SETA  1                                                        02697702
+.SCAN    AIF   ('&DEVPREF(&A)'(&E,1) GT '9').E4                         02697802
+         AIF   ('&DEVPREF(&A)'(&E,1) LT '0').E4                         02714502
+&E       SETA  &E+1                                                     02724502
+         AIF   (&E GT 4).OUT                                            02726502
+         AGO   .SCAN                                                    02728502
+.OUT     ANOP                                                           02730502
+&SGSCHVC(&A) SETC   '&DEVPREF(&A)'                                      02791002
+&A           SETA  &A+1                                                 02801002
+         AGO   .LEL                                                     02831002
+.* * * TAVR * * *                       * * * TAVR * * *          * * * 20200000
+.TA      AIF   (&TAVR EQ 200).TA8            TAVR=200                   20400000
+         AIF   (&TAVR NE 556).TA6                                       20600000
+&SGSCHDB(23) SETB 1                          TAVR=556                   20800000
+         AGO   .TA8                                                     21000000
+.TA6     AIF   (&TAVR NE 800).W9             TAVR=INVALID               21200000
+&SGSCHDB(24) SETB 1                          TAVR=800 OR DEFAULT        21400000
+.TA8     ANOP                                                           21600000
+    MNOTE *,'     7-TRACK TAPE DENSITY IS &TAVR-BPI'                    21800000
+.***  BCLMT  ***             ***  BCLMT  ***            ***  BCLMT  *** 25420000
+.BCLMT   AIF   (T'&BCLMT EQ 'O').HC                                     25440002
+         AIF   (T'&BCLMT NE 'N').ZE                                     25460000
+         AIF   (&BCLMT LT 1 OR &BCLMT GT 1000).ZE                       25480000
+&SGSCHDA(13) SETA &BCLMT                                                25500000
+ MNOTE *,'    SYS1.BRODCAST TO HAVE ROOM FOR &BCLMT NOTICE MESSAGES'    25520000
+.* * * HARDCPY * * *     HARDCPY        * * * HARDCPY * * *       * * * 46400000
+.HC      ANOP  PROCESS HARDCPY PARAMETERS                               46600000
+    MNOTE *,'     HARD COPY PARAMETERS--'                               46800000
+&N       SETA  N'&HARDCPY               NUMBER OF VALUES                47000000
+         AIF   (&N GT 3 OR &N LT 0).Z0       N'HARDCPY VALIDITY  V2     47200000
+    MNOTE *,'          HARD COPY LOG WILL BE IN THE SYSTEM-'            47400000
+         AIF   (&N NE 0).HC2A           SKIP DEFAULT                    47600000
+    MNOTE 0,'* * * IEISCH909 HARDCPY=(SYSLOG,ALL) DEFAULTED'            47800002
+.HC1A    ANOP                           HARDCPY=SYSLOG                  48000000
+    MNOTE *,'          SYSTEM LOG WILL BE THE HARD COPY LOG'            48200000
+&SGSCHDB(36) SETB 1                     HARDCPY=SYSLOG                  48400000
+         AIF   (&N NE 0).HC4            CHECK WTO'S                     48600000
+         AGO   .HCC                     ALL WTO'S IF DEFAULT            48800000
+.HC2A    AIF   ('&HARDCPY(1)' EQ 'SYSLOG' OR T'&HARDCPY(1) EQ 'O').HC1A 49000000
+         AIF   (K'&HARDCPY(1) NE 3).Z1  ADDRESS 3 CHARACTERS            49200000
+&SGSCHDC(14) SETC '&HARDCPY(1)'         HARD COPY ADDRESS               49400000
+    MNOTE *,'          HARD COPY LOG ADDRESS=&SGSCHDC(14)'              49600000
+.HC4     AIF   (&N EQ 1).HCC            DEFAULT ALL IF ONLY ONE PARM    49800000
+         AIF   ('&HARDCPY(2)' EQ 'ALL' OR T'&HARDCPY(2) EQ 'O').HCC     50000000
+         AIF   ('&HARDCPY(2)' EQ 'CMDS' OR '&HARDCPY(2)' EQ 'INCMDS'   *50200000
+               OR '&HARDCPY(2)' EQ 'STCMDS').HCC  PREMATURE             50400000
+    MNOTE *,'          WTO MESSAGES WITH THE FOLLOWING ROUTE-CODES'     50600000
+    MNOTE *,'           WILL BE OUTPUT TO THE HARD COPY LOG--'          50800000
+         AIF   ('&HARDCPY(2)'(1,1) EQ '(' AND                          *51000000
+                '&HARDCPY(2)'(K'&HARDCPY(2),1) EQ ')').HC6              51200000
+         AIF   (T'&HARDCPY(2) NE 'N' OR                                *51400000
+               (&HARDCPY(2) LT 1 OR &HARDCPY(2) GT 16)).Z4              51600000
+&D       SETC  '&HARDCPY(2)'                 SINGLE ROUTE-CODE          51800000
+&G       SETA  99                            INDICATOR                  52000000
+         AGO   .HCA                          SET IN GLOBAL              52200000
+.HC6     ANOP  PROCESS MULTIPLE HARD COPY ROUTE-CODES                   52400000
+&F       SETA  2                             FIRST DIGIT OF NUMBER      52600000
+&G       SETA  0                             COUNT OF DIGITS            52800000
+&H       SETA  2                             SEARCH FOR ',' OR ')'      53000000
+.HC8     ANOP  PICK OUT EACH ROUTE-CODE IN SUBLIST                      53200000
+&C       SETC  '&HARDCPY(2)'(&H,1)           LOOK FOR ')' OR ','        53400000
+         AIF   ('&C' EQ '(').Z2         ANOTHER '(' INVALID             53600000
+         AIF   ('&C' EQ ',' OR '&C' EQ ')').HC9   GET THE ROUTE-CODE    53800000
+&H       SETA  &H+1                          SCAN AGAIN                 54000000
+&G       SETA  &G+1                          COUNT OF CHAR              54200000
+         AGO   .HC8                          ANOTHER TIME THROUGH       54400000
+.HC9     AIF   (&G EQ 0 AND &F EQ 2).HCC     ALL ANYWAY, ,() ...        54600000
+         AIF   (&G EQ 0).HCB                 TWO COMMAS IN SUCCESSION   54800000
+&D       SETC  '&HARDCPY(2)'(&F,&G)          ROUTE-CODE SPECIFIED       55000000
+         AIF   (&D LT 1 OR &D GT 16).Z4 VALIDITY                        55200000
+.HCA     AIF   (&SGSCHHB(&D)).Z5        ROUTE-CODE REDUNDANT            55400000
+&SGSCHHB(&D) SETB 1                          NTH ROUTE-CODE             55600000
+    MNOTE *,'               &D'                                         55800000
+.HCB     AIF   (&G EQ 99 OR '&C' EQ ')').HCE END OF THE ROAD            56000000
+&F       SETA  &F+&G+1                                                  56200000
+&G       SETA  0                                                        56400000
+&H       SETA  &H+1                                                     56600000
+         AGO   .HC8                          TRY IT AGAIN               56800000
+.HCC     ANOP                                                           57000000
+    MNOTE *,'          ALL WTO MESSAGES WILL BE OUTPUT TO THE '         57200000
+    MNOTE *,'          HARD COPY LOG'                                   57400000
+&G       SETA  1                        INITIALIZE GLOBAL POINTER       57600000
+.HCD     AIF   (&G GT 16).HCE                LIMIT                      57800000
+&SGSCHHB(&G) SETB 1                     SET                             58000000
+&G       SETA  &G+1                          INCREMENT POINTER          58200000
+         AGO   .HCD                     SET NEXT OR FINISH              58400000
+.HCE     AIF   (&N EQ 0 OR &N EQ 1).HCE1                                58600000
+&C       SETC  ''                       FOR .M4 MESSAGE                 58800000
+         AIF   (&N EQ 2 AND ('&HARDCPY(2)' NE 'CMDS' OR '&HARDCPY(2)'  *59000000
+               NE 'INCMDS' OR '&HARDCPY(2)' NE 'STCMDS')).HCE1          59200000
+         AIF   (T'&HARDCPY(&N) EQ 'O').HCE1  LAST OMITTED               59400000
+         AIF   ('&HARDCPY(&N)' NE 'CMDS').HCEA    VALIDITY              59600000
+&SGSCHDB(37) SETB 1                          CMDS SPECIFIED             59800000
+    MNOTE *,'          STATUS DISPLAYS WILL BE OUTPUT TO'       OZ04242 59810003
+    MNOTE *,'           THE HARD COPY LOG '                     OZ04242 59820003
+         AGO   .HF                      TO MNOTE                        60000000
+.HCEA    AIF   ('&HARDCPY(&N)' NE 'INCMDS').HCEB  VALIDITY              60200000
+&SGSCHDB(42) SETB 1                     INCMDS SPECIFIED                60400000
+    MNOTE *,'          STATUS DISPLAYS WILL NOT BE OUTPUT TO'           60600000
+    MNOTE *,'           THE HARD COPY LOG '                             60800000
+         AGO   .HF                      TO MNOTE                        61000000
+.HCEB    AIF   ('&HARDCPY(&N)' NE 'STCMDS').HCEC    VALIDITY            61200002
+&SGSCHDB(43) SETB 1                     STCMDS SPECIFIED                61400000
+    MNOTE *,'          STATIC STATUS DISPLAYS WILL BE OUTPUT TO'        61600000
+    MNOTE *,'           THE HARD COPY LOG '                             61800000
+         AGO    .HF                                             OZ04242 61850003
+.HCEC    AIF ('&HARDCPY(&N)' NE 'NOCMDS').Z3      VALIDITY              61900002
+.HCE1    ANOP                                                           62000000
+&C       SETC  ' NOT'                         FOR MESSAGE       OZ04242 62200003
+.HF MNOTE *,'          OPERATOR COMMANDS AND RESPONSES WILL&C BE'  "    62400003
+    MNOTE *,'           OUTPUT TO THE HARD COPY LOG'                    62600000
+         MEXIT                                                          62650002
+.********************************************************************** 73800000
+.*                       ERROR MESSAGES                               * 74000000
+.********************************************************************** 74200000
+.V1 MNOTE 5,'* * * IEISCH001 SCHEDULR PREVIOUSLY SPECIFIED'          ** 74400000
+&SGQUITB SETB  1                                                        74600000
+         AGO   .MEND                         NO PROCESSING              74800000
+.E1      AIF   ('&SUBSYS' EQ 'PRISUB').PRI                              74810002
+    MNOTE 5,'* * * IEISCH002 SUBSYS=&SUBSYS(&V) MORE THAN 4 CHARACTERS' 74850002
+&SGQUITB SETB 1                                                         74900002
+         AGO   .CKMT                                                    74950002
+.E2 MNOTE 5,'* * * IEISCH003 SUBSYS HAS MORE THAN 15 PARAMETRRS'        75000002
+&SGQUITB SETB 1                                                         75050002
+         AGO   .PRI                                                     75100002
+.E4 MNOTE 5,'* * * IEISCH005 DEVPREF=&DEVPREF(&A) INVALID'              75300002
+&SGQUITB SETB 1                                                         75350002
+         AGO   .OUT                                                     75400002
+.E5 MNOTE 5,'* * * IEISCH006 DEVPREF PARAMETER LIST EXCEEDS 30 DEVICES' 75450002
+&SGQUITB SETB 1                                                         75500002
+         AGO   .TA                                                      75550002
+.E6 MNOTE 5,'* * * IEISCH007 PRISUB=&PRISUB EXCEEDS 4 CHARACTERS'       75600002
+&SGQUITB SETB 1                                                         75650002
+         AGO   .DEV                                            @AZ09190 75700003
+.W9 MNOTE 5,'* * * IEISCH019 TAVR=&TAVR VALUE INVALID'                  75750002
+&SGQUITB SETB 1                                                         75800002
+         AGO   .BCLMT                   * BCLMT   *                     80800000
+.Z0 MNOTE 5,'* * * IEISCH040 HARDCPY=&HARDCPY HAS INVALID NUMBER OF PAR*80850002
+               AMETERS'                                              ** 86800000
+&SGQUITB SETB  1                                                        87000000
+         AGO   .MEND                      * RETURN *                    87200002
+.Z1 MNOTE 5,'* * * IEISCH041 HARDCPY=-&HARDCPY(1)- VALUE INVALID'    ** 87400000
+&SGQUITB SETB  1                                                        87600000
+         AGO   .HC4                     * * RETURN * *                  87800000
+.Z2 MNOTE 5,'* * * IEISCH042 HARDCPY=-&HARDCPY(2)- VALUE INVALID'    ** 88000000
+&SGQUITB SETB  1                                                        88200000
+         AGO   .HCE                     * RETURN **                     88400000
+.Z3 MNOTE 5,'* * * IEISCH043 HARDCPY=-&HARDCPY(&N)- VALUE INVALID'   ** 88600000
+&SGQUITB SETB 1                                                         88800000
+         AGO   .MEND                      * RETURN *                    89000002
+.Z4 MNOTE 5,'* * * IEISCH044 HARDCPY ROUTE-CODE VALUE &D INVALID'    ** 89200000
+&SGQUITB SETB  1                                                        89400000
+         AGO   .HCB                     * RETURN **                     89600000
+.Z5 MNOTE 5,'* * * IEISCH045 HARDCPY ROUTE-CODE VALUE &D DUPLICATED' ** 89800000
+&SGQUITB SETB  1                                                        90000000
+         AGO   .HCB                     * RETURN **                     90200000
+.ZE MNOTE 5,'* * * IEISCH053 BCLMT VALUE &BCLMT INVALID'                94090000
+&SGQUITB SETB  1                                                        94120000
+         AGO   .HC                     * HARDCPY *                      94150002
+.MEND    MEND                                                           94200000

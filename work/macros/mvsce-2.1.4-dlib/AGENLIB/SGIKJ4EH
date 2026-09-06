@@ -1,0 +1,40 @@
+          MACRO                                                         03000020
+         SGIKJ4EH                                                       06000020
+.* C 150000                                                    @YL026YB 06050000
+.* D 690000-750000                                             @YL026YB 09000000
+.********************************************************************   09050000
+.***  THIS MACRO PRODUCES THE LINKEDIT CONTROL STATEMENTS               09100000
+.***  FOR THE UTILITY COMMANDS  RENAME, AND PROTECT,           @YL026YB 12000000
+.***  AND FOR THE AMS LISTCAT AND DELETE COMMANDS.                      12050000
+.********************************************************************   18000020
+          COPY SGGBLPAK                                                 21000020
+&SGCTRLC(7)  SETC  '&SGCTRLC(23)'        CMDVOL                         24000020
+&SGCTRLC(8)  SETC  '&SGCTRLC(24)'        UNIT NAME OF CMDVOL            27000020
+&SGCTRLC(9)  SETC  'CMDLIB'              LIBRARY NAME                   30000020
+&SGCTRLC(11)   SETC  ',REFR'                                            42000000
+&SGCTRLC(12)   SETC  ',RENT'                                            45000000
+          COPY SGLEDPK1                                                 51000020
+ PUNCH '//ACMDLIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.ACMDLIB'     54000000
+          COPY SGLEDPK2                                                 54050000
+ PUNCH '  INCLUDE ACMDLIB(IKJEHREN)'                                    54100000
+ PUNCH '  ALIAS RENAME'                                                 63000020
+ PUNCH '  ALIAS REN'                                                    64000020
+ PUNCH '  NAME IKJEHREN(R)'                                             66000020
+ PUNCH '  INCLUDE ACMDLIB(IKJEHPRO)'                                    66050000
+ PUNCH '  ALIAS PROTECT'                                                81000020
+ PUNCH '  ALIAS PROT'                                                   82000020
+ PUNCH '  NAME IKJEHPRO(R)'                                             84000020
+ PUNCH '  INCLUDE ACMDLIB(IDCAM01)'                            @YL026YB 84050000
+ PUNCH '  ALIAS ALTER,DEFINE,DEF,DELETE,DEL'                   @ZA07167 87000000
+ PUNCH '  ALIAS EXPORT,EXP,IMPORT,IMP,LISTCAT,LISTC'           @YL026YB 87050000
+ PUNCH '  ALIAS PRINT,REPRO,VERIFY,VFY'                        @YL026YB 87100000
+ PUNCH '  SETCODE AC(1)'                                       @ZA28029 90000000
+ PUNCH '  NAME IDCAM01(R)'                                     @YL026YB 90050000
+ PUNCH '  INCLUDE ACMDLIB(IDCAM02)'                            @YL026YB 90100000
+ PUNCH '  ALIAS CNVTCAT,CNVTC,BLDINDEX,BIX'                    @Y30SSJK 90150000
+ PUNCH '  ALIAS LISTCRA,LISTR,EXPORTRA,XPRA,IMPORTRA,MPRA'     @Y30SSJK 90200000
+ PUNCH '  ALIAS RESETCAT,RCAT'                                 @Z40PSFY 90250000
+ PUNCH '  SETCODE AC(1)'                                       @ZA28029 90300000
+ PUNCH '  NAME IDCAM02(R)'                                     @YL026YB 90350000
+ PUNCH '/*'                                                             90400000
+          MEND                                                          90450000

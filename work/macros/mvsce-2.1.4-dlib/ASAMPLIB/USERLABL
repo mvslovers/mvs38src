@@ -1,0 +1,506 @@
+USERLABL CSECT                                                          00100017
+         SPACE 3                                                        00200017
+**********************************************************************  00300017
+*                                                                    *  00400017
+*   THIS PROGRAM ILLUSTRATES ONE APPLICATION FOR THE USER LABEL      *  00500017
+*   FACILITY.  A SINGLE VOLUME BSAM DATA SET IS OPENED FOR OUT-      *  00600017
+*   PUT.  EIGHT HEADER AND EIGHT TRAILER LABELS ARE CREATED BY       *  00700017
+*   THE USER LABEL EXIT ROUTINES.                                    *  00800017
+*                                                                    *  00900017
+**********************************************************************  01000017
+         EJECT                                                          01100017
+******************************                                          01200017
+         SPACE 2                                                        01300017
+*************************REGISTER ASSIGNMENTS*************************  01400017
+         SPACE 2                                                        01500017
+******************************                                          01600017
+         SPACE                                                          01700017
+R0       EQU   0                                                        01800017
+         SPACE                                                          01900017
+R1       EQU   1                                                        02000017
+         SPACE                                                          02100017
+R2       EQU   2                                                        02200017
+         SPACE                                                          02300017
+R3       EQU   3                                                        02400017
+         SPACE                                                          02500017
+R4       EQU   4                                                        02600017
+         SPACE                                                          02700017
+R5       EQU   5                                                        02800017
+         SPACE                                                          02900017
+R6       EQU   6                                                        03000017
+         SPACE                                                          03100017
+R7       EQU   7                                                        03200017
+         SPACE                                                          03300017
+R8       EQU   8                                                        03400017
+         SPACE                                                          03500017
+R9       EQU   9                                                        03600017
+         SPACE                                                          03700017
+R10      EQU   10                                                       03800017
+         SPACE                                                          03900017
+R11      EQU   11                                                       04000017
+         SPACE                                                          04100017
+R12      EQU   12                                                       04200017
+         SPACE                                                          04300017
+R13      EQU   13                                                       04400017
+         SPACE                                                          04500017
+R14      EQU   14                                                       04600017
+         SPACE                                                          04700017
+R15      EQU   15                                                       04800017
+         SPACE                                                          04900017
+BUFAD    EQU   0        *DISP INTO PARM LIST FOR LBL BUF ADR            05000017
+         SPACE                                                          05100017
+DCBAD    EQU   4        *DISP INTO PARM LIST FOR DCB ADR                05200017
+         SPACE                                                          05300017
+IOERRAD  EQU   8        *DISP INTO PARM LIST FOR I/O ERR STATUS ADR     05400017
+         SPACE                                                          05500017
+*******************************                                         05600017
+         EJECT                                                          05700017
+******************************                                          05800017
+         SPACE 2                                                        05900017
+****************************INITIALIZATION****************************  06000017
+         SPACE 2                                                        06100017
+******************************                                          06200017
+         SPACE                                                          06300017
+         SAVE  (14,12)        *SAVE CALLERS REGS.                       06400017
+         SPACE                                                          06500017
+         BALR  R12,0          *ESTABLISH ADDRESSABILITY                 06600017
+         SPACE                                                          06700017
+         USING *,12                                                     06800017
+         SPACE                                                          06900017
+         LA    R2,MYSAVE      *CHAIN                                    07000017
+         SPACE                                                          07100017
+         ST    R2,8(0,R13)    *SAVE AREAS                               07200017
+         SPACE                                                          07300017
+         ST    R13,4(0,R2)    *TOGETHER                                 07400017
+         SPACE                                                          07500017
+         LR    R13,R2         *SET SAVE AREA PTR.                       07600017
+         SPACE                                                          07700017
+*******************************                                         07800017
+         EJECT                                                          07900017
+******************************                                          08000017
+         SPACE 2                                                        08100017
+***********************OPEN DATA SET FOR OUTPUT**********************   08200017
+         SPACE 2                                                        08300017
+******************************                                          08400017
+         SPACE                                                          08500017
+OPEN1    OPEN  (OUTDCB,(OUTPUT))  *OPEN FOR OUTPUT                      08600017
+         SPACE                                                          08700017
+*        ***HEADER LABEL ROUTINE GETS CONTROL DURING OPEN***            08800017
+         SPACE                                                          08900017
+CKTRACK  CLI   ERRCODE,X'00'  *WAS THERE AN ERROR IN LABEL PROCESSING   09000017
+         SPACE                                                          09100017
+       BNE   DUMP           *YES, GO TO TERMINATE JOB WITH DUMP         09200017
+         SPACE                                                          09300017
+*******************************                                         09400017
+         EJECT                                                          09500017
+******************************                                          09600017
+         SPACE 2                                                        09700017
+*************************WRITE EIGHT RECORDS*************************   09800017
+         SPACE 2                                                        09900017
+******************************                                          10000017
+         SPACE                                                          10100017
+SETWRITE LA    R5,8(0,0)          *SET CONTROL FOR 8 RECORDS            10200017
+         SPACE                                                          10300017
+LOOP1    WRITE WDECB,SF,OUTDCB,RECORD *WRITE DATA (FIRST VOLUME)        10400017
+         SPACE                                                          10500017
+         CHECK WDECB                  *VALIDATE WRITE                   10600017
+         SPACE                                                          10700017
+         BCT   R5,LOOP1               *REPEAT 8 TIMES                   10800017
+         SPACE                                                          10900017
+*******************************                                         11000017
+         EJECT                                                          11100017
+******************************                                          11200017
+         SPACE 2                                                        11300017
+*************************CLOSE THE DATA SET**************************   11400017
+         SPACE 2                                                        11500017
+******************************                                          11600017
+         SPACE                                                          11700017
+         CLOSE (OUTDCB)       *CLOSE DATA SET                           11800017
+         SPACE                                                          11900017
+*        ***OUTPUT TRAILER ROUTINE GETS CONTROL DURING CLOSE***         12000017
+         SPACE                                                          12100017
+         CLI   ERRCODE,X'00'  *WAS THERE AN ERROR IN LABEL PROCESSING   12200017
+         SPACE                                                          12300017
+         BNE   DUMP           *YES, GO TO TERMINATE JOB                 12400017
+         SPACE                                                          12500017
+******************************                                          12600017
+         SPACE 2                                                        12700017
+***********************RETURN TO CONTROL PROGRAM*********************   12800017
+         SPACE 2                                                        12900017
+******************************                                          13000017
+         SPACE                                                          13100017
+ENDJOB   L     R13,4(0,R13)   *EXIT                                     13200017
+         SPACE                                                          13300017
+         RETURN (14,12),RC=0                                            13400017
+         SPACE                                                          13500017
+*******************************                                         13600017
+         EJECT                                                          13700017
+*******************************                                         13800017
+         SPACE 2                                                        13900017
+*******************SYNAD ROUTINE*************************************   14000017
+         SPACE 2                                                        14100017
+******************************                                          14200017
+         SPACE                                                          14300017
+OUTSYNAD MVI   ERRCODE,X'11'  *SET ERROR CODE                           14400017
+         SPACE                                                          14500017
+         B     DUMP           *ABORT JOB                                14600017
+         SPACE                                                          14700017
+*******************************                                         14800017
+         SPACE 2                                                        14900017
+*******************DUMP ROUTINE**************************************   15000017
+         SPACE 2                                                        15100017
+*******************************                                         15200017
+         SPACE                                                          15300017
+DUMP     SR    R1,R1          *CLEAR REGISTER ONE                       15400017
+         SPACE                                                          15500017
+         IC    R1,ERRCODE     *SET UP ERROR CODE                        15600017
+         SPACE                                                          15700017
+         NI    EXITLIST,X'00'      *DEACTIVATE EXITS 2 AND 4 BEFORE     15800017
+         SPACE                                                          15900017
+         NI    EXITLIST+4,X'00'     *ABEND                              16000017
+         SPACE                                                          16100017
+         ABEND  (1),DUMP                                                16200017
+         SPACE                                                          16300017
+*******************************                                         16400017
+         EJECT                                                          16500017
+******************************                                          16600017
+         SPACE 2                                                        16700017
+*****SUBROUTINE TO PRINT 80 CHAR. MESSAGES***************************   16800017
+         SPACE 2                                                        16900017
+******************************                                          17000017
+         SPACE                                                          17100017
+MSGOUT   NI    MSGSWTCH,X'00'     *SET UNABLE TO OPEN SWITCH OFF        17200017
+         SPACE                                                          17300017
+         LR    R7,R1              *SAVE MSG ADDRESS                     17400017
+         SPACE                                                          17500017
+MSGTEST  TM    MSGDCB+48,X'10'    *IS DCB OPEN                          17600017
+         SPACE                                                          17700017
+         BO    MSGWRITE           *YES, GO WRITE MESSAGE                17800017
+         SPACE                                                          17900017
+         TM    MSGSWTCH,X'01'     *NO,IS UNABLE TO OPEN SWITCH ON       18000017
+         SPACE                                                          18100017
+         BO    WTOMSG             *YES,ERROR                            18200017
+         SPACE                                                          18300017
+         OPEN  (MSGDCB,(OUTPUT))  *NO,OPEN DCB                          18400017
+         SPACE                                                          18500017
+         OI    MSGSWTCH,X'01'     *TURN SWITCH ON                       18600017
+         SPACE                                                          18700017
+         B     MSGTEST            *REPEAT PROCESS                       18800017
+         SPACE                                                          18900017
+MSGWRITE PRTOV MSGDCB,12          *SPACE TO NEW PAGE WHEN NEEDED        19000017
+         EJECT                                                          19100017
+         WRITE MSGDECB,SF,MSGDCB,(7) *WRITE MSG                         19200017
+         SPACE                                                          19300017
+         CHECK MSGDECB               *VALIDATE WRITE                    19400017
+         SPACE                                                          19500017
+         BR    R11                   *RETURN TO CALLER                  19600017
+         SPACE                                                          19700017
+WTOMSG   WTO   'UNABLE TO OPEN OUTPUT WRITER'                           19800017
+         SPACE                                                          19900017
+         MVI   ERRCODE,X'63'  *SET ERROR CODE                           20000017
+         SPACE                                                          20100017
+         B     DUMP           *DUMP                                     20200017
+         SPACE                                                          20300017
+*******************************                                         20400017
+         SPACE 2                                                        20500017
+**********************************************************************  20600017
+         EJECT                                                          20700017
+**********************************************************************  20800017
+         SPACE 2                                                        20900017
+******************EXIT-2- OUTPUT HEADER LABEL EXIT ROUTINE************* 21000017
+         SPACE 2                                                        21100017
+**********************************************************************  21200017
+         EJECT                                                          21300017
+******************************                                          21400017
+         SPACE 2                                                        21500017
+*******************CREATE EIGHT HEADER LABELS************************   21600017
+         SPACE 2                                                        21700017
+******************************                                          21800017
+         SPACE                                                          21900017
+OHLBL1   LA    R13,EX2SAVE    *PROVIDE A SAVE AREA                      22000017
+         SPACE                                                          22100017
+         LR    R4,R1         *SAVE PARM LIST ADR                        22200017
+         SPACE                                                          22300017
+         ST    R14,SAVE14     *SAVE RETURN ADR.                         22400017
+         SPACE                                                          22500017
+         TM    IOERRAD(R4),X'80'  *WAS I/O ERR ENCOUNT. WRITING LBL     22600017
+         SPACE                                                          22700017
+         BO    IOERROR2      *YES, GO TO ERROR ROUTINE                  22800017
+         SPACE                                                          22900017
+         CLC   BUFAD+1(3,R4),=3X'00'  *NO, WAS LBL TRK ALLOCATED        23000017
+         SPACE                                                          23100017
+         BE    REG0RTN2      *NO, GO TO ERROR ROUTINE                   23200017
+         SPACE                                                          23300017
+         L     R6,BUFAD(R4)  *GET ADR OF LBL BUFFER                     23400017
+         SPACE                                                          23500017
+         LA    R6,0(R6)      *CLEAR HIGH ORDER BYTE                     23600017
+         SPACE                                                          23700017
+         MVC   0(1,R6),HCOUNT+3   *GET LABEL COUNT                      23800017
+         SPACE                                                          23900017
+         OI    0(R6),X'F0'    *MAKE IT EBCDIC                           24000017
+         SPACE                                                          24100017
+         MVC   1(79,R6),0(R6)  *PROP. COUNT THRU LABEL                  24200017
+         SPACE                                                          24300017
+         L     R6,HCOUNT      *GET LABEL COUNT                          24400017
+         SPACE                                                          24500017
+         LA    R6,1(0,R6)     *ADD ONE TO LABEL COUNT                   24600017
+         SPACE                                                          24700017
+         ST    R6,HCOUNT      *RESTORE LABEL COUNT                      24800017
+         SPACE                                                          24900017
+         LA    R15,8          *SET RETURN CODE TO EIGHT                 25000017
+         SPACE                                                          25100017
+RETURN2  L     R14,SAVE14     *RESTORE RETURN ADR.                      25200017
+         SPACE                                                          25300017
+         RETURN RC=(15)       *RETURN TO I/O SUPPORT                    25400017
+         SPACE                                                          25500017
+*******************************                                         25600017
+         EJECT                                                          25700017
+******************************                                          25800017
+         SPACE 2                                                        25900017
+*******************ALLOCATION ERROR ROUTINE**************************   26000017
+         SPACE 2                                                        26100017
+******************************                                          26200017
+         SPACE                                                          26300017
+REG0RTN2 MVI   ERRCODE,X'22'  *TURN ON ERROR CODE                       26400017
+         SPACE                                                          26500017
+         LA    R1,EX2RMSG1    *GET ADDRESS OF FIRST ERROR MESSAGE       26600017
+         SPACE                                                          26700017
+         MVI   5(R1),C'2'     *SET TYPE OF LABEL ROUTINE IN MESSAGE     26800017
+         SPACE                                                          26900017
+         BAL   R11,MSGOUT     *GO TO PRINT ERROR MESSAGE                27000017
+         SPACE                                                          27100017
+         LA    R1,EX2RMSG2    *GET ADDRESS OF SECOND ERROR MESSAGE      27200017
+         SPACE                                                          27300017
+         BAL   R11,MSGOUT     *GO TO PRINT ERROR MESSAGE                27400017
+         SPACE                                                          27500017
+         B     RETURN2        *GO TO RETURN WITH NO RETURN CODE         27600017
+         SPACE                                                          27700017
+*******************************                                         27800017
+         SPACE 2                                                        27900017
+*******************I/O ERROR ROUTINE*********************************   28000017
+         SPACE 2                                                        28100017
+******************************                                          28200017
+         SPACE                                                          28300017
+IOERROR2 MVI   ERRCODE,X'12'  *SET ERROR CODE                           28400017
+         SPACE                                                          28500017
+         LA    R1,EX2IOMSG    *GET ADDRESS OF FIRST ERROR MESSAGE       28600017
+         SPACE                                                          28700017
+         MVI   5(R1),C'2'     *SET TYPE OF LABEL ROUTINE IN MESSAGE     28800017
+         SPACE                                                          28900017
+         BAL   R11,MSGOUT     *GO TO PRINT ERROR MESSAGE                29000017
+         SPACE                                                          29100017
+         LA    R1,EX2RMSG2    *GET ADDRESS OF SECOND ERROR MESSAGE      29200017
+         SPACE                                                          29300017
+         BAL   R11,MSGOUT    *GO TO PRINT ERROR MESSAGE                 29400017
+         SPACE                                                          29500017
+         SR    R15,R15        *SET RETURN CODE TO ZERO                  29600017
+         SPACE                                                          29700017
+         B     RETURN2        *GO TO RETURN TO I/O SUPPORT              29800017
+         SPACE                                                          29900017
+******************************                                          30000017
+         SPACE 2                                                        30100017
+*********************************************************************** 30200017
+         EJECT                                                          30300017
+*********************************************************************** 30400017
+         SPACE 2                                                        30500017
+******************EXIT-4- OUTPUT TRAILER LABEL EXIT ROUTINE************ 30600017
+         SPACE 2                                                        30700017
+*********************************************************************** 30800017
+         EJECT                                                          30900017
+******************************                                          31000017
+         SPACE 2                                                        31100017
+*******************CREATE EIGHT TRAILER LABELS***********************   31200017
+         SPACE 2                                                        31300017
+*******************************                                         31400017
+         SPACE                                                          31500017
+OTLBL1   LA    R13,EX4SAVE    *PROVIDE A SAVE AREA                      31600017
+         SPACE                                                          31700017
+         LR    R4,R1         *SAVE PARM LIST ADR                        31800017
+         SPACE                                                          31900017
+         ST    R14,SAVE14     *SAVE RETURN ADR.                         32000017
+         SPACE                                                          32100017
+         TM    IOERRAD(R4),X'80'  *WAS I/O ERR ENCOUNT. WRITING LBL     32200017
+         SPACE                                                          32300017
+         BO    IOERROR4      *YES, GO TO ERROR ROUTINE                  32400017
+         SPACE                                                          32500017
+         CLC   BUFAD+1(3,R4),=3X'00'  *NO, WAS LBL TRK ALLOCATED        32600017
+         SPACE                                                          32700017
+         BE    REG0RTN4      *NO, GO TO ERROR ROUTINE                   32800017
+         SPACE                                                          32900017
+         L     R6,BUFAD(R4)  *GET LBL BUFFER ADR                        33000017
+         SPACE                                                          33100017
+         LA    R6,0(R6)      *CLEAR HIGH ORDER BYTE                     33200017
+         SPACE                                                          33300017
+         MVC   0(1,R6),TCOUNT+3   *GET LABEL COUNT                      33400017
+         SPACE                                                          33500017
+         OI    0(R6),X'F0'    *MAKE IT EBCDIC                           33600017
+         SPACE                                                          33700017
+         MVC   1(79,R6),0(R6)  *PROP. COUNT THRU LABEL                  33800017
+         SPACE                                                          33900017
+         L     R6,TCOUNT      *GET LABEL COUNT                          34000017
+         SPACE                                                          34100017
+         LA    R6,1(0,R6)     *ADD ONE TO LABEL COUNT                   34200017
+         SPACE                                                          34300017
+         ST    R6,TCOUNT      *RESTORE LABEL COUNT                      34400017
+         SPACE                                                          34500017
+         LA    R15,8          *SET RETURN CODE TO EIGHT                 34600017
+         SPACE                                                          34700017
+RETURN4  L     R14,SAVE14     *RESTORE RETURN ADR.                      34800017
+         SPACE                                                          34900017
+         RETURN RC=(15)       *RETURN TO I/O SUPPORT                    35000017
+         SPACE                                                          35100017
+*******************************                                         35200017
+         EJECT                                                          35300017
+*******************************                                         35400017
+         SPACE 2                                                        35500017
+*******************ALLOCATION ERROR ROUTINE**************************   35600017
+         SPACE 2                                                        35700017
+******************************                                          35800017
+         SPACE                                                          35900017
+REG0RTN4 MVI   ERRCODE,X'24'  *TURN ON ERROR CODE                       36000017
+         SPACE                                                          36100017
+         LA    R1,EX2RMSG1    *GET ADDRESS OF FIRST ERROR MESSAGE       36200017
+         SPACE                                                          36300017
+         MVI   5(R1),C'4'     *SET TYPE OF LABEL ROUTINE IN MESSAGE     36400017
+         SPACE                                                          36500017
+         BAL   R11,MSGOUT     *GO TO PRINT ERROR MESSAGE                36600017
+         SPACE                                                          36700017
+         LA    R1,EX2RMSG2    *GET ADDRESS OF SECOND ERROR MESSAGE      36800017
+         SPACE                                                          36900017
+         BAL   R11,MSGOUT     *GO TO PRINT ERROR MESSAGE                37000017
+         SPACE                                                          37100017
+         B     RETURN4        *GO TO RETURN WITH NO RETURN CODE         37200017
+         SPACE                                                          37300017
+*******************************                                         37400017
+         SPACE 2                                                        37500017
+*******************I/O ERROR ROUTINE*********************************   37600017
+         SPACE 2                                                        37700017
+******************************                                          37800017
+         SPACE                                                          37900017
+IOERROR4 MVI   ERRCODE,X'14'  *SET ERROR CODE                           38000017
+         SPACE                                                          38100017
+         LA    R1,EX2IOMSG    *GET ADDRESS OF FIRST ERROR MESSAGE       38200017
+         SPACE                                                          38300017
+         MVI   5(R1),C'4'     *SET TYPE OF LABEL ROUTINE IN MESSAGE     38400017
+         SPACE                                                          38500017
+         BAL   R11,MSGOUT     *GO TO PRINT ERROR MESSAGE                38600017
+         SPACE                                                          38700017
+         LA    R1,EX2RMSG2    *GET ADDRESS OF SECOND ERROR MESSAGE      38800017
+         SPACE                                                          38900017
+         BAL   R11,MSGOUT     *GO TO PRINT OUT ERROR MESSAGE            39000017
+         SPACE                                                          39100017
+         SR    R15,R15        *SET RETURN CODE TO ZERO                  39200017
+         SPACE                                                          39300017
+         B     RETURN4        *GO TO RETURN TO I/O SUPPORT              39400017
+         SPACE                                                          39500017
+******************************                                          39600017
+         SPACE 2                                                        39700017
+*********************************************************************   39800017
+         EJECT                                                          39900017
+*********************************************************************** 40000017
+         SPACE 2                                                        40100017
+*                                CONSTANTS                            * 40200017
+         SPACE 2                                                        40300017
+*********************************************************************** 40400017
+         EJECT                                                          40500017
+******************************                                          40600017
+         SPACE 2                                                        40700017
+*******************EXIT LIST FOR OUTPUT USER LABEL ROUTINES**********   40800017
+         SPACE 2                                                        40900017
+*******************************                                         41000017
+         SPACE                                                          41100017
+         DS    0F                                                       41200017
+         SPACE                                                          41300017
+EXITLIST DC    X'02'         *EXIT-2 OUTPUT HEADER LABEL EXIT RTN       41400017
+         SPACE                                                          41500017
+         DC    AL3(OHLBL1)                                              41600017
+         SPACE                                                          41700017
+         DC    X'84'         *EXIT-4 OUTPUT TRAILER LABEL EXIT RTN      41800017
+         SPACE                                                          41900017
+         DC    AL3(OTLBL1)                                              42000017
+         SPACE                                                          42100017
+******************************                                          42200017
+         SPACE 2                                                        42300017
+*******************STORAGE*******************************************   42400017
+         SPACE 2                                                        42500017
+*******************************                                         42600017
+         SPACE                                                          42700017
+HCOUNT   DC    F'1'           *NUMBER OF HEADER LABELS TO BE CREATED    42800017
+         SPACE                                                          42900017
+TCOUNT   DC    F'1'           *NUMBER OF TRAILER LABELS TO BE CREATED   43000017
+         SPACE                                                          43100017
+SAVE14   DC    F'0'                                                     43200017
+         SPACE                                                          43300017
+ERRCODE  DC    X'00'                                                    43400017
+         SPACE                                                          43500017
+MSGSWTCH DC    X'00'                                                    43600017
+         SPACE                                                          43700017
+RECORD   DC    20C'DATA'                                                43800017
+         SPACE                                                          43900017
+******************************                                          44000017
+         EJECT                                                          44100017
+******************************                                          44200017
+         SPACE 2                                                        44300017
+*******************MESSAGES******************************************   44400017
+         SPACE 2                                                        44500017
+******************************                                          44600017
+         SPACE                                                          44700017
+EX2RMSG1 DC    CL40'EXIT-2 ENTERED WITH LABEL ADD.=0 INDICAT'           44800017
+         DC    CL40'ING A LABEL TRACK HAS NOT BEEN ALLOCATED'           44900017
+         SPACE                                                          45000017
+EX2RMSG2 DC    CL40'JOB WILL BE TERMINATED WITH NO FURTHER P'           45100017
+         DC    CL40'ROCESSING DONE.                         '           45200017
+         SPACE                                                          45300017
+EX2IOMSG DC    CL40'EXIT-2 ENTERED WITH BIT 0 OF THE FLAG BY'           45400017
+         DC    CL40'TE ON INDICATING AN I/O ERROR CONDITION.'           45500017
+         SPACE                                                          45600017
+*******************************                                         45700017
+         EJECT                                                          45800017
+*******************************                                         45900017
+         SPACE 2                                                        46000017
+*************************DCB FOR OUTPUT DATA SET*********************   46100017
+         SPACE 2                                                        46200017
+******************************                                          46300017
+         SPACE                                                          46400017
+OUTDCB   DCB   DSORG=PS,                                               C46500017
+               MACRF=(W),                                              C46600017
+               DDNAME=OUTPUT,                                          C46700017
+               BLKSIZE=80,                                             C46800017
+               LRECL=80,                                               C46900017
+               RECFM=F,                                                C47000017
+               SYNAD=OUTSYNAD,                                         C47100017
+               EXLST=EXITLIST                                           47200017
+         SPACE                                                          47300017
+******************************                                          47400017
+         EJECT                                                          47500017
+*******************************                                         47600017
+         SPACE 2                                                        47700017
+***********************DCB FOR PRINTING MESSAGES*********************   47800017
+         SPACE 2                                                        47900017
+******************************                                          48000017
+         SPACE                                                          48100017
+MSGDCB   DCB   DSORG=PS,                                               C48200017
+               MACRF=(WC),                                             C48300017
+               DDNAME=SYSPRINT,                                        C48400017
+               RECFM=F,                                                C48500017
+               LRECL=80,                                               C48600017
+               BLKSIZE=80                                               48700017
+         SPACE                                                          48800017
+******************************                                          48900017
+         EJECT                                                          49000017
+*******************************                                         49100017
+         SPACE 2                                                        49200017
+**************************REGISTER SAVE AREAS************************   49300017
+         SPACE 2                                                        49400017
+******************************                                          49500017
+         SPACE                                                          49600017
+MYSAVE   DS    18F                                                      49700017
+         SPACE                                                          49800017
+EX2SAVE  DS    18F                                                      49900017
+         SPACE                                                          50000017
+EX4SAVE  DS    18F                                                      50100017
+         SPACE                                                          50200017
+*******************************                                         50300017
+         SPACE 2                                                        50400017
+*********************************************************************   50500017
+         END                                                            50600017

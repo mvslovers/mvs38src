@@ -1,0 +1,1175 @@
+         MACRO                                                          29750001
+         SGIEA202                                                       29800001
+.*** START OF SPECIFICATIONS ****************************************** 29800103
+.*                                                            @ZA51483* 29800203
+.* MACRO NAME = SGIEA202                                      @ZA51483* 29800303
+.*                                                            @ZA51483* 29800403
+.* DESCRIPTIVE NAME = IEECUCM BUILD MACRO                     @ZA51483* 29800503
+.*                                                            @ZA51483* 29800603
+.* STATUS =   OS/VS2 EBB1102                                  @ZA51483* 29800703
+.*                                                            @ZA51483* 29800803
+.* FUNCTION = BUILDS A JOBSTEP FOR STAGE 2 TO BUILD THE UNIT  @ZA51483* 29800903
+.*            CONTROL MODULE (UCM) BASE AND ITS EXTENSIONS    @ZA51483* 29801003
+.*            FOR MULTIPLE CONSOLE SUPPORT.                   @ZA51483* 29801103
+.*                                                            @ZA51483* 29801203
+.* OPERATION = THIS MACRO SETS UP TABLES OF PARAMETERS FOR    @ZA51483* 29801303
+.*             ALL CONSOLES AS DEFINED BY THE CONSOLE,        @ZA51483* 29801403
+.*             IODEVICE, AND SCHEDULR MACROS.  THEN, IT       @ZA51483* 29801503
+.*             BUILDS A STAGE 2 JOBSTEP TO ASSEMBLE THE UCM   @ZA51483* 29801603
+.*             AND ITS EXTENSIONS.                            @ZA51483* 29801703
+.*                                                            @ZA51483* 29801803
+.* NOTES = THE IEEDUCM MACRO IS BUILT ONCE FOR 50 OR FEWER    @ZA51483* 29801903
+.*         CONSOLES, TWICE FOR MORE THAN 50 CONSOLES.  THIS   @ZA51483* 29802003
+.*         IS DUE TO THE 255-CHARACTER LIMIT ON EACH PARA-    @ZA51483* 29802103
+.*         METER LIST ON THAT MACRO.                          @ZA51483* 29802203
+.*                                                            @ZA51483* 29802303
+.* MODULE TYPE = MACRO                                        @ZA51483* 29802403
+.*                                                            @ZA51483* 29802503
+.*   PROCESSOR = OS/VS2 ASSEMBLER                             @ZA51483* 29802603
+.*                                                            @ZA51483* 29802703
+.*   MODULE SIZE = N/A                                        @ZA51483* 29802803
+.*                                                            @ZA51483* 29802903
+.*   ATTRIBUTES = N/A                                         @ZA51483* 29803003
+.*                                                            @ZA51483* 29803103
+.* ENTRY POINT = INVOKED BY THE GENERATE MACRO                @ZA51483* 29803203
+.*                                                            @ZA51483* 29803303
+.* INPUT = THE FOLLOWING GLOBAL VARIABLES ARE USED:           @ZA51483* 29803403
+.*                                                            @ZA51483* 29803503
+.*       NAME         FUNCTION                                @ZA51483* 29803603
+.* ----------------   --------                                @ZA51483* 29803703
+.*                                                            @ZA51483* 29803803
+.* &SGSCHDB(36)       IF ON, SYSLOG IS TO BE USED AS HARDCOPY @ZA51483* 29803903
+.*                                                            @ZA51483* 29804003
+.* &SGSCHDB(37)       IF ON, HARDCPY=(,CMDS) WAS SPECIFIED    @ZA51483* 29804103
+.*                                                            @ZA51483* 29804203
+.* &SGSCHDB(42)       IF ON, HARDCPY=(,INCMDS) WAS SPECIFIED  @ZA51483* 29804303
+.*                                                            @ZA51483* 29804403
+.* &SGSCHDB(43)       IF ON, HARDCPY=(,STCMDS) WAS SPECIFIED  @ZA51483* 29804503
+.*                                                            @ZA51483* 29804603
+.* &SGSCHDC(1)        MASTER CONSOLE INPUT/OUTPUT ADDRESSES   @ZA51483* 29804703
+.*                                                            @ZA51483* 29804803
+.* &SGSCHDC(2)        ALTERNATE MASTER CONSOLE INPUT/OUTPUT   @ZA51483* 29804903
+.*                    ADDRESS                                 @ZA51483* 29805003
+.*                                                            @ZA51483* 29805103
+.* &SGSCHDC(14)       ADDRESS OF HARDCOPY LOG IF NOT SYSLOG   @ZA51483* 29805203
+.*                                                            @ZA51483* 29805303
+.* &SGSCHDC(16)       INTEGRATED OPERATOR'S CONSOLE ADDRESS   @ZA51483* 29805403
+.*                    FOR MASTER CONSOLE                      @ZA51483* 29805503
+.*                                                            @ZA51483* 29805603
+.* &SGSCNCC(1-98)     SECONDARY CONS INPUT/OUTPUT ADDRESSES   @ZA51483* 29805703
+.*                                                            @ZA51483* 29805803
+.* &SGSCSDB(1-98)     IF ON, CORRESPONDING CONSOLE IS STATUS  @ZA51483* 29805903
+.*                    DISPLAY                                 @ZA51483* 29806003
+.*                                                            @ZA51483* 29806103
+.* &SGSCMSB(1-98)     IF ON, CORRESPONDING CONSOLE IS MESSAGE @ZA51483* 29806203
+.*                    STREAM                                  @ZA51483* 29806303
+.*                                                            @ZA51483* 29806403
+.* &SGSCNYA(1)        NUMBER OF SECONDARY CONSOLES DEFINED    @ZA51483* 29806503
+.*                                                            @ZA51483* 29806603
+.* &SGSCNAC(1-98)     ALTERNATE SECONDARY CONS INPUT/OUTPUT   @ZA51483* 29806703
+.*                    ADDRESSES                               @ZA51483* 29806803
+.*                                                            @ZA51483* 29806903
+.* &SGDTXXB(1-1917)   WHERE XX=04-08 - IF ON, DEVICE IS IN A  @ZA51483* 29813303
+.*                    CLASS ELIGIBLE FOR CONSOLES             @ZA51483* 29813403
+.*                                                            @ZA51483* 29813503
+.* &SGDUXXB(1-1917)   WHERE XX=01-13 - DENOTES DEVICE TYPE    @ZA51483* 29813603
+.*                    OF 'OLD' DEVICE WITHIN CLASS            @ZA51483* 29813703
+.*                                                            @ZA51483* 29813803
+.* &SGDMXXB(1-1917)   WHERE XX=MODEL NUMBER OF DEVICE - IF    @ZA51483* 29813903
+.*                    ON, THIS IS MODEL NUMBER OF 'OLD'       @ZA51483* 29814003
+.*                    DEVICE                                  @ZA51483* 29814103
+.*                                                            @ZA51483* 29814203
+.* &SGSIOCC(1-98)     INTEGRATED OPERATOR'S CONSOLE ADDRESS   @ZA51483* 29814303
+.*                    FOR SECONDARY CONSOLE                   @ZA51483* 29814403
+.*                                                            @ZA51483* 29814503
+.* &SGSCHRB(3-16)     ROUTING CODES SPECIFIED FOR MASTER      @ZA51483* 29814603
+.*                    CONSOLE (1 & 2 ARE FORCED)              @ZA51483* 29814703
+.*                                                            @ZA51483* 29814803
+.* &SGSCHOB(1-16)     ROUTING CODES ASSIGNED FOR MESSAGES     @ZA51483* 29814903
+.*                    THAT DO NOT INCLUDE ROUTING AND DE-     @ZA51483* 29815003
+.*                    SCRIPTOR CODES                          @ZA51483* 29815103
+.*                                                            @ZA51483* 29815203
+.* &SGSCHHB(1-16)     ROUTING CODES TO BE WRITTEN TO HARDCOPY @ZA51483* 29815303
+.*                    LOG                                     @ZA51483* 29815403
+.*                                                            @ZA51483* 29815503
+.* &SGRTXXB(1-98)     WHERE XX=01-16 - ROUTING CODES SPECI-   @ZA51483* 29815603
+.*                    FIED FOR SECONDARY CONSOLES             @ZA51483* 29815703
+.*                                                            @ZA51483* 29815803
+.* &SGCMDXB(1-98)     WHERE X=1-4 - COMMAND GROUPS SPECIFIED  @ZA51483* 29815903
+.*                    FOR SECONDARY CONSOLES                  @ZA51483* 29816003
+.*                                                            @ZA51483* 29816103
+.* OUTPUT = A STAGE 2 JOBSTEP IS BUILT TO INVOKE MACROS       @ZA51483* 29816203
+.*          IEEDUCM (ONCE FOR 1-50 CONSOLES, A SECOND TIME    @ZA51483* 29816303
+.*          FOR 51-99 CONSOLES) AND IEECUCM.                  @ZA51483* 29816403
+.*                                                            @ZA51483* 29816503
+.*          &SGCTRLC(6) IS SET EQUAL TO 'IEECVUCM'.           @ZA51483* 29816603
+.*                                                            @ZA51483* 29816703
+.*          &SGSCHDB(13) IS SET TO '1'B IF A 2740 WAS SPECI-  @ZA51483* 29816803
+.*          FIED AS A CONSOLE.                                @ZA51483* 29816903
+.*                                                            @ZA51483* 29817003
+.* EXIT NORMAL = N/A                                          @ZA51483* 29817103
+.*                                                            @ZA51483* 29817203
+.* EXIT ERROR = N/A                                           @ZA51483* 29817303
+.*                                                            @ZA51483* 29817403
+.* EXTERNAL REFERENCES = N/A                                  @ZA51483* 29817503
+.*                                                            @ZA51483* 29817603
+.* TABLES = &AUTH    - CONTAINS THE COMMAND AUTHORITY FOR     @ZA51483* 29817703
+.*                     EACH CONSOLE, TRANSLATED TO ONE HEX    @ZA51483* 29817803
+.*                     CHARACTER, I.E. THE VALUE IN &AUTH     @ZA51483* 29817903
+.*                     WILL BE 'A' IF A CONSOLE HAS AUTHORITY @ZA51483* 29818003
+.*                     TO ISSUE COMMANDS IN GROUPS 1 AND 3.   @ZA51483* 29818103
+.*                                                            @ZA51483* 29818203
+.*          &RTCODE1 - CONTAIN THE ROUTING CODES DESIGNATED   @ZA51483* 29818303
+.*          &RTCODE2   FOR EACH CONSOLE, TRANSLATED TO HEX    @ZA51483* 29818403
+.*          &RTCODE3   CHARACTERS, IN GROUPS OF FOUR.         @ZA51483* 29818503
+.*          &RTCODE4                                          @ZA51483* 29818603
+.*                                                            @ZA51483* 29818703
+.*          &A       - CONTAINS THE ADDRESSES OF ALL CONSOLE  @ZA51483* 29818803
+.*                     DEVICES.  FOR COMPOSITE CONSOLES,      @ZA51483* 29818903
+.*                     THERE ARE TWO ENTRIES IN THIS TABLE.   @ZA51483* 29819003
+.*                                                            @ZA51483* 29819103
+.*          &B       - CONTAINS A 2-CHARACTER PROCESSOR NAME  @ZA51483* 29819203
+.*                     MODIFIER FOR EACH CONSOLE.  XX WOULD   @ZA51483* 29819303
+.*                     RESULT IN IGCXX07B AS THE PROCESSOR    @ZA51483* 29819403
+.*                     MODULE NAME.  ITEMS ARE SET AS FOLLOWS @ZA51483* 29819503
+.*                                                            @ZA51483* 29819603
+.*                       XX   DEVICE TYPES                    @ZA51483* 29819703
+.*                       --   ------------                    @ZA51483* 29819803
+.*                                                            @ZA51483* 29819903
+.*                       00   1052, 3210, 3213, 3215, JES     @ZA51483* 29820003
+.*                       01   1403, 1443, 3211                @ZA51483* 29820103
+.*                       02   2501, 2520, 2540R, 3505, 3525   @ZA51483* 29820203
+.*                       51   2250, 2260, 3036, 3066, 3158,   @ZA51483* 29820303
+.*                            3277                            @ZA51483* 29820403
+.*                       5W   3284, 3286                      @ZA51483* 29820503
+.*                       XX   2740                            @ZA51483* 29820603
+.*                                                            @ZA51483* 29820703
+.*          &C       - CONTAINS A 4-CHARACTER INITIAL ATTRI-  @ZA51483* 29820803
+.*                     BUTE FOR EACH CONSOLE DEVICE, GIVEN IN @ZA51483* 29820903
+.*                     THE FORM 'WAXA'.  AN 'N' IN ANY POSI-  @ZA51483* 29821003
+.*                     TION IMPLIES LACK OF THAT ATTRIBUTE.   @ZA51483* 29821103
+.*                                                            @ZA51483* 29821203
+.*                       CHAR  MEANING                        @ZA51483* 29821303
+.*                       ----  -------                        @ZA51483* 29821403
+.*                        W    DEVICE SUPPORTS WTO            @ZA51483* 29821503
+.*                        A    DEVICE SUPPORTS ATTENTION      @ZA51483* 29821603
+.*                        X    DEVICE IS SUBJECT TO EXTERNAL  @ZA51483* 29821703
+.*                             INTERRUPT                      @ZA51483* 29821803
+.*                        A    DEVICE ACTIVE AT IPL           @ZA51483* 29821903
+.*                                                            @ZA51483* 29822003
+.*          &E       - CONTAINS A CHARACTER INDICATING CER-   @ZA51483* 29822103
+.*                     TAIN DEVICE TYPES, SET AS FOLLOWS:     @ZA51483* 29822203
+.*                                                            @ZA51483* 29822303
+.*                       CHAR  DEVICE TYPES                   @ZA51483* 29822403
+.*                       ----  ------------                   @ZA51483* 29822503
+.*                                                            @ZA51483* 29822603
+.*                        A    3066                           @ZA51483* 29822703
+.*                        B    2250                           @ZA51483* 29822803
+.*                        C    2260                           @ZA51483* 29822903
+.*                        D    3277-1                         @ZA51483* 29823003
+.*                        E    3036, 3158, 3277-2             @ZA51483* 29823103
+.*                        Y    JES (DUMMY) CONSOLE            @ZA51483* 29823203
+.*                        Z    3213                           @ZA51483* 29823303
+.*                        0    ALL OTHERS                     @ZA51483* 29823403
+.*                                                            @ZA51483* 29823503
+.*          &G       - CONTAINS A CHARACTER INDICATING EACH   @ZA51483* 29823603
+.*                     CONSOLE'S INPUT/OUTPUT CAPABILITY, SET @ZA51483* 29823703
+.*                     AS FOLLOWS:                            @ZA51483* 29823803
+.*                                                            @ZA51483* 29823903
+.*                       CHAR  CAPABILITY                     @ZA51483* 29824003
+.*                       ----  ----------                     @ZA51483* 29824103
+.*                                                            @ZA51483* 29824203
+.*                        F    FULL CAPABILITY                @ZA51483* 29824303
+.*                        M    MESSAGE STREAM                 @ZA51483* 29824403
+.*                        S    STATUS DISPLAY                 @ZA51483* 29824503
+.*                                                            @ZA51483* 29824603
+.*          &H       - FOR EACH CONSOLE, CONTAINS A '1' IF    @ZA51483* 29824703
+.*                     THE DEVICE IS AN INTEGRATED OPERATOR'S @ZA51483* 29824803
+.*                     CONSOLE, '0' OTHERWISE.                @ZA51483* 29824903
+.*                                                            @ZA51483* 29825003
+.*          &ATR     - USED TO BUILD THE LAST 2 CHARACTERS OF @ZA51483* 29825103
+.*                     EACH ELEMENT IN &C.  IT IS ALWAYS SET  @ZA51483* 29825203
+.*                     TO 'XN'.                               @ZA51483* 29825303
+.*                                                            @ZA51483* 29825403
+.*          &COMP    - CONTAINS, IN EACH PAIR OF ELEMENTS,    @ZA51483* 29825503
+.*                     THE ADDRESSES OF THE OUTPUT AND INPUT  @ZA51483* 29825603
+.*                     HALVES OF COMPOSITE CONSOLES, 'FFF' IF @ZA51483* 29825703
+.*                     THE CONSOLE IS NOT A COMPOSITE.  IT IS @ZA51483* 29825803
+.*                     USED TO BUILD THE COMPCN1 PARAMETER OF @ZA51483* 29825903
+.*                     IEEDUCM MACROS.                        @ZA51483* 29826003
+.*                                                            @ZA51483* 29826103
+.*          &ALT     - CONTAINS, IN EACH PAIR OF ELEMENTS,    @ZA51483* 29826203
+.*                     THE ADDRESS OF THE ALTERNATE CONSOLE   @ZA51483* 29826303
+.*                     FOR EACH CONSOLE, OR 'FFF' IF THERE IS @ZA51483* 29826403
+.*                     NO ALTERNATE.  IT IS USED TO BUILD THE @ZA51483* 29826503
+.*                     ALTCON1 PARAMETER OF IEEDUCM MACROS.   @ZA51483* 29826603
+.*                                                            @ZA51483* 29826703
+.*          &COMPALT - CONTAINS, IN EACH PAIR OF ELEMENTS,    @ZA51483* 29826803
+.*                     THE ADDRESS OF THE OUTPUT HALF OF AN   @ZA51483* 29826903
+.*                     ALTERNATE CONSOLE THAT IS ALSO A COM-  @ZA51483* 29827003
+.*                     POSITE CONSOLE.  IT IS USED TO BUILD   @ZA51483* 29827103
+.*                     THE ALTCOM1 PARAMETER OF IEEDUCM       @ZA51483* 29827203
+.*                     MACROS.                                @ZA51483* 29827303
+.*                                                            @ZA51483* 29827403
+.* VARIABLES = THE FOLLOWING LOCAL VARIABLES ARE USED:        @ZA51483* 29827503
+.*                                                            @ZA51483* 29827603
+.*   NAME     FUNCTION                                        @ZA51483* 29827703
+.* --------   --------                                        @ZA51483* 29827803
+.*                                                            @ZA51483* 29827903
+.* &M2        INDEX INTO CONSOLE PARAMETER TABLES             @ZA51483* 29828003
+.*                                                            @ZA51483* 29828103
+.* &MASTCON   MASTER CONSOLE ADDRESS                          @ZA51483* 29828203
+.*                                                            @ZA51483* 29828303
+.* &OLDW1     THE HEX CHARACTERS INDICATING WHICH ROUTING     @ZA51483* 29828403
+.* &OLDW2     CODES ARE TO BE ASSIGNED TO MESSAGES THAT DO    @ZA51483* 29828503
+.* &OLDW3     NOT INCLUDE ROUTING AND DESCRIPTOR CODES.       @ZA51483* 29828603
+.* &OLDW4                                                     @ZA51483* 29828703
+.*                                                            @ZA51483* 29828803
+.* &HARDM1    THE HEX CHARACTERS INDICATING WHICH ROUTING     @ZA51483* 29828903
+.* &HARDM2    CODES ARE TO BE WRITTEN TO THE HARDCOPY LOG.    @ZA51483* 29829003
+.* &HARDM3                                                    @ZA51483* 29829103
+.* &HARDM4                                                    @ZA51483* 29829203
+.*                                                            @ZA51483* 29829303
+.* &ROUTM1    THE HEX CHARACTERS INDICATING WHICH ROUTING     @ZA51483* 29829403
+.* &ROUTM2    CODES ARE TO BE ASSIGNED TO THE MASTER CONSOLE. @ZA51483* 29829503
+.* &ROUTM3                                                    @ZA51483* 29829603
+.* &ROUTM4                                                    @ZA51483* 29829703
+.*                                                            @ZA51483* 29829803
+.* &M         INDEX INTO CONSOLE PARAMETER TABLES             @ZA51483* 29829903
+.*                                                            @ZA51483* 29830003
+.* &TO        RETURN POINT FOR 'SUBROUTINE' CALLS WITHIN      @ZA51483* 29830103
+.*            THIS MACRO                                      @ZA51483* 29830203
+.*                                                            @ZA51483* 29830303
+.* &THING     CHARACTER REPRESENTATION OF BIT STRINGS USED    @ZA51483* 29830403
+.*            IN CONVERSION TO HEX                            @ZA51483* 29830503
+.*                                                            @ZA51483* 29830603
+.* &WHO       ADDRESS OF HARDCOPY CONSOLE OR 'SYSLOG'         @ZA51483* 29830703
+.*                                                            @ZA51483* 29830803
+.* &CMDS      THE SECOND SUBPARAMETER OF THE HARDCPY PARA-    @ZA51483* 29830903
+.*            METER SPECIFIED ON THE SCHEDULR MACRO.  IT      @ZA51483* 29831003
+.*            MAY BE SET TO 'NOCMDS', 'CMDS', 'INCMDS', OR    @ZA51483* 29831103
+.*            'STCMDS'.                                       @ZA51483* 29831203
+.*                                                            @ZA51483* 29831303
+.* &HCPY      UNUSED                                          @ZA51483* 29831403
+.*                                                            @ZA51483* 29831503
+.* &N         INDEX INTO GLOBAL CONSOLE PARAMETER TABLES      @ZA51483* 29831603
+.*                                                            @ZA51483* 29831703
+.* &U         DEVICE ADDRESS IN ARITHMETIC FORM               @ZA51483* 29831803
+.*                                                            @ZA51483* 29831903
+.* &CTL       LAST INDEX OF GLOBAL CONSOLE PARAMETER TABLES   @ZA51483* 29832003
+.*                                                            @ZA51483* 29832103
+.* &STOP      INDEX OF LAST PARAMETER IN IEEDUCM MACRO        @ZA51483* 29832203
+.*            CURRENTLY BEING BUILT                           @ZA51483* 29832303
+.*                                                            @ZA51483* 29832403
+.* &LIMIT     NUMBER OF SUBPARAMETERS PER IEEDUCM MACRO       @ZA51483* 29832503
+.*                                                            @ZA51483* 29832603
+.* &W         INDEX OF FIRST PARAMETER IN IEEDUCM MACRO       @ZA51483* 29832703
+.*            CURRENTLY BEING BUILT                           @ZA51483* 29832803
+.*                                                            @ZA51483* 29832903
+.* &Y         INDEX INTO CERTAIN LOCAL CONSOLE PARAMETER      @ZA51483* 29833003
+.*            TABLES.  SET TO &M-1 WHEN USED.                 @ZA51483* 29833103
+.*                                                            @ZA51483* 29833203
+.*   THE FOLLOWING GLOBAL VARIABLE IS USED:                   @ZA51483* 29833303
+.*                                                            @ZA51483* 29833403
+.*   NAME     FUNCTION                                        @ZA51483* 29833503
+.* --------   --------                                        @ZA51483* 29833603
+.*                                                            @ZA51483* 29833703
+.* &HEX       CONTAINS HEX NUMBERS AS OUTPUT OF THE CONVERT   @ZA51483* 29833803
+.*            MACRO                                           @ZA51483* 29833903
+.*                                                            @ZA51483* 29834003
+.* MACROS = SGGBLPAK, SGASMPAK, CONVERT, IOCHECK              @ZA51483* 29834103
+.*                                                            @ZA51483* 29834203
+.* CHANGE ACTIVITY =                                          @ZA51483* 29834303
+.*       12/01/75                                             @ZA07191* 29834403
+.*       12/01/76                                             @ZA15722* 29834503
+.*       03/21/77  MVS 3033 PROCESSOR SUPPORT(SCP)            @G51APSS* 29834603
+.*       09/12/78  ADD COMMA AFTER ROUTCD 51 CONSOLES         @ZA35283* 29834703
+.*       10/12/79  ALT CONSOLE FOR CONSOLE 51 WILL NOT AUTO-  @ZA41089* 29834903
+.*                 MATICALLY BE THE SAME AS THE ALT CONSOLE   @ZA41089* 29835003
+.*                 FOR MASTER WHEN 52 OR MORE CONSOLES ARE    @ZA41089* 29835103
+.*                 GENERATED                                  @ZA41089* 29835203
+.*       02/18/81  C(.PCOMP1) SO 51ST CONSOLE CAN FUNCTION AS @ZA51483* 29835303
+.*                 A COMPOSITE. ZA51483 CHANGES NOT REQUIRED  @ZA51483* 29835403
+.*                 FOR JBB1126 OR HIGHER LEVEL.               @ZA51483* 29835603
+.*                                                            @ZA51483* 29835703
+.* MESSAGES = MNOTE, SEVERITY 1 - 'INVALID CONSOLE XXX'       @ZA51483* 29835803
+.*                                                            @ZA51483* 29835903
+.* COMPLETION CODES = N/A                                     @ZA51483* 29836003
+.*                                                            @ZA51483* 29836103
+.*** END OF SPECIFICATIONS ******************************************** 29836203
+.*                                                             @ZA51483 29836303
+.*                                                             @ZA51483 29836403
+.********************************************************************** 29836503
+.*                                                            @ZA51483* 29836603
+.*       DEFINE THE GLOBAL AND LOCAL VARIABLES                @ZA51483* 29836703
+.*                                                            @ZA51483* 29836803
+.********************************************************************** 29836903
+         COPY  SGGBLPAK                                                 29850001
+         LCLA  &M2                                                  MCS 29900002
+         LCLC  &MASTCON                                                 29950001
+         LCLC  &AUTH(198),&OLDW1,&OLDW2,&OLDW3,&OLDW4                   30000003
+         LCLC  &HARDM1,&HARDM2,&HARDM3,&HARDM4                          30050001
+         LCLC  &ROUTM1,&ROUTM2,&ROUTM3,&ROUTM4                          30100001
+         LCLC  &RTCODE1(196),&RTCODE2(196)                       Y02038 30150003
+         LCLC  &RTCODE3(196),&RTCODE4(196)                       Y02038 30160051
+         LCLC  &A(198),&B(198),&C(198),&E(198),&G(198)           Y02038 30200003
+         LCLA  &H(198)                                           Y02038 30210003
+         LCLA  &M,&TO                                                   30250001
+         LCLC  &ATR(198)                                         Y02038 30300003
+         LCLC  &THING,&WHO,&CMDS,&HCPY                                  30350001
+         LCLC  &COMP(198),&ALT(198),&COMPALT(198)                Y02038 30400003
+         LCLA  &N,&U                                                    30750001
+         LCLA  &CTL                                                MP65 30850001
+         LCLA  &STOP,&LIMIT,&W                                   Y02038 30900051
+         LCLA  &Y             FOR RTCODE AND AUTH 51 CONSOLES  @ZA07191 30950051
+         ACTR  40000                                             Y02038 31300003
+.********************************************************************** 31350003
+.*                                                            @ZA51483* 31400003
+.*       BUILD INITIAL INFORMATION FOR THE MASTER CONSOLE     @ZA51483* 31450003
+.*                                                            @ZA51483* 31500003
+.********************************************************************** 31550003
+&A(1)    SETC  '&SGSCHDC(1)'(1,3)                                       33450001
+&A(2)    SETC  '&SGSCHDC(1)'(4,3)                                       33500001
+&G(1)    SETC  'F'                                                      33550051
+&G(2)    SETC  'F'                                                      33600001
+&M       SETA  1                                                    MCS 33650001
+&ATR(1)  SETC  'XN'                                              R20916 33700002
+&ATR(2)  SETC  'XN'                                              R20916 33750002
+.RADICE1 ANOP                                                       MCS 33800001
+.********** GET SECONDARY CONSOLES                                      33850001
+         AIF   (&SGSCNYA(1) EQ 0).CTL                                   33900001
+&N       SETA  &N+1                                                 MCS 34000001
+&M       SETA  &M+2                                                 MCS 34050001
+&A(&M)   SETC  '&SGSCNCC(&N)'(1,3)                                  MCS 34100001
+&A(&M+1) SETC  '&SGSCNCC(&N)'(4,3)                                  MCS 34150001
+         AIF   (&SGSCSDB(&N)).SDSGEN  CONSOLE IS STATUS DISPLAY         34200001
+         AIF   (&SGSCMSB(&N)).MSTGEN  CONSOLE IS MESSAGE STREAM         34250001
+&G(&M)   SETC  'F'                                                      34300001
+&G(&M+1) SETC  'F'                                                      34350001
+.CONTBA  ANOP                                                           34400001
+         AIF   (&SGSCNYA(1) NE &N).RADICE1                              34450001
+.CTL     ANOP                                                           34500001
+&CTL     SETA  &M+1                                                     34550001
+&N       SETA  1                                                        34600001
+         AGO   .RPYBUF                                                  34650001
+.SDSGEN  ANOP                                                           34700001
+&G(&M)   SETC  'S'                                                      34750001
+&G(&M+1) SETC  'S'                                                      34800001
+         AGO   .CONTBA                                                  34850001
+.MSTGEN  ANOP                                                           34900001
+&G(&M)   SETC  'M'                                                      34950001
+&G(&M+1) SETC  'M'                                                      35000001
+         AGO   .CONTBA                                                  35050001
+.RPYBUF  ANOP                                                           35100001
+.********      THIS SECTION SETS THE COMPOSITE CONSOLE        ********* 35250001
+&N       SETA  1                                                        35350001
+&M       SETA  0                                                        35400001
+.F1      AIF   ('&SGSCHDC(1)'(1,3) EQ '&SGSCHDC(1)'(4,3)).EQUAL         35450001
+&COMP(1) SETC  '&SGSCHDC(1)'(4,3)                                       35500001
+&COMP(2) SETC  '&SGSCHDC(1)'(1,3)                                       35550001
+.TOPPER  AIF   (&N+2 GT &CTL).LEAVE                                     35600001
+&N       SETA  &N+2                                                     35650001
+&M       SETA  &M+1                                                 MCS 35700001
+.FOUND1  AIF   ('&SGSCNCC(&M)'(1,3) EQ '&SGSCNCC(&M)'(4,3)).EQUAL   MCS 35750001
+         AIF   ('&SGSCNCC(&M)'(1,3) EQ 'FFF').EQUAL                     35800001
+&COMP(&N) SETC '&SGSCNCC(&M)'(4,3)                                      35850001
+&COMP(&N+1)    SETC '&SGSCNCC(&M)'(1,3)                                 35900001
+         AGO   .TOPPER                                                  35950001
+.EQUAL   ANOP                                                       MCS 36000001
+&COMP(&N) SETC 'FFF'                                                    36050001
+&COMP(&N+1)    SETC 'FFF'                                               36100001
+         AGO   .TOPPER                                                  36150001
+.LEAVE   ANOP                                                           36200001
+.********      THIS SECTION SETS THE ALTERNATE CONSOLE       ********** 36250001
+         AIF   ('&SGSCHDC(2)' EQ '').NOMORE1                            36350001
+&ALT(1)  SETC  '&SGSCHDC(2)'(1,3)                                       36400001
+&ALT(2)  SETC  '&ALT(1)'                                                36450001
+&N       SETA  0                                                        36500001
+&M       SETA  1                                                        36550001
+.INCR1   ANOP                                                       MCS 36600001
+&N       SETA  &N+1                                                     36650001
+&M       SETA  &M+2                                                     36700001
+         AIF   ('&SGSCNAC(&N)' EQ '').ALT0                              36750001
+&ALT(&M)     SETC '&SGSCNAC(&N)'(4,3)                                   36800003
+&ALT(&M+1)   SETC '&ALT(&M)'                                            36850001
+.TEST    AIF   (&M+1 LT &CTL).INCR1                                     36900001
+         AGO   .NOMORE1                                                 36950001
+.ALT0    ANOP                                                           37000001
+&ALT(&M) SETC  'FFF'                                                    37050001
+&ALT(&M+1)     SETC 'FFF'                                               37100001
+         AGO   .TEST                                                    37150001
+.NOMORE1 ANOP                                                           37200001
+.********** SET ALTERNATE OUTPUT CONSOLES                               37250001
+         AIF   (&SGSCNYA(1) EQ 0).NOMORE2                               37350001
+&M       SETA    1                                                      37400001
+&N       SETA    0                                                      37450001
+         AIF   ('&SGSCHDC(2)'(1,3) EQ '&SGSCHDC(2)'(4,3)).AWAY          37500001
+&COMPALT(1)    SETC '&SGSCHDC(2)'(4,3)                                  37550001
+&COMPALT(2)  SETC '&COMPALT(1)'                                         37600001
+.TESTAC  ANOP                                                           37650001
+&N       SETA  &N+1                                                     37700001
+&M       SETA  &M+2                                                     37750001
+         AIF   ('&SGSCNAC(&N)' EQ '').AWAY                              37800001
+         AIF   ('&SGSCNAC(&N)'(1,3) EQ 'FFF').AWAY                      37820003
+         AIF   ('&SGSCNAC(&N)'(1,3) NE '&SGSCNAC(&N)'(4,3)).COMPALT     37850001
+.AWAY    ANOP                                                           37900001
+&COMPALT(&M) SETC 'FFF'                                                 37950001
+&COMPALT(&M+1) SETC 'FFF'                                               38000001
+.TESTSTS AIF   (&M+1 LT &CTL).TESTAC                                    38050001
+         AGO   .NOMORE2                                                 38100001
+.COMPALT ANOP                                                           38150001
+&COMPALT(&M)   SETC '&SGSCNAC(&N)'(4,3)                                 38200001
+&COMPALT(&M+1) SETC '&COMPALT(&M)'                                      38250001
+         AGO   .TESTSTS                                                 38300001
+.******** BLANK OUT 2ND HALF OF NON-COMPOSITES *********                38350003
+.NOMORE2  ANOP                                                          38450001
+&N       SETA  1                                                        38500001
+.DUMY    ANOP                                                      MP65 38550001
+         AIF   ('&A(&N)' NE 'FFF').INCR     'FFF'=NO CONSOLE SPECIFIED  38600001
+&A(&N)   SETC  ''                                                  MP65 38650001
+.INCR    ANOP                                                      MP65 38700001
+&N       SETA  &N+1                                                MP65 38750001
+         AIF   (&N LE &CTL).DUMY                                   MP65 38800001
+&N       SETA  1                                                   MP65 38850001
+         AGO   .OVER1                                                   38900001
+.MCS2    ANOP                                                           38950001
+&N       SETA  &N+2                                                     39000001
+&ATR(&N) SETC  'XN'                                                     39050001
+&ATR(&N+1) SETC 'XN'                                                    39100001
+.OVER1   ANOP                                                       MCS 39150001
+         AIF   ('&A(&N)' NE '&A(&N+1)').OK                          MCS 39200001
+&A(&N+1) SETC  ''                                                   MCS 39250001
+.OK      ANOP                                                       MCS 39300001
+         AIF   (&N NE &CTL-1).MCS2                                      39350001
+&N       SETA  1                                                        39400001
+.******** SET ATTRIBUTES ************                                   39450001
+.LP      ANOP                                                      MP65 39550001
+         AIF   ('&A(&N)' EQ '').MPEND                                   39600001
+         AIF   ('&A(&N)' EQ 'JES').JES3                          Y02038 39620051
+         CONVERT TO=HEX,VALUE=&A(&N),DIGITS=3                           39700001
+&U       SETA  &HEX                                                     39750001
+         IOCHECK LOOKFOR=&U                                             39850001
+&HEX     SETA  &SGDASPA(&HEX)                                  @ZA15722 39900051
+&E(&N)   SETC  '0'                                                19029 40000001
+         AIF   (&SGDT04B(&HEX)).ACMP                               MP65 40050001
+         AIF   (&SGDT05B(&HEX)).ADMP                               MP65 40100001
+         AIF   (&SGDT06B(&HEX)).APMP                               MP65 40150001
+         AIF   (&SGDT07B(&HEX)).ARMP                               MP65 40200001
+         AIF   (&SGDT08B(&HEX)).AXMP                                MCS 40250001
+         MNOTE 1,'INVALID CONSOLE &A(&N) '                         MP65 40300001
+         MEXIT                                                     MP65 40350001
+.ACMP    ANOP                                                      MP65 40400001
+.********************************************************************** 40408303
+.*                                                            @ZA51483* 40416603
+.*       SET ATTRIBUTES FOR PRINTER/KEYBOARD CONSOLE          @ZA51483* 40424903
+.*                                                            @ZA51483* 40433203
+.********************************************************************** 40441503
+&B(&N)   SETC  '00'                                                MP65 40450001
+         AIF   ((&N+1)/2 EQ &N/2).MPWN                           A28263 40500001
+         AIF   ('&A(&N+1)' EQ '').MPWA                             MP65 40550001
+.MPNA    ANOP                     COMPOSITE READER                 MP65 40600003
+&C(&N)   SETC  'NA&ATR(&N)'                                        MP65 40650001
+         AGO   .MPEND                                              MP65 40700001
+.MPWN    ANOP                     COMPOSITE WRITER                 MP65 40750003
+&C(&N)   SETC  'WN&ATR(&N)'                                        MP65 40800001
+         AGO   .MPEND                                              MP65 40850001
+.MPWA    ANOP                     CONSOLE 1052                     MP65 40900001
+&C(&N)   SETC  'WA&ATR(&N)'                                        MP65 40950001
+         AGO   .MPEND                                              MP65 41000001
+.ADMP    ANOP  GRAPHICS,MODEL1,W/ALKYB,LIGHTPEN,BUFFER4K/8K       19029 41050001
+.********************************************************************** 41051603
+.*                                                            @ZA51483* 41053203
+.*       SET ATTRIBUTES FOR GRAPHICS CONSOLE                  @ZA51483* 41054803
+.*                                                            @ZA51483* 41056403
+.********************************************************************** 41058003
+         AIF   (&SGDU07B(&HEX) OR &SGDU09B(&HEX)).PRINT                 41060001
+&B(&N)   SETC  '51'                                               19029 41100001
+.CONTINA ANOP                                                           41150001
+         AIF   ((&N+1)/2 EQ &N/2).GRAPHWN                               41200001
+         AIF   ('&A(&N+1)' EQ '').GRAPHWA                               41250001
+.*                                COMPOSITE READER                      41300001
+&C(&N)   SETC  'NA&ATR(&N)'                                             41350001
+         AGO   .CHK5450                                                 41400001
+.GRAPHWN ANOP                                                           41450001
+&C(&N)   SETC  'WN&ATR(&N)'                                             41500001
+         AGO   .CHK5450                                                 41550001
+.GRAPHWA ANOP                                                           41600001
+&C(&N)   SETC  'WA&ATR(&N)'                                       19029 41700001
+.CHK5450 ANOP                                                           41750001
+.********************************************************************** 41757103
+.*                                                            @ZA51483* 41764203
+.*       DETERMINE DEVICE TYPE AND SET THE PARAMETER          @ZA51483* 41771303
+.*       TO BE PASSED TO THE IEEDUCM MACRO                    @ZA51483* 41778403
+.*                                                            @ZA51483* 41785503
+.********************************************************************** 41792603
+         AIF   (&SGDU02B(&HEX)).IS2260                            19029 41800001
+         AIF   (&SGDU06B(&HEX)).IS3066                                  41850001
+         AIF   (&SGDU08B(&HEX)).IS3277                                  41860001
+         AIF   (&SGDU10B(&HEX)).ISANR2                           Y01122 41870002
+         AIF   (&SGDU13B(&HEX)).ISANR2  BR IF A 3036 DEVICE    @G51APSS 41880051
+.*       MUST  BE  2250                                           19029 41900001
+&E(&N)   SETC  'B'                                                19029 41950001
+         AGO   .MPEND                                              MP65 42000001
+.IS3066  ANOP                                                           42050001
+&E(&N)   SETC  'A'                                                      42100001
+         AGO   .MPEND                                                   42150001
+.IS2260  ANOP                                                     19029 42200001
+&E(&N)   SETC  'C'                                                19029 42250001
+         AGO   .MPEND                                               MCS 42300001
+.IS3277  ANOP                                                           42310001
+         AIF   (&SGDM02B(&HEX)).ISANR2                                  42320001
+&E(&N)   SETC  'D'                  3277 MOD 1 IDENT                    42330001
+         AGO   .MPEND                                                   42340001
+.ISANR2  ANOP                                                           42342001
+&E(&N)   SETC  'E'                                                      42344001
+         AGO   .MPEND                                                   42346001
+.PRINT   ANOP                                                           42348001
+&B(&N)   SETC  '5W'                                                     42348401
+&C(&N)   SETC  'WN&ATR(&N)'                                             42348801
+         AGO   .MPEND                                                   42349201
+.APMP    ANOP                     COMPOSITE WRITER                 MP65 42350103
+.********************************************************************** 42351003
+.*                                                            @ZA51483* 42351903
+.*       SET ATTRIBUTES FOR PRINTERS                          @ZA51483* 42352803
+.*                                                            @ZA51483* 42353703
+.********************************************************************** 42354603
+.* SPECIAL ATTRIBUTES SET FOR 3213.                             YM03463 42356002
+         AIF   (&SGDU08B(&HEX) EQ 0).NOT3213                    YM03463 42362002
+&B(&N)   SETC  '00'                                             YM03463 42368002
+&C(&N)   SETC  'WNXN'                                           YM03463 42374002
+&E(&N)   SETC  'Z'                                              YM03463 42380002
+         AGO   .MPEND                                           YM03463 42386002
+.NOT3213 ANOP                                                   YM03463 42392002
+&B(&N)   SETC  '01'                                                MP65 42400001
+&C(&N)   SETC  'WN&ATR(&N)'                                        MP65 42450001
+         AGO   .MPEND                                              MP65 42500001
+.ARMP    ANOP                     COMPOSITE READER                 MP65 42514203
+.********************************************************************** 42528403
+.*                                                            @ZA51483* 42542603
+.*       SET ATTRIBUTES FOR CARD READERS                      @ZA51483* 42556803
+.*                                                            @ZA51483* 42571003
+.********************************************************************** 42585203
+&B(&N)   SETC  '02'                                                MP65 42600001
+&C(&N)   SETC  'NA&ATR(&N)'                                        MP65 42650001
+         AGO   .MPEND                                                   42700001
+.AXMP    ANOP                                                           42750001
+.********************************************************************** 42758303
+.*                                                            @ZA51483* 42766603
+.*       SET ATTRIBUTES FOR TERMINALS                         @ZA51483* 42774903
+.*                                                            @ZA51483* 42783203
+.********************************************************************** 42791503
+&B(&N)   SETC  'XX'                                                     42800001
+&C(&N)   SETC  'WA&ATR(&N)'                                             42850001
+&SGSCHDB(13)   SETB 1                                                   42900001
+         AIF   ((&N+1)/2 EQ &N/2).C2740WN                               42950001
+         AIF   ('&A(&N+1)' EQ '').C2740WA                               43000001
+.*                                COMPOSITE READER                      43050001
+&C(&N)   SETC  'NA&ATR(&N)'                                             43100001
+         AGO   .MPEND                                                   43150001
+.C2740WN ANOP                                                           43200001
+&C(&N)   SETC  'WN&ATR(&N)'                                             43250001
+         AGO   .MPEND                                                   43300001
+.C2740WA ANOP                                                           43350001
+&C(&N)   SETC  'WA&ATR(&N)'                                             43400001
+         AGO   .MPEND                                            Y02038 43404051
+.JES3    ANOP                                                    Y02038 43408051
+.********************************************************************** 43408303
+.*                                                            @ZA51483* 43408603
+.*       SET ATTRIBUTES FOR JES (DUMMY) CONSOLES              @ZA51483* 43408903
+.*                                                            @ZA51483* 43409203
+.********************************************************************** 43409503
+&B(&N)   SETC  '00'                                              Y02038 43410051
+&C(&N)   SETC  'WAXN'                                            Y02038 43416051
+&E(&N)   SETC  'Y'                                               Y02038 43418051
+.MPEND   ANOP                                                      MP65 43450001
+&N       SETA  &N+1                                                MP65 43500001
+         AIF   (&N LE &CTL).LP                                     MP65 43550001
+&N       SETA  1                                                   MP65 43600001
+.******** SQUEEZE OUT BLANK CONSOLES                                    43650001
+.LOOP    ANOP                                                      MP65 43750001
+         AIF   ('&A(&N)' EQ '').SCAT                               MP65 43800001
+&N       SETA  &N+1                                                MP65 43850001
+         AIF   (&N LE &CTL).LOOP                                   MP65 43900001
+         AGO   .MPOUT                                              MP65 43950001
+.SCAT    ANOP                                                      MP65 44000001
+&M       SETA  &N-1                                                     44050001
+.MCS3    ANOP                                                           44100001
+&M       SETA  &M+1                                                     44150001
+         AIF   (&M EQ &CTL AND '&A(&M)' EQ '' AND &M EQ &N).DONIT   MCS 44200001
+&A(&M)   SETC  '&A(&M+1)'                                               44250001
+&B(&M)   SETC  '&B(&M+1)'                                               44300001
+&C(&M)   SETC  '&C(&M+1)'                                               44350001
+&E(&M)   SETC  '&E(&M+1)'                                         19029 44400001
+&G(&M)   SETC  '&G(&M+1)'                                               44450001
+&ALT(&M) SETC  '&ALT(&M+1)'                                             44500001
+&COMP(&M)      SETC '&COMP(&M+1)'                                       44550001
+&COMPALT(&M)   SETC '&COMPALT(&M+1)'                                    44600001
+         AIF   (&M+1 LT &CTL).MCS3                                      44650001
+&CTL     SETA  &CTL-1                                                   44700001
+         AGO   .LOOP                                                    44750001
+.DONIT   ANOP                                                           44800001
+&CTL     SETA  &M-1                                                     44850001
+.MPOUT   ANOP                                                           44860001
+.********************************************************************** 44861403
+.*                                                            @ZA51483* 44862803
+.*       INDICATE WHETHER EACH CONSOLE IS AN INTEGRATED       @ZA51483* 44864203
+.*       OPERATOR CONSOLE OR NOT.  &H EQUALS 1 IF IT IS.      @ZA51483* 44865603
+.*                                                            @ZA51483* 44867003
+.********************************************************************** 44868403
+&N       SETA  2                                                 R20893 44870002
+&M       SETA  1                                                 R20893 44880002
+         AIF   ('&A(1)' NE '&SGSCHDC(16)').CHKALT                R20893 44890002
+&H(1)    SETA  1                                                 R20893 44892002
+.CHKALT  AIF   ('&A(&N)' NE '&SGSIOCC(&M)').NEXTIOC              R20893 44894002
+&H(&N)   SETA  1                                                 R20893 44896002
+         AGO   .NEXTONE                                          R20893 44898002
+.NEXTIOC ANOP                                                    R20893 44898402
+&M       SETA  &M+1                                              R20893 44898802
+         AIF   (&M LE 98).CHKALT                                 Y02038 44899203
+.NEXTONE ANOP                                                    R20893 44899602
+&M       SETA  1                                                 R20893 44899702
+&N       SETA  &N+1                                              R20893 44899802
+         AIF   (&N LE &CTL).CHKALT                               R20893 44899902
+.********************************************************************** 44907003
+.*                                                            @ZA51483* 44914103
+.*       PUNCH JCL AND CSECT NAME                             @ZA51483* 44921203
+.*                                                            @ZA51483* 44928303
+.********************************************************************** 44935403
+&SGCTRLC(6) SETC 'IEECVUCM'                                             44942503
+         COPY  SGASMPAK                                                 44950001
+         PUNCH 'IEEUCMC CSECT'                                          45000001
+.********************************************************************** 45050003
+.*                                                            @ZA51483* 45100003
+.*       SET ROUTING CODES FOR THE MASTER CONSOLE             @ZA51483* 45150003
+.*                                                            @ZA51483* 45200003
+.********************************************************************** 45250003
+&TO      SETA  1                                                        45300001
+&THING   SETC  '11&SGSCHRB(3).&SGSCHRB(4)'                          MCS 45350001
+         AGO   .COMBINE                                                 45400001
+.BACK1   ANOP                                                           45450001
+&ROUTM1  SETC  '&THING'                                                 45500001
+&TO      SETA  2                                                        45550001
+&THING   SETC  '&SGSCHRB(5).&SGSCHRB(6).&SGSCHRB(7).&SGSCHRB(8)'        45600001
+         AGO   .COMBINE                                                 45650001
+.BACK2   ANOP                                                           45700001
+&ROUTM2  SETC  '&THING'                                                 45750001
+&TO      SETA  3                                                        45800001
+&THING   SETC  '&SGSCHRB(9).&SGSCHRB(10).&SGSCHRB(11).&SGSCHRB(12)'     45850001
+         AGO   .COMBINE                                                 45900001
+.BACK3   ANOP                                                           45950001
+&ROUTM3  SETC  '&THING'                                                 46000001
+&TO      SETA  4                                                        46050001
+&THING   SETC  '&SGSCHRB(13).&SGSCHRB(14).&SGSCHRB(15).&SGSCHRB(16)'    46100001
+         AGO   .COMBINE                                                 46150001
+.BACK4   ANOP                                                           46200001
+&ROUTM4  SETC  '&THING'                                                 46250001
+.********************************************************************** 46258303
+.*                                                            @ZA51483* 46266603
+.*       SET ROUTING CODES FOR "OLD" WTOR'S                   @ZA51483* 46274903
+.*                                                            @ZA51483* 46283203
+.********************************************************************** 46291503
+&TO      SETA  5                                                        46300001
+&THING   SETC  '&SGSCHOB(1).&SGSCHOB(2).&SGSCHOB(3).&SGSCHOB(4)'        46350001
+         AGO   .COMBINE                                                 46400001
+.BACK5   ANOP                                                           46450001
+&OLDW1   SETC  '&THING'                                                 46500001
+&TO      SETA  6                                                        46550001
+&THING   SETC  '&SGSCHOB(5).&SGSCHOB(6).&SGSCHOB(7).&SGSCHOB(8)'        46600001
+         AGO   .COMBINE                                                 46650001
+.BACK6   ANOP                                                           46700001
+&OLDW2   SETC  '&THING'                                                 46750001
+&TO      SETA  7                                                        46800001
+&THING   SETC  '&SGSCHOB(9).&SGSCHOB(10).&SGSCHOB(11).&SGSCHOB(12)'     46850001
+         AGO   .COMBINE                                                 46900001
+.BACK7   ANOP                                                           46950001
+&OLDW3   SETC  '&THING'                                                 47000001
+&TO      SETA  8                                                        47050001
+&THING   SETC  '&SGSCHOB(13).&SGSCHOB(14).&SGSCHOB(15).&SGSCHOB(16)'    47100001
+         AGO   .COMBINE                                                 47150001
+.BACK8   ANOP                                                           47200001
+&OLDW4   SETC  '&THING'                                                 47250001
+.********************************************************************** 47258303
+.*                                                            @ZA51483* 47266603
+.*       SET ROUTING CODES FOR THE HARDCOPY LOG               @ZA51483* 47274903
+.*                                                            @ZA51483* 47283203
+.********************************************************************** 47291503
+&TO      SETA  9                                                        47300001
+&THING   SETC  '&SGSCHHB(1).&SGSCHHB(2).&SGSCHHB(3).&SGSCHHB(4)'        47350001
+         AGO   .COMBINE                                                 47400001
+.BACK9   ANOP                                                           47450001
+&HARDM1  SETC  '&THING'                                                 47500001
+&TO      SETA  10                                                       47550001
+&THING   SETC  '&SGSCHHB(5).&SGSCHHB(6).&SGSCHHB(7).&SGSCHHB(8)'        47600001
+         AGO   .COMBINE                                                 47650001
+.BACK10  ANOP                                                           47700001
+&HARDM2  SETC  '&THING'                                                 47750001
+&TO      SETA  11                                                       47800001
+&THING   SETC  '&SGSCHHB(9).&SGSCHHB(10).&SGSCHHB(11).&SGSCHHB(12)'     47850001
+         AGO   .COMBINE                                                 47900001
+.BACK11  ANOP                                                           47950001
+&HARDM3  SETC  '&THING'                                                 48000001
+&TO      SETA  12                                                       48050001
+&THING   SETC  '&SGSCHHB(13).&SGSCHHB(14).&SGSCHHB(15).&SGSCHHB(16)'    48100001
+         AGO   .COMBINE                                                 48150001
+.BACK12  ANOP                                                           48200001
+&HARDM4  SETC  '&THING'                                                 48250001
+.********************************************************************** 48264203
+.*                                                            @ZA51483* 48278403
+.*       SET ROUTING CODES AND COMMAND AUTHORITY FOR          @ZA51483* 48292603
+.*       SECONDARY CONSOLES                                   @ZA51483* 48306803
+.*                                                            @ZA51483* 48321003
+.********************************************************************** 48335203
+&M       SETA  0                                                        48350001
+&M2      SETA  0                                                        48352001
+         AIF   ('&B(1)' NE '02').INKMS                                  48360001
+&M2      SETA  &M2+1                                                    48370001
+.INKMS   ANOP                                                           48400001
+&M       SETA  &M+1                                                     48450001
+&M2      SETA  &M2+1                                                    48550001
+         AIF   (&M2 EQ &CTL).MOREROT                                    48600001
+         AIF   ('&COMP(&M2+1)' NE 'FFF').SETCOMP                        48650001
+&TO      SETA  13                                                       49100001
+&THING       SETC '&SGRT01B(&M).&SGRT02B(&M).&SGRT03B(&M).&SGRT04B(&M)' 49150001
+         AGO   .COMBINE                                                 49200001
+.BACK13  ANOP                                                           49250001
+&RTCODE1(&M2)  SETC '&THING'                                        MCS 49300001
+&TO      SETA  14                                                       49350001
+&THING       SETC '&SGRT05B(&M).&SGRT06B(&M).&SGRT07B(&M).&SGRT08B(&M)' 49400001
+         AGO   .COMBINE                                                 49450001
+.BACK14  ANOP                                                           49500001
+&RTCODE2(&M2)  SETC '&THING'                                        MCS 49550001
+&TO      SETA  15                                                       49600001
+&THING       SETC '&SGRT09B(&M).&SGRT10B(&M).&SGRT11B(&M).&SGRT12B(&M)' 49650001
+         AGO   .COMBINE                                             MCS 49700001
+.BACK15  ANOP                                                       MCS 49750001
+&RTCODE3(&M2)  SETC '&THING'                                        MCS 49800001
+&TO      SETA  16                                                   MCS 49850001
+&THING       SETC '&SGRT13B(&M).&SGRT14B(&M).&SGRT15B(&M).&SGRT16B(&M)' 49900001
+         AGO   .COMBINE                                             MCS 49950001
+.BACK16  ANOP                                                       MCS 50000001
+&RTCODE4(&M2)  SETC '&THING'                                        MCS 50050001
+&TO      SETA  17                                                       50052001
+&THING       SETC '&SGCMD1B(&M).&SGCMD2B(&M).&SGCMD3B(&M).&SGCMD4B(&M)' 50054001
+         AGO   .COMBINE                                                 50056001
+.BACK17  ANOP                                                           50058001
+&AUTH(&M2)     SETC '&THING'                                        MCS 50058401
+          AGO   .INKMS                                                  50058801
+.SETCOMP ANOP                                                           50059201
+.********************************************************************** 50059503
+.*                                                            @ZA51483* 50059803
+.*       SET THE ROUTING CODES AND COMMAND AUTHORITY FOR      @ZA51483* 50060103
+.*       COMPOSITE SECONDARY CONSOLES.  THE COMMAND AUTHORITY @ZA51483* 50060403
+.*       IS ASSOCIATED WITH THE INPUT HALF; THE ROUTING       @ZA51483* 50060703
+.*       CODES WITH THE OUTPUT HALF.                          @ZA51483* 50061003
+.*                                                            @ZA51483* 50061303
+.********************************************************************** 50061603
+&RTCODE1(&M2) SETC '0'                                                  50061903
+&RTCODE2(&M2) SETC '0'                                                  50062203
+&RTCODE3(&M2) SETC '0'                                                  50062503
+&RTCODE4(&M2) SETC '0'                                                  50062803
+&TO      SETA  18                                                       50063201
+&THING       SETC '&SGCMD1B(&M).&SGCMD2B(&M).&SGCMD3B(&M).&SGCMD4B(&M)' 50065201
+         AGO   .COMBINE                                                 50065601
+.BACK18  ANOP                                                           50066001
+&AUTH(&M2)     SETC '&THING'                                        MCS 50066401
+&M2      SETA  &M2+1                                                    50066501
+&TO      SETA  19                                                       50066601
+&THING       SETC '&SGRT01B(&M).&SGRT02B(&M).&SGRT03B(&M).&SGRT04B(&M)' 50069901
+         AGO   .COMBINE                                                 50071901
+.BACK19  ANOP                                                           50072301
+&RTCODE1(&M2)  SETC '&THING'                                        MCS 50072701
+&TO      SETA  20                                                       50073101
+&THING       SETC '&SGRT05B(&M).&SGRT06B(&M).&SGRT07B(&M).&SGRT08B(&M)' 50073201
+         AGO   .COMBINE                                                 50073301
+.BACK20  ANOP                                                           50078601
+&RTCODE2(&M2)  SETC '&THING'                                        MCS 50088601
+&TO      SETA  21                                                       50089001
+&THING       SETC '&SGRT09B(&M).&SGRT10B(&M).&SGRT11B(&M).&SGRT12B(&M)' 50089101
+         AGO   .COMBINE                                             MCS 50089201
+.BACK21  ANOP                                                       MCS 50089301
+&RTCODE3(&M2)  SETC '&THING'                                        MCS 50097401
+&TO      SETA  22                                                   MCS 50107401
+&THING       SETC '&SGRT13B(&M).&SGRT14B(&M).&SGRT15B(&M).&SGRT16B(&M)' 50109401
+         AGO   .COMBINE                                             MCS 50111401
+.BACK22  ANOP                                                       MCS 50113401
+&RTCODE4(&M2)  SETC '&THING'                                        MCS 50113501
+&AUTH(&M2) SETC '0'                                                     50113801
+          AGO   .INKMS                                                  50900001
+.********************************************************************** 50950003
+.*                                                            @ZA51483* 51000003
+.*       CONVERT THE BINARY STRING TO A HEXADECIMAL DIGIT     @ZA51483* 51050003
+.*                                                            @ZA51483* 51100003
+.********************************************************************** 51150003
+.COMBINE AIF   ('&THING' EQ '0000').IS0                                 51350001
+         AIF   ('&THING' EQ '0001').IS1                             MCS 51400001
+         AIF   ('&THING' EQ '0010').IS2                             MCS 51450001
+         AIF   ('&THING' EQ '0011').IS3                             MCS 51500001
+         AIF   ('&THING' EQ '0100').IS4                             MCS 51550001
+         AIF   ('&THING' EQ '0101').IS5                             MCS 51600001
+         AIF   ('&THING' EQ '0110').IS6                             MCS 51650001
+         AIF   ('&THING' EQ '0111').IS7                             MCS 51700001
+         AIF   ('&THING' EQ '1000').IS8                             MCS 51750001
+         AIF   ('&THING' EQ '1001').IS9                             MCS 51800001
+         AIF   ('&THING' EQ '1010').ISA                             MCS 51850001
+         AIF   ('&THING' EQ '1011').ISB                             MCS 51900001
+         AIF   ('&THING' EQ '1100').ISC                             MCS 51950001
+         AIF   ('&THING' EQ '1101').ISD                             MCS 52000001
+         AIF   ('&THING' EQ '1110').ISE                                 52050001
+&THING   SETC  'F'                                                      52100001
+         AGO   .BACK                                                    52150001
+.IS0     ANOP                                                           52200001
+&THING   SETC  '0'                                                  MCS 52250001
+         AGO   .BACK                                                    52300001
+.IS1     ANOP                                                           52350001
+&THING   SETC  '1'                                                  MCS 52400001
+         AGO   .BACK                                                    52450001
+.IS2     ANOP                                                           52500001
+&THING   SETC  '2'                                                  MCS 52550001
+         AGO   .BACK                                                    52600001
+.IS3     ANOP                                                           52650001
+&THING   SETC  '3'                                                  MCS 52700001
+         AGO   .BACK                                                    52750001
+.IS4     ANOP                                                           52800001
+&THING   SETC  '4'                                                  MCS 52850001
+         AGO   .BACK                                                    52900001
+.IS5     ANOP                                                           52950001
+&THING   SETC  '5'                                                  MCS 53000001
+         AGO   .BACK                                                    53050001
+.IS6     ANOP                                                           53100001
+&THING   SETC  '6'                                                  MCS 53150001
+         AGO   .BACK                                                    53200001
+.IS7     ANOP                                                           53250001
+&THING   SETC  '7'                                                  MCS 53300001
+         AGO   .BACK                                                    53350001
+.IS8     ANOP                                                           53400001
+&THING   SETC  '8'                                                  MCS 53450001
+         AGO   .BACK                                                    53500001
+.IS9     ANOP                                                           53550001
+&THING   SETC  '9'                                                  MCS 53600001
+         AGO   .BACK                                                    53650001
+.ISA     ANOP                                                           53700001
+&THING   SETC  'A'                                                  MCS 53750001
+         AGO   .BACK                                                    53800001
+.ISB     ANOP                                                           53850001
+&THING   SETC  'B'                                                  MCS 53900001
+         AGO   .BACK                                                    53950001
+.ISC     ANOP                                                           54000001
+&THING   SETC  'C'                                                  MCS 54050001
+         AGO   .BACK                                                    54100001
+.ISD     ANOP                                                           54150001
+&THING   SETC  'D'                                                  MCS 54200001
+         AGO   .BACK                                                    54250001
+.ISE     ANOP                                                           54300001
+&THING   SETC  'E'                                                  MCS 54350001
+.BACK    AIF (&TO EQ 1).BACK1                                       MCS 54400001
+         AIF (&TO EQ 2).BACK2                                       MCS 54450001
+         AIF (&TO EQ 3).BACK3                                       MCS 54500001
+         AIF (&TO EQ 4).BACK4                                       MCS 54550001
+         AIF (&TO EQ 5).BACK5                                       MCS 54600001
+         AIF (&TO EQ 6).BACK6                                       MCS 54650001
+         AIF (&TO EQ 7).BACK7                                       MCS 54700001
+         AIF (&TO EQ 8).BACK8                                       MCS 54750001
+         AIF (&TO EQ 9).BACK9                                       MCS 54800001
+         AIF (&TO EQ 10).BACK10                                     MCS 54850001
+         AIF (&TO EQ 11).BACK11                                     MCS 54900001
+         AIF (&TO EQ 12).BACK12                                     MCS 54950001
+         AIF (&TO EQ 13).BACK13                                     MCS 55000001
+         AIF (&TO EQ 14).BACK14                                     MCS 55050001
+         AIF (&TO EQ 15).BACK15                                     MCS 55100001
+         AIF (&TO EQ 16).BACK16                                     MCS 55150001
+         AIF (&TO EQ 17).BACK17                                     MCS 55200001
+         AIF (&TO EQ 18).BACK18                                     MCS 55210001
+         AIF (&TO EQ 19).BACK19                                     MCS 55220001
+         AIF (&TO EQ 20).BACK20                                     MCS 55230001
+         AIF (&TO EQ 21).BACK21                                     MCS 55240001
+         AIF (&TO EQ 22).BACK22                                     MCS 55242001
+.MOREROT ANOP                                                       MCS 55250001
+.********************************************************************** 55258303
+.*                                                            @ZA51483* 55266603
+.*       SET THE HARDCOPY PARAMETERS                          @ZA51483* 55274903
+.*                                                            @ZA51483* 55283203
+.********************************************************************** 55291503
+         AIF   (&SGSCHDB(36)).ISSYSL                                    55300001
+&WHO     SETC  '&SGSCHDC(14)'                                           55350001
+         AGO   .TESTCMD                                                 55400001
+.ISSYSL  ANOP                                                           55450001
+&WHO     SETC  'SYSLOG'                                                 55500001
+.TESTCMD AIF   (&SGSCHDB(37)).CMDS                                      55550001
+         AIF   (&SGSCHDB(42)).INCMDS                                    55600001
+         AIF   (&SGSCHDB(43)).STCMDS                                    55650001
+&CMDS    SETC  'NOCMDS'                                                 55700001
+         AGO   .TESTCPY                                                 55750001
+.CMDS    ANOP                                                           55800001
+&CMDS    SETC  'CMDS'                                                   55850001
+         AGO   .TESTCPY                                                 55900001
+.INCMDS  ANOP                                                           55950001
+&CMDS    SETC  'INCMDS'                                                 56000001
+         AGO   .TESTCPY                                                 56050001
+.STCMDS  ANOP                                                           56100001
+&CMDS    SETC  'STCMDS'                                                 56150001
+.TESTCPY ANOP                                                           56200001
+.********************************************************************** 56201403
+.*                                                            @ZA51483* 56202803
+.*       SET LOOP LIMITING VARIABLES.  ONE IEEDUCM MACRO      @ZA51483* 56204203
+.*       MUST BE PUNCHED FOR EACH 50 OR FEWER CONSOLES.       @ZA51483* 56205603
+.*                                                            @ZA51483* 56207003
+.********************************************************************** 56208403
+&MASTCON SETC  '&SGSCHDC(1)'(1,3)                                       56210001
+         AIF   (&SGSCNYA(1) EQ 0).ONECON                                56250001
+&W       SETA  -49                                               Y02038 56252051
+&LIMIT   SETA  50                                                Y02038 56254051
+&STOP    SETA  0                                                 Y02038 56257051
+.CALLD   ANOP                                                    Y02038 56259051
+&STOP    SETA  &STOP+&LIMIT                                      Y02038 56264051
+&W       SETA  &W+&LIMIT                                         Y02038 56266051
+&M       SETA  &W                                                Y02038 56300003
+.********************************************************************** 56300603
+.*                                                            @ZA51483* 56301203
+.*       PUNCH IEEDUCM FOR ONE SECONDARY CONSOLE              @ZA51483* 56301803
+.*                                                            @ZA51483* 56302403
+.********************************************************************** 56303003
+         AIF   (&M NE &CTL).MULTI                              @ZA07191 56304051
+&Y       SETA  &M-1           SET RTCODE AND AUTH 51 CONSOLES  @ZA07191 56308051
+         PUNCH ' IEEDUCM  &A(&M),&B(&M),&C(&M),&E(&M),&G(&M),&H(&M),   *56312051
+                                                       X'      @ZA07191 56316051
+         PUNCH '               ROUTCD1=&RTCODE1(&Y).&RTCODE2(&Y).&RTCOD*56320051
+               E3(&Y).&RTCODE4(&Y),                                    *56324003
+                      X'                                       @ZA35283 56326003
+         PUNCH '               ALTCON1=&ALT(&M),AUTH1=&AUTH(&Y).0,COMPC*56332051
+               N1=&COMP(&M),ALTCOM1=&COMPALT(&M)'              @ZA07191 56336051
+         AGO   .CALLC                                          @ZA07191 56340051
+.MULTI   ANOP                                                  @ZA07191 56344051
+.********************************************************************** 56345003
+.*                                                            @ZA51483* 56346003
+.*       PUNCH IEEDUCM FOR MULTIPLE CONSOLES                  @ZA51483* 56347003
+.*                                                            @ZA51483* 56348003
+.********************************************************************** 56349003
+         PUNCH ' IEEDUCM (&A(&M),                                      *56350003
+                                  X'                                    56400001
+         AGO   .PUNCHA1                                                 56450001
+.********************************************************************** 56457103
+.*                                                            @ZA51483* 56464203
+.*       PUNCH IEEDUCM FOR THE MASTER CONSOLE IF THERE        @ZA51483* 56471303
+.*       ARE NO SECONDARY CONSOLES                            @ZA51483* 56478403
+.*                                                            @ZA51483* 56485503
+.********************************************************************** 56492603
+.ONECON  PUNCH ' IEEDUCM &A(1),&B(1),&C(1),&E(1),&G(1),&H(1),          *56500003
+                                                 X'                     56550002
+         PUNCH '               ROUTCD1=&ROUTM1.&ROUTM2.&ROUTM3.&ROUTM4,*56560003
+                                                          EEE'          56570003
+         PUNCH '               AUTH1=E0'                                56580003
+         AGO   .CALLC                                            Y02038 56600003
+.PUNCHA1 ANOP                                                           56650001
+.********************************************************************** 56658303
+.*                                                            @ZA51483* 56666603
+.*       PUNCH CONSOLE ADDRESSES                              @ZA51483* 56674903
+.*                                                            @ZA51483* 56683203
+.********************************************************************** 56691503
+&M       SETA  &M+1                                                     56700001
+         AIF   ((&M EQ &CTL) OR (&M EQ &STOP)).PUNCHA2           Y02038 56750003
+         PUNCH '               &A(&M),                                 *56800001
+                                  X'                                    56850001
+         AGO   .PUNCHA1                                                 56900001
+.PUNCHA2 PUNCH '               &A(&M)),                                *56950001
+                                  X'                                    57000001
+.********************************************************************** 57008303
+.*                                                            @ZA51483* 57016603
+.*       PUNCH PROCESSOR NAME INSERT                          @ZA51483* 57024903
+.*                                                            @ZA51483* 57033203
+.********************************************************************** 57041503
+&M       SETA  &W                                                Y02038 57050003
+         PUNCH '               (&B(&M),                                *57100001
+                                   X'                                   57150001
+.PUNCHB1 ANOP                                                           57200001
+&M       SETA  &M+1                                                     57250001
+         AIF   ((&M EQ &CTL) OR (&M EQ &STOP)).PUNCHB2           Y02038 57300003
+         PUNCH '               &B(&M),                                 *57350001
+                                   X'                                   57400001
+         AGO   .PUNCHB1                                                 57450001
+.PUNCHB2 PUNCH '               &B(&M)),                                *57500001
+                                   X'                                   57550001
+.********************************************************************** 57558303
+.*                                                            @ZA51483* 57566603
+.*       PUNCH INITIAL DEVICE ATTRIBUTES                      @ZA51483* 57574903
+.*                                                            @ZA51483* 57583203
+.********************************************************************** 57591503
+&M       SETA  &W                                                Y02038 57600003
+         PUNCH '               (&C(&M),                                *57650001
+                                 R'                                     57700001
+.PUNCHC1 ANOP                                                           57750001
+&M       SETA  &M+1                                                     57800001
+         AIF   ((&M EQ &CTL) OR (&M EQ &STOP)).PUNCHC2           Y02038 57850003
+         PUNCH '               &C(&M),                                 *57900001
+                                 A'                                     57950001
+         AGO   .PUNCHC1                                                 58000001
+.PUNCHC2 PUNCH '               &C(&M)),                                *58050003
+                                 XXX'                                   58100001
+.********************************************************************** 58108303
+.*                                                            @ZA51483* 58116603
+.*       PUNCH THE DEVICE TYPE PARAMETER                      @ZA51483* 58124903
+.*                                                            @ZA51483* 58133203
+.********************************************************************** 58141503
+&M       SETA  &W                                                Y02038 58150003
+         PUNCH '               (&E(&M),                                *58200001
+                                    X'                            19029 58250001
+.PUNCHE1 ANOP                                                     19029 58300001
+&M       SETA  &M+1                                               19029 58350001
+         AIF   ((&M EQ &CTL) OR (&M EQ &STOP)).PUNCHE2           Y02038 58400003
+         PUNCH '               &E(&M),                                 *58450001
+                                    X'                            19029 58500001
+         AGO   .PUNCHE1                                           19029 58550001
+.PUNCHE2 ANOP                                                           58600001
+         PUNCH '               &E(&M)),                                *58650001
+                                   XX'                                  58700001
+.********************************************************************** 58708303
+.*                                                            @ZA51483* 58716603
+.*       PUNCH THE CONSOLE MODE                               @ZA51483* 58724903
+.*                                                            @ZA51483* 58733203
+.********************************************************************** 58741503
+&M       SETA  &W                                                Y02038 58750003
+         PUNCH '               (&G(&M),                                *58800001
+                                   XX'                                  58850002
+.PUNCHG2 ANOP                                                           58900002
+&M       SETA  &M+1                                                     58950002
+         AIF   ((&M EQ &CTL) OR (&M EQ &STOP)).PUNCHE3           Y02038 59000003
+         PUNCH '               &G(&M),                                 *59050001
+                                   XX'                                  59100002
+         AGO   .PUNCHG2                                                 59150002
+.PUNCHE3 PUNCH '               &G(&M)),                                *59200002
+                                    X'                                  59250002
+.********************************************************************** 59258303
+.*                                                            @ZA51483* 59266603
+.*       PUNCH THE INTEGRATED OPERATOR CONSOLE FLAG           @ZA51483* 59274903
+.*                                                            @ZA51483* 59283203
+.********************************************************************** 59291503
+&M       SETA  &W                                                Y02038 59300003
+         PUNCH '               (&H(&M),                                *59310002
+                                    X'                           R20893 59320002
+.PUNCHH2 ANOP                                                    R20893 59330002
+&M       SETA  &M+1                                              R20893 59340002
+         AIF   ((&M EQ &CTL) OR (&M EQ &STOP)).PUNCHH3           Y02038 59342003
+         PUNCH '               &H(&M),                                 *59344002
+                                    X'                           R20893 59346002
+         AGO   .PUNCHH2                                          R20893 59348002
+.PUNCHH3 PUNCH '               &H(&M)),                                *59348402
+                                    X'                           R20893 59348802
+.********************************************************************** 59398803
+.*                                                            @ZA51483* 59448803
+.*       PUNCH THE ROUTCD1 PARAMETER                          @ZA51483* 59498803
+.*                                                            @ZA51483* 59548803
+.********************************************************************** 59598803
+         AIF   (('&B(1)' EQ '02') AND (&STOP EQ 50)).FAKE1       Y02038 59750003
+         AIF   (&STOP GT 50).PROUT0     MORE THAN 51 CONSOLES  @ZA07191 59770051
+         PUNCH '               ROUTCD1=(&ROUTM1.&ROUTM2.&ROUTM3.&ROUTM4*59800003
+               ,                                          E'            59850001
+&M       SETA  &W-1                                              Y02038 59900003
+         AGO   .PROUT1                                                  59950001
+.FAKE1   PUNCH '               ROUTCD1=(0000,&ROUTM1.&ROUTM2.&ROUTM3.&R*60000003
+               OUTM4,                             EEEEEEEEEEE'          60050001
+&M       SETA  &W                                                Y02038 60100003
+         AGO   .PROUT1                                         @ZA07191 60107051
+.PROUT0  ANOP                                                  @ZA07191 60114051
+&M       SETA  &W-1                                            @ZA07191 60121051
+         PUNCH '               ROUTCD1=(&RTCODE1(&M).&RTCODE2(&M).&RTCO*60128051
+               DE3(&M).&RTCODE4(&M),                                   *60135051
+                      X'                                       @ZA07191 60142051
+.PROUT1  ANOP                                                       MCS 60150001
+&M       SETA  &M+1                                                     60200001
+         AIF   ((&M+1 EQ &CTL) OR (&M+1 EQ &STOP)).PROUT2        Y02038 60250003
+         PUNCH '               &RTCODE1(&M).&RTCODE2(&M).&RTCODE3(&M).&*60300001
+               RTCODE4(&M),                                            *60350001
+                      R'                                                60400001
+         AGO   .PROUT1                                              MCS 60450001
+.PROUT2  PUNCH '               &RTCODE1(&M).&RTCODE2(&M).&RTCODE3(&M).&*60500001
+               RTCODE4(&M)),                                           *60550001
+                      A'                                                60600001
+.********************************************************************** 60650003
+.*                                                            @ZA51483* 60700003
+.*       PUNCH THE ALTCON1 PARAMETER                          @ZA51483* 60750003
+.*                                                            @ZA51483* 60800003
+.********************************************************************** 60850003
+&M       SETA  &W                                                Y02038 60950003
+         PUNCH '               ALTCON1=(&ALT(&M),                      *61000003
+                                    C'                         @ZA41089 61050003
+.PALT1   ANOP                                                           61100001
+&M       SETA  &M+1                                                     61150001
+         AIF   ((&M EQ &CTL) OR (&M EQ &STOP)).PALT2             Y02038 61200003
+         PUNCH '               &ALT(&M),                               *61250001
+                                    X'                                  61300001
+         AGO   .PALT1                                                   61350001
+.PALT2   PUNCH '               &ALT(&M)),                              *61400001
+                                    X'                                  61450001
+.********************************************************************** 61491603
+.*                                                            @ZA51483* 61533203
+.*       PUNCH THE AUTH1 PARAMETER                            @ZA51483* 61574803
+.*                                                            @ZA51483* 61616403
+.********************************************************************** 61658003
+         AIF   (('&B(1)' EQ '02') AND (&STOP EQ 50)).FAKE2       Y02038 61700003
+&M       SETA  &W-1                                              Y02038 61750003
+         AIF   (&STOP GT 50).PAUTH0     OVER 50 CONSOLES?      @ZA07191 61770051
+         PUNCH '               AUTH1=(E0,                              *61800003
+                               X'                                       61850001
+         AGO   .PAUTH1                                                  61900001
+.FAKE2   PUNCH '               AUTH1=(E0,00,                           *61950003
+                           XXXXXXXX'                                    62000001
+&M       SETA  &W                                                Y02038 62050003
+         AGO   .PAUTH1                  GO AROUND OVER 50 CONS @ZA07191 62060051
+.PAUTH0  ANOP                           AUTH FOR OVER 50 CONS  @ZA07191 62070051
+         PUNCH '               AUTH1=(&AUTH(&M).0,                     *62080051
+                                        X'                     @ZA07191 62090051
+.PAUTH1  ANOP                                                       MCS 62100001
+&M       SETA  &M+1                                                 MCS 62150001
+         AIF   ((&M+1 EQ &CTL) OR (&M+1 EQ &STOP)).PAUTH2        Y02038 62200003
+         PUNCH '               &AUTH(&M).0,                            *62250001
+                                        X'                              62300001
+         AGO   .PAUTH1                                              MCS 62350001
+.PAUTH2  PUNCH '               &AUTH(&M).0),                           *62400001
+                                        X'                              62450001
+.********************************************************************** 62458303
+.*                                                            @ZA51483* 62466603
+.*       PUNCH THE COMPCN1 PARAMETER                          @ZA51483* 62474903
+.*                                                            @ZA51483* 62483203
+.********************************************************************** 62491503
+&M       SETA  &W                                                Y02038 62500003
+         PUNCH '               COMPCN1=(&COMP(&M),             @ZA51483*62550003
+                                     X'                        @ZA51483 62600003
+.PCOMP1  ANOP                                                           62650001
+&M       SETA  &M+1                                                     62700001
+         AIF   ((&M EQ &CTL) OR (&M EQ &STOP)).PCOMP2            Y02038 62750003
+         PUNCH '               &COMP(&M),                              *62800001
+                                     H'                                 62850001
+         AGO   .PCOMP1                                                  62900001
+.PCOMP2  PUNCH '               &COMP(&M)),                             *62950001
+                                     O'                                 63000001
+.********************************************************************** 63008303
+.*                                                            @ZA51483* 63016603
+.*       PUNCH THE ALTCOM1 PARAMETER                          @ZA51483* 63024903
+.*                                                            @ZA51483* 63033203
+.********************************************************************** 63041503
+&M       SETA  &W                                                       63050003
+         PUNCH '               ALTCOM1=(&COMPALT(&M),                  *63100003
+                                        H'                              63150001
+.PACOMP1 ANOP                                                           63200001
+&M       SETA  &M+1                                                     63250001
+         AIF   ((&M EQ &CTL) OR (&M EQ &STOP)).PACOMP2           Y02038 63300003
+         PUNCH '               &COMPALT(&M),                           *63350001
+                                        E'                              63400001
+         AGO   .PACOMP1                                                 63450001
+.PACOMP2 PUNCH '               &COMPALT(&M))'                           63500001
+         AIF   (&CTL GT &STOP).CALLD                                    63550003
+.CALLC   ANOP                                                           63560003
+.********************************************************************** 63561603
+.*                                                            @ZA51483* 63563203
+.*       PUNCH THE IEECUCM MARCO                              @ZA51483* 63564803
+.*                                                            @ZA51483* 63566403
+.********************************************************************** 63568003
+         PUNCH ' IEECUCM U,DSECT=NO,MCS=MCS,MASTCON=&MASTCON,          *63570003
+                                    X'                                  63580003
+         PUNCH '               HARDCDE=&HARDM1.&HARDM2.&HARDM3.&HARDM4,*63590003
+                                                          X'            63600003
+         PUNCH '               OLDWCDE=&OLDW1.&OLDW2.&OLDW3.&OLDW4,    *63610003
+                                                      X'                63620003
+         PUNCH '               HARDCPY=(&WHO,&CMDS.,HCPY)'              63630003
+.OUT     PUNCH '         END  '                                    MP65 63650001
+         PUNCH '/*'                                                MP65 63700001
+         MEND                                                      MP65 63750001

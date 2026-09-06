@@ -1,0 +1,70 @@
+)F FUNCTION -                                                           01000002
+  THE DEFINE COMMAND CAN BE USED TO CREATE A CATALOG ENTRY FOR A        02000002
+  GENERATION DATA GROUP.                                                03000002
+)X SYNTAX -                                                             04000002
+         DEFINE    GENERATIONDATAGROUP                                  05000002
+                   (  NAME('ENTRYNAME')                                 06000002
+                      EMPTY | NOEMPTY                                   07000002
+                      SCRATCH | NOSCRATCH                               08000002
+                      OWNER('OWNERID')                                  08050003
+                      TO('DATE') | FOR('DAYS')                          08100003
+                      LIMIT('LIMIT')  )                                 09000002
+                   CATALOG('CATNAME/PASSWORD')                          10000003
+  REQUIRED - GENERATIONDATAGROUP, NAME                                  11000002
+  DEFAULTS - NOEMPTY, NOSCRATCH                                         12000002
+  ABBREVIATIONS -                                                       13000002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 14000002
+             GENERATIONDATAGROUP  GDG                                   15000002
+             NOEMPTY              NEMP                                  16000002
+             NOSCRATCH            NSCR                                  17000002
+)O OPERANDS -                                                           18000002
+))GENERATIONDATAGROUP                                                   19000002
+           - SPECIFIES THAT A GENERATION-DATA-GROUP ENTRY IS TO BE      20000002
+             DEFINED.                                                   21000002
+))NAME('ENTRYNAME')                                                     22000002
+           - SPECIFIES THE NAME OF THE GENERATION DATA GROUP THAT IS    23000002
+             BEING DEFINED.                                             24000002
+  'ENTRYNAME'                                                           25000002
+           - NAME OF THE GENERATION DATA GROUP THAT IS BEING DEFINED.   26000002
+))EMPTY    - SPECIFIES THAT ALL OF THE DATA SETS OF THE GDG ARE TO BE   27000002
+             UNCATALOGED WHEN THE LIMIT IS REACHED AND ANOTHER          28000002
+             GENERATION DATA SET IS TO BE CATALOGED.                    29000002
+))NOEMPTY  - SPECIFIES THAT ONLY THE OLDEST DATA SET OF THE GDG IS TO   30000002
+             BE UNCATALOGED WHEN THE LIMIT IS REACHED AND ANOTHER       31000002
+             GENERATION DATA SET IS TO BE CATALOGED.                    32000002
+))SCRATCH  - SPECIFIES THAT THE GENERATION DATA SET IS TO BE REMOVED    33000002
+             FROM THE VTOC OF THE VOLUME ON WHICH IT RESIDES WHEN IT IS 34000002
+             UNCATALOGED.                                               35000002
+))NOSCRATCH                                                             36000002
+           - SPECIFIES THAT THE GENERATION DATA SET IS NOT TO BE        37000002
+             REMOVED FROM THE VTOC OF THE VOLUME ON WHICH IT RESIDES    38000002
+             WHEN IT IS UNCATALOGED.                                    39000002
+))OWNER('OWNERID')                                                      39050003
+           - SPECIFIES THE IDENTIFICATION OF THE OWNER OF THE ENTRY     39100003
+             BEING DEFINED.                                             39150003
+  'OWNERID'                                                             39200003
+           - IDENTIFICATION OF THE OWNER OF THE ENTRY BEING DEFINED.    39250003
+))TO('DATE')                                                            39300003
+           - SPECIFIES THE RETENTION PERIOD FOR THE ENTRY BEING         39350003
+             DEFINED.                                                   39400003
+  'DATE'   - DATE (YYDDD) THROUGH WHICH THE ENTRY BEING DEFINED IS TO   39450003
+             BE KEPT.                                                   39500003
+))FOR('DAYS')                                                           39550003
+           - SPECIFIES THE RETENTION PERIOD FOR THE ENTRY BEING         39600003
+             DEFINED.                                                   39650003
+  'DAYS'   - NUMBER OF DAYS FOR WHICH THE ENTRY BEING DEFINED IS TO     39700003
+             BE KEPT.                                                   39750003
+))LIMIT('LIMIT')                                                        40000002
+           - SPECIFIES THE MAXIMUM NUMBER OF GENERATION DATA SETS THAT  41000002
+             CAN BE ASSOCIATED WITH THE GENERATION DATA GROUP TO BE     42000002
+             DEFINED.                                                   43000002
+  'LIMIT'  - MAXIMUM NUMBER OF GENERATION DATA SETS THAT CAN BE         44000002
+             ASSOCIATED WITH THE GENERATION DATA GROUP TO BE DEFINED.   45000002
+))CATALOG('CATNAME/PASSWORD')                                           46000003
+           - IDENTIFIES THE CATALOG IN WHICH THE GENERATION DATA GROUP  47000002
+             IS TO BE DEFINED.                                          48000002
+  'CATNAME'                                                             49000002
+           - NAME OF THE CATALOG IN WHICH THE ENTRY IS TO BE DEFINED.   50000002
+  'PASSWORD'                                                            51000002
+           - PASSWORD OF THE CATALOG.                                   52000002
+  REQUIRED - 'CATNAME'                                                  56000002

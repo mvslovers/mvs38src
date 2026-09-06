@@ -1,0 +1,134 @@
+         MACRO                                                          00060002
+         SGIEA402                                                       00070002
+.* CHANGE LEVEL= 02/19/74                                               00070203
+.*             = 06/14/74                                      @Z30HPSF 00070340
+.*             = 05/14/75                                      @Z40APSM 00072340
+.*             = 05/28/75                                      @Z40WPSM 00073440
+.*             = 07/14/75                                      @ZA05479 00074340
+.*             = 01/14/77                                      @G559P2L 00076300
+.*             = 03/29/77                                      @G51CPXG 00079000
+.*             = 05/16/78                                      @G64IPXG 00079500
+.*             = 08/15/79                                      @ZA41024 00079746
+.*                                                                      00080040
+.* CHANGE = Y30LPTH,YM06033,YM04043,YM02451,R21178,M02656,R21170,       00086040
+.*          M02012                                                      00086140
+.*          M02012                                                      00088040
+.*          OZ41024 - REMOVE LINKEDIT FOR IEAVNP14 AS OF SU7            00088346
+.*                    IN SUPPORT OF ASM REDESIGN.              @ZA41024 00088646
+.*                                                                      00089040
+.*                                                                      00090040
+         COPY  SGGBLPAK                                          Y02952 00092002
+&SGCTRLC(6)    SETC  ''                                          Y02952 00095002
+&SGCTRLC(7)    SETC  '&SGCTRLC(30)'                              Y02952 00100002
+&SGCTRLC(8)    SETC  '&SGCTRLC(29)'                              Y02952 00150002
+&SGCTRLC(9)    SETC  'NUCLEUS'                                   Y02952 00200002
+&SGCTRLC(12)   SETC  ',LET'                                      Y02952 00250002
+               COPY  SGLEDPK1                                    Y02952 00300002
+         PUNCH '//AOSC5 DD DISP=SHR,VOLUME=(,RETAIN),DSN=SYS1.AOSC5'    00350002
+         PUNCH '//AOSB3 DD DISP=SHR,VOLUME=(,RETAIN),DSN=SYS1.AOSB3'    00370002
+       PUNCH '//ALPALIB DD DISP=SHR,VOLUME=(,RETAIN),DSN=SYS1.ALPALIB'  00380002
+               COPY  SGLEDPK2                                    Y02952 00400002
+.*                                                               Y02952 00450002
+.*****   NIP MODULES   *****                                     Y02952 00500002
+.*                                                               Y02952 00550002
+.*  INCLUDES FOR IEFSCAN AND IEFDEVPT DELETED                  @G64IPXG 00555000
+.*  I/O SYSGEN LOGIC REMOVED.  NO LONGER CALLED FOR I/O SYSGEN @G64IPXG 00562000
+         PUNCH ' INCLUDE AOSC5(IEAVAP00)'                       YM06033 00569000
+         PUNCH ' ENTRY IEAVAP00'                                YM06033 00576000
+         PUNCH ' NAME IEAVNP15(R)'                              YM06033 00583000
+         PUNCH ' INCLUDE AOSC5(IEAVNIPM,IEAVNPM2,IEAVNPM3)'      Y02952 00600002
+         PUNCH ' ENTRY IEAVNIPM'                                 Y02952 00610002
+         PUNCH ' NAME IEAVNIPM(R)'                               Y02952 00650002
+         PUNCH ' INCLUDE AOSC5(IEAVNP01)'                        Y02952 00660002
+         PUNCH ' NAME IEAVNP01(R)'                               Y02952 00670002
+         PUNCH ' INCLUDE AOSC5(IEAVNPA1)'                        Y02952 00680002
+         PUNCH ' NAME IEAVNPA1(R)'                               Y02952 00690002
+         PUNCH ' INCLUDE AOSC5(IEAVNP02)'                        Y02952 00690402
+         PUNCH ' INCLUDE ALPALIB(IGC0001F)'                      R21178 00690602
+         PUNCH ' ALIAS IEAVNPA2'                                 Y02952 00690802
+         PUNCH ' ALIAS IEAVNPB2'                                 Y02952 00691202
+         PUNCH ' ALIAS IEAVNPC2'                               @ZA05479 00691640
+         PUNCH ' NAME IEAVNP02(R)'                               Y02952 00692002
+         PUNCH ' INCLUDE AOSC5(IEAVNP03)'                        Y02952 00694002
+         PUNCH ' NAME IEAVNP03(R)'                               Y02952 00696002
+         PUNCH ' INCLUDE AOSC5(ILRASRIM)'                      @Z40WPSM 00700040
+         PUNCH ' INCLUDE AOSC5(ILRIMMSG)'                      @Z40WPSM 00705040
+         PUNCH ' INCLUDE AOSC5(IEAVNPB5)'                      @Z40WPSM 00711040
+         PUNCH ' ENTRY ILRASRIM'                               @Z40WPSM 00720040
+         PUNCH ' NAME IEAVNP04(R)'                               Y02952 00750002
+         PUNCH ' INCLUDE AOSC5(IEAVNP05)'                        Y02952 00800002
+         PUNCH ' INCLUDE AOSC5(IEAVNPA5)'                        M02656 00803002
+         PUNCH ' INCLUDE AOSC5(IEAVNPS5)'                      @Z30HPSF 00804003
+         PUNCH ' INCLUDE AOSC5(ILRQSRIT,ILRIMMSG)'             @Z40WPSM 00804540
+         PUNCH ' ENTRY IEAVNP05'                                 M02656 00806002
+         PUNCH ' NAME IEAVNP05(R)'                               Y02952 00810002
+         PUNCH ' INCLUDE AOSC5(IGFRINIT,IGFCINIT)'               Y02952 00820002
+         PUNCH ' INCLUDE AOSC5(IGFPINIT)'                        Y02952 00830002
+         PUNCH ' ENTRY IGFRINIT'                                 M02012 00832002
+         PUNCH ' NAME IEAVNP06(R)'                               Y02952 00840002
+         PUNCH ' INCLUDE AOSC5(IEAVNPB6)'                      @G559P2L 00842055
+         PUNCH ' NAME IEAVNPB6(R)'                             @G559P2L 00842955
+         PUNCH ' INCLUDE AOSC5(IGFPNSAV)'                      @G559P2L 00843855
+         PUNCH ' NAME IEAVNPC6(R)'                             @G559P2L 00844755
+         PUNCH ' INCLUDE AOSC5(IEAVNP07)'                        Y02952 00846502
+         PUNCH ' NAME IEAVNP07(R)'                               Y02952 00846802
+         PUNCH ' INCLUDE AOSC5(IEAVNP08)'                        Y02952 00847202
+         PUNCH ' ALIAS IEAVNPA8'                                 Y02952 00847602
+         PUNCH ' ALIAS IEAVNPB8'                                 Y02952 00847702
+         PUNCH ' ALIAS IEAVNPC8'                                 Y02952 00847802
+         PUNCH ' NAME IEAVNP08(R)'                               Y02952 00847902
+         PUNCH ' INCLUDE AOSC5(IEAVNP09)'                        Y02952 00897902
+         PUNCH ' NAME IEAVNP09(R)'                               Y02952 00898002
+         PUNCH ' INCLUDE AOSC5(IEAVNP10)'                        Y02952 00898302
+         PUNCH ' INCLUDE AOSC5(IRARMCPU)'                      @G51CPXG 00899300
+         PUNCH ' INCLUDE AOSC5(IRARMIPS,IRBMFANL)'               Y02952 00900302
+         PUNCH ' ENTRY IEAVNP10'                                 Y02952 00902302
+         PUNCH ' NAME IEAVNP10(R)'                               Y02952 00908302
+         PUNCH ' INCLUDE AOSC5(IEAVNP11)'                        Y02952 00948302
+         PUNCH ' NAME IEAVNP11(R)'                               Y02952 00958302
+         PUNCH ' INCLUDE AOSC5(IEAVNP12)'                        Y02952 00998302
+         PUNCH ' NAME IEAVNP12(R)'                               Y02952 01048302
+         PUNCH ' INCLUDE AOSC5(IEAVNP13)'                        Y02952 01098302
+         PUNCH ' NAME IEAVNP13(R)'                               Y02952 01148302
+.*                                                                      01198346
+.*  LINKEDIT FOR IEAVNP14 REMOVED AS OF SU7 IN SUPPORT OF               01248346
+.*  ASM REDESIGN.                                              @ZA41024 01298346
+.*                                                                      01348346
+         PUNCH ' INCLUDE AOSC5(IEAVNIPX)'                        Y02952 01398302
+         PUNCH ' NAME IEAVNIPX(R)'                               Y02952 01448302
+.* LOAD MODULES IEAVNPB5,IEAVNPA4 AND ILRRIM03 WERE DELETED    @Z40WPSM 01458340
+.* IN SUPPORT OF ASM REDESIGN.                                 @Z40WPSM 01468340
+         PUNCH '/*'                                              Y02952 01598302
+.*                                                               Y02952 01600302
+&SGCTRLC(6)    SETC  ''                                          Y02952 01608302
+&SGCTRLC(7)    SETC  '&SGCTRLC(30)'                              Y02952 01618302
+&SGCTRLC(8)    SETC  '&SGCTRLC(29)'                              Y02952 01628302
+&SGCTRLC(9)    SETC  'NUCLEUS'                                   Y02952 01638302
+&SGCTRLC(12)   SETC  ',RENT'                                     Y02952 01640302
+               COPY  SGLEDPK1                                    Y02952 01642302
+         PUNCH '//AOSC5 DD DISP=SHR,VOLUME=(,RETAIN),DSN=SYS1.AOSC5'    01644302
+               COPY  SGLEDPK2                                    Y02952 01646702
+.*                                                               Y02952 01646802
+.*** NIP MODULE****                                              Y02952 01646902
+.*                                                               Y02952 01647002
+         PUNCH ' INCLUDE AOSC5(IEAVNPA6,IEAVTSDI,IEAVTABI)'      Y02952 01647102
+         PUNCH ' ENTRY IEAVNPA6'                                 Y02952 01647502
+         PUNCH ' NAME IEAVNPA6(R)'                               Y02952 01647602
+.*                                                               Y02952 01647902
+         PUNCH '/*'                                            @Y30LPTH 01648003
+&SGCTRLC(6)    SETC  ''                                        @Y30LPTH 01748003
+&SGCTRLC(7)    SETC  '&SGCTRLC(30)'                            @Y30LPTH 01848003
+&SGCTRLC(8)    SETC  '&SGCTRLC(29)'                            @Y30LPTH 01948003
+&SGCTRLC(9)    SETC  'NUCLEUS'                                 @Y30LPTH 02048003
+&SGCTRLC(12)   SETC  ',REUS'                                   @Y30LPTH 02148003
+               COPY  SGLEDPK1                                  @Y30LPTH 02248003
+         PUNCH '//AOSC5 DD DISP=SHR,VOLUME=(,RETAIN),DSN=SYS1.AOSC5'    02348003
+               COPY  SGLEDPK2                                  @Y30LPTH 02448003
+.*                                                             @Y30LPTH 02548003
+.*  SSC RIM                                                    @Y30LPTH 02648003
+.*                                                             @Y30LPTH 02748003
+         PUNCH ' INCLUDE AOSC5(IEAVNP19)'                      @Y30LPTH 02848003
+         PUNCH ' NAME IEAVNP19(R)'                             @Y30LPTH 02948003
+.*                                                             @Y30LPTH 03048003
+        PUNCH '/*'                                               Y02952 03148000
+         MEND                                                    Y02952 03198000

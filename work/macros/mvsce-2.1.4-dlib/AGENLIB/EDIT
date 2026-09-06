@@ -1,0 +1,1053 @@
+         MACRO                                                          00050000
+         EDIT  &DSTYPE=,&BLOCK=,&FORMAT=,&FIXED=,&VAR=,&CONVERT=,      X00100000
+               &CHECKER=,&USEREXT=,&PRMPTR=,&USERSRC=,&DATEXIT=  Y02676 00150000
+         COPY  SGGBLPAK                                                 00200000
+         LCLA  &A,&I,&J,&K,&L,&M                                        00250000
+         LCLB  &B,&X                                                    00300000
+         LCLC  &C                                                       00350000
+.***** START OF SPECIFICATIONS **************************************   00400000
+.*                                                                      00450000
+.* MODULE NAME - EDIT                                                   00500000
+.*                                                                      00550000
+.* DESCRIPTIVE NAME - EDIT                                              00600000
+.*                                                                      00650000
+.* COPYRIGHT - NONE                                                     00700000
+.*                                                                      00750000
+.* STATUS - CHANGE LEVEL 03                                             00800000
+.*                                                                      00850000
+.* FUNCTION -                                                           00900000
+.*       THE EDIT MACRO IS USED TO SPECIFY THE PHYSICAL CHARACTERISTICS 00950000
+.*       AND PROCESSING ATTRIBUTES OF THE DATA SETS TO BE PROCESSED     01000000
+.*       BY THE TSO EDIT COMMAND.                                       01050000
+.*                                                                      01100000
+.* NOTES - N/A                                                          01150000
+.*                                                                      01200000
+.* MODULE TYPE - MACRO                                                  01250000
+.*                                                                      01300000
+.* ENTRY POINT - N/A                                                    01350000
+.*                                                                      01400000
+.* INPUT - THE FOLLOWING PARAMETERS ARE ALLOWED ON EDIT                 01450000
+.*             &BLOCK   - SPECIFIES IN BYTES THE DEFAULT LENGTH OF      01500000
+.*                        BLOCKS FOR DATA SETS CREATED BY THE TSO       01550000
+.*                        EDIT COMMAND.                                 01600000
+.*             &CHECKER - SPECIFIES THE INSTALLATION-SUPPLIED PROCESSOR 01650000
+.*                        THAT IS TO BE USED BY THE TSO COMMAND TO      01700000
+.*                        CHECK LINES IN THE DATA SET FOR PROPER SYNTAX 01750000
+.*             &CONVERT - SPECIFIES WHETHER INPUT DATA TO THE TSO EDIT  01800000
+.*                        COMMAND SHOULD BE CONVERTED TO UPPER CASE.    01850000
+.*             &DATEXIT - SPECIFIES THE INSTALLATION-SUPPLIED DATA EXIT 01900000
+.*                        ROUTINE THAT IS TO BE INVOKED BY THE TSO EDIT 01950000
+.*                        COMMAND TO INTERPRET THE PARAMETER SPECIFIED  02000000
+.*                        IN THE DSTYPE OPERAND OF THE TSO EDIT COMMAND 02050000
+.*             &DSTYPE  - SPECIFIES IBM-STANDARD DATA SET TYPES OR NEW  02100000
+.*                        DATA SET TYPES DEFINED BY USER THAT ARE TO    02150000
+.*                        HAVE THEIR ATTRIBUTES MODIFIED OR DEFINED FOR 02200000
+.*                        USE BY THE TSO EDIT COMMAND                   02250000
+.*             &FIXED   - SPECIFIES IN BYTES THE DEFAULT AND MAXIMUM    02300000
+.*                        ALLOWABLE LENGTH OF LOGICAL FIXED-LENGTH      02350000
+.*                        RECORDS FOR DATA SETS CREATED BY THE TSO EDIT 02400000
+.*                        COMMAND.                                      02450000
+.*             &FORMAT  - SPECIFIES THE ALLOWABLE RECORD FORMAT FOR NEW 02500000
+.*                        DATA SETS CREATED BY THE TSO EDIT COMMAND.    02550000
+.*             &PRMPTR  - SPECIFIES THE INSTALLATION-SUPPLIED PROCESSOR 02600000
+.*                        THAT IS TO USED BY THE RUN SUBCOMMAND OF THE  02650000
+.*                        TSO EDIT COMMAND.                             02700000
+.*             &USEREXT - SPECIFIES THE INSTALLATION-SUPPLIED USER EXIT 02750000
+.*                        ROUTINE THAT IS TO BE INVOKED BY THE TSO EDIT 02800000
+.*                        COMMAND TO INTERPRET THE PARAMETER SPECIFIED  02850000
+.*                        IN THE DSTYPE OPERAND OF THE TSO EDIT COMMAND 02900000
+.*             &USERSRC - SPECIFIES THE TYPE OF INPUT ACCEPTABLE TO THE 02950000
+.*                        PROCESSOR SPECIFIED IN THE PRMPTR PARAMETER   03000000
+.*                        IN THE TSO EDIT COMMAND.                      03050000
+.*             &VAR     - SPECIFIES IN BYTES THE DEFAULT AND MAXIMUM    03100000
+.*                        ALLOWABLE LENGTH OF LOGICAL VARIABLE-LENGTH   03150000
+.*                        RECORDS WITH VARIABLE-RECORD FORMAT FOR NEW   03200000
+.*                        DATA SETS CREATED BY THE TSO EDIT COMMAND.    03250000
+.* OUTPUT -                                                             03300000
+.*       GLOBALS USED ARE -                                             03350000
+.*          &SGMENTB(61)    - EDIT MACRO CALLED                         03400000
+.*          &SGEDITA(1-26)  - SET FOR BLOCK PARAMETER                   03450000
+.*          &SGEDT2A(1-26)  - SET FOR FIXED PARAMETER                   03500000
+.*          &SGEDT3A(1-26)  - SET FOR FIXED MAXIMUM PARAMETER           03550000
+.*          &SGEDT4A(1-26)  - SET FOR VAR PARAMETER                     03600000
+.*          &SGEDT5A(1-26)  - SET FOR VAR MAXIMUM PARAMETER             03650000
+.*          &SGEDITC(1-26)  - SET FOR DSTYPE PARAMETER - MAX OF 26      03700000
+.*          &SGEDT2C(1-26)  - SET FOR FORMAT PARAMETER                  03750000
+.*          &SGEDT3C(1-26)  - SET FOR CONVERT PARAMETER                 03800000
+.*          &SGEDT4C(1-26)  - SET FOR CHECKER PARAMETER                 03850000
+.*          &SGEDT5C(1-26)  - SET FOR USEREXT PARAMETER                 03900000
+.*          &SGEDT6C(1-26)  - SET FOR PRMPTR PARAMETER                  03950000
+.*          &SGEDT7C(1-26)  - SET FOR USERSRC PARAMETER                 04000000
+.*          &SGEDT8C(1-26)  - SET FOR DATEXIT PARAMETER                 04050000
+.*          &SGQUITB        - QUIT SWITCH                               04100000
+.*             &SGCNTRA(4)  - COUNT OF ESOTERIC NAMES FROM UNITNAME     04160000
+.*             &SGCNTRA(5)  - COUNT OF ADDRESSES FROM UNITNAME          04170000
+.*             &SGCNTRA(6)  - CONTROL IN UNITNAME                       04180000
+.*             &SGUNSGA     - TOTAL COUNT OF ESOTERIC AND GENERIC NAMES 04190000
+.*             &SGUNVA      - COUNT OF VIO NAMES                        04192000
+.*             &SGQUITB     - QUIT SWITCH                               04194000
+.*             &SGUNVB(1-100)  - VIO BIT FOR ESOTERIC LIST              04196000
+.*             &SGUNNMC(1-100) - NAMES GIVEN IN MACRO CALL              04198000
+.*             &SGUNNVC(1-100) - VIO DEVICE NAMES                       04198400
+.*             &SGUNNMA(1-514) - ADDRESSES ASSOCIATED WITH NAMES        04198800
+.*                                                                      04199200
+.*       LOCALS USED ARE -                                              04200000
+.*             &A      - SUBSCRIPT FOR CHECKING DEFAULTS OF THE DSTYPE  04250000
+.*             &B      - SET IF DEFAULT TAKEN                           04300000
+.*             &C      - SET FOR CHECKING MINIMUM AND MAXIMUM VALUES    04350000
+.*             &I      - SET FOR CHECKING MAXIMUM OF NONSTANDARD DSTYPE 04400000
+.*             &J      - SET TO CHECK MAXIMUM OF 26 DSTYPES             04450000
+.*             &K      - SET TO MATCH DSTYPE AND OTHER PARMS            04500000
+.*             &L      - SET TO MATCH IBM-SUPPLIED DSTYPE               04550000
+.*             &M      - SET TO CHECK IF A DSTYPE HAS BEEN SPECIFIED    04600000
+.*             &X      - SET TO CHECK IF A HYPHEN IS MISSING            04650000
+.*                                                                      04700000
+.* EXIT, NORMAL - N/A                                                   04750000
+.*                                                                      04800000
+.* EXIT, ERROR - N/A                                                    04850000
+.*                                                                      04900000
+.* EXTERNAL REFERENCES - N/A                                            04950000
+.*                                                                      05000000
+.* TABLES - N/A                                                         05050000
+.*                                                                      05100000
+.* MACROS - NONE                                                        05150000
+.*                                                                      05200000
+.* CHANGE ACTIVITY - Y02676,Y03NS04                                     05250000
+.* CHANGE ACTIVITY - @ZA17963,@ZA34982                                  05270037
+.*                                                                      05300000
+.****** END OF SPECIFICATIONS ***************************************   05350000
+         AIF   (NOT &SGMENTB(61)).E2    TEST FOR PREVIOUS ENTRY         05450000
+    MNOTE 5,'* * * IEIEDI101 EDIT MACRO PREVIOUSLY USED'                05500000
+&SGQUITB SETB  1                        SET QUIT BIT                    05550000
+         MEXIT                                                          05600000
+.E2      ANOP                                                           05650000
+&SGMENTB(61)   SETB 1                   SET EDIT ENTRY SWITCH           05700000
+         AIF   (N'&DSTYPE EQ 0).E44     TEST FOR NO OP5RAN4S     A45714 07550000
+   MNOTE *,'      EDIT ATTRIBUTES NOT DEFAULTED ARE -'           A45714 07600000
+&J       SETA  N'&DSTYPE                NUMBER OF OPERANDS       A45714 07650000
+&I       SETA  1                       INIT USER TYPE INDEX      A45714 07700000
+&K       SETA  1                       INIT INDEX FOR OPERANDS   A45714 07750000
+.*                                                               A45714 07800000
+.* * * THIS ROUTINE ISOLATES DATA SET TYPE ATTRIBUTES * * * *    A45714 07850000
+.*                                                               A45714 07900000
+.ED0     AIF   (&K GT &J OR &K EQ 27).EDEXT TEST FOR END OF OPER Y02676 07950000
+         AIF   ('&DSTYPE(&K)' EQ 'PLIF').ED5                     A45714 08000000
+         AIF   ('&DSTYPE(&K)' EQ 'FORTE').ED6                    A45714 08050000
+         AIF   ('&DSTYPE(&K)' EQ 'FORTG').ED7                    A45714 08100000
+         AIF   ('&DSTYPE(&K)' EQ 'FORTH').ED8                    A45714 08150000
+         AIF   ('&DSTYPE(&K)' EQ 'TEXT').ED9                     A45714 08200000
+         AIF   ('&DSTYPE(&K)' EQ 'DATA').ED10                    A45714 08250000
+         AIF   ('&DSTYPE(&K)' EQ 'CLIST').ED11                   A45714 08300000
+         AIF   ('&DSTYPE(&K)' EQ 'CNTL').ED12                    A45714 08350000
+         AIF   ('&DSTYPE(&K)' EQ 'ASM').ED13                     A45714 08400000
+         AIF   ('&DSTYPE(&K)' EQ 'COBOL').ED14                   A45714 08450000
+         AIF   ('&DSTYPE(&K)' EQ 'FORTGI').ED15                  A45714 08500000
+         AIF   ('&DSTYPE(&K)' EQ 'GOFORT').ED16                  A45714 08550000
+.*  DELETE  BASIC, IPLI TYPES                                  @ZA17963 08600037
+         AIF   ('&DSTYPE(&K)' EQ 'PLI').ED18                     A45714 08700000
+         AIF   ('&DSTYPE(&K)' EQ 'VSBASIC').ED18AA               Y02676 08750000
+         AIF   ('&DSTYPE(&K)' NE '').ED3 CHECK IF DSTYPE IS NULL A45714 08800000
+.ED2     ANOP                                                    A45714 08850000
+    MNOTE 5,'* * * IEIEDI102 EDIT OPERAND &DSTYPE(&K) INVALID DATA SET X08900000
+               TYPE OR MISSING VALUE'                            A45714 08950000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 09000000
+         AGO   .EDNXT                  PROCESS NEXT DATA SET TYPEA45714 09050000
+.ED3     AIF   (K'&DSTYPE(&K) LE 8).ED4 CHECK IF LENGTH VALID    A45714 09100000
+    MNOTE 5,'* * * IEIED105 DATA SET NAME &DSTYPE(&K) LONGER THAN EIGHTX09150000
+                CHARACTERS'                                      A45714 09200000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 09250000
+         AGO   .EDNXT                  PROCESS NEXT DATA SET TYPEA45714 09300000
+.ED4     AIF   ('&DSTYPE(&K)'(1,1) EQ '@').ED4A CHECK IF FIRST   A45714 09350000
+         AIF   ('&DSTYPE(&K)'(1,1) EQ '#').ED4A    IS VALID ALPHAA45714 09400000
+         AIF   ('&DSTYPE(&K)'(1,1) EQ '$').ED4A                  A45714 09450000
+         AIF   ('&DSTYPE(&K)'(1,1) LT 'A').ED2                   A45714 09500000
+         AIF   ('&DSTYPE(&K)'(1,1) GT 'Z').ED2                   A45714 09550000
+.ED4A    ANOP                                                    A45714 09600000
+         AIF   (&I LT 11).ED4AA        TEST IF MORE THAN 10 SPEC A45714 09650000
+    MNOTE 0,'* * * IEIEDIW31 MORE THAN 10 NON-STANDARD DATA SET TYPES  X09700000
+               WERE SPECIFIED - &DSTYPE(&K) IS IGNORED'          A45714 09750000
+         AGO   .EDNXT                  PROCESS NEXT PARAMETER    A45714 09800000
+.ED4AA   ANOP                                                    A45714 09850000
+&M       SETA  1                                                 A45714 09900000
+.ED4B    AIF   (&M GT &I).ED4C                                   A45714 09950000
+         AIF   ('&SGEDITC(&M)' EQ '&DSTYPE(&K)').ED19            A45714 10000000
+&M       SETA  &M+1                                              A45714 10050000
+         AGO   .ED4B                                             A45714 10100000
+.ED4C    ANOP                                                    A45714 10150000
+&SGEDITC(&I) SETC '&DSTYPE(&K)'        SET DSTYPE GLOBAL VALUE   A45714 10200000
+    MNOTE *,'           DATA SET TYPE &DSTYPE(&K):'              A45714 10250000
+&L       SETA  &I                      SET INDEX FOR OTHER ATTR. A45714 10300000
+&I       SETA  &I+1                    INCR. TO NEXT USER SLOT   A45714 10350000
+         AGO   .ED20                   PROCESS ATTRIBUTES        A45714 10400000
+.ED5     ANOP                                                    A45714 10450000
+&L       SETA  11                      INDEX FOR PLIF DSTYPE     A45714 10500000
+         AGO   .ED18A                                            A45714 10550000
+.ED6     ANOP                                                    A45714 10600000
+&L       SETA  12                      INDEX FOR FORTE DSTYPE    A45714 10650000
+         AGO   .ED18A                                            A45714 10700000
+.ED7     ANOP                                                    A45714 10750000
+&L       SETA  13                      INDEX FOR FORTG DSTYPE    A45714 10800000
+         AGO   .ED18A                                            A45714 10850000
+.ED8     ANOP                                                    A45714 10900000
+&L       SETA  14                      INDEX FOR FORTH DSTYPE    A45714 10950000
+         AGO   .ED18A                                            A45714 11000000
+.ED9     ANOP                                                    A45714 11050000
+&L       SETA  15                      INDEX FOR TEXT DSTYPE     A45714 11100000
+         AGO   .ED18A                                            A45714 11150000
+.ED10    ANOP                                                    A45714 11200000
+&L       SETA  16                      INDEX FOR DATA DSTYPE     A45714 11250000
+         AGO   .ED18A                                            A45714 11300000
+.ED11    ANOP                                                    A45714 11350000
+&L       SETA  17                      INDEX FOR CLIST DSTYPE    A45714 11400000
+         AGO   .ED18A                                            A45714 11450000
+.ED12    ANOP                                                    A45714 11500000
+&L       SETA  18                      INDEX FOR CNTL DSTYPE     A45714 11550000
+         AGO   .ED18A                                            A45714 11600000
+.ED13    ANOP                                                    A45714 11650000
+&L       SETA  19                      INDEX FOR ASM DSTYPE      A45714 11700000
+         AGO   .ED18A                                            A45714 11750000
+.ED14    ANOP                                                    A45714 11800000
+&L       SETA  20                      INDEX FOR COBOL DSTYPE    A45714 11850000
+         AGO   .ED18A                                            A45714 11900000
+.ED15    ANOP                                                    A45714 11950000
+&L       SETA  21                      INDEX FOR FORTGI DSTYPE   A45714 12000000
+         AGO   .ED18A                                            A45714 12050000
+.ED16    ANOP                                                    A45714 12100000
+&L       SETA  22                      INDEX FOR GOFORI DSTYPE   A45714 12150000
+         AGO   .ED18A                                            A45714 12200000
+.*  DELETE  BASIC, IPLI TYPES                                  @ZA17963 12250037
+.ED18    ANOP                                                    A45714 12550000
+&L       SETA  25                      INDEX FOR PLI DSTYPE      A45714 12600000
+         AGO   .ED18A                                            Y02676 12650000
+.ED18AA  ANOP                                                    Y02676 12700000
+&L       SETA  26                                                Y02676 12750000
+.ED18A   AIF   ('&SGEDITC(&L)' NE '').ED19                       A45714 12800000
+&SGEDITC(&L) SETC '&DSTYPE(&K)'        SET DSTYPE GLOBAL VALUE   A45714 12850000
+    MNOTE *,'           DATA SET TYPE &DSTYPE(&K):'              A45714 12900000
+         AGO   .ED20                                             A45714 12950000
+.ED19    ANOP                                                    A45714 13000000
+    MNOTE 5,'* * * IEIEDI104 EDIT OPERAND &DSTYPE(&K) DATA SET TYPE    X13050000
+               PREVIOUSLY SPECIFIED'                             A45714 13100000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 13150000
+         AGO   .EDNXT                                            A45714 13200000
+.ED20    AIF   ('&BLOCK(&K)' EQ '').ED22 CHECK IF BLOCKSIZE SPEC A45714 13250000
+         AIF   (&BLOCK(&K) GE 8 AND &BLOCK(&K) LE 32760).ED21    Y02676 13300000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &BLOCK(&K) INVALID BLOCKSIZE X13350000
+               FOR DATA SET TYPE &DSTYPE(&K)'                    A45714 13400000
+&SGQUITB SETB  1                                                 A45714 13450000
+         AGO   .ED22                                             A45714 13500000
+.ED21    ANOP                                                    A45714 13550000
+&SGEDITA(&L) SETA &BLOCK(&K)           SET BLOCKSIZE GLOBAL VALUEA45714 13600000
+    MNOTE *,'                    BLOCKSIZE = &BLOCK(&K)'         A45714 13650000
+.ED22    AIF   ('&FORMAT(&K)' EQ '').ED24 CHECK IF RECFM SPEC.   A45714 13700000
+         AIF   ('&FORMAT(&K)' EQ 'VAR').ED23                     A45714 13750000
+         AIF   ('&FORMAT(&K)' EQ 'FIXED').ED23                   A45714 13800000
+         AIF   ('&FORMAT(&K)' EQ 'FXDONLY').ED23                 A45714 13850000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &FORMAT(&K) INVALID RECFM    X13900000
+               FOR DATA SET TYPE &DSTYPE(&K)'                    A45714 13950000
+&SGQUITB SETB  1                                                 A45714 14000000
+         AGO   .ED24                                             A45714 14050000
+.ED23    ANOP                                                    A45714 14100000
+&SGEDT2C(&L) SETC '&FORMAT(&K)'        SET RECFM GLOBAL VALUE    A45714 14150000
+    MNOTE *,'                    RECORD FORMAT = &FORMAT(&K)'    A45714 14200000
+.ED24    ANOP                                                    M02325 14250000
+&X       SETB  1                                                 M02325 14300000
+         AIF   ('&FIXED(&K)' EQ '' AND '&VAR(&K)' EQ '').ED29    A45714 14350000
+         AIF   ('&FIXED(&K)' NE '' AND '&VAR(&K)' NE '').ED27    A45714 14400000
+         AIF   ('&FIXED(&K)' EQ '').ED25                         A45714 14450000
+&M       SETA  0                                                 A45714 14500000
+.ED24A   ANOP                                                    A45714 14550000
+&M       SETA  &M+1                                              A45714 14600000
+         AIF   (&M GE K'&FIXED(&K)).ED24C                        A45714 14650000
+         AIF   ('&FIXED(&K)'(&M,1) NE '-').ED24A                 A45714 14700000
+&X       SETB  0                                                 M02325 14750000
+&C       SETC  '&FIXED(&K)'(&M+1,K'&FIXED(&K)-&M)                A45714 14800000
+         AIF   (&C GE 1 AND &C LE 255).ED24B                     A45714 14850000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &FIXED(&K) INVALID FIXED     X14900000
+               MAXIMUM FOR DATA SET TYPE &DSTYPE(&K)'            A45714 14950000
+         AGO   .ED24C                                            A45714 15000000
+.ED24B   ANOP                                                    A45714 15050000
+&SGEDT3A(&L) SETA &C                   SET FIXED MAXIMUM GLOBAL  A45714 15100000
+    MNOTE *,'                    FIXED MAXIMUM LRECL = &SGEDT3A(&L)'    15150000
+.ED24C   AIF   ('&FORMAT(&K)' EQ 'VAR' OR ('&FORMAT(&K)' EQ '' AND     X15200000
+               &L GT 10)).ED29                                   A45714 15250000
+         AIF  (&X).ED28ERR                                       M02325 15300000
+&X       SETB  1                                                 M02325 15350000
+&M       SETA  0                                                 A45714 15400000
+.ED24D   ANOP                                                    A45714 15450000
+&M       SETA  &M+1                                              A45714 15500000
+         AIF   (&M GT K'&FIXED(&K)).ED24                         A45714 15550000
+         AIF   ('&FIXED(&K)'(&M,1) NE '-').ED24D                 A45714 15600000
+&X       SETB  0                                                 M02325 15650000
+         AIF   (&M EQ 1).ED24X         CHECK IF MISSING          A45714 15700000
+&C       SETC  '&FIXED(&K)'(1,&M-1)                              A45714 15750000
+         AIF   (&SGEDT3A(&L) EQ 0).ED24Y MAX. LT DFLT. FIXED     A45714 15800000
+         AIF   ('&SGEDT3A(&L)' LT '&C').ED24X                    A45714 15850000
+.ED24Y   ANOP                                                    A45714 15900000
+         AIF   (&C GE 1 AND &C LE 255).ED24E                     A45714 15950000
+.ED24X   ANOP                                                    A45714 16000000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &FIXED(&K) INVALID FIXED     X16050000
+               DEFAULT FOR DATA SET TYPE &DSTYPE(&K)'            A45714 16100000
+         AGO   .ED29                                             A45714 16150000
+.ED24E   ANOP                                                    A45714 16200000
+&SGEDT2A(&L) SETA &C                   SET FIXED DEFAULT GLOBAL  A45714 16250000
+    MNOTE *,'                    FIXED DEFAULT LRECL = &SGEDT2A(&L)'    16300000
+         AGO   .ED29                                             A45714 16350000
+.ED25    AIF   ('&FORMAT(&K)' EQ 'FXDONLY').ED26                 A45714 16400000
+&M       SETA  0                                                 A45714 16450000
+.ED25A   ANOP                                                    A45714 16500000
+&M       SETA  &M+1                                              A45714 16550000
+         AIF   (&M GE K'&VAR(&K)).ED25C                          A45714 16600000
+         AIF   ('&VAR(&K)'(&M,1) NE '-').ED25A                   A45714 16650000
+&X       SETB  0                                                 M02325 16700000
+&C       SETC  '&VAR(&K)'(&M+1,K'&VAR(&K)-&M)                    A45714 16750000
+         AIF   (&C GE 5 AND &C LE 255).ED25B                     A45714 16800000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &VAR(&K) INVALID VARIABLE    X16850000
+               MAXIMUM FOR DATA SET TYPE &DSTYPE(&K)'            A45714 16900000
+         AGO   .ED25C                                            A45714 16950000
+.ED25B   ANOP                                                    A45714 17000000
+&SGEDT5A(&L) SETA &C                   SET VARIABLE MAX. GLOBAL  A45714 17050000
+    MNOTE *,'                    VARIABLE MAXIMUM LRECL = &SGEDT5A(&L)' 17100000
+.ED25C   AIF   ('&FORMAT(&K)' EQ 'FIXED').ED29                   A45714 17150000
+         AIF   ('&FORMAT(&K)' EQ '' AND &L GT 10).ED29           A45714 17200000
+         AIF  (&X).ED28ERR                                       M02325 17250000
+&M       SETA  0                                                 A45714 17300000
+.ED25D   ANOP                                                    A45714 17350000
+&M       SETA  &M+1                                              A45714 17400000
+         AIF   (&M GT K'&VAR(&K)).ED26                           A45714 17450000
+         AIF   ('&VAR(&K)'(&M,1) NE '-').ED25D                   A45714 17500000
+         AIF   (&M EQ 1).ED25X         CHECK IF MISSING          A45714 17550000
+&C       SETC  '&VAR(&K)'(1,&M-1)                                A45714 17600000
+         AIF   (&SGEDT5A(&L) EQ 0).ED25Y  MAX. LT DFLT. VAR      A45714 17650000
+         AIF   ('&SGEDT5A(&L)' LT '&C').ED25X                    A45714 17700000
+.ED25Y   ANOP                                                    A45714 17750000
+         AIF   (&C GE 5 AND &C LE 255).ED25E                     A45714 17800000
+.ED25X   ANOP                                                    A45714 17850000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &VAR(&K) INVALID VARIABLE    X17900000
+               DEFAULT FOR DATA SET TYPE &DSTYPE(&K)'            A45714 17950000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 18000000
+         AGO   .ED29                                             A45714 18050000
+.ED25E   ANOP                                                    A45714 18100000
+&SGEDT4A(&L) SETA &C                   SET VARIABLE DEFLT. GLOBALA45714 18150000
+    MNOTE *,'                    VARIABLE DEFAULT LRECL = &SGEDT4A(&L)' 18200000
+         AGO   .ED29                                             A45714 18250000
+.ED26    ANOP                                                    A45714 18300000
+    MNOTE 5,'* * * IEIEDI106 EDIT OPERAND VAR INVALID WHEN FORMAT=     X18350000
+               &FORMAT(&K) SPECIFIED'                            A45714 18400000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 18450000
+         AGO   .ED29                                             A45714 18500000
+.ED27    ANOP                                                    A45714 18550000
+&M       SETA  0                                                 A45714 18600000
+.ED27A   ANOP                                                    A45714 18650000
+&M       SETA  &M+1                                              A45714 18700000
+         AIF   (&M GE K'&FIXED(&K)).ED27C                        A45714 18750000
+         AIF   ('&FIXED(&K)'(&M,1) NE '-').ED27A                 A45714 18800000
+&X       SETB  0                                                 M02325 18850000
+&C       SETC  '&FIXED(&K)'(&M+1,K'&FIXED(&K)-&M)                A45714 18900000
+         AIF   (&C GE 1 AND &C LE 255).ED27B                     A45714 18950000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &FIXED(&K) INVALID FIXED     X19000000
+               MAXIMUM FOR DATA SET TYPE &DSTYPE(&K)'            A45714 19050000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 19100000
+         AGO   .ED27C                                            A45714 19150000
+.ED27B   ANOP                                                    A45714 19200000
+&SGEDT3A(&L) SETA &C                   SET FIXED MAX. GLOBAL     A45714 19250000
+    MNOTE *,'                    FIXED MAXIMUM LRECL = &SGEDT3A(&L)'    19300000
+.ED27C   ANOP                                                    A45714 19350000
+&M       SETA  0                                                 A45714 19400000
+.ED27D   ANOP                                                    A45714 19450000
+&M       SETA  &M+1                                              A45714 19500000
+         AIF   (&M GE K'&VAR(&K)).ED27E                          A45714 19550000
+         AIF   ('&VAR(&K)'(&M,1) NE '-').ED27D                   A45714 19600000
+&X       SETB  0                                                 M02325 19650000
+&C       SETC  '&VAR(&K)'(&M+1,K'&VAR(&K)-&M)                    A45714 19700000
+         AIF   (&C GE 5 AND &C LE 255).ED27E                     A45714 19750000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &VAR(&K) INVALID VARIABLE    X19800000
+               MAXIMUM FOR DATA SET TYPE &DSTYPE(&K)'            A45714 19850000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 19900000
+         AGO   .ED27F                                            A45714 19950000
+.ED27E   AIF  (&X).ED28ERR                                       M02325 20000000
+&SGEDT5A(&L) SETA &C                   SET VARIABLE MAX. GLOBAL  A45714 20050000
+    MNOTE *,'                    VARIABLE MAXIMUM LRECL = &SGEDT5A(&L)' 20100000
+.ED27F   AIF   ('&FORMAT(&K)' EQ 'VAR').ED28                     A45714 20150000
+         AIF   (&L GT 10 AND '&FORMAT(&K)' EQ '').ED29           A45714 20200000
+&M       SETA  0                                                 A45714 20250000
+.ED27G   ANOP                                                    A45714 20300000
+&M       SETA  &M+1                                              A45714 20350000
+         AIF   (&M GT K'&FIXED(&K)).ED29                         A45714 20400000
+         AIF   ('&FIXED(&K)'(&M,1) NE '-').ED27G                 A45714 20450000
+&X       SETB  0                                                 M02325 20500000
+         AIF   (&M EQ 1).ED27X         CHECK IF MISSING          A45714 20550000
+&C       SETC  '&FIXED(&K)'(1,&M-1)                              A45714 20600000
+         AIF   (&SGEDT3A(&L) EQ 0).ED27Y MAX. LT DFLT. FIXED     A45714 20650000
+         AIF   ('&SGEDT3A(&L)' LT '&C').ED27X                    A45714 20700000
+.ED27Y   ANOP                                                    A45714 20750000
+         AIF   (&C GE 1 AND &C LE 255).ED27H                     A45714 20800000
+.ED27X   ANOP                                                    A45714 20850000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &FIXED(&K) INVALID FIXED     X20900000
+               DEFAULT FOR DATA SET TYPE &DSTYPE(&K)'            A45714 20950000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 21000000
+         AGO   .ED29                                             A45714 21050000
+.ED27H   ANOP                                                    A45714 21100000
+&SGEDT2A(&L) SETA &C                   SET FIXED DEFAULT GLOBAL  A45714 21150000
+    MNOTE *,'                    FIXED DEFAULT LRECL = &SGEDT2A(&L)'    21200000
+         AGO   .ED29                                             A45714 21250000
+.ED28    ANOP                                                    A45714 21300000
+&X       SETB  1                                                 M02325 21350000
+&M       SETA  0                                                 A45714 21400000
+.ED28A   ANOP                                                    A45714 21450000
+&M       SETA  &M+1                                              A45714 21500000
+         AIF   (&M GT K'&VAR(&K)).ED29                           A45714 21550000
+         AIF   ('&VAR(&K)'(&M,1) NE '-').ED28A                   A45714 21600000
+&X       SETB  0                                                 M02325 21650000
+         AIF   (&M EQ 1).ED28X         CHECK IF MISSING          A45714 21700000
+&C       SETC  '&VAR(&K)'(1,&M-1)                                A45714 21750000
+         AIF   (&SGEDT5A(&L) EQ 0).ED28Y MAX. LT DFLT. VAR       A45714 21800000
+         AIF   ('&SGEDT5A(&L)' LT '&C').ED28X                    A45714 21850000
+.ED28Y   ANOP                                                    A45714 21900000
+         AIF   (&C GE 5 AND &C LE 255).ED28B                     A45714 21950000
+.ED28X   ANOP                                                    A45714 22000000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &VAR(&K) INVALID VARIABLE    X22050000
+               DEFAULT FOR DATA SET TYPE &DSTYPE(&K)'            A45714 22100000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 22150000
+         AGO   .ED29                                             A45714 22200000
+.ED28B   ANOP                                                    A45714 22250000
+&SGEDT4A(&L) SETA &C                   SET VARIABLE DEFLT. GLOBALA45714 22300000
+    MNOTE *,'                    VARIABLE DEFAULT LRECL = &SGEDT4A(&L)' 22350000
+         AGO   .ED29                                             A45714 22400000
+.ED28ERR ANOP                                                    M02325 22450000
+    MNOTE 5,'* * * IEIEDI108 EDIT OPERAND FIXED OR VARIABLE INVALID    *22500000
+               HYPHEN MISSING  '                                 M02325 22550000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 22600000
+.ED29    AIF   ('&CONVERT(&K)' EQ '').ED32                       A45714 22650000
+         AIF   ('&CONVERT(&K)' EQ 'CAPS').ED31                   A45714 22700000
+         AIF   ('&CONVERT(&K)' EQ 'ASIS').ED31                   A45714 22750000
+         AIF   ('&CONVERT(&K)' EQ 'CAPSONLY').ED31               A45714 22800000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &CONVERT(&K) INVALID FOR     X22850000
+               DATA SET TYPE &DSTYPE(&K)'                        A45714 22900000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 22950000
+         AGO   .ED32                                             A45714 23000000
+.ED31    ANOP                                                    A45714 23050000
+&SGEDT3C(&L) SETC '&CONVERT(&K)'       SET CONVERSION GLOBAL     A45714 23100000
+    MNOTE *,'                    CHARACTER CONVERSION = &CONVERT(&K)'   23150000
+.ED32    AIF   ('&CHECKER(&K)' EQ '').ED36                       A45714 23200000
+         AIF   (K'&CHECKER(&K) LE 8).ED33                        A45714 23250000
+    MNOTE 5,'* * * IEIEDI105 CHECKER NAME &CHECKER(&K) LONGER THAN     X23300000
+               EIGHT CHARACTERS'                                 A45714 23350000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 23400000
+         AGO   .ED36                                             A45714 23450000
+.ED33    AIF   ('&CHECKER(&K)'(1,1) EQ '@').ED34                 A45714 23500000
+         AIF   ('&CHECKER(&K)'(1,1) EQ '#').ED34                 A45714 23550000
+         AIF   ('&CHECKER(&K)'(1,1) EQ '$').ED34                 A45714 23600000
+         AIF   ('&CHECKER(&K)'(1,1) LT 'A').ED35                 A45714 23650000
+         AIF   ('&CHECKER(&K)'(1,1) GT 'Z').ED35                 A45714 23700000
+.ED34    ANOP                                                    A45714 23750000
+&SGEDT4C(&L) SETC '&CHECKER(&K)'       SET CHECKER NAME GLOBAL   A45714 23800000
+    MNOTE *,'                    SYNTAX CHECKER NAME = &CHECKER(&K)'    23850000
+         AGO   .ED36                                             A45714 23900000
+.ED35   ANOP                                                     A45714 23950000
+    MNOTE 5,'* * * IEIED102 EDIT OPERAND &CHECKER(&K) INVALID CHECKER  X24000000
+               NAME OR MISSING VALUE'                            A45714 24050000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 24100000
+.ED36    AIF   ('&USEREXT(&K)' EQ '').ED40                       A45714 24150000
+         AIF   (&L LE 10).ED36A                                  A45714 24200000
+    MNOTE 5,'* * * IEIEDI107 USER EXIT CAN ONLY BE SPECIFIED FOR       X24250000
+               NON-STANDARD DATA SET TYPES - &USEREXT(&K) IS IGNORED'   24300000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 24350000
+         AGO   .ED40                                             A45714 24400000
+.ED36A   AIF   (K'&USEREXT(&K) LE 8).ED37                        A45714 24450000
+    MNOTE 5,'* * * IEIEDI105 USER EXIT NAME &USEREXT(&K) LONGER THAN   X24500000
+               EIGHT CHARACTERS'                                 A45714 24550000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 24600000
+         AGO   .ED40                                             A45714 24650000
+.ED37    AIF   ('&USEREXT(&K)'(1,1) EQ '@').ED38                 A45714 24700000
+         AIF   ('&USEREXT(&K)'(1,1) EQ '#').ED38                 A45714 24750000
+         AIF   ('&USEREXT(&K)'(1,1) EQ '$').ED38                 A45714 24800000
+         AIF   ('&USEREXT(&K)'(1,1) LT 'A').ED39                 A45714 24850000
+         AIF   ('&USEREXT(&K)'(1,1) GT 'Z').ED39                 A45714 24900000
+.ED38    ANOP                                                    A45714 24950000
+&SGEDT5C(&L) SETC '&USEREXT(&K)'       SET USER EXIT NAME GLB    A45714 25000000
+    MNOTE *,'                    USER EXIT NAME = &USEREXT(&K)'  A45714 25050000
+         AGO   .ED40                                             A45714 25100000
+.ED39    ANOP                                                    A45714 25150000
+    MNOTE 5,'* * * IEIEDI102 EDIT OPERAND &USEREXT(&K) INVALID USER    X25200000
+               EXIT NAME OR MISSING VALUE'                       A45714 25250000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 25300000
+.ED40    AIF   ('&PRMPTR(&K)' EQ '').ED43 TEST IF SPECIFIED      A45714 25350000
+         AIF   (K'&PRMPTR(&K) LE 8).ED40A TEST FOR VALID LENGTH  A45714 25400000
+    MNOTE 5,'* * * IEIEDI105 PROMPTER NAME &PRMPTR(&K) LONGER THAN     X25450000
+               EIGHT CHARACTERS'                                 A45714 25500000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 25550000
+         AGO   .ED43                                             A45714 25600000
+.ED40A   AIF   ('&PRMPTR(&K)'(1,1) EQ '@').ED41                  A45714 25650000
+         AIF   ('&PRMPTR(&K)'(1,1) EQ '#').ED41                  A45714 25700000
+         AIF   ('&PRMPTR(&K)'(1,1) EQ '$').ED41                  A45714 25750000
+         AIF   ('&PRMPTR(&K)'(1,1) LT 'A').ED42                  A45714 25800000
+         AIF   ('&PRMPTR(&K)'(1,1) GT 'Z').ED42                  A45714 25850000
+.ED41    ANOP                                                    A45714 25900000
+&SGEDT6C(&L) SETC '&PRMPTR(&K)'        SET PROMPTER NAME GLOBAL  A45714 25950000
+    MNOTE *,'                    PROMPTER NAME = &PRMPTR(&K)'    A45714 26000000
+         AGO   .ED43                                             A45714 26050000
+.ED42    ANOP                                                    A45714 26100000
+    MNOTE 5,'* * * IEIEDI102 EDIT OPERAND &PRMPTR(&K) INVALID PROMPTER X26150000
+               NAME OR MISSING VALUE'                            A45714 26200000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 26250000
+.ED43    AIF   ('&USERSRC(&K)' EQ '').EDTAG99                    Y02676 26300000
+         AIF   ('&USERSRC(&K)' EQ 'INLIST').ED44                 Y02676 26350000
+         AIF   ('&USERSRC(&K)' EQ 'DATASET').ED44                A45714 26400000
+         AIF   ('&USERSRC(&K)' EQ 'INCORE').ED44                 A45714 26450000
+    MNOTE 5,'* * * IEIEDI103 EDIT OPERAND &USERSRC(&K) INVALID FOR     X26500000
+               DATA SET TYPE &DSTYPE(&K)'                        A45714 26550000
+&SGQUITB SETB  1                       SET QUIT BIT              A45714 26600000
+         AGO   .EDNXT                                            A45714 26650000
+.ED44    ANOP                                                    A45714 26700000
+&SGEDT7C(&L) SETC '&USERSRC(&K)'       SET INPUT SOURCE GLB VALUEA45714 26750000
+    MNOTE *,'                    PROMPTER INPUT SOURCE = &USERSRC(&K)'  26800000
+.EDTAG99 AIF   ('&DATEXIT(&K)' EQ '').EDNXT   TEST IF SPECIFIED  Y02676 26850000
+         AIF   (K'&DATEXIT(&K) LE 8).EDTAG10 TEST FOR VALID LEN. Y02676 26900000
+    MNOTE 5,'* * * IEIEDI109 DATEXIT NAME &DATEXIT(&K) LONGER THAN EIGHX26950000
+               T CHARACTERS'                                     Y02676 27000000
+&SGQUITB SETB  1                                                 Y02676 27050000
+         AGO   .EDNXT                                            Y02676 27100000
+.EDTAG10 AIF   ('&DATEXIT(&K)'(1,1) EQ '@').EDTAG20              Y02676 27150000
+         AIF   ('&DATEXIT(&K)'(1,1) EQ '#').EDTAG20              Y02676 27200000
+         AIF   ('&DATEXIT(&K)'(1,1) EQ '$').EDTAG20              Y02676 27250000
+         AIF   ('&DATEXIT(&K)'(1,1) LT 'A').EDTAG30              Y02676 27300000
+         AIF   ('&DATEXIT(&K)'(1,1) GT 'Z').EDTAG30              Y02676 27350000
+.EDTAG20 ANOP                                                    Y02676 27400000
+&SGEDT8C(&L) SETC '&DATEXIT(&K)'  SET DATEXIT NAME               Y02676 27450000
+    MNOTE *,'             DATEXIT NAME = &DATEXIT(&K)'           Y02676 27500000
+         AGO   .EDNXT                                            Y02676 27550000
+.EDTAG30 ANOP                                                    Y02676 27600000
+    MNOTE 5,'* * * IEIEDI110 EDIT OPERAND &DATEXIT(&K) INVALID DATEXIT X27650000
+               NAME OR MISSING VALUE'                            Y02676 27700000
+&SGQUITB SETB  1                                                 Y02676 27750000
+.EDNXT   ANOP                                                    A45714 27800000
+&K       SETA  &K+1                    INCREMENT INDEX BY ONE    A45714 27850000
+         AGO   .ED0                                              A45714 27900000
+.EDEXT   AIF   (&K LT 27).EDFALT                                 A45714 27950000
+    MNOTE 0,'* * * IEIEDIW02 MORE THAN 26 DATA SET TYPES WERE          X28000000
+               SPECIFIED - ONLY FIRST 26 UNIQUE DATA SET TYPES         X28050000
+               PROCESSED'                                        A45714 28100000
+.EDFALT  ANOP                                                           28150000
+.*  *  *  *  SET EDIT DEFAULTS FOR DATA SET TYPES NOT USER SPECIFIED  * 28200000
+    MNOTE *,'     THE FOLLOWING EDIT ATTRIBUTES ARE DEFAULTED-'  A45714 28250000
+&A SETA 1                               SET COUNTER                     28300000
+.T8      AIF   (&A GT 10).T17           TEST FOR END OF USERTYPESA45714 28350000
+         AIF   ('&SGEDITC(&A)' EQ '').T17 TEST IF USERTYPE PRES. A45714 28400000
+         AIF   (&SGEDITA(&A) NE 0).T9   TEST IF BLKSIZE NEEDED   A45714 28450000
+&SGEDITA(&A) SETA 3120                  SET DEFAULT VALUE      @ZA34982 28500037
+    MNOTE *,'           &SGEDITC(&A)  BLOCK = &SGEDITA(&A)'             28550000
+.T9      AIF   ('&SGEDT2C(&A)' NE '').T10 TEST IF RECFM NEEDED   A45714 28600000
+&SGEDT2C(&A) SETC 'FIXED'               SET DEFAULT VALUE        A45714 28650000
+    MNOTE *,'           &SGEDITC(&A) FORMAT = &SGEDT2C(&A)'             28700000
+.*                                                                      28750000
+.* * * DETERMINE DEFAULT AND MAXIMUM LRECL DEFAULTS, IF NECESSARYA45714 28800000
+.*                                                               A45714 28850000
+.T10     AIF   (&SGEDT3A(&A) NE 0).T11  TEST IF MAX. FIXED NEEDEDA45714 28900000
+&SGEDT3A(&A) SETA 255                   SET DEFAULT VALUE        A45714 28950000
+    MNOTE *,'           &SGEDITC(&A) MAXIMUM FIXED LRECL = &SGEDT3A(&A)X29000000
+               '                                                        29050000
+.T11     AIF   ('&SGEDT2C(&A)' EQ 'FXDONLY').T12 TEST IF MAX.    A45714 29100000
+         AIF   (&SGEDT5A(&A) NE 0).T12           VARIABLE NEEDED A45714 29150000
+&SGEDT5A(&A) SETA 255                   SET DEFAULT VALUE        A45714 29200000
+    MNOTE *,'           &SGEDITC(&A) MAXIMUM VAR LRECL =  &SGEDT5A(&A)' 29250000
+.T12     AIF   ('&SGEDT2C(&A)' EQ 'VAR').T13 TEST IF RECFM IS VARA45714 29300000
+         AIF   (&SGEDT2A(&A) NE 0).T14  TEST IF DFLT.FIXED NEEDEDA45714 29350000
+&SGEDT2A(&A) SETA 80                    SET DEFAULT VALUE        A45714 29400000
+   MNOTE *,'           &SGEDITC(&A) DEFAULT FIXED LRECL = &SGEDT2A(&A)' 29450000
+         AGO   .T14                     PROCESS NEXT ATTRIBUTE   A45714 29500000
+.T13     AIF   (&SGEDT4A(&A) NE 0).T14  TEST IF DLFT.VAR NEEDED  A45714 29550000
+&SGEDT4A(&A) SETA 255                   SET DEFAULT VALUES       A45714 29600000
+    MNOTE *,'           &SGEDITC(&A) DEFAULT VAR LRECL = &SGEDT4A(&A)'  29650000
+.T14     AIF   ('&SGEDT3C(&A)' NE '').T15 TEST IF DEFAULT NEEDED A45714 29700000
+&SGEDT3C(&A) SETC 'CAPS'               SET CHAR.CONVERSION VALUE A45714 29750000
+    MNOTE *,'           &SGEDITC(&A) CONVERT = &SGEDT3C(&A)'            29800000
+.T15      ANOP                                                          29850000
+&A       SETA  &A+1                     INCREMENT INDEX BY ONE   A45714 29900000
+         AGO   .T8                      REPEAT LOOP              A45714 29950000
+.*                                                               A45714 30000000
+.* * * SET DEFAULT VALUES FOR PLIF DATA SET TYPE                 A45714 30050000
+.*                                                               A45714 30100000
+.T17     AIF   (&SGEDITA(11) NE 0).T17A TEST IF BLKSIZE NEEDED   A45714 30150000
+&SGEDITA(11) SETA 400                   SET DEFAULT VALUE        A45714 30200000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 30250000
+    MNOTE *,'           PLIF BLOCK = 400'                        A45714 30300000
+.T17A    AIF   ('&SGEDT2C(11)' NE '').T17B TEST IF RECFM NEEDED  A45714 30350000
+&SGEDT2C(11) SETC 'FXDONLY'             SET DEFAULT VALUE        A45714 30400000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 30450000
+    MNOTE *,'           PLIF FORMAT = FXDONLY'                   A45714 30500000
+.T17B    AIF   (&SGEDT3A(11) NE 0).T17C TEST IF MAX. FIXED NEEDEDA45714 30550000
+&SGEDT3A(11) SETA 100                   SET DEFAULT VALUE        A45714 30600000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 30650000
+    MNOTE *,'           PLIF MAXIMUM FIXED LRECL = 100'          A45714 30700000
+.T17C    AIF   ('&SGEDT2C(11)' EQ 'VAR').T17D TEST IF RECFM=VAR  A45714 30750000
+         AIF   (&SGEDT2A(11) NE 0).T17D TEST IF FIXED DFT.NEEDED A45714 30800000
+&SGEDT2A(11) SETA 80                    SET DEFAULT VALUE        A45714 30850000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 30900000
+    MNOTE *,'           PLIF DEFAULT FIXED LRECL = 80'           A45714 30950000
+.T17D    AIF   ('&SGEDT3C(11)' NE '').T17E TEST IF DEFAULT NEEDEDA45714 31000000
+&SGEDT3C(11) SETC 'CAPSONLY'            SET CHAR.CONVERSION VALUEA45714 31050000
+&B       SETB  1                                                 A45714 31100000
+    MNOTE *,'           PLIF CONVERT = CAPSONLY'                 A45714 31150000
+.T17E    AIF   ('&SGEDT4C(11)' NE '').T17F TEST IF CHECKER NEEDEDA45714 31200000
+&SGEDT4C(11) SETC 'PLIFSCAN'            SET DEFAULT VALUE        A45714 31250000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 31300000
+    MNOTE *,'           PLIF CHECKER NAME = PLIFSCAN'            A45714 31350000
+.T17F    AIF   ('&SGEDT7C(11)' NE '').T18 TEST IF DEFAULT NEEDED A45714 31400000
+&SGEDT7C(11) SETC 'DATASET'             SET INPUT SOURCE VALUE   A45714 31450000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 31500000
+    MNOTE *,'           PLIF PROMPTER SOURCE = DATASET'          A45714 31550000
+.*                                                               A45714 31600000
+.* * * SET DEFAULT VALUES FOR FORTE DATA SET TYPE                A45714 31650000
+.*                                                               A45714 31700000
+.T18     AIF   (&SGEDITA(12) NE 0).T18A TEST IF BLKSIZE NEEDED   A45714 31750000
+&SGEDITA(12) SETA 400                   SET DEFAULT VALUE        A45714 31800000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 31850000
+    MNOTE *,'           FORTE BLOCK = 400'                       A45714 31900000
+.T18A    AIF   ('&SGEDT2C(12)' NE '').T18B TEST IF RECFM NEEDED  A45714 31950000
+&SGEDT2C(12) SETC 'FXDONLY'             SET DEFAULT VALUE        A45714 32000000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 32050000
+    MNOTE *,'           FORTE FORMAT = FXDONLY'                  A45714 32100000
+.T18B    AIF   (&SGEDT3A(12) NE 0).T18C TEST IF MAX. FIXED NEEDEDA45714 32150000
+&SGEDT3A(12) SETA 80                    SET DEFAULT VALUE        A45714 32200000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 32250000
+    MNOTE *,'           FORTE MAXIMUM FIXED LRECL = 80'          A45714 32300000
+.T18C    AIF   ('&SGEDT2C(12)' EQ 'VAR').T18D TEST IF RECFM=VAR  A45714 32350000
+         AIF   (&SGEDT2A(12) NE 0).T18D TEST IF FIXED DFT.NEEDED A45714 32400000
+&SGEDT2A(12) SETA 80                    SET DEFAULT VALUE        A45714 32450000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 32500000
+    MNOTE *,'           FORTE DEFAULT FIXED LRECL = 80'          A45714 32550000
+.T18D    AIF   ('&SGEDT3C(12)' NE '').T18E TEST IF DEFAULT NEEDEDA45714 32600000
+&SGEDT3C(12) SETC 'CAPSONLY'            SET DEFAULT VALUE        A45714 32650000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 32700000
+    MNOTE *,'           FORTE CONVERT = CAPSONLY'                A45714 32750000
+.T18E    AIF   ('&SGEDT4C(12)' NE '').T18F TEST IF CHECKER NEEDEDA45714 32800000
+&SGEDT4C(12) SETC 'IPDSNEXC'            SET DEFAULT VALUE        A45714 32850000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 32900000
+    MNOTE *,'           FORTE CHECKER NAME = IPDSNEXC'           A45714 32950000
+.T18F    AIF   ('&SGEDT7C(12)' NE '').T19 TEST IF DEFAULT NEEDED A45714 33000000
+&SGEDT7C(12) SETC 'DATASET'             SET INPUT SOURCE VALUE   A45714 33050000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 33100000
+    MNOTE *,'           FORTE PROMPTER SOURCE = DATASET'         A45714 33150000
+.*                                                               A45714 33200000
+.* * * SET DEFAULT VALUES FOR FORTG DATA SET TYPE                A45714 33250000
+.*                                                               A45714 33300000
+.T19     AIF   (&SGEDITA(13) NE 0).T19A TEST IF BLKSIZE NEEDED   A45714 33350000
+&SGEDITA(13) SETA 400                   SET DEFAULT VALUE        A45714 33400000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 33450000
+    MNOTE *,'           FORTG BLOCK = 400'                       A45714 33500000
+.T19A    AIF   ('&SGEDT2C(13)' NE '').T19B TEST IF RECFM NEEDED  A45714 33550000
+&SGEDT2C(13) SETC 'FXDONLY'             SET DEFAULT VALUE        A45714 33600000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 33650000
+    MNOTE *,'           FORTG FORMAT = FXDONLY'                  A45714 33700000
+.T19B    AIF   (&SGEDT3A(13) NE 0).T19E TEST IF MAX. FIXED NEEDEDA45714 33750000
+&SGEDT3A(13) SETA 80                    SET DEFAULT VALUE        A45714 33800000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 33850000
+    MNOTE *,'           FORTG MAXIMUM FIXED LRECL = 80'          A45714 33900000
+         AIF   ('&SGEDT2C(13)' EQ 'VAR').T19D TEST IF RECFM=VAR  A45714 33950000
+         AIF   (&SGEDT2A(13) NE 0).T19D TEST IF FIXED DFT.NEEDED A45714 34000000
+&SGEDT2A(13) SETA 80                    SET DEFAULT VALUE        A45714 34050000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 34100000
+    MNOTE *,'           FORTG DEFAULT FIXED LRECL = 80'          A45714 34150000
+.T19D    AIF   ('&SGEDT3C(13)' NE '').T19E TEST IF DEFAULT NEEDEDA45714 34200000
+&SGEDT3C(13) SETC 'CAPSONLY'            SET CHAR.CONVERSION VALUEA45714 34250000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 34300000
+    MNOTE *,'           FORTG CONVERT = CAPSONLY'                A45714 34350000
+.T19E    AIF   ('&SGEDT4C(13)' NE '').T19F TEST IF CHECKER NEEDEDA45714 34400000
+&SGEDT4C(13) SETC 'IPDSNEXC'            SET DEFAULT VALUE        A45714 34450000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 34500000
+    MNOTE *,'           FORTG CHECKER NAME = IPDSNEXC'           A45714 34550000
+.T19F    AIF   ('&SGEDT7C(13)' NE '').T20 TEST IF DEFAULT NEEDED A45714 34600000
+&SGEDT7C(13) SETC 'DATASET'             SET INPUT SOURCE VALUE   A45714 34650000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 34700000
+    MNOTE *,'           FORTG PROMPTER SOURCE = DATASET'         A45714 34750000
+.*                                                               A45714 34800000
+.* * * SET DEFAULT VALUES FOR FORTH DATA SET TYPE                A45714 34850000
+.*                                                               A45714 34900000
+.T20     AIF   (&SGEDITA(14) NE 0).T20A TEST IF BLKSIZE NEEDED   A45714 34950000
+&SGEDITA(14) SETA 400                   SET DEFAULT VALUE        A45714 35000000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 35050000
+    MNOTE *,'           FORTH BLOCK = 400'                       A45714 35100000
+.T20A    AIF   ('&SGEDT2C(14)' NE '').T20B TEST IF RECFM NEEDED  A45714 35150000
+&SGEDT2C(14) SETC 'FXDONLY'             SET DEFAULT VALUE        A45714 35200000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 35250000
+    MNOTE *,'           FORTH FORMAT = FXDONLY'                  A45714 35300000
+.T20B    AIF   (&SGEDT3A(14) NE 0).T20C TEST IF MAX. FIXED NEEDEDA45714 35350000
+&SGEDT3A(14) SETA 80                    SET DEFAULT VALUE        A45714 35400000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 35450000
+    MNOTE *,'           FORTH MAXIMUM FIXED LRECL = 80'          A45714 35500000
+.T20C    AIF   ('&SGEDT2C(14)' EQ 'VAR').T20D TEST IF RECFM=VAR  A45714 35550000
+         AIF   (&SGEDT2A(14) NE 0).T20D TEST IF FIXED DFT.NEEDED A45714 35600000
+&SGEDT2A(14) SETA 80                    SET DEFAULT VALUE        A45714 35650000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 35700000
+    MNOTE *,'           FORTH DEFAULT FIXED LRECL = 80'          A45714 35750000
+.T20D    AIF   ('&SGEDT3C(14)' NE '').T20E TEST IF DEFAULT NEEDEDA45714 35800000
+&SGEDT3C(14) SETC 'CAPSONLY'            SET CHAR.CONVERSION VALUEA45714 35850000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 35900000
+    MNOTE *,'           FORTH CONVERT = CAPSONLY'                A45714 35950000
+.T20E    AIF   ('&SGEDT4C(14)' NE '').T20F TEST IF CHECKER NEEDEDA45714 36000000
+&SGEDT4C(14) SETC 'IPDSNEXC'            SET DEFAULT VALUE        A45714 36050000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 36100000
+    MNOTE *,'           FORTH CHECKER NAME = IPDSNEXC'           A45714 36150000
+.T20F    AIF   ('&SGEDT7C(14)' NE '').T21 TEST IF DEFAULT NEEDED A45714 36200000
+&SGEDT7C(14) SETC 'DATASET'             SET INPUT SOURCE VALUE   A45714 36250000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 36300000
+    MNOTE *,'           FORTH PROMPTER SOURCE = DATASET'         A45714 36350000
+.*                                                               A45714 36400000
+.* * * SET DEFAULT VALUES FOR TEXT DATA SET TYPE                 A45714 36450000
+.*                                                               A45714 36500000
+.T21     AIF   (&SGEDITA(15) NE 0).T21A TEST IF BLKSIZE NEEDED   A45714 36550000
+&SGEDITA(15) SETA 3120                  SET DEFAULT VALUE        A45714 36600000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 36650000
+    MNOTE *,'           TEXT BLOCK = 3120'                       A45714 36700000
+.T21A    AIF   ('&SGEDT2C(15)' NE '').T21B TEST IF RECFM NEEDED  A45714 36750000
+&SGEDT2C(15) SETC 'VAR'                 SET DEFAULT VALUE        A45714 36800000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 36850000
+    MNOTE *,'           TEXT FORMAT = VAR'                       A45714 36900000
+.T21B    AIF   (&SGEDT3A(15) NE 0).T21C TEST IF MAX.FIXED NEEDED A45714 36950000
+&SGEDT3A(15) SETA 255                   SET DEFAULT VALUE        A45714 37000000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 37050000
+    MNOTE *,'           TEXT MAXIMUM FIXED LRECL = 255'          A45714 37100000
+.T21C    AIF   ('&SGEDT2C(15)' EQ 'FXDONLY').T21D TEST IF FXDONLYA45714 37150000
+         AIF   (&SGEDT5A(15) NE 0).T21D TEST IF MAX. VAR NEEDED  A45714 37200000
+&SGEDT5A(15) SETA 255                   SET DEFAULT VALUE        A45714 37250000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 37300000
+    MNOTE *,'           TEXT MAXIMUM VARIABLE LRECL = 255'       A45714 37350000
+.T21D    AIF   ('&SGEDT2C(15)' NE 'VAR').T21E TEST IF RECFM=VAR  A45714 37400000
+         AIF   (&SGEDT4A(15) NE 0).T21E TEST IF VAR DFT. NEEDED  A45714 37450000
+&SGEDT4A(15) SETA 255                   SET DEFAULT VALUE        A45714 37500000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 37550000
+    MNOTE *,'           TEXT DEFAULT VARIABLE LRECL = 255'       A45714 37600000
+.T21E    AIF   ('&SGEDT3C(15)' NE '').T21F TEST IF DEFAULT NEEDEDA45714 37650000
+&SGEDT3C(15) SETC 'ASIS'                SET CHAR.CONVERSION VALUEA45714 37700000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 37750000
+    MNOTE *,'           TEXT CONVERT = ASIS'                     A45714 37800000
+.T21F    AIF   ('&SGEDT7C(15)' NE '').T22 TEST IF DEFAULT NEEDED A45714 37850000
+&SGEDT7C(15) SETC  'DATASET'            SET INPUT SOURCE VALUE   A45714 37900000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 37950000
+    MNOTE *,'           TEXT PROMPTER SOURCE = DATASET'          A45714 38000000
+.*                                                               A45714 38050000
+.* * * SET DEFAULT VALUES FOR DATA DATA SET TYPE                 A45714 38100000
+.*                                                               A45714 38150000
+.T22     AIF   (&SGEDITA(16) NE 0).T22A TEST IF BLKSIZE NEEDED   A45714 38200000
+&SGEDITA(16) SETA 3120                  SET DEFAULT VALUE        A45714 38250000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 38300000
+    MNOTE *,'           DATA BLOCK = 3120'                       A45714 38350000
+.T22A    AIF   ('&SGEDT2C(16)' NE '').T22B TEST IF RECFM NEEDED  A45714 38400000
+&SGEDT2C(16) SETC 'FIXED'               SET DEFAULT VALUE        A45714 38450000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 38500000
+    MNOTE *,'           DATA FORMAT = FIXED'                     A45714 38550000
+.T22B    AIF   (&SGEDT3A(16) NE 0).T22C TEST IF MAX. FIXED NEEDEDA45714 38600000
+&SGEDT3A(16) SETA 255                   SET DEFAULT VALUE        A45714 38650000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 38700000
+    MNOTE *,'           DATA MAXIMUM FIXED LRECL =255'           A45714 38750000
+.T22C    AIF   ('&SGEDT2C(16)' EQ 'FXDONLY').T22D TEST IF FXDONLYA45714 38800000
+         AIF   (&SGEDT5A(16) NE 0).T22D TEST IF MAX. VAR NEEDED  A45714 38850000
+&SGEDT5A(16) SETA 255                   SET DEFAULT VALUE        A45714 38900000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 38950000
+    MNOTE *,'           DATA MAXIMUM VAR LRECL = 255'            A45714 39000000
+.T22D    AIF   ('&SGEDT2C(16)' EQ 'VAR').T22E TEST IF RECFM=VAR  A45714 39050000
+         AIF   (&SGEDT2A(16) NE 0).T22E TEST IF FIXED DFT. NEEDEDA45714 39100000
+&SGEDT2A(16) SETA 80                    SET DEFAULT VALUE        A45714 39150000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 39200000
+    MNOTE *,'           DATA DEFAULT FIXED LRECL = 80'           A45714 39250000
+.T22E    AIF   ('&SGEDT3C(16)' NE '').T22F TEST IF DEFAULT NEEDEDA45714 39300000
+&SGEDT3C(16) SETC 'CAPS'                SET CHAR.CONVERSION VALUEA45714 39350000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 39400000
+    MNOTE *,'           DATA CONVERT = CAPS'                     A45714 39450000
+.T22F    AIF   ('&SGEDT7C(16)' NE '').T23 TEST IF DEFAULT NEEDED A45714 39500000
+&SGEDT7C(16) SETC 'DATASET'             SET INPUT SOURCE VALUE   A45714 39550000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 39600000
+    MNOTE *,'           DATA PROMPTER SOURCE = DATASET'          A45714 39650000
+.*                                                               A45714 39700000
+.* * * SET DEFAULT VALUES FOR CLIST DATA SET TYPE                A45714 39750000
+.*                                                               A45714 39800000
+.T23     AIF   (&SGEDITA(17) NE 0).T23A TEST IF BLKSIZE NEEDED   A45714 39850000
+&SGEDITA(17) SETA 3120                  SET DEFAULT VALUE        A45714 39900000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 39950000
+    MNOTE *,'           CLIST BLOCK = 3120'                      A45714 40000000
+.T23A    AIF   ('&SGEDT2C(17)' NE '').T23B TEST IF RECFM NEEDED  A45714 40050000
+&SGEDT2C(17) SETC 'VAR'                 SET DEFAULT VALUE        A45714 40100000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 40150000
+    MNOTE *,'           CLIST FORMAT = VAR'                      A45714 40200000
+.T23B    AIF   (&SGEDT3A(17) NE 0).T23C TEST IF MAX. FIXED NEEDEDA45714 40250000
+&SGEDT3A(17) SETA 255                   SET DEFAULT VALUE        A45714 40300000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 40350000
+    MNOTE *,'           CLIST MAXIMUM FIXED LRECL = 255'         A45714 40400000
+.T23C    AIF   ('&SGEDT2C(17)' EQ 'FXDONLY').T23D TEST IF FXDONLYA45714 40450000
+         AIF   (&SGEDT5A(17) NE 0).T23D TEST IF MAX. VAR NEEDED  A45714 40500000
+&SGEDT5A(17) SETA 255                   SET DEFAULT VALUE        A45714 40550000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 40600000
+    MNOTE *,'           CLIST MAXIMUM VAR LRECL = 255'           A45714 40650000
+.T23D    AIF   ('&SGEDT2C(17)' NE 'VAR').T23E TEST IF RECFM=VAR  A45714 40700000
+         AIF   (&SGEDT4A(17) NE 0).T23E TEST IF VAR DFT. NEEDED  A45714 40750000
+&SGEDT4A(17) SETA 255                   SET DEFAULT VALUE        A45714 40800000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 40850000
+    MNOTE *,'           CLIST DEFAULT VAR LRECL = 255'           A45714 40900000
+.T23E    AIF   ('&SGEDT3C(17)' NE '').T23F TEST IF DEFAULT NEEDEDA45714 40950000
+&SGEDT3C(17) SETC 'CAPSONLY'            SET CHAR.CONVERSION VALUEA45714 41000000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 41050000
+    MNOTE *,'           CLIST CONVERT = CAPSONLY'                A45714 41100000
+.T23F    AIF   ('&SGEDT7C(17)' NE '').T24 TEST IF DEFAULT NEEDED A45714 41150000
+&SGEDT7C(17) SETC 'DATASET'             SET INPUT SOURCE VALUE   A45714 41200000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 41250000
+    MNOTE *,'           CLIST PROMPTER SOURCE = DATASET'         A45714 41300000
+.*                                                               A45714 41350000
+.* * * SET DEFAULT VALUES FOR CNTL DATA SET TYPE                 A45714 41400000
+.*                                                               A45714 41450000
+.T24     AIF   (&SGEDITA(18) NE 0).T24A TEST IF BLKSIZE NEEDED   A45714 41500000
+&SGEDITA(18) SETA 3120                  SET DEFAULT VALUE        A45714 41550000
+&B       SETB  1                        SET DEFAULT TAKEN VALUE  A45714 41600000
+    MNOTE *,'           CNTL BLOCK = 3120'                       A45714 41650000
+.T24A    AIF   ('&SGEDT2C(18)' NE '').T24B TEST IF RECFM NEEDED  A45714 41700000
+&SGEDT2C(18) SETC 'FXDONLY'             SET DEFAULT VALUE        A45714 41750000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 41800000
+    MNOTE *,'           CNTL FORMAT = FXDONLY'                   A45714 41850000
+.T24B    AIF   (&SGEDT3A(18) NE 0).T24C TEST IF MAX. FIXED NEEDEDA45714 41900000
+&SGEDT3A(18) SETA 80                    SET DEFAULT VALUE        A45714 41950000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 42000000
+    MNOTE *,'           CNTL MAXIMUM FIXED LRECL = 80'           A45714 42050000
+.T24C    AIF   ('&SGEDT2C(18)' EQ 'VAR').T24D TEST IF RECFM=VAR  A45714 42100000
+         AIF   (&SGEDT2A(18) NE 0).T24D TEST IF FIXED DFT. NEEDEDA45714 42150000
+&SGEDT2A(18) SETA 80                    SET DEFAULT VALUE        A45714 42200000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 42250000
+    MNOTE *,'           CNTL DEFAULT FIXED LRECL = 80'           A45714 42300000
+.T24D    AIF   ('&SGEDT3C(18)' NE '').T24E TEST IF DEFAULT NEEDEDA45714 42350000
+&SGEDT3C(18) SETC 'CAPSONLY'            SET CHAR.COVNERSION VALUEA45714 42400000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 42450000
+    MNOTE *,'           CNTL CONVERT = CAPSONLY'                 A45714 42500000
+.T24E    AIF   ('&SGEDT7C(18)' NE '').T25 TEST IF DEFAULT NEEDED A45714 42550000
+&SGEDT7C(18) SETC 'DATASET'             SET INPUT SOURCE VALUE   A45714 42600000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 42650000
+    MNOTE *,'           CNTL PROMPTER SOURCE = DATASET'          A45714 42700000
+.*                                                               A45714 42750000
+.* * * SET DEFAULT VALUES FOR ASM DATA SET TYPE                  A45714 42800000
+.*                                                               A45714 42850000
+.T25     AIF   (&SGEDITA(19) NE 0).T25A TEST IF BLKSIZE NEEDED   A45714 42900000
+&SGEDITA(19) SETA 3120                  SET DEFAULT VALUE        A45714 42950000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 43000000
+    MNOTE *,'           ASM BLOCK = 3120'                        A45714 43050000
+.T25A    AIF   ('&SGEDT2C(19)' NE '').T25B TEST IF RECFM NEEDED  A45714 43100000
+&SGEDT2C(19) SETC 'FXDONLY'             SET DEFAULT VALE         A45714 43150000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 43200000
+    MNOTE *,'           ASM FORMAT = FXDONLY'                    A45714 43250000
+.T25B    AIF   (&SGEDT3A(19) NE 0).T25C TEST IF MAX. FIXED NEEDEDA45714 43300000
+&SGEDT3A(19) SETA 80                    SET DEFAULT VALUE        A45714 43350000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 43400000
+    MNOTE *,'           ASM MAXIMUM FIXED LRECL = 80'            A45714 43450000
+.T25C    AIF   ('&SGEDT2C(19)' EQ 'VAR').T25D TEST IF RECFM=VAR  A45714 43500000
+         AIF   (&SGEDT2A(19) NE 0).T25D TEST IF MAX. FIXED NEEDEDA45714 43550000
+&SGEDT2A(19) SETA 80                    SET DEFAULT VALUE        A45714 43600000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 43650000
+    MNOTE *,'           ASM DEFAULT FIXED LRECL = 80'            A45714 43700000
+.T25D    AIF   ('&SGEDT3C(19)' NE '').T25E TEST IF DEFAULT NEEDEDA45714 43750000
+&SGEDT3C(19) SETC 'CAPSONLY'            SET CHAR.CONVERSION VALUEA45714 43800000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 43850000
+    MNOTE *,'           ASM CONVERT = CAPSONLY'                  A45714 43900000
+.T25E    AIF   ('&SGEDT6C(19)' NE '').T25F TEST IF DEFAULT NEEDEDA45714 43950000
+&SGEDT6C(19) SETC 'ASM'                 SET PROMPTER NAME VALUE  A45714 44000000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 44050000
+    MNOTE *,'           ASM PROMPTER NAME = ASM'                 A45714 44100000
+.T25F    AIF   ('&SGEDT7C(19)' NE '').T26 TEST IF DEFAULT NEEDED A45714 44150000
+&SGEDT7C(19) SETC 'DATASET'             SET INPUT SOURCE VALUE   A45714 44200000
+    MNOTE *,'           ASM PROMPTER SOURCE = DATASET'           A45714 44250000
+.*                                                               A45714 44300000
+.* * * SET DEFAULT VALUES FOR COBOL DATA SET TYPE                A45714 44350000
+.*                                                               A45714 44400000
+.T26     AIF   (&SGEDITA(20) NE 0).T26A TEST IF BLKSIZE NEEDED   A45714 44450000
+&SGEDITA(20) SETA 400                   SET DEFAULT VALUE        A45714 44500000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 44550000
+    MNOTE *,'           COBOL BLOCK = 400'                       A45714 44600000
+.T26A    AIF   ('&SGEDT2C(20)' NE '').T26B TEST IF RECFM NEEDED  A45714 44650000
+&SGEDT2C(20) SETC 'FXDONLY'             SET DEFAULT VALUE        A45714 44700000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 44750000
+    MNOTE *,'           COBOL FORMAT = FXDONLY'                  A45714 44800000
+.T26B    AIF   (&SGEDT3A(20) NE 0).T26C TEST IF MAX. FIXED NEEDEDA45714 44850000
+&SGEDT3A(20) SETA 80                    SET DEFAULT VALUE        A45714 44900000
+&B       SETB  1                        SET DEFAULT TAKEN VALUE  A45714 44950000
+    MNOTE *,'           COBOL MAXIMUM FIXED LRECL = 80'          A45714 45000000
+.T26C    AIF   ('&SGEDT2C(20)' EQ 'VAR').T26D TEST IF RECFM=VAR  A45714 45050000
+         AIF   (&SGEDT2A(20) NE 0).T26D TEST IF FIXED DFT. NEEDEDA45714 45100000
+&SGEDT2A(20) SETA 80                    SET DEFAULT VALUE        A45714 45150000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 45200000
+    MNOTE *,'           COBOL DEFAULT FIXED LRECL = 80'          A45714 45250000
+.T26D    AIF   ('&SGEDT3C(20)' NE '').T26E TEST IF DEFAULT NEEDEDA45714 45300000
+&SGEDT3C(20) SETC 'CAPSONLY'            SET CHAR.CONVERSION VALUEA45714 45350000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 45400000
+    MNOTE *,'           COBOL CONVERT = CAPSONLY'                A45714 45450000
+.T26E    AIF   ('&SGEDT6C(20)' NE '').T26F TEST IF DEFAULT NEEDEDA45714 45500000
+&SGEDT6C(20) SETC 'COBOL'               SET PROMPTER NAME VALUE  A45714 45550000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 45600000
+    MNOTE *,'           COBOL PROMPTER NAME = COBOL'             A45714 45650000
+.T26F    AIF   ('&SGEDT7C(20)' NE '').T27 TEST IF DEFAULT NEEDED A45714 45700000
+&SGEDT7C(20) SETC 'DATASET'             SET INPUT SOURCE VALUE   A45714 45750000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 45800000
+    MNOTE *,'           COBOL PROMPTER SOURCE = DATASET'         A45714 45850000
+.*                                                               A45714 45900000
+.* * * SET DEFAULT VALUES FOR FORIGI DATA SET TYPE               A45714 45950000
+.*                                                               A45714 46000000
+.T27     AIF   (&SGEDITA(21) NE 0).T27A TEST IF BLKSIZE NEEDED   A45714 46050000
+&SGEDITA(21) SETA 400                   SET DEFAULT VALUE        A45714 46100000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 46150000
+    MNOTE *,'           FORTGI BLOCK = 400'                      A45714 46200000
+.T27A    AIF   ('&SGEDT2C(21)' NE '').T27B TEST IF RECFM NEEDED  A45714 46250000
+&SGEDT2C(21) SETC 'FXDONLY'             SET DEFAULT VALUE        A45714 46300000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 46350000
+    MNOTE *,'           FORTGI FORMAT = FXDONLY'                 A45714 46400000
+.T27B    AIF   (&SGEDT3A(21) NE 0).T27C TEST IF MAX. FIXED NEEDEDA45714 46450000
+&SGEDT3A(21) SETA 80                    SET DEFAULT VALUE        A45714 46500000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 46550000
+    MNOTE *,'           FORTGI MAXIMUM FIXED LRECL = 80'         A45714 46600000
+.T27C    AIF   ('&SGEDT2C(21)' EQ 'VAR').T27D TEST IF RECFM=VAR  A45714 46650000
+         AIF   (&SGEDT2A(21) NE 0).T27D TEST IF FIXED DFT. NEEDEDA45714 46700000
+&SGEDT2A(21) SETA 80                    SET DEFAULT VALUE        A45714 46750000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 46800000
+    MNOTE *,'           FORTGI DEFAULT FIXED LRECL = 80'         A45714 46850000
+.T27D    AIF   ('&SGEDT3C(21)' NE '').T27E TEST IF DEFAULT NEEDEDA45714 46900000
+&SGEDT3C(21) SETC 'CAPSONLY'            SET CHAR.CONVERSION VALUEA45714 46950000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 47000000
+    MNOTE *,'           FORTGI CONVERT = CAPSONLY'               A45714 47050000
+.T27E    AIF   ('&SGEDT4C(21)' NE '').T27F TEST IF CHECKER NEEDEDA45714 47100000
+&SGEDT4C(21) SETC 'IPDSNEXC'            SET DEFAULT VALUE        A45714 47150000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 47200000
+    MNOTE *,'           FORTGI CHECKER NAME = IPDSNEXC'          A45714 47250000
+.T27F    AIF   ('&SGEDT6C(21)' NE '').T27G TEST IF DEFAULT NEEDEDA45714 47300000
+&SGEDT6C(21) SETC 'FORT'                SET PROMPTER NAME VALUE  A45714 47350000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 47400000
+    MNOTE *,'           FORTGI PROMPTER NAME = FORT'             A45714 47450000
+.T27G    AIF   ('&SGEDT7C(21)' NE '').T28X TEST IF DEFAULT NEEDEDA45714 47500000
+&SGEDT7C(21) SETC 'DATASET'             SET INPUT SOURCE VALUE   A45714 47550000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 47600000
+    MNOTE *,'           FORTGI PROMPTER SOURCE = DATASET'        A45714 47650000
+.*                                                               A45714 47700000
+.* * * SET DEFAULT VALUES FOR GOFORT DATA SET TYPE               A45714 47750000
+.*                                                               A45714 47800000
+.T28X    AIF   (&SGEDITA(22) NE 0).T28A TEST IF BLKSIZE NEEDED   A45714 47850000
+&SGEDITA(22) SETA 3120                  SET DEFAULT VALUE        A45714 47900000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 47950000
+    MNOTE *,'           GOFORT BLOCK = 3120'                     A45714 48000000
+.T28A    AIF   ('&SGEDT2C(22)' NE '').T28B TEST IF RECFM NEEDED  A45714 48050000
+&SGEDT2C(22) SETC 'VAR'                 SET DEFAULT VALUE        A45714 48100000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 48150000
+    MNOTE *,'           GOFORT FORMAT = VAR'                     A45714 48200000
+.T28B    AIF   (&SGEDT3A(22) NE 0).T28C TEST IF MAX. FIXED NEEDEDA45714 48250000
+&SGEDT3A(22) SETA 255                   SET DEFAULT VALUE        A45714 48300000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 48350000
+    MNOTE *,'           GOFORT MAXIMUM FIXED LRECL = 255'        A45714 48400000
+.T28C    AIF   ('&SGEDT2C(22)' EQ 'FXDONLY').T28E TEST IF FXDONLYA45714 48450000
+         AIF   (&SGEDT5A(22) NE 0).T28D TEST IF MAX. VAR NEEDED  A45714 48500000
+&SGEDT5A(22) SETA 255                   SET DEFAULT VALUE        A45714 48550000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 48600000
+    MNOTE *,'           GOFORT MAXIMUM VAR LRECL = 255'          A45714 48650000
+.T28D    AIF   ('&SGEDT2C(22)' NE 'VAR').T28E TEST IF RECFM=VAR  A45714 48700000
+         AIF   (&SGEDT4A(22) NE 0).T28E TEST IF DFT. VAR NEEDED  A45714 48750000
+&SGEDT4A(22) SETA 255                   SET DEFAULT VALUE        A45714 48800000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 48850000
+    MNOTE *,'           GOFORT DEFAULT VAR LRECL = 255'          A45714 48900000
+.T28E    AIF   ('&SGEDT3C(22)' NE '').T28F TEST IF DEFAULT NEEDEDA45714 48950000
+&SGEDT3C(22) SETC 'CAPS'                SET CHAR.CONVERSION      A45714 49000000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 49050000
+    MNOTE *,'           GOFORT CONVERT = CAPS'                   A45714 49100000
+.T28F    AIF   ('&SGEDT4C(22)' NE '').T28G TEST IF CHECKER NEEDEDA45714 49150000
+&SGEDT4C(22) SETC 'IPDSNEXC'            SET DEFAULT VALUE        A45714 49200000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 49250000
+    MNOTE *,'           GOFORT CHECKER NAME = IPDSNEXC'          A45714 49300000
+.T28G    AIF   ('&SGEDT6C(22)' NE '').T28H TEST IF DEFAULT NEEDEDA45714 49350000
+&SGEDT6C(22) SETC 'GOFORT'              SET PROMPTER NAME VALUE  A45714 49400000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 49450000
+    MNOTE *,'           GOFORT PROMPTER NAME = GOFORT'           A45714 49500000
+.T28H    AIF   ('&SGEDT7C(22)' NE '').T29 TEST IF DEFAULT NEEDED A45714 49550000
+&SGEDT7C(22) SETC 'INCORE'              SET INPUT SOURCE VALUE   A45714 49600000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 49650000
+    MNOTE *,'           GOFORT PROMPTER SOURCE = INCORE'         A45714 49700000
+.T29     ANOP                                                  @ZA17963 49750037
+.* DELETE  BASIC, IPLI TYPES                                   @ZA17963 51750037
+.*                                                               A45714 53850000
+.* * * SET DEFAULT VALUES FOR PLI DATA SET TYPE                  A45714 53900000
+.*                                                               A45714 53950000
+.T31     AIF   (&SGEDITA(25) NE 0).T31A TEST IF BLKSIZE NEEDED   A45714 54000000
+&SGEDITA(25) SETA 400                   SET DEFAULT VALUE        A45714 54050000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 54100000
+    MNOTE *,'           PLI BLOCK = 400'                         A45714 54150000
+.T31A    AIF   ('&SGEDT2C(25)' NE '').T31B TEST IF RECFM NEEDED  A45714 54200000
+&SGEDT2C(25) SETC 'VAR'                 SET DEFAULT VALUE        A45714 54250000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 54300000
+    MNOTE *,'           PLI FORMAT = VAR'                        A45714 54350000
+.T31B    AIF   (&SGEDT3A(25) NE 0).T31C TEST IF MAX. FIXED NEEDEDA45714 54400000
+&SGEDT3A(25) SETA 100                   SET DEFAULT VALUE        A45714 54450000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 54500000
+    MNOTE *,'           PLI MAXIMUM FIXED LRECL = 100'           A45714 54550000
+.T31C    AIF   ('&SGEDT2C(25)' EQ 'FXDONLY').T31E TEST IF FXDONLYA45714 54600000
+         AIF   (&SGEDT5A(25) NE 0).T31D TEST IF MAX. VAR NEEDED  A45714 54650000
+&SGEDT5A(25) SETA 104                   SET DEFAULT VALUE        A45714 54700000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 54750000
+    MNOTE *,'           PLI MAXIMUM VAR LRECL = 104'             A45714 54800000
+.T31D    AIF   ('&SGEDT2C(25)' NE 'VAR').T31E TEST IF RECFM=VAR  A45714 54850000
+         AIF   (&SGEDT4A(25) NE 0).T31E TEST IF DFT. VAR NEEDED  A45714 54900000
+&SGEDT4A(25) SETA 104                   SET DEFAULT VALUE        A45714 54950000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 55000000
+    MNOTE *,'           PLI DEFAULT VAR LRECL = 104'             A45714 55050000
+.T31E    AIF   ('&SGEDT3C(25)' NE '').T31G TEST IF DEFAULT NEEDEDA45714 55100000
+&SGEDT3C(25) SETC 'CAPS'                SET CHAR.CONVERSION VALUEA45714 55150000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 55200000
+    MNOTE *,'           PLI CONVERT = CAPS'                      A45714 55250000
+.T31G    AIF   ('&SGEDT6C(25)' NE '').T31H TEST IF DEFAULT NEEDEDA45714 55300000
+&SGEDT6C(25) SETC 'PLIC'                SET PROMPTER NAME VALUE         55350000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 55400000
+    MNOTE *,'           PLI PROMPTER NAME = PLIC'                       55450000
+.T31H    AIF   ('&SGEDT7C(25)' NE '').T32 TEST IF DEFAULT NEEDED A45714 55500000
+&SGEDT7C(25) SETC 'DATASET'             SET INPUT SOURCE VALUE   A45714 55550000
+&B       SETB  1                        SET DEFAULT TAKEN SWITCH A45714 55600000
+    MNOTE *,'           PLI PROMPTER SOURCE = DATASET'           A45714 55650000
+.*                                                               Y02676 55700000
+.* * * SET DEFAULT VALUES FOR VSBASIC DATA SET TYPE              Y02676 55750000
+.*                                                               Y02676 55800000
+.T32     ANOP                                                    Y02676 55850000
+         AIF (&SGEDITA(26) NE 0).T32A TEST IF BLKSIZE NEEDED     Y02676 55900000
+&SGEDITA(26) SETA  3120               SET DEFAULT VALUE          Y02676 55950000
+&B       SETB  1                      SET DEFAULT TAKEN SWITCH   Y02676 56000000
+    MNOTE *,'           VSBASIC BLOCK = 3120'                    Y02676 56050000
+.T32A    AIF   ('&SGEDT2C(26)' NE '').T32B TEST IF RECFM NEEDED  Y02676 56100000
+&SGEDT2C(26) SETC 'VAR'               SET DEFAULT VALUE          Y02676 56150000
+&B       SETB  1                      SET DEFAULT TAKEN SWITCH   Y02676 56200000
+    MNOTE *,'           VSBASIC FORMAT = VAR'                    Y02676 56250000
+.T32B    AIF   (&SGEDT3A(26) NE 0).T32C TEST IF MAX. FIXED LRECL Y02676 56300000
+.*                                    REQUIRED                   Y02676 56350000
+&SGEDT3A(26) SETA  80                 SET DEFAULT VALUE          Y02676 56400000
+&B       SETB  1                      SET DEFAULT TAKEN SWITCH   Y02676 56450000
+    MNOTE *,'           VSBASIC MAXIMUM FIXED LRECL = 80'        Y02676 56500000
+.T32C    AIF   ('SGEDT2C(26)' EQ 'FXDONLY').T32E TEST IF FXDONLY Y02676 56550000
+         AIF   (&SGEDT5A(26) NE 0).T32D TEST IF MAX. VAR NEEDED  Y02676 56600000
+&SGEDT5A(26) SETA 255                 SET DEFAULT VALUE          Y02676 56650000
+&B       SETB  1                      SET DEFAULT TAKEN SWITCH   Y02676 56700000
+    MNOTE *,'           VSBASIC MAXIMUM VAR LRECL = 255'         Y02676 56750000
+.T32D    AIF   ('&SGEDT2C(26)' NE 'VAR').T32E TEST IF RECFM=VAR  Y02676 56800000
+         AIF   (&SGEDT4A(26) NE 0).T32E TEST IF DFT. VAR NEEDED  Y02676 56850000
+&SGEDT4A(26) SETA 255                 SET DEFAULT VALUE          Y02676 56900000
+&B       SETB  1                      SET DEFAULT TAKEN SWITCH   Y02676 56950000
+    MNOTE *,'           VSBASIC DEFAULT VAR LRECL = 255'         Y02676 57000000
+.T32E    AIF   ('&SGEDT3C(26)' NE '').T32F TEST IF DEFAULT NEEDEDY02676 57050000
+&SGEDT3C(26) SETC 'CAPSONLY'          SET DEFAULT VALUE          Y02676 57100000
+&B       SETB  1                      SET DEFAULT TAKEN SWITCH   Y02676 57150000
+    MNOTE *,'           VSBASIC CONVERT = CAPSONLY'              Y02676 57200000
+.T32F   AIF   ('&SGEDT6C(26)' NE '').T32G TEST IF PRMPTER NEEDED Y02676 57250000
+&SGEDT6C(26) SETC 'VSBASIC'           SET PROMPTER DEFAULT       Y02676 57300000
+&B      SETB  1                       SET DEFAULT TAKEN SWITCH   Y02676 57350000
+    MNOTE *,'           VSBASIC PROMPTER NAME = VSBASIC'         Y02676 57400000
+.T32G   AIF   ('&SGEDT7C(26)' NE '').T32H TEST IF DEFAULT NEEDED Y02676 57450000
+&SGEDT7C(26) SETC 'INLIST'            SET INPUT SOURCE DEFAULT   Y02676 57500000
+&B      SETB  1                       SET DEFAULT TAKEN SWITCH   Y02676 57550000
+    MNOTE *,'           VSBASIC INPUT SOURCE = INLIST'           Y02676 57600000
+.T32H   AIF   ('&SGEDT8C(26)' NE '').T28 TEST IF DEFAULT NEEDED  Y02676 57650000
+&SGEDT8C(26) SETC 'ICDQRNME'          SET DEFAULT DATEXIT        Y02676 57700000
+&B      SETB  1                       SET DEFAULT TAKEN SWITCH   Y02676 57750000
+    MNOTE *,'           VSBASIC DATEXIT NAME = ICDQRNME'         Y02676 57800000
+.T28     AIF   (&B).EMEND          TEST DEFAULT TAKEN SWITCH     Y02676 57850000
+    MNOTE *,'            NONE - ALL WERE USER SPECIFIED'         Y02676 57900000
+         AGO   .EMEND                                            Y02676 57950000
+.E44 MNOTE *,'      EDIT DATA SET TYPE ATTRIBUTE DEFAULTS TO BE TAKEN'  58000000
+         AGO   .EDFALT                  GO PROCESS DEFAULTS      Y02676 58050000
+.EMEND   MEND                                                           58100000
+   UCLIN CDS.
+  REP MAC(EDIT) DISTLIB(AGENLIB)
+  ENDUCL.

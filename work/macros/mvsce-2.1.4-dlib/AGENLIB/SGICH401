@@ -1,0 +1,30 @@
+         MACRO                                                          00020004
+         SGICH401                                                       00050004
+.*                                                                      00055503
+.* $MAC(SGICH401) COMP(SC1BN) PROD(RACF):                               00061003
+.*                                                                      00066503
+.* DESCRIPTIVE NAME = DUMMY SYSGEN SUPPORT FOR RACF                     00072003
+.*                      MASTER SCHEDULER INITIALIZATION PROCESSING      00077503
+.*                                                                      00083003
+.* STATUS = OS/VS2 EBB1102                                              00088503
+.*                                                                      00094003
+.* CHANGE LEVEL = 0                                                     00100004
+.*                                                                      00150004
+.*                                                                      00250004
+         COPY  SGGBLPAK                                                 00300004
+&SGCTRLC(6) SETC ''               SET 'MOD' PARM NULL                   00350004
+&SGCTRLC(7) SETC '&SGCTRLC(32)'   SET VOLUME FOR LINKLIB                00400004
+&SGCTRLC(8) SETC '&SGCTRLC(31)'   SET UNIT NAME FOR LINKLIB             00450004
+&SGCTRLC(9) SETC 'LINKLIB'        SET DSNAME FOR LINKLIB                00500004
+&SGCTRLC(10) SETC ',LET'                                                00550004
+&SGCTRLC(11) SETC ''                                                    00600004
+         COPY  SGLEDPK1           PUNCH L.E. JCL DECK                   00650004
+         PUNCH '//AOSB3 DD DISP=SHR,VOL=(,RETAIN),DSNAME=SYS1.AOSB3'    00700004
+         COPY  SGLEDPK2                                                 00750004
+.*                                                                      00800004
+.*       ADD ICHSEC00 LOAD                                              00850004
+.*                                                                      00900004
+         PUNCH ' INCLUDE AOSB3(IEFBR14)'                                00950004
+         PUNCH ' NAME ICHSEC00(R)'                                      00980004
+         PUNCH '/*'                                                     01050004
+         MEND                                                           01100004

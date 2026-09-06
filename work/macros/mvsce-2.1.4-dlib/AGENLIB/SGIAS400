@@ -1,0 +1,36 @@
+         MACRO                                                          02000002
+         SGIAS400                                                       04000002
+***SGIAS400 - EXTERNAL WRITER SYSGEN MACRO***                           06000002
+*********************************************************************** 08000002
+*                                                                     * 10000002
+*        LINKEDIT EXTERNAL WRITER INTO SYS1.LPALIB                    * 12000002
+*                                                                     * 14000002
+*********************************************************************** 16000002
+         COPY  SGGBLPAK            DEFINE GLOBAL SYMBOLS                18000002
+&SGCTRLC(7)  SETC  '&SGCTRLC(20)'  SET VOLUME FOR LPALIB                20000002
+&SGCTRLC(8)  SETC  '&SGCTRLC(19)'  SET UNIT FOR LPALIB                  22000002
+&SGCTRLC(9)  SETC  'LPALIB'        SET DSNAME                           24000002
+&SGCTRLC(10) SETC  ',LET'          SET LINKEDIT PARAMETERS              26000002
+&SGCTRLC(11) SETC  ',RENT'         SET LINKEDIT PARAMETERS              28000002
+&SGCTRLC(12) SETC  ',REFR'         SET LINKEDIT PARAMETERS              30000002
+         COPY  SGLEDPK1                                                 32000002
+ PUNCH '//AOSB0 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSB0'         34000002
+         COPY  SGLEDPK2                                                 36000002
+         PUNCH ' INCLUDE AOSB0(IASXWR00,IASXSD81,IASXSD82)'             38000002
+         PUNCH ' ENTRY IASXWR00'                                        40000002
+         PUNCH ' NAME IASXWR00(R)'                                      42000002
+         PUNCH ' INCLUDE AOSB0(IEFSD087,IEFSD088,IEFSD089)'             44000002
+         PUNCH ' ENTRY IEFSD087'                                        46000002
+         PUNCH ' NAME IEFSD087(R)'                                      48000002
+         PUNCH ' INCLUDE AOSB0(IEFSD094,IEFSD095)'                      50000002
+         PUNCH ' INCLUDE AOSB0(IEFSD088,IEFSD089)'                      52000002
+         PUNCH ' ENTRY IEFSD094'                                        54000002
+         PUNCH ' NAME IEFSD094(R)'                                      56000002
+         PUNCH ' INCLUDE AOSB0(IEFSDTTE)'                               58000002
+         PUNCH ' ENTRY IEFSDTTE'                                        60000002
+         PUNCH ' NAME IEFSDTTE(R)'                                      62000002
+         PUNCH ' INCLUDE AOSB0(IEFSDXXX)'                               64000002
+         PUNCH ' ENTRY IEFSDXXX'                                        66000002
+         PUNCH ' NAME IEFSDXXX(R)'                                      68000002
+         PUNCH '/*  '                                                   70000002
+         MEND                                                           72000002

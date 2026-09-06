@@ -1,0 +1,48 @@
+.***** START OF SPECIFICATIONS **************************************   00100000
+.*                                                                      00200000
+.* MODULE NAME - SGASMPAK                                               00300000
+.*                                                                      00400000
+.* DESCRIPTIVE NAME - SGASMPAK                                          00500000
+.*                                                                      00600000
+.* COPYRIGHT - NONE                                                     00700000
+.*                                                                      00800000
+.* STATUS - CHANGE LEVEL 02                                             00900000
+.*                                                                      01000000
+.* FUNCTION -                                                           01100000
+.*       THE SGASMPAK MACRO IS USED TO SUPPLY AN EASY METHOD OF         01200000
+.*       USING THE ASMS PROCEDURE FOR ASSEMBLING INTERNAL MACROS.       01300000
+.*                                                                      01400000
+.* NOTES - N/A                                                          01500000
+.*                                                                      01600000
+.* MODULE TYPE - MACRO                                                  01700000
+.*                                                                      01800000
+.* ENTRY POINT - N/A                                                    01900000
+.*                                                                      02000000
+.* INPUT - THE FOLLOWING GLOBALS ARE PASSED TO THE SGASMPAK MACRO -     02100000
+.*                                                                      02200000
+.*             &SGCTRLA(1)  - JOB STEP COUNTER                          02300000
+.*             &SGCTRLC(5)  - DATA SET FOR OBJECT MODULES               02400000
+.*             &SGCTRLC(6)  - OBJECT MODULE NAME                        02500000
+.*             &SGCTRLC(41) - OUTPUT CLASS                              02600000
+.*                                                                      02700000
+.* OUTPUT - THE ASMS PROCEDURE                                          02800000
+.*       LOCALS USED ARE - NONE                                         02900000
+.*                                                                      03000000
+.* EXIT, NORMAL - N/A                                                   03100000
+.*                                                                      03200000
+.* EXIT, ERROR - N/A                                                    03300000
+.*                                                                      03400000
+.* EXTERNAL REFERENCES - N/A                                            03500000
+.*                                                                      03600000
+.* TABLES - N/A                                                         03700000
+.*                                                                      03800000
+.* MACROS - NONE                                                        03900000
+.*                                                                      04000000
+.* CHANGE ACTIVITY -                                                    04100000
+.*                                                                      04200000
+.****** END OF SPECIFICATIONS ***************************************   04300000
+&SGCTRLA(1)    SETA &SGCTRLA(1)+1       INCREMENT STEP COUNTER          04400000
+ PUNCH '//SG&SGCTRLA(1) EXEC ASMS,OBJ=&SGCTRLC(5),MOD=&SGCTRLC(6),CLASS*04500000
+               =&SGCTRLC(41)'                                           04600000
+ PUNCH '//SYSIN DD *'                                                   04700000
+ PUNCH '      PRINT ON,NODATA'                                          04800000

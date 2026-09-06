@@ -1,0 +1,688 @@
+         MACRO                                                          01000020
+         SGIKJ2EB                                                       02000020
+.*A121000-129000,131000-139000,141000-149000,151000-159000       A45714 02040021
+.*A161000-169000,171000-179000,181000-189000,191000-199000       A45714 02080021
+.*A201000-204000,206000-209000,211000-219000,221000-229000       A45714 02120021
+.*A231000-239000,241000-249000,251000-259000,262000-269000       A45714 02160021
+.*A271000-279000,281000-289000,291000-299000,301000-309000       A45714 02200021
+.*A311000-319000,321000-329000,331000-339000,341000-349000       A45714 02240021
+.*A351000-359000,361000-369000,371000-379000,381000-389000       A45714 02280021
+.*A391000-399000,401000-409000,411000-419000,421000-429000       A45714 02320021
+.*A431000-439000,441000-449000,451000-459000,461000-469000       A45714 02360021
+.*A471000-479000,481000-489000,491000-499000,501000-509000       A45714 02400021
+.*A511000-519000,521000-529000,531000-539000,541000-549000       A45714 02440021
+.*A551000-559000,561000-569000,571000-579000,581000-589000       A45714 02480021
+.*A591000-599000,601000-609000,611000-619000,621000-629000       A45714 02520021
+.*A631000-639000,641000-649000,651000-659000,661000-666000       A45714 02560021
+.*A690100-695300                                                 A45714 02600021
+.*C120000,130000,140000,150000,160000,170000,180000,190000       A45714 02640021
+.*C200000,205000,210000,220000,230000,240000,250000,630000       A45714 02680021
+.*C280000,290000,300000,301000,320000,330000,340000,350000       A45714 02720021
+.*C370000,380000,390000,400000,410000,420000,430000,440000       A45714 02760021
+.*C460000,470000,480000,490000,500000,510000,520000,530000       A45714 02800021
+.*C550000,560000,570000,580000,590000,600000,610000,620000       A45714 02840021
+.*C640000,650000,660000,670000,270000,360000,450000,540000       A45714 02880021
+.*D260000                                                        A45714 02920021
+.*C693400                                                         M0596 02960000
+.*C693300                                                        YM2741 02980000
+.*A123500-123600,173500-173600,223500-223600,275500-275600       Y02676 02980402
+.*A325500-325600,375500-375600,425500-425600,475500-475600       Y02676 02980802
+.*A525500-525600,597500-597600,646500-646600,666100-680999       Y02676 02981202
+.*A691204-691220                                                 Y02676 02981602
+.*C546000-547000,647000,666000                                   Y02676 02982002
+.*D680000                                                        Y02676 02982402
+.*C666000-666100                                               @YA03703 02990402
+.*C666500-680959                                               @YA03364 02994402
+.*C666200                                                      @YA04729 02996402
+.*  DELETE BASIC, IPLI TYPES                                   @ZA16366 02997400
+.*A695500                                                       ZA37606 02998401
+.********************************************************************   03000020
+.***  THIS MACRO SETS THE PARAMETER LIST UP FOR MACRO SGIKJ0EB. THE     04000020
+.***  PARAMETER LIST CONSISTS OF DATA SET TYPES AND THE BLOCKSIZES      05000020
+.***  SPECIFIED FOR EACH TYPE. IT IS USED TO CONSTRUCT A PROCESSOR      06000020
+.*** DATA TABLE FOR THE TSO EDIT COMMAND.                               07000020
+.********************************************************************   08000020
+         COPY SGGBLPAK                                                  09000020
+&SGCTRLC(6)    SETC      'IKJEBEPD'                                     10000020
+         COPY TSASMPAK                                                  11000020
+ PUNCH  '  SGIKJ0EB  DSTYPE=(PLIF,FORTE,FORTG,FORTH,TEXT,DATA,CLIST,   X12000021
+                        X'                                       A45714 12100021
+ PUNCH  '               CNTL,ASM,COBOL,FORTGI,GOFORT,PLI,VSBASIC,      X12200000
+                        X'                                     @ZA16366 12250000
+ PUNCH  '               &SGEDITC(1),                                   X12400021
+                           XXXXXXXXX'                            A45714 12500021
+ PUNCH  '               &SGEDITC(2),                                   X12600021
+                           XXXXXXXXX'                            A45714 12700021
+ PUNCH  '               &SGEDITC(3),                                   X12800021
+                           XXXXXXXXX'                            A45714 12900021
+ PUNCH  '               &SGEDITC(4),                                   X13000021
+                           XXXXXXXXX'                            A45714 13100021
+ PUNCH  '               &SGEDITC(5),                                   X13200021
+                           XXXXXXXXX'                            A45714 13300021
+ PUNCH  '               &SGEDITC(6),                                   X13400021
+                           XXXXXXXXX'                            A45714 13500021
+ PUNCH  '               &SGEDITC(7),                                   X13600021
+                           XXXXXXXXX'                            A45714 13700021
+ PUNCH  '               &SGEDITC(8),                                   X13800021
+                           XXXXXXXXX'                            A45714 13900021
+ PUNCH  '               &SGEDITC(9),                                   X14000021
+                           XXXXXXXXX'                            A45714 14100021
+ PUNCH  '               &SGEDITC(10)),                                 X14200021
+                            XXXXXXXXX'                           A45714 14300021
+ PUNCH  '               BLKSIZE=(&SGEDITA(11),                         X14400021
+                            XXXXXXXXX'                           A45714 14500021
+ PUNCH  '               &SGEDITA(12),                                  X14600021
+                            XXXXXXXXX'                           A45714 14700021
+ PUNCH  '               &SGEDITA(13),                                  X14800021
+                            XXXXXXXXX'                           A45714 14900021
+ PUNCH  '               &SGEDITA(14),                                  X15000021
+                            XXXXXXXXX'                           A45714 15100021
+ PUNCH  '               &SGEDITA(15),                                  X15200021
+                            XXXXXXXXX'                           A45714 15300021
+ PUNCH  '               &SGEDITA(16),                                  X15400021
+                            XXXXXXXXX'                           A45714 15500021
+ PUNCH  '               &SGEDITA(17),                                  X15600021
+                            XXXXXXXXX'                           A45714 15700021
+ PUNCH  '               &SGEDITA(18),                                  X15800021
+                            XXXXXXXXX'                           A45714 15900021
+ PUNCH  '               &SGEDITA(19),                                  X16000021
+                            XXXXXXXXX'                           A45714 16100021
+ PUNCH  '               &SGEDITA(20),                                  X16200021
+                            XXXXXXXXX'                           A45714 16300021
+ PUNCH  '               &SGEDITA(21),                                  X16400021
+                            XXXXXXXXX'                           A45714 16500021
+ PUNCH  '               &SGEDITA(22),                                  X16600021
+                            XXXXXXXXX'                           A45714 16700021
+.*   DELETE BASIC, IPLI                                        @ZA16366 16750000
+ PUNCH  '               &SGEDITA(25),                                  X17200021
+                            XXXXXXXXX'                           A45714 17300021
+ PUNCH  '               &SGEDITA(26),                                  X17350002
+                            XXXXXXXXX'                           Y02676 17360002
+ PUNCH  '               &SGEDITA(1),                                   X17400021
+                           XXXXXXXXX'                            A45714 17500021
+ PUNCH  '               &SGEDITA(2),                                   X17600021
+                           XXXXXXXXX'                            A45714 17700021
+ PUNCH  '               &SGEDITA(3),                                   X17800021
+                           XXXXXXXXX'                            A45714 17900021
+ PUNCH  '               &SGEDITA(4),                                   X18000021
+                           XXXXXXXXX'                            A45714 18100021
+ PUNCH  '               &SGEDITA(5),                                   X18200021
+                           XXXXXXXXX'                            A45714 18300021
+ PUNCH  '               &SGEDITA(6),                                   X18400021
+                           XXXXXXXXX'                            A45714 18500021
+ PUNCH  '               &SGEDITA(7),                                   X18600021
+                           XXXXXXXXX'                            A45714 18700021
+ PUNCH  '               &SGEDITA(8),                                   X18800021
+                           XXXXXXXXX'                            A45714 18900021
+ PUNCH  '               &SGEDITA(9),                                   X19000021
+                           XXXXXXXXX'                            A45714 19100021
+ PUNCH  '               &SGEDITA(10)),                                 X19200021
+                            XXXXXXXXX'                           A45714 19300021
+ PUNCH  '               RECFM=(&SGEDT2C(11),                           X19400021
+                            XXXXXXXXX'                           A45714 19500021
+ PUNCH  '               &SGEDT2C(12),                                  X19600021
+                            XXXXXXXXX'                           A45714 19700021
+ PUNCH  '               &SGEDT2C(13),                                  X19800021
+                            XXXXXXXXX'                           A45714 19900021
+ PUNCH  '               &SGEDT2C(14),                                  X20000021
+                            XXXXXXXXX'                           A45714 20100021
+ PUNCH  '               &SGEDT2C(15),                                  X20200021
+                            XXXXXXXXX'                           A45714 20300021
+ PUNCH  '               &SGEDT2C(16),                                  X20400021
+                            XXXXXXXXX'                           A45714 20500021
+ PUNCH  '               &SGEDT2C(17),                                  X20600021
+                            XXXXXXXXX'                           A45714 20700021
+ PUNCH  '               &SGEDT2C(18),                                  X20800021
+                            XXXXXXXXX'                           A45714 20900021
+ PUNCH  '               &SGEDT2C(19),                                  X21000021
+                            XXXXXXXXX'                           A45714 21100021
+ PUNCH  '               &SGEDT2C(20),                                  X21200021
+                            XXXXXXXXX'                           A45714 21300021
+ PUNCH  '               &SGEDT2C(21),                                  X21400021
+                            XXXXXXXXX'                           A45714 21500021
+ PUNCH  '               &SGEDT2C(22),                                  X21600021
+                            XXXXXXXXX'                           A45714 21700021
+.*  DELETE BASIC, IPLI                                         @ZA16366 21750000
+ PUNCH  '               &SGEDT2C(25),                                  X22200021
+                            XXXXXXXXX'                           A45714 22300021
+ PUNCH  '               &SGEDT2C(26),                                  X22350002
+                            XXXXXXXXX'                           Y02676 22360002
+ PUNCH  '               &SGEDT2C(1),                                   X22400021
+                           XXXXXXXXX'                            A45714 22500021
+ PUNCH  '               &SGEDT2C(2),                                   X22600021
+                           XXXXXXXXX'                            A45714 22700021
+ PUNCH  '               &SGEDT2C(3),                                   X22800021
+                           XXXXXXXXX'                            A45714 22900021
+ PUNCH  '               &SGEDT2C(4),                                   X23000021
+                           XXXXXXXXX'                            A45714 23100021
+ PUNCH  '               &SGEDT2C(5),                                   X23200021
+                           XXXXXXXXX'                            A45714 23300021
+ PUNCH  '               &SGEDT2C(6),                                   X23400021
+                           XXXXXXXXX'                            A45714 23500021
+ PUNCH  '               &SGEDT2C(7),                                   X23600021
+                           XXXXXXXXX'                            A45714 23700021
+ PUNCH  '               &SGEDT2C(8),                                   X23800021
+                           XXXXXXXXX'                            A45714 23900021
+ PUNCH  '               &SGEDT2C(9),                                   X24000021
+                           XXXXXXXXX'                            A45714 24100021
+ PUNCH  '               &SGEDT2C(10)),                                 X24200021
+                            XXXXXXXXX'                           A45714 24300021
+ PUNCH  '               DLRECLF=(&SGEDT2A(11),                         X24400021
+                            XXXXXXXXX'                           A45714 24500021
+ PUNCH  '               &SGEDT2A(12),                                  X24600021
+                            XXXXXXXXX'                           A45714 24700021
+ PUNCH  '               &SGEDT2A(13),                                  X24800021
+                            XXXXXXXXX'                           A45714 24900021
+ PUNCH  '               &SGEDT2A(14),                                  X25000021
+                            XXXXXXXXX'                           A45714 25100021
+ PUNCH  '               &SGEDT2A(15),                                  X25200021
+                            XXXXXXXXX'                           A45714 25300021
+ PUNCH  '               &SGEDT2A(16),                                  X25400021
+                            XXXXXXXXX'                           A45714 25500021
+ PUNCH  '               &SGEDT2A(17),                                  X25600021
+                            XXXXXXXXX'                           A45714 25700021
+ PUNCH  '               &SGEDT2A(18),                                  X25800021
+                            XXXXXXXXX'                           A45714 25900021
+ PUNCH  '               &SGEDT2A(19),                                  X26000021
+                            XXXXXXXXX'                           A45714 26100021
+ PUNCH  '               &SGEDT2A(20),                                  X26200021
+                            XXXXXXXXX'                           A45714 26300021
+ PUNCH  '               &SGEDT2A(21),                                  X26400021
+                            XXXXXXXXX'                           A45714 26500021
+ PUNCH  '               &SGEDT2A(22),                                  X26600021
+                            XXXXXXXXX'                           A45714 26700021
+.*  DELETE BASIC, IPLI                                         @ZA16366 26750000
+ PUNCH  '               &SGEDT2A(25),                                  X27400021
+                            XXXXXXXXX'                           A45714 27500021
+ PUNCH  '               &SGEDT2A(26),                                  X27550002
+                            XXXXXXXXX'                           Y02676 27560002
+ PUNCH  '               &SGEDT2A(1),                                   X27600021
+                           XXXXXXXXX'                            A45714 27700021
+ PUNCH  '               &SGEDT2A(2),                                   X27800021
+                           XXXXXXXXX'                            A45714 27900021
+ PUNCH  '               &SGEDT2A(3),                                   X28000021
+                           XXXXXXXXX'                            A45714 28100021
+ PUNCH  '               &SGEDT2A(4),                                   X28200021
+                           XXXXXXXXX'                            A45714 28300021
+ PUNCH  '               &SGEDT2A(5),                                   X28400021
+                           XXXXXXXXX'                            A45714 28500021
+ PUNCH  '               &SGEDT2A(6),                                   X28600021
+                           XXXXXXXXX'                            A45714 28700021
+ PUNCH  '               &SGEDT2A(7),                                   X28800021
+                           XXXXXXXXX'                            A45714 28900021
+ PUNCH  '               &SGEDT2A(8),                                   X29000021
+                           XXXXXXXXX'                            A45714 29100021
+ PUNCH  '               &SGEDT2A(9),                                   X29200021
+                           XXXXXXXXX'                            A45714 29300021
+ PUNCH  '               &SGEDT2A(10)),                                 X29400021
+                            XXXXXXXXX'                           A45714 29500021
+ PUNCH  '               MLRECLF=(&SGEDT3A(11),                         X29600021
+                            XXXXXXXXX'                           A45714 29700021
+ PUNCH  '               &SGEDT3A(12),                                  X29800021
+                            XXXXXXXXX'                           A45714 29900021
+ PUNCH  '               &SGEDT3A(13),                                  X30000021
+                            XXXXXXXXX'                           A45714 30100021
+ PUNCH  '               &SGEDT3A(14),                                  X30200021
+                            XXXXXXXXX'                           A45714 30300021
+ PUNCH  '               &SGEDT3A(15),                                  X30400021
+                            XXXXXXXXX'                           A45714 30500021
+ PUNCH  '               &SGEDT3A(16),                                  X30600021
+                            XXXXXXXXX'                           A45714 30700021
+ PUNCH  '               &SGEDT3A(17),                                  X30800021
+                            XXXXXXXXX'                           A45714 30900021
+ PUNCH  '               &SGEDT3A(18),                                  X31000021
+                            XXXXXXXXX'                           A45714 31100021
+ PUNCH  '               &SGEDT3A(19),                                  X31200021
+                            XXXXXXXXX'                           A45714 31300021
+ PUNCH  '               &SGEDT3A(20),                                  X31400021
+                            XXXXXXXXX'                           A45714 31500021
+ PUNCH  '               &SGEDT3A(21),                                  X31600021
+                            XXXXXXXXX'                           A45714 31700021
+ PUNCH  '               &SGEDT3A(22),                                  X31800021
+                            XXXXXXXXX'                           A45714 31900021
+.*  DELETE BASIC, IPLI                                         @ZA16366 32000000
+ PUNCH  '               &SGEDT3A(25),                                  X32400021
+                            XXXXXXXXX'                           A45714 32500021
+ PUNCH  '               &SGEDT3A(26),                                  X32550002
+                            XXXXXXXXX'                           Y02676 32560002
+ PUNCH  '               &SGEDT3A(1),                                   X32600021
+                           XXXXXXXXX'                            A45714 32700021
+ PUNCH  '               &SGEDT3A(2),                                   X32800021
+                           XXXXXXXXX'                            A45714 32900021
+ PUNCH  '               &SGEDT3A(3),                                   X33000021
+                           XXXXXXXXX'                            A45714 33100021
+ PUNCH  '               &SGEDT3A(4),                                   X33200021
+                           XXXXXXXXX'                            A45714 33300021
+ PUNCH  '               &SGEDT3A(5),                                   X33400021
+                           XXXXXXXXX'                            A45714 33500021
+ PUNCH  '               &SGEDT3A(6),                                   X33600021
+                           XXXXXXXXX'                            A45714 33700021
+ PUNCH  '               &SGEDT3A(7),                                   X33800021
+                           XXXXXXXXX'                            A45714 33900021
+ PUNCH  '               &SGEDT3A(8),                                   X34000021
+                           XXXXXXXXX'                            A45714 34100021
+ PUNCH  '               &SGEDT3A(9),                                   X34200021
+                           XXXXXXXXX'                            A45714 34300021
+ PUNCH  '               &SGEDT3A(10)),                                 X34400021
+                            XXXXXXXXX'                           A45714 34500021
+ PUNCH  '               DLRECLV=(&SGEDT4A(11),                         X34600021
+                            XXXXXXXXX'                           A45714 34700021
+ PUNCH  '               &SGEDT4A(12),                                  X34800021
+                            XXXXXXXXX'                           A45714 34900021
+ PUNCH  '               &SGEDT4A(13),                                  X35000021
+                            XXXXXXXXX'                           A45714 35100021
+ PUNCH  '               &SGEDT4A(14),                                  X35200021
+                            XXXXXXXXX'                           A45714 35300021
+ PUNCH  '               &SGEDT4A(15),                                  X35400021
+                            XXXXXXXXX'                           A45714 35500021
+ PUNCH  '               &SGEDT4A(16),                                  X35600021
+                            XXXXXXXXX'                           A45714 35700021
+ PUNCH  '               &SGEDT4A(17),                                  X35800021
+                            XXXXXXXXX'                           A45714 35900021
+ PUNCH  '               &SGEDT4A(18),                                  X36000021
+                            XXXXXXXXX'                           A45714 36100021
+ PUNCH  '               &SGEDT4A(19),                                  X36200021
+                            XXXXXXXXX'                           A45714 36300021
+ PUNCH  '               &SGEDT4A(20),                                  X36400021
+                            XXXXXXXXX'                           A45714 36500021
+ PUNCH  '               &SGEDT4A(21),                                  X36600021
+                            XXXXXXXXX'                           A45714 36700021
+ PUNCH  '               &SGEDT4A(22),                                  X36800021
+                            XXXXXXXXX'                           A45714 36900021
+.*   DELETE BASIC, IPLI                                        @ZA16366 36950000
+ PUNCH  '               &SGEDT4A(25),                                  X37400021
+                            XXXXXXXXX'                           A45714 37500021
+ PUNCH  '               &SGEDT4A(26),                                  X37550002
+                            XXXXXXXXX'                           Y02676 37560002
+ PUNCH  '               &SGEDT4A(1),                                   X37600021
+                           XXXXXXXXX'                            A45714 37700021
+ PUNCH  '               &SGEDT4A(2),                                   X37800021
+                           XXXXXXXXX'                            A45714 37900021
+ PUNCH  '               &SGEDT4A(3),                                   X38000021
+                           XXXXXXXXX'                            A45714 38100021
+ PUNCH  '               &SGEDT4A(4),                                   X38200021
+                           XXXXXXXXX'                            A45714 38300021
+ PUNCH  '               &SGEDT4A(5),                                   X38400021
+                           XXXXXXXXX'                            A45714 38500021
+ PUNCH  '               &SGEDT4A(6),                                   X38600021
+                           XXXXXXXXX'                            A45714 38700021
+ PUNCH  '               &SGEDT4A(7),                                   X38800021
+                           XXXXXXXXX'                            A45714 38900021
+ PUNCH  '               &SGEDT4A(8),                                   X39000021
+                           XXXXXXXXX'                            A45714 39100021
+ PUNCH  '               &SGEDT4A(9),                                   X39200021
+                           XXXXXXXXX'                            A45714 39300021
+ PUNCH  '               &SGEDT4A(10)),                                 X39400021
+                            XXXXXXXXX'                           A45714 39500021
+ PUNCH  '               MLRECLV=(&SGEDT5A(11),                         X39600021
+                            XXXXXXXXX'                           A45714 39700021
+ PUNCH  '               &SGEDT5A(12),                                  X39800021
+                            XXXXXXXXX'                           A45714 39900021
+ PUNCH  '               &SGEDT5A(13),                                  X40000021
+                            XXXXXXXXX'                           A45714 40100021
+ PUNCH  '               &SGEDT5A(14),                                  X40200021
+                            XXXXXXXXX'                           A45714 40300021
+ PUNCH  '               &SGEDT5A(15),                                  X40400021
+                            XXXXXXXXX'                           A45714 40500021
+ PUNCH  '               &SGEDT5A(16),                                  X40600021
+                            XXXXXXXXX'                           A45714 40700021
+ PUNCH  '               &SGEDT5A(17),                                  X40800021
+                            XXXXXXXXX'                           A45714 40900021
+ PUNCH  '               &SGEDT5A(18),                                  X41000021
+                            XXXXXXXXX'                           A45714 41100021
+ PUNCH  '               &SGEDT5A(19),                                  X41200021
+                            XXXXXXXXX'                           A45714 41300021
+ PUNCH  '               &SGEDT5A(20),                                  X41400021
+                            XXXXXXXXX'                           A45714 41500021
+ PUNCH  '               &SGEDT5A(21),                                  X41600021
+                            XXXXXXXXX'                           A45714 41700021
+ PUNCH  '               &SGEDT5A(22),                                  X41800021
+                            XXXXXXXXX'                           A45714 41900021
+.*  DELETE BASIC, IPLI                                         @ZA16366 41950000
+ PUNCH  '               &SGEDT5A(25),                                  X42400021
+                            XXXXXXXXX'                           A45714 42500021
+ PUNCH  '               &SGEDT5A(26),                                  X42550002
+                            XXXXXXXXX'                           Y02676 42560002
+ PUNCH  '               &SGEDT5A(1),                                   X42600021
+                           XXXXXXXXX'                            A45714 42700021
+ PUNCH  '               &SGEDT5A(2),                                   X42800021
+                           XXXXXXXXX'                            A45714 42900021
+ PUNCH  '               &SGEDT5A(3),                                   X43000021
+                           XXXXXXXXX'                            A45714 43100021
+ PUNCH  '               &SGEDT5A(4),                                   X43200021
+                           XXXXXXXXX'                            A45714 43300021
+ PUNCH  '               &SGEDT5A(5),                                   X43400021
+                           XXXXXXXXX'                            A45714 43500021
+ PUNCH  '               &SGEDT5A(6),                                   X43600021
+                           XXXXXXXXX'                            A45714 43700021
+ PUNCH  '               &SGEDT5A(7),                                   X43800021
+                           XXXXXXXXX'                            A45714 43900021
+ PUNCH  '               &SGEDT5A(8),                                   X44000021
+                           XXXXXXXXX'                            A45714 44100021
+ PUNCH  '               &SGEDT5A(9),                                   X44200021
+                           XXXXXXXXX'                            A45714 44300021
+ PUNCH  '               &SGEDT5A(10)),                                 X44400021
+                            XXXXXXXXX'                           A45714 44500021
+ PUNCH  '               TRNSLT=(&SGEDT3C(11),                          X44600021
+                            XXXXXXXXX'                           A45714 44700021
+ PUNCH  '               &SGEDT3C(12),                                  X44800021
+                            XXXXXXXXX'                           A45714 44900021
+ PUNCH  '               &SGEDT3C(13),                                  X45000021
+                            XXXXXXXXX'                           A45714 45100021
+ PUNCH  '               &SGEDT3C(14),                                  X45200021
+                            XXXXXXXXX'                           A45714 45300021
+ PUNCH  '               &SGEDT3C(15),                                  X45400021
+                            XXXXXXXXX'                           A45714 45500021
+ PUNCH  '               &SGEDT3C(16),                                  X45600021
+                            XXXXXXXXX'                           A45714 45700021
+ PUNCH  '               &SGEDT3C(17),                                  X45800021
+                            XXXXXXXXX'                           A45714 45900021
+ PUNCH  '               &SGEDT3C(18),                                  X46000021
+                            XXXXXXXXX'                           A45714 46100021
+ PUNCH  '               &SGEDT3C(19),                                  X46200021
+                            XXXXXXXXX'                           A45714 46300021
+ PUNCH  '               &SGEDT3C(20),                                  X46400021
+                            XXXXXXXXX'                           A45714 46500021
+ PUNCH  '               &SGEDT3C(21),                                  X46600021
+                            XXXXXXXXX'                           A45714 46700021
+ PUNCH  '               &SGEDT3C(22),                                  X46800021
+                            XXXXXXXXX'                           A45714 46900021
+.*  DELETE BASIC, IPLI                                         @ZA16366 46950000
+ PUNCH  '               &SGEDT3C(25),                                  X47400021
+                            XXXXXXXXX'                           A45714 47500021
+ PUNCH  '               &SGEDT3C(26),                                  X47550002
+                            XXXXXXXXX'                           Y02676 47560002
+ PUNCH  '               &SGEDT3C(1),                                   X47600021
+                           XXXXXXXXX'                            A45714 47700021
+ PUNCH  '               &SGEDT3C(2),                                   X47800021
+                           XXXXXXXXX'                            A45714 47900021
+ PUNCH  '               &SGEDT3C(3),                                   X48000021
+                           XXXXXXXXX'                            A45714 48100021
+ PUNCH  '               &SGEDT3C(4),                                   X48200021
+                           XXXXXXXXX'                            A45714 48300021
+ PUNCH  '               &SGEDT3C(5),                                   X48400021
+                           XXXXXXXXX'                            A45714 48500021
+ PUNCH  '               &SGEDT3C(6),                                   X48600021
+                           XXXXXXXXX'                            A45714 48700021
+ PUNCH  '               &SGEDT3C(7),                                   X48800021
+                           XXXXXXXXX'                            A45714 48900021
+ PUNCH  '               &SGEDT3C(8),                                   X49000021
+                           XXXXXXXXX'                            A45714 49100021
+ PUNCH  '               &SGEDT3C(9),                                   X49200021
+                           XXXXXXXXX'                            A45714 49300021
+ PUNCH  '               &SGEDT3C(10)),                                 X49400021
+                            XXXXXXXXX'                           A45714 49500021
+ PUNCH  '               CHKR=(&SGEDT4C(11),                            X49600021
+                            XXXXXXXXX'                           A45714 49700021
+ PUNCH  '               &SGEDT4C(12),                                  X49800021
+                            XXXXXXXXX'                           A45714 49900021
+ PUNCH  '               &SGEDT4C(13),                                  X50000021
+                            XXXXXXXXX'                           A45714 50100021
+ PUNCH  '               &SGEDT4C(14),                                  X50200021
+                            XXXXXXXXX'                           A45714 50300021
+ PUNCH  '               &SGEDT4C(15),                                  X50400021
+                            XXXXXXXXX'                           A45714 50500021
+ PUNCH  '               &SGEDT4C(16),                                  X50600021
+                            XXXXXXXXX'                           A45714 50700021
+ PUNCH  '               &SGEDT4C(17),                                  X50800021
+                            XXXXXXXXX'                           A45714 50900021
+ PUNCH  '               &SGEDT4C(18),                                  X51000021
+                            XXXXXXXXX'                           A45714 51100021
+ PUNCH  '               &SGEDT4C(19),                                  X51200021
+                            XXXXXXXXX'                           A45714 51300021
+ PUNCH  '               &SGEDT4C(20),                                  X51400021
+                            XXXXXXXXX'                           A45714 51500021
+ PUNCH  '               &SGEDT4C(21),                                  X51600021
+                            XXXXXXXXX'                           A45714 51700021
+ PUNCH  '               &SGEDT4C(22),                                  X51800021
+                            XXXXXXXXX'                           A45714 51900021
+.*  DELETE BASIC, IPLI                                         @ZA16366 51950000
+ PUNCH  '               &SGEDT4C(25),                                  X52400021
+                            XXXXXXXXX'                           A45714 52500021
+ PUNCH  '               &SGEDT4C(26),                                  X52550002
+                            XXXXXXXXX'                           Y02676 52560002
+ PUNCH  '               &SGEDT4C(1),                                   X52600021
+                           XXXXXXXXX'                            A45714 52700021
+ PUNCH  '               &SGEDT4C(2),                                   X52800021
+                           XXXXXXXXX'                            A45714 52900021
+ PUNCH  '               &SGEDT4C(3),                                   X53000021
+                           XXXXXXXXX'                            A45714 53100021
+ PUNCH  '               &SGEDT4C(4),                                   X53200021
+                           XXXXXXXXX'                            A45714 53300021
+ PUNCH  '               &SGEDT4C(5),                                   X53400021
+                           XXXXXXXXX'                            A45714 53500021
+ PUNCH  '               &SGEDT4C(6),                                   X53600021
+                           XXXXXXXXX'                            A45714 53700021
+ PUNCH  '               &SGEDT4C(7),                                   X53800021
+                           XXXXXXXXX'                            A45714 53900021
+ PUNCH  '               &SGEDT4C(8),                                   X54000021
+                           XXXXXXXXX'                            A45714 54100021
+ PUNCH  '               &SGEDT4C(9),                                   X54200021
+                           XXXXXXXXX'                            A45714 54300021
+ PUNCH  '               &SGEDT4C(10)),                                 X54400021
+                            XXXXXXXXX'                           A45714 54500021
+ PUNCH  '               USREXT=(,,,,,,,,,,,,,,                         X54600000
+                        X'                                       Y02676 54700002
+ PUNCH  '               &SGEDT5C(1),                                   X54800021
+                           XXXXXXXXX'                            A45714 54900021
+ PUNCH  '               &SGEDT5C(2),                                   X55000021
+                           XXXXXXXXX'                            A45714 55100021
+ PUNCH  '               &SGEDT5C(3),                                   X55200021
+                           XXXXXXXXX'                            A45714 55300021
+ PUNCH  '               &SGEDT5C(4),                                   X55400021
+                           XXXXXXXXX'                            A45714 55500021
+ PUNCH  '               &SGEDT5C(5),                                   X55600021
+                           XXXXXXXXX'                            A45714 55700021
+ PUNCH  '               &SGEDT5C(6),                                   X55800021
+                           XXXXXXXXX'                            A45714 55900021
+ PUNCH  '               &SGEDT5C(7),                                   X56000021
+                           XXXXXXXXX'                            A45714 56100021
+ PUNCH  '               &SGEDT5C(8),                                   X56200021
+                           XXXXXXXXX'                            A45714 56300021
+ PUNCH  '               &SGEDT5C(9),                                   X56400021
+                           XXXXXXXXX'                            A45714 56500021
+ PUNCH  '               &SGEDT5C(10)),                                 X56600021
+                            XXXXXXXXX'                           A45714 56700021
+ PUNCH  '               PRMTR=(&SGEDT6C(11),                           X56800021
+                            XXXXXXXXX'                           A45714 56900021
+ PUNCH  '               &SGEDT6C(12),                                  X57000021
+                            XXXXXXXXX'                           A45714 57100021
+ PUNCH  '               &SGEDT6C(13),                                  X57200021
+                            XXXXXXXXX'                           A45714 57300021
+ PUNCH  '               &SGEDT6C(14),                                  X57400021
+                            XXXXXXXXX'                           A45714 57500021
+ PUNCH  '               &SGEDT6C(15),                                  X57600021
+                            XXXXXXXXX'                           A45714 57700021
+ PUNCH  '               &SGEDT6C(16),                                  X57800021
+                            XXXXXXXXX'                           A45714 57900021
+ PUNCH  '               &SGEDT6C(17),                                  X58000021
+                            XXXXXXXXX'                           A45714 58100021
+ PUNCH  '               &SGEDT6C(18),                                  X58200021
+                            XXXXXXXXX'                           A45714 58300021
+ PUNCH  '               &SGEDT6C(19),                                  X58400021
+                            XXXXXXXXX'                           A45714 58500021
+ PUNCH  '               &SGEDT6C(20),                                  X58600021
+                            XXXXXXXXX'                           A45714 58700021
+ PUNCH  '               &SGEDT6C(21),                                  X58800021
+                            XXXXXXXXX'                           A45714 58900021
+ PUNCH  '               &SGEDT6C(22),                                  X59000021
+                            XXXXXXXXX'                           A45714 59100021
+.*  DELETE BASIC, IPLI                                         @ZA16366 59150000
+ PUNCH  '               &SGEDT6C(25),                                  X59600021
+                            XXXXXXXXX'                           A45714 59700021
+ PUNCH  '               &SGEDT6C(26),                                  X59750002
+                            XXXXXXXXX'                           Y02676 59760002
+ PUNCH  '               &SGEDT6C(1),                                   X59800021
+                           XXXXXXXXX'                            A45714 59900021
+ PUNCH  '               &SGEDT6C(2),                                   X60000021
+                           XXXXXXXXX'                            A45714 60100021
+ PUNCH  '               &SGEDT6C(3),                                   X60200021
+                           XXXXXXXXX'                            A45714 60300021
+ PUNCH  '               &SGEDT6C(4),                                   X60400021
+                           XXXXXXXXX'                            A45714 60500021
+ PUNCH  '               &SGEDT6C(5),                                   X60600021
+                           XXXXXXXXX'                            A45714 60700021
+ PUNCH  '               &SGEDT6C(6),                                   X60800021
+                           XXXXXXXXX'                            A45714 60900021
+ PUNCH  '               &SGEDT6C(7),                                   X61000021
+                           XXXXXXXXX'                            A45714 61100021
+ PUNCH  '               &SGEDT6C(8),                                   X61200021
+                           XXXXXXXXX'                            A45714 61300021
+ PUNCH  '               &SGEDT6C(9),                                   X61400021
+                           XXXXXXXXX'                            A45714 61500021
+ PUNCH  '               &SGEDT6C(10)),                                 X61600021
+                            XXXXXXXXX'                           A45714 61700021
+ PUNCH  '               DSNSRC=(&SGEDT7C(11),                          X61800021
+                            XXXXXXXXX'                           A45714 61900021
+ PUNCH  '               &SGEDT7C(12),                                  X62000021
+                            XXXXXXXXX'                           A45714 62100021
+ PUNCH  '               &SGEDT7C(13),                                  X62200021
+                            XXXXXXXXX'                           A45714 62300021
+ PUNCH  '               &SGEDT7C(14),                                  X62400021
+                            XXXXXXXXX'                           A45714 62500021
+ PUNCH  '               &SGEDT7C(15),                                  X62600021
+                            XXXXXXXXX'                           A45714 62700021
+ PUNCH  '               &SGEDT7C(16),                                  X62800021
+                            XXXXXXXXX'                           A45714 62900021
+ PUNCH  '               &SGEDT7C(17),                                  X63000021
+                            XXXXXXXXX'                           A45714 63100021
+ PUNCH  '               &SGEDT7C(18),                                  X63200021
+                            XXXXXXXXX'                           A45714 63300021
+ PUNCH  '               &SGEDT7C(19),                                  X63400021
+                            XXXXXXXXX'                           A45714 63500021
+ PUNCH  '               &SGEDT7C(20),                                  X63600021
+                            XXXXXXXXX'                           A45714 63700021
+ PUNCH  '               &SGEDT7C(21),                                  X63800021
+                            XXXXXXXXX'                           A45714 63900021
+ PUNCH  '               &SGEDT7C(22),                                  X64000021
+                            XXXXXXXXX'                           A45714 64100021
+.*  DELETE BASIC, IPLI                                         @ZA16366 64150000
+ PUNCH  '               &SGEDT7C(25),                                  X64600021
+                            XXXXXXXXX'                           Y02676 64650002
+ PUNCH  '               &SGEDT7C(26),                                  X64660002
+                            XXXXXXXXX'                           Y02676 64700002
+ PUNCH  '               &SGEDT7C(1),                                   X64800021
+                           XXXXXXXXXX'                          A45714  64900002
+ PUNCH  '               &SGEDT7C(2),                                   X65000021
+                           XXXXXXXXXX'                          A45714  65100002
+ PUNCH  '               &SGEDT7C(3),                                   X65200021
+                           XXXXXXXXXX'                          A45714  65300002
+ PUNCH  '               &SGEDT7C(4),                                   X65400021
+                           XXXXXXXXXX'                          A45714  65500002
+ PUNCH  '               &SGEDT7C(5),                                   X65600021
+                           XXXXXXXXXX'                          A45714  65700002
+ PUNCH  '               &SGEDT7C(6),                                   X65800021
+                           XXXXXXXXXX'                          A45714  65900002
+ PUNCH  '               &SGEDT7C(7),                                   X66000021
+                           XXXXXXXXXX'                          A45714  66100002
+ PUNCH  '               &SGEDT7C(8),                                   X66200021
+                           XXXXXXXXXX'                          A45714  66300002
+ PUNCH  '               &SGEDT7C(9),                                   X66400021
+                           XXXXXXXXXX'                          A45714  66500002
+ PUNCH  '               &SGEDT7C(10)),                                 X66600002
+                           XXXXXXXXXXX'                        @YA04729 66620002
+ PUNCH  '               DATEXIT=(&SGEDT8C(11),                         X66650002
+                        XXXXXXXXXXXXX'                           Y02676 66700002
+ PUNCH  '               &SGEDT8C(12),                                  X66750002
+                        XXXXXXXXXXXXX'                           Y02676 66800002
+ PUNCH  '               &SGEDT8C(13),                                  X66850002
+                        XXXXXXXXXXXXX'                           Y02676 66900002
+ PUNCH  '               &SGEDT8C(14),                                  X66950002
+                        XXXXXXXXXXXXX'                           Y02676 67000002
+ PUNCH  '               &SGEDT8C(15),                                  X67050002
+                        XXXXXXXXXXXXX'                           Y02676 67100002
+ PUNCH  '               &SGEDT8C(16),                                  X67150002
+                        XXXXXXXXXXXXX'                           Y02676 67200002
+ PUNCH  '               &SGEDT8C(17),                                  X67250002
+                        XXXXXXXXXXXXX'                           Y02676 67300002
+ PUNCH  '               &SGEDT8C(18),                                  X67350002
+                        XXXXXXXXXXXXX'                           Y02676 67400002
+ PUNCH  '               &SGEDT8C(19),                                  X67450002
+                        XXXXXXXXXXXXX'                           Y02676 67500002
+ PUNCH  '               &SGEDT8C(20),                                  X67550002
+                        XXXXXXXXXXXXX'                           Y02676 67600002
+ PUNCH  '               &SGEDT8C(21),                                  X67650002
+                        XXXXXXXXXXXXX'                           Y02676 67700002
+ PUNCH  '               &SGEDT8C(22),                                  X67750002
+                        XXXXXXXXXXXXX'                           Y02676 67800002
+.*  DELETE BASIC, IPLI                                         @ZA16366 67850000
+ PUNCH  '               &SGEDT8C(25),                                  X67970002
+                        XXXXXXXXXXXXX'                           Y02676 67980002
+ PUNCH  '               &SGEDT8C(26),                                  X67990002
+                        XXXXXXXXXXXXX'                           Y02676 67992002
+ PUNCH  '               &SGEDT8C(1),                                   X67994002
+                       XXXXXXXXXXXXX'                            Y02676 67996002
+ PUNCH  '               &SGEDT8C(2),                                   X67998002
+                       XXXXXXXXXXXXX'                            Y02676 67998402
+ PUNCH  '               &SGEDT8C(3),                                   X67998802
+                       XXXXXXXXXXXXX'                            Y02676 67999202
+ PUNCH  '               &SGEDT8C(4),                                   X67999602
+                       XXXXXXXXXXXXX'                            Y02676 67999702
+ PUNCH  '               &SGEDT8C(5),                                   X67999802
+                       XXXXXXXXXXXXX'                            Y02676 67999902
+ PUNCH  '               &SGEDT8C(6),                                   X68049902
+                       XXXXXXXXXXXXX'                            Y02676 68059902
+ PUNCH  '               &SGEDT8C(7),                                   X68069902
+                       XXXXXXXXXXXXX'                            Y02676 68079902
+ PUNCH  '               &SGEDT8C(8),                                   X68089902
+                       XXXXXXXXXXXXX'                            Y02676 68091902
+ PUNCH  '               &SGEDT8C(9),                                   X68093902
+                       XXXXXXXXXXXXX'                            Y02676 68095902
+ PUNCH  '               &SGEDT8C(10))'                           Y02676 68097902
+ PUNCH  ' END'                                                          68099902
+ PUNCH  '/*'                                                            69000020
+.****************************************************************A45714 69010021
+.*    THIS MACRO SETS THE PARAMETER LIST UP FOR MACRO SGIKJ0E2.  A45714 69020021
+.*    THE PARAMETER LIST CONSISTS OF DATA SET TYPES AND USER EXITA45714 69030021
+.*    NAMES SPECIFIED FOR EACH USER TYPE. IT IS USED TO CONSTRUCTA45714 69040021
+.*    THE INITIALIZATION ROUTINE FOR THE TSO EDIT COMMAND.       A45714 69050021
+.****************************************************************A45714 69060021
+&SGCTRLC(6)    SETC      'IKJEBEIN'                              A45714 69070021
+         COPY TSASMPAK                                           A45714 69080021
+ PUNCH  '  SGIKJ0E2  DST=(PLI,COBOL,ASM,TEXT,DATA,CLIST,CNTL,GOFORT,   X69090000
+                        X'                                     @ZA16366 69096000
+ PUNCH  '               FORTE,FORTG,FORTGI,FORTH,PLIF,VSBASIC,         X69102000
+                        X'                                     @ZA16366 69108000
+ PUNCH  '               &SGEDITC(1),                                   X69130021
+                           XXXXXXXXX'                            A45714 69140021
+ PUNCH  '               &SGEDITC(2),                                   X69150021
+                           XXXXXXXXX'                            A45714 69160021
+ PUNCH  '               &SGEDITC(3),                                   X69170021
+                           XXXXXXXXX'                            A45714 69180021
+ PUNCH  '               &SGEDITC(4),                                   X69190021
+                           XXXXXXXXX'                            A45714 69200021
+ PUNCH  '               &SGEDITC(5),                                   X69210021
+                           XXXXXXXXX'                            A45714 69220021
+ PUNCH  '               &SGEDITC(6),                                   X69230021
+                           XXXXXXXXX'                            A45714 69240021
+ PUNCH  '               &SGEDITC(7),                                   X69250021
+                           XXXXXXXXX'                            A45714 69260021
+ PUNCH  '               &SGEDITC(8),                                   X69270021
+                           XXXXXXXXX'                            A45714 69280021
+ PUNCH  '               &SGEDITC(9),                                   X69290021
+                           XXXXXXXXX'                            A45714 69300021
+ PUNCH  '               &SGEDITC(10)),                                 X69310021
+                            XXXXXXXXX'                           A45714 69320021
+ PUNCH  '               SUBFD=(&SGEDT5C(1),                      YM2741X69330000
+                           XXXXXXXXX'                             M0596 69340000
+ PUNCH  '               &SGEDT5C(2),                                   X69350021
+                           XXXXXXXXX'                            A45714 69360021
+ PUNCH  '               &SGEDT5C(3),                                   X69370021
+                           XXXXXXXXX'                            A45714 69380021
+ PUNCH  '               &SGEDT5C(4),                                   X69390021
+                           XXXXXXXXX'                            A45714 69400021
+ PUNCH  '               &SGEDT5C(5),                                   X69410021
+                           XXXXXXXXX'                            A45714 69420021
+ PUNCH  '               &SGEDT5C(6),                                   X69430021
+                           XXXXXXXXX'                            A45714 69440021
+ PUNCH  '               &SGEDT5C(7),                                   X69450021
+                           XXXXXXXXX'                            A45714 69460021
+ PUNCH  '               &SGEDT5C(8),                                   X69470021
+                           XXXXXXXXX'                            A45714 69480021
+ PUNCH  '               &SGEDT5C(9),                                   X69490021
+                           XXXXXXXXX'                            A45714 69500021
+ PUNCH  '               &SGEDT5C(10))'                           A45714 69510021
+ PUNCH  ' END'                                                   A45714 69520021
+ PUNCH  '/*'                                                     A45714 69530021
+&SGCTRLC(6) SETC ''                RESET MODULE NAME            ZA37606 69550001
+         MEND                                                           70000020

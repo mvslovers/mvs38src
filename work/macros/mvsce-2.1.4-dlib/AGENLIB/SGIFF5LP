@@ -1,0 +1,26 @@
+         MACRO                                                          00050002
+         SGIFF5LP                                                       00100002
+         COPY  SGGBLPAK                                                 00150002
+.* A009020                                                    LF YM6974 00150402
+.* A005100-006000,C009200,A009300                             LF YM4325 00152002
+.* A000000-999999                                             LF Y02971 00160002
+.*  THIS MACRO, NEW FOR VS2/R2, PRODUCES IEBCOPY STATEMENTS ONLY FOR    00200002
+.*  THE LPALIB.  THIS FUNCTION WAS PREVIOUSLY DONE AT THE BEGINNING     00250002
+.*  OF SGIFF5LS.  THE PUNCH STATEMENTS HAVE BEEN UPDATED TO REFLECT     00300002
+.*  MODULE CONSOLIDATIONS.                                              00350002
+.*                                                                      00400002
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOSG0'                   Y01007 00500002
+.*  IF GRAPHICS IS NOT IN SYSTEM, ONLY TASK TERMINATION/RECOVERY YM4325 00510002
+.*  IS NEEDED.                                                LF YM4325 00530002
+         PUNCH ' SELECT MEMBER=(IGG0203Z,IGG0213Z)'           LF YM4325 00550002
+         AIF   (NOT &SGMENTB(12)).LP10                        LF YM4325 00600002
+.*  DO NOT LOAD BFRMGT MODULES UNLESS 2250 IS AVAILABLE                 00660002
+         AIF   (NOT &SGDCLSB(9)).LP05                                   00700002
+         PUNCH ' SELECT MEMBER=(IGC0007A,IGC0207A)'                     00750002
+.LP05    PUNCH ' SELECT MEMBER=(IGC0007C,IGC0007D,IGC0007E)'            00900002
+         PUNCH ' SELECT MEMBER=(IGC0107C,IGC0107D)'           LF YM6974 00902002
+         PUNCH ' SELECT MEMBER=(IGG019OA,IGG019OB,IGG019OC)'            00910002
+         PUNCH ' SELECT MEMBER=(IGG019OE,IGG019OJ)'                     00912002
+         PUNCH ' SELECT MEMBER=(IGG0193Y,IGG0203Y)'           LF YM4325 00920002
+.LP10    ANOP                                                 LF YM4325 00930002
+         MEND                                                           00950002

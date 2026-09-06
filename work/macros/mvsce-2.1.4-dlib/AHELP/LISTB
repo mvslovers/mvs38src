@@ -1,0 +1,18 @@
+)F LISTBC FUNCTION -                                                    05000000
+  THIS COMMAND  IS USED TO LIST THE MESSAGES SAVED IN THE BROADCAST     10000000
+  DATA SET.  EITHER THE GENERAL MESSAGES (NOTICES) INTENDED FOR ALL     15000000
+  USERS,  OR UNIQUE MESSAGES (MAIL) INTENDED FOR SPECIFIC USERS, OR     20000000
+  BOTH SETS,  CAN BE LISTED.                                            25000000
+)X SYNTAX -                                                             30000000
+         LISTBC   MAIL / NOMAIL                                         35000000
+                  NOTICES / NONOTICES                                   40000000
+  REQUIRED - NONE                                                       45000000
+  DEFAULTS - MAIL, NOTICES                                              50000000
+  ALIAS    - LISTB                                                      55000000
+)O OPERANDS -                                                           60000000
+))MAIL     - REQUESTS LISTING THE MESSAGES SPECIFIC FOR THE USER        65000000
+             WHO ENTERED THE LISTBC COMMAND.                            70000000
+))NOMAIL   - SUPPRESSES THE PRINTING OF USER MESSAGES.                  75000000
+))NOTICES  - REQUESTS LISTING OF MESSAGES WHICH ARE FOR GENERAL         80000000
+             BROADCAST TO ALL USERS.                                    85000000
+))NONOTICES- SUPPRESSES THE PRINTING OF BROADCAST MESSAGES.             90000000

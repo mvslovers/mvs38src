@@ -1,0 +1,70 @@
+)F FUNCTION -                                                           02000020
+  THE LOGON COMMAND INITIATES A TERMINAL JOB.                           04000020
+)X SYNTAX -                                                             06000020
+         LOGON   'ID' ACCT('ACCOUNT') PROC('PROCEDURE') SIZE('INTEGER') 08000020
+                 PERFORM('INTEGER') GROUP('GROUP-ID') OIDCARD           10000003
+                 MAIL/NOMAIL NOTICES/NONOTICES                          10010003
+           OR                                                           10050002
+         LOGON   'ID'  RECONNECT                                        10100002
+  REQUIRED - 'ID'                                                       12000020
+  DEFAULTS - ACCOUNT - NULL STRING                                      14000020
+             PERFORM - SUPPLIED BY OPTIMIZER                            14050002
+             GROUP   - DEFAULT FROM RACF PROFILE                        16000003
+             MAIL                                                       16050003
+             NOTICES                                                    16100003
+        - WHEN USING TERMINALS SUPPORTED BY TSO/VTAM,                   16150003
+          THE LOGON FROM THESE DEVICES WILL BE INSTALLATION DEFINED.    16200003
+          SEE YOUR SYSTEM PROGRAMMER FOR YOUR INSTALLATIONS             16250003
+          REQUIREMENTS.                                                 16300003
+)O OPERANDS -                                                           16350003
+  'ID'     - IS A USER'S IDENTIFICATION TO THE SYSTEM. THE 'ID'         16400003
+             CONSISTS OF 'USERID/CURRENT-PASSWORD/NEW-PASSWORD'.        16450003
+             IF THE USER DOES NOT HAVE PASSWORDS THEN                   16500003
+             '/CURRENT-PASSWORD' IS OPTIONAL AND '/NEW-PASSWORD' IS     16550003
+             IGNORED. '/NEW-PASSWORD' IS VALID ONLY FOR RACF USERS. IT  16600003
+             WILL BECOME THE '/CURRENT-PASSWORD' THE NEXT TIME THE      16650003
+             USER LOGS ON. IT WILL BE IGNORED FOR NON RACF USERS.       16700003
+))ACCT('ACCOUNT')                                                       24000020
+           - 'ACCOUNT' IS THE INFORMATION REQUIRED BY THE INSTALLATION  26000020
+             ACCOUNTING ROUTINES.                                       28000020
+))PROC('PROCEDURE')                                                     30000020
+           - 'PROCEDURE' IS THE NAME OF A CATALOGUED PROCEDURE WHICH    32000020
+             IDENTIFIES THE SYSTEM RESOURCES REQUIRED FOR A TERMINAL    34000020
+             JOB.                                                       36000020
+))SIZE('INTEGER')                                                       38000020
+           - 'INTEGER' IS THE UPPER BOUND ON THE SIZE OF A VARIABLE     40000002
+             CONDITIONAL GETMAIN WHICH CAN BE SATISFIED.                42000002
+))PERFORM('INTEGER')                                                    42050002
+           - 'INTEGER' IS A NUMBER FROM 1 TO 255, INCLUSIVE,            42100002
+             INDICATING A PERFORMANCE GROUP FOR THIS SESSION.           42150002
+))GROUP('GROUP-ID')                                                     42200003
+           - 'GROUP-ID' IS VALID ONLY FOR RACF DEFINED USERS.           42250003
+             IT IS A 1 TO 8 CHARACTER ID COMPOSED OF ALPHANUMERIC       42300003
+             AND/OR NATIONAL CHARACTERS, THE FIRST OF WHICH MUST BE     42350003
+             ALPHABETIC OR NATIONAL. IT WILL BE IGNORED FOR NON RACF    42400003
+             USERS.                                                     42450003
+))OIDCARD  - 'OIDCARD' IS VALID ONLY FOR RACF DEFINED USERS.            42500003
+             SPECIFYING 'OIDCARD' ON LOGON WILL CAUSE THE USER          42550003
+             TO BE PROMPTED FOR AN OPERATOR IDENTIFICATION CARD,        42600003
+             EVEN IF AN OIDCARD IS NOT REQUIRED.  THE OPERATOR          42650003
+             IDENTIFICATION CARD WILL ONLY BE ACCEPTED AFTER THE        42700003
+             USER HAS BEEN PROMPTED TO ENTER ONE.  IT WILL BE           42750003
+             IGNORED FOR NON RACF USERS.                                42800003
+))MAIL     - SPECIFIES THAT ALL MESSAGES QUEUED ON THE BROADCAST DATA   44000020
+             SET FOR THE USER ARE TO BE TRANSMITTED TO THE TERMINAL     46000020
+             DURING LOGON PROCESSING AND THEN DELETED FROM THE DATA SET 48000020
+))NOMAIL   - SPECIFIES THAT THE MESSAGES QUEUED ON THE BROADCAST DATA   50000020
+             SET FOR THE USER ARE TO REMAIN QUEUED THERE FOR LATER      52000020
+             TRANSMISSION.                                              54000020
+))NOTICES  - SPECIFIES THAT THE MESSAGES QUEUED ON THE BROADCAST DATA   56000020
+             SET WHICH ARE OF INTEREST TO ALL USERS SHOULD BE           58000020
+             TRANSMITTED TO THE TERMINAL DURING LOGON PROCESSING.       60000020
+))NONOTICES                                                             62000020
+           - SPECIFIES THAT THE MESSAGES QUEUED ON THE BROADCAST DATA   64000020
+             SET WHICH ARE OF INTEREST TO ALL USERS SHOULD NOT BE       66000020
+             TRANSMITTED TO THE TERMINAL DURING LOGON PROCESSING.       68000020
+))RECONNECT                                                             68050002
+          - IF A USER'S LINE HAS BEEN DISCONNECTED HE MAY RELOGON USING 68100002
+            THIS OPERAND - WHICH IS MUTUALLY EXCLUSIVE OF ALL OTHERS.   68150002
+            THE PASSWORD, IF ANY, USED WITH THE DISCONNECTED SESSION    68160002
+            MUST BE USED WITH LOGON  'ID'  RECONNECT.                   68200002

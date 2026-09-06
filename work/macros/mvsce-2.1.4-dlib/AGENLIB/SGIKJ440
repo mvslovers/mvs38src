@@ -1,0 +1,184 @@
+         MACRO                                                          00052002
+         SGIKJ440                                                       00054002
+.*                                                             @YM06796 00054102
+.*                                                             @YM04996 00061102
+.*                                                             @YM03630 00068102
+.*                                                             @YM02225 00071102
+.*                                                             @YM03705 00075102
+.*A000000-999999                                                 Y02953 00082102
+         COPY  SGGBLPAK                                                 00085102
+&SGCTRLC(7)  SETC  '&SGCTRLC(32)'      SET VOLUME FOR LINKLIB           00092102
+&SGCTRLC(8)  SETC  '&SGCTRLC(31)'      SET UNIT NAME FOR LINKLIB        00100002
+&SGCTRLC(9)  SETC  'LINKLIB'           SET DSNAME                       00150002
+&SGCTRLC(10) SETC  ',LET'                                               00200002
+&SGCTRLC(11) SETC  ',RENT'                                     @YM06796 00250002
+         COPY  SGLEDPK1                 PUNCH L. E. JCL DECK            00300002
+  PUNCH '//AOST4 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOST4'        00400002
+  PUNCH '//ACMDLIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.ACMDLIB'    00450002
+         COPY  SGLEDPK2                                                 00500002
+.********************************************************************** 00550002
+.*                                                                      00600002
+.*    ACCOUNT                                                           00650002
+.*                                                                      00700002
+.********************************************************************** 00750002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA00,IKJEFA01)'                 00800002
+         PUNCH '    ENTRY IKJEFA00'                                     00850002
+         PUNCH ' NAME ACCOUNT(R)'                                       00900002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA30,IKJEFA31,IKJEFA51)'        00950002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA52,IKJEFA54)'                 01000002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA32,IKJEFA55)'                 01050002
+         PUNCH '    ENTRY IKJEFA30'                                     01100002
+         PUNCH ' NAME IKJEFA30(R)'                                      01150002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA40,IKJEFA41,IKJEFA42)'        01200002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA52,IKJEFA51,IKJEFA55)'        01250002
+         PUNCH '    ENTRY IKJEFA40'                                     01300002
+         PUNCH ' NAME IKJEFA40(R)'                                      01350002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA10,IKJEFA11,IKJEFA12)'        01400002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA13,IKJEFA51)'                 01450002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA52,IKJEFA53,IKJEFA55)'        01500002
+         PUNCH '    ENTRY IKJEFA10'                                     01550002
+         PUNCH ' NAME IKJEFA10(R)'                                      01600002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA20,IKJEFA21,IKJEFA22)'        01650002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA23,IKJEFA24,IKJEFA55)'        01700002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA51,IKJEFA52,IKJEFA53)'        01750002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA54)'                          01800002
+         PUNCH '    ENTRY IKJEFA20'                                     01850002
+         PUNCH ' NAME IKJEFA20(R)'                                      01900002
+         PUNCH '    INCLUDE AOST4(IKJRBBCR)'                            01950002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA51)'                 @YM03705 01955002
+         PUNCH '    INCLUDE AOST4(IKJEFF02)'                            01960002
+         PUNCH '    INCLUDE AOST4(IKJRBBCM,IEEVSDIO)'                   02000002
+         PUNCH '    ENTRY IKJRBBCR'                                     02050002
+         PUNCH ' NAME IKJRBBCR(R)'                                      02100002
+.********************************************************************** 02410002
+.*                                                                      02420002
+.*    UADS REFORM                                                       02430002
+.*                                                                      02440002
+.********************************************************************** 02442002
+         PUNCH '    INCLUDE AOST4(IKJRBBU0) '                           02444002
+         PUNCH '    INCLUDE AOST4(IKJRBBU1) '                           02446002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA51) '                         02448002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA52) '                         02448402
+         PUNCH '    INCLUDE ACMDLIB(IKJEFA53) '                         02448802
+         PUNCH ' ALIAS UADSREFM '                              @YM04996 02449002
+         PUNCH ' ENTRY IKJRBBU0 '                                       02449202
+         PUNCH ' NAME  IKJRBBU0(R) '                                    02449602
+.********************************************************************** 02450002
+.*                                                                      02500002
+.*    OPERATOR SEND                                                     02550002
+.*                                                                      02600002
+.********************************************************************** 02650002
+         PUNCH '    INCLUDE AOST4(IEEVSEND)'                            02700002
+         PUNCH '    INCLUDE AOST4(IEEVSND2,IEEVSND3)'                   02750002
+         PUNCH '    INCLUDE AOST4(IEEVSND4,IEEVSDIO)'                   02800002
+         PUNCH '    INCLUDE AOST4(IEEVSND6)'                            02850002
+         PUNCH '    INCLUDE AOST4(IEEVSND8,IEEVSND9)'                   02900002
+         PUNCH '    INCLUDE AOST4(IKJEES20)'                            02950002
+         PUNCH '    ENTRY IEEVSEND'                                     03050002
+         PUNCH ' NAME IEEVSEND(R)'                                      03100002
+.*     SEND FOR ACCOUNT USE                                             03150002
+         PUNCH '   INCLUDE ACMDLIB(IKJEES40)'                           03200002
+         PUNCH '   INCLUDE AOST4(IKJEES20)'                             03210002
+         PUNCH '   INCLUDE AOST4(IEEVSDIO)'                             03250002
+         PUNCH '   ORDER IKJEES40(P),IKJEES20,IEEVSDIO'                 03300002
+         PUNCH '   ENTRY IKJEES40'                                      03350002
+         PUNCH ' NAME IKJEES40(R)'                                      03400002
+.*    LISTBC FOR LOGON                                                  08550002
+         PUNCH '    INCLUDE AOST4(IKJEES70,IKJEES74,IKJEES75)'          08600002
+         PUNCH '    ENTRY IKJEES73'                                     08650002
+         PUNCH ' NAME IKJEES73(R)'                                      08700002
+         PUNCH '/* '                                           @YM06796 08710002
+&SGCTRLC(7)  SETC  '&SGCTRLC(32)'      SET VOLUME FOR LINKLIB  @YM06796 08720002
+&SGCTRLC(8)  SETC  '&SGCTRLC(31)'      SET UNIT FOR LINKLIB    @YM06796 08730002
+&SGCTRLC(9)  SETC  'LINKLIB'           SET DSNAME              @YM06796 08740002
+&SGCTRLC(10) SETC  ',LET'                                      @YM06796 08750002
+         COPY  SGLEDPK1                 PUNCH L. E. JCL DECK   @YM06796 08760002
+  PUNCH '//AOST4 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOST4'        08770002
+.*                                                             @YM06796 08780002
+         COPY  SGLEDPK2                                        @YM06796 08790002
+.**************************************************************@YM02225 08800002
+.*                                                             @YM02225 08900002
+.*    TSO LOAD LIST INITIALIZATION                             @YM02225 09000002
+.*                                                             @YM02225 09100002
+.**************************************************************@YM02225 09200002
+         PUNCH '    INCLUDE AOST4(IKJEFXSR)'                   @YM02225 09300002
+         PUNCH ' NAME IKJEFXSR(R)'                             @YM02225 09400002
+         PUNCH '/* '                                                    10200002
+&SGCTRLC(7)    SETC      '&SGCTRLC(32)'                                 10202002
+&SGCTRLC(8)    SETC      '&SGCTRLC(31)'                                 10204002
+&SGCTRLC(9)    SETC      'LINKLIB'                                      10206002
+&SGCTRLC(10)   SETC      ',LET'                                         10208002
+&SGCTRLC(11)   SETC      ',RENT'                                        10208402
+         COPY  SGLEDPK1                                                 10209602
+  PUNCH '//AOSB3 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSB3'        10209702
+         COPY  SGLEDPK2                                                 10209902
+.*   IEFBR14 IS ADDED TO LINKLIB FOR TSO C-LIST COMPATIBILITY           10213202
+         PUNCH '    INCLUDE AOSB3(IEFBR14)'                             10215202
+         PUNCH ' NAME IEFBR14(R)'                                       10216002
+         PUNCH '/* '                                                    10216402
+         AIF ('&SGCMDSC(1)' EQ 'NO').TSOCMD       IF TSO COMMANDS ARE   10216702
+.*                                                NOT WANTED - SKIP     10220002
+.*                                                TO TSOCMD             10230002
+&SGCTRLC(7)    SETC      '&SGCTRLC(32)'                                 10250002
+&SGCTRLC(8)    SETC      '&SGCTRLC(31)'                                 10300002
+&SGCTRLC(9)    SETC      'LINKLIB'                                      10350002
+&SGCTRLC(10)   SETC      ',LET'                                         10400002
+&SGCTRLC(11)   SETC      ',REUS'                                        10450002
+&SGCTRLC(12)   SETC      ',RENT'                                        10500002
+         COPY  SGLEDPK1                                                 10600002
+  PUNCH '//AOST4 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOST4'        10650002
+  PUNCH '//ACMDLIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.ACMDLIB'    10660002
+         COPY  SGLEDPK2                                                 10700002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFF50)'                          10810002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFF55)'                          10812002
+         PUNCH '    INCLUDE AOST4(IKJEFF02)'                            10812102
+         PUNCH ' ALIAS IKJEFF55'                                        10812402
+         PUNCH ' ENTRY IKJEFF50'                                        10814002
+         PUNCH ' NAME IKJEFF50(R)'                                      10820002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFF57)'                          10842002
+         PUNCH '    INCLUDE AOST4(IKJEFF49)'                            10842402
+         PUNCH ' ENTRY IKJEFF57'                                        10842802
+         PUNCH ' NAME IKJEFF57(R)'                                      10844002
+.*    CANCEL/STATUS                                                     10850002
+         PUNCH '    INCLUDE AOST4(IKJEFF51,IKJEFF52,IKJEFF54)'          10900002
+         PUNCH '    ENTRY IKJEFF51'                                     10950002
+         PUNCH ' NAME IKJEFF51(R)'                                      11000002
+.*    OUTPUT                                                            11350002
+         PUNCH ' INCLUDE AOST4(IKJCT469)'                               12100002
+         PUNCH ' INCLUDE AOST4(IKJCT473)'                               12200002
+         PUNCH ' INCLUDE AOST4(IKJCT462)'                               12250002
+         PUNCH ' INCLUDE AOST4(IKJCT470)'                               12300002
+         PUNCH ' INCLUDE AOST4(IKJCT471)'                               12350002
+         PUNCH ' INCLUDE AOST4(IKJCT463)'                               12400002
+         PUNCH ' INCLUDE AOST4(IKJCT472)'                               12410002
+         PUNCH ' INCLUDE AOST4(IKJCT460)'                               12420002
+         PUNCH ' INCLUDE AOST4(IKJCT464)'                               12430002
+         PUNCH ' INCLUDE AOST4(IKJCT467)'                               12440002
+         PUNCH ' ENTRY IKJCT469'                                        12442002
+         PUNCH ' ALIAS IKJCT467'                                        12442402
+         PUNCH ' NAME IKJCT469(R)'                                      12444002
+.*    SUBMIT                                                     Y02953 12446002
+         PUNCH '    INCLUDE AOST4(IKJEFF02)'                     Y02953 12448002
+         PUNCH '    INCLUDE ACMDLIB(IKJEFF03)'                   Y02953 12448402
+         PUNCH '    INCLUDE ACMDLIB(IKJEFF04)'                   Y02953 12448802
+         PUNCH '    INCLUDE AOST4(IKJEFF15)'                     Y02953 12449202
+         PUNCH '    INCLUDE ACMDLIB(IKJEFF05)'                 @YM03630 12449602
+         PUNCH '    INCLUDE ACMDLIB(IKJEFF07,IKJEFF08,IKJEFF09)' Y02953 12449702
+         PUNCH '    INCLUDE ACMDLIB(IKJEFF13)'                 @YM03630 12449802
+         PUNCH '    INCLUDE ACMDLIB(IKJEFF16)'                   Y02953 12449902
+         PUNCH '    ORDER IKJEFF05'                              Y02953 12453202
+         PUNCH '    ORDER IKJEFF07'                              Y02953 12455602
+         PUNCH '    ORDER IKJEFF09'                              Y02953 12456402
+         PUNCH '    ORDER IKJEFF08'                              Y02953 12456502
+         PUNCH '    ORDER IKJEFF13'                              Y02953 12456602
+         PUNCH '    ORDER IKJEFF02'                              Y02953 12467402
+         PUNCH '    ORDER IKJEFF03'                              Y02953 12477402
+         PUNCH '    ORDER IKJEFF04'                              Y02953 12477802
+         PUNCH '    ORDER IKJEFF15'                              Y02953 12478202
+         PUNCH '    ORDER IKJEFF16'                              Y02953 12478302
+         PUNCH '    ALIAS IKJEFF03,IKJEFF15 '                    Y02953 12481902
+         PUNCH '    ENTRY IKJEFF04'                              Y02953 12483902
+         PUNCH ' NAME IKJEFF04(R)'                               Y02953 12484302
+         PUNCH '/* '                                                    12485602
+.TSOCMD  ANOP                                                           12489202
+         MEND                                                           12500002

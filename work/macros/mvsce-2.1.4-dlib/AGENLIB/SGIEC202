@@ -1,0 +1,1656 @@
+         MACRO                                                          00050002
+    SGIEC202                                                            00100002
+         COPY  SGGBLPAK                                                 00150002
+         LCLA  &SCR,&T,&M,&K,&J,&I,&SLCHS,&LCHN,&SYSRES,&GS GRAF        00200064
+         LCLA  &LCHCNT,&LCHTAB,&LCHSTOT,&COUNTB,&UCBAD,&STATAB @G64HPLP 00240064
+         LCLA  &MPXCNT,&ACOUNT,&CHIND,&ALTLIST(1792)           @G64HPLP 00270064
+         LCLA  &UCBNO,&FL5,&CPRFX,&LCHTOT                      @G64HPLP 00300064
+         LCLA  &NCU,&NUA,&OCU,&OUA,&ASEQNO,&NUCSIZ             @G64HPLP 00330064
+         LCLA  &NCHAN,&OCHAN,&INDX,&AINDX,&CUINDX              @G64HPLP 00360064
+         LCLA  &COMPNO1,&COMPNO2,&DEVNDX,&SAVECU,&CH(16)       @G64HPLP 00390064
+         LCLA  &STATLST(10),&STCNT,&WKIDX,&CHCT(15),&LCHST,&STEMPY      00420064
+         LCLA  &PCUINDX,&ZSCNT,&EXTINDX                        @G64HPLP 00450064
+         LCLA  &ANR,&CTC,&SHRUP                                @G64HPLP 00480064
+         LCLA  &OPTNS,&FLP1                                    @G64HPLP 00510064
+         LCLA  &DITX                                           @G64HPLP 00540064
+         LCLB  &OFF,&TSHR,&EXTCHAN                             @G64HPLP 00570064
+         LCLB  &SSCH(15),&HSALT(16),&HSPRIM1(3),&HSPRIM2(3)    @G64HPLP 00600064
+         LCLB  &HSPRIM3(3),&SSTCH2,&SSTCH3                              00630064
+         LCLB  &LASTCH,&TCHAP                                  @G64HPLP 00660064
+         LCLB  &MCRDR                                          @G64HPLP 00690064
+         LCLB  &LSTDEV,&S1(240),&S2(240),&S3(240),&S4(240)              01050002
+         LCLB  &LCHAP1(15),&LCHAP2(15),&LCHAP3(15),&LCHAP4(15)          01100002
+         LCLB  &LCHAP5(15),&LCHAP6(15),&TYPESW,&NCHANSW,&NCUSW,&EOALTS  01150002
+         LCLB  &LCHAP7(15),&LCHAP8(15),&LCHAP9(15),&LCHAP10(15)         01200002
+         LCLB  &LCHAP11(15),&LCHAP12(15),&LCHAP13(15),&LCHAP14(15)      01250002
+         LCLB  &LCHAP15(15),&LCHAP16(15)                                01300002
+         LCLB  &CUNEG,&CNEG,&ALTSW,&IRSW                       @G64HPLP 01350064
+         LCLB  &ACTLSW,&NCHSW,&LSTMAC,&GR                      @G64HPLP 01370064
+         LCLB  &SK1(240),&SK2(240),&SK3(240),&SK4(240)                  01390064
+         LCLB  &SM,&S9,&S12                                    @ZM30494 01410064
+         LCLC  &DEVAD,&TYPE,&TYPEA,&ERRTAB,&C,&D               @G64HPLP 01430064
+         LCLC  &DEVADE,&ZUSBAS                                          01600064
+         LCLC  &WCGMNO                                         @Y40MPLG 01770004
+         ACTR  250000                   MAX NO.                @ZA15707 01780000
+.*                                                             @Z30RSTA 01810004
+.* CHANGE ACTIVITY - MODIFIED FOR @Z30RSTA                     @Z30RSTA 01820004
+.*                                                             @Z30RSTA 01830004
+&NUCSIZ  SETA  4096                     SET TO LARGEST LOG OUT AREA     01850064
+         AIF   (&SGCHANB(1)).ALTINIT    TEST FOR CHAN 0 PRESNT @G64HPLP 01900064
+&NCHSW SETB 1                                                           02950002
+&NCHANSW SETB  1                        SET NEW CHANNEL SWITCH          03000002
+.ALTINIT ANOP                           ROUTINE TO CHECK ATERNATE ADDRE 03050002
+&INDX    SETA  1                        INITIALIZE INDEX                03100002
+.********************************************************************** 03210002
+.*                                                                    * 03250002
+.*   THIS ROUTINE SETS UP A LIST OF PSUEDO DEVICE ADDRESSES FOR ALTER-* 03300002
+.*   NATE CHANNEL PATHES,TO BE ENTERED IN THE UCB LOOK UP TABLE       * 03350002
+.*                                                                    * 03400002
+.********************************************************************** 03410002
+&AINDX   SETA  1                       INITIALIZE ALTERNATE INDEX       03450002
+&INDX    SETA  1                       INITIALIZE DEVICE INDEX          03500002
+&EXTINDX SETA  1                       INITIALIZE EXTEN. DEVICE INDEX   03510002
+.ALTLOOP ANOP                                                           03550002
+&COUNTB  SETA  &SGDASPA(&INDX)          SET DEVICE INDEX       @ZA15707 03570000
+         AIF   (&SGDT08B(&COUNTB) OR &SGDT02B(&COUNTB)).LSTALT          03650002
+&COMPNO1 SETA  &SGDADRA(&INDX)-&SGDADRA(&INDX)/4096*4096 GET ADDR       03700002
+&COMPNO2 SETA  &COMPNO1-4096*(&COMPNO1/4096) CLEAR HIGH ORDER           03750002
+&NCHAN   SETA  &COMPNO2/256             GET CHAN ADDR                   03800002
+         AIF   (NOT &SGCHANB(&NCHAN*15+4)).NOSSALT     HSMPX TEST       03850002
+.********************************************************************** 03860002
+.*                                                                    * 03870002
+.*   TEST FOR ANY ALTERNATE SUB-SELECTOR CHANNEL PATHS TO DEVICE      * 03900002
+.*                                                                    * 03910002
+.********************************************************************** 03920002
+         AIF   (NOT &SGDAP2B(&COUNTB)).HSAP3 TEST FOR 'D' ALT.          03950002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/16*16*04000002
+               )+&NCHAN*256+208         GET 'D' ALT ADDRESS             04050002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT INDEX                04100002
+&HSALT(&NCHAN+1) SETB 1                 SET MULTIPLE LCH ON CHAN        04150002
+.HSAP3   AIF   (NOT &SGDAP3B(&COUNTB)).HSAP4 TEST FOR 'E' ALT.          04200002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/16*16*04250002
+               )+&NCHAN*256+224         GET 'E' ALT ADDRESS             04300002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT INDEX                04350002
+&HSALT(&NCHAN+1) SETB 1                 SET MULTIPLE LCH ON CHAN        04400002
+.HSAP4   AIF   (NOT &SGDAP4B(&COUNTB)).LSTALT TEST FOR 'F' ALT.         04450002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/16*16*04500002
+               )+&NCHAN*256+240         GET 'F' ALT ADDRESS             04550002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT INDEX                04600002
+&HSALT(&NCHAN+1) SETB 1                 SET MULTIPLE LCH ON CHAN        04650002
+         AGO   .LSTALT                  BRANCH AROUND                   04700002
+.NOSSALT ANOP                                                           04750002
+         AIF   (NOT &SGDAP1B(&COUNTB)).EXAMAP2  IS THERE A CH 1 ALTER.  04800002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*04850002
+               56)+X'100'   SET UCB SEQ NUM AND ALTERNATE ADDRESS       04900002
+&AINDX   SETA  &AINDX+1                UPDATE ALTERNATE INDEX           04950002
+.EXAMAP2 AIF   (NOT &SGDAP2B(&COUNTB)).EXAMAP3  NO CH 2-CHECK FOR 3     05000002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*05050002
+               56)+X'200'   YES-SET UP UCB NUMBER AND ALTERNATE ADDR.   05100002
+&AINDX   SETA  &AINDX+1                UPDATE ALT. INDEX                05150002
+.EXAMAP3 AIF   (NOT &SGDAP3B(&COUNTB)).EXAMAP4  NO CH 3-CHECK FOR 4     05200002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*05250002
+               56)+X'300'   YES SET CH3 ALT ADDR AND UCB NUM.           05300002
+&AINDX   SETA  &AINDX+1                UPDATE ALT. INDEX                05350002
+.EXAMAP4 AIF   (NOT &SGDAP4B(&COUNTB)).EXAMAP5  NO CH 4-CHECK FOR 5     05400002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*05450002
+               56)+X'400'    YES-SET ALT-ADDR AND UCB NUMBER            05500002
+&AINDX   SETA  &AINDX+1                UPDATE ALT. INDEX                05550002
+.EXAMAP5 AIF   (NOT &SGDAP5B(&COUNTB)).EXAMAP6  NO CH 5-CHECK FOR 6     05600002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*05650002
+               56)+X'500'    YES- SET ALT ADDR AND UCB NUMB.            05700002
+&AINDX   SETA  &AINDX+1                UPDATE ALT INDEX                 05750002
+.EXAMAP6 AIF   (NOT &SGDAP6B(&COUNTB)).EXAMAP7    NO CH 6-CHECK FOR 7   05800002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*05850002
+               56)+X'600'    YES-SET ALT.ADDR AND UCB NUMBER            05900002
+&AINDX   SETA  &AINDX+1                UPDATE ALT. INDEX                05950002
+.EXAMAP7 AIF   (NOT &SGDAP7B(&COUNTB)).EXAMAP8  NO CH 7-CHECK IF 8      06000002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*06050002
+               56)+X'700'     YES-SET ALT. ADDR AND UCB NUMBER          06100002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT. INDEX               06150002
+.EXAMAP8 AIF   (NOT &SGDAP8B(&COUNTB)).EXAMAP9    NO CH 8-CHECK FOR 9   06200002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*06250002
+               56)+X'800'     YES-SET ALT. ADDR AND UCB NUMBER          06300002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT. INDEX               06350002
+.EXAMAP9 AIF   (NOT &SGDAP9B(&COUNTB)).EXAMAPA    NO CH 9-CHECK FOR 10  06400002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*06450002
+               56)+X'900'     YES-SET ALT. ADDR AND UCB NUMBER          06500002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT. INDEX               06550002
+.EXAMAPA AIF   (NOT &SGDAPAB(&COUNTB)).EXAMAPB   NO CH 10-CHECK FOR 11  06600002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*06650002
+               56)+X'A00'     YES-SET ALT. ADDR AND UCB NUMBER          06700002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT. INDEX               06750002
+.EXAMAPB AIF   (NOT &SGDAPBB(&COUNTB)).EXAMAPC   NO CH 11-CHECK FOR 12  06800002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*06850002
+               56)+X'B00'     YES-SET ALT. ADDR AND UCB NUMBER          06900002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT. INDEX               06950002
+.EXAMAPC AIF   (NOT &SGDAPCB(&COUNTB)).EXAMAPD   NO CH 12-CHECK FOR 13  07000002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*07050002
+               56)+X'C00'     YES-SET ALT. ADDR AND UCB NUMBER          07100002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT. INDEX               07150002
+.EXAMAPD AIF   (NOT &SGDAPDB(&COUNTB)).EXAMAPE   NO CH 13-CHECK FOR 14  07200002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*07250002
+               56)+X'D00'     YES-SET ALT. ADDR AND UCB NUMBER          07300002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT. INDEX               07350002
+.EXAMAPE AIF   (NOT &SGDAPEB(&COUNTB)).EXAMAPF   NO CH 14-CHECK FOR 15  07400002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*07450002
+               56)+X'E00'     YES-SET ALT. ADDR AND UCB NUMBER          07500002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT. INDEX               07550002
+.EXAMAPF AIF   (NOT &SGDAPFB(&COUNTB)).LSTALT    LAST CHECK             07600002
+&ALTLIST(&AINDX) SETA &INDX*4096+(&SGDADRA(&INDX)-&SGDADRA(&INDX)/256*2*07650002
+               56)+X'F00'     YES-SET ALT. ADDR AND UCB NUMBER          07700002
+&AINDX   SETA  &AINDX+1                 UPDATE ALT. INDEX               07750002
+.LSTALT  AIF   (&EXTCHAN).N7CHN      TEST FOR HI-CHAN SET               07800002
+&CHIND   SETA  8                        SET CHAN COUNT                  07850002
+         AIF   (&AINDX LT 2).N7ALT      TEST FOR NO ALTS                07900002
+  AIF  (&ALTLIST(&AINDX-1)-&ALTLIST(&AINDX-1)/4096*4096 GT 1791).P7CHN  07950002
+.N7ALT   AIF   (&NCHAN LT 7).N7CHN      TEST FOR +7CHAN ADDR            08000002
+.P7CHN   ANOP                                                           08050002
+&EXTCHAN SETB 1                        SET INDICATOR                    08100002
+&CHIND   SETA  30              SET CHAN INDEX FOR +7 CHAN               08150002
+.N7CHN   ANOP                                                           08250002
+&INDX    SETA  &INDX+1                 UPDATE DEVICE INDEX              08300002
+         AIF   (&INDX LE &SGCNTRA(3)).ALTLOOP  LAST NO-CONYINUE LOOP    08350002
+&EOALTS  SETB  (&AINDX EQ 1)           NO ALTERNATE PATHS SET SWITCH    08400002
+&ACOUNT  SETA  &AINDX-1                SETUP COUNBT UP ALTERNATES       08550002
+&INDX    SETA  1                       REINITIALIZE                     08600002
+&AINDX   SETA  1                                   INDEX                08650002
+.L1      AIF   (&ACOUNT LT 2 OR &ACOUNT GT 1917).INITIAL       @ZA15707 08670000
+&M       SETA  &ACOUNT                 GET NUMBER OF ALTERNATE ADDRS    08750002
+.L2      AIF   (&M/2 LE 0).INITIAL     OUT-ALL ALTS SORTED              08800002
+&M       SETA  &M/2  SET INDEX TO OFFSET FOR SECOND ALTER. ADDR         08850002
+&K       SETA  &ACOUNT-&M              SET FOR END OF PASS CHK          08900002
+&J       SETA  1                       SET OUR INDEX VALUE              08950002
+.L3      ANOP      RETURN TO CONTINUE PASS AT SANE INCREMENT            09000002
+&I       SETA  &J                      SET INDEX TO FIRST ADDR          09050002
+.L4      AIF   (&ALTLIST(&I)-&ALTLIST(&I)/4096*4096 LT &ALTLIST(&I+&M)-109100002
+               &ALTLIST(&I+&M)/4096*4096).L5  TRANSFER-ADDRS ORDRED     09150002
+         AIF   (&ALTLIST(&I)-&ALTLIST(&I)/4096*4096 EQ &ALTLIST(&I+&M)-109200002
+               &ALTLIST(&I+&M)/4096*4096).ABIOEND  ADDRESSES = ERROR    09250002
+&T       SETA  &ALTLIST(&I)            ADDRESSES OUT OF ORDER           09300002
+&ALTLIST(&I) SETA &ALTLIST(&I+&M)   SAVE FIRST ADDR AND PUT SECIND      09350002
+&ALTLIST(&I+&M) SETA &T   ADDR IN FIRST - THEN PUT FIRST IN SEVOND      09400002
+&I       SETA  &I-&M     RESET INNER INDEX TO MOVW ADDR. FARTHER BACK   09450002
+         AIF   (&I GE 1).L4   TRANSFER TO MOVE ADDRESS FURTHER BACK     09500002
+.L5      AIF   (&J+1 GT &K).L2         XFER FOR ANOTHHER PASS           09550002
+&J       SETA  &J+1                    SET OUTER IND%X BY ONE           09600002
+         AGO   .L3    TRXFER TO CONT. PASS AT SAME INCRENENT            09650002
+.********************************************************************** 09660002
+.*                                                                    * 09700002
+.*                 INITIALIZATION ROUTINE                             * 09750002
+.*                                                                    * 09800002
+.********************************************************************** 09810002
+.INITIAL ANOP                                                           09850002
+         AIF   (&SGCNTRA(3) EQ 0).ERROR CHECK FOR ZERO COUNT            09950064
+&INDX    SETA  1                        RESET INDEX                     10000064
+&WKIDX   SETA  1                        INITIALIZE WORK AREA INDEX TWBS 10050064
+&AINDX   SETA  1                        RESET ALTERNATE INDEX           10100064
+&CUINDX  SETA 0                         INITIALIZE CONTROL INIT INDEX   10900002
+&SAVECU  SETA  257                      CONTROL UNIT COMPARE            10950002
+&DEVNDX  SETA  0                        NUMBER OF DEVICES/CU            11000002
+&STATAB  SETA  2                        INITIALIZE STATAB INDEX         11050003
+&STCNT   SETA  1                        INITIALIZE STAT COUNT           11100002
+&MPXCNT  SETA 1                        INITIALIZE UCBADD COUNT          11250002
+&I       SETA  1                       INITIALIZE TCH COUNT             11300002
+&J       SETA  1                       INITIALIZE CHANNEL SETCH CNT     11350002
+&K       SETA  1                       INITIALIZE LCH MOD COIUT         11400002
+&M       SETA  1                       INITIALIZE CHANN COUNT           11450002
+&T       SETA  1                       INITIALIZE CU COUNT              11500002
+&SGCTRLC(6)  SETC   'IEAASU00'                                          11600002
+.********************************************************************** 11640002
+.*         COPY  SGASMPAK AND PUNCH EXTERNS AND ENTRY POINTS          * 11640402
+.********************************************************************** 11642002
+         COPY  SGASMPAK                                                 11650064
+         PUNCH '   IHAPSA  DSECT=NO'                                    11700002
+         PUNCH '         EJECT'                                         11710002
+         PUNCH '         EXTRN IEEBA1'                                  11720002
+         PUNCH '         EXTRN IEFDPOST'                                11730002
+         PUNCH '         ENTRY IECRCTBL,IECVATTN,IECVSGT'               11742002
+         PUNCH '         ENTRY IECILK1,IECILK2,IECSTB,IECVCCWS'         11744002
+         PUNCH '         ENTRY IECVLCH,IECILCH,IECVSLCH'                11746002
+         PUNCH '         ENTRY IECVUCBM'                        YM2366P 11748002
+         PUNCH '         ACTR  10000      SET STAGE2 CTR'      @ZA15707 11749000
+         PUNCH '          AGO    .UCB1    TO FIRST UCB   '              11750002
+.********************************************************************** 13060002
+.*                                                                    * 13070002
+.*             THE FOLLOWING SETS UP PARAMETERS FOR THE UCB           * 13100002
+.*                                                                    * 13110002
+.********************************************************************** 13120002
+.DEVLOOP ANOP                                                           13150002
+&STATAB  SETA  &STATAB-&STATAB/256*256  GET 1 BYTE INDEX                13200002
+         AIF   (&STATAB NE 0).NEXTST                           @YM04859 13210002
+&STATAB  SETA  &STATAB+1           INSURE ONLY DA HAVE 0       @YM04859 13220002
+.NEXTST  ANOP                                                           13230002
+&COUNTB SETA  &SGDASPA(&INDX)           SET DEVICE INDEX       @ZA15707 13240000
+&DITX   SETA  &SGDITXA(&COUNTB)         DIT INDEX FOR DEVICE   @G64HPLP 13300064
+         AIF   (K'&SGDDTMC(&DITX) GT 0).DDTOK0 DDT NAME ?      @G64HPLP 13303064
+.*ISSUE MNOTE AND SET QUIT SWITCH SINCE DDT NAME IS REQUIRED   @G64HPLP 13306064
+         MNOTE 12,'***IEIIEC202-DDT NAME FOR DIT ENTRY &DITX NOT SPECIF*13309064
+               IED'                                            @G64HPLP 13312064
+&SGQUITB SETB  1                       SET QUIT SWITCH         @G64HPLP 13315064
+.DDTOK0  ANOP                                                  @G64HPLP 13318064
+         AIF (&SGUSNSA(&DITX) LT 41).DDTOK1 IF THE NUMBER OF   @G64HPLP 13321064
+         MNOTE 12,'***IEIIEC202-NUMBER OF SENSE BYTES FOR THIS DEVICE  *13324064
+               EXCEEDS 40 BYTES. SYSGEN TERMINATED.'           @G64HPLP 13327064
+&SGQUITB SETB  1                       SET QUIT SWITCH         @G64HPLP 13330064
+.DDTOK1  ANOP                                                  @G64HPLP 13333064
+&PCUINDX  SETA  (&SGDADRA(&INDX)-&SGDADRA(&INDX)/1048576*1048576)/4096  13350002
+.********************************************************************** 13360002
+.*                                                                    * 13370002
+.*             THE ABOVE SETS THE CU INDEX FOR GRAPHICS               * 13400002
+.*                                                                    * 13410002
+.********************************************************************** 13420002
+&UCBNO   SETA  &INDX                   SET UCB LABEL NUMBER             13500002
+.********************************************************************** 13510002
+.*                                                                    * 13550002
+.*       UCB LOOKUP GOES HERE                                         * 13600002
+.*       THE FOLLOWING COMPUTES THE ALLOCATION CHAN. MASK             * 13650002
+.*                ***   THE FOLLOWING ROUTINE COMPARES ALTERNATE TO *** 13700002
+.*                *** NEXT ACTUAL DEVICE ADDRESS                    *** 13750002
+.*                                                                    * 13800002
+.********************************************************************** 13810002
+.LUSTRT  AIF   (&LSTMAC AND &EOALTS).COUT  ALT CHKS ALL DONE            13850002
+         AIF   (&LSTMAC).ALTA          CONTINUE WITH ALTERNTES          13900002
+         AIF   (&EOALTS).SKIPCHK       NO MORE ALTS.-SKIP CHECK         13950002
+         AIF   (&SGDADRA(&INDX)-&SGDADRA(&INDX)/4096*4096 GT &ALTLIST(&*14000002
+               AINDX)-&ALTLIST(&AINDX)/4096*4096).ALTA                  14050002
+.SKIPCHK ANOP                                                           14100002
+&COMPNO1 SETA  &SGDADRA(&INDX)-&SGDADRA(&INDX)/4096*4096                14150002
+.********************************************************************** 14160002
+.*                                                                    * 14170002
+.*              THIS SECTION SETS UP THE SYMBOLIC DEVICE ADDRESS      * 14200002
+.*                                                                    * 14210002
+.********************************************************************** 14220002
+        CONVERT TO=EBCDIC,VALUE=&COMPNO1,DIGITS=3                       14250002
+&DEVAD   SETC  '&EBCDIC'              SET UP DEVICE ADDRESS             14300002
+&DEVADE  SETC  '&DEVAD'                 SET CHAR ADDRESS                14350002
+&ALTSW   SETB  0                       SET ALTERNATE RUN SWITCH         14400002
+         AGO   .COMPUTE                                                 14450002
+.ALTA    ANOP                                                           14500002
+&COMPNO1 SETA  &ALTLIST(&AINDX)-&ALTLIST(&AINDX)/4096*4096  BREAK OUTUA 14550002
+&ASEQNO  SETA  &ALTLIST(&AINDX)/4096                                    14600002
+&ALTSW   SETB  1                       ALTERNATE DEVICE SWOTCH OM       14650002
+&EOALTS  SETB  (&AINDX EQ &ACOUNT)     SET LAST ALTERNAT PROCESSED SW.  14700002
+&AINDX   SETA  &AINDX+1                UPDATE ALTERNATE INDEX           14750002
+.COMPUTE ANOP                                                           14800002
+&COMPNO2 SETA  &COMPNO1-4096*(&COMPNO1/4096)    CLEAR HIGH ORD BYTE     14850002
+.********************************************************************** 14860002
+.*                                                                    * 14870002
+.*              COMPUTE CHANNEL ADDRESS                               * 14900002
+.*                                                                    * 14910002
+.********************************************************************** 14920002
+&NCHAN   SETA  &COMPNO2/256            EXTRACT CHANNEL ADDRESS          14950064
+&NCU     SETA  (&COMPNO2-&NCHAN*256)/16   EXTRACT CNTRL UNIT ADDR       15000002
+&NUA     SETA  &COMPNO2-(&NCHAN*256+&NCU*16)     EXTRACT UNIT ADDR      15050002
+.********************************************************************** 15060002
+.*                                                                    * 15070002
+.*               ***   THE FOLLOWING ROUTINE COMPUTES CHANNEL INDEX *** 15100002
+.*               *** FACTORS AND INSERTS THEM IN A MODEL STATMENT   *** 15150002
+.*               *** TO BE PROCESSED AT PASS TWO OF SYSGEN          *** 15200002
+.*                                                                    * 15202002
+.********************************************************************** 15210002
+         AIF   (&NCHAN GT &OCHAN).NCHRTN   'NEW CHAN. AD HIGH-TO NEW RT 15250002
+         AIF   (&NCHAN LT &OCHAN).ORDERR    LOW-TO OUT OF ORDER ERROR   15300002
+         AIF   (&IRSW EQ 0).NCHRTN          INITIAL TIME-TO NEW RTN     15350002
+         AIF   (&NCU GT &OCU).NCURTN        NEW CU-TO CU INDX UPDATE    15400002
+         AIF   (&NCU LT &OCU).ORDERR        LOW- OUT OF ORDER           15450002
+         AIF   (&NUA GT &OUA).UAUDTE        NEW UA- TO UPDATE           15500002
+         AGO   .ORDERR                      EQUAL OR LOW UA.-ERROR      15550002
+.UAUDTE  AIF   (&ALTSW EQ 1).ALTPR      ALTERNATE PATH-USE ASEQNO       15600002
+&ACTLSW  SETB  1                                                        15650002
+&UCBAD   SETA  &INDX                   SET NEW UCB NUMBER               15700002
+         AIF   (&MPXCNT NE 1).UCBLAB    CHECK FOR FIRST UCB LOOK UP     15750002
+.********************************************************************** 15760002
+.*                     IECILK2                                        * 15770002
+.********************************************************************** 15780002
+         PUNCH '.LST&MPXCNT ANOP   UCB LOOKUP ENTRY '                   15800064
+         PUNCH 'LIST     DS    0H       THIS IS THE LIST OF UCB ADDS'   15830064
+         PUNCH 'IECILK2  DS    0C'     SET UP LOOK UP LABELS            15860064
+&MPXCNT  SETA  &MPXCNT+1                UPDATE COUNTER                  15890064
+         PUNCH '         AGO   .LST&MPXCNT    '                         15920064
+.UCBLAB  ANOP                                                           15950064
+.********************************************************************** 16060002
+.*                            IECULK3                                 * 16070002
+.********************************************************************** 16080002
+ PUNCH '.LST&MPXCNT IECULK3 &OUA,&NUA,&UCBAD,&NCUSW,&CUINDX,&LSTDEV,&NC*16100002
+               HAN,&NCU,&CUNEG'                                         16150002
+&MPXCNT  SETA  &MPXCNT+1               UPDATE UCBADD COUNT              16200064
+         PUNCH '         AGO   .LST&MPXCNT    TO NEXT UCB ADD ENTRY   ' 16230064
+&OUA     SETA  &NUA                         UPDATE OLD UNIT ADDR        16300002
+         AIF   (&CHIND GE 0).CKCUN     CHECK FOR NEG CHAN INDEX         16350002
+&CHIND   SETA  0                       IF NEG. SET TO ZRO               16400002
+.CKCUN   AIF   (&CUINDX GE 0).COMPARE  CHECK FOR NEG CU IND%X           16450002
+&CUINDX  SETA  0                       IF NEG. SET TO ZEERO             16500002
+         AGO   .COMPARE                ??   RETURN TO COMPARE(MAYBE)    16550002
+.ALTPR   ANOP                                                           16600002
+&UCBAD   SETA  &ASEQNO                 SET UCB NUM. FOR THIS ALTERNATE  16650002
+.********************************************************************** 16652002
+.*                            IECULK3                                 * 16654002
+.********************************************************************** 16656002
+ PUNCH '.LST&MPXCNT IECULK3 &OUA,&NUA,&UCBAD,&NCUSW,&CUINDX,&LSTDEV,&NC*16700002
+               HAN,&NCU,&CUNEG'                                         16750002
+&MPXCNT  SETA  &MPXCNT+1               UPDATE UCBADD COUNT              16850064
+         PUNCH '         AGO   .LST&MPXCNT    TO NEXT UCB ADD ENTRY   ' 16900064
+&OUA     SETA  &NUA                     UPDATE OLD UNIT ADDRESDS        17150002
+&NCHANSW SETB  0                       RESET NEW CHANNEL SWITCH         17200002
+&NCUSW   SETB  0                       RESET NEW CONTROL UNIT SWITCH    17250002
+         AIF   (&CHIND GE 0).CKCUN1    CHECK FOR NEG CHAN NDX           17300002
+&CHIND   SETA  0                       IF NEG. SET TO ZERO              17350002
+.CKCUN1  AIF   (&CUINDX GE 0).LUSTRT   CHECK FOR CU INDEX NEG.          17400002
+&CUINDX  SETA  0                       IF NEG. SET TO ZERO              17450002
+         AGO   .LUSTRT                      RETURN TO COMPARE           17500002
+.********************************************************************** 17510002
+.*                                                                    * 17520002
+.*                     NEW CHANNEL ROUTINE                            * 17550002
+.*                                                                    * 17560002
+.********************************************************************** 17570002
+.NCHRTN  AIF   (&IRSW EQ 0).NCHCON      FIRST TIME NO UPDATE TO CHAN ID 17600002
+&CHIND   SETA  &CHIND+1                                                 17650002
+&LCHCNT  SETA  1                                                        17700002
+         AIF   (NOT &SGCHANB(&OCHAN*15+2)).SELCH1 TEST FOR MPX          17750002
+&CH(&OCHAN+1)  SETA  1                  SET MPX TYPE FOR CHANNEL TABLE  17800002
+&SLCHS   SETA  1                        YES THEN ONLY ONE LCH           17850002
+         AIF   (&OCHAN NE 0).NOTCH0                                     17900002
+.********************************************************************** 17910002
+.*                            IECICS                                  * 17920002
+.********************************************************************** 17930002
+         PUNCH '.SRCH&J  ANOP         CHAN SEARCH FOR MPX'              17950002
+         PUNCH '    IECICS &OCHAN '                                     18000002
+&J       SETA  &J+1                    UPDATE CSRCH MOD COUNT           18050002
+         PUNCH '         AGO   .SRCH&J     TO NEXT SEARCH '             18100002
+.NOTCH0  ANOP                                                           18150002
+&TYPESW  SETB  0                        SET CHAN/TYPE TO MPXLER         18200002
+&LCHTOT  SETA  &LCHTOT+&SLCHS           UPDATE TOTAL OF LCS             18250002
+&LCHSTOT SETA  0                       REINITIALIZE SUBTOTAL OF LCHS    18300002
+         AIF   (NOT &LSTMAC).NLST       TEST FOR LAST DEVICE            18350002
+&LASTCH  SETB  1                        SET IND IF LAST                 18400002
+.NLST    ANOP                                                           18450002
+.********************************************************************** 18460002
+.*                            IECXTCH                                 * 18470002
+.********************************************************************** 18480002
+         PUNCH '.TCH&I   ANOP       TCH FOR MPX'                        18500002
+         PUNCH '         IECXTCH &LCHTOT,0,&OCHAN'                      18550002
+&I       SETA  &I+1                    UPDATE TCH MOD COUNT             18650002
+         PUNCH '         AGO   .TCH&I     TO NEXT TXH'                  18700002
+         AIF   (&OCHAN NE 0).SKPTCH     IF NOT CH0 DO ICS               18750002
+         AGO   .REINIT                 TO REINITIALIZE COUNTD           18800002
+.********************************************************************** 18810002
+.*                                                                    * 18820002
+.*             THE FOLLOWING IS THE MACRO INST TO BUILD LCHWRDS       * 18850002
+.*                                                                    * 18860002
+.********************************************************************** 18870002
+.SELCH1  AIF   (NOT &SGCHANB(&OCHAN*15+4)).NOTHSPA     TEST FOR HSMPX   18900002
+         AIF   (&HSALT(&OCHAN+1)).TOTSET     TEST FOR MULTIPLE LCH      18950002
+&LCHSTOT SETA  1                      YES, SET ON LCH                   19000002
+.TOTSET  ANOP                                                           19050002
+&CH(&OCHAN+1)  SETA  2                  SET HSMPX TYPE FOR CHAN TABLE   19100002
+         AGO   .TSTCHAN                                                 19150002
+.NOTHSPA AIF    (&SGCHANB(&OCHAN*15+6)).BLKMPXR       TEST FOR BLKMPXR  19200002
+&CH(&OCHAN+1)  SETA  3                  SET SEL TYPE FOR CHANNEL TABLE  19250002
+         AGO   .TSTCHAN                                                 19260002
+.BLKMPXR ANOP                                                           19262002
+&CH(&OCHAN+1)  SETA  4                  SET BLKMPX TYPE FOR CHAN TABLE  19270002
+.TSTCHAN ANOP                                                           19300002
+.********************************************************************** 19310002
+.*                                                                    * 19330002
+.*       THIS BUILDS THE PARAMETERS FOR TST CHANNEL CODE MACRO        * 19350002
+.*                                                                    * 19352002
+.********************************************************************** 19360002
+&TYPESW  SETB  (NOT &SGCHANB(&OCHAN*15+4))   SET SEL. MODE IF NOT HSMPX 19400002
+&LCHCNT  SETA  1                                                        19450002
+         AIF   (NOT &ACTLSW).SKPTCH                                     19500002
+         PUNCH   '.TCH&I    ANOP   TEST CHANNEL  '                 ANOP 19550002
+.TCHLOOP ANOP                                                           19600002
+&LCHTAB  SETA  &LCHTOT+&LCHCNT         SET LCH NUMBER                   19650002
+         AIF   (NOT &LSTMAC).TCHLP1     TEST FOR LAST ACTUAL DEV        19700002
+         AIF   (&LCHCNT+1 LE &LCHSTOT).TCHLP1     TEST FOR LAST PASS    19750002
+&LASTCH  SETB  1                        SET LAST TCH SWITCH             19800002
+.TCHLP1  ANOP                                                           19850002
+         AIF   (NOT &HSALT(&OCHAN+1)).NHTCH TEST CHAN FOR ALT PATH      19900002
+         AIF   (&OCHAN EQ 0).CH0        WAS IT CHANNEL '0'              19950002
+&SSCH(&OCHAN) SETB 1                    SET CHANNEL INDICATOR           20000002
+.********************************************************************** 20010002
+.*                                                                    * 20020002
+.*   REINITIALIZE AND SET UP PRIMARY AND ALTERNATE SS PATHS             20050002
+.*                                                                    * 20060002
+.********************************************************************** 20070002
+.CH0     ANOP                                                           20100002
+&SSTCH2  SETB  0                                                        20150002
+&SSTCH3  SETB  0                                                        20200002
+         AIF   (NOT &HSPRIM2(&LCHCNT) AND NOT &LCHAP2(&LCHCNT)).STCH    20250002
+.********************************************************************** 20260002
+.*                                                                    * 20270002
+.*             SET SWITCH IF 'D' IS PRIMARY OR ALTERNATE              * 20300002
+.*                                                                    * 20310002
+.********************************************************************** 20320002
+&SSTCH2  SETB  1                        SET SWITCH                      20350002
+.STCH    AIF   (NOT &HSPRIM3(&LCHCNT) AND NOT &LCHAP3(&LCHCNT)).STCH1   20400002
+.********************************************************************** 20410002
+.*                                                                    * 20420002
+.*             SET SWITCH IF 'E' IS PRIMARY OR ALTERNATE              * 20450002
+.*                                                                    * 20460002
+.********************************************************************** 20470002
+&SSTCH3  SETB  1                        SET SWITCH                      20500002
+.STCH1   ANOP                                                           20550002
+.********************************************************************** 20560002
+.*                            IECXTCH                                 * 20570002
+.********************************************************************** 20580002
+ PUNCH ' IECXTCH &LCHTAB,&TYPESW,(&SSCH(1),&SSCH(2),&SSCH(3),&SSCH(4),&*20600002
+               SSCH(5),&SSCH(6)),(&HSPRIM1(&LCHCNT),&SSTCH2,&SSTCH3,&LC*20650002
+               HAP4(&LCHCNT))'                                          20700002
+.********************************************************************** 20710002
+.*                                                                    * 20750002
+.*             CLEAR THE  PRIMARY SWITCHES FOR THIS LCH               * 20800002
+.*                                                                    * 20810002
+.********************************************************************** 20820002
+&HSPRIM1(&LCHCNT)  SETB  0              CLEAR PRIMARY SW1               20850002
+&HSPRIM2(&LCHCNT)  SETB  0              CLEAR PRIMARY SW2               20900002
+&HSPRIM3(&LCHCNT)  SETB  0              CLEAR PRIMARY SW3               20950002
+         AIF   (&OCHAN EQ 0).BYPSEL                                     21000002
+&SSCH(&OCHAN) SETB 0                    CLEAR SWITCH                    21050002
+         AGO   .BYPSEL                  BRANCH AROUND                   21100002
+.NHTCH   ANOP                                                  @G64HPLP 21150064
+.********************************************************************** 21860002
+.*                            IECXTCH                                 * 21870002
+.********************************************************************** 21880002
+         PUNCH '    IECXTCH &LCHTAB,&TYPESW,(&LCHAP1(&LCHCNT),&LCHAP2(&*22000002
+               LCHCNT),&LCHAP3(&LCHCNT),&LCHAP4(&LCHCNT),&LCHAP5(&LCHCN*22050002
+               T),                                           *****'     22100002
+ PUNCH '               &LCHAP6(&LCHCNT),&LCHAP7(&LCHCNT),&LCHAP8(&LCHCN*22200002
+               T),&LCHAP9(&LCHCNT),&LCHAP10(&LCHCNT),&LCHAP11(&LCHCNT),*22250002
+                                                         ******'        22300002
+ PUNCH '               &LCHAP12(&LCHCNT),&LCHAP13(&LCHCNT),&LCHAP14(&LC*22350002
+               HCNT),&LCHAP15(&LCHCNT))'                                22400002
+         AIF   (&LCHAP1(&LCHCNT) EQ 0).CHCT2 TEST FOR AP ON 1           22750002
+&CHCT(1) SETA  &CHCT(1)+1               UPDATE COUNTER FOR CHAN1        22800002
+.CHCT2   AIF   (&LCHAP2(&LCHCNT) EQ 0).CHCT3 TEST FOR AP ON 2           22850002
+&CHCT(2) SETA  &CHCT(2)+1               UPDATE COUNTER FOR CHAN 2       22900002
+.CHCT3   AIF   (&LCHAP3(&LCHCNT) EQ 0).CHCT4 TEST FOR AP ON 3           22950002
+&CHCT(3) SETA  &CHCT(3)+1               UPDATE COUNTER FOR CHAN 3       23000002
+.CHCT4   AIF   (&LCHAP4(&LCHCNT) EQ 0).CHCT5 TEST FOR AP ON 4           23050002
+&CHCT(4) SETA  &CHCT(4)+1               UPDATE COUNTER FOR CHAN 4       23100002
+.CHCT5   AIF   (&LCHAP5(&LCHCNT) EQ 0).CHCT6 TEST FOR AP ON 5           23150002
+&CHCT(5) SETA  &CHCT(5)+1               UPDATE COUNTER FOR CHAN 5       23200002
+.CHCT6   AIF   (&LCHAP6(&LCHCNT) EQ 0).CHCT7                            23250002
+&CHCT(6) SETA  &CHCT(6)+1               UPDATE COUNTER FOR CHAN 6       23300002
+.CHCT7   AIF   (&LCHAP7(&LCHCNT) EQ 0).CHCT8                            23350002
+&CHCT(7) SETA  &CHCT(7)+1                                               23400002
+.CHCT8   AIF   (&LCHAP8(&LCHCNT) EQ 0).CHCT9                            23450002
+&CHCT(8) SETA  &CHCT(8)+1                                               23500002
+.CHCT9   AIF   (&LCHAP9(&LCHCNT) EQ 0).CHCT10                           23550002
+&CHCT(9) SETA  &CHCT(9)+1                                               23600002
+.CHCT10  AIF   (&LCHAP10(&LCHCNT) EQ 0).CHCT11                          23650002
+&CHCT(10) SETA &CHCT(10)+1                                              23700002
+.CHCT11  AIF   (&LCHAP11(&LCHCNT) EQ 0).CHCT12                          23750002
+&CHCT(11) SETA &CHCT(11)+1                                              23800002
+.CHCT12  AIF   (&LCHAP12(&LCHCNT) EQ 0).CHCT13                          23850002
+&CHCT(12) SETA &CHCT(12)+1                                              23900002
+.CHCT13  AIF   (&LCHAP13(&LCHCNT) EQ 0).CHCT14                          23950002
+&CHCT(13) SETA &CHCT(13)+1                                              24000002
+.CHCT14  AIF   (&LCHAP14(&LCHCNT) EQ 0).CHCT15                          24050002
+&CHCT(14) SETA &CHCT(14)+1                                              24100002
+.CHCT15  AIF   (&LCHAP15(&LCHCNT) EQ 0).BYPSEL                          24150002
+&CHCT(15) SETA &CHCT(15)+1                                              24200002
+.BYPSEL  ANOP                                                           24250002
+&LCHAP1(&LCHCNT)  SETB  0               CLEAR SWITCH                    24300002
+&LCHAP2(&LCHCNT)  SETB  0               CLEAR SWITCH                    24350002
+&LCHAP3(&LCHCNT)  SETB  0               CLEAR SWITCH                    24400002
+&LCHAP4(&LCHCNT)  SETB  0               CLEAR SWITCH                    24450002
+&LCHAP5(&LCHCNT)  SETB  0               CLEAR SWITCH                    24500002
+&LCHAP6(&LCHCNT)  SETB  0               CLEAR SWITCH                    24550002
+&LCHAP7(&LCHCNT) SETB  0                CLEAR SWITCH                    24600002
+&LCHAP8(&LCHCNT) SETB  0                CLEAR SWITCH                    24650002
+&LCHAP9(&LCHCNT) SETB  0                CLEAR SWITCH                    24700002
+&LCHAP10(&LCHCNT) SETB 0                CLEAR SWITCH                    24750002
+&LCHAP11(&LCHCNT) SETB 0                CLEAR SWITCH                    24800002
+&LCHAP12(&LCHCNT) SETB 0                CLEAR SWITCH                    24850002
+&LCHAP13(&LCHCNT) SETB 0                CLEAR SWITCH                    24900002
+&LCHAP14(&LCHCNT) SETB 0                CLEAR SWITCH                    24950002
+&LCHAP15(&LCHCNT) SETB 0                CLEAR SWITCH                    25000002
+&LCHCNT  SETA  &LCHCNT+1                UPDATE INDEX                    25050002
+         AIF   (&LCHCNT LE &LCHSTOT).TCHLOOP GO BACK IF NOT LAST        25100002
+&I       SETA  &I+1                    UPDATE TCH COUNTER               25150002
+         PUNCH '         AGO   .TCH&I      TO NEXT TCH MOD'             25200002
+&ACTLSW  SETB  0                                                        25250002
+.SKPTCH  ANOP                                                           25300002
+.********************************************************************** 25310002
+.*                                                                    * 25320002
+.*   THIS IS THE MACRO INSTRUCTION FOR CHANNEL SEARCH/1 PER CHAN      * 25350002
+.*   THE FOLLOWING LOOP IS USED TO COMPUTE THE PARAMETERS FOR CHAN SCH* 25400002
+.*                                                                    * 25410002
+.********************************************************************** 25420002
+&LCHCNT  SETA  1                       RESET COMMON COUNTER             25450002
+.********************************************************************** 25460002
+.*                            IECICS                                  * 25470002
+.********************************************************************** 25480002
+         PUNCH '.SRCH&J  ANOP       CHANNEL SEARCH MOD&J'               25500002
+         PUNCH '               IECICS &OCHAN,                          *25550002
+                               **********'                              25600002
+         AIF   (NOT &HSALT(&OCHAN+1)).NHCS   TEST FOR HSMPX ALT         25650002
+         PUNCH '               (&LCHTOT,                               *25700002
+                               ********'                                25750002
+&LCHCNT  SETA  1                        REINITIALIZE COUNTER            25800002
+.HSCSLP1 PUNCH '               1,0,                                    *25850064
+                               *'                                       25880064
+&LCHCNT  SETA  &LCHCNT+1                UPDATE COUNTER                  25950002
+         AIF   (&LCHCNT LE &LCHSTOT).HSCSLP1 TEST FOR END               26000002
+         AGO   .CSEND                                                   26050002
+.NHCS    ANOP                                                           26100002
+         AIF   (&OCHAN EQ 0).CSP0                                       26150002
+         AIF   (NOT &SGCHANB(&OCHAN*15+2)).CSP01                        26200002
+&LCHTOT  SETA  &LCHTOT-1                ADJ FOR MPX                     26250002
+         AGO   .CSP0                                                    26300002
+.CSP01   ANOP                                                           26350002
+&LCHST   SETA  0                        CLEAR START COUNT               26400002
+.CS0     AIF   (&OCHAN GT 3).CS1        TEST FOR S1                     26450002
+&SLCHS   SETA  &OCHAN*60+&LCHTOT+&LCHSTOT    GET COUNT OF LCH'S         26500002
+&LCHCNT  SETA  &OCHAN*60+1+&LCHST       GET START POINTER               26550002
+         AIF   (&S1(&LCHCNT)).PCHST     GO PUNCH IF BIT SET             26600002
+&LCHST   SETA  &LCHST+1                 UPDATE START COUNT              26650002
+         AGO   .CS0                     GO TEST NEXT BIT                26700002
+.CS1     AIF   (&OCHAN GT 7).CS2        TEST FOR S2                     26750002
+&SLCHS   SETA  (&OCHAN-4)*60+&LCHTOT+&LCHSTOT   GET COUNT OF LCH'S      26800002
+&LCHCNT  SETA  (&OCHAN-4)*60+1+&LCHST   GET START POINTER               26850002
+         AIF   (&S2(&LCHCNT)).PCHST     GO PUNCH IF BIT SET             26900002
+&LCHST   SETA  &LCHST+1                 UPDATE START COUNT              26950002
+         AGO   .CS1                     GO TEST NEXT BIT                27000002
+.CS2     AIF   (&OCHAN GT 11).CS3       TEST FOR S3                     27050002
+&SLCHS   SETA  (&OCHAN-8)*60+&LCHTOT+&LCHSTOT     GET COUNT OF LCH'     27100002
+&LCHCNT  SETA  (&OCHAN-8)*60+1+&LCHST   GET START POINTER               27150002
+         AIF   (&S3(&LCHCNT)).PCHST     GO PUNCH IF BIT SET             27200002
+&LCHST   SETA  &LCHST+1                 UPDATE START COUNT              27250002
+         AGO   .CS2                     GO TEST NEXT BIT                27300002
+.CS3     ANOP                                                           27350002
+&SLCHS   SETA  (&OCHAN-12)*60+&LCHTOT+&LCHSTOT  GET COUNT OF LCH'S      27400002
+&LCHCNT  SETA  (&OCHAN-12)*60+1+&LCHST  GET START POINTER               27450002
+         AIF   (&S4(&LCHCNT)).PCHST     GO PUNCH IF BIT SET             27500002
+&LCHST   SETA  &LCHST+1                 UPDATE START COUNT              27550002
+         AGO   .CS3                     GO TEST NEXT BIT                27600002
+.PCHST   PUNCH '               (&LCHST,                                *27650002
+                                ********'                               27700002
+         AGO   .STARTA                  GO TEST FOR SWITCH              27750002
+.CSP1    PUNCH '               &S1(&LCHCNT),&SK1(&LCHCNT),             *27800002
+                                                      *'                27850002
+         AGO   .LCHUP                                                   27900002
+.CSP2    PUNCH '               &S2(&LCHCNT),&SK2(&LCHCNT),             *27950002
+                                                      *'                28000002
+         AGO   .LCHUP                                                   28050002
+.CSP3    PUNCH '               &S3(&LCHCNT),&SK3(&LCHCNT),             *28100002
+                                                      *'                28150002
+         AGO   .LCHUP                                                   28200002
+.CSP4    PUNCH '               &S4(&LCHCNT),&SK4(&LCHCNT),             *28250002
+                                                      *'                28300002
+.LCHUP ANOP                                                             28350002
+&LCHCNT  SETA  &LCHCNT+1                UPDATE POINTER                  28400002
+         AIF   (&LCHCNT GT &SLCHS).CSEND     TEST FOR LAST              28450002
+.STARTA  AIF   (&OCHAN LT 4).CSP1       TEST FOR SWITCH 1               28500002
+         AIF   (&OCHAN LT 8).CSP2                                       28550002
+         AIF   (&OCHAN LT 12).CSP3                                      28600002
+         AGO   .CSP4                                                    28650002
+.CSP0    ANOP                                                           28700002
+         PUNCH '               (&LCHTOT,                               *28750002
+                               ********'                                28800002
+         PUNCH '               1,0,                                    *28850064
+                               *'                                       28900064
+         AIF   (NOT &SGCHANB(&OCHAN*15+2)).CSEND    MPX?                28950064
+&LCHTOT  SETA  &LCHTOT+&SLCHS           UPDATE TOTAL OF LCHS            29000064
+.CSEND   ANOP                                                           29050064
+&SLCHS   SETA  0                        CLEAR SWITCH                    29100064
+&LCHCNT  SETA  &LCHCNT-1               REDUCE LCHCNT TO ACTUAL  COUNT   29150064
+  PUNCH '               &LSTDEV) '                                      29200064
+&J       SETA  &J+1                    UPDATE CHAN SRCH COUNTER         29250064
+         PUNCH '         AGO   .SRCH&J     TO NEXT CHAN SRCH MOD'       29300064
+.REINIT  ANOP                          REINITIALIZE LCH COUNTS          29850002
+.*             REMOVE SET B - SET NEW CHANNEL SWITCH                    29900002
+&SLCHS   SETA  0                        CLEAR MPX SWITCH                29950002
+&NCHSW   SETB  1                       SET UP LCH NEW CH ANNEL SW       30000002
+&LCHCNT  SETA  1                       INITIALIZE COUNT                 30050002
+&LCHTOT  SETA  &LCHTOT+&LCHSTOT        UPDATE LCH TOTAL                 30150002
+&LCHSTOT SETA  0                                                        30200002
+&ACTLSW  SETB  0                                                        30250002
+        AIF   (&LSTDEV).LSTMAC         LAST DEVUCE TO END ROUTINR       30300002
+.NCHCON  ANOP                                                           30350002
+&CHIND   SETA &OCU+&CHIND-&NCU   COMP. NEW INDEX AND INSERT             30400002
+&CNEG    SETB  (&CHIND LT 0)           SET INDEX MINUS SWITCH           30450002
+.********************************************************************** 30460002
+.*                            IECULK1                                 * 30470002
+.********************************************************************** 30480002
+         PUNCH '.TAB&M   ANOP         LOOK UP UCB TAB'                  30500002
+         AIF   (&M NE 1).LSTLAB        CHECK FOR FIRST CHAN ENTRY       30550002
+         PUNCH 'UCBTAB   DS    0C         THIS IS THE LOOK UP TAB'      30600002
+         PUNCH 'IECILK1  DS    0C'   SET UP LOOK UP TAB LABEL           30650002
+.LSTLAB PUNCH ' IECULK1 &CHIND,&OCHAN,&NCHAN,&LSTDEV,&CNEG,&IRSW,&EXTCH*30700064
+               AN'                                                      30750002
+&M       SETA  &M+1                    UPDATE CHANNEL COUNT             30800002
+         PUNCH '         AGO   .TAB&M     TO NEXT CHANNEL ENTRY'        30850002
+&OCHAN   SETA  &NCHAN                  UPDATE OLD CHANNEL ADDR.         30900002
+&NCHANSW SETB  1                   SET NEW CHANNEL                      30950002
+.NCURTN  AIF   (&IRSW EQ 0).NCUCON      INITIAL RUN NEW CONTROL UNIT    31000002
+&CUINDX  SETA  &CUINDX+2               AUTO UPDATE OF CU INDEX          31050002
+.NCUCON  ANOP                                                           31100002
+&CUINDX  SETA  (2*&OUA)-(2*&NUA)+&CUINDX      NEW CNTRL UNIT INDEX      31150002
+&CUNEG   SETB  (&CUINDX LT 0)          SET CU INDEX MUNUS SWITCH        31200002
+.********************************************************************** 31210002
+.*                            IECULK2                                 * 31220002
+.********************************************************************** 31230002
+   PUNCH '.TCU&T   IECULK2 &CUINDX,&OCU,&NCU,&CHIND,&NCHANSW,&CNEG,&CUN*31250002
+               EG'                                                      31300002
+&T       SETA  &T+1                    UPDATE CU MOD COUNT              31350002
+         PUNCH '         AGO   .TCU&T       TO NEXT ENTRY'              31400002
+&NCUSW   SETB  1                       SET NEW CONTROL UNIT SWITCH      32150002
+&OCU     SETA  &NCU                    UPDATE CURRENT CU ADDRESS        32200002
+         AGO   .UAUDTE                                                  32250002
+.*                                                                      32300002
+.COMPARE ANOP                                                           32350002
+.*  SKIP THIS CODE FOR NEW DEVICE SINCE INFO IS IN DFT         @G64HPLP 32356064
+         AIF   (&SGINTFB(&DITX)).ALTCHPT NEW DEV.              @G64HPLP 32360064
+.********************************************************************** 32370004
+.*                                                             @Y40MPLG 32390004
+.*   COMPUTE THE VALUE FOR &FLP1 WHICH SETS UP THE FLAG        @Y40MPLG 32410004
+.*     BYTE UCBFLP1.                                           @Y40MPLG 32430004
+.*     BIT X'04' - DEVICE HAS ERROR LOGGING BUFFER.            @Y40MPLG 32450004
+.********************************************************************** 32470004
+&FLP1    SETA  0                   INITIALIZE                  @Y40MPLG 32490004
+         AIF   (NOT &SGDF10B(&COUNTB)).COMPAR1    ERROR LOG?   @G30HNLO 32500041
+&FLP1    SETA  &FLP1+4             SET ERROR LOG FLAG          @Y40MPLG 32570004
+.*                                                             @Y40MPLG 32590004
+.COMPAR1 ANOP                                                  @Y40MPLG 32610004
+.********************************************************************** 32642003
+.*                                                                    * 32645003
+.*   COMPUTE THE VALUE FOR &FL5 NEEDED TO INDICATE THE DASD           * 32650002
+.*     CHARACTERISTICS  - NEEDS STAND ALONE SEEK                      * 32652002
+.*                      - DISCONNECT COMMAND CHAINING DEVICE          * 32654002
+.*                      - ENVIRONMENTAL DATA PRESENT                  * 32656002
+.*                                                                    * 32660002
+.********************************************************************** 32670002
+         AIF   (NOT &SGDT03B(&COUNTB)).FL502  CHECK FOR DASD            32720002
+         AIF   (&SGDU06B(&COUNTB)).FL501      IT'S DASD, IS IT 2314     32770002
+&FL5     SETA  136                 NO, SET DCC,ENVIRONMENTAL DATA       32820002
+         AGO   .FL502                                                   32870002
+.FL501   ANOP                                                           32920002
+&FL5     SETA  32                  2314, SET SAS                        32970002
+.FL502   ANOP                                                           33020002
+.********************************************************************** 33070002
+.*       THIS SECTION TESTS FOR ALTERNATE CHANNEL PATHS                 33600002
+.********************************************************************** 33610002
+.ALTCHPT AIF   (&SGDT08B(&COUNTB)).SACHMSK                              33650002
+         AIF   (&SGDAP7B(&COUNTB) OR &SGDAP8B(&COUNTB) OR &SGDAP9B(&COU*33700002
+               NTB) OR &SGDAPAB(&COUNTB) OR &SGDAPBB(&COUNTB)).ALOC7    33750002
+         AIF   (&SGDAPCB(&COUNTB) OR &SGDAPDB(&COUNTB) OR &SGDAPEB(&COU*33800002
+               NTB) OR &SGDAPFB(&COUNTB)).ALOC7   TEST FOR + 7 ALT I267 33850002
+         AIF   (NOT &SGDAP1B(&COUNTB) AND NOT &SGDAP2B(&COUNTB) AND NOT*33900002
+                &SGDAP3B(&COUNTB) AND NOT &SGDAP4B(&COUNTB) AND NOT &SG*33950002
+               DAP5B(&COUNTB) AND NOT &SGDAP6B(&COUNTB)).SACHMSK        34000002
+.ALOC7   ANOP                                                           34050002
+&FL5     SETA  &FL5+1                  YES,ADD ALT. BIT TO ALOC-CH-MSK  34150002
+         AIF   (&SGCHANB(&NCHAN*15+4)).SACHMSK    TEST FOR HSMPX        34200002
+&TCHAP   SETB  1                        SET ALTERNATE INDICATOR         34250002
+.SACHMSK ANOP                                                           34300002
+.*  SKIP THIS CODE FOR NEW DEVICE SINCE INFO IS IN DFT         @G64HPLP 34500064
+         AIF   (&SGINTFB(&DITX)).CDEVTB  NEW DEV INTERFACE ?   @G64HPLP 34520064
+         AIF   (NOT &SGDT01B(&COUNTB)).DATSTA   IS IT A TAPE MAG/PAPER  34600064
+         AIF   (&SGDU01B(&COUNTB)).NORMTRP  2400?                       34650064
+&TYPE    SETC  'AT'                  SET NEW TAPE TYPE                  34700064
+         AGO   .CDEVTB                   GO CHECK QUEING                34750064
+.NORMTRP ANOP                                                           34800064
+&TYPE    SETC  'TA'                    SET TYPE TO TAPE                 34850064
+         AGO   .CDEVTB                 TO TEST FOR QUEUEING OPTIONS     34900064
+.DATSTA  AIF   (NOT &SGDT03B(&COUNTB)).TPTST   IS IT DIR/ACC            34950064
+         AIF   (&SGDU06B(&COUNTB)).T2314 TEST FOR 2314                  35000064
+         AIF   (&SGDU08B(&COUNTB)).ZS  TEST FOR 2305                    35050064
+.*                                                             @Z30RSTA 35100064
+&TYPE    SETC  'ML'                     SET TYPE TO 3330,3340,3350      35150064
+         AGO   .CDEVTB                                                  35200064
+.ZS      ANOP                           2305                            35250064
+&TYPE    SETC  'ZS'                     SET TYPE TO ZEUS                35300064
+         AGO   .CDEVTB                                                  35350064
+.T2314   ANOP                           NOT DRUM MUST BE DISK           35400064
+&TYPE    SETC  'DA'                     YES-SET D/A TYPE                35450064
+         AIF   (&SGUNF5B(&COUNTB)).SETDS                                35500064
+         AIF   (NOT &SGDF02B(&COUNTB)).CDEVTB                           35550064
+.SETDS   ANOP                                                           35600064
+&TYPE    SETC  'DS'                                                     35650064
+         AGO   .CDEVTB                                                  35700064
+.TPTST   AIF   (&SGDT08B(&COUNTB) OR &SGDT12B(&COUNTB) OR              *36100002
+               &SGDT09B(&COUNTB)).TPTSTX                                36110002
+         AIF   (NOT &SGDT02B(&COUNTB)).GRDEV NOT OPT RDR OR TP          36150002
+.********************************************************************** 36160002
+.*                                                                    * 36170002
+.*             TEST FOR OPTICAL READER                                * 36200002
+.*                                                                    * 36210002
+.********************************************************************** 36220002
+         AIF   (&SGDAD1B(&COUNTB) OR &SGDAD8B(&COUNTB)).TPTSTX          36250002
+         AIF   (&SGDU01B(&COUNTB) OR &SGDU02B(&COUNTB) OR &SGDU03B(&COU*36300064
+               NTB)).UNREC              TEST FOR TP                     36350064
+.TPTSTX  ANOP                                                           36400064
+&TYPE    SETC  'TP'                     SET T/P FOR DCV TAB             36450064
+         AGO   .CDEVTB                                                  36500064
+.GRDEV   AIF   (NOT &SGDT05B(&COUNTB)).UNREC   TEST FOR GRAPHIC         36550064
+&TYPE    SETC  'GR'                     SET GR CODE FOR DEVICE TABLE    36600064
+&GR      SETB  1                        SET IECIOS PARAM FOR GRAPHICS   36650064
+         AGO   .CDEVTB                                                  36700064
+.UNREC   AIF   (NOT &SGDUMMY(&COUNTB)).UNREC2      NOT DUMMY            36750064
+&TYPE    SETC  'DUM'                    SET TYPE TO DUMMY               36800064
+         AGO   .CDEVTB                                                  36850064
+.UNREC2  ANOP                           ALL OTHERS UR                   36900064
+         AIF   (NOT &SGDT06B(&COUNTB) OR NOT (&SGDU06B(&COUNTB) OR &SGD*36950064
+               U07B(&COUNTB) OR &SGDU10B(&COUNTB)                      *37000064
+               OR &SGDU09B(&COUNTB))).UNREC3                   @G30HNLO 37050064
+&TYPE    SETC  'WR'                     SET TYPE TO PRINTER             37100064
+         AGO   .CDEVTB                                                  37150064
+.UNREC3  ANOP                                                           37200064
+         AIF   (NOT &SGDT07B(&COUNTB) OR NOT(&SGDU08B(&COUNTB) OR &SGDU*37250064
+               09B(&COUNTB))).UNREC4                                    37300064
+&TYPE    SETC  'WR'                        SET TYPE TO NEW UR           37350064
+         AGO   .CDEVTB                                                  37400064
+.UNREC4  ANOP                                                           37450064
+&TYPE    SETC  'UR'                    SET TYPE TO UNIT RECORD          37500064
+.CDEVTB  ANOP                                                           39050002
+.********************************************************************** 39260002
+.*                                                                    * 39300002
+.*      THIS ROUTINE COMPUTES THE LOGICAL CHANNEL INDEX               * 39350002
+.*                                                                    * 39400002
+.*          TEST FOR MPLXOR CHAN AND IF SO ARE THERE ANY BURST DEVICS * 39450002
+.*       LCHWRD COMPUTATION - OUT-PUT IS/PER CHANNEL                  * 39500002
+.*                                                                    * 39510002
+.********************************************************************** 39520002
+.*                                                                      39530002
+.********************************************************************** 39532002
+.*                                                                    * 39540002
+.*               TEST FOR MULTIPLEXOR CHANNEL ONLY                    * 39550002
+.*                                                                    * 39560002
+.********************************************************************** 39570002
+&LCHCNT  SETA  1                         RESET CONMON COUNTRE           39600002
+.********************************************************************** 39610002
+.*                                                                    * 39620002
+.*        TEST FOR HI-SPEED MPX AND ALT. PATH/MULT LCH THIS CHANNEL   * 39650002
+.*                                                                    * 39660002
+.********************************************************************** 39670002
+    AIF   (NOT &SGCHANB(&NCHAN*15+4) OR NOT &HSALT(&NCHAN+1)).LCHLOOP   39700002
+.********************************************************************** 39714002
+.*                                                                    * 39720002
+.*        TEST FOR NEW CHANNEL SWITCH ON                              * 39750002
+.*                                                                    * 39760002
+.********************************************************************** 39770002
+         AIF   (NOT &NCHANSW).SSCUTST   NOT ON-GO TEST FOR NEW CU       39800002
+.********************************************************************** 39810002
+.*                                                                    * 39820002
+.*        TEST FOR NON-SUB SELECTOR CHANNEL ON NEW CHANNEL            * 39850002
+.*                                                                    * 39860002
+.********************************************************************** 39870002
+         AIF   ('&DEVAD'(2,1) LT 'C' AND '&DEVAD'(2,1) GT 'F').NOPRIM   39900002
+         AGO   .HSNLCH                  GO SET UP NEW LCH               39950002
+.********************************************************************** 39960002
+.*                                                                    * 39970002
+.*        TEST FOR NEW CONTROL UNIT                                   * 40000002
+.*                                                                    * 40010002
+.********************************************************************** 40020002
+.SSCUTST AIF   (NOT &NCUSW).HSLCHLP     GO FIND RIGHT LCH               40050002
+.********************************************************************** 40060002
+.*                                                                    * 40070002
+.*        TEST FOR NON-SUB SELECTOR CHANNEL                             40100002
+.*                                                                    * 40110002
+.********************************************************************** 40120002
+         AIF   ('&DEVAD'(2,1) LT 'C' AND '&DEVAD'(2,1) GT 'F').LCHSET   40150002
+.********************************************************************** 40160002
+.*                                                                    * 40170002
+.*        IF ALL CONDITIONS EXIST BELOW - THE LCH NUMBER IS SET       * 40200002
+.*                                                                    * 40210002
+.********************************************************************** 40220002
+.HSLCHLP AIF   (&SGDAP2B(&COUNTB) NE &LCHAP2(&LCHCNT)).HSNXLCH          40250002
+         AIF   (&SGDAP3B(&COUNTB) NE &LCHAP3(&LCHCNT)).HSNXLCH          40300002
+         AIF   (&SGDAP4B(&COUNTB) NE &LCHAP4(&LCHCNT)).HSNXLCH          40350002
+         AIF   ('&DEVAD'(2,1) EQ 'C').LCHSET                            40400002
+         AIF   ('&DEVAD'(2,1) NE 'D').CHKE                              40450002
+         AIF   (NOT &HSPRIM2(&LCHCNT) AND (&LCHAP3(&LCHCNT) OR &LCHAP4(*40500064
+               &LCHCNT))).HSNXLCH                                       40550002
+         AGO   .LCHSET                                                  40600002
+.CHKE    AIF   ('&DEVAD'(2,1) NE 'E').LCHSET                            40650002
+         AIF   (NOT &HSPRIM3(&LCHCNT) AND &LCHAP4(&LCHCNT)).HSNXLCH     40700002
+         AGO   .LCHSET                                                  40750002
+.HSNXLCH ANOP                                                           40800002
+&LCHCNT  SETA  &LCHCNT+1                UPDATE INDEX                    40850002
+         AIF   (&LCHCNT LE &LCHSTOT).HSLCHLP TEST FOR LAST TEST         40900002
+.********************************************************************** 40910002
+.*                                                                    * 40920002
+.*                THEN - SET UP NEW LCH                               * 40950002
+.*                                                                    * 40960002
+.********************************************************************** 40970002
+.HSNLCH  ANOP                                                           41000002
+&LCHCNT  SETA  &LCHSTOT+1               UPDATE LCH NUMBER               41050002
+.********************************************************************** 41060002
+.*                                                                    * 41070002
+.*        IF NO ALTERNATES - MUST BE ON MPX LCH                         41100002
+.*        NOW SET THE PRIMARY PATH SWITCH                               41150002
+.*                                                                    * 41160002
+.********************************************************************** 41170002
+         AIF   ('&DEVAD'(2,1) NE 'C').PTST1  TEST FOR 'C' PRIMARY       41200002
+&HSPRIM1(&LCHCNT) SETB 1                SET 'C' PRIME INDICATOR         41250002
+         AGO   .NOPRIM                  SWITCH SET                      41300002
+.PTST1   AIF   ('&DEVAD'(2,1) NE 'D').PTST2  TEST FOR 'D' PRIMARY       41350002
+&HSPRIM2(&LCHCNT) SETB 1                SET 'D' PRIMARY INDICATOR       41400002
+         AGO   .NOPRIM                  SWITCH SET                      41450002
+.PTST2   ANOP                                                           41500002
+&HSPRIM3(&LCHCNT) SETB 1                SET 'E' PRIMARY INDICATOR       41550002
+.NOPRIM  ANOP                                                           41600002
+.********************************************************************** 41610002
+.*                                                                    * 41620002
+.*               SET THE ALTERNATE PATH SWITCH                        * 41650002
+.*                                                                    * 41660002
+.********************************************************************** 41670002
+&LCHAP2(&LCHCNT) SETB (&SGDAP2B(&COUNTB))    SET 'D' ALT PATH           41700002
+&LCHAP3(&LCHCNT) SETB (&SGDAP3B(&COUNTB))    SET 'E' ALT PATH           41750002
+&LCHAP4(&LCHCNT) SETB (&SGDAP4B(&COUNTB))    SET 'F' ALT PATH           41800002
+&LCHSTOT SETA  &LCHSTOT+1               UPDATE COUNTER FOR THIS CH      41850002
+.********************************************************************** 41860002
+.*                                                                    * 41870002
+.* THIS COMPUTES AND SAVES LCH INFO FOR SEL CH AND HSMPX NON-ALT PATH * 41900002
+.*                                                                    * 41910002
+.********************************************************************** 41920002
+         AGO   .LCHSET                                                  41950002
+.LCHLOOP ANOP           THIS COMPUTES AND SAVES NEEDED LCH INFO.        42000002
+         AIF   (&SGCHANB(&OCHAN*15+2)).MPXLCHA    TEST FOR MPX          42050002
+         AIF   (&NCHSW).NEWLCH         NEW CHANNEL-INITIALIZE TABLE     42100002
+         AIF   (&SGDAP1B(&COUNTB) NE &LCHAP1(&LCHCNT) AND &OCHAN NE 1).*42150002
+               NXTLCH                    TO CHECK NEXT ENTRY IN TABLE   42200002
+         AIF   (&SGDAP2B(&COUNTB) NE &LCHAP2(&LCHCNT) AND &OCHAN NE 2).*42250002
+               NXTLCH                    TO CHECK NEXT ENTRY IN TABLE   42300002
+         AIF   (&SGDAP3B(&COUNTB) NE &LCHAP3(&LCHCNT) AND &OCHAN NE 3).*42350002
+               NXTLCH                    TO CHECK NEXT ENTRY IN TABLE   42400002
+         AIF   (&SGDAP4B(&COUNTB) NE &LCHAP4(&LCHCNT) AND &OCHAN NE 4).*42450002
+               NXTLCH                    TO CHECK NEXT ENTRY IN TABLE   42500002
+         AIF   (&SGDAP5B(&COUNTB) NE &LCHAP5(&LCHCNT) AND &OCHAN NE 5).*42550002
+               NXTLCH                    TO CHECK NEXT ENTRY IN TABLE   42600002
+         AIF   (&SGDAP6B(&COUNTB) NE &LCHAP6(&LCHCNT) AND &OCHAN NE 6).*42650002
+               NXTLCH                    TO CHECK NEXT ENTRY IN TABLE   42700002
+         AIF   (&SGDAP7B(&COUNTB) NE &LCHAP7(&LCHCNT) AND &OCHAN NE 7).*42750002
+               NXTLCH                                                   42800002
+         AIF   (&SGDAP8B(&COUNTB) NE &LCHAP8(&LCHCNT) AND &OCHAN NE 8).*42850002
+               NXTLCH                                                   42900002
+         AIF   (&SGDAP9B(&COUNTB) NE &LCHAP9(&LCHCNT) AND &OCHAN NE 9).*42950002
+               NXTLCH                                                   43000002
+         AIF   (&SGDAPAB(&COUNTB) NE &LCHAP10(&LCHCNT) AND &OCHAN NE 10*43050002
+               ).NXTLCH                                                 43100002
+         AIF   (&SGDAPBB(&COUNTB) NE &LCHAP11(&LCHCNT) AND &OCHAN NE 11*43150002
+               ).NXTLCH                                                 43200002
+         AIF   (&SGDAPCB(&COUNTB) NE &LCHAP12(&LCHCNT) AND &OCHAN NE 12*43250002
+               ).NXTLCH                                                 43300002
+         AIF   (&SGDAPDB(&COUNTB) NE &LCHAP13(&LCHCNT) AND &OCHAN NE 13*43350002
+               ).NXTLCH                                                 43400002
+         AIF   (&SGDAPEB(&COUNTB) NE &LCHAP14(&LCHCNT) AND &OCHAN NE 14*43450002
+               ).NXTLCH                                                 43500002
+         AIF   (&SGDAPFB(&COUNTB) NE &LCHAP15(&LCHCNT) AND &OCHAN NE 15*43550002
+               ).NXTLCH                                                 43600002
+         AGO   .LCHSET                  TO SET LCHTAB FOR UCB           43650002
+.MPXLCHA ANOP                                                           43700002
+&LCHN    SETA  &LCHTOT                  SET UCB LCHTAB                  43750002
+         AGO   .ERTAB                   TO COMPUTE ERRTAB DOR UCB       43800002
+.NXTLCH  ANOP           THIS ENTERS A NEW LOGICAL CHANNEL OR RETURNS    43850002
+&LCHCNT  SETA  &LCHCNT+1               UPDATE INDEX                     43900002
+         AIF   (&LCHCNT LE &LCHSTOT).LCHLOOP  LAST ENTRY,NO-RETURN      43950002
+.NEWLCH  ANOP                          INITI ALIZATION ENTRY TO TABLES  44000002
+&S1(61+&LCHTOT+&LCHSTOT)  SETB (&SGDAP1B(&COUNTB) OR &OCHAN EQ 1)       44050002
+&S1(121+&LCHTOT+&LCHSTOT) SETB (&SGDAP2B(&COUNTB) OR &OCHAN EQ 2)       44100002
+&S1(181+&LCHTOT+&LCHSTOT) SETB (&SGDAP3B(&COUNTB) OR &OCHAN EQ 3)       44150002
+&S2(&LCHTOT+&LCHSTOT+1)   SETB (&SGDAP4B(&COUNTB) OR &OCHAN EQ 4)       44200002
+&S2(61+&LCHTOT+&LCHSTOT)  SETB (&SGDAP5B(&COUNTB) OR &OCHAN EQ 5)       44250002
+&S2(121+&LCHTOT+&LCHSTOT) SETB (&SGDAP6B(&COUNTB) OR &OCHAN EQ 6)       44300002
+&S2(181+&LCHTOT+&LCHSTOT) SETB (&SGDAP7B(&COUNTB) OR &OCHAN EQ 7)       44350002
+&S3(&LCHTOT+&LCHSTOT+1)   SETB (&SGDAP8B(&COUNTB) OR &OCHAN EQ 8)       44400002
+&S3(61+&LCHTOT+&LCHSTOT)  SETB (&SGDAP9B(&COUNTB) OR &OCHAN EQ 9)       44450002
+&S3(121+&LCHTOT+&LCHSTOT) SETB (&SGDAPAB(&COUNTB) OR &OCHAN EQ 10)      44500002
+&S3(181+&LCHTOT+&LCHSTOT) SETB (&SGDAPBB(&COUNTB) OR &OCHAN EQ 11)      44550002
+&S4(&LCHTOT+&LCHSTOT+1)   SETB (&SGDAPCB(&COUNTB) OR &OCHAN EQ 12)      44600002
+&S4(61+&LCHTOT+&LCHSTOT)  SETB (&SGDAPDB(&COUNTB) OR &OCHAN EQ 13)      44650002
+&S4(121+&LCHTOT+&LCHSTOT) SETB (&SGDAPEB(&COUNTB) OR &OCHAN EQ 14)      44700002
+&S4(181+&LCHTOT+&LCHSTOT) SETB (&SGDAPFB(&COUNTB) OR &OCHAN EQ 15)      44750002
+&LCHAP1(&LCHCNT) SETB (&SGDAP1B(&COUNTB) OR &OCHAN EQ 1)  SET           44800002
+&LCHAP2(&LCHCNT) SETB (&SGDAP2B(&COUNTB) OR &OCHAN EQ 2)    UP          44850002
+&LCHAP3(&LCHCNT) SETB (&SGDAP3B(&COUNTB) OR &OCHAN EQ 3)       NEW      44900002
+&LCHAP4(&LCHCNT) SETB (&SGDAP4B(&COUNTB) OR &OCHAN EQ 4)            LCH 44950002
+&LCHAP5(&LCHCNT) SETB (&SGDAP5B(&COUNTB) OR &OCHAN EQ 5)   CHANNEL      45000002
+&LCHAP6(&LCHCNT) SETB (&SGDAP6B(&COUNTB) OR &OCHAN EQ 6)          PATHS 45050002
+&LCHAP7(&LCHCNT)  SETB (&SGDAP7B(&COUNTB) OR &OCHAN EQ 7)               45100002
+&LCHAP8(&LCHCNT)  SETB (&SGDAP8B(&COUNTB) OR &OCHAN EQ 8)               45150002
+&LCHAP9(&LCHCNT)  SETB (&SGDAP9B(&COUNTB) OR &OCHAN EQ 9)               45200002
+&LCHAP10(&LCHCNT) SETB (&SGDAPAB(&COUNTB) OR &OCHAN EQ 10)              45250002
+&LCHAP11(&LCHCNT) SETB (&SGDAPBB(&COUNTB) OR &OCHAN EQ 11)              45300002
+&LCHAP12(&LCHCNT) SETB (&SGDAPCB(&COUNTB) OR &OCHAN EQ 12)              45350002
+&LCHAP13(&LCHCNT) SETB (&SGDAPDB(&COUNTB) OR &OCHAN EQ 13)              45400002
+&LCHAP14(&LCHCNT) SETB (&SGDAPEB(&COUNTB) OR &OCHAN EQ 14)              45450002
+&LCHAP15(&LCHCNT) SETB (&SGDAPFB(&COUNTB) OR &OCHAN EQ 15)              45500002
+&LCHSTOT SETA  &LCHSTOT+1              UPDATE SUBTOTAL OF LCHS          45550002
+.LCHSET  ANOP                                                           45600002
+&LCHN    SETA  &LCHCNT+&LCHTOT-1       SET LCH TABLE INDEX FOR UCB      45650002
+.********************************************************************** 45710002
+.*                                                                    * 45750002
+.*      THIS ROUTINE COMPUTES THE ERROR TAB FOR THE UCB               * 45800002
+.*                                                                    * 45810002
+.********************************************************************** 45820002
+.ERTAB   ANOP                          THIS ROUTINE FINDS THE ERRTAB FO 45850002
+&NCHSW   SETB  0                       RESET LCH NEW CHANNEL SWITCH     45900002
+&LCHCNT  SETA  0                       RESET COMMON COUNTER             45950002
+&SHRUP   SETA  0                       RESET SHARED UP                  45970003
+&EBCDIC  SETC  '000'                   INITIALIXE OPTIOMN FIELD         46000002
+&TYPEA   SETC  '00000000'                                               46050002
+         AIF   (&PCUINDX EQ &SAVECU).DEVN  1ST DEVICE ON CU             46100002
+&SAVECU  SETA  &PCUINDX                                                 46150002
+&DEVNDX  SETA  0                        RESET DEVICE COUNT              46200002
+.DEVN    ANOP                                                           46250002
+&DEVNDX  SETA  &DEVNDX+1                                                46300002
+.*     TEST FOR TAPE--IF NOT, SKIP TO TEST FOR DASD            @G64HPLP 46350064
+         AIF   ('&SGDTYPC(&DITX)'(5,2) NE '80').TFDISK         @G64HPLP 46380064
+.*  SKIP THIS CODE FOR NEW DEVICE SINCE INFO IS IN DFT OR DIT  @G64HPLP 46410064
+         AIF   (&SGINTFB(&DITX)).NUCBPUT NEW DEV SO SKIP TEST  @G64HPLP 46440064
+         AIF   (NOT &SGDF08B(&COUNTB)).HSCHNCK  ALTERNATE POWER FEATURE 46550064
+&LCHCNT  SETA  &LCHCNT+1         ALTERNATE POWER                        46600064
+.HSCHNCK ANOP                                                           46650064
+&NUCSIZ  SETA  &NUCSIZ+24               ADD TAPE                        46700064
+         AIF   (NOT &SGDF03B(&COUNTB)).E2400  CHECK FOR R/W TAU         46750064
+&LCHCNT  SETA  &LCHCNT+8                SET R/W TAU BIT                 46800064
+.E2400   AIF   (NOT &SGUNF6B(&COUNTB)).TCUAP      TEST FOR ALT CU       46850064
+&FL5     SETA  &FL5+2                   SET ALT CU FLAG                 47350002
+.TCUAP   ANOP                                                           47400002
+&ERRTAB  SETC  '09'                      SET TAPE ERRTAB                47450002
+         AIF   (&SGDU01B(&COUNTB)).E240A       2400?                    47500002
+&TYPEA   SETC  '30008003'                SET 34XX TYPE                  47550002
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 47570064
+&FL5     SETA  &FL5+16                   SET 20 BYTE STAT BIT           47600002
+         AIF   (&SGDM04B(&COUNTB) OR &SGDM06B(&COUNTB) OR &SGDM08B(&COU*47606002
+               NTB)).E34M468                                    @YM8658 47612064
+         AIF   (&SGDF01B(&COUNTB)).E347TRK                      OZ00084 47652064
+&LCHCNT  SETA  &LCHCNT+1024              SET PHASE IN CODE BIT          47692064
+         AGO   .E240B                                                   47800002
+.E347TRK ANOP                                                   OZ00084 47800503
+&LCHCNT  SETA  &LCHCNT+192                                      OZ00084 47801003
+         AGO   .SETYPA                                          OZ00084 47801503
+.E34M468 ANOP                                                           47802064
+&LCHCNT  SETA  &LCHCNT+512   SET FOR MODELS 4 6 8               @YM8658 47805064
+         AIF   (&SGDF06B(&COUNTB)).E34O16                       @YM5087 47808064
+         AGO   .E240B                                                   47811064
+.E34O16  ANOP                                                           47814064
+&LCHCNT  SETA  &LCHCNT+16    SET FOR 1600/6250                  @YM8658 47820002
+         AGO   .E240B                                                   47830002
+.E240A   ANOP                                                           47850002
+&TYPEA   SETC  '30008001'    SET 2400 TAPE TYPE                         47900002
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 47920064
+         AIF   (NOT(&SGDM04B(&COUNTB) OR &SGDM05B(&COUNTB) OR &SGDM06B(*47950064
+               &COUNTB))).H01   BR IF NOT PHASE IN CODE                 48000002
+&LCHCNT  SETA  &LCHCNT+1024         SET PHASE IN CODE MODEL BIT         48050002
+.E240B   ANOP                                                           48100002
+         AIF   (&SGDF01B(&COUNTB)).H01  TEST FOR 7-TRK                  48150002
+         AIF   (&SGUNU8B(&COUNTB) AND &SGUNF4B(&COUNTB)).T2415          48200064
+         AIF   (NOT(&SGDF04B(&COUNTB))).SETYPA BR IF NOT DUO-DENSITY    48250002
+.T2415   ANOP                                                           48300002
+&LCHCNT  SETA  &LCHCNT+32               SET DUO-DENSITY FEATURE BIT     48350002
+.H01     AIF   (NOT &SGDF01B(&COUNTB)).SETYPA     BR IF 9 TRACK         48400002
+&LCHCNT  SETA  &LCHCNT+128             SET SEVEN TRACK OPTION BIT       48450002
+         AIF   (NOT &SGUNF2B(&COUNTB)).SETYPA    DATA CONVERT TEST      48500064
+&LCHCNT  SETA  &LCHCNT+64              SET DATA CONVERSION BIT          48530064
+         AGO   .SETYPA                 TO SET TYPE FIELD FOR UCB        48560064
+.TFDISK  ANOP                                                  @G64HPLP 48590064
+.*     TEST FOR DASD--IF NOT, SKIP TO FURTHER DEVICE TESTS     @G64HPLP 48620064
+         AIF   ('&SGDTYPC(&DITX)'(5,2) NE '20').TFCON          @G64HPLP 48650064
+.*  SKIP THIS CODE FOR NEW DEVICE SINCE INFO IS IN DFT OR DIT  @G64HPLP 48680064
+         AIF   (NOT &SGINTFB(&DITX)).OLDDA1 NEW DEV INTERFACE  @G64HPLP 48710064
+         AIF   (NOT &SGUF52B(&COUNTB)).NUCBPUT   NOT S/A SEEK  @G64HPLP 48740064
+         AGO   .NEWDA1                  PROCESS S/A SEEK       @G64HPLP 48770064
+.OLDDA1  ANOP                                                  @G64HPLP 48800064
+&ERRTAB  SETC  '00'                     SET ERRTAB                      48960002
+&NUCSIZ  SETA  &NUCSIZ+16        INCREMENT UCB STORAGE COUNT   @ZA15707 48980000
+         AIF   (NOT &SGDF08B(&COUNTB)).MERLCK  ALTERNATE POWER FEATURE  49010002
+&LCHCNT  SETA  &LCHCNT+1         ALTERNATE POWER                        49060002
+.MERLCK  AIF   (&SGDU07B(&COUNTB)).EMLIN  IS IT 3330                    49950002
+         AIF   (&SGDU08B(&COUNTB)).E2305  IS IT 2305                    50000002
+         AIF   (&SGDU09B(&COUNTB)).E3340  IS IT 3340                    50050002
+         AIF   (&SGDU10B(&COUNTB)).E3350  IS IT 3350           @Z30RSTA 50100004
+.NEWDA1  ANOP                                                  @G64HPLP 50150064
+&SK1(61+&LCHN)  SETB (&SGDAP1B(&COUNTB) OR &OCHAN EQ 1)                 50300002
+&SK1(121+&LCHN) SETB (&SGDAP2B(&COUNTB) OR &OCHAN EQ 2)                 50350002
+&SK1(181+&LCHN) SETB (&SGDAP3B(&COUNTB) OR &OCHAN EQ 3)                 50400002
+&SK2(&LCHN+1)   SETB (&SGDAP4B(&COUNTB) OR &OCHAN EQ 4)                 50450002
+&SK2(61+&LCHN)  SETB (&SGDAP5B(&COUNTB) OR &OCHAN EQ 5)                 50500002
+&SK2(121+&LCHN) SETB (&SGDAP6B(&COUNTB) OR &OCHAN EQ 6)                 50550002
+&SK2(181+&LCHN) SETB (&SGDAP7B(&COUNTB) OR &OCHAN EQ 7)                 50600002
+&SK3(&LCHN+1)   SETB (&SGDAP8B(&COUNTB) OR &OCHAN EQ 8)                 50650002
+&SK3(61+&LCHN)  SETB (&SGDAP9B(&COUNTB) OR &OCHAN EQ 9)                 50700002
+&SK3(121+&LCHN) SETB (&SGDAPAB(&COUNTB) OR &OCHAN EQ 10)                50750002
+&SK3(181+&LCHN) SETB (&SGDAPBB(&COUNTB) OR &OCHAN EQ 11)                50800002
+&SK4(&LCHN+1)   SETB (&SGDAPCB(&COUNTB) OR &OCHAN EQ 12)                50850002
+&SK4(61+&LCHN)  SETB (&SGDAPDB(&COUNTB) OR &OCHAN EQ 13)                50900002
+&SK4(121+&LCHN) SETB (&SGDAPEB(&COUNTB) OR &OCHAN EQ 14)                50950002
+&SK4(181+&LCHN) SETB (&SGDAPFB(&COUNTB) OR &OCHAN EQ 15)                51000002
+         AIF   (&SGINTFB(&DITX)).NUCBPUT NEW DEV INTERFACE     @G64HPLP 51020064
+         AGO   .E2314                   MUST BE A 2314                  51050002
+.EMLIN   AIF   (NOT &SGDF03B(&COUNTB)).EMLINA IF 3330V THEN    @Y30LPLC 51160064
+&LCHCNT  SETA  &LCHCNT+8           SET VIRTUAL 3330            @Y30LPLC 51170003
+.EMLINA  ANOP                                                  @Y30LPLC 51190003
+         AIF   (&SGDM11B(&COUNTB)).E33301 MODEL 11 3330        @Y30LPLC 51200003
+&TYPEA   SETC  '30002009'               SET BASIC MERLIN TYPE           51250002
+         AIF   (&SGDF03B(&COUNTB)).EMLINB IF 3330V DONT        @G64HPLP 51260064
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 51270064
+.EMLINB  ANOP                                                  @G64HPLP 51280064
+&LCHCNT  SETA  &LCHCNT+80               TRACK OVERFLOW & RPS    @YM7692 51300002
+         AIF   (NOT &SGDF04B(&COUNTB)).SDTEST  TEST FOR ALT CU @YM07061 51330002
+&FL5     SETA  &FL5+2                                                   51360002
+.SDTEST  AIF   (NOT &SGDF02B(&COUNTB)).SETYPA     TEST FOR SHARED       51400002
+         AGO   .SETYPA1                 GO SET SHARED BIT               51500002
+.E33301  ANOP                                                           51510002
+&TYPEA   SETC  '3000200D'               SET 3330-11 TYPE                51520002
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 51525064
+&LCHCNT  SETA  &LCHCNT+80               TRACK OVERFLOW & RPS    @YM7692 51530002
+         AIF   (NOT &SGDF04B(&COUNTB)).SDTEST1 TEST FOR ALT CU @YM07061 51533002
+&FL5     SETA  &FL5+2                                                   51536002
+.SDTEST1 AIF   (NOT &SGDF02B(&COUNTB)).SETYPA     TEST FOR SHARED       51540002
+         AGO   .SETYPA1                 GO SET SHARED BIT               51544002
+.E2305A  ANOP                                                           51550002
+&ZUSBAS  SETC  '&DEVAD'                 GET BASE ADDR                   51600002
+&ZSCNT   SETA  0                        RESET ZEUS BASE - NEW ZEUS      51610002
+         AGO   .E2305B                                                  51650002
+.E2305   AIF   ((&ZSCNT EQ 8) OR (&ZSCNT LT 1)).E2305A                  51700002
+&OFF     SETB  1                        SET ONLINE FIRST PASS           51750002
+.E2305B  ANOP                                                           51800002
+&NUCSIZ  SETA  &NUCSIZ+8                ADD DIRECT ACCESS(2305)         51810002
+&ZSCNT   SETA  &ZSCNT+1                 INCREMENT COUNTER               51850002
+&DEVADE  SETC  '&ZUSBAS'                KEEP BASE SAME                  51900002
+&SYSRES  SETA 4                         SET NON-REMOVABLE               52000002
+         AIF   (&SGDM02B(&COUNTB)).MOD2Z                                52050002
+&TYPEA   SETC  '30002006'               SET BASIC 2305 MOD 1            52100002
+&LCHCNT  SETA  &LCHCNT+80               TRACK OVERFLOW & RPS    @YM7692 52150002
+         AGO   .MOD2ZA                  BRANCH AROUND                   52200002
+.MOD2Z ANOP                                                             52250002
+&LCHCNT  SETA  &LCHCNT+80               TRACK OVERFLOW & RPS    @YM7692 52300002
+&TYPEA   SETC  '30002007'               SET BASIC 2305 MOD 2            52350002
+.MOD2ZA  AIF   (NOT &SGDF02B(&COUNTB)).SETYPA     TEST FOR SHARED       52400002
+         AGO   .SETYPA1                 GO SET SHARED BIT               52450064
+.E3340   ANOP                                                           52456064
+&TYPEA   SETC  '3000200A'               SET 3340 TYPE                   52462064
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 52465064
+&LCHCNT  SETA  &LCHCNT+64               TRACK OVERFLOW         @G64HPLP 52469064
+         AIF   (NOT &SGDF04B(&COUNTB)).SDTEST2 TEST FOR ALT CU @YM07061 52473064
+&FL5     SETA  &FL5+2                                                   52477064
+.SDTEST2 AIF   (NOT &SGDF01B(&COUNTB)).CSHRD     TEST FOR RPS  @G64HPLP 52481064
+&LCHCNT  SETA  &LCHCNT+16                                      @G64HPLP 52485064
+.CSHRD   AIF   (NOT &SGDF02B(&COUNTB)).SETYPA   TEST FOR SHARED         52498064
+         AGO   .SETYPA1                 GO SET SHARED BIT               52504064
+.E3350   ANOP                                                  @Z30RSTA 52510064
+&TYPEA   SETC  '3000200B'               BASIC 3350 UCB TYPE    @Z30RSTA 52516064
+&LCHCNT  SETA  &LCHCNT+80               TRK OVERFLOW AND RPS   @G64HPLP 52522064
+&SYSRES  SETA  4                        NON-REMOVABLE          @Z30RSTA 52546404
+         AIF   (NOT &SGDF04B(&COUNTB)).SDTEST3   ALT CU        @Z30RSTA 52547004
+&FL5     SETA  &FL5+2                   SET ALT CU FLAG        @Z30RSTA 52547604
+.SDTEST3 AIF   (NOT &SGDF02B(&COUNTB)).SETYPA   TEST FOR SHR   @Z30RSTA 52548204
+         AGO   .SETYPA1                 GO SET SHARED BIT      @Z30RSTA 52549404
+.E2314   AIF   (NOT &SGDF04B(&COUNTB)).DCUAP  TEST FOR ALT CU  @YM07061 52550002
+&FL5     SETA  &FL5+2                   SET ALT CU FLAG                 52600002
+.DCUAP   ANOP                                                           52650002
+&TYPEA   SETC  '30002008'               SET BASIC 2314 DISK TYPE        52800002
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 52820064
+&LCHCNT  SETA  &LCHCNT+192              SET OVERFLOW AND SCAN BITS      52850002
+         AIF   (NOT &SGDF02B(&COUNTB)).SETYPA  TEST FOR SHARED DEVICE   52900002
+.SETYPA1 ANOP                                                           53000002
+         AIF   (NOT &SGDF05B(&COUNTB)).ESH                              53010003
+&SHRUP   SETA  1                                                        53020003
+.ESH     ANOP                                                           53030003
+&LCHCNT  SETA  &LCHCNT+32               SET SHARABLE BIT                53050002
+         AGO   .SETYPA                  TO SET FINAL TYPE WITH OPTION B 54700002
+.********************************************************************** 54710002
+.*                                                                    * 54720002
+.*             CONSOLE ERROR ROUTINE CHECK                            * 54750002
+.*                                                                    * 54760002
+.********************************************************************** 54770002
+.*  SKIP THIS CODE FOR NEW DEVICE SINCE INFO IS IN DFT OR DIT  @G64HPLP 54800064
+.TFCON   AIF   (&SGINTFB(&DITX)).NUCBPUT NEW DEV INTERFACE     @G64HPLP 54820064
+         AIF   (NOT &SGDT04B(&COUNTB)).TFDD  NOT CON-TEST FOR DISPLAYS  54900064
+&ERRTAB  SETC  '04'                     SET CONSOLE ERRTAB              54950064
+         AIF   (&SGDU01B(&COUNTB)).E1052     TEST FOR 1052              55000064
+         AIF   (&SGDU03B(&COUNTB)).E3210     TEST FOR 3210              55050064
+.********************************************************************** 55100064
+.*                                                                    * 55150064
+.*                     3215 DEVICE TYPE                               * 55200064
+.*                                                                    * 55410002
+.********************************************************************** 55420002
+&TYPEA   SETC  '10000823'               SET DEVTYPE FIELD               55450002
+         AGO   .UCBOPUT                                                 55500002
+.E3210   ANOP                                                           55550064
+&TYPEA   SETC  '10000822'               SET DEVTYPE FIELD               55600002
+         AGO   .UCBOPUT                                                 55650002
+.E1052   ANOP                                                           55700002
+&TYPEA   SETC  '10000820'               SET BASIC 1052 CONSOLE TYPE     55750002
+         AGO   .UCBOPUT                                                 55800002
+.TFPRT   AIF   (NOT &SGDT06B(&COUNTB)).TFRDPN   NOT PRINTER-TEST R/P    56000002
+         AIF   (&SGDU04B(&COUNTB)).E1419     TEST FOR 1419              56102002
+         AIF   (&SGDU05B(&COUNTB)).E1275     TEST FOR 1275              56102402
+         AIF   (&SGDU06B(&COUNTB)).E3211     TEST FOR 3211              56104002
+         AIF   (&SGDU08B(&COUNTB)).E3213     TEST FOR 3213              56160002
+         AIF   (&SGDU09B(&COUNTB)).E3895     TEST FOR 3895     @G30HNLO 56180041
+         AIF   (&SGDU10B(&COUNTB)).E3800     TEST FOR 3800     @Y40MPLG 56200004
+&ERRTAB  SETC  '07'                     SET 1443/1403 PRINTER ERRTAB    56250002
+         AIF   (&SGDU03B(&COUNTB)).E1443  1443 PRINTER                  56300002
+&TYPEA   SETC  '10000808'               SDT BASIC 1403 TYPE FIELD       56350002
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 56400064
+         AIF   (NOT &SGDF02B(&COUNTB)).UCBOPUT  NOT THIS FEATURE        56450002
+&LCHCNT  SETA  128                      SET UNIV CHAR SET FEATURE       56500002
+&NUCSIZ  SETA  &NUCSIZ+8                ADD UCS                         56550002
+         AGO   .SETYPA                  TO SET TYPE FIELD IN UCB        56600002
+.E1419   AIF   (&MCRDR).MCRSEC          TEST FOR SECONDARY CU           56650002
+&MCRDR   SETB  1                        SET SECOND PASS INDICATOR       56700002
+&TYPEA   SETC  '4000081D'               SET 1419 PRIMARY                56750002
+         AGO   .ETABMCR                 GO SET ERRTAB                   56800002
+.E1275   AIF   (&MCRDR).MCRSEC          TEST FOR SECONDARY CU           56850002
+&MCRDR   SETB  1                        SET SECOND PASS IND             56900002
+&TYPEA   SETC  '4000081F'               SET 1275 PRIMARY                56950002
+         AGO   .ETABMCR                 GO SET ERRTAB                   57000002
+.MCRSEC  ANOP                                                           57050002
+&MCRDR   SETB  0                        CLEAR SECOND PASS IND           57100002
+&TYPEA   SETC  '0000081E'               SET 1419/1275 SECONDARY         57150002
+.ETABMCR ANOP                                                           57200002
+&ERRTAB  SETC  '73'                     SET ERRTAB FOR 1419/1275        57250002
+         AGO   .UCBOPUT                 GO SET TYPE FIELD               57300002
+.TFDD    AIF   (NOT &SGDT05B(&COUNTB)).TFPRT      NOT DISPLAY-TEST PRT  57350002
+&NUCSIZ  SETA  &NUCSIZ+16               ADD GRAPHICS                    57450002
+.********************************************************************** 57500002
+.*                          SGIEC2GR                                  * 57550002
+.********************************************************************** 57552002
+&OFF     SETB  (&SGDOFFB(&COUNTB))     OFFLINE DESIRED                  57554002
+    SGIEC2GR   &UCBNO,&DEVAD,&TYPE,&CPRFX,&STATAB,&LCHN,&DEVNDX,&FL5,&S*57560002
+               YSRES,&SGDDTMC(&DITX),&OFF                      @G64HPLP 57570064
+&INDX    SETA  &INDX+1                 UPDATE DEVICE INDEX              57580064
+         AGO   .GREND                                                   57600002
+.E1443   ANOP             SET TYPE AND CHECK FEATURES ON 1443           57650002
+&TYPEA   SETC  '1000080A'               SET BASIC TYPE FOR 1443         57700002
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 57750064
+         AGO   .SETYPA                                                  57770064
+.E3211   ANOP                                                           57790064
+&TYPEA   SETC  '10800809'               SET 3211 TYPE                   57810064
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 57830064
+&ERRTAB  SETC  '07'                     SET ERRTAB                      57900002
+&NUCSIZ  SETA  &NUCSIZ+8                ADD EXTENSION                   57950002
+         AGO   .UCBOPUT                                                 58050002
+.E3213   ANOP                           SET 3213 FIELDS                 58060002
+&ERRTAB  SETC  '04'                     SET ERRTAB              @YM7790 58065002
+&TYPEA   SETC  '10000830'               SET 3213 DEV/UNIT TYPE          58070002
+         AGO   .UCBOPUT                 PUNCH IECIUCB MACRO CALL        58080002
+.E3895   ANOP                                                  @G30HNLO 58082041
+&TYPEA   SETC  '10000819'               SET 3895 TYPE          @G30HNLO 58084041
+&ERRTAB  SETC  '16'                     SET 3895 ERRTAB        @G30HNLO 58086041
+         AGO   .UCBOPUT                                        @G30HNLO 58088041
+.E3800   ANOP                                                  @Y40MPLG 58090004
+&TYPEA   SETC  '1000080E'          SET 3800 TYPE               @Y40MPLG 58100004
+&ERRTAB  SETC  '07'                SET ERRTAB                  @Y40MPLG 58110004
+&NUCSIZ  SETA  &NUCSIZ+32          ADD EXTENSION               @Y40MPLG 58120004
+&WCGMNO  SETC  '02'           DEFAULT 2 WCGMS                  @Y40MPLG 58130004
+&OPTNS   SETA  0                                               @Y40MPLG 58140004
+         AIF   (&SGDF02B(&COUNTB)).WCGM4    CGS2               @Y40MPLG 58180004
+         AGO   .OP3800                                         @Y40MPLG 58190004
+.WCGM4   ANOP                                                  @Y40MPLG 58393004
+&WCGMNO  SETC  '04'                INDICATE 4 WCGM             @Y40MPLG 58394004
+.OP3800  AIF   (NOT &SGDF07B(&COUNTB)).UCBOPUT                 @Y40MPLG 58400004
+&OPTNS   SETA  &OPTNS+2            SET BURSTER/TRIMER/STAK     @Y40MPLG 58407004
+         AGO   .UCBOPUT                                        @Y40MPLG 58414004
+.TFRDPN  AIF   (NOT &SGDT07B(&COUNTB)).TFUR  NOT R/P-TRY UR    @G29ANLO 58417041
+&LCHCNT  SETA  &SGDF01B(&COUNTB)                                        58428004
+         AIF   (&SGDU08B(&COUNTB) OR &SGDU09B(&COUNTB)).E35XX           58450002
+         AIF   (&SGDU02B(&COUNTB)).E2501  IS TI 2501 PUNCH              58500064
+         AIF   (&SGDU03B(&COUNTB)).E2520  IS IT A 2520 PUNCH            58550064
+         AIF  (&COUNTB EQ 0).SKIPME                                     58600064
+&LCHCNT  SETA  &SGUNF1B(&COUNTB)                                        58650064
+.SKIPME  ANOP                                                           58750002
+         AIF   (&SGDU04B(&COUNTB)).E2540R  IS TI A 2540 READET          58800002
+         AIF   (&SGDU05B(&COUNTB)).E2540P IS IT A 2540 PUNCH            58850002
+         AIF   (&SGDU06B(&COUNTB)).E2671     TEST FOR 2671              58900002
+         AIF   (&SGDU10B(&COUNTB)).E3886                                58910002
+         AIF   (&SGDU11B(&COUNTB)).E3890                                58920002
+         AIF   (&SGDU12B(&COUNTB)).E3540  IS IT A 3540 DISKET  @Y30OPLA 58927003
+.*                                 READER/WRITER.              @Y30OPLA 58934003
+         AIF   (&SGDU13B(&COUNTB)).EDSM  IS IT A SS1/DSM       @Y30LPLC 58941003
+.E2495   ANOP                                                           58950002
+&ERRTAB  SETC  '6F'                     SET 2495 ERRTAB                 59000002
+&TYPEA   SETC  '00000818'               SET 2495 DEVICE TYPE FLD        59050002
+         AGO   .ADDUR                                                   59100002
+.E2671   ANOP                                                  @YM04395 59150002
+&ERRTAB  SETC  '15'                     SET ERRTAB FOR 2671 PAPER TAPE  59200003
+.*                                                             @OZ02582 59220003
+&TYPEA   SETC  '10000810'              SET 2671 PAPER TAPE              59250002
+         AGO   .UCBOPUT                                                 59300002
+.E2501   ANOP                            2501 PUNCH ERRTAB AND TYPE     59650002
+&ERRTAB  SETC  '0D'                     SET 2501 PUNCH ERRTAB  @YM04395 59700002
+&TYPEA   SETC  '50000804'                SET BASIC 2501 TYPE            59750002
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 59770064
+         AGO   .SETYPA                                                  59800002
+.E2520   AIF   (&SGDM01B(&COUNTB)).E2520A                               59850002
+&LCHCNT  SETA  &LCHCNT+256                                              59900002
+.E2520A  ANOP                                                           59950002
+&ERRTAB  SETC  '0D'                     SET 2520 PUNCH ERRTAB  @YM04395 60000002
+         AIF   (&SGDM02B(&COUNTB) OR &SGDM03B(&COUNTB)).T2520 IS IT PCH 60050002
+&TYPEA   SETC  '50000805'                SET BASIC 2520 R/P TYPE        60100002
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 60150064
+         AGO   .SETYPA                                                  60170064
+.T2520   ANOP                            THIS IS A 2520 PUNCH ONLY      60190064
+&TYPEA   SETC  '10000805'              SET BASIC 2520 PUNCH TYPE        60210064
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 60230064
+         AGO   .SETYPA                                                  60300002
+.E2540P  ANOP                            2540 PUNCH ERRTAB AND TYPE     60350002
+&ERRTAB  SETC  '0D'   SET ERROR TAB                                     60400002
+&TYPEA   SETC  '10000802'     SET PUNCH TYPE FIELD                      60450002
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 60470064
+         AGO   .SETYPA                                                  60500002
+.E2540R  ANOP                            2540 READER ERRTAB AND TYPE    60550002
+&ERRTAB  SETC  '0D'                      SET 2540 R/P ERRTAB            60600002
+&TYPEA   SETC  '10000801'                SET BASIC 2540 TYPE FIELD      60650002
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 60670064
+         AGO   .SETYPA                                                  60700002
+.E35XX   ANOP                                                           60750002
+&ERRTAB  SETC  '0B'                    SET 3505,3525 ERRTAB             60850002
+         AIF   (NOT &SGDF03B(&COUNTB)).CHKMULT                          60900002
+&LCHCNT  SETA  &LCHCNT+32                SET TWOLINE PRINT      @YM7992 60950002
+         AGO   .E35XXA                                                  61000002
+.CHKMULT AIF   (NOT &SGDF02B(&COUNTB)).E35XXA                           61050002
+&LCHCNT  SETA  &LCHCNT+16                SET MULTI LINE PRINT           61100002
+.E35XXA  ANOP                                                           61150002
+         AIF   (&SGDU09B(&COUNTB)).E3525     3525?                      61200002
+&TYPEA   SETC  '10000806'              SET BASIC 3505 TYPE              61250002
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 61300064
+         AGO   .SETYPA                                                  61320064
+.E3525   ANOP                                                           61340064
+&TYPEA   SETC  '1000080C'              SET BASIC 3525 TYPE              61360064
+&FLP1    SETA  &FLP1+8                  SET DDR BIT IN UCBFLP1 @G64HPLP 61380064
+         AGO   .SETYPA                                                  61450002
+.EDSM    ANOP                                                  @Y30LPLC 61450903
+&ERRTAB  SETC  '12'                SET DSM ERROR TABLE INDEX   @ZM32164 61451803
+&TYPEA   SETC  '00000842'          SET DSM DEVICE TYPE         @Y30LPLC 61452703
+&NUCSIZ  SETA  &NUCSIZ+8           ADD DEVICE DEPEND. SECT.    @Y30LPLC 61453603
+&FL5     SETA  &FL5+12              SET UCBNALOC BIT           @Y30LPLC 61454004
+.*                                  AND ENVIORNMENTAL DATA     @ZUP1024 61454104
+         AGO   .SETYPA                                         @Y30LPLC 61454503
+.E3540   ANOP                                                  @Y30OPLA 61455403
+&ERRTAB  SETC  '17'                SET 3540 ERRTAB             @Y30OPLA 61456303
+&TYPEA   SETC  '00000844'          SET 3540 DEVICE TYPE        @Y30OPLA 61457203
+&NUCSIZ  SETA  &NUCSIZ+8           ADD EXTENSION LENGTH        @Y30OPLA 61458103
+         AGO   .SETYPA                                         @Y30OPLA 61459003
+.E3886   ANOP                                                           61460002
+&NUCSIZ  SETA   &NUCSIZ+8          INCREMENT UCB STORAGE COUNT @ZA15707 61460500
+&FL5     SETA   &FL5+16                                        @YM05205 61461002
+&ERRTAB  SETC  '10'                    SET 3886 ERRTAB                  61462002
+&TYPEA   SETC  '10000817'              SET BASIC 3886 TYPE              61470002
+         AGO   .SETYPA                                                  61480002
+.E3890   ANOP                                                           61490002
+&ERRTAB  SETC  '11'                    SET 3890 ERRTAB                  61490402
+&TYPEA   SETC  '10000816'              SET BASIC 3890 TYPE              61492002
+         AGO   .SETYPA                                                  61494002
+.TFUR    ANOP                          TEST FOR UNIT RECORD    @G29ANLO 61494541
+         AIF   (NOT &SGDT10B(&COUNTB)).TFASP NOT UR - TRY ASP  @G29ANLO 61495041
+         AIF   (&SGDU01B(&COUNTB)).E3838     IS IT 3838        @G29ANLO 61495541
+         AIF   (&SGDU02B(&COUNTB)).E7443     IS IT 7443        @ZM49533 61495764
+         AGO   .TFASP                  NO - CONTINUE AS BEFORE @G29ANLO 61496041
+.E3838   ANOP                                                  @G29ANLO 61496541
+&TYPEA   SETC  '3000084C'              SET 3838 TYPE           @G29ANLO 61497041
+&ERRTAB  SETC  '21'                    SET 3838 ERRTAB         @G29ANLO 61497541
+&NUCSIZ  SETA  &NUCSIZ+8               ADD DEVICE DEPENDENT    @G29ANLO 61498041
+&FL5     SETA  &FL5+128                SET DCC                 @G29ANLO 61498541
+         AGO   .UCBOPUT                                        @G29ANLO 61499041
+.E7443   ANOP                                                  @ZM49533 61499264
+&TYPEA   SETC  '1100083D'              SET 7443 TYPE           @ZM49533 61499464
+&ERRTAB  SETC  '00'                    NO ERP                  @ZM49533 61499664
+         AGO   .UCBOPUT                                        @ZM49533 61499864
+.TFASP  ANOP                           TEST FOR ASP DEVICES             61500002
+         AIF   (NOT &SGDT09B(&COUNTB)).TFTPD                            61502002
+&ERRTAB  SETC  '19'                    SET 3890 ERRTAB                  61504002
+&TYPEA   SETC  '10004100'              SET BASIC CTC TYPE               61506002
+&NUCSIZ  SETA  &NUCSIZ+8           INCREMENT UCB STORAGE COUNT @ZA15707 61507000
+         AIF   (NOT &SGDF04B(&COUNTB)).SETYPA                           61508002
+&LCHCNT  SETA  &LCHCNT+1               SET FEATURE=370                  61508402
+         AGO   .SETYPA                                                  61508802
+.TFTPD  ANOP                          TEST FOR TELEPROCESSSINF          61510002
+&ERRTAB  SETC  '00'                     SET DUMMY UCB ERRTAB            61550002
+         AIF   (NOT &SGDT02B(&COUNTB)).TPTYPB                           61600002
+         AIF   (&SGDU04B(&COUNTB) AND (&SGDAD1B(&COUNTB) OR &SGDAD3B(&C*61650002
+               OUNTB))).TPTYPA          TEST FOR TP                     61700002
+         AIF   (&SGDU01B(&COUNTB) AND &SGDAD8B(&COUNTB)).TPTYPA         61750002
+         AIF   (&SGDAD1B(&COUNTB) AND (&SGDU02B(&COUNTB) OR &SGDU03B(&C*61800002
+               OUNTB))).TPTYPA          2741C OR 2741P                  61850002
+         AIF   (&SGDAD7B(&COUNTB) AND (&SGDU05B(&COUNTB)OR &SGDU06B(&CO*61900002
+               UNTB)OR &SGDU07B(&COUNTB)OR &SGDU08B(&COUNTB))).TPTYPA   61950002
+         AIF   (NOT &SGDU02B(&COUNTB) OR &SGDAD1B(&COUNTB)).E1288       62000064
+&TYPEA   SETC  '4000081B'               SET 1287 TYPE                   62250002
+&ERRTAB  SETC  '71'                     SET ERRTAB                      62300002
+         AGO   .ADDUR                                                   62350002
+.E1288   AIF   (NOT &SGDU03B(&COUNTB) OR &SGDAD1B(&COUNTB)).TPTYPB      62400002
+&TYPEA   SETC  '4000081C'               SET 1288 TYPE                   62450002
+&ERRTAB  SETC  '72'                     SET ERRTAB                      62500002
+.ADDUR   ANOP                                                           62550002
+         AGO   .UCBOPUT                                                 62650002
+.TPTYPB  AIF (NOT &SGDT08B(&COUNTB) AND NOT &SGDT12B(&COUNTB)).UCBOPUT  62700002
+.*                                                                      62750002
+.TPTYPA  ANOP                                                           62800002
+.********************************************************************** 62810002
+.*                          SGIEC2PT                                  * 62820002
+.********************************************************************** 62830002
+&OFF     SETB  (&SGDOFFB(&COUNTB))       OFFLINE DESIRED                62840002
+    SGIEC2PT   &UCBNO,&DEVAD,&TYPE,&CPRFX,&STATAB,&LCHN,&DEVNDX,&FL5,&S*62850002
+               YSRES,&SGDDTMC(&DITX),&OFF                      @G64HPLP 62900064
+&INDX    SETA  &INDX+1                 UPDATEDEVICE INDEX               62910002
+         AIF   (&SGDT12B(&COUNTB) AND (&SGDU06B(&COUNTB) OR &SGDU07B(&C*62916000
+               OUNTB))).SET3705    IF DEVICE IS A 3704 OR A    @ZA15707 62922000
+         AGO   .GREND              3705, INCREMENT UCB STORAGE @ZA15707 62928000
+.SET3705 ANOP                      COUNT.                      @ZA15707 62934000
+&NUCSIZ  SETA  &NUCSIZ+8                                       @ZA15707 62940000
+         AGO   .GREND                                                   62950002
+.SETYPA  ANOP            CONVERT BEFORE SETTING FINAL TYPE              63000002
+.*  SKIP THIS CODE FOR NEW DEVICE SINCE INFO IS IN DFT OR DIT  @G64HPLP 63010064
+         AIF   (&SGINTFB(&DITX)).NUCBPUT NEW DEV INTERFACE     @G64HPLP 63020064
+         CONVERT TO=EBCDIC,VALUE=&LCHCNT,DIGITS=3                       63050002
+&TYPEA   SETC  '&TYPEA'(1,1).'&EBCDIC'(1,3).'&TYPEA'(5,4)               63100002
+.UCBOPUT AIF   (NOT &SGDEVB(1)).UCB0P2  SKIP INSPECTION                 63150002
+&SCR     SETA  &SGETABA(&COUNTB)-&SGETABA(&COUNTB)/256*256              63200002
+.*                                      LAST TWO CHAR DEVTYPE           63250002
+         AIF   (&SGDEVTP(&COUNTB) EQ 0 AND &SCR EQ 0).UCB0P1            63300002
+         CONVERT   TO=EBCDIC,VALUE=&SGDEVTP(&COUNTB),DIGITS=6           63350002
+&TYPEA   SETC  '&EBCDIC'                                                63400002
+         CONVERT   TO=EBCDIC,VALUE=&SCR,DIGITS=2                        63450002
+&TYPEA   SETC  '&TYPEA'.'&EBCDIC'                                       63500002
+.UCB0P1  ANOP                                                           63550002
+&SCR     SETA  (&SGETABA(&COUNTB)-&SGETABA(&COUNTB)/65536*65536)/256    63600002
+.*                                      ERRTAB SETTING                  63650002
+         AIF   (&SCR EQ 0).UCB0P2                                       63700002
+&SCR   SETA    &SCR-1                                                   63750002
+         CONVERT   TO=EBCDIC,VALUE=&SCR,DIGITS=2                        63800002
+&ERRTAB  SETC   '&EBCDIC'                                               63850002
+.*   PUNCH UCB INFORMATION USING OLD DEVICE INTERFACE          @G64HPLP 63870064
+.UCB0P2  PUNCH '.UCB&INDX ANOP'                                         63900002
+&STEMPY  SETA  0                   STAT TAB INDEX TO 0 IF DA            63910002
+.*                                 LEAVE ZERO FOR DSM          @Y30LPLC 63913003
+         AIF   (&SGDT07B(&COUNTB) AND &SGDU13B(&COUNTB)).UCBOP3X        63916003
+         AIF   (&SGDT03B(&COUNTB)).UCBOP3X LEAVE 0 IF DA                63920002
+&STEMPY  SETA   &STATAB            SET TO CURRENT INDEX VALUE           63930002
+.********************************************************************** 63942002
+.*                          IECVUCB                                   * 63944002
+.********************************************************************** 63946002
+.UCBOP3X AIF   (&OFF).UCBOP4X          2305 OFFLINE BIT ON              63948402
+&OFF     SETB  (&SGDOFFB(&COUNTB))     OFFLINE DESIRED                  63948802
+.UCBOP4X ANOP                                                           63949602
+&TSHR    SETB  (&SGDF09B(&COUNTB))     SET SHR BIT FOR 3420             63949702
+&C       SETC  '  IECVUCB &UCBNO,&DEVAD,&TYPE,&CPRFX,&ERRTAB,&STEMPY,&L*63950064
+               CHN,,&TYPEA,&FL5,&SYSRES,&SGDDTMC(&DITX),&OFF,0,0,0,0,&D*63957064
+               EVADE,&TSHR,&SHRUP,&FLP1'                       @G64HPLP 63964064
+         AIF   (K'&C LT 72).OK         IF THE PUNCH STATEMENT  @G64HPLP 63970064
+&D       SETC  '&C'(1,71)              OVERFLOWS 72, THEN      @G64HPLP 63976064
+         PUNCH '&D.*'                  PUNCH THE DEVICE INTO   @G64HPLP 63982064
+&D       SETC  '&C'(72,K'&C-71)        TWO CARDS.              @G64HPLP 63988064
+         PUNCH '               &D'  PUNCH THE REMAINDER ON     @G64HPLP 63994064
+         AGO   .OK1                    THE SECOND CARD.        @G64HPLP 64000064
+.OK      ANOP                                                  @G64HPLP 64006064
+ PUNCH '  IECVUCB &UCBNO,&DEVAD,&TYPE,&CPRFX,&ERRTAB,&STEMPY,&LCHN,,&TY*64012064
+               PEA,&FL5,&SYSRES,&SGDDTMC(&DITX),&OFF,0,0,0,0,&DEVADE,&T*64018064
+               SHR,&SHRUP,&FLP1'        UCB CALL               @G64HPLP 64024064
+.OK1     ANOP                                                  @G64HPLP 64030064
+&INDX    SETA  &INDX+1                 UPDATE DEVICE INDEX              64060064
+         PUNCH '         AGO   .UCB&INDX      TO NEXT UCB'              64062002
+.********************************************************************** 64070002
+.*                          IECVUCBX                                  * 64080002
+.********************************************************************** 64090002
+         PUNCH '.UCX&EXTINDX ANOP'                                      64090403
+&C       SETC  '  IECVUCB &UCBNO,&DEVAD,&TYPE,&CPRFX,&ERRTAB,&STEMPY,&L*64090864
+               CHN,,&TYPEA,&FL5,&SYSRES,&SGDDTMC(&DITX),&OFF,0,0,1,0,&D*64090964
+               EVADE,&TSHR,&SHRUP,&FLP1'                       @G64HPLP 64091064
+         AIF   (K'&C LT 72).OK2        IF THE PUNCH STATEMENT  @G64HPLP 64091264
+&D       SETC  '&C'(1,71)              OVERFLOWS 72, THEN      @G64HPLP 64091464
+         PUNCH '&D.*'                  PUNCH THE DEVICE INTO   @G64HPLP 64091664
+&D       SETC  '&C'(72,K'&C-71)        TWO CARDS.              @G64HPLP 64091864
+         PUNCH '               &D'  PUNCH THE REMAINDER ON     @G64HPLP 64092064
+         AGO   .GREND                  THE SECOND CARD.        @G64HPLP 64092264
+.OK2     ANOP                                                  @G64HPLP 64092464
+ PUNCH '  IECVUCB &UCBNO,&DEVAD,&TYPE,&CPRFX,&ERRTAB,&STEMPY,&LCHN,,&TY*64092664
+               PEA,&FL5,&SYSRES,&SGDDTMC(&DITX),&OFF,0,0,1,0,&DEVADE,&T*64092864
+               SHR,&SHRUP,&FLP1'        UCB EXTENSION CALL     @G64HPLP 64093064
+.GREND   ANOP                                                           64093464
+&EXTINDX SETA  &EXTINDX+1               UPDATE EXTENSION INDEX          64093602
+         PUNCH '         AGO   .UCX&EXTINDX  TO NEXT EXTENSION '        64095603
+&OFF     SETB  0                                                        64100002
+&FL5     SETA  0                                                        64150002
+.********************************************************************** 64260002
+.*                                                                    * 64270002
+.*         *** TEST FOR LAST DEVICE THIS GENERATION GOES HERE ***     * 64300002
+.*                                                                    * 64310002
+.********************************************************************** 64320002
+.*                                                                      64400002
+.*  COMPUTE IN DOUBLE WORDS THE NEXT OFFSET IN THE IOS CHANNEL          64410002
+.*  PROGRAM PREFIX AREA - 6 - SHARED 3330V CCW'S               @G24LPLN 64412041
+.*                        5 - NON-SHARED 3330V CCW'S           @G24LPLN 64414041
+.*                        4 - DUMMY AND SHARED DA CCW'S                 64416041
+.*                        3 - DA AND TAPE CCW'S                         64430002
+.*                        1 - ALL OTHERS                                64440002
+.*                                                                      64442002
+&CPRFX   SETA  &CPRFX+1            NEED AT LEAST ONE CCW                64444002
+        AIF   (NOT &SGDT03B(&COUNTB) AND NOT &SGDT01B(&COUNTB)).CPRFX01 64446002
+&CPRFX   SETA  &CPRFX+2            IF TAPE OR DA - ADD 2 MORE           64448002
+  AIF (NOT &SGDF03B(&COUNTB) OR NOT &SGDT03B(&COUNTB)).CPRFX00 @G24LPLN 64448141
+&CPRFX   SETA  &CPRFX+2            IF 3330V ADD 2 MORE         @G24LPLN 64448241
+.CPRFX00 ANOP                                                  @G24LPLN 64448341
+         AIF   (NOT &SGDF02B(&COUNTB) OR NOT &SGDT03B(&COUNTB)).CPRFND  64448441
+&CPRFX   SETA  &CPRFX+1            IF SHARED DA - ADD 1                 64448802
+         AGO   .CPRFND                                                  64449202
+.CPRFX01 AIF   ('&TYPE' NE 'DUM').CPRFND                                64449602
+&CPRFX   SETA  &CPRFX+3            DUMMY UCB'S GET 4 CCW'S              64449702
+.CPRFND  ANOP                                                           64449802
+.*                                                                      64449902
+&NUCSIZ  SETA  &NUCSIZ+32               ADD BASIC UCB SIZE              64450002
+         AIF   (&NUCSIZ LT 65536).SIZOK                                 64600003
+.SIZBAD  ANOP                                                  @G64HPLP 64650064
+         MNOTE 12,'***IEIIEC202 64K LIMIT RESERVED FOR UCB''S EXCEEDED' 64660064
+.*                      THE PREVIOUS STATEMENT IS MODIFIED FOR @G64HPLP 64670064
+         AGO   .ABIOEND                                                 64700002
+.SIZOK   ANOP                                                           64750002
+&SYSRES SETA 0                                                          64800002
+&NCHANSW SETB  0                       RESET NW CHANNEL SWITCH          64850002
+&NCUSW   SETB  0                       RESET NEW CONTROL UNITM SW       64900002
+&IRSW    SETB  1                       SET INITIAL RUN SWITCH ON        64950002
+         AIF   (&SGDT01B(&COUNTB)).WRKA IF TAPE GEN A UCB EXTENSION     65150002
+.*                                 IF 3540 GEN EXTENSION       @Y30OPLA 65160003
+         AIF   (&SGDU12B(&COUNTB) AND &SGDT07B(&COUNTB)).WRKA  @Y30OPLA 65170003
+.*                                 IF 3800 GEN EXTENSION       @Y40MPLG 65180004
+         AIF   (&SGDT06B(&COUNTB) AND &SGDU10B(&COUNTB)).WRKA  @Y40MPLG 65190004
+         AIF   (NOT(&SGDT06B(&COUNTB) AND (&SGDU06B(&COUNTB) OR        *65200002
+               (&SGDU01B(&COUNTB) AND &SGDF02B(&COUNTB))))).NOWRK       65250002
+.********************************************************************** 65300002
+.*                          IECVUCBA                                  * 65350002
+.********************************************************************** 65400002
+.WRKA    PUNCH '.WK&WKIDX IECVUCBA &UCBNO,&TYPEA,0,0,0,&OPTNS,&WCGMNO'  65600064
+.*                            THE PREVIOUS LINE WAS CHANGED BY @G64HPLP 65650064
+&WKIDX   SETA  &WKIDX+1                 UPDATE INDEX                    65750002
+         PUNCH '         AGO   .WK&WKIDX   TO NEXT WORK AREA '          65800002
+.NOWRK   ANOP                                                           65850002
+&LCHCNT  SETA  0                         RESET COMMON COUNTER           65900002
+         AIF   ('&TYPEA'(5,4) NE '8003').NASP                           65950064
+&STATAB  SETA  &STATAB+1               UPDATE STATISTICS FOR 34XX       66000064
+.NASP    AIF   ('&TYPEA'(5,4) NE '0817').LDEVTST                        66050064
+&STATAB  SETA  &STATAB+2               UPDATE STATISTICS FOR 3886       66100064
+.LDEVTST AIF   (&INDX GT &SGCNTRA(3)).OUT LAST DEV.-YES-EXIT            66150064
+         AIF   (&SGDT03B(&COUNTB)).STATST IF DA, DON'T UPDATE STAT IDX  66360002
+&STATAB  SETA  &STATAB+1                UPDATE STATAB                   66450002
+.STATST  AIF   (&STATAB LT 256).DEVLOOP STATAB OVER 1 BYTE              67700002
+         AIF   (&STCNT EQ 10).ERDEV      FIRST STAT ENTRY FULL          67750003
+&STATLST(&STCNT) SETA &INDX             UCB # TO STATLST                67800002
+&STCNT   SETA  &STCNT+1                 UPDATE COUNT                    67850002
+         AGO   .DEVLOOP                 GET NEXT DEVICE                 67900002
+.*  NEW DEVICE INTERFACE--PUNCH UCB INFORMATION FROM DFT       @G64HPLP 67950064
+.NUCBPUT ANOP                                                  @G64HPLP 67952064
+&SCR     SETA  &SGETABA(&COUNTB)-&SGETABA(&COUNTB)/256*256     @G64HPLP 67954064
+.*                                      LAST TWO CHAR DEVTYPE  @G64HPLP 67956064
+         CONVERT   TO=EBCDIC,VALUE=&SGDEVTP(&COUNTB),DIGITS=6  @G64HPLP 67958064
+&TYPEA   SETC  '&EBCDIC'                                       @G64HPLP 67960064
+         CONVERT   TO=EBCDIC,VALUE=&SCR,DIGITS=2               @G64HPLP 67962064
+&TYPEA   SETC  '&TYPEA'.'&EBCDIC'                              @G64HPLP 67964064
+.*  COMPUTE UCBFL5 INFORMATION                                 @G64HPLP 67966064
+&FL5     SETA  128*&SGUF50B(&COUNTB)+64*&SGUF51B(&COUNTB)+32*&SGUF52B(&*67968064
+               COUNTB)+16*&SGUF53B(&COUNTB)+8*&SGUF54B(&COUNTB)+4*&SGUF*67970064
+               55B(&COUNTB)+2*&SGUF56B(&COUNTB)+&SGUF57B(&COUNTB)       67972064
+         PUNCH '.UCB&INDX ANOP'                                @G64HPLP 67974064
+.********************************************************************** 67989064
+.*                          IECVNUCB--BASE UCB                        * 67992064
+.********************************************************************** 67995064
+ PUNCH 'UCB&UCBNO IECVNUCB UCBBASE,(&DEVAD,&FL5,&SGDOFFB(&COUNTB),&SGUP*67998064
+               RMB(&COUNTB),&LCHN,&TYPEA)' PUNCH CALL FOR BASE @G64HPLP 68001064
+.*   PUNCH DEVICE-DEPENDENT SEGMENT IF ONE WAS PROVIDED        @G64HPLP 68003064
+         AIF   (K'&SGUDSGC(&COUNTB) EQ 0).NEWUCB1              @G64HPLP 68005064
+         PUNCH '*   DEVICE-DEPENDENT SEGMENT'                  @G64HPLP 68007064
+         SGIEC2DD &SGUDSGC(&COUNTB),UCBS&DEVAD PUNCH SEGMENT   @G64HPLP 68009064
+.*  INCREMENT NUCLEUS SIZE BY SIZE OF DEVICE-DEPENDENT         @G64HPLP 68011064
+.*      SEGMENT ROUNDED UP TO DOUBLE-WORD BOUNDARY             @G64HPLP 68013064
+&NUCSIZ  SETA  &NUCSIZ+((&SGUDSGA(&COUNTB)+7)*8)/8             @G64HPLP 68015064
+.NEWUCB1 ANOP                                                  @G64HPLP 68017064
+&INDX    SETA  &INDX+1                 UPDATE DEVICE INDEX     @G64HPLP 68019064
+         PUNCH '         AGO   .UCB&INDX      TO NEXT UCB'     @G64HPLP 68021064
+&NUCSIZ  SETA  &NUCSIZ+32               ADD BASIC UCB SIZE              68023064
+         AIF   (&NUCSIZ GE 65536).SIZBAD NUC SIZE OVERFLOW     @G64HPLP 68025064
+.********************************************************************** 68027064
+.*                          IECVNUCB--COMMON EXTENSION                * 68029064
+.********************************************************************** 68031064
+.*  COMPUTE UCBFLP1 INFORMATION                                @G64HPLP 68033064
+&FLP1    SETA  128*&SGUFP0B(&COUNTB)+64*&SGUFP1B(&COUNTB)+32*&SGUFP2B(&*68035064
+               COUNTB)+16*&SGUFP3B(&COUNTB)+8*&SGUFP4B(&COUNTB)+4*&SGUF*68037064
+               P5B(&COUNTB)+2*&SGUFP6B(&COUNTB)+&SGUFP7B(&COUNTB)       68039064
+.*  ISOLATE ERRTAB INFORMATION                                 @G64HPLP 68041064
+&SCR     SETA  (&SGETABA(&COUNTB)-&SGETABA(&COUNTB)/65536*65536)/256    68043064
+         AIF   (&SCR EQ 0).NUCB0P2                             @G64HPLP 68045064
+&SCR   SETA    &SCR-1                                          @G64HPLP 68047064
+.NUCB0P2 ANOP                                                  @G64HPLP 68049064
+&STEMPY  SETA  0                   STAT TAB INDEX TO 0         @G64HPLP 68051064
+         AIF   (&SGUNSTA(&DITX) EQ 0).NEWUCB2 ANY STAT TBL ?   @G64HPLP 68053064
+&STEMPY  SETA  &STATAB             YES--GET VALUE FOR UCBSTI   @G64HPLP 68055064
+.NEWUCB2 ANOP                                                  @G64HPLP 68057064
+         PUNCH '.UCX&EXTINDX ANOP'                             @G64HPLP 68059064
+ PUNCH 'UCBX&UCBNO IECVNUCB UCBCEXT,(&DEVAD,&SCR,&STEMPY,&SGUATIA(&COUN*68061064
+               TB),&SGUSNSA(&DITX),&FLP1,&CPRFX,&SGDDTMC(&DITX))'       68063064
+&EXTINDX SETA  &EXTINDX+1               UPDATE EXTENSION INDEX @G64HPLP 68065064
+         PUNCH '         AGO   .UCX&EXTINDX  TO NEXT EXTENSION '        68067064
+&CPRFX   SETA  &CPRFX+&SGUCCWA(&COUNTB) INCREMENT CH.PGM       @G64HPLP 68069064
+.*                                      PREFIX REQUIREMENTS    @G64HPLP 68071064
+&STATAB  SETA  &STATAB+&SGUNSTA(&DITX)   INCREMENT STATISTICS  @G64HPLP 68073064
+.*                                      TABLE REQUIREMENTS     @G64HPLP 68075064
+         AIF   ('&SGDTYPC(&DITX)'(5,2) NE '10').NEWDV1 GRAPHIC @G64HPLP 68077064
+&GR      SETB  1                       YES--INDICATE GRAPHICS  @G64HPLP 68079064
+.NEWDV1  ANOP                                                  @G64HPLP 68081064
+&OFF     SETB  0                                               @G64HPLP 68083064
+&FL5     SETA  0                                               @G64HPLP 68085064
+&SYSRES  SETA  0                                               @G64HPLP 68087064
+&NCHANSW SETB  0                       RESET NW CHANNEL SWITCH @G64HPLP 68089064
+&NCUSW   SETB  0                       RESET NEW CTL UNIT SW   @G64HPLP 68091064
+&IRSW    SETB  1                       SET INITIAL RUN SW ON   @G64HPLP 68093064
+.*   PUNCH DEVICE-DEPENDENT EXTENSION IF ONE WAS PROVIDED      @G64HPLP 68095064
+         AIF   (K'&SGUDXTC(&COUNTB) EQ 0).NLDVTST              @G64HPLP 68097064
+         PUNCH '.WK&WKIDX  ANOP   DEVICE-DEPENDENT EXTENSION'  @G64HPLP 68099064
+UCBW&UCBNO SGIEC2DD &SGUDXTC(&COUNTB),UCBE&DEVAD PUNCH EXT     @G64HPLP 68101064
+&WKIDX   SETA  &WKIDX+1                 UPDATE INDEX                    68103064
+         PUNCH '         AGO   .WK&WKIDX   TO NEXT WORK AREA '          68105064
+.NLDVTST AIF   (&INDX GT &SGCNTRA(3)).OUT EXIT IF LAST DEVICE  @G64HPLP 68107064
+         AGO   .STATST                 CHECK STAT TBL OVFLW    @G64HPLP 68109064
+.ERDEV   MNOTE 12,'STATISTIC TABLE EXCEEDS LIMIT'              @G64HPLP 68111064
+         AGO   .ABIOEND                                                 68169064
+.ORDERR  ANOP                                                           68172064
+         MNOTE 7,'DEVICE ADDRESS OUT OF ORDER, END OF GENERATION'       68250002
+         AGO   .ABIOEND                                                 68300002
+.ERROR   MNOTE 7,'NO DEVICE LIST SPECIFIED, END GENERATION'             68350002
+.ABIOEND ANOP                          ABNORMAL SYSGN END FROM IOS      68400002
+&SGQUITB SETB  1                       SET QUIT SWITCH                  68450002
+         MEXIT                                                          68500002
+.OUT     ANOP                                                           68550002
+&LSTMAC  SETB  1                  SET LAST MACRO SWITCH                 68600002
+         AIF   (NOT &EOALTS).LUSTRT    HAVE ALL ALTS. BEEN PROCESSED    68650002
+.COUT    ANOP                          YES- FINISH UP LAST PUNCHES      68700002
+&LSTDEV  SETB  1                       SET LAST DEVICE SWITCH           68750002
+.********************************************************************** 68760002
+.*                   IECULK3 & IECULK1                                * 68770002
+.********************************************************************** 68780002
+         PUNCH '.LST&MPXCNT ANOP     LAST UCB ADD ENTRY'                68800002
+         PUNCH '    IECULK3 0,0,0,0,0,&LSTDEV'                          68850002
+         PUNCH '         AGO   .TCH0  TO TEST CHANNEL'                  68900064
+         PUNCH '.TAB&M   ANOP            LAST CHANNEL ENTRY'            68950064
+         PUNCH '  IECULK1 0,0,&NCHAN,&LSTDEV'                           69250002
+         PUNCH '         AGO   .TCU1       TO FIRST CU ENTRY'           69300002
+        AGO  .NCHRTN                  TO PUT OUT LAST CHANNEL MACROS    69350002
+.********************************************************************** 69360002
+.*                                                                    * 69370002
+.*  ALL DEVICES HAVE BEEN PROCESSED, FROM INFORMATION GATHERED DURING * 69400002
+.*  PROCESSING THE FOLLOWING WILL NOW BE COMPUTED AND PUT OUT-        * 69450002
+.*      CHANNEL TABLE ,LCH TABLE, DEVICE TABLE,                       * 69500002
+.*       TEST CHANNEL , CHANNEL SRCH CODE AND TABLE, ATTEN TABLE,     * 69550002
+.*       AND STATISTICS TABLE.                                        * 69600002
+.*                                                                    * 69610002
+.********************************************************************** 69620002
+.LSTMAC  PUNCH '.TCH&I   ANOP       LAST TEST CHAN MOD'                 69650002
+         PUNCH '         AGO   .SRCH1     TO FIRST CSRCH MOD'           69700002
+         PUNCH '.SRCH&J  ANOP       LAST CHANNEL SEARCH MOD'            69750002
+         PUNCH '         AGO   .TBLTAB          TO TABLE MACRO'         69800002
+         PUNCH '.TCU&T   ANOP       LAST CU ENRY TO TABLE'              69850002
+         PUNCH '         AGO   .LST1       TO FIRST CUB ADD'            69900002
+         PUNCH '.UCB&INDX   ANOP    LAST UCB ENTRY'                     70030002
+         PUNCH '         AGO   .UCX1  TO UCB WORK AREAS'       @Y30ANLG 70040003
+         PUNCH '.UCX&EXTINDX   ANOP  LAST UCB EXTENSION ENTRY'          70042003
+         PUNCH '         AGO   .WK1   TO UCB WORK AREAS'                70044002
+         PUNCH '.WK&WKIDX ANOP    LAST WORK ENTRY  '                    70050002
+         PUNCH '         AGO   .TAB1  TO LOOKUP TABLE'                  70100002
+.********************************************************************** 70960002
+.*                                                                    * 71670002
+.*         SET UP GRAPHICS 0=NO DEVS.,1=NO GAM & DEV.,2=GAM & DEV.    * 71700002
+.*                                                                    * 71710002
+.********************************************************************** 71720002
+         AIF   (NOT &GR).GRF0           TEST FOR ANY DEVICES            71750002
+&GS      SETA  1                        SET TO 1                        71800002
+         AIF   (NOT &SGMENTB(12)).GRF0       TEST FOR GAM               71850002
+&GS      SETA  2                        SET TO 2                        71900002
+.GRF0    ANOP                                                           71950002
+         AIF  (NOT &SGDCLSB(80)).NOANR                                  72000002
+&ANR     SETA 1           SET ANR                                       72050002
+         AIF   (NOT &SGDMGTB(4)).NOANR                                  72100002
+&ANR     SETA 2           SET ANR AND BTAM FOR MAIN                     72150002
+.NOANR   ANOP                                                           72200002
+         AIF   (NOT &SGDCLSB(83)).NOCTC  CTC DEVICE                     72300002
+&CTC     SETA  1                       SET CTC                          72400002
+.NOCTC   ANOP                                                           72500002
+         PUNCH '.TCH0  ANOP'                                            72900002
+         AIF   (NOT &TCHAP).NOAP        TEST FOR ANY SEL ALTS           73750002
+.********************************************************************** 73760002
+.*                          IECXTCH                                   * 73770002
+.********************************************************************** 73780002
+         PUNCH '   IECXTCH    (0,&CHCT(1),&CHCT(2),&CHCT(3),&CHCT(4),&C*73800064
+               HCT(5),&CHCT(6),&CHCT(7),&CHCT(8),&CHCT(9),&CHCT(10),&CH*73850002
+               CT(11),&CHCT(12),&CHCT(13),&CHCT(14),&CHCT(15))'         73900002
+.*               THE FOLLOWING IS FOR MP65                              73950002
+.NOAP    PUNCH '         AGO   .TCH1      TO FIRST TCH MOD'             74200002
+.********************************************************************** 74210002
+.*                                                                    * 74220002
+.*       THE FOLLOWING IS THE MACRO INST TO BUILD THE DEVICE TABLE.   * 74300002
+.*                                                                    * 74310002
+.********************************************************************** 74320002
+         PUNCH '.TBLTAB  ANOP  LCH,ATTN AND CHAN TABLE'                 74350002
+&CPRFX   SETA  &CPRFX*2                                        @YM06537 74370002
+         AIF   (&EXTCHAN).TB7          GREATER THAN 7?                  74400002
+.********************************************************************** 74410002
+.*                          IECTBL                                    * 74420002
+.********************************************************************** 74430002
+        PUNCH ' IECTBL  (&CH(1),&CH(2),&CH(3),&CH(4),&CH(5),&CH(6),&CH(*74450064
+               7)),&LCHTOT,&SGDMGTB(5),(&CPRFX),&GS,&ANR,&CTC,&SGCPRGB(*74480064
+               9),&SGCPRGB(12)'                                         74510064
+         AGO   .TYPOUT                                                  74600002
+.TB7     ANOP                                                  @ZM30494 74610003
+&SM      SETB  (&SGDMGTB(5))                                   @ZM30494 74620003
+&S9      SETB  (&SGCPRGB(9))                                   @ZM30494 74630003
+&S12     SETB  (&SGCPRGB(12))                                  @ZM30494 74640003
+    PUNCH ' IECTBL (&CH(1),&CH(2),&CH(3),&CH(4),&CH(5),&CH(6),&CH(7),&C*74650064
+               H(8),&CH(9),&CH(10),&CH(11),&CH(12),&CH(13),&CH(14),&CH(*74700064
+               15),&CH(16)),&LCHTOT,&SM,&CPRFX,&GS,&ANR,&CTC,&S9,&S12'  74750064
+.TYPOUT  PUNCH '         AGO  .UCBEND     TO STATISTICS TABLE'          74800064
+         PUNCH '.IOSB    ANOP   '                                       74850064
+         PUNCH '.END    ANOP    '                                       74900064
+         PUNCH '.UCBEND  ANOP   '                                       74950064
+.********************************************************************** 76410002
+.*             PUNCH OUT CALL FOR STATISTICS TABLE MACRO              * 76412002
+.*                          IECIST                                    * 76420002
+.********************************************************************** 76430002
+&SCR     SETA ((&STCNT*256)+(&STATAB-1))                                76440064
+ PUNCH ' IECIST &SCR,(&STATLST(1),&STATLST(2),&STATLST(3),&STATLST(4),&*76490064
+               STATLST(5),&STATLST(6),&STATLST(7),&STATLST(8),&STATLST(*76540064
+               9),&STATLST(10)),&STCNT'                                 76590064
+         PUNCH '         END  '                                         76640064
+         PUNCH '/*'                                                     76690064
+         MEND                                                           76740064

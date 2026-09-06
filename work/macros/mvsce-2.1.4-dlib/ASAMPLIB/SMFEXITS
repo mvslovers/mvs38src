@@ -1,0 +1,1301 @@
+//SMFEXITS     JOB      MSGLEVEL=1                                     *00050000
+//                       *                                             C00100000
+//       THE SAMPLE SMF EXITS ARE - IEFUJV - JOB VALIDATION            C00150000
+//                                  IEFUJI - JOB INITIATION            C00200000
+//                                  IEFACTRT JOB TERMINATION           C00250000
+//                                  IEFUTL - TIME LIMIT                C00300000
+//                                  IEFU83 - SVC 83              Y01034*00350000
+//                                  IEFU29 - SMF WRITER EXIT   @Z40FPPF 00370040
+//                       *                                             C00400000
+//         THERE IS NO EXAMPLE FOR IEFUSI, IEFUSO OR IEFUJP            *00450000
+//                                      *                              C00500000
+//       THEY ARE INTENDED TO DEMONSTRATE ONE FORM OF EXIT PROCESSING  C00550000
+//            AND ILLUSTRATE THE USE OF THE TEST PROGRAM,TESTEXIT.     C00600000
+//                       *                                             C00650000
+//       PROCEDURE:                                                    C00700000
+//             EACH EXIT ROUTINE WILL ASSEMBLE AND LINKEDIT INTO A     C00750000
+//               DATASET,EXITLIB,UNDER THEIR RESPECTIVE MEMBER NAMES.  C00800000
+//               THE NEXT JOB(TESTEXIT) WILL COMBINE THE EXIT ROUTINES C00850000
+//                WITH THE TEST PROGRAM.                               C00900000
+//                       *                                             C00950000
+//             IF THE SAMPLE ROUTINES ARE ACCEPTABLE FOR GENERAL SYSTEMC01000000
+//              IMPLEMENTATION,THE FOLLOWING ACTION IS REQUIRED TO     C01050000
+//              INCORPORATE THEM INTO AN EXISTING SYSTEM.              C01100000
+//                 1.REASSEMBLE EACH EXIT WITHOUT THE PRIVATE MACRO,   C01150000
+//                    SMFWTM.  THIS PRIVATE MACRO INTERFACES DIRECTLY  C01200000
+//                    WITH TESTEXIT.  THE STANDARD SMFWTM MACRO IS     C01250000
+//                    AVAILABLE IN SYS1.MACLIB.                        *01300000
+//                       *                                             C01350000
+//                 2.THE LINKEDIT PROCEDURE TO INCORPORATE THE SAMPLE  *01400000
+//                    EXIT MODULES IS IN THE SMF SRL GC35-0004.        *01450000
+//*    A006500,046500-046800,833100-840221                       Y01034 02600000
+//IEFUJV    EXEC  ASMFCL                                                02650000
+//ASM.SYSIN  DD  *                                                      02700000
+         TITLE 'IEFUJV'                                                 02750000
+         MACRO                GENERATES CALLING SEQUENCE FOR TSMFWTM    02800000
+&NAME    SMFWTM &MSGAD                                                  02850000
+         AIF   ('&MSGAD' EQ '').E1                NO OPERAND            02900000
+         AIF   ('&MSGAD' EQ '(1)').BAL            REG 1 ALREADY LOADED  02950000
+         AIF   ('&MSGAD'(1,1) EQ '(').REGA        REG(NOT 1) SPECIFIED  03000000
+         AGO   .LODIT                             ADDRESS SPECIFIED     03050000
+.E1      MNOTE '* * * NO OPERAND SPECIFIED * * *'                       03100000
+         MEXIT                                                          03150000
+.BAL     ANOP                                                           03200000
+         CNOP  0,4                                                      03250000
+&NAME    BAL   15,*+8                                                   03300000
+.LIST    DC    V(TSMFWTM)                         ADDRESS OF TSMFWTM    03350000
+         L     15,0(15)                                                 03400000
+         BALR  14,15                                                    03450000
+         MEXIT                                                          03500000
+.REGA    ANOP                                                           03550000
+&NAME    LR    1,&MSGAD(1)                                              03600000
+         CNOP  0,4                                                      03650000
+         BAL   15,*+8                                                   03700000
+         AGO   .LIST                                                    03750000
+.LODIT   ANOP                                                           03800000
+&NAME    LA    1,&MSGAD                                                 03850000
+         CNOP  0,4                                                      03900000
+         BAL   15,*+8                                                   03950000
+         AGO   .LIST                                                    04000000
+         MEND                                                           04050000
+IEFUJV   CSECT                                                          04100000
+* STATUS - CHANGE LEVEL 1                                               04150000
+* FUNCTION                                                              04200000
+*    THIS MODULE CHECKS A TWO CARD JOB CARD SEQUENCE TO                 04250000
+*    DETERMINE IF IT MEETS THE FOLLOWING REQUIREMENTS:                  04300000
+*    - FIRST CARD MUST HAVE AN 8 CHARACTER ACCOUNT NUMBER IN            04350000
+*    COLUMNS 16-23. THIS ACCOUNT NUMBER WILL BE VALIDATED BY            04400000
+*    SEARCHING A TABLE OF VALID ACCOUNT NUMBERS.                        04450000
+*    - SECOND CARD MUST CONTAIN THE PRTY, REGION AND TIME               04500000
+*    PARAMETERS IN THAT ORDER. THE VALUES OF THESE PARAMETERS           04550000
+*    WILL BE COMPARED WITH MAXIMUM VALUES IN A TABLE USING AN           04600000
+*    INDEX DERIVED FROM THE ACCT #.                                     04650000
+*    IF THESE REQUIREMENTS ARE NOT SATISFIED, THE JOB IS CANCELED.      04700000
+*    THIS MODULE ALSO GETS THE TIME OF DAY AT WHICH THE JOB IS          04750000
+*    ENQUEUED AND PUTS IT IN THE USER COMMUNICATIONS AREA WHERE         04800000
+*    IT WILL BE USED BY THE JOB INITIATION ROUTINE (IEFUJI).            04850000
+* ENTRY POINTS -                                                        04900000
+*         IEFUJV                                                        04950000
+* INPUT                                                                 05000000
+*    REGISTER 1 POINTS TO A LIST OF 4 BYTE ADDRESSES FOR THE            05050000
+*    FOLLOWING THREE PARAMETERS:                                        05100000
+*    1 - 36 BYTES OF THE FOLLOWING JOB INFORMATION:                     05150000
+*    JOBNAME (8 BYTES)                                                  05200000
+*    TIME STAMP (8 BYTES)                                               05250000
+*    SYSTEM ID (4 BYTES)                                                05300000
+*    USER ID (8 BYTES)                                                  05350000
+*    USER COMMUNICATIONS AREA (4 BYTES)                                 05400000
+*    ZERO FOR INITIAL ENTRY, FIRST BYTE IS USED AS A                    05450000
+*    BRANCH CODE WHEN PROCESSING THE JOB CARD SEQUENCE.                 05500000
+*    TIME OF DAY FOR JOB INITIATION ROUTINE IS PUT                      05550000
+*    HERE WHEN THE JOB ENQUEUE ENTRY IS TAKEN.                          05600000
+*    2 - 80 BYTES CONTAINING THE JCL STATEMENT IMAGE.                   05650000
+*    3 - 1 BYTE ENTRY CODE WITH ONE OF THE FOLLOWING VALUES:            05700000
+*    0 - NULL STATEMENT                                                 05750000
+*    1 - JOB STATEMENT                                                  05800000
+*    2 - EXEC STATEMENT                                                 05850000
+*    4 - DD STATEMENT                                                   05900000
+*    8 - PROC STATEMENT                                                 05950000
+*    16 - JOB ENQUEUE (SECOND PARAMETER IS MEANINGLESS)                 06000000
+* OUTPUT                                                                06050000
+*    REGISTER 15 MUST CONTAIN ONE OF THE FOLLOWING RETURN CODES:        06100000
+*    0 - CONTINUE PROCESSING                                            06150000
+*    4 - CANCEL                                                         06200000
+* EXTERNAL REFERENCES - NONE                                            06250000
+* EXITS,NORMAL - RETURN TO CALLER                                       06300000
+* EXITS,ERROR - NONE                                                    06350000
+* TABLES/WORK AREAS -                                                   06400000
+*    TABLE - TAB OF VALID ACCT NOS.                                     06450000
+*    RGNTBL - TAB OF VALID REGION SIZES                                 06500000
+*    TIMETBL - TAB OF VALID TIME SPECS                                  06550000
+* ATTRIBUTES - STANDARD                                                 06600000
+* CHARACTER CODE DEPENDENCY - NONE                                      06650000
+* NOTES - GETMAIN FREEMAIN AND TIME MACROS USED                         06700000
+*        EJECT                                                          06750000
+REGA     EQU   2                       @ OF 36 BYTES OF JOB INFO        06800000
+REGB     EQU   3                       @ OF 80 BYTE JCL STMT            06850000
+REGC     EQU   4                       @ OF 1 BYTE ENTRY CODE TRY CODE  06900000
+REGD     EQU   5                       WORK REG FOR BR CODE             06950000
+REGE     EQU   6                       LOOP CONTROL                     07000000
+REGF     EQU   7                       LOOP CNTRL / WORK REG            07050000
+REGG     EQU   8                       LOOP CONTROL                     07100000
+REGH     EQU   9                       BRANCH REG                       07150000
+REGEVEN  EQU   14                                                       07200000
+REGODD   EQU   15                                                       07250000
+D16      EQU   16                      DISP OF 16                       07300000
+L28      EQU   28                      LENGTH OF 28                     07350000
+D23      EQU   23                      DISP OF 23                       07400000
+R1       EQU   1                       REG 1                            07450000
+D1       EQU   1                       DISP OF 1                        07500000
+D2       EQU   2                       DISP OF 2                        07550000
+L2       EQU   2                       LENGTH OF 2                      07600000
+D22      EQU   22                      DISP OF 22                       07650000
+D7       EQU   7                       DISP OF 7                        07700000
+L7       EQU   7                       LENGTH OF 7                      07750000
+D240     EQU   240                     DISP OF 240                      07800000
+D21      EQU   21                      DISP OF 21                       07850000
+D5       EQU   5                       DISP OF 5                        07900000
+L5       EQU   5                       REG 5                            07950000
+D20      EQU   20                      DISP OF 20                       08000000
+D8       EQU   8                       DISP OF 8                        08050000
+L8       EQU   8                       LENGTH OF 8                      08100000
+L4       EQU   4                       LENGTH OF 4                      08150000
+D4       EQU   4                       DISP OF 4                        08200000
+D32      EQU   32                      DISP OF 32                       08250000
+D12      EQU   12                      DISP OF 12                       08300000
+R12      EQU   12                      REG 12                           08350000
+R14      EQU   14                      REG 14                           08400000
+R13      EQU   13                      REG 13                           08450000
+D0       EQU   0                       DISP OF 0                        08500000
+R0       EQU   0                       REG 0                            08550000
+R11      EQU   11                      REG 11                           08600000
+D15      EQU   15                      DISP OF 15                       08650000
+R15      EQU   15                      REG 15                           08700000
+M2       EQU   2                       MASK OF 2                        08750000
+X10      EQU   X'10'                   HEX 10                           08800000
+X01      EQU   X'01'                                                    08850000
+XF0      EQU   X'F0'                                                    08900000
+XF9      EQU   X'F9'                                                    08950000
+X00      EQU   X'00'                                                    09000000
+M4       EQU   4                       MASK OF 4                        09050000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 09100000
+         USING *,R15                                                    09150000
+         B     HERE                    BRANCH AROUND MODULE NAME        09200000
+         DC    CL8'IEFUJV'             MODULE NAME                      09250000
+HERE     STM   R14,R12,D12(R13)        STORE CALLERS REGS               09300000
+         DROP  R15                                                      09350000
+         BALR  R11,R0                  SET UP                           09400000
+         USING *,R11                   BASE                             09450000
+         LM    REGA,REGC,D0(R1)         GET PARAMETER ADDRESSES         09500000
+         TM    D0(REGC),X10            TEST FOR JOB ENQUEUE ENTRY       09550000
+         BO    JOBENQ                  PROCESS JOB ENQUEUE ENTRY        09600000
+         TM    D0(REGC),X01            TEST FOR JOB CARD ENTRY          09650000
+         BZ    OKEXIT                  NORMAL RETURN                    09700000
+         SR    REGC,REGC                                                09750000
+         IC    REGC,D32(REGA)           GET CARD BRANCH CODE            09800000
+         B     *+D4(REGC)              BRANCH TABLE                     09850000
+         B     ACCTCRD                 - TO ACCT CARD                   09900000
+         B     PARMCRD                 - TO PARAMETER CARD              09950000
+         B     OKEXIT                  - TO NORMAL EXIT                 10000000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 10050000
+*   PROCESS FIRST CARD OF JOB CARD SEQUENCE                           * 10100000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 10150000
+ACCTCRD  LM    REGE,REGG,LOOPCTL                                        10200000
+NXTACCT  CLC   D15(L8,REGB),D0(REGG)      CHECK FOR VALID ACCOUNT NUM   10250000
+         BE    OKACCT                  PROCESS ACCT NO.                 10300000
+         BXLE  REGG,REGE,NXTACCT       TEST NEXT ACCT NO.               10350000
+         MVC   D20(L8,REGA),INVALID      INDICATE INVALID ACCT NO       10400000
+         B     CANCEL                  CANCEL - INVALID ACCT NO.        10450000
+OKACCT   MVC   D20(L8,REGA),D15(REGB)     PUT ACCT NUMBER IN USER ID    10500000
+         LA    REGD,D4(R0)                SET BRANCH CODE FOR PARM CARD 10550000
+         STC   REGD,D32(REGA)            STORE BRANCH CODE              10600000
+         B     OKEXIT                  NORMAL RETURN                    10650000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 10700000
+*   PROCESS SECOND CARD OF JOB CARD SEQUENCE                          * 10750000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 10800000
+PARMCRD  CLC   D15(L5,REGB),PRTYLTRL      CHECK FOR 'PRTY='             10850000
+         BNE   CANCEL                  CANCEL - INVALID PRTY LITERAL    10900000
+         LA    REGG,D20(REGB)            SET REGG TO 1ST DIGIT OF PRTY  10950000
+         LA    REGF,D2(REGG)             SET LOOP CONTROL FOR DIGIT CK  11000000
+         BAL   REGH,CKDGTS               CHECK DIGITS                   11050000
+         CLC   D0(L8,REGG),RGNLTRL        CHECK FOR ',REGION='          11100000
+         BNE   CANCEL                    CANCEL - INVALID REGION LIT    11150000
+         IC    REGE,D21(REGA)            GET MAX PRTY CODE FROM ACCT #  11200000
+         LA    REGE,PRTYTBL-D240(REGE)                                  11250000
+         EX    REGEVEN,CLIPRTY           CHECK FOR VALID PRTY CODE      11300000
+         BL    CANCEL                    CANCEL - INVALID PRTY CODE     11350000
+         LA    REGG,D8(REGG)             SET REGG TO FIRST DIGIT OF RGN 11400000
+         LA    REGF,D5(REGG)             SET LOOP CONTROL FOR DIGIT CK  11450000
+         BAL   REGH,CKDGTS             CHECK DIGITS                     11500000
+         CLC   D0(L7,REGG),TIMELTRL       CHECK FOR 'K,TIME='           11550000
+         BNE   CANCEL                  CANCEL - INVALID TIME LITERAL    11600000
+         IC    REGE,D22(REGA)            GET MAX REGION CODE FROM ACCT  11650000
+         LA    REGF,D15                                                 11700000
+         NR    REGE,REGF                REMOVE ZONE BITS FROM CODE      11750000
+         SLL   REGE,L2                   MULTIPLY CODE BY 4             11800000
+         C     REGEVEN,RGNTBL(REGE)     DETERMINE IF THE SPECIFIED      11850000
+*                                       REGION IS =< THE MAXIMUM FOR    11900000
+*                                       THE SPECIFIC ACCT               11950000
+         BH    CANCEL                  CANCEL - INVALID REGION FOR ACCT 12000000
+         SR    REGD,REGD                ZERO TIME ACCUMULATION REGISTER 12050000
+         LA    REGG,D7(REGG)             SET REGG TO 1ST CHAR OF TIME   12100000
+         CLI   0(REGG),C'('             CHECK FOR TIME PARAM            12150000
+         BNE   MINUTES                 PROCESS MINUTES                  12200000
+         SR    REGC,REGC                REGC IS USED AS A FLAG TO       12250000
+*                                       INDICATE PARENTHESIS            12300000
+         LA    REGG,D1(REGG)                                            12350000
+         CLI   0(REGG),C','            CHECK FOR SECONDS PARAM          12400000
+         BE    SECONDS                 PROCESS SECONDS                  12450000
+MINUTES  LA    REGF,D4(REGG)             SET LOOP CONTROL               12500000
+         LR    REGB,REGG                SAVE ADDR OF 1ST CHAR OF TIME   12550000
+         BAL   REGH,CKDGTS             CHECK DIGITS                     12600000
+         CR    REGB,REGG                TEST FOR NO DIGITS              12650000
+         BE    CANCEL                  CANCEL - TOO MANY DIGITS         12700000
+         SLL   REGEVEN,L8                                               12750000
+         LR    REGD,REGEVEN             PUT MINUTES IN ACCUMULATION REG 12800000
+         LTR   REGC,REGC                TEST PARENTHESIS FLAG           12850000
+         BNZ   CKTIME                   BRANCH FOR NO PARENTHESIS       12900000
+         CLI   0(REGG),C','            CHECK FOR SECONDS PARAM          12950000
+         BE    SECONDS                 PROCESS SECONDS                  13000000
+         CLI   0(REGG),C')'            CHECK FOR ENDING PAREN           13050000
+         BNE   CANCEL                  CANCEL - UNBALANCED PARENS       13100000
+         B     CKTIME                  PROCESS TIME                     13150000
+SECONDS  LA    REGG,D1(REGG)                                            13200000
+         LA    REGF,D2(REGG)             SET LOOP CONTROL               13250000
+         BAL   REGH,CKDGTS             CHECK DIGITS                     13300000
+         CH    REGEVEN,MAXSEC          CHECK AMOUNT OF TIME             13350000
+         BH    CANCEL                  CANCEL - TOO MUCH TIME SPEC.     13400000
+         AR    REGD,REGEVEN             ADD SECONDS TO ACCUM. REG       13450000
+CKTIME   IC    REGE,D23(REGA)            GET MAX TIME CODE FROM ACCT #  13500000
+         LA    REGF,D15                                                 13550000
+         NR    REGE,REGF                REMOVE ZONE BITS FROM CODE      13600000
+         SLL   REGE,L2                   MULTIPLY CODE BY FOUR          13650000
+         C     REGD,TIMETBL(REGE)       CHECK MAX TIME FOR ACCT         13700000
+         BH    CANCEL                 CANCEL - TOO MUCH TIME SPEC.      13750000
+         LA    REGD,D8(R0)                SET BRANCH CODE FOR OKEXIT    13800000
+         STC   REGD,D32(REGA)            STORE BRANCH CODE              13850000
+         B     OKEXIT                 NORMAL RETURN                     13900000
+CKDGTS   SR    REGEVEN,REGEVEN                                          13950000
+         LA    REGE,D1                   SET LOOP INCREMENT             14000000
+NXTDGT   CLI   0(REGG),XF0            CHECK FOR NUMERIC CHARACTER       14050000
+         BCR   M4,REGH                NOT NUMERIC                       14100000
+         CLI   0(REGG),XF9                                              14150000
+         BC    M2,CANCEL              NOT NUMERIC                       14200000
+         IC    REGODD,0(REGG)                                           14250000
+         SLL   REGODD,L28                ISOLATE AND SAVE DECIMAL PART  14300000
+         SLDL  REGEVEN,L4                  OF EACH EBCDIC DIGIT         14350000
+         BXLE  REGG,REGE,NXTDGT       TEST NEXT DIGIT                   14400000
+         B     CANCEL                   CANCEL IF TOO MANY DIGITS       14450000
+CLIPRTY  CLI   0(REGE),X00                                              14500000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 14550000
+*   GET TIME OF DAY THAT JOB WAS ENQUEUED                             * 14600000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 14650000
+JOBENQ   GETMAIN    R,LV=8              GET AREA FOR TEMP STORAGE       14700000
+         LR    REGB,R1                                                  14750000
+         TIME       BIN                 GET TIME OF JOB ENQUEUE         14800000
+         ST    R0,D0(REGB)                PUT TIME IN INTERMEDIATE AREA 14850000
+         MVC   D32(L4,REGA),0(REGB)       MOVE TIME TO USER COMM AREA   14900000
+         FREEMAIN   R,LV=8,A=(REGB)                                     14950000
+OKEXIT   SR    REGA,REGA               SET RETURN CODE TO ZERO          15000000
+         B     EXIT                   RETURN                            15050000
+CANCEL   LA    REGA,D4(R0)               SET RETURN CODE TO FOUR        15100000
+EXIT     ST    REGA,D16(R13)             PUT RETURN CODE IN SAVE AREA   15150000
+         LM    R14,R12,D12(R13)                                         15200000
+         BR    R14                    RETURN                            15250000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 15300000
+*   DEFINE CONSTANTS AND TABLES FOR VALIDITY CHECKS                   * 15350000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 15400000
+LOOPCTL  DC    F'8'                   COUNT OF 8 FOR LOOPING            15450000
+         DC    A(TABLEND)             @ OF END OF TABLE                 15500000
+         DC    A(TABLE)               @ OF BEGINNING OF TABLE           15550000
+TABLE    DC    C'A2224567'            TAB OF VALID                      15600000
+         DC    C'B3235678'            ACCOUNT                           15650000
+         DC    C'C4444444'            NUMBERS                           15700000
+TABLEND  EQU   *-8                                                      15750000
+RGNTBL   DS    0F                                                       15800000
+         DC    X'00000032'            32 K                              15850000
+         DC    X'00000064'            64 K                              15900000
+         DC    X'00000128'            128 K                             15950000
+         DC    X'00000256'            256 K                             16000000
+         DC    X'00000512'            512 K                             16050000
+TIMETBL  DS    0F                                                       16100000
+         DC    X'00000030'              30 SECONDS                      16150000
+         DC    X'00000330'              3 MINUTES AND 30 SECONDS        16200000
+         DC    X'00001000'              10 MINUTES                      16250000
+         DC    X'00003000'              30 MINUTES                      16300000
+         DC    X'00144000'              1440 MINUTES (NO TIME LIMIT)    16350000
+         DS    0H                                                       16400000
+MAXSEC   DC    X'0059'                MAXIMUM SECONDS                   16450000
+PRTYTBL  DC    X'0102030413'          PRIORTY TABLE                     16500000
+PRTYLTRL DC    C'PRTY='               PRIORTY LITERAL                   16550000
+RGNLTRL  DC    C',REGION='            REGION LITERAL                    16600000
+TIMELTRL DC    C'K,TIME='             TIME LITERAL                      16650000
+INVALID  DC    C'INVALID '            INVALID LITERAL                   16700000
+         END                                                            16750000
+//LKED.SYSLMOD  DD  DSNAME=EXITLIB,VOLUME=SER=231400,UNIT=2314,        *16800000
+//             DISP=(NEW,KEEP),SPACE=(TRK,(5,1,2))                      16850000
+//LKED.SYSIN  DD  *                                                     16900000
+    NAME  IEFUJV                                                        16950000
+//IEFUJI  EXEC  ASMFCL                                                  17000000
+//ASM.SYSIN DD *                                                        17050000
+         TITLE 'IEFUJI'                                                 17100000
+         MACRO                GENERATES CALLING SEQUENCE FOR TSMFWTM    17150000
+&NAME    SMFWTM &MSGAD                                                  17200000
+         AIF   ('&MSGAD' EQ '').E1                NO OPERAND            17250000
+         AIF   ('&MSGAD' EQ '(1)').BAL            REG 1 ALREADY LOADED  17300000
+         AIF   ('&MSGAD'(1,1) EQ '(').REGA        REG(NOT 1) SPECIFIED  17350000
+         AGO   .LODIT                             ADDRESS SPECIFIED     17400000
+.E1      MNOTE '* * * NO OPERAND SPECIFIED * * *'                       17450000
+         MEXIT                                                          17500000
+.BAL     ANOP                                                           17550000
+         CNOP  0,4                                                      17600000
+&NAME    BAL   15,*+8                                                   17650000
+.LIST    DC    V(TSMFWTM)                         ADDRESS OF TSMFWTM    17700000
+         L     15,0(15)                                                 17750000
+         BALR  14,15                                                    17800000
+         MEXIT                                                          17850000
+.REGA    ANOP                                                           17900000
+&NAME    LR    1,&MSGAD(1)                                              17950000
+         CNOP  0,4                                                      18000000
+         BAL   15,*+8                                                   18050000
+         AGO   .LIST                                                    18100000
+.LODIT   ANOP                                                           18150000
+&NAME    LA    1,&MSGAD                                                 18200000
+         CNOP  0,4                                                      18250000
+         BAL   15,*+8                                                   18300000
+         AGO   .LIST                                                    18350000
+         MEND                                                           18400000
+IEFUJI   CSECT                                                          18450000
+*C 365000,386000                                                 A48478 18500000
+*C 234000                                                      @YM04803 18510000
+* STATUS - CHANGE LEVEL 1                                               18550000
+* FUNCTION                                                              18600000
+*    THIS MODULE CALCULATES THE AMOUNT OF TIME THAT A JOB WAS           18650000
+*    ENQUEUED AWAITING INITIATION. THIS TIME AND THE EFFECTIVE JOB      18700000
+*    PRIORITY ARE WRITTEN TO THE SMF DATA SET AS RECORD TYPE 128.       18750000
+* ENTRY POINTS -                                                        18800000
+*         IEFUJI                                                        18850000
+* INPUT                                                                 18900000
+*    REGISTER 1 POINTS TO A LIST OF 4 BYTE ADDRESSES FOR THE            18950000
+*    FOLLOWING FOUR PARAMETERS:                                         19000000
+*    1 - 36 BYTES OF THE FOLLOWING JOB INFORMATION:                     19050000
+*    JOBNAME (8 BYTES)                                                  19100000
+*    TIME STAMP (8 BYTES)                                               19150000
+*    SYSTEM ID (4 BYTES)                                                19200000
+*    USER ID (8 BYTES)                                                  19250000
+*    USER COMMUNICATIONS AREA (4 BYTES)                                 19300000
+*    WHEN ENTERED, THIS FIELD CONTAINS THE TIME OF DAY                  19350000
+*    AT WHICH THE JOB WAS ENQUEUED (SUPPLIED BY THE                     19400000
+*    IEFUJV ROUTINE). THIS FIELD IS ZEROED BEFORE THE                   19450000
+*    ROUTINE IS EXITED.                                                 19500000
+*    2 - 20 BYTES CONTAINING THE PROGRAMMERS NAME                       19550000
+*    3 - 1 BYTE INDICATING THE EFFECTIVE JOB PRIORITY                   19600000
+*    4 - JOB ACCOUNTING FIELDS (NOT USED)                               19650000
+* OUTPUT                                                                19700000
+*    A 47 BYTE RECORD IS WRITTEN TO THE SMF DATA SET USING THE          19750000
+*    SMFWTM MACRO. THE FORMAT OF THIS RECORD IS DESCRIBED BY THE        19800000
+*    DSECT FOR THE SMF RECORD.                                          19850000
+*    REGISTER 15 MUST CONTAIN ONE OF THE FOLLOWING RETURN CODES:        19900000
+*    0 - CONTINUE PROCESSING                                            19950000
+*    4 - CANCEL                                                         20000000
+* EXTERNAL REFERENCES -  NONE                                           20050000
+* EXITS,NORMAL -  RETURN TO CALLER     RC=0                             20100000
+* EXITS,ERROR - RETURN TO CALLER    RC=4 - CANCEL REQUEST               20150000
+* TABLES/WORK AREAS -  DSECT FOR SMF RECORD EMPLOYED                    20200000
+* ATTRIBUTES - STANDARD                                                 20250000
+* CHARACTER CODE DEPENDENCY - NONE                                      20300000
+* NOTES - GETMAIN FREEMAIN SMFWTM AND TIME MACROS WERE USED             20350000
+         EJECT                                                          20400000
+REGA     EQU   2                       @ OF 36 BYTES OF JOB INFO        20450000
+REGC     EQU   4                       @ OF 1 BYTE WITH EFF JOB PRTY    20500000
+REGD     EQU   5                       BASE REG FOR DSECT               20550000
+D20      EQU   20                      DISP OF 20                       20600000
+L8       EQU   8                       LENGTH OF 8                      20650000
+L16      EQU   16                      LENGTH OF 16                     20700000
+L6       EQU   6                       LENGTH OF 6                      20750000
+L1       EQU   1                       LENGTH OF 1                      20800000
+M2       EQU   2                       MASK OF 2                        20850000
+D16      EQU   16                      DISP OF 16                       20900000
+D12      EQU   12                      DISP OF 12                       20950000
+D0       EQU   0                       DISP OF 0                        21000000
+D32      EQU   32                      DISP OF 32                       21050000
+R15      EQU   15                      REG 15                           21100000
+R14      EQU   14                      REG 14                           21150000
+R13      EQU   13                      REG 13                           21200000
+R12      EQU   12                      REG 12                           21250000
+R11      EQU   11                      REG 11                           21300000
+R0       EQU   0                       REG 0                            21350000
+R1       EQU   1                       REG 1                            21400000
+L4       EQU   4                       LENGTH OF 4                      21450000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 21500000
+         USING *,R15                                                    21550000
+         B     HERE                   BRANCH AROUND MODULE NAME         21600000
+         DC    CL8'IEFUJI'             MODULE NAME                      21650000
+HERE     STM   R14,R12,D12(R13)        SAVE REGS                        21700000
+         DROP  R15                                                      21750000
+         BALR  R11,R0                  SET UP BASE                      21800000
+         USING *,R11                   REGISTER                         21850000
+         LM    REGA,REGC,D0(R1)        GET PARAMETER ADDRESSES          21900000
+         GETMAIN   R,LV=56             GET CORE FOR SMF RECORD   A48478 21950000
+         LR    REGD,R1                                                  22000000
+         USING SMFDSECT,REGD           BASE FOR SMF DSECT               22050000
+         TIME      BIN                                                  22100000
+         ST    R0,TIME                 TIME FOR SMF RECORD              22150000
+         ST    R1,DATE                 DATE FOR SMF RECORD              22200000
+         MVC   ENQTIME(L4),D32(REGA)   GET JOB ENQUEUE TIME             22250000
+         XC    D32(L4,REGA),D32(REGA)  ZERO COMMUNICATIONS WORD         22300000
+         C     R0,ENQTIME              CHECK FOR A NEW DAY              22350000
+         BC    M2,SAMEDAY              ENQUEUED SAME DAY                22400000
+         A     R0,HR24                 ADD 24 HOURS (86400 SECONDS)     22450000
+SAMEDAY  S     R0,ENQTIME              DETERMINE TIME JOB WAS ON QUEUE  22500000
+         ST    R0,ENQTIME              PUT TIME IN SMF RECORD           22550000
+         MVC   PRTY(L1),D0(REGC)       GET PRIORITY CODE                22600000
+         MVC   SYSID(L4),D16(REGA)     GET SYSTEM ID                    22650000
+         MVC   HEADER(L6),SMFRCD       GET HEADER                       22700000
+         MVC   JOBLOG(L16),D0(REGA)    GET JOB LOG                      22750000
+         MVC   USERID(L8),D20(REGA)    GET USER ID                      22800000
+         LA    R1,SMFOUT               GET SMF BUFFER @                 22850000
+         SMFWTM    (1)                 WRITE SMF RECORD TYPE 128        22900000
+         LR    R1,REGD                                                  22950000
+         FREEMAIN  R,LV=56,A=(1)                                 A48478 23000000
+         LM    R14,R12,D12(R13)        RESTORE REGS                     23050000
+         XR    R15,R15                 SET RETURN CODE TO ZERO          23100000
+         BR    R14                     RETURN                           23150000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 23200000
+*   DEFINE DATA CONSTANTS                                             * 23250000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 23300000
+HR24     DC    F'8640000'              24 HRS IN SECS                   23350000
+SMFRCD   DC    X'002F00000280'         SMF RECORD              @YM04803 23400000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 23450000
+*   DEFINE DSECT FOR JOB INITIATION RECORD (TYPE X'80')               * 23500000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 23550000
+SMFDSECT DSECT                                                          23600000
+         DS    1H                      ALIGN TIME/DATE ON FWD           23650000
+SMFOUT   EQU   *                                                        23700000
+HEADER   DS    6C                      HEADER                           23750000
+TIME     DS    1F                      TIME                             23800000
+DATE     DS    1F                      DATE                             23850000
+SYSID    DS    1F                      SYSTEM ID                        23900000
+JOBLOG   DS    4F                      JOB LOG                          23950000
+USERID   DS    2F                      USER ID                          24000000
+ENQTIME  DS    1F                      ENQUEUE TIME                     24050000
+PRTY     DS    1C                      PRIORTY                          24100000
+         END                                                            24150000
+//LKED.SYSLMOD DD DSNAME=EXITLIB,VOLUME=SER=231400,UNIT=2314,DISP=OLD   24200000
+//LKED.SYSIN  DD *                                                      24250000
+     NAME IEFUJI                                                        24300000
+//IEFACTRT EXEC ASMFCL                                                  24350000
+//ASM.SYSIN DD *                                                        24400000
+         TITLE 'IEFACTRT'                                               24450000
+         MACRO                GENERATES CALLING SEQUENCE FOR TSMFWTM    24500000
+&NAME    SMFWTM &MSGAD                                                  24550000
+         AIF   ('&MSGAD' EQ '').E1                NO OPERAND            24600000
+         AIF   ('&MSGAD' EQ '(1)').BAL            REG 1 ALREADY LOADED  24650000
+         AIF   ('&MSGAD'(1,1) EQ '(').REGA        REG(NOT 1) SPECIFIED  24700000
+         AGO   .LODIT                             ADDRESS SPECIFIED     24750000
+.E1      MNOTE '* * * NO OPERAND SPECIFIED * * *'                       24800000
+         MEXIT                                                          24850000
+.BAL     ANOP                                                           24900000
+         CNOP  0,4                                                      24950000
+&NAME    BAL   15,*+8                                                   25000000
+.LIST    DC    V(TSMFWTM)                         ADDRESS OF TSMFWTM    25050000
+         L     15,0(15)                                                 25100000
+         BALR  14,15                                                    25150000
+         MEXIT                                                          25200000
+.REGA    ANOP                                                           25250000
+&NAME    LR    1,&MSGAD(1)                                              25300000
+         CNOP  0,4                                                      25350000
+         BAL   15,*+8                                                   25400000
+         AGO   .LIST                                                    25450000
+.LODIT   ANOP                                                           25500000
+&NAME    LA    1,&MSGAD                                                 25550000
+         CNOP  0,4                                                      25600000
+         BAL   15,*+8                                                   25650000
+         AGO   .LIST                                                    25700000
+         MEND                                                           25750000
+IEFACTRT CSECT                                                          25800000
+*A 541001                                                         M4736 25850000
+*C 501500,508000,509500,510500                                   A40917 25900000
+*D 542000-593000,637000,638000,659000-671000                     A40917 25950000
+*A 523500,523600,526500-526984,641500-641700                     A40917 26000000
+* STATUS - CHANGE LEVEL 1                                               26050000
+* FUNCTION                                                              26100000
+*    THIS MODULE IS ENTERED AT JOB/STEP TERMINATION. IF THE             26150000
+*    MODULE WAS ENTERED FOR STEP TERMINATION, THE CPU TIME IS           26200000
+*    TIME IS EXAMINED FOR A FLUSH CONDITION.  IF THE STEP WAS           26250000
+*    FLUSHED, THE SMF RECORD IS NOT PRINTED AND THE MODULE              26300000
+*    RETURNS TO THE CALLING ROUTINE.  OTHERWISE,                        26350000
+*    THE SMF TERMINATION RECORD TYPE FIELD IS CHANGED AND               26400000
+*    THE RECORD IS WRITTEN AS A USER RECORD BY THE SMFWTM MACRO.        26450000
+*    IF THE RETURN CODE FROM THE MACRO INDICATES THAT THE RECORD        26500000
+*    WAS NOT WRITTEN SUCCESSFULLY, A MESSAGE IS WRITTEN TO THE          26550000
+*    CONSOLE INDICATING AN ERROR CONDITION.  FOR JOB                    26600000
+*    TERMINATION, A RECORD IS WRITTEN TO THE SYSOUT DATA SET USING      26650000
+*    THE IEFYS ROUTINE.                                                 26700000
+* ENTRY POINTS -                                                        26750000
+*         IEFACTRT                                                      26800000
+* INPUT                                                                 26850000
+*    REGISTER 0 CONTAINS A BINARY 16 IF THE MODULE WAS ENTERED          26900000
+*    FOR JOB TERMINATION.  IT CONTAINS A BINARY 12 IF ENTERED           26950000
+*    FOR STEP TERMINATION.                                              27000000
+*    REGISTER 1 POINTS TO A LIST OF 4 BYTE ADDRESSES FOR THE            27050000
+*    FOLLOWING TEN PARAMETERS:                                          27100000
+*    1 - 36 BYTES OF THE FOLLOWING JOB INFORMATION:                     27150000
+*    JOBNAME (8 BYTES)                                                  27200000
+*    TIME STAMP (8 BYTES)                                               27250000
+*    SYSTEM ID (4 BYTES)                                                27300000
+*    USER ID (8 BYTES)                                                  27350000
+*    USER COMMUNICATIONS AREA (4 BYTES)                                 27400000
+*    THIS FIELD IS ZEROED AT JOB TERMINATION.                           27450000
+*    2 - STEP NAME (ADDRESS IS ZERO FOR JOB TERM ENTRY)                 27500000
+*    3 - PROGRAMMERS NAME                                               27550000
+*    4 - JOB EXECUTION TIME (NOT USED BY THIS ROUTINE)                  27600000
+*    5 - JOB ACCOUNTING FIELDS (NOT USED)                               27650000
+*    6 - STEP EXECUTION TIME                                            27700000
+*    7 - STEP ACCOUNTING FIELDS (NOT USED)                              27750000
+*    8 - FLAGS AND STEP NUMBER (NOT USED)                               27800000
+*    9 - TERMINATION STATUS (NOT USED)                                  27850000
+*    10 - SMF TERMINATION RECORD                                        27900000
+*    REGISTER 0 CONTAINS ONE OF THE FOLLOWING ENTRY CODES:              27950000
+*    12 - STEP TERMINATION ENTRY                                        28000000
+*    16 - JOB TERMINATION ENTRY                                         28050000
+* OUTPUT                                                                28100000
+*    THE JOB/STEP TERMINATION RECORD CREATED BY SMF IS WRITTEN TO       28150000
+*    THE SMF DATA SET AFTER THE RECORD TYPE FIELD HAS BEEN              28200000
+*    MODIFIED.                                                          28250000
+*    AT JOB TERM. THE RECORD DEFINED BY THE JOBMSG DSECT IS             28300000
+*    WRITTEN TO THE SYSOUT DATA SET USING THE IEFYS ROUTINE.            28350000
+*    AN ERROR MESSAGE IS WRITTEN TO THE CONSOLE IF THE SMF              28400000
+*    JOB/STEP TERM. RECORD CANNOT BE WRITTEN SUCCESSFULLY.              28450000
+*    REGISTER 15 CONTAINS A RETURN CODE OF 0 INDICATING THAT THE        28500000
+*    JOB SHOULD BE CONTINUED.                                           28550000
+*    REGISTER 1 CONTAINS A RETURN CODE OF 4 INDICATING THAT THE         28600000
+*    SMF TERMINATION RECORD SHOULD NOT BE WRITTEN.                      28650000
+* EXTERNAL REFERENCES                                                   28700000
+*         IEFYS                                                         28750000
+* EXITS,NORMAL - RETURN TO CALLER                                       28800000
+* EXITS,ERROR - NONE, RETURN CODES INDICATE ACTION                      28850000
+* TABLES/WORK AREAS - DSECTS FOR WTO RCD AND JOB MSG                    28900000
+* ATTRIBUTES - STANDARD                                                 28950000
+* CHARACTER CODE DEPENDENCY - NONE                                      29000000
+* NOTES -                                                               29050000
+*    GETMAIN,FREEMAIN,EXTRACT,TIME,SMFWTM MACROS WERE USED              29100000
+         EJECT                                                          29150000
+REG0     EQU   0                       JOB/STEP TERM INDICATOR   A40917 29200000
+REGA     EQU   2                       @ OF 36 BYTES OF JOB INFO        29250000
+REGB     EQU   3                       @ OF STEPNAME                    29300000
+REGC     EQU   4                       @ OF PGMR'S NAME                 29350000
+REGD     EQU   5                       @ OF SMF TERM RECORD             29400000
+REGE     EQU   6                       WORK REGISTER                    29450000
+REGF     EQU   7                       LENGTH FOR GETMAIN               29500000
+REGG     EQU   8                       WORK REGISTER             A40917 29550000
+REGH     EQU   9                       BASE REGISTER FOR DSECTS         29600000
+REGI     EQU   10                      @ AND VALUE OF CPU TIME   A40917 29650000
+TYPE     EQU   5                                                        29700000
+CPUSTM   EQU   20                                                A40917 29750000
+SMFPTR   EQU   36                                                       29800000
+GETLNGTH EQU   128                                                      29850000
+TIOTDDL  EQU   24                                                       29900000
+L18      EQU   18                      LENGTH OF 18                     29950000
+L31      EQU   31                      LENGTH OF 31                     30000000
+L20      EQU   20                      LENGTH OF 20                     30050000
+L8       EQU   8                       LENGTH OF 8                      30100000
+L73      EQU   73                      LENGTH OF 73                     30150000
+L4       EQU   4                       LENGTH OF 4                      30200000
+L16      EQU   16                      LENGTH OF 16                     30250000
+L2       EQU   2                       LENGTH OF 2                      30300000
+D20      EQU   20                      DISP OF 20                       30350000
+D42      EQU   42                      DISP OF 42                       30400000
+D36      EQU   36                      DISP OF 36                       30450000
+D32      EQU   32                      DISP OF 32                       30500000
+D8       EQU   8                       DISP OF 8                        30550000
+D6       EQU   6                       DISP OF 6                        30600000
+D12      EQU   12                      DISP OF 12                       30650000
+D24      EQU   24                      DISP OF 24                       30700000
+D0       EQU   0                       DISP OF 0                        30750000
+D126     EQU   126                     DISP OF 126                      30800000
+XF0      EQU   X'F0'                   ZONE FOR ERROR CODES             30850000
+R15      EQU   15                      REG 15                           30900000
+R14      EQU   14                      REG 14                           30950000
+R13      EQU   13                      REG 13                           31000000
+R12      EQU   12                      REG 12                           31050000
+R11      EQU   11                      REG 11                           31100000
+R0       EQU   0                       REG 0                            31150000
+R1       EQU   1                       REG 1                            31200000
+L3       EQU   3                       REG 3                            31250000
+L13      EQU   13                      LENGTH OF 13                     31300000
+L1       EQU   1                       LENGTH OF 1                      31350000
+R2       EQU   2                       REG 2                            31400000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 31450000
+         USING *,R15                                                    31500000
+         B     HERE                    BRANCH AROUND MODULE NAME        31550000
+         DC    CL8'IEFACTRT'           MODULE NAME                      31600000
+HERE     STM   R14,R12,D12(R13)        ENTRY LINKAGE                    31650000
+         DROP  R15                                                      31700000
+         LA    REGA,L4                                                  31750000
+         ST    REGA,D24(R13)           SET REG 1 RETURN CODE TO 4       31800000
+         BALR  R11,R0                  SET UP                           31850000
+         USING *,R11                   ADDRESSABILITY                   31900000
+         LM    REGA,REGC,D0(R1)        GET PARAMETER ADDRESSES          31950000
+         L     REGD,SMFPTR(R1)         GET SMF TERM. RECORD ADDRESS     32000000
+         L     REGI,CPUSTM(R1)         GET ADDR OF CPU STP TIME  A40917 32050000
+         LR    REGG,REG0               SAVE 'REASON FOR ENTRY'   A40917 32100000
+         LA    REGF,GETLNGTH(R0)                                        32150000
+         GETMAIN   R,LV=(REGF)                                          32200000
+         LR    REGH,R1                 SET BASE REG FOR DSECT           32250000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 32300000
+*  ELIMINATE SMF RECORD TYPE 4 IF STEP IS BEING  FLUSHED              * 32350000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 32400000
+         LA    REGE,L16                                          A40917 32450000
+         CR    REGG,REGE               IS IT JOB TERMINATION     A40917 32500000
+         BE    CONT                    YES, SKIP CPU TIME CHECK  A40917 32550000
+         CLC   FLSHFLG(L3),D0(REGI)    ZERO CPU TIME?            A40917 32600000
+         BE    EXIT                    RETURN W.O. WRITING REC   A40917 32650000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 32700000
+*   CONVERT SMF RECORD TYPE AND WRITE IT                              * 32750000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 32800000
+CONT     SR    REGG,REGG                                                32850000
+         IC    REGG,TYPE(REGD)         GET RECORD TYPE                  32900000
+         LA    REGG,D126(REGG)         CHANGE RECORD TYPE               32950000
+         STC   REGG,TYPE(REGD)                                          33000000
+         SMFWTM     (REGD)             WRITE SMF RECORD TYPE 130/131    33050000
+         LA    REGG,L4                 SET COMPARAND REG TO 4           33100000
+         CR    R15,REGG                TEST SMFWTM RETURN CODE TO       33150000
+*                                      DETERMINE IF RECORD WAS WRITTEN  33200000
+         BH    ERRWTO                  IF NOT, WRITE ERROR MSG          33250000
+         LTR   REGB,REGB               TEST FOR ZERO STEP NAME ADDRESS  33300000
+*                                      INDICATING ENTRY FOR JOB TERM    33350000
+         BZ   JOBTERM                  YES, JOB TERM                    33400000
+         B    EXIT                     FINISHED IF STEP TERM      M4736 33450000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 33500000
+*   WRITE ERROR MESSAGE TO CONSOLE                                    * 33550000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 33600000
+         USING WTORCD,REGH             BASE FOR WTORCD DSECT            33650000
+ERRWTO   CVD   R15,MSGAREA             CONVERT RETURN CODE TO DECIMAL   33700000
+         UNPK  ERRCODE(L2),MSGAREA+D6(R2) CONVERT RETURN CODE TO EBCDIC 33750000
+         OI    ERRCODE,XF0             SET ZONE ON LOW ORDER DIGITS     33800000
+         OI    ERRCODE+L1,XF0                                           33850000
+         MVC   MSGAREA(L73),WTOMSG     SET UP CONSOLE MESSAGE           33900000
+         MVC   JOBNAME(L8),D0(REGA)    FILL IN JOBNAME                  33950000
+         WTO       MF=(E,(REGH))                                        34000000
+         LTR   REGB,REGB               TEST FOR ZERO STEP NAME ADDRESS  34050000
+*                                      INDICATING ENTRY FOR JOB TERM.   34100000
+         BNZ   EXIT                    IF NOT, EXIT                     34150000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 34200000
+*   WRITE JOB TERMINATION RECORD TO SYSOUT                            * 34250000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 34300000
+JOBTERM  GETMAIN   R,LV=256            GET SAVE AREA FOR IEFYS          34350000
+         ST    R1,D8(R13)                                               34400000
+         LR    REGE,R13                SAVE POINTER TO REG SAVE AREA    34450000
+         LR    R13,R1                  REG 13 POINTS TO 64 WORD AREA    34500000
+         XC    D32(L4,REGA),D32(REGA)  ZERO USER COMM AREA              34550000
+         USING JOBMSG,REGH                                              34600000
+         ST    REGH,0(REGH)            PUT ADDRESS IN A TEMP LOCATION   34650000
+         MVC   D36(L4,R12),D0(REGH)    MSG ADDRESS FOR IEFYS            34700000
+         MVC   D42(L2,R12),MSGLEN      MSG LENGTH FOR IEFYS             34750000
+         MVC   MSG1(L31),MSGTXT1       SET UP SYSOUT MSG                34800000
+         MVC   JOB(L8),D0(REGA)        CONTAINING                       34850000
+         MVC   MSG2(L13),MSGTXT2       JOB NAME                         34900000
+         MVC   ACCTNO(L8),D20(REGA)    ACCOUNTING NO.                   34950000
+         MVC   MSG3(L18),MSGTXT3       AND                              35000000
+         MVC   PGRNAME(L20),D0(REGC)   PGMR NAME                        35050000
+         MVC   MSG4(L18),MSGTXT1                                        35100000
+         L     R15,ADDRYS                                               35150000
+         BALR  R14,R15                 BRANCH TO IEFYS ROUTINE AND      35200000
+*                                      WRITE MSG TO SYSOUT              35250000
+         LR    R13,REGE                RESTORE SAVE AREA POINTER        35300000
+         FREEMAIN  R,LV=256,A=(1)                                       35350000
+EXIT     LR    R1,REGH                                                  35400000
+         FREEMAIN  R,LV=GETLNGTH,A=(1)                                  35450000
+         LM    R14,R12,D12(R13)        RESTORE REGS                     35500000
+         SR    R15,R15                 SET REG 15 RETURN CODE TO 0      35550000
+         BR    R14                     RETURN                           35600000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 35650000
+*   DEFINE CONSTANTS FOR STEP FLUSH CHECK                               35700000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 35750000
+FLSHFLG  DC  X'000000'                 CPU TIME FOR STEP FLUSH   A40917 35800000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 35850000
+*   DEFINE CONSTANTS FOR CONSOLE MESSAGE                              * 35900000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 35950000
+WTOMSG   DS    0F                                                       36000000
+         DC    AL2(MSGEND-*)           MESSAGE LENGTH                   36050000
+         DC    AL2(0)                  SPACING                          36100000
+         DC    C'SMF JOB/STEP TERMINATION RECORD NOT WRITTEN FOR ' MSG  36150000
+         DC    C'JJJJJJJJ. ERROR CODE = '                         TEXT  36200000
+         DS    2C                      PAD FOR ERROR CODE               36250000
+MSGEND   EQU   *                                                        36300000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 36350000
+*   DEFINE CONSTANTS FOR SYSOUT JOB TERMINATION MESSAGE               * 36400000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 36450000
+MSGLEN   DC    AL2(ENDMSG-MSG1)        SYSOUT JOB TERM MSG              36500000
+MSGTXT1  DC    C'   *** JOB END ***   JOBNAME = '        TEXT           36550000
+MSGTXT2  DC    C'     ACCT# = '        CONTAINING ACCT NO.              36600000
+MSGTXT3  DC    C'     PROGRAMMER = '   AND PGMR NAME                    36650000
+ADDRYS   DC    V(IEFYS)                @ OF IEFYS (EXT ROUTINE)         36700000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 36750000
+*   DEFINE STORAGE FOR CONSOLE MESSAGE                                * 36800000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 36850000
+WTORCD   DSECT                                                          36900000
+MSGAREA  DS    52C                     MSG BUFFER                       36950000
+JOBNAME  DS    8C                      JOB NAME                         37000000
+         DS    13C                     SPACING                          37050000
+ERRCODE  DS    2C                      ERROR CODE                       37100000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 37150000
+*   DEFINE STORAGE FOR SYSOUT JOB TERMINATION MESSAGE                 * 37200000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 37250000
+JOBMSG   DSECT                                                          37300000
+MSG1     DS    31C                     MSG TEXT                         37350000
+JOB      DS    8C                      JOB NAME                         37400000
+MSG2     DS    13C                     TEXT                             37450000
+ACCTNO   DS    8C                      ACCT NO.                         37500000
+MSG3     DS    18C                     TEXT                             37550000
+PGRNAME  DS    20C                     PGMR NAME                        37600000
+MSG4     DS    18C                     AND TEXT                         37650000
+ENDMSG   EQU   *                                                        37700000
+         END                                                            37750000
+//LKED.SYSLMOD DD DSNAME=EXITLIB,VOLUME=SER=231400,UNIT=2314,DISP=OLD   37800000
+//LKED.SYSIN  DD *                                                      37850000
+     NAME IEFACTRT                                                      37900000
+//IEFUTL  EXEC  ASMFCL                                                  37950000
+//ASM.SYSIN DD *                                                        38000000
+         TITLE 'IEFUTL'                                                 38050000
+         MACRO                GENERATES CALLING SEQUENCE FOR TSMFWTM    38100000
+&NAME    SMFWTM &MSGAD                                                  38150000
+         AIF   ('&MSGAD' EQ '').E1                NO OPERAND            38200000
+         AIF   ('&MSGAD' EQ '(1)').BAL            REG 1 ALREADY LOADED  38250000
+         AIF   ('&MSGAD'(1,1) EQ '(').REGA        REG(NOT 1) SPECIFIED  38300000
+         AGO   .LODIT                             ADDRESS SPECIFIED     38350000
+.E1      MNOTE '* * * NO OPERAND SPECIFIED * * *'                       38400000
+         MEXIT                                                          38450000
+.BAL     ANOP                                                           38500000
+         CNOP  0,4                                                      38550000
+&NAME    BAL   15,*+8                                                   38600000
+.LIST    DC    V(TSMFWTM)                         ADDRESS OF TSMFWTM    38650000
+         L     15,0(15)                                                 38700000
+         BALR  14,15                                                    38750000
+         MEXIT                                                          38800000
+.REGA    ANOP                                                           38850000
+&NAME    LR    1,&MSGAD(1)                                              38900000
+         CNOP  0,4                                                      38950000
+         BAL   15,*+8                                                   39000000
+         AGO   .LIST                                                    39050000
+.LODIT   ANOP                                                           39100000
+&NAME    LA    1,&MSGAD                                                 39150000
+         CNOP  0,4                                                      39200000
+         BAL   15,*+8                                                   39250000
+         AGO   .LIST                                                    39300000
+         MEND                                                           39350000
+IEFUTL   CSECT                                                          39400000
+*C 450000                                                      @YM04803 39410000
+*C TO GIVE RC8 AND TIME EXTENSION IN SECONDS TO TESTEXIT       @ZA17320 39430040
+* STATUS - CHANGE LEVEL 1                                               39450000
+* FUNCTION                                                              39500000
+*    THIS MODULE IS ENVOKED WHEN THE JOB TIME, STEP TIME OR             39550000
+*    JOB WAIT TIME LIMIT IS EXCEEDED. THE JOB IS CANCELED IF THE        39600000
+*    JOB CPU TIME LIMIT EXPIRES. IF THE STEP CPU TIME LIMIT    @ZA17320 39606040
+*    EXPIRES, THE TIME WILL BE EXTENDED BY A FIXED NUMBER OF   @ZA17320 39612040
+*    TIMER UNITS. IF THE CONTINUOUS WAIT TIME LIMIT EXPIRES,   @ZA17320 39618040
+*    THE TIME WILL BE EXTENDED BY A FIXED NUMBER OF SECONDS.   @ZA17320 39624040
+*    IF MORE THAN THREE EXTENSIONS ARE REQUIRED, THE JOB WILL  @ZA17320 39630040
+*    BE CANCELLED. EACH TIME A JOB WAIT TIME IS EXCEEDED, A    @ZA17320 39636040
+*    RECORD IS WRITTEN TO THE SMF DATA SET.                    @ZA17320 39642040
+* ENTRY POINTS -                                                        39900000
+*         IEFUTL                                                        39950000
+* INPUT                                                                 40000000
+*    REGISTER 1 POINTS TO A 4 BYTE ADDRESS FOR THE FOLLOWING            40050000
+*    PARAMETER:                                                         40100000
+*    36 BYTES OF THE FOLLOWING JOB INFORMATION:                         40150000
+*    JOBNAME (8 BYTES)                                                  40200000
+*    TIME STAMP (8 BYTES)                                               40250000
+*    SYSTEM ID (4 BYTES)                                                40300000
+*    USER ID (8 BYTES)                                                  40350000
+*    USER COMMUNICATIONS AREA (4 BYTES) - THE FIRST BYTE                40400000
+*    IS USED AS AN EXTENSION INDICATOR. IT IS ZERO FOR                  40450000
+*    THE INITIAL ENTRY AND CONTAINS AN INCREMENTED                      40500000
+*    VALUE FOR SUBSEQUENT ENTRIES.                                      40550000
+*    REGISTER 0 WILL CONTAIN ONE OF THE FOLLOWING ENTRY CODES           40600000
+*    INDICATING WHICH TIME LIMIT WAS EXCEEDED:                          40650000
+*             0 - JOB CPU TIME                                          40700000
+*             4 - STEP CPU TIME                                         40750000
+*             8 - JOB WAIT TIME                                         40800000
+* OUTPUT                                                                40850000
+*    EACH TIME THE JOB WAIT TIME LIMIT IS EXCEEDED, A 43 BYTE           40900000
+*    RECORD IS WRITTEN TO THE SMF DATA SET USING THE SMFWTM MACRO.      40950000
+*    THE FORMAT OF THIS RECORD IS DESCRIBED BY THE DSECT FOR THE        41000000
+*    SMF RECORD.                                                        41050000
+*    IF THE TIME LIMIT IS EXTENDED, THE AMOUNT OF THE EXTENSION         41100000
+*    IN TIMER UNITS MUST BE RETURNED IN REGISTER 1.                     41150000
+*    REGISTER 15 MUST CONTAIN ONE OF THE FOLLOWING RETURN CODES:        41200000
+*             0 - CONTINUE PROCESSING (CANCEL THE JOB)                  41250000
+*             4 - CONTINUE THE JOB WITH THE TIME EXTENSION IN REG 1     41300000
+*                 IN TIMER UNITS.                              @ZA17320 41310040
+*             8 - CONTINUE THE JOB WITH THE TIME EXTENSION IN  @ZA17320 41320040
+*                 REG1 IN SECONDS.                             @ZA17320 41330040
+* EXTERNAL REFERENCES - NONE                                            41350000
+* EXITS,NORMAL - RETURN TO CALLER                                       41400000
+* EXITS,ERROR - NONE                                                    41450000
+* TABLES/WORK AREAS - DSECT FOR SMF RECORD                              41500000
+* ATTRIBUTES - STANDARD                                                 41550000
+* CHARACTER CODE DEPENDENCY - NONE                                      41600000
+* NOTES - GETMAIN,FREEMAIN,TIME,SMFWTM MACROS WERE USED                 41650000
+         EJECT                                                          41700000
+REGA     EQU   2                       @ OF 36 BYTES OF JOB INFO        41750000
+REGB     EQU   3                       TIME EXTENSION                   41800000
+REGC     EQU   4                       DSECT BASE                       41850000
+REGD     EQU   5                       WORK REG (CONTAINS 4)            41900000
+D32      EQU   32                      DISP OF 32                       41950000
+D4       EQU   4                       DISP OF 4                        42000000
+D24      EQU   24                      DISP OF 24                       42050000
+D12      EQU   12                      DISP OF 12                       42100000
+D0       EQU   0                       DISP OF 0                        42150000
+D16      EQU   16                      DISP OF 16                       42200000
+D20      EQU   20                      DISP OF 20                       42250000
+D33      EQU   33                      DISP OF 33              @ZA17320 42260040
+D1       EQU   1                       DISP OF 1               @ZA17320 42270040
+L4       EQU   4                       LENGTH OF 4                      42300000
+L16      EQU   16                      LENGTH OF 16                     42350000
+L8       EQU   8                       LENGTH OF 8                      42400000
+L6       EQU   6                       LENGTH OF 6                      42450000
+R15      EQU   15                      REG 15                           42500000
+R14      EQU   14                      REG 14                           42550000
+R13      EQU   13                      REG 13                           42600000
+R12      EQU   12                      REG 12                           42650000
+R11      EQU   11                      REG 11                           42700000
+R0       EQU   0                       REG 0                            42750000
+R1       EQU   1                       REG 1                            42800000
+REG6     EQU   6                                               @ZA17320 42820040
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 42850000
+         USING *,R15                                                    42900000
+         B     HERE                     BRANCH AROUND MOD NAME          42950000
+         DC    CL8'IEFUTL'              MODULE NAME                     43000000
+HERE     STM   R14,R12,D12(R13)         STANDARD                        43050000
+         DROP  R15                                                      43100000
+         BALR  R11,R0                   ENTRY LINKAGE                   43150000
+         USING *,R11                                                    43200000
+         L     REGA,D0(R1)              GET PARAMETER ADDRESS           43250000
+         LA    REGD,L4                  SET COMPARAND REGISTER TO 4     43300000
+         CR    R0,REGD                  TEST FOR JOB/STEP TIME EXCEEDED 43350000
+         BL    CANCEL                   JOB CPU TIME EXCEEDED  @ZA17320 43400040
+         GETMAIN   R,LV=56              GET CORE FOR SMF RECORD         43450000
+         LR    REGB,R0                 SET ENTRY CODE          @ZA17320 43470040
+         LR    REGC,R1                                                  43500000
+         USING SMFDSECT,REGC                                            43550000
+         TIME      BIN                                                  43600000
+         ST    R0,TIME                  TIME FOR SMF RECORD             43650000
+         ST    R1,DATE                  DATE FOR SMF RECORD             43700000
+         MVC   SYSID(L4),D16(REGA)      BUILD SMF RECORD                43750000
+         MVC   JOBLOG(D16),D0(REGA)     CONTAINING JOB LOG NO.          43800000
+         MVC   USERID(L8),D20(REGA)     USER ID                         43850000
+         MVC   HEADER(L6),SMFRCD        AND HEADER                      43900000
+         SR    REGB,REGB                                                43950000
+         IC    REGB,D32(REGA)           GET TIME EXTENSION INDICATOR    44000000
+         STC   REGB,EXTCODE             PUT EXTENSION CODE IN RECORD    44050000
+         LA    R1,SMFOUT                                                44100000
+         SMFWTM    (1)                  WRITE SMF RECORD TYPE 132       44150000
+         LR    R1,REGC                                                  44200000
+         FREEMAIN  R,LV=56,A=(1)                                        44250000
+         LA    REGD,L4                  SET COMPERAND VALUE    @ZA17320 44252040
+         CR    REGB,REGD                CHECK STEP CPU TIME    @ZA17320 44254040
+         BH    PROC8                    NO, GO PROC WAIT TIME  @ZA17320 44256040
+         TM    D33(REGA),X'01'          1ST ENT FOR STEP TIME  @ZA17320 44258040
+         BO    CANCEL                   NO, CANCEL STEP        @ZA17320 44260040
+         OI    D33(REGA),X'01'          SET 1ST TIME INDICATOR @ZA17320 44262040
+         B     TIMUN                    PROCESS TIMER UNITS    @ZA17320 44264040
+PROC8    SR    REG6,REG6                CLEAR REGISTER         @ZA17320 44266040
+         IC    REG6,D32(REGA)           GET ENTRY INDICATOR    @ZA17320 44268040
+         CH    REG6,CONS1               UTL MORE THAN TWICE    @ZA17320 44270040
+         BH    CANCEL                   YES, NOT ALLOWED       @ZA17320 44272040
+         LA    REG6,D1(REG6)            INCREMENT ENTRY VALUE  @ZA17320 44274040
+         STC   REG6,D32(REGA)           SAVE NEW VALUE         @ZA17320 44276040
+         MVC   D24(L4,R13),SECEXT       PUT SECONDS IN R1      @ZA17320 44278040
+         B     INCEXT                                          @ZA17320 44280040
+TIMUN    MVC   D24(L4,R13),TIMEXT       PUT TIMER UNITS IN R1  @ZA17320 44282040
+INCEXT   LR    REGD,REGB                SAVE CODE              @ZA17320 44284040
+         B     EXIT                     RETURN                          44550000
+CANCEL   SR    REGD,REGD                SET RETURN CODE VALUE TO 0      44600000
+EXIT     ST    REGD,D16(R13)            PUT RETURN CODE IN REG 15 AREA  44650000
+         LM    R14,R12,D12(R13)         RESTORE REGS                    44700000
+         BR    R14                      RETURN                          44750000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 44800000
+*   DEFINE DATA CONSTANTS                                             * 44850000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 44900000
+TIMEXT   DC    F'2307692'               ONE MINUTE TIME EXTENSION       44950000
+SECEXT   DC    F'00000060'              SIXTY SEC TIME EXT     @ZA17320 44970040
+SMFRCD   DC    X'002B00000284'          SMF RECORD             @YM04803 45000000
+CONS1    DC    H'0001'                                         @ZA17320 45020040
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 45050000
+*   DEFINE DSECT FOR JOB WAIT TIME LIMIT RECORD (TYPE X'84')          * 45100000
+*-- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --* 45150000
+SMFDSECT DSECT                                                          45200000
+         DS    1H                       ALIGN TIME/DATE ON FWD          45250000
+SMFOUT   EQU   *                                                        45300000
+HEADER   DS    6C                       HEADER                          45350000
+TIME     DS    1F                       TIME                            45400000
+DATE     DS    1F                       DATE                            45450000
+SYSID    DS    1F                       SYSTEM ID                       45500000
+JOBLOG   DS    16C                      JOB LOG                         45550000
+USERID   DS    8C                       USER ID                         45600000
+EXTCODE  DS    1C                       EXIT CODE                       45650000
+         END                                                            45700000
+//LKED.SYSLMOD DD DSNAME=EXITLIB,VOLUME=SER=231400,UNIT=2314,DISP=OLD   45750000
+//LKED.SYSIN  DD *                                                      45800000
+    NAME IEFUTL                                                         45850000
+//IEFU83    EXEC  ASMFCL                                         Y01034 45900000
+//ASM.SYSIN  DD  *                                               Y01034 45950000
+         TITLE 'IEFU83'                                          Y01034 46000000
+   MACRO                                                         Y01034 46050000
+&LABEL   WTOR   &MSG,&REPLY,&RLENGTH,&ECB                        Y01034 46100000
+&LABEL   B    IHB0003                                            Y01034 46150000
+IHB0001  DC   A(IHB0002)                                         Y01034 46200000
+IHB0002  DC   CL20'KD (5,10,15'   INVALID CALL                   Y01034 46250000
+   DC CL20'K ALL'                                                Y01034 46300000
+   DC CL20'D,ALL'                                                Y01034 46350000
+   DC CL20'K (1,3,34,125)'                                       Y01034 46400000
+   DC CL20' D (0,3,48,80,240)'                                   Y01034 46450000
+IHB0003  L    1,IHB0001                                          Y01034 46500000
+   MVC   0(20,&REPLY),0(1)                                     @ZA10833 46550040
+   LA 1,20(1)                                                    Y01034 46600000
+   CLI   0(1),X'58'                                              Y01034 46650000
+   BNE   IHB0004                                                 Y01034 46700000
+   LA 1,IHB0002                                                  Y01034 46750000
+IHB0004  ST   1,IHB0001                                          Y01034 46800000
+   MEND                                                          Y01034 46850000
+   MACRO                                                         Y01034 46900000
+&LABL WAIT    &ECB=                                              Y01034 46950000
+&LABL NOPR    0                                                  Y01034 47000000
+   MEND                                                          Y01034 47050000
+   MACRO                                                         Y01034 47100000
+&LBL WTO    &MSG                                                 Y01034 47150000
+&LBL NOPR    0                                                   Y01034 47200000
+   MEND                                                          Y01034 47250000
+IEFU83   CSECT                     U83 EXIT                      Y01034 47300000
+*A 564600                                                      @YM04803 47310000
+*C 565000                                                      @YM04803 47320000
+*A495000,497100,511500-511900,515770-51600,516600,             @ZA02385 47327000
+*A518050-518150,520120-520460,559200,577050-577400             @ZA02385 47334000
+*C521500                                                       @ZA02385 47341000
+*C (IHB0003) APPROX. 46550000                                  @ZA10833 47345040
+* STATUS - CHANGE LEVEL 1                                        Y01034 47350000
+* FUNCTION                                                       Y01034 47400000
+*    THIS MODULE CHECKS FOR TYPE 0 SMF RECORD AND IF SO SETS THE Y01034 47450000
+*    BITMAP FOR RECORD TYPES TO BE WRITTEN TO THE MAN DATA SET.  Y01034 47500000
+*    IT ACCOMPLISHES THIS BY ASKING THE OPERATOR TO SPECIFY WHICHY01034 47550000
+*    TYPES ARE TO BE KEPT AND WHICH DELETED AND TRANSLATING THE  Y01034 47600000
+*    REPLY INTO A BITMAP - 0 FOR DELETE , 1 FOR KEEP.            Y01034 47650000
+*    FOR ALL RECORD TYPES IT THEN TESTS THE BITMAP TO SEE IF THE Y01034 47700000
+*    RECORD IS TO BE WRITTEN - IF SO THE RETURN CODE IS 0, IF NOTY01034 47750000
+*    THE RETURN CODE IS 4.                                       Y01034 47800000
+* ENTRY POINTS -                                                 Y01034 47850000
+*         IEFU83                                                 Y01034 47900000
+* INPUT                                                          Y01034 47950000
+*    REGISTER 1 POINTS TO A LIST OF 4 BYTE ADDRESSES FOR THE     Y01034 48000000
+*    FOLLOWING TWO PARAMETERS:                                   Y01034 48050000
+*    1 - THE SMF RECORD TO BE PROCESSED BY THE EXIT              Y01034 48100000
+*    2 - THE SECOND ADDRESS IN THE LIST IS 0, NO 2ND PARAMETER   Y01034 48150000
+* OUTPUT                                                         Y01034 48200000
+*    REGISTER 15 MUST CONTAIN ONE OF THE FOLLOWING RETURN CODES: Y01034 48250000
+*    0 - WRITE THE SMF RECORD (KEEP)                             Y01034 48300000
+*    4 - DON'T WRITE THE SMF RECORD (DELETE)                     Y01034 48350000
+* EXTERNAL REFERENCES - NONE                                     Y01034 48400000
+* EXITS,NORMAL - RETURN TO CALLER                                Y01034 48450000
+* EXITS,ERROR - NONE                                             Y01034 48500000
+* TABLES/WORK AREAS -                                            Y01034 48550000
+*    REPLY - 119 CHARACTER AREA FOR REPLY FROM OPERATOR          Y01034 48600000
+*    BITMAP - 256 BIT SWITCHES, 1 FOR EACH SMF RECORD TYPE       Y01034 48650000
+*    MASKS - MASKS FOR SETTING AND TESTING BITMAP                Y01034 48700000
+* ATTRIBUTES - STANDARD                                          Y01034 48750000
+* CHARACTER CODE DEPENDENCY - NONE                               Y01034 48800000
+* NOTES - GETMAIN FREEMAIN MACROS USED                           Y01034 48850000
+         EJECT                                                   Y01034 48900000
+R0       EQU   0                                                 Y01034 48950000
+R1       EQU   1                   PARAMETER ADDRESS             Y01034 49000000
+R2       EQU   2                   MESSAGE ADDRESS               Y01034 49050000
+R3       EQU   3                   OPERATOR REPLY POINTER        Y01034 49100000
+R4       EQU   4                   SWITCH   0-DELETE,1-KEEP      Y01034 49150000
+R5       EQU   5                   DIGIT COUNT OF RECORD NOS.    Y01034 49200000
+R6       EQU   6                   BITMAP BYTE POINTER           Y01034 49250000
+R7       EQU   7                   BITMAP BIT POINTER            Y01034 49300000
+R8       EQU   8                   BITMAP MASK & RECORD NO.      Y01034 49350000
+R9       EQU   9                   RECORD TYPE BITMAP POINTER    Y01034 49400000
+R10      EQU   10                  PARM @ SAVE & BITMAP BYTE PTR Y01034 49450000
+R11      EQU   11                  CVT AND SMCA PTR            @ZA02385 49500000
+R12      EQU   12                  BASE REG                      Y01034 49550000
+R13      EQU   13                  SAVEAREA REG                  Y01034 49600000
+R14      EQU   14                  RETURN ADDRESS                Y01034 49650000
+R15      EQU   15                  ENTRY ADDRESS & BASE          Y01034 49700000
+D0       EQU   0                                               @ZA02385 49720000
+D1       EQU   1                   DI                            Y01034 49750000
+D2       EQU   2                     SP                          Y01034 49800000
+D3       EQU   3                       LA                        Y01034 49850000
+D4       EQU   4                         CE                      Y01034 49900000
+D5       EQU   5                           ME                    Y01034 49950000
+D12      EQU   12                            NT                  Y01034 50000000
+D8       EQU   8                                                 Y01034 50050000
+D20      EQU   20                  VAL                           Y01034 50100000
+D29      EQU   29                     UES                        Y01034 50150000
+TYPE0    EQU   X'00'               0 OFFSET & TYPE 0 RECORD      Y01034 50200000
+BLANK    EQU   X'40'               BLANK                         Y01034 50250000
+COMMA    EQU   X'6B'               COMMA                         Y01034 50300000
+K        EQU   X'D2'               KEEP CODE                     Y01034 50350000
+D        EQU   X'C4'               DELETE CODE                   Y01034 50400000
+LP       EQU   X'4D'               LEFT PAREN                    Y01034 50450000
+RP       EQU   X'5D'               RIGHT PAREN                   Y01034 50500000
+XF0      EQU   X'F0'               LOWER BOUND NUMERIC           Y01034 50550000
+XF9      EQU   X'F9'               UPPER BOUND NUMERIC           Y01034 50600000
+XFF      EQU   X'FF'               BITMAP INITIALIZER            Y01034 50650000
+C0       EQU   0                   RETURN CODE OF 0              Y01034 50700000
+C4       EQU   4                   RETURN CODE OF 4              Y01034 50750000
+L0       EQU   0                   LENGTH TO BE ALTERED BY EX    Y01034 50800000
+L1       EQU   1                   LENGTH OF BITMASK             Y01034 50850000
+L3       EQU   3                   LENGTH FOR 'ALL' COMPARE      Y01034 50900000
+L8       EQU   8                   LENGTH FOR CVB                Y01034 50950000
+L32      EQU   32                  LENGTH OF BITMAP              Y01034 51000000
+L31      EQU   31                  LENGTH FOR BITMAP INIT        Y01034 51050000
+L119     EQU   119                 REPLY FIELD LENGTH            Y01034 51100000
+SAVE72   EQU   72                  SAVEAREA LENGTH             @ZA02385 51150000
+MAPLEN   EQU   32                  BITMAP LENGTH               @ZA02385 51158000
+GETAREA  EQU   204                 GETMAIN SIZE                @ZA02385 51166000
+CVTPTR   EQU   16                  CVT LOCATION                @ZA02385 51174000
+CVTSMCA  EQU   X'C4'               SMCAPTR                     @ZA02385 51182000
+SMCASAVE EQU   X'80'               PTR SAVE FIELD              @ZA02385 51190000
+         USING *,R15               TEMPORARY BASE FOR            Y01034 51200000
+         B     HERE                BRANCHING AROUND              Y01034 51250000
+         DC    CL8'IEFU83  '       MODULE NAME                   Y01034 51300000
+HERE     STM   R14,R12,D12(R13)    SAVE REGS                     Y01034 51350000
+         DROP  R15                 DROP TEMP BASE                Y01034 51400000
+         BALR  R12,R0              SET UP                        Y01034 51450000
+         USING *,R12               BASE                          Y01034 51500000
+         LR    R10,R1              SAVE PTR TO PARMS             Y01034 51550000
+         SR    R0,R0               CLEAR REG 0                 @ZA02385 51570000
+         LA    R0,GETAREA          SET LENGTH FOR GETMAIN      @ZA02385 51600000
+         GETMAIN R,LV=(R0)         GET CORE FOR REG SAVE AREA    Y01034 51650000
+         XC    D0(GETAREA,R1),D0(R1) CLEAR GOTTEN AREA         @ZA02385 51670000
+         ST    R1,D8(R13)          CHAIN                         Y01034 51700000
+         ST    R13,D4(R1)          SAVE                          Y01034 51750000
+         LR    R13,R1              AREAS                         Y01034 51800000
+         USING SMFDSECT,R13        ADDRESS GOTTEN AREA         @ZA02385 51805000
+         L     R11,CVTPTR          PTR TO CVT                  @ZA02385 51810000
+         L     R11,CVTSMCA(R11)    PTR TO SMCA                 @ZA02385 51815000
+         SR    R8,R8               CLEAR WORK                    Y01034 51850000
+         L     R2,0(R10)           GET @ OF SMF RECORD           Y01034 51900000
+         CLI   D5(R2),TYPE0        IS IT TYPE 0                  Y01034 51950000
+         BNE   TEST                IF NOT SKIP INITIALIZATION    Y01034 52000000
+         GETMAIN R,LV=MAPLEN,SP=245  GET BITMAP AREA           @ZA02385 52012000
+         ST    R1,SMCASAVE(R11)    SAVE PTR TO BITMAP AREA     @ZA02385 52018000
+         LR    R11,R1              PTR TO BITMAP AREA          @ZA02385 52024000
+         USING BITDSECT,R11        ADDRESS BITMAP AREA         @ZA02385 52030000
+WRITE    LA    R3,REPLY            REPLY ADDRESS               @ZA02385 52036000
+         LA    R4,OPECB            ECB ADDRESS                 @ZA02385 52042000
+         XC    OPECB,OPECB         CLEAR ECB                   @ZA02385 52044000
+         XC    REPLY,REPLY         CLEAR REPLY AREA            @ZA02385 52046000
+         WTOR  'REPLY IN FORM:  K|D  ALL|(R1,R2,..,RN)  TO INDICATE THE*52050000
+                KEEPING OR DELETING OF ALL OR PARTICULAR SMF RECORDS', *52100000
+               (3),119,(4)                                     @ZA02385 52150000
+         LA    R3,REPLY-D1         LOCATE REPLY FROM OPERATOR    Y01034 52200000
+         SR    R4,R4               REGISTERS                     Y01034 52250000
+         MVI   BITMAP,XFF          BITMAP INITIALIZATION         Y01034 52300000
+         MVC   BITMAP+D1(L31),BITMAP                             Y01034 52350000
+         WAIT  ECB=OPECB                                         Y01034 52400000
+KORD     LA    R3,D1(R3)                                         Y01034 52500000
+         CLI   0(R3),BLANK         SCAN FOR 1ST NON-BLANK        Y01034 52550000
+         BE    KORD                TEST FOR K OR D               Y01034 52600000
+         CLI   0(R3),K             IS IT A K AS IN KEEP          Y01034 52650000
+         BNE   NOTK                IF NOT K TEST FOR D           Y01034 52700000
+         LA    R4,D1(R4)           IF SO SET SWITCH TO KEEP      Y01034 52750000
+         B     SETBITS             AND GO SET THE BITMAP         Y01034 52800000
+NOTK     CLI   0(R3),D             IS IT A D AS IN DELETE        Y01034 52850000
+         BNE   WTO01               IF NOT HAVE OPERATOR REWRITE  Y01034 52900000
+SETBITS  LA    R3,D1(R3)                                         Y01034 52950000
+         CLI   0(R3),BLANK         SCAN FOR 1ST RECORD NUMBER    Y01034 53000000
+         BE    SETBITS             TRY AGAIN, STILL BLANK        Y01034 53050000
+ALLRECS  CLC   0(L3,R3),ALL        IS IT 'ALL'                   Y01034 53100000
+         BNE   RECPREP             IF NOT PROCESS RECORD NUMBERS Y01034 53150000
+SETALL   LTR   R4,R4               IF SO IS IT K OR D            Y01034 53200000
+         BNZ   TEST                IF K BITMAP IS ALREADY SET    Y01034 53250000
+         XC    BITMAP(L32),BITMAP  FOR D SET ALL BITS TO 0       Y01034 53300000
+         B     TEST                AND GO TEST RECORD TYPE       Y01034 53350000
+RECPREP  CLI   0(R3),COMMA         LEADING COMMA?                Y01034 53400000
+         BNE   LPAREN              IF NOT IS IT L PAREN          Y01034 53450000
+         LA    R3,D1(R3)           ELSE MOVE TO FIRST NO.        Y01034 53500000
+         B     ALLRECS             TEST FOR ALL                  Y01034 53550000
+LPAREN   CLI   0(R3),LP            LEFT PAREN?                   Y01034 53600000
+         BNE   WTO02               IF NOT REPLY IS INVALID       Y01034 53650000
+         LA    R3,D1(R3)           IF SO INCREMENT PASSED IT     Y01034 53700000
+         CLC   0(L3,R3),ALL        IS IT 'ALL'                   Y01034 53750000
+         BE    SETALL              IF SO SET BITMAP              Y01034 53800000
+SOME     LTR   R4,R4               IF SO IS IT K OR D            Y01034 53850000
+         BZ    RECS                IF D BITMAP IS ALREADY SET    Y01034 53900000
+         XC    BITMAP(L32),BITMAP  FOR K SET ALL BITS TO 0       Y01034 53950000
+RECS     SR    R5,R5               FOR INITIALIZATION PROCESS    Y01034 54000000
+         CLI   0(R3),COMMA         IS IT A COMMA                 Y01034 54050000
+         BE    GETNEXT             IF SO IGNORE IT               Y01034 54100000
+         LA    R8,L3               SET BCT CTR FOR REC NO TEST   Y01034 54150000
+NEXT     CLI   0(R3),XF0           TEST FOR NUMERIC              Y01034 54200000
+         BL    DELIM               IF SO IS IT A DELIMITER       Y01034 54250000
+         CLI   0(R3),XF9           IF NOT IT IS AN               Y01034 54300000
+         BH    WTO04               INVALID REPLY                 Y01034 54350000
+         LA    R5,D1(R5)           BUMP DIGIT COUNT BY 1         Y01034 54400000
+         LA    R3,D1(R3)           MOVE TO NEXT DIGIT            Y01034 54450000
+         BCT   R8,NEXT             AND GO PROCESS IT             Y01034 54500000
+         CLI   0(R3),COMMA         IS RECORD NO. 2 DIGITS LONG   Y01034 54550000
+         BE    GOTONE              IF SO GO PROCESS IT           Y01034 54600000
+         CLI   0(R3),RP            COULD BE LAST NUMBER          Y01034 54650000
+         BE    GOTONE              IF SO GO PROCESS IT           Y01034 54700000
+         B     WTO03               ELSE REC NO TOO LONG          Y01034 54750000
+DELIM    CLI   0(R3),RP            COULD BE LAST NUMBER          Y01034 54800000
+         BE    GOTONE              IF SO GO PROCESS IT           Y01034 54850000
+         CLI   0(R3),COMMA         IS RECORD NO. 3 DIGITS LONG   Y01034 54900000
+         BNE   WTO04               IF NOT HAVE OP. REWRITE       Y01034 54950000
+GOTONE   SR    R3,R5               RESET TO REC NO               Y01034 55000000
+         BCTR  R5,R0               DECREMENT FOR EXECUTE OF PACK Y01034 55050000
+         EX    R5,PACK             PACK THE RECORD NUMBER        Y01034 55100000
+         CVB   R6,WORK             CONVERT IT TO BINARY          Y01034 55150000
+         C     R6,MAX              VALID RECORD TYPE?            Y01034 55200000
+         BH    WTO05               IF NOT WTOR                   Y01034 55250000
+         SRDA  R6,D3               ISOLATE BITMAP BYTE AFFECTED  Y01034 55300000
+         SRL   R7,D29              ISOLATE THE BITMAP BIT        Y01034 55350000
+         IC    R8,MASKS(R7)        GET BITMAP MASK               Y01034 55400000
+         STC   R8,SAVE72(R13)      STORE IN WORK AREA            Y01034 55450000
+         LA    R6,BITMAP(R6)       SET UP @ FOR BIT SET          Y01034 55500000
+         LTR   R4,R4               IS IT K OR D                  Y01034 55550000
+         BZ    DLT                 IF D GO SET BIT TO 0          Y01034 55600000
+KP       OC    0(L1,R6),SAVE72(R13)  SET BIT TO 1 FOR KEEP       Y01034 55650000
+         B     GETNEXT             GET NEXT RECORD               Y01034 55700000
+DLT      XC    0(L1,R6),SAVE72(R13)  SET BIT TO 0 FOR DELETE     Y01034 55750000
+GETNEXT  LA    R3,D1(R5,R3)        INCREMENT TO NEXT RECORD NO.  Y01034 55800000
+         CLI   0(R3),RP            ARE THERE ANY MORE RECNOS.    Y01034 55850000
+         BNE   RECS                IF NOT GET THE NEXT RECORD NO.Y01034 55900000
+TEST     L     R11,SMCASAVE(R11)   PICK UP BITMAP              @ZA02385 55920000
+         IC    R8,D5(R2)           GET RECORD NUMBER FROM RECORD Y01034 55950000
+         SRDA  R8,D3               ISOLATE WHICH BYTE IT'S IN    Y01034 56000000
+         SRL   R9,D29              ISOLATE THE BIT               Y01034 56050000
+         IC    R9,MASKS(R9)        GET THE APPROPRIATE MASK      Y01034 56100000
+         LA    R10,BITMAP(R8)      GET THE BYTE ADDRESS          Y01034 56150000
+         EX    R9,TM               TEST TO SEE IF BIT IS 1 OR 0  Y01034 56200000
+         BZ    DELETE              IF 0 SET CODE TO DELETE       Y01034 56250000
+KEEP     LA    R6,C0               IF 1 SET KEEP RETURN CODE (0) Y01034 56300000
+         B     THRU                PROCESSING IS COMPLETE        Y01034 56350000
+DELETE   LA    R6,C4               RETURN CODE FOR DELETE IS 4   Y01034 56400000
+THRU     LR    R1,R13              ADDRESS FOR FREEMAIN          Y01034 56450000
+         L     R13,D4(R13)         GET BACK @ CALLERS SAVE AREA@YM04803 56460000
+         SR    R0,R0               CLEAR REG 0                 @ZA02385 56470000
+         LA    R0,GETAREA          FREE GOTTEN AREA            @ZA02385 56480000
+         FREEMAIN R,LV=(R0),A=(R1)                             @YM04803 56500000
+         L     R14,D12(R13)        RELOAD REGISTER 14            Y01034 56600000
+         LR    R15,R6              RESTORE RETURN CODE           Y01034 56650000
+         LM    R0,R12,D20(R13)     RELOAD REST OF REGISTERS      Y01034 56700000
+         BR    R14                 RETURN                        Y01034 56750000
+MASKS    DC    X'8040201008040201' BITMAP SETTING AND TESTING    Y01034 56800000
+PACK     PACK  WORK(L8),0(L0,R3)   TO PACK THE RECORD NOS.       Y01034 56900000
+TM       TM    0(R10),TYPE0        TO TEST THE BITMAP FOR 0 OR 1 Y01034 56950000
+ALL      DC    C'ALL'              FOR ALL RECORDS TESTING       Y01034 57150000
+MAX      DC    F'255'              MAXIMUM RECORD NUMBER ALLOWED Y01034 57200000
+WTO01         WTO            'OPERATION NEITHER K OR D'          Y01034 57250000
+              B              WRITE                               Y01034 57300000
+WTO02         WTO           'INITIAL OPERAND CHARACTERS NOT , ( OR ALL' 57350000
+              B              WRITE                               Y01034 57400000
+WTO03         WTO            'RECORD NUMBER MORE THAN 3 DIGITS LONG'    57450000
+              B              WRITE                               Y01034 57500000
+WTO04         WTO            'RECORD NUMBER NOT NUMERIC'         Y01034 57550000
+              B              WRITE                               Y01034 57600000
+WTO05         WTO            'RECORD NUMBER LARGER THAN 255'     Y01034 57650000
+              B              WRITE                               Y01034 57700000
+BITDSECT DSECT                                                 @ZA02385 57705000
+BITMAP   DS    CL32                BITMAP                      @ZA02385 57710000
+SMFDSECT DSECT                                                 @ZA02385 57715000
+SAVEAREA DS    18F                 SAVEAREA                    @ZA02385 57720000
+FLAG1    DS    CL1                 FLAG BYTE                   @ZA02385 57725000
+OPECB    DS    F                   ECB FOR WTOR                @ZA02385 57730000
+WORK     DS    D                   CONVERTING REC NO TO BINARY @ZA02385 57735000
+REPLY    DS    CL119               OPERATOR REPLY AREA         @ZA02385 57740000
+         END                                                            57750000
+//LKED.SYSLMOD DD DSNAME=EXITLIB,VOLUME=SER=231400,UNIT=2314,DISP=OLD   57800000
+//LKED.SYSIN  DD *                                               Y01034 57850000
+    NAME IEFU83                                                         57900000
+//IEFU29 EXEC  ASMFCL                                                   57950040
+//ASM.SYSIN DD *                                                        58000040
+         TITLE 'IEFU29'                                                 58050040
+         MACRO                                                          58300040
+&L       WTOR  ,&REPLY,&RLEN,&ECB,&MF=                                  58320040
+&L       B     IHB0003                                         @ZA15389 58450040
+IHB0001  DC    A(IHB0002)                                      @ZA15389 58500040
+IHB0002  DC    CL1'U'                                          @ZA15389 58550040
+IHB0003  L     1,IHB0001                                       @ZA15389 58600040
+         MVC   0(1,&REPLY),0(1)                                @ZA15389 58650040
+         MEND                                                           58900040
+         MACRO                                                          58910040
+&LAB     WAIT  &ECB=                                                    58920040
+&LAB     NOPR  0                                                        58930040
+         MEND                                                           58940040
+IEFU29   CSECT                                                          58950040
+* C - LABEL &L - CHANGED FROM NOPR TO PROVIDE COMPARE VALUE    @ZA15389 58970040
+* STATUS - NO CHANGE                                                  * 59000040
+* FUNCTION -                                                          * 59050040
+*     THIS EXIT ROUTINE RECEIVES CONTROL FROM THE SMF WRITER WHEN AN  * 59100040
+*     SMF DATASET NEEDS TO BE DUMPED. A WTOR WILL BE ISSUED TO        * 59110040
+*     INFORM OPERATOR THAT A DUMP SHOULD BE STARTED ON THE            * 59120040
+*     DATA SET WHOSE DSN WAS PASSED VIA PARAMETER LIST.               * 59130040
+* ENTRY POINTS -                                                      * 59350040
+*     IEFU29                                                          * 59400040
+* INPUT -                                                             * 59450040
+*     REGISTER 1 POINTS TO FULLWORD CONTAINING ADDRESS OF DSN         * 59500040
+*     (SYS1.MANX/Y) WHICH REQUIRES DUMPING.                           * 59550040
+* OUTPUT -                                                            * 59600040
+*     RETURN CODE OF 0 IN REGISTER 15                                 * 59650040
+* EXTERNAL REFERENCES - NONE                                          * 59700040
+* EXITS,NORMAL - RETURN TO CALLER                                     * 59750040
+* EXITS,ERROR - NONE                                                  * 59800040
+* TABLES/WORKAREAS -                                                  * 59850040
+*     WTOAREA - DSECT OVERLAYING WORK AREA OBTAINED BY GETMAIN        * 59900040
+* ATTRIBUTES - STANDARD                                               * 59950040
+* CHARACTER CODE DEPENDENCIES - NONE                                  * 60000040
+* MACROS - GETMAIN,FREEMAIN,WTO                                       * 60050040
+         EJECT                                                          60100040
+R0       EQU   0                        INPUT TO SVC 34...SET TO 0      60150040
+R1       EQU   1                        ADDR PARM LISTS, GETMAINED AREA 60200040
+RDSN     EQU   2                        ADDR DSN PASSED TO IEFU29       60250040
+R3       EQU   3                        REPLY ADDRESS                   60260040
+R4       EQU   4                        ECB ADDRESS                     60270040
+R5       EQU   5                        MESSAGE ADDRESS                 60280040
+RBASE    EQU   12                       BASE REGISTER                   60300040
+R12      EQU   12                       LAST REG TO SAVE                60350040
+RSAVE    EQU   13                       ADDR SAVE AREA                  60400040
+RET      EQU   14                       RETURN ADDRESS                  60450040
+R14      EQU   14                       FIRST REG TO SAVE               60500040
+RETCODE  EQU   15                       RETURN CODE WILL BE 0           60550040
+RWTOR    EQU   11                       ADDRESS OF GETMAINED WTOR LIST  60600040
+R15      EQU   15                       ENTRY POINT ADDRESS             60650040
+*********************************************************************** 60700040
+         SPACE 3                                                        60750040
+         USING *,R15                    TEMP ADDRESSABILITY             60800040
+         B     U29START                 BR AROUND MODULE ID             60850040
+         DC    AL1(7),CL7'IEFU29'       MODULE ID                       60900040
+U29START STM   R14,R12,12(RSAVE)        SAVE REGISTERS                  60950040
+         DROP  R15                      DROP TEMP ADDRESSABILITY        61000040
+         BALR  RBASE,0                  ESTABLISH MODULE ADDRESSABILITY 61050040
+         USING *,RBASE                  ADDRESSABILITY FOR MODULE       61100040
+         L     RDSN,0(R1)               SAVE ADDRESS OF DSN PASSED      61150040
+         GETMAIN R,LV=GETSIZE           GET AREA FOR WTOR PARMS         61200040
+         LR    RWTOR,R1                 SAVE ADDRESS GETMAIN AREA       61230040
+         USING WTORAREA,RWTOR           ADDRESSABILITY FOR WTOR         61260040
+*                                       DSECT                           61350040
+         MVC   WTORAREA(PARMLEN),PARMSTRT                               61400040
+*                                       MOVE LIST FORM INTO             61450040
+*                                       PARM AREA                       61500040
+         MVC   WTORDSN,0(RDSN)          MOVE IN DSN                     61550040
+WRITE    LA    R3,REPLY                REPLY ADDRESS                    61554040
+         LA    R4,OPECB                ECB ADDRESS                      61558040
+         LA    R5,WTORMSG              ADDRESS OPERATOR MESSAGE         61562040
+         XC    OPECB,OPECB             CLEAR ECB                        61566040
+         XC    REPLY,REPLY             CLEAR REPLY AREA                 61570040
+         WTOR  ,(R3),1,(R4),MF=(E,(R5)) SEND MESSAGE TO OPERATOR        61574040
+         WAIT  ECB=OPECB               WAIT FOR REPLY                   61578040
+         CLI   REPLY,C'U'              CHECK REPLY                      61582040
+         BNE   WRITE                   REISSUE MSG IF REPLY NOT 'U'     61586040
+         FREEMAIN  R,LV=GETSIZE,A=(RWTOR)  RELEASE OBTAINED STORAGE     61900040
+         LM    R14,R12,12(RSAVE)        RESTORE CALLER'S REGISTERS      61950040
+         SR    RETCODE,RETCODE          SET SUCCESSFUL RETURN CODE      62000040
+         BR    RET                      RETURN TO CALLER                62050040
+         SPACE 3                                                        62100040
+PARMSTRT DC    F'0'                                                     62106040
+         DC    F'0'                                                     62108040
+         DC    AL2(MSGEND-MSGSTART)                                     62110040
+         DC    X'8000'                                                  62112040
+MSGSTART DC    CL62'START SMF DUMP PROGRAM TO DUMP XXXXXXXXX - REPLY U X62114040
+               TO CONTINUE'                                             62116040
+         DC    X'4000'                                                  62118040
+         DC    X'8000'                                                  62120040
+MSGEND   EQU   *                                                        62122040
+PARMLEN  EQU   *-PARMSTRT                                               62124040
+WTORAREA DSECT                                                          62126040
+WTORMSG  DS    CL(MSGSTART-PARMSTRT)                                    62128040
+         DS    CL31                                                     62130040
+WTORDSN  DS    CL9                                                      62132040
+         DS    CL26                                                     62134040
+REPLY    DS    CL1                                                      62136040
+OPECB    DS    F                                                        62138040
+GETSIZE  EQU   *-WTORMSG                                                62140040
+         END                                                            63300040
+//LKED.SYSLMOD DD DSNAME=EXITLIB,VOLUME=SER=231400,UNIT=2314,DISP=OLD   63350040
+//LKED.SYSIN   DD *                                                     63400040
+   NAME IEFU29                                                          63450040

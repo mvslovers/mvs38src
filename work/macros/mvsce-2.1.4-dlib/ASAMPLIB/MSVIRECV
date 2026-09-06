@@ -1,0 +1,73 @@
+//DISABLE JOB MSGLEVEL=1                                                01000003
+//*******************************************************************   02000003
+//* SAMPLE BACK-UP JOBSTREAM                                            03000003
+//* DISABLE MSVC                                                        03050003
+//*******************************************************************   04000003
+//STEP1 EXEC  PGM=ICBVDR00,PARM='DISABLE'                               05000003
+//MSVISCR  JOB MSGLEVEL=1                                               06000003
+//*******************************************************************   06050003
+//* SCRATCH BACK-UP                                                     06100003
+//*******************************************************************   06200003
+//STEP2  EXEC  PGM=IEHPROGM                                             07000003
+//SYSPRINT  DD  SYSOUT=A                                                08000003
+//DD1  DD  UNIT=2314,VOL=SER=SPOOL1,DISP=OLD                            09000003
+//SYSIN  DD  *                                                          10000003
+ SCRATCH DSNAME=MSVI,VOL=2314=SPOOL1,PURGE                              11000003
+//EXPORT JOB MSGLEVEL=1                                                 12000003
+//*******************************************************************   12050003
+//* CREATE NEW BACK-UP                                                  12100003
+//*******************************************************************   12150003
+//STEP3 EXEC  PGM=IDCAMS,REGION=350K                                    13000003
+//SYSPRINT  DD  SYSOUT=A                                                14000003
+//MSVIJCL DD  DSN=MSVCCAT.MSVI,DISP=OLD                                 15000003
+//MSVIRCV   DD  DSN=MSVI,VOL=SER=SPOOL1,DISP=(NEW,KEEP),           0035016000003
+//  UNIT=2314,SPACE=(CYL,(4))                                           17000003
+//SYSIN DD  *                                                           18000003
+  EXPORT      -                                                         19000003
+    MSVCCAT.MSVI    -                                                   20000003
+    INFILE(MSVIJCL) -                                                   21000003
+    OUTFILE(MSVIRCV)  -                                                 22000003
+    TEMPORARY                                                           23000003
+//BACKUP JOB MSGLEVEL=1                                                 24000003
+//*******************************************************************   24050003
+//* NULL JOURNAL                                                        24100003
+//*******************************************************************   24150003
+//STEP4 EXEC  PGM=ICBVDR01,PARM='BACKUP'                                25000003
+//SYSPRINT   DD  SYSOUT=A                                               26000003
+//MSVCJRNL   DD  DSN=MSVCCAT.MSVCJRNL,DISP=SHR                          27000003
+//ENABLE JOB MSGLEVEL=1                                                 28000003
+//*******************************************************************   28050003
+//* ENABLE MSVC                                                         28100003
+//*******************************************************************   28150003
+//STEP5 EXEC  PGM=ICBVDR00,PARM='ENABLE'                                29000003
+//DISABLE JOB MSGLEVEL=1                                                30000003
+//*******************************************************************   31000003
+//* SAMPLE RECOVERY JOBSTREAM                                           32000003
+//* DISABLE MSVC                                                        32050003
+//*******************************************************************   33000003
+//STEP1 EXEC  PGM=ICBVDR00,PARM='DISABLE'                               34000003
+//IMPORT JOB MSGLEVEL=1                                                 35000003
+//*******************************************************************   35050003
+//* RECOVER BACK-UP                                                     35150003
+//*******************************************************************   35200003
+//STEP2 EXEC  PGM=IDCAMS,REGION=350K                                    36000003
+//SYSPRINT  DD  SYSOUT=A                                                37000003
+//MSVIJCL DD  DSN=MSVCCAT.MSVI,DISP=OLD                                 38000003
+//MSVISOR   DD  DSN=MSVI,UNIT=2314,VOL=SER=SPOOL1,DISP=OLD              39000003
+//SYSIN DD  *                                                           40000003
+  IMPORT      -                                                         41000003
+    INFILE(MSVISOR) -                                                   42000003
+    OUTFILE(MSVIJCL)  -                                                 43000003
+    PURGE                                                               44000003
+//RECOVER JOB MSGLEVEL=1                                                45000003
+//STEP3 EXEC  PGM=ICBVDR01,PARM='RECOVER'                               46000003
+//*******************************************************************   46050003
+//* RECOVER INVENTORY                                                   46100003
+//*******************************************************************   46150003
+//SYSPRINT  DD  SYSOUT=A                                                47000003
+//MSVCJRNL  DD  DSN=MSVCCAT.MSVCJRNL,DISP=SHR                           48000003
+//ENABLE JOB MSGLEVEL=1                                                 49000003
+//*******************************************************************   49050003
+//* ENABLE MSVC                                                         49100003
+//*******************************************************************   49150003
+//STEP4 EXEC  PGM=ICBVDR00,PARM='ENABLE'                                50000003

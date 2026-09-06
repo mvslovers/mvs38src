@@ -1,0 +1,43 @@
+* /* START OF SPECIFICATIONS ****                                       01000003
+*                                                                       02000003
+*01*  MODULE-NAME = SGIST510                                            03000003
+*                                                                       04000003
+*01*  DESCRIPTIVE-NAME = SYSGEN MACRO FOR VS2                           05000003
+*                                                                       06000003
+*01*  COPYRIGHT = XXXX-XXX COPYRIGHT IBM CORP 1973                      07000003
+*                                                                       08000003
+*01*  STATUS = RELEASE 3                                                09000003
+*                                                                       10000003
+*01*  FUNCTION = THIS MACRO WILL BE CALLED BY THE GENERATE MACRO. IT    11000003
+*     WILL DO A SELECTIVE COPY OF MODULES ON SYS1.AOS26 INTO            12000003
+*     SYS1.VTAMLIB.                                                     13000003
+*                                                                       14000003
+*01*  NOTES = NONE                                                      15000003
+*                                                                       16000003
+*02*    CHARACTER-CODE-DEPENDENCIES = NONE                              17000003
+*                                                                       18000003
+*02*    DEPENDENCIES = VS2 SYSTEM ONLY                                  19000003
+*                                                                       20000003
+*02*    RESTRICTIONS = NONE                                             21000003
+*                                                                       22000003
+*02*    REGISTER-CONVENTIONS = NONE                                     23000003
+*                                                                       24000003
+*02*    PATCH-LABEL = NONE                                              25000003
+*                                                                       26000003
+*01*  MODULE-TYPE = MACRO                                               27000003
+*                                                                       28000003
+**** END OF SPECIFICATIONS ***/                                         29000003
+         MACRO                                                          36000003
+         SGIST510                                                       37000003
+         COPY SGGBLPAK                                                  38000003
+         PUNCH ' COPY OUTDD=VTAMLIB,INDD=AOS26'                         39000003
+         PUNCH ' SELECT MEMBER=(ISTCRCR4)'                              40000003
+         PUNCH ' SELECT MEMBER=(ISTINCDT)'                     @Z40GKE7 40050000
+         PUNCH ' SELECT MEMBER=(ISTINCFE)'                              40110000
+         PUNCH ' SELECT MEMBER=(ISTINCMS)'                              40500003
+         PUNCH ' SELECT MEMBER=(ISTORFPO)'                              50000003
+         PUNCH ' SELECT MEMBER=(ISTRACCR)'                              52000003
+         PUNCH ' SELECT MEMBER=(ISTNSC00)'                              53000003
+         PUNCH ' SELECT MEMBER=(ISTSC034)'                              53500003
+         PUNCH ' SELECT MEMBER=(ISTSDCLM)'                              53550003
+         MEND                                                           54000003

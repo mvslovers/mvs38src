@@ -1,0 +1,164 @@
+         MACRO                                                          00050000
+         CKPTREST &NOTELIG=,&ELIGBLE=                                   00100000
+         COPY  SGSYSPAK                                                 00150000
+         LCLA &C,&B,&N,&NN                                              00200000
+         LCLB  &L(50),&TEST(1)                                          00250000
+.***** START OF SPECIFICATIONS **************************************   00300000
+.*                                                                      00350000
+.* MODULE NAME - CKPTREST                                               00400000
+.*                                                                      00450000
+.* DESCRIPTIVE NAME - CKPTREST                                          00500000
+.*                                                                      00550000
+.* COPYRIGHT - NONE                                                     00600000
+.*                                                                      00650000
+.* STATUS - CHANGE LEVEL 02                                             00700000
+.*                                                                      00750000
+.* FUNCTION -                                                           00800000
+.*       THE CKPTREST MACRO IS USED TO SPECIFY THE STANDARD ABEND CODES 00850000
+.*       THAT YOU DON'T WANT ELIGIBLE FOR AUTOMATIC RESTART AND THOSE   00900000
+.*       CODES WRITTEN BY YOU THAT YOU DO WANT ELIGIBLE FOR AUTOMATIC   00950000
+.*       RESTART.                                                       01000000
+.*                                                                      01050000
+.* NOTES - N/A                                                          01100000
+.*                                                                      01150000
+.* MODULE TYPE - MACRO                                                  01200000
+.*                                                                      01250000
+.* ENTRY POINT - N/A                                                    01300000
+.*                                                                      01350000
+.* INPUT - THE FOLLOWING PARAMETERS ARE ALLOWED ON CKPTREST             01400000
+.*             &ELIGBLE - SPECIFIES ABEND CODES WRITTEN BY YOU WHICH    01450000
+.*                        WILL BE ELIGIBLE FOR AUTOMATIC RESTART.       01500000
+.*             &NOTELIG - SPECIFIES THOSE STANDARD ABEND CODES WHICH    01550000
+.*                        YOU DON'T WANT TO BE ELIGIBLE FOR AUTOMATIC   01600000
+.*                        RESTART.                                      01650000
+.*                                                                      01700000
+.* OUTPUT -                                                             01750000
+.*       GLOBALS USED ARE -                                             01800000
+.*             &SGMENTB(32)  - CKPTREST MACRO CALLED                    01850000
+.*             &SGCKPA(1-10) - SET FOR ELIGIBLE USER ABEND CODES        01900000
+.*             &SGCKPB(1-50) - SET FOR IBM CODES NOT ELIGIBLE           01950000
+.*             &SGQUITB      - QUIT SWITCH                              02000000
+.*                                                                      02050000
+.*       LOCALS USED ARE -                                              02100000
+.*             &B      - SET TO CHECK IF IBM CODE SPECIFIED EARLIER     02150000
+.*             &C      - SUBSCRIPT FOR NOTELIG CODES NUMBER FORM 1-50   02200000
+.*             &L      - SET IF AN IBM ABEND CODE HAS BEEN SPECIFIED    02250000
+.*             &N      - SUBSCRIPT FOR USER ABEND CODES SPECIFIED       02300000
+.*             &NN     - SUBSCRIPT FOR USER GLOBAL SGCKPA               02350000
+.*             &TEST   - FLIP FLOP SWITCH FOR SUBSCRIPT &NN             02400000
+.*                                                                      02450000
+.* EXIT, NORMAL - N/A                                                   02500000
+.*                                                                      02550000
+.* EXIT, ERROR - N/A                                                    02600000
+.*                                                                      02650000
+.* EXTERNAL REFERENCES - N/A                                            02700000
+.*                                                                      02750000
+.* TABLES - N/A                                                         02800000
+.*                                                                      02850000
+.* MACROS - NONE                                                        02900000
+.*                                                                      02950000
+.* CHANGE ACTIVITY -                                                    03000000
+.*                                                                      03050000
+.****** END OF SPECIFICATIONS ***************************************   03100000
+         AIF   (&SGMENTB(32)).M1             ENTRY SWITCH               03150000
+&SGMENTB(32) SETB 1                                                     03200000
+         AIF   (T'&ELIGBLE EQ 'O').C        NO USER-DEFINED ABEND CODES 03250000
+&NN      SETA  2                            SET PTR TO 'A' BOX          03300000
+         AIF  (N'&ELIGBLE GT 10).M8         MAXIMUM 10 CODES            03350000
+.K MNOTE *,'     FOLLOWING USER COMPLETION CODES ELIGIBLE FOR RESTART-' 03400000
+.E       AIF   (N'&ELIGBLE EQ &N OR &NN GT 6).I   END OR MAX            03450000
+&N       SETA  &N+1                                                     03500000
+         AIF   (T'&ELIGBLE(&N) NE 'N').M9   NOT NUMERIC                 03550000
+         AIF   (&ELIGBLE(&N) LT 0 OR &ELIGBLE(&N) GT 4095).M9           03600000
+&SGCKPA(&NN) SETA 4096*&SGCKPA(&NN)+&ELIGBLE(&N)                        03650000
+&SGCKPA(1) SETA &SGCKPA(1)+1      INCREMENT COUNTER                     03700000
+&TEST(1) SETB  (NOT &TEST(1))           RESET FLIP-FLOP                 03750000
+         AIF   (&TEST(1)).EM            SKIP INCR IF FIRST SET IN BOX   03800000
+&NN      SETA  &NN+1                    INCREMENT TO NEXT BOX           03850000
+.EM MNOTE *,'                 &ELIGBLE(&N)  '                           03900000
+         AGO   .E                       CHECK NEXT OR END               03950000
+.I       AIF   (NOT &TEST(1)).C         Q. PAD UP FOR ODD               04000000
+&SGCKPA(&NN)  SETA  4096*&SGCKPA(&NN)                                   04050000
+.C       AIF   (T'&NOTELIG NE 'O').CA   NOT OMITTED                     04100000
+    MNOTE *,'     ALL SYSTEM COMPLETION CODES ARE ELIGIBLE FOR RESTART' 04150000
+         MEXIT                                                          04200000
+.CA      AIF   (N'&NOTELIG GT 50).M2    50 ALLOWABLE CODES              04250000
+.CC MNOTE *,'     FOLLOWING COMPLETION CODES INELIGIBLE FOR RESTART --' 04300000
+.BEGIN   AIF   (&C EQ N'&NOTELIG).MEND  END TEST                        04350000
+&C       SETA  &C+1                          INCREMENT POINTER          04400000
+&L(1)    SETB  ('&NOTELIG(&C)' EQ '001')     *         W                04450000
+&L(2)    SETB  ('&NOTELIG(&C)' EQ '031')     *         H                04500000
+&L(3)    SETB  ('&NOTELIG(&C)' EQ '033')     *         I                04550000
+&L(4)    SETB  ('&NOTELIG(&C)' EQ '03A')     *         C                04600000
+&L(6)    SETB  ('&NOTELIG(&C)' EQ '0A3')     *                          04650000
+&L(7)    SETB  ('&NOTELIG(&C)' EQ '0B0')     *         C                04700000
+&L(8)    SETB  ('&NOTELIG(&C)' EQ '0F3')     *         O                04750000
+&L(9)    SETB  ('&NOTELIG(&C)' EQ '100')     *         M                04800000
+&L(10)   SETB  ('&NOTELIG(&C)' EQ '106')     *         P                04850000
+&L(11)   SETB  ('&NOTELIG(&C)' EQ '113')     *         L                04900000
+&L(12)   SETB  ('&NOTELIG(&C)' EQ '117')     *         E                04950000
+&L(13)   SETB  ('&NOTELIG(&C)' EQ '137')     *         T                05000000
+&L(15)   SETB  ('&NOTELIG(&C)' EQ '20A')     *         O                05050000
+&L(16)   SETB  ('&NOTELIG(&C)' EQ '213')     *         N                05100000
+&L(17)   SETB  ('&NOTELIG(&C)' EQ '214')     *                          05150000
+&L(18)   SETB  ('&NOTELIG(&C)' EQ '217')     *         C                05200000
+&L(19)   SETB  ('&NOTELIG(&C)' EQ '313')     *         O                05250000
+&L(20)   SETB  ('&NOTELIG(&C)' EQ '314')     *         D                05300000
+&L(21)   SETB  ('&NOTELIG(&C)' EQ '317')     *         E                05350000
+&L(22)   SETB  ('&NOTELIG(&C)' EQ '413')     *         S                05400000
+&L(23)   SETB  ('&NOTELIG(&C)' EQ '414')     *                          05450000
+&L(24)   SETB  ('&NOTELIG(&C)' EQ '417')     *         W                05500000
+&L(25)   SETB  ('&NOTELIG(&C)' EQ '513')     *         E                05550000
+&L(26)   SETB  ('&NOTELIG(&C)' EQ '514')     *         R                05600000
+&L(27)   SETB  ('&NOTELIG(&C)' EQ '613')     *         E                05650000
+&L(28)   SETB  ('&NOTELIG(&C)' EQ '614')     *                          05700000
+&L(29)   SETB  ('&NOTELIG(&C)' EQ '626')     *         S                05750000
+&L(30)   SETB  ('&NOTELIG(&C)' EQ '637')     *         P                05800000
+&L(31)   SETB  ('&NOTELIG(&C)' EQ '700')     *         E                05850000
+&L(32)   SETB  ('&NOTELIG(&C)' EQ '714')     *         C                05900000
+&L(33)   SETB  ('&NOTELIG(&C)' EQ '717')     *         I                05950000
+&L(34)   SETB  ('&NOTELIG(&C)' EQ '806')     *         F                06000000
+&L(35)   SETB  ('&NOTELIG(&C)' EQ '813')     *         I                06050000
+&L(36)   SETB  ('&NOTELIG(&C)' EQ '837')     *         E                06100000
+&L(37)   SETB  ('&NOTELIG(&C)' EQ '906')     *         D                06150000
+&L(38)   SETB  ('&NOTELIG(&C)' EQ '913')     *                          06200000
+&L(39)   SETB  ('&NOTELIG(&C)' EQ '926')     *                          06250000
+&L(40)   SETB  ('&NOTELIG(&C)' EQ '937')     *                          06300000
+&L(41)   SETB  ('&NOTELIG(&C)' EQ 'A14')     *                          06350000
+&L(42)   SETB  ('&NOTELIG(&C)' EQ 'B14')     *                          06400000
+&L(43)   SETB  ('&NOTELIG(&C)' EQ 'B37')     *                          06450000
+&L(44)   SETB  ('&NOTELIG(&C)' EQ 'C13')     *                          06500000
+&L(45)   SETB  ('&NOTELIG(&C)' EQ 'E37')     *                          06550000
+&L(46)   SETB  ('&NOTELIG(&C)' EQ 'E1F')     *                          06600000
+&L(47)   SETB  ('&NOTELIG(&C)' EQ '32D')     *                          06650000
+&L(48)   SETB  ('&NOTELIG(&C)' EQ '737')     *                          06700000
+&L(49)   SETB  ('&NOTELIG(&C)' EQ '422')     *                          06750000
+&L(50)   SETB  ('&NOTELIG(&C)' EQ '2F3')                                06800000
+&B       SETA  0                        RESET                           06850000
+.A       AIF   (&B EQ 50).M4            INVALID CODE SPECIFIED          06900000
+&B       SETA  &B+1                     FIND CODE PRESENTLY SET         06950000
+         AIF   (NOT &L(&B)).A           NOT SET,CHECK NEXT              07000000
+&L(&B)   SETB  0                        RESET                           07050000
+         AIF   (&SGCKPB(&B)).M5         PREVIOUSLY SPECIFIED            07100000
+&SGCKPB(&B) SETB 1                      SET APPROPRIATE SWITCH          07150000
+    MNOTE *,'                 &NOTELIG(&C)  '                           07200000
+         AGO   .BEGIN                                                   07250000
+.M1 MNOTE 5,'* * * IEICKP100 CKPTREST MACRO PREVIOUSLY SPECIFIED'       07300000
+&SGQUITB SETB  1                                                        07350000
+         AGO   .MEND                                                    07400000
+.M2 MNOTE 5,'* * * IEICKP101 MAXIMUM OF 50 COMPLETION CODES ALLOWED'    07450000
+&SGQUITB SETB  1                                                        07500000
+         AGO   .CC                                                      07550000
+.M4 MNOTE 5,'* * * IEICKP102 COMPLETION CODE &NOTELIG(&C) IS INVALID'   07600000
+&SGQUITB SETB  1                                                        07650000
+         AGO   .BEGIN                                                   07700000
+.M5 MNOTE 5,'* * * IEICKP103 &NOTELIG(&C) WAS SPECIFIED PREVIOUSLY'     07750000
+&SGQUITB SETB  1                                                        07800000
+         AGO   .BEGIN                                                   07850000
+.M8 MNOTE 5,'* * * IEICKP104 MAX OF 10 USER COMPLETION CODES ALLOWED'   07900000
+&SGQUITB SETB  1                                                        07950000
+         AGO   .K                                                       08000000
+.M9  MNOTE 5,'* * * IEICKP105 COMPLETION CODE &ELIGBLE(&N) INVALID'     08050000
+&SGQUITB SETB 1                                                         08100000
+         AGO   .E                                                       08150000
+.MEND    MEND                                                           08200000

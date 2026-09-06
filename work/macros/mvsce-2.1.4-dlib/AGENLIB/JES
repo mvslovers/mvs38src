@@ -1,0 +1,693 @@
+         MACRO                                                          00100003
+         JES   &LOCLJES=NO,&PROCID=JES3,&PARMID=00,                    *00200003
+               &RDR=00C,                                               *00300003
+               &PRT=((00E,1403,PN)),                                   *00400003
+               &PUN=00D,                                               *00500003
+               &CNS=((01F,3215)),                                      *00600003
+               &D3330=,&D2314=,&T3400=,&T2400=                          00700003
+.****** START OF SPECIFICATIONS **************************************  00800003
+.*                                                                      00900003
+.* MODULE NAME - JES                                                    01000003
+.*                                                                      01100003
+.* DESCRIPTIVE NAME - JES CONFIGURATION GENERATION                      01200003
+.*                                                                      01300003
+.* COPYRIGHT - NONE                                                     01400003
+.*                                                                      01500003
+.* STATUS - CHANGE LEVEL 03                                             01600003
+.*                                                                      01700003
+.* FUNCTION -                                                           01800003
+.*       THE JES MACRO IS USED TO SPECIFY THE CONFIGURATION FOR THE     01900003
+.*       JES SUBSYSTEM.                                                 02000003
+.*                                                                      02100003
+.* NOTES - N/A                                                          02200003
+.*                                                                      02300003
+.* MODULE TYPE - MACRO                                                  02400003
+.*                                                                      02500003
+.* ENTRY POINT - N/A                                                    02600003
+.*                                                                      02700003
+.* INPUT -                                                              02800003
+.*         THE FOLLOWING PARAMETERS MAY BE CODED ON THE CALL TO         02900003
+.*         JES                                                          03000003
+.*             &LOCLJES - SPECIFIES WHETHER THE JES SUBSYSTEM WILL BE   03100003
+.*                        USED AS A LOCAL PROCESSOR                     03200003
+.*                        DEFAULT IS NO                                 03300003
+.*             &PROCID  - SPECIFIES THE NAME OF THE JES PROCEDURE IN    03400003
+.*                        PROCLIB                                       03500003
+.*                        DEFAULT IS JES3                               03600003
+.*             &PARMID  - SPECIFIES THE PARMLIB MEMBER SUFFIX FOR THE   03700003
+.*                        JES INITIALIZATION DECK                       03800003
+.*                        DEFAULT IS 00                                 03900003
+.*             &RDR     - DEFINES THE READERS FOR JES                   04000003
+.*                        DEFAULT IS 00C                                04100003
+.*             &PRT     - DEFINES THE PRINTERS FOR JES                  04200003
+.*                        DEFAULT IS (00E,1403,PN)                      04300003
+.*             &PUN     - DEFINES THE PUNCHES FOR JES                   04400003
+.*                        DEFAULT IS 00D                                04500003
+.*             &CNS     - DEFINES THE CONSOLES FOR JES                  04600003
+.*                        DEFAULT IS (01F,3215)                         04700003
+.*             &D3330   - DEFINES THE 3330 DISK DRIVES FOR JES          04800003
+.*             &D2314   - DEFINES THE 2414 DISK DRIVES FOR JES          04900003
+.*             &T3400   - DEFINES THE 3400 TAPE DRIVES FOR JES          05000003
+.*             &T2400   - DEFINES THE 2400 TAPE DRIVES FOR JES          05100003
+.*                                                                      05200003
+.* OUTPUT -                                                             05300003
+.*       THE GLOBALS USED ARE -                                         05400003
+.*             &SGMENTB(46) - ENTRY SWITCH                              05500003
+.*             &SGJLOCC     - LOCAL JES 'YES' OR 'NO'                   05600003
+.*             &SGJPARC     - PARMLIB MEMBER ID 'XX'                    05700003
+.*             &SGJPROC     - PROCLIB ID 'XXXX'                         05800003
+.*             &SGJRDRC(63) - JES READER ADDRESS 'NNN'                  05900003
+.*             &SGJPRTC(63) - JES PRINTER ADDR.TYPE.TRAIN 'NNNMMMMQQQ'  06000003
+.*             &SGJPUNC(63) - JES PUNCH ADDRESS 'NNN'                   06100003
+.*             &SGJCNSC(63) - JES CONSOLE ADDRESS.TYPE 'NNNMMMM'        06200003
+.*             &SGJD33C(63) - JES 3330 ADDRESSES 'NNNMMM ETC. '         06300003
+.*             &SGJD23C(63) - JES 2314 ADDRESSES 'NNNMMM ETC. '         06400003
+.*             &SGJT34C(63) - JES 3400 ADDRESSES 'NNNMMM ETC. '         06500003
+.*             &SGJT24C(63) - JES 2400 ADDRESSES 'NNNMMM ETC. '         06600003
+.*                                                                      06700003
+.*       THE LOCALS USED ARE -                                          06800003
+.*             &A - INDEX                                               06900003
+.*             &B - INDEX OR SUBPARM LENGTH OR POINTER TO SUBPARM CHAR  07000003
+.*                  OR CONTENTS OF INCR RANGE FIELD                     07100003
+.*             &C - SUBPARM COUNT                                       07200003
+.*             &D - POINTER TO 1ST SUBPARM CHAR                         07300003
+.*             &ADDRC - DEVICE ADDRESS                                  07400003
+.*             &DEVC - DEVICE TYPE                                      07500003
+.*             &TRNC - PRINT TRAIN                                      07600003
+.*             &MSGC - MESSAGE VALUE                                    07700003
+.*             &LENGTH - SUBPARM LENGTH                                 07800003
+.*             &W - CHAR TO BE CHECKED                                  07900003
+.*             &X - CHAR TO BE CHECKED OR CONTENTS OF INCR RANGE FIELD  08000003
+.*             &Y - CHAR TO BE CHECKED                                  08100003
+.*             &Z - CHAR TO BE CHECKED                                  08200003
+.*                                                                      08300003
+.* EXIT, NORMAL - N/A                                                   08400003
+.*                                                                      08500003
+.* EXIT, ERROR - N/A                                                    08600003
+.*                                                                      08700003
+.* EXTERNAL REFERENCES - N/A                                            08800003
+.*                                                                      08900003
+.* TABLES - N/A                                                         09000003
+.*                                                                      09100003
+.* MACROS - NONE                                                        09200003
+.*                                                                      09300003
+.* CHANGE ACTIVITY - ZA08263                                            09400003
+.*                                                                      09500003
+.******* END OF SPECIFICATIONS ***************************************  09600003
+.*                                                                      09700003
+         COPY  SGSYSPAK                                                 09800003
+         LCLA  &A,&B,&C,&D,&LENGTH                                      09900003
+         LCLB  &MULT                                                    10000003
+         LCLC  &ADDRC,&DEVC,&TRNC,&MSGC,&W,&X,&Y,&Z                     10100003
+.*                                                                      10200003
+.********* CHECK ENTRY **********************************************   10300003
+.*                                                                      10400003
+         AIF   (&SGMENTB(46)).ERR1          CHECK PREVIOUS ENTRY        10500003
+&SGMENTB(46) SETB 1                         SET ENTRY SWITCH            10600003
+.*                                                                      10700003
+.********* LOCAL JES - &LOCLJES='YES' OR 'NO' ***********************   10800003
+.*                                                                      10900003
+.LOCL    AIF   ('&LOCLJES' EQ 'NO').NOLOC   NO LOCAL JES                11000003
+         AIF   ('&LOCLJES' NE 'YES').ERR2   INVALID PARM                11100003
+         AGO   .LOCMSG                                                  11200003
+.NOLOC   ANOP                                                           11300003
+&MSGC    SETC  'NOT'                                                    11400003
+.LOCMSG MNOTE  *,'     THE SYSTEM WILL &MSGC BE USED AS A JES LOCAL PRO*11500003
+               CESSOR'                                                  11600003
+&SGJLOCC SETC  '&LOCLJES'                   SET GLOBAL                  11700003
+.LOCLEND ANOP                               &LOCLJES DONE               11800003
+.*                                                                      11900003
+.********** PROC ID - &PROCID='XXXX' *********************************  12000003
+.*                                                                      12100003
+.PROC    AIF   (K'&PROCID GT 4 OR K'&PROCID EQ 0).ERR3 INVALID LENGTH   12200003
+&X       SETC  '&PROCID'(1,1)               GET FIRST CHAR              12300003
+         AIF   ('&X' LT 'A' OR '&X' GT 'Z' OR ('&X' GT 'J' AND '&X' LT *12400003
+               'K') OR ('&X' GT 'R' AND '&X' LT 'S')).ERR3  CHECK FOR   12500003
+.*                                                         ALPHA        12600003
+&SGJPROC SETC  '&PROCID'                    SET GLOBAL                  12700003
+ MNOTE *,'     &PROCID IS THE NAME OF THE JES PROCEDURE IN PROCLIB'     12800003
+.PROCEND ANOP                               &PROCID DONE                12900003
+.*                                                                      13000003
+.********** PARM ID - &PARMID='XX' **********************************   13100003
+.*                                                                      13200003
+.PARM    AIF   (K'&PARMID NE 2).ERR4        NOT RIGHT LENGTH            13300003
+ MNOTE *,'     &PARMID IS THE PARMLIB MEMBER SUFFIX FOR THE JES INITIAL*13400003
+               IZATION DECK'                                            13500003
+&SGJPARC SETC  '&PARMID'                    SET GLOBAL                  13600003
+.PARMEND ANOP                               &PARMID DONE                13700003
+.*                                                                      13800003
+.********** READER - &RDR(&B)='NNN' *********************************   13900003
+.*                                                                      14000003
+.RDR     AIF   (N'&RDR EQ 0).RDREND         NO READER SPECIFIED         14100003
+         AIF   (N'&RDR GT 63).ERR5          TOO MANY READERS            14200003
+&B       SETA  1                            INITIALIZE COUNT            14300003
+.RDRNXT0 AIF   (T'&RDR(&B) EQ 'O').ERR6A    FIELD OMITTED               14400003
+         AIF   (K'&RDR(&B) NE 3).ERR6       INVALID ADDRESS             14500003
+&X       SETC  '&RDR(&B)'(1,1)              1ST ADDRESS CHAR            14600003
+&Y       SETC  '&RDR(&B)'(2,1)              2ND ADDRESS CHAR            14700003
+&Z       SETC  '&RDR(&B)'(3,1)              3RD ADDRESS CHAR            14800003
+ AIF (NOT(('&X' GE '0' AND '&X' LE '9')OR('&X' GE 'A' AND '&X' LE 'F'))*14900003
+               ).ERR6                       NOT HEX                     15000003
+ AIF (NOT(('&Y' GE '0' AND '&Y' LE '9')OR('&Y' GE 'A' AND '&Y' LE 'F'))*15100003
+               ).ERR6                       NOT HEX                     15200003
+ AIF (NOT(('&Z' GE '0' AND '&Z' LE '9')OR('&Z' GE 'A' AND '&Z' LE 'F'))*15300003
+               ).ERR6                       NOT HEX                     15400003
+&SGJRDRC(&B) SETC '&RDR(&B)'                SET GLOBAL                  15500003
+ MNOTE *,'     &RDR(&B) WILL BE ASSIGNED TO READER &B (RD&RDR(&B))'     15600003
+.RDRNXT1 ANOP                               ONE READER DONE             15700003
+&B       SETA  &B+1                         INCREMENT COUNT             15800003
+         AIF   (&B LE N'&RDR).RDRNXT0       GO GET NEXT RDR             15900003
+.RDREND  ANOP                               ALL READERS DONE            16000003
+.*                                                                      16100003
+.********** PRINTER - &PRT(&A)='(NNN,XXXX,TT)' OR '(NNN,XXXX,TTT)' ***  16200003
+.*                                                                      16300003
+.PRT     AIF   (N'&PRT EQ 0).PRTEND         NO PRINTER SPECIFIED        16400003
+         AIF   (N'&PRT GT 63).ERR7          TOO MANY PRINTERS           16500003
+&A       SETA  1                            SET COUNT                   16600003
+.PRTNXT0 AIF   (T'&PRT(&A) EQ 'O').ERR8     FIELD OMITTED               16700003
+&B       SETA  1                            SET INDEX                   16800003
+&C       SETA  1                            SET SUBPARM COUNT           16900003
+.PRTNXT1 ANOP                                                           17000003
+&D       SETA  &B                           SAVE START OF SUBPARM       17100003
+.PRTNXT2 AIF   ('&PRT(&A)'(&B,1) EQ ',').PRTNXT3 FOUND SUBPARM END      17200003
+         AIF   ('&PRT(&A)'(&B,1) EQ ')').PRTNXT3 FOUND SUBPARM END      17300003
+&B       SETA  &B+1                         SET INDEX TO NEXT CHAR      17400003
+         AIF   (&B LE K'&PRT(&A)).PRTNXT2   LOOP TILL SUBPARM END       17500003
+         AGO   .ERR9                        END OF FIELD PASSED         17600003
+.PRTNXT3 AIF   (&C EQ 3 AND '&PRT(&A)'(&B,1) EQ ')').PRTTHI PRINT TRAIN 17700003
+         AIF   (&C EQ 2 AND '&PRT(&A)'(&B,1) EQ ',').PRTSEC DEVICE TYPE 17800003
+         AIF   (&C EQ 1 AND '&PRT(&A)'(&B,1) EQ ',').PRTFIR DEVICE ADDR 17900003
+         AGO   .ERR9                        OTHERWISE ERROR             18000003
+.PRTFIR  ANOP                               CHECK OUT DEVICE ADDR       18100003
+&B       SETA   &B+1                        BUMP PAST COMMA             18200003
+         AIF   (&B NE 6).ERR10              CHECK ADDR LENGTH           18300003
+&ADDRC   SETC  '&PRT(&A)'(2,3)              SAVE ADDRESS                18400003
+&X       SETC  '&ADDRC'(1,1)                1ST ADDRESS CHAR            18500003
+&Y       SETC  '&ADDRC'(2,1)                2ND ADDRESS CHAR            18600003
+&Z       SETC  '&ADDRC'(3,1)                3RD ADDRESS CHAR            18700003
+ AIF (NOT(('&X' GE '0' AND '&X' LE '9')OR('&X' GE 'A' AND '&X' LE 'F'))*18800003
+               ).ERR10                      NOT HEX                     18900003
+ AIF (NOT(('&Y' GE '0' AND '&Y' LE '9')OR('&Y' GE 'A' AND '&Y' LE 'F'))*19000003
+               ).ERR10                      NOT HEX                     19100003
+ AIF (NOT(('&Z' GE '0' AND '&Z' LE '9')OR('&Z' GE 'A' AND '&Z' LE 'F'))*19200003
+               ).ERR10                      NOT HEX                     19300003
+&C       SETA  &C+1                         INCREMENT SUBPARM COUNT     19400003
+         AGO   .PRTNXT1                     GET NEXT SUBPARM            19500003
+.PRTSEC  ANOP                               CHECK OUT DEVICE TYPE       19600003
+&B       SETA  &B+1                         BUMP PAST COMMA             19700003
+         AIF   (&B-&D NE 5).ERR11           CHECK LENGTH                19800003
+&DEVC    SETC  '&PRT(&A)'(&D,4)             SAVE DEVICE TYPE            19900003
+&W       SETC  '&DEVC'(1,1)                 1ST DEVICE TYPE CHAR        20000003
+&X       SETC  '&DEVC'(2,1)                 2ND DEVICE TYPE CHAR        20100003
+&Y       SETC  '&DEVC'(3,1)                 3RD DEVICE TYPE CHAR        20200003
+&Z       SETC  '&DEVC'(4,1)                 4TH DEVICE TYPE CHAR        20300003
+         AIF   (NOT('&W' GE '0' AND '&W' LE '9')).ERR11 NOT NUMERIC     20400003
+         AIF   (NOT('&X' GE '0' AND '&X' LE '9')).ERR11 NOT NUMERIC     20500003
+         AIF   (NOT('&Y' GE '0' AND '&Y' LE '9')).ERR11 NOT NUMERIC     20600003
+         AIF   (NOT('&Z' GE '0' AND '&Z' LE '9')).ERR11 NOT NUMERIC     20700003
+&C       SETA  &C+1                         INCREMENT SUBPARM COUNT     20800003
+         AGO   .PRTNXT1                     GET NEXT SUB PARM           20900003
+.PRTTHI  AIF   (&B-&D LT 2 OR &B-&D GT 3).ERR12 CHECK TRAIN LENGTH      21000003
+&TRNC    SETC  '&PRT(&A)'(&D,&B-&D)         GET TRAIN VALUE             21100003
+         AIF   (&B LT K'&PRT(&A)).ERR9      TOO MANY SUBPARMS           21200003
+ MNOTE *,'     &ADDRC IS THE ADDRESS ASSIGNED TO PRINTER &A (PR&ADDRC)' 21300003
+ MNOTE *,'     &DEVC IS THE DEVICE TYPE ASSIGNED TO PRINTER &A (PR&ADDR*21400003
+               C)'                                                      21500003
+ MNOTE *,'     &TRNC IS THE PRINT TRAIN ASSIGNED TO PRINTER &A (PR&ADDR*21600003
+               C)'                                                      21700003
+&SGJPRTC(&A) SETC '&ADDRC&DEVC&TRNC'        SET GLOBAL                  21800003
+.PRTNXT4 ANOP                               ONE PRINTER DONE            21900003
+&A       SETA  &A+1                         INCREMENT COUNT             22000003
+         AIF   (&A LE N'&PRT).PRTNXT0       GO GET NEXT PRINTER         22100003
+.PRTEND  ANOP                               ALL PRINTERS DONE           22200003
+.*                                                                      22300003
+.********** PUNCH - &PUN(&B)='NNN' ***********************************  22400003
+.*                                                                      22500003
+.PUN     AIF   (N'&PUN EQ 0).PUNEND         NO PUNCH SPECIFIED          22600003
+         AIF   (N'&PUN GT 63).ERR13         TOO MANY PUNCHES            22700003
+&B       SETA  1                            SET COUNT                   22800003
+.PUNNXT0 AIF   (T'&PUN(&B) EQ 'O').ERR14A   FIELD OMITTED               22900003
+         AIF   (K'&PUN(&B) NE 3).ERR14      INVALID ADDRESS             23000003
+&X       SETC  '&PUN(&B)'(1,1)              1ST ADDRESS CHAR            23100003
+&Y       SETC  '&PUN(&B)'(2,1)              2ND ADDRESS CHAR            23200003
+&Z       SETC  '&PUN(&B)'(3,1)              3RD ADDRESS CHAR            23300003
+ AIF (NOT(('&X' GE '0' AND '&X' LE '9')OR('&X' GE 'A' AND '&X' LE 'F'))*23400003
+               ).ERR14                      NOT HEX                     23500003
+ AIF (NOT(('&Y' GE '0' AND '&Y' LE '9')OR('&Y' GE 'A' AND '&Y' LE 'F'))*23600003
+               ).ERR14                      NOT HEX                     23700003
+ AIF (NOT(('&Z' GE '0' AND '&Z' LE '9')OR('&Z' GE 'A' AND '&Z' LE 'F'))*23800003
+               ).ERR14                      NOT HEX                     23900003
+&SGJPUNC(&B) SETC '&PUN(&B)'                SET GLOBAL                  24000003
+ MNOTE *,'     &PUN(&B) WILL BE ASSIGNED TO PUNCH &B (PU&PUN(&B))'      24100003
+.PUNNXT1 ANOP                               ONE PUNCH DONE              24200003
+&B       SETA  &B+1                         INCREMENT COUNT             24300003
+         AIF   (&B LE N'&PUN).PUNNXT0       GO GET NEXT PUNCH  @ZA08263 24400003
+.PUNEND  ANOP                               ALL PUNCHES DONE            24500003
+.*                                                                      24600003
+.********** CONSOLE - &CONSOLE(&A)='(NNN,XXXX)' **********************  24700003
+.*                                                                      24800003
+.CNS     AIF   (N'&CNS EQ 0).CNSEND         NO CONSOLE SPECIFIED        24900003
+         AIF   (N'&CNS GT 63).ERR15         TOO MANY CONSOLES           25000003
+&A       SETA  1                            SET COUNT                   25100003
+.CNSNXT0 AIF   (T'&CNS(&A) EQ 'O').ERR16    FIELD OMITTED               25200003
+         AIF   (K'&CNS(&A) NE 10).ERR17     IMPROPER LENGTH             25300003
+&B       SETA  1                            SET INDEX                   25400003
+&C       SETA  1                            SET SUBPARM COUNT           25500003
+.CNSNXT1 ANOP                                                           25600003
+&D       SETA  &B                           SAVE SUBPARM START          25700003
+.CNSNXT2 AIF   ('&CNS(&A)'(&B,1) EQ ',').CNSNXT3 SUBPARM END            25800003
+         AIF   ('&CNS(&A)'(&B,1) EQ ')').CNSNXT3 SUBPARM END            25900003
+&B       SETA  &B+1                         INCREMENT INDEX             26000003
+         AIF   (&B LE K'&CNS(&A)).CNSNXT2   GO CHECK NEXT CHARACTER     26100003
+         AGO   .ERR17                       ERROR                       26200003
+.CNSNXT3 AIF   (&C EQ 1 AND '&CNS(&A)'(&B,1) EQ ',').CNSFIR DEVICE ADDR 26300003
+         AIF   (&C EQ 2 AND '&CNS(&A)'(&B,1) EQ ')').CNSSEC DEVICE TYPE 26400003
+         AGO   .ERR17                       OTHERWISE ERROR             26500003
+.CNSFIR  ANOP                               DEVICE ADDRESS              26600003
+&B       SETA  &B+1                         BUMP PAST ','               26700003
+         AIF   (&B NE 6).ERR18              CHECK ADDR LENGTH           26800003
+&ADDRC   SETC  '&CNS(&A)'(2,3)              SAVE ADDRESS                26900003
+&X       SETC  '&ADDRC'(1,1)                1ST ADDRESS CHAR            27000003
+&Y       SETC  '&ADDRC'(2,1)                2ND ADDRESS CHAR            27100003
+&Z       SETC  '&ADDRC'(3,1)                3RD ADDRESS CHAR            27200003
+ AIF (NOT(('&X' GE '0' AND '&X' LE '9')OR('&X' GE 'A' AND '&X' LE 'F'))*27300003
+               ).ERR18                      NOT HEX                     27400003
+ AIF (NOT(('&Y' GE '0' AND '&Y' LE '9')OR('&Y' GE 'A' AND '&Y' LE 'F'))*27500003
+               ).ERR18                      NOT HEX                     27600003
+ AIF (NOT(('&Z' GE '0' AND '&Z' LE '9')OR('&Z' GE 'A' AND '&Z' LE 'F'))*27700003
+               ).ERR18                      NOT HEX                     27800003
+&C       SETA  &C+1                         INCREMENT SUBPARM COUNT     27900003
+         AGO   .CNSNXT1                     GET NEXT SUBPARM            28000003
+.CNSSEC  AIF   (&B-&D NE 4).ERR19           CHECK DEVICE TYPE LENGTH    28100003
+&DEVC    SETC  '&CNS(&A)'(&D,4)             SAVE DEVICE TYPE            28200003
+&W       SETC  '&DEVC'(1,1)                 1ST DEVICE TYPE CHAR        28300003
+&X       SETC  '&DEVC'(2,1)                 2ND DEVICE TYPE CHAR        28400003
+&Y       SETC  '&DEVC'(3,1)                 3RD DEVICE TYPE CHAR        28500003
+&Z       SETC  '&DEVC'(4,1)                 4TH DEVICE TYPE CHAR        28600003
+         AIF   (NOT('&W' GE '0' AND '&W' LE '9')).ERR19 NOT NUMERIC     28700003
+         AIF   (NOT('&X' GE '0' AND '&X' LE '9')).ERR19 NOT NUMERIC     28800003
+         AIF   (NOT('&Y' GE '0' AND '&Y' LE '9')).ERR19 NOT NUMERIC     28900003
+         AIF   (NOT('&Z' GE '0' AND '&Z' LE '9')).ERR19 NOT NUMERIC     29000003
+ MNOTE *,'     &ADDRC IS THE ADDRESS ASSIGNED TO CONSOLE &A (CN&ADDRC)' 29100003
+ MNOTE *,'     &DEVC IS THE CONSOLE TYPE ASSIGNED TO CONSOLE &A (CN&ADD*29200003
+               RC)'                                                     29300003
+         AIF   (&B LT K'&CNS(&A)).ERR17     TOO MANY SUBPARMS           29400003
+&SGJCNSC(&A) SETC '&ADDRC&DEVC'             SET GLOBAL                  29500003
+.CNSNXT4 ANOP                               ONE CONSOLE DONE            29600003
+&A       SETA  &A+1                         INCREMENT COUNT             29700003
+         AIF   (&A LE N'&CNS).CNSNXT0       GET NEXT CONSOLE            29800003
+.CNSEND  ANOP                               ALL CONSOLES DONE           29900003
+.*                                                                      30000003
+.********** 3330'S - &D3330(&A)='NNN' OR '(NNN,M)' OR '(NNN,MM)' *****  30100003
+.*                                                                      30200003
+.D3330   AIF   (N'&D3330 EQ 0).D33END       NO 3330 SPECIFIED           30300003
+         AIF   (N'&D3330 GT 63).ERR20A      TOO MANY 3330'S             30400003
+&A       SETA  1                            SET INITIAL INDEX           30500003
+&C       SETA  1                            SET INITIAL COUNT           30600003
+.D33NXT0 ANOP                                                           30700003
+&MULT    SETB  0                            PRESET SINGLE ADDRESS       30800003
+         AIF   (T'&D3330(&A) EQ 'O').ERR20  FIELD OMITTED               30900003
+         AIF   (K'&D3330(&A) EQ 3).D33NXT2  SINGLE ADDRESS              31000003
+&MULT    SETB  1                            SET MULTIPLE ADDRESS        31100003
+         AIF   (K'&D3330(&A) LE 6).ERR21    WRONG LENGTH                31200003
+&ADDRC   SETC  '&D3330(&A)'(2,3)            SAVE ADDRESS                31300003
+         AIF   ('&D3330(&A)'(5,1) NE ',').ERR21 ADDRESS INVALID         31400003
+&LENGTH  SETA  K'&D3330(&A)-6               LENGTH OF INCR FIELD        31500003
+         AIF   (&LENGTH GT 2).ERR22         MULT ADDR INCR INVALID      31600003
+&B       SETA  &LENGTH                                                  31700003
+.D33NXT1 ANOP                                                           31800003
+&X       SETC  '&D3330(&A)'(&B+5,1)         INCR CHAR                   31900003
+         AIF   (NOT('&X' GE '0' AND '&X' LE '9')).ERR22 NOT NUMERIC     32000003
+&B       SETA  &B-1                         STEP TO NEXT CHAR           32100003
+         AIF   (&B GT 0).D33NXT1            LOOP CONTROL                32200003
+&X       SETC  '&D3330(&A)'(6,&LENGTH)      PICK UP                     32300003
+&B       SETA   &X                          CONTENTS OF INCR FIELD      32400003
+         AIF   (&B GT 63).ERR22             INCR RANGE TOO LARGE        32500003
+         AIF   (&B LE 0).D33NXT4            INCR RANGE NOT POSITIVE     32600003
+         AGO   .D33NXT3                                                 32700003
+.D33NXT2 ANOP                               SINGLE ADDRESS              32800003
+&B       SETA  1                            SET INCR RANGE TO 1         32900003
+&ADDRC   SETC  '&D3330(&A)'                 SAVE ADDRESS                33000003
+.D33NXT3 ANOP                               CHECK SINGLE/MULTIPLE ADDR  33100003
+&X       SETC  '&ADDRC'(1,1)                1ST ADDRESS CHAR            33200003
+&Y       SETC  '&ADDRC'(2,1)                2ND ADDRESS CHAR            33300003
+&Z       SETC  '&ADDRC'(3,1)                3RD ADDRESS CHAR            33400003
+ AIF (NOT(('&X' GE '0' AND '&X' LE '9')OR('&X' GE 'A' AND '&X' LE 'F'))*33500003
+               ).ERR21                      NOT HEX                     33600003
+ AIF (NOT(('&Y' GE '0' AND '&Y' LE '9')OR('&Y' GE 'A' AND '&Y' LE 'F'))*33700003
+               ).ERR21                      NOT HEX                     33800003
+ AIF (NOT(('&Z' GE '0' AND '&Z' LE '9')OR('&Z' GE 'A' AND '&Z' LE 'F'))*33900003
+               ).ERR21                      NOT HEX                     34000003
+         CONVERT TO=HEX,DIGITS=3,VALUE=&ADDRC CONVERT TO HEX            34100003
+         AIF   (&HEX EQ X'FFF').ERR23       ADDRESS X'FFF' INVALID      34200003
+ MNOTE *,'     &ADDRC WILL BE ASSIGNED TO 3330 DISK DRIVE &C'           34300003
+&SGJD33C(&A) SETC '&SGJD33C(&A).&ADDRC'     SET GLOBAL                  34400003
+&C       SETA  &C+1                         INCREMENT COUNT FOR 3330'S  34500003
+&B       SETA  &B-1                         DECREMENT INCR RANGE        34600003
+         AIF   (&B LE 0).D33NXT4            LOOP CONTROL                34700003
+&HEX     SETA  &HEX+1                       INCREASE ADDRESS BY ONE     34800003
+         CONVERT TO=EBCDIC,DIGITS=3,VALUE=&HEX CONVERT BACK TO EBCDIC   34900003
+&ADDRC   SETC  '&EBCDIC'                    SAVE ADDRESS                35000003
+         AGO   .D33NXT3                     GO TO CHECK ADDRESS         35100003
+.D33NXT4 ANOP                               ONE INDEX DONE              35200003
+&A       SETA  &A+1                         INCREMENT INDEX             35300003
+         AIF   (&A LE N'&D3330).D33NXT0     LOOP CONTROL                35400003
+.D33END  ANOP                               ALL 3330'S DONE             35500003
+.*                                                                      35600003
+.********** 2314'S - &D2314(&A)='NNN' OR '(NNN,M)' OR '(NNN,MM)' *****  35700003
+.*                                                                      35800003
+.D2314   AIF   (N'&D2314 EQ 0).D23END       NO 2314 SPECIFIED           35900003
+         AIF   (N'&D2314 GT 63).ERR25A      TOO MANY 2314'S             36000003
+&A       SETA  1                            SET INITIAL INDEX           36100003
+&C       SETA  1                            SET INITIAL COUNT           36200003
+.D23NXT0 ANOP                                                           36300003
+&MULT    SETB  0                            PRESET SINGLE ADDRESS       36400003
+         AIF   (T'&D2314(&A) EQ 'O').ERR25  FIELD OMITTED               36500003
+         AIF   (K'&D2314(&A) EQ 3).D23NXT2  SINGLE ADDRESS              36600003
+&MULT    SETB  1                            SET MULTIPLE ADDRESS        36700003
+         AIF   (K'&D2314(&A) LE 6).ERR26    INVALID ADDRESS LENGTH      36800003
+&ADDRC   SETC  '&D2314(&A)'(2,3)            SAVE ADDRESS                36900003
+         AIF   ('&D2314(&A)'(5,1) NE ',').ERR26 ADDRESS INVALID         37000003
+&LENGTH  SETA  K'&D2314(&A)-6               LENGTH OF INCREMENT FIELD   37100003
+         AIF   (&LENGTH GT 2).ERR27         MULT ADDRESS INCR INVALID   37200003
+&B       SETA  &LENGTH                                                  37300003
+.D23NXT1 ANOP                                                           37400003
+&X       SETC  '&D2314(&A)'(&B+5,1)         CHECK INCR RANGE            37500003
+         AIF   (NOT('&X' GE '0' AND '&X' LE '9')).ERR27 NOT NUMERIC     37600003
+&B       SETA  &B-1                         STEP TO NEXT CHAR           37700003
+         AIF   (&B GT 0).D23NXT1            LOOP CONTROL                37800003
+&X       SETC  '&D2314(&A)'(6,&LENGTH)      PICK UP                     37900003
+&B       SETA   &X                          CONTENTS OF INCR FIELD      38000003
+         AIF   (&B GT 63).ERR27             INCR RANGE TOO LARGE        38100003
+         AIF   (&B LE 0).D23NXT4            INCR RANGE NOT POSITIVE     38200003
+         AGO   .D23NXT3                                                 38300003
+.D23NXT2 ANOP                               SINGLE ADDRESS              38400003
+&B       SETA  1                            SET INCR RANGE TO 1         38500003
+&ADDRC   SETC  '&D2314(&A)'                 SAVE ADDRESS                38600003
+.D23NXT3 ANOP                               CHECK SINGLE/MULTIPLE ADDR  38700003
+&X       SETC  '&ADDRC'(1,1)                1ST ADDRESS CHAR            38800003
+&Y       SETC  '&ADDRC'(2,1)                2ND ADDRESS CHAR            38900003
+&Z       SETC  '&ADDRC'(3,1)                3RD ADDRESS CHAR            39000003
+ AIF (NOT(('&X' GE '0' AND '&X' LE '9')OR('&X' GE 'A' AND '&X' LE 'F'))*39100003
+               ).ERR26                      NOT HEX                     39200003
+ AIF (NOT(('&Y' GE '0' AND '&Y' LE '9')OR('&Y' GE 'A' AND '&Y' LE 'F'))*39300003
+               ).ERR26                      NOT HEX                     39400003
+ AIF (NOT(('&Z' GE '0' AND '&Z' LE '9')OR('&Z' GE 'A' AND '&Z' LE 'F'))*39500003
+               ).ERR26                      NOT HEX                     39600003
+         CONVERT TO=HEX,DIGITS=3,VALUE=&ADDRC CONVERT TO HEX            39700003
+         AIF   (&HEX EQ X'FFF').ERR28       ADDRESS X'FFF' INVALID      39800003
+ MNOTE *,'     &ADDRC WILL BE ASSIGNED TO 2314 DISK DRIVE &C'           39900003
+&SGJD23C(&A) SETC '&SGJD23C(&A).&ADDRC'     SET GLOBAL                  40000003
+&C       SETA  &C+1                         INCREMENT COUNT FOR 2314'S  40100003
+&B       SETA  &B-1                         DECREMENT INCR RANGE        40200003
+         AIF   (&B LE 0).D23NXT4            LOOP CONTROL                40300003
+&HEX     SETA  &HEX+1                       INCREASE ADDRESS BY ONE     40400003
+         CONVERT TO=EBCDIC,DIGITS=3,VALUE=&HEX CONVERT BACK TO EBCDIC   40500003
+&ADDRC   SETC  '&EBCDIC'                    SAVE ADDRESS                40600003
+         AGO   .D23NXT3                     GO TO CHECK ADDRESS         40700003
+.D23NXT4 ANOP                               ONE INDEX DONE              40800003
+&A       SETA  &A+1                         INCREMENT INDEX             40900003
+         AIF   (&A LE N'&D2314).D23NXT0     LOOP CONTROL                41000003
+.D23END  ANOP                               ALL 2314'S DONE             41100003
+.*                                                                      41200003
+.********** 3400'S - &T3400(&A)='NNN' OR '(NNN,M)' OR '(NNN,MM)' *****  41300003
+.*                                                                      41400003
+.T3400   AIF   (N'&T3400 EQ 0).T34END       NO 3400 SPECIFIED           41500003
+         AIF   (N'&T3400 GT 63).ERR30A      TOO MANY 3400'S             41600003
+&A       SETA  1                            SET INITIAL INDEX           41700003
+&C       SETA  1                            SET INITIAL COUNT           41800003
+.T34NXT0 ANOP                                                           41900003
+&MULT    SETB  0                            PRESET SINGLE ADDRESS       42000003
+         AIF   (T'&T3400(&A) EQ 'O').ERR30  FIELD OMITTED               42100003
+         AIF   (K'&T3400(&A) EQ 3).T34NXT2  SINGLE ADDRESS              42200003
+&MULT    SETB  1                            SET MULTIPLE ADDRESS        42300003
+         AIF   (K'&T3400(&A) LE 6).ERR31    INVALID ADDRESS LENGTH      42400003
+&ADDRC   SETC  '&T3400(&A)'(2,3)            SAVE ADDRESS                42500003
+         AIF   ('&T3400(&A)'(5,1) NE ',').ERR31 ADDRESS INVALID         42600003
+&LENGTH  SETA  K'&T3400(&A)-6               LENGTH OF INCR FIELD        42700003
+         AIF   (&LENGTH GT 2).ERR32         MULT ADDRESS INCR INVALID   42800003
+&B       SETA  &LENGTH                                                  42900003
+.T34NXT1 ANOP                                                           43000003
+&X       SETC  '&T3400(&A)'(&B+5,1)         CHECK INCR RANGE            43100003
+         AIF   (NOT('&X' GE '0' AND '&X' LE '9')).ERR32 NOT NUMERIC     43200003
+&B       SETA  &B-1                         STEP TO NEXT CHAR           43300003
+         AIF   (&B GT 0).T34NXT1            LOOP CONTROL                43400003
+&X       SETC  '&T3400(&A)'(6,&LENGTH)      PICK UP                     43500003
+&B       SETA  &X                           CONTENTS OF INCR FIELD      43600003
+         AIF   (&B GT 63).ERR32             INCR RANGE TOO LARGE        43700003
+         AIF   (&B LE 0).T34NXT3            INCR RANGE NOT POSITIVE     43800003
+         AGO   .T34NXT3                                                 43900003
+.T34NXT2 ANOP                               SINGLE ADDRESS              44000003
+&B       SETA  1                            SET INCR RANGE TO 1         44100003
+&ADDRC   SETC  '&T3400(&A)'                 SAVE ADDRESS                44200003
+.T34NXT3 ANOP                               CHECK SINGLE/MULTIPLE ADDR  44300003
+&X       SETC  '&ADDRC'(1,1)                1ST ADDRESS CHAR            44400003
+&Y       SETC  '&ADDRC'(2,1)                2ND ADDRESS CHAR            44500003
+&Z       SETC  '&ADDRC'(3,1)                3RD ADDRESS CHAR            44600003
+ AIF (NOT(('&X' GE '0' AND '&X' LE '9')OR('&X' GE 'A' AND '&X' LE 'F'))*44700003
+               ).ERR31                      NOT HEX                     44800003
+ AIF (NOT(('&Y' GE '0' AND '&Y' LE '9')OR('&Y' GE 'A' AND '&Y' LE 'F'))*44900003
+               ).ERR31                      NOT HEX                     45000003
+ AIF (NOT(('&Z' GE '0' AND '&Z' LE '9')OR('&Z' GE 'A' AND '&Z' LE 'F'))*45100003
+               ).ERR31                      NOT HEX                     45200003
+         CONVERT TO=HEX,DIGITS=3,VALUE=&ADDRC CONVERT TO HEX            45300003
+         AIF   (&HEX EQ X'FFF').ERR33       ADDRESS X'FFF' INVALID      45400003
+ MNOTE *,'     &ADDRC WILL BE ASSIGNED TO 3400 TAPE DRIVE &C'           45500003
+&SGJT34C(&A) SETC '&SGJT34C(&A).&ADDRC'     SET GLOBAL                  45600003
+&C       SETA  &C+1                         INCREMENT COUNT FOR 3400'S  45700003
+&B       SETA  &B-1                         DECREMENT INCR RANGE        45800003
+         AIF   (&B LE 0).T34NXT4            LOOP CONTROL                45900003
+&HEX     SETA  &HEX+1                       INCREASE ADDRESS BY ONE     46100003
+         CONVERT TO=EBCDIC,DIGITS=3,VALUE=&HEX CONVERT BACK TO EBCDIC   46200003
+&ADDRC   SETC  '&EBCDIC'                    SAVE ADDRESS                46300003
+         AGO   .T34NXT3                     GO TO CHECK ADDRESS         46400003
+.T34NXT4 ANOP                               ONE INDEX DONE              46500003
+&A       SETA  &A+1                         INCREMENT INDEX             46600003
+         AIF   (&A LE N'&T3400).T34NXT0     LOOP CONTROL                46700003
+.T34END  ANOP                               ALL 3400'S DONE             46800003
+.*                                                                      46900003
+.********** 2400'S - &T2400(&A)='NNN' OR '(NNN,M)' OR '(NNN,MM)' *****  47000003
+.*                                                                      47100003
+.T2400   AIF   (N'&T2400 EQ 0).T24END       NO 2400 SPECIFIED           47200003
+         AIF   (N'&T2400 GT 63).ERR35A      TOO MANY 2400'S             47300003
+&A       SETA  1                            SET INITIAL INDEX           47400003
+&C       SETA  1                            SET INITIAL COUNT           47500003
+.T24NXT0 ANOP                                                           47600003
+&MULT    SETB  0                            PRESET SINGLE ADDRESS       47700003
+         AIF   (T'&T2400(&A) EQ 'O').ERR35  FIELD OMITTED               47800003
+         AIF   (K'&T2400(&A) EQ 3).T24NXT2  SINGLE ADDRESS              47900003
+&MULT    SETB  1                            SET MULTIPLE ADDRESS        48000003
+         AIF   (K'&T2400(&A) LE 6).ERR36    INVALID ADDRESS LENGTH      48100003
+&ADDRC   SETC  '&T2400(&A)'(2,3)            SAVE ADDRESS                48200003
+         AIF   ('&T2400(&A)'(5,1) NE ',').ERR36 ADDRESS INVALID         48300003
+&LENGTH  SETA  K'&T2400(&A)-6               LENGTH OF INCR FIELD        48400003
+         AIF   (&LENGTH GT 2).ERR37         MULT ADDRESS INCR INVALID   48500003
+&B       SETA  &LENGTH                                                  48600003
+.T24NXT1 ANOP                                                           48700003
+&X       SETC  '&T2400(&A)'(&B+5,1)         CHECK INCR RANGE            48800003
+         AIF   (NOT('&X' GE '0' AND '&X' LE '9')).ERR37 NOT NUMERIC     48900003
+&B       SETA  &B-1                         STEP TO NEXT CHAR           49000003
+         AIF   (&B GT 0).T24NXT1            LOOP CONTROL                49100003
+&X       SETC  '&T2400(&A)'(6,&LENGTH)      PICK UP                     49200003
+&B       SETA  &X                           CONTENTS OF INCR FIELD      49300003
+         AIF   (&B GT 63).ERR37             INCR RANGE TOO LARGE        49400003
+         AIF   (&B LE 0).T24NXT4            INCR RANGE NOT POSITIVE     49500003
+         AGO   .T24NXT3                                                 49600003
+.T24NXT2 ANOP                               SINGLE ADDRESS              49700003
+&B       SETA  1                            SET INCR RANGE TO 1         49800003
+&ADDRC   SETC  '&T2400(&A)'                 SAVE ADDRESS                49900003
+.T24NXT3 ANOP                                                           50000003
+&X       SETC  '&ADDRC'(1,1)                1ST ADDRESS CHAR            50100003
+&Y       SETC  '&ADDRC'(2,1)                2ND ADDRESS CHAR            50200003
+&Z       SETC  '&ADDRC'(3,1)                3RD ADDRESS CHAR            50300003
+ AIF (NOT(('&X' GE '0' AND '&X' LE '9')OR('&X' GE 'A' AND '&X' LE 'F'))*50400003
+               ).ERR36                      NOT HEX                     50500003
+ AIF (NOT(('&Y' GE '0' AND '&Y' LE '9')OR('&Y' GE 'A' AND '&Y' LE 'F'))*50600003
+               ).ERR36                      NOT HEX                     50700003
+ AIF (NOT(('&Z' GE '0' AND '&Z' LE '9')OR('&Z' GE 'A' AND '&Z' LE 'F'))*50800003
+               ).ERR36                      NOT HEX                     50900003
+         CONVERT TO=HEX,DIGITS=3,VALUE=&ADDRC CONVERT TO HEX            51000003
+         AIF   (&HEX EQ X'FFF').ERR38       ADDRESS X'FFF' INVALID      51100003
+ MNOTE *,'     &ADDRC WILL BE ASSIGNED TO 2400 TAPE DRIVE &C'           51200003
+&SGJT24C(&A) SETC '&SGJT24C(&A).&ADDRC'     SET GLOBAL                  51300003
+&C       SETA  &C+1                         INCREMENT COUNT FOR 2400'S  51400003
+&B       SETA  &B-1                         DECREMENT INCR RANGE        51500003
+         AIF   (&B LE 0).T24NXT4            LOOP CONTROL                51600003
+&HEX     SETA  &HEX+1                       INCREASE ADDRESS BY ONE     51700003
+         CONVERT TO=EBCDIC,DIGITS=3,VALUE=&HEX CONVERT BACK TO EBCDIC   51800003
+&ADDRC   SETC  '&EBCDIC'                    SAVE ADDRESS                51900003
+         AGO   .T24NXT3                     GO TO CHECK ADDRESS         52000003
+.T24NXT4 ANOP                               ONE INDEX DONE              52100003
+&A       SETA  &A+1                         INCREASE INDEX              52200003
+         AIF   (&A LE N'&T2400).T24NXT0     LOOP CONTROL                52300003
+.T24END  ANOP                               ALL 2400'S DONE             52400003
+         MEXIT                              ALL WORK DONE               52500003
+.*                                                                      52600003
+.****** ERROR MESSAGES **********************************************   52700003
+.*                                                                      52800003
+.ERR1 MNOTE 5,'* * * IEIJES101 JES MACRO USED PREVIOUSLY'               52900003
+&SGQUITB SETB  1                            SET QUIT BIT                53000003
+         MEXIT                              RETURN                      53100003
+.ERR2 MNOTE 5,'* * * IEIJES102 &LOCLJES LOCLJES VALUE INVALID'          53200003
+&SGQUITB SETB  1                            SET QUIT BIT                53300003
+         AGO   .LOCLEND                     SCAN NEXT PARM              53400003
+.ERR3 MNOTE 5,'* * * IEIJES103 &PROCID PROCID VALUE INVALID'            53500003
+&SGQUITB SETB  1                            SET QUIT BIT                53600003
+         AGO   .PROCEND                     SCAN NEXT PARM              53700003
+.ERR4 MNOTE 5,'* * * IEIJES104 &PARMID PARMID VALUE INVALID'            53800003
+&SGQUITB SETB  1                            SET QUIT BIT                53900003
+         AGO   .PARMEND                     SCAN NEXT PARM              54000003
+.ERR5 MNOTE 5,'* * * IEIJES105 MAXIMUM READERS EXCEEDED, ONLY 63 READER*54100003
+               S ALLOWED'                                               54200003
+&SGQUITB SETB  1                            SET QUIT BIT                54300003
+         AGO   .RDREND                      SCAN NEXT PARM              54400003
+.ERR6 MNOTE 5,'* * * IEIJES106 &RDR(&B) ADDRESS INVALID FOR READER &B'  54500003
+&SGQUITB SETB  1                            SET QUIT BIT                54600003
+         AGO   .RDRNXT1                     SCAN NEXT READER            54700003
+.ERR6A MNOTE 5,'* * * IEIJES06A OMITTED READERS NOT ALLOWED READER &B'  54800003
+&SGQUITB SETB  1                            SET QUIT BIT                54900003
+         AGO   .RDRNXT1                     SCAN NEXT READER            55000003
+.ERR7 MNOTE 5,'* * * IEIJES107 MAXIMUM PRINTERS EXCEEDED, ONLY 63 PRINT*55100003
+               ERS ALLOWED'                                             55200003
+&SGQUITB SETB  1                            SET QUIT BIT                55300003
+         AGO   .PRTEND                      SCAN NEXT PARM              55400003
+.ERR8 MNOTE 5,'* * * IEIJES108 OMITTED PRINTERS NOT ALLOWED PRINTER &A' 55500003
+&SGQUITB SETB  1                            SET QUIT BIT                55600003
+         AGO   .PRTNXT4                     SCAN NEXT PRINTER           55700003
+.ERR9 MNOTE 5,'* * * IEIJES109 &PRT(&A) INVALID NUMBER OF PARMS OR MISS*55800003
+               ING DELIMITER FOR PRINTER &A'                            55900003
+&SGQUITB SETB  1                            SET QUIT BIT                56000003
+         AGO   .PRTNXT4                     SCAN NEXT PRINTER           56100003
+.ERR10 MNOTE 5,'* * * IEIJES110 &PRT(&A) ADDRESS INVALID FOR PRINTER &A*56200003
+               '                                                        56300003
+&SGQUITB SETB  1                            SET QUIT BIT                56400003
+         AGO   .PRTNXT4                     SCAN NEXT PRINTER           56500003
+.ERR11 MNOTE 5,'* * * IEIJES111 &PRT(&A) TYPE INVALID FOR PRINTER &A'   56600003
+&SGQUITB SETB  1                            SET QUIT BIT                56700003
+         AGO   .PRTNXT4                     SCAN NEXT PRINTER           56800003
+.ERR12 MNOTE 5,'* * * IEIJES112 &PRT(&A) TRAIN INVALID FOR PRINTER &A'  56900003
+&SGQUITB SETB  1                            SET QUIT BIT                57000003
+         AGO   .PRTNXT4                     SCAN NEXT PRINTER           57100003
+.ERR13 MNOTE 5,'* * * IEIJES113 MAXIMUM PUNCHES EXCEEDED, ONLY 63 PUNCH*57200003
+               ES ALLOWED'                                              57300003
+&SGQUITB SETB  1                            SET QUIT BIT                57400003
+         AGO   .PUNEND                      SCAN NEXT PARM              57500003
+.ERR14 MNOTE 5,'* * * IEIJES114 &PUN(&B) ADDRESS INVALID FOR PUNCH &B'  57600003
+&SGQUITB SETB  1                            SET QUIT BIT                57700003
+         AGO   .PUNNXT1                     SCAN NEXT PUNCH             57800003
+.ERR14A MNOTE 5,'* * * IEIJES14A OMITTED PUNCHES NOT ALLOWED PUNCH &B'  57900003
+&SGQUITB SETB  1                            SET QUIT BIT                58000003
+         AGO   .PUNNXT1                     SCAN NEXT PUNCH             58100003
+.ERR15 MNOTE 5,'* * * IEIJES115 MAXIMUM CONSOLES EXCEEDED, ONLY 63 CONS*58200003
+               OLES ALLOWED'                                            58300003
+&SGQUITB SETB  1                            SET QUIT BIT                58400003
+         AGO   .CNSEND                      SCAN NEXT PARM              58500003
+.ERR16 MNOTE 5,'* * * IEIJES116 OMITTED CONSOLES NOT ALLOWED CONSOLE &A*58600003
+               '                                                        58700003
+&SGQUITB SETB  1                            SET QUIT BIT                58800003
+         AGO   .CNSNXT4                     SCAN NEXT CONSOLE           58900003
+.ERR17 MNOTE 5,'* * * IEIJES117 &CNS(&A) INVALID NUMBER OF PARMS OR MIS*59000003
+               SING DEMITER FOR CONSOLE &A'                             59100003
+&SGQUITB SETB  1                            SET QUIT BIT                59200003
+         AGO   .CNSNXT4                     SCAN NEXT CONSOLE           59300003
+.ERR18 MNOTE 5,'* * * IEIJES118 &CNS(&A) ADDRESS INVALID FOR CONSOLE &A*59400003
+               '                                                        59500003
+&SGQUITB SETB  1                            SET QUIT BIT                59600003
+         AGO   .CNSNXT4                     SCAN NEXT CONSOLE           59700003
+.ERR19 MNOTE 5,'* * * IEIJES119 &CNS(&A) TYPE INVALID FOR CONSOLE &A'   59800003
+&SGQUITB SETB  1                            SET QUIT BIT                59900003
+         AGO   .CNSNXT4                     SCAN NEXT CONSOLE           60000003
+.ERR20  MNOTE 5,'* * * IEIJES120 OMITTED 3330''S NOT ALLOWED D3330 &A'  60100003
+&SGQUITB SETB  1                            SET QUIT BIT                60200003
+         AGO   .D33NXT4                     SCAN NEXT 3330              60300003
+.ERR20A MNOTE 5,'* * * IEIJES20A MAXIMUM 3330''S EXCEEDED, ONLY 63 3330*60400003
+               ''S ALLOWED'                                             60500003
+&SGQUITB SETB  1                            SET QUIT BIT                60600003
+         AGO   .D33END                      SCAN NEXT PARM              60700003
+.ERR21 MNOTE 5,'* * * IEIJES121 &D3330(&A) ADDRESS INVALID FOR D3330 &A*60800003
+               '                                                        60900003
+&SGQUITB SETB  1                            SET QUIT BIT                61000003
+         AGO   .D33NXT4                     SCAN NEXT 3330              61100003
+.ERR22 MNOTE 5,'* * * IEIJES122 &D3330(&A) MULTIPLIER INVALID FOR D3330*61200003
+                &A'                                                     61300003
+&SGQUITB SETB  1                            SET QUIT BIT                61400003
+         AGO   .D33NXT4                     SCAN NEXT 3330              61500003
+.ERR23   AIF   (&MULT).ERR24                MULTIPLE ADDRESS            61600003
+       MNOTE 5,'* * * IEIJES123 &ADDRC ADDRESS INVALID FOR D3330 &A'    61700003
+&SGQUITB SETB  1                            SET QUIT BIT                61800003
+         AGO   .D33NXT4                     SCAN NEXT 3330              61900003
+.ERR24 MNOTE 5,'* * * IEIJES124 &ADDRC MULTIPLE ADDRESS INVALID FOR D33*62000003
+               30 &A'                                                   62100003
+&SGQUITB SETB  1                            SET QUIT BIT                62200003
+         AGO   .D33NXT4                     SCAN NEXT 3330              62300003
+.ERR25  MNOTE 5,'* * * IEIJES125  OMITTED 2314''S NOT ALLOWED D2314 &A' 62400003
+&SGQUITB SETB  1                            SET QUIT BIT                62500003
+         AGO   .D23NXT4                     SCAN NEXT 2314              62600003
+.ERR25A MNOTE 5,'* * * IEIJES25A MAXIMUM 2314''S EXCEEDED, ONLY 63 2314*62700003
+               ''S ALLOWED'                                             62800003
+&SGQUITB SETB  1                            SET QUIT BIT                62900003
+         AGO   .D23END                      SCAN NEXT PARM              63000003
+.ERR26 MNOTE 5,'* * * IEIJES126 &D2314(&A) ADDRESS INVALID FOR D2314 &A*63100003
+               '                                                        63200003
+&SGQUITB SETB  1                            SET QUIT BIT                63300003
+         AGO   .D23NXT4                     SCAN NEXT 2314              63400003
+.ERR27 MNOTE 5,'* * * IEIJES127 &D2314(&A) MULTIPLIER INVALID FOR D2314*63500003
+                &A'                                                     63600003
+&SGQUITB SETB  1                            SET QUIT BIT                63700003
+         AGO   .D23NXT4                     SCAN NEXT 2314              63800003
+.ERR28   AIF   (&MULT).ERR29                MULTIPLE ADDRESS            63900003
+       MNOTE 5,'* * * IEIJES128 &ADDRC ADDRESS INVALID FOR D2314 &A'    64000003
+&SGQUITB SETB  1                            SET QUIT BIT                64100003
+         AGO   .D23NXT4                     SCAN NEXT 2314              64200003
+.ERR29 MNOTE 5,'* * * IEIJES129 &ADDRC MULTIPLE ADDRESS INVALID FOR D23*64300003
+               14 &A'                                                   64400003
+&SGQUITB SETB  1                            SET QUIT BIT                64500003
+         AGO   .D23NXT4                     SCAN NEXT 2314              64600003
+.ERR30  MNOTE 5,'* * * IEIJES30  OMITTED 3400''S NOT ALLOWED T3400 &A'  64700003
+&SGQUITB SETB  1                            SET QUIT BIT                64800003
+         AGO   .T34NXT4                     SCAN NEXT 3400              64900003
+.ERR30A MNOTE 5,'* * * IEIJES30A MAXIMUM 3400''S EXCEEDED, ONLY 63 3400*65000003
+               ''S ALLOWED'                                             65100003
+&SGQUITB SETB  1                            SET QUIT BIT                65200003
+         AGO   .T34END                      SCAN NEXT PARM              65300003
+.ERR31 MNOTE 5,'* * * IEIJES131 &T3400(&A) ADDRESS INVALID FOR T3400 &A*65400003
+               '                                                        65500003
+&SGQUITB SETB  1                            SET QUIT BIT                65600003
+         AGO   .T34NXT4                     SCAN NEXT 3400              65700003
+.ERR32 MNOTE 5,'* * * IEIJES132 &T3400(&A) MULTIPLIER INVALID FOR T3400*65800003
+                &A'                                                     65900003
+&SGQUITB SETB  1                            SET QUIT BIT                66000003
+         AGO   .T34NXT4                     SCAN NEXT 3400              66100003
+.ERR33   AIF   (&MULT).ERR34                MULTIPLE ADDRESS            66200003
+       MNOTE 5,'* * * IEIJES133 &ADDRC ADDRESS INVALID FOR T3400 &A'    66300003
+&SGQUITB SETB  1                            SET QUIT BIT                66400003
+         AGO   .T34NXT4                     SCAN NEXT 3400              66500003
+.ERR34 MNOTE 5,'* * * IEIJES134 &ADDRC MULTIPLE ADDRESS INVALID FOR T34*66600003
+               00 &A'                                                   66700003
+&SGQUITB SETB  1                            SET QUIT BIT                66800003
+         AGO   .T34NXT4                     SCAN NEXT 3400              66900003
+.ERR35  MNOTE 5,'* * * IEIJES135 OMITTED 2400''S NOT ALLOWED T2400 &A'  67000003
+&SGQUITB SETB  1                            SET QUIT BIT                67100003
+         AGO   .T24NXT4                     SCAN NEXT 2400              67200003
+.ERR35A MNOTE 5,'* * * IEIJES35A MAXIMUM 2400''S EXCEEDED, ONLY 63 2400*67300003
+               ''S ALLOWED'                                             67400003
+&SGQUITB SETB  1                            SET QUIT BIT                67500003
+         AGO   .T24END                      SCAN NEXT PARM IF ANY       67600003
+.ERR36 MNOTE 5,'* * * IEIJES136 &T2400(&A) ADDRESS INVALID FOR T2400 &A*67700003
+               '                                                        67800003
+&SGQUITB SETB  1                            SET QUIT BIT                67900003
+         AGO   .T24NXT4                     SCAN NEXT 2400              68000003
+.ERR37 MNOTE 5,'* * * IEIJES137 &T2400(&A) MULTIPLIER INVALID FOR T2400*68100003
+                &A'                                                     68200003
+&SGQUITB SETB  1                            SET QUIT BIT                68300003
+         AGO   .T24NXT4                     SCAN NEXT 2400              68400003
+.ERR38   AIF   (&MULT).ERR39                MULTIPLE ADDRESS            68500003
+       MNOTE 5,'* * * IEIJES138 &ADDRC ADDRESS VALUE INVALID FOR T2400 *68600003
+               &A'                                                      68700003
+&SGQUITB SETB  1                            SET QUIT BIT                68800003
+         AGO   .T24NXT4                     SCAN NEXT 2400              68900003
+.ERR39 MNOTE 5,'* * * IEIJES139 &ADDRC MULTIPLE ADDRESS INVALID FOR T24*69000003
+               00 &A'                                                   69100003
+&SGQUITB SETB  1                            SET QUIT BIT                69200003
+         AGO   .T24NXT4                     SCAN NEXT 2400              69300003
+         MEND                                                           69400003

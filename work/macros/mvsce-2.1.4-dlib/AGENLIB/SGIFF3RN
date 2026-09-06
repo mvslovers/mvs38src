@@ -1,0 +1,26 @@
+         MACRO                                                          06000021
+         SGIFF3RN                                                       12000021
+.*                                                                      12700021
+.*             MACRO VERSION:   VS2 RELEASE 2.0                         13400002
+.*                                                                      14100021
+.*C269000,D620500,621000,621500                               LF YM6974 14150002
+.*C300000,480000-600000,720000-780000                            Y01007 16000002
+.*C621500                                                        YM2480 16050002
+         COPY  SGGBLPAK                      GET GLOBAL VARIABLES       18000021
+         AIF   (NOT &GETB(3)).NOIO      IF NOT I/O GEN BRANCH       274 18700021
+         AIF   (NOT (&SGMENTB(12) AND &SGDCLSB(9))).END             274 19400021
+.*                                                                      19700021
+.*             IF BOTH GRAPHICS AND 2250 DISPLAY STATION NOT        274 20100021
+.*             SPECIFIED DO NO FURTHER PROCESSING                   274 20800021
+.*                                                                      21100021
+         PUNCH ' INCLUDE SYSPUNCH(IFFBDA) '     BUFFER  TABLES      274 21500021
+         AGO   .END                                                 274 22200021
+.NOIO    ANOP                                                       274 22900021
+         AIF   (NOT &SGMENTB(12)).END        TEST GRAPHICS    LF YM6974 26900002
+         PUNCH ' INCLUDE AOSG0(IFFABA)'      GAM                 Y01007 30900000
+         AIF   (NOT &SGDCLSB(9)).NO2250                                 36000021
+         PUNCH ' INCLUDE SYSPUNCH(IFFBDA)'   BUFFER TABLES              42000021
+.NO2250  PUNCH ' INCLUDE AOSG0(IGC070)'      ATTN SERVICE        Y01007 52000000
+         PUNCH ' INCLUDE AOSG0(IGC084)'      BUFFER RESTART ADDR Y01007 62000000
+.END     ANOP                                                           84000021
+         MEND                                                           90000021

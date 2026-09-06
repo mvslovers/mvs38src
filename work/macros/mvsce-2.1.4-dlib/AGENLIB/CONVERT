@@ -1,0 +1,114 @@
+         MACRO                                                          00050000
+         CONVERT &VALUE=,&DIGITS=,&TO=                                  00100000
+         COPY  SGSYSPAK                                                 00150000
+       LCLA  &A,&B,&C(8),&D                                             00200000
+         LCLC  &CA                                                      00250000
+.***** START OF SPECIFICATIONS **************************************   00300000
+.*                                                                      00350000
+.* MODULE NAME - CONVERT                                                00400000
+.*                                                                      00450000
+.* DESCRIPTIVE NAME - CONVERT                                           00500000
+.*                                                                      00550000
+.* COPYRIGHT - NONE                                                     00600000
+.*                                                                      00650000
+.* STATUS - CHANGE LEVEL 02                                             00700000
+.*                                                                      00750000
+.* FUNCTION -                                                           00800000
+.*       THE CONVERT MACRO IS USED TO CHANGE A VALUE FROM HEX OR EBCDIC 00850000
+.*       TO ITS OPPOSITE VALUE.                                         00900000
+.*                                                                      00950000
+.* NOTES - N/A                                                          01000000
+.*                                                                      01050000
+.* MODULE TYPE - MACRO                                                  01100000
+.*                                                                      01150000
+.* ENTRY POINT - N/A                                                    01200000
+.*                                                                      01250000
+.* INPUT - THE FOLLOWING PARAMETERS ARE ALLOWED ON CONVERT              01300000
+.*             &VALUE   - SPECIFIES A VALUE TO BE CONVERTED TO HEX OR   01350000
+.*                        EBCDIC.                                       01400000
+.*             &DIGITS  - NUMBER OF EBCDIC CHARACTERS                   01450000
+.*             &TO      - SPECIFIES THE TYPE OF CONVERSION TO BE DONE   01500000
+.*                                                                      01550000
+.* OUTPUT -                                                             01600000
+.*       GLOBALS USED ARE -                                             01650000
+.*             &EBCDIC      - THE VALUE IN EBCDIC                       01700000
+.*             &HEX         - THE VALUE IN HEX                          01750000
+.*             &SGQUITB     - QUIT SWITCH                               01800000
+.*                                                                      01850000
+.*       LOCALS USED ARE -                                              01900000
+.*             &A      - SET TO &VALUE AND MINIPULATED ACCORDINGLY      01950000
+.*             &B      - SET TO NUMBER OF DIGITS OR USED TO COUNT VALUE 02000000
+.*             &C(8)   - GLOBAL USED TO CONVERT &VALUE TO EBCDIC        02050000
+.*             &CA     - SET TO &VALUE WHEN &TO=HEX                     02100000
+.*             &D      - GLOBAL USED TO CONVERT &VALUE TO EBCDIC        02150000
+.*                                                                      02200000
+.* EXIT, NORMAL - N/A                                                   02250000
+.*                                                                      02300000
+.* EXIT, ERROR - N/A                                                    02350000
+.*                                                                      02400000
+.* EXTERNAL REFERENCES - N/A                                            02450000
+.*                                                                      02500000
+.* TABLES - N/A                                                         02550000
+.*                                                                      02600000
+.* MACROS - NONE                                                        02650000
+.*                                                                      02700000
+.* CHANGE ACTIVITY -                                                    02750000
+.*                                                                      02800000
+.****** END OF SPECIFICATIONS ***************************************   02850000
+&EBCDIC  SETC   ''                                                      02900000
+&HEX     SETA  0                                                        02950000
+         AIF   ('&TO' EQ 'HEX').TOHEX                                   03000000
+         AIF   ('&TO' NE 'EBCDIC').E1   'TO' VALUE INVALID              03050000
+&A       SETA  &VALUE                                                   03100000
+&B   SETA  &DIGITS+1                                                    03150000
+&D       SETA  &A/65536            SHIFT RIGHT 16 POSITIONS.            03200000
+&C(8)    SETA  &D/4096             SHIFT RIGHT 12 POSITIONS.            03250000
+&C(7)    SETA  &D/256-16*&C(8)  SHIFT D RIGHT 8 & C LEFT 4-GET 4 ZEROS. 03300000
+&C(6)    SETA  &D/16-&D/256*16  SHIFT D RIGHT 8 & 4MORE TO GET 4 0'S.   03350000
+&C(5)    SETA  &D-&D/16*16                                              03400000
+&C(4)    SETA  &A/4096-16*&D                                            03450000
+&C(3)    SETA  &A/256-&A/4096*16                                        03500000
+&C(2)    SETA  &A/16-&A/256*16                                          03550000
+&C(1)    SETA  &A-&A/16*16                                              03600000
+.BACK    AIF   (&B EQ 1).MEND                                           03650000
+&B       SETA  &B-1                                                     03700000
+&EBCDIC  SETC  '&EBCDIC'.'0123456789ABCDEF'(&C(&B)+1,1)                 03750000
+         AGO   .BACK                                                    03800000
+.TOHEX   AIF   (&B EQ K'&VALUE).MEND                                    03850000
+&B       SETA  &B+1                                                     03900000
+&CA      SETC  '&VALUE'(&B,1)                                           03950000
+         AIF   ('&CA' GE '0').ZERTO9X                                   04000000
+         AIF   ('&CA' EQ 'A').AX                                        04050000
+         AIF   ('&CA' EQ 'B').BX                                        04100000
+         AIF   ('&CA' EQ 'C').CX                                        04150000
+         AIF   ('&CA' EQ 'D').DX                                        04200000
+         AIF   ('&CA' EQ 'E').EX                                        04250000
+         AIF   ('&CA' EQ 'F').FX                                        04300000
+         AGO   .E2                      NOT CONVERTIBLE                 04350000
+.ZERTO9X ANOP                                                           04400000
+&HEX     SETA  &HEX*16+&CA                                              04450000
+         AGO   .TOHEX                                                   04500000
+.AX      ANOP                                                           04550000
+&HEX     SETA  &HEX*16+X'A'                                             04600000
+         AGO   .TOHEX                                                   04650000
+.BX      ANOP                                                           04700000
+&HEX     SETA  &HEX*16+X'B'                                             04750000
+         AGO   .TOHEX                                                   04800000
+.CX      ANOP                                                           04850000
+&HEX     SETA  &HEX*16+X'C'                                             04900000
+         AGO   .TOHEX                                                   04950000
+.DX      ANOP                                                           05000000
+&HEX     SETA  &HEX*16+X'D'                                             05050000
+         AGO   .TOHEX                                                   05100000
+.EX      ANOP                                                           05150000
+&HEX     SETA  &HEX*16+X'E'                                             05200000
+         AGO   .TOHEX                                                   05250000
+.FX      ANOP                                                           05300000
+&HEX     SETA  &HEX*16+X'F'                                             05350000
+         AGO   .TOHEX                                                   05400000
+.E1 MNOTE 5,'* * * IEICON001 ''TO=&TO'' VALUE INVALID'                  05450000
+         AGO   .BEND                                                    05500000
+.E2 MNOTE 5,'* * * IEICON002 ''VALUE=&VALUE'' NOT CONVERTIBLE'          05550000
+.BEND    ANOP                                                           05600000
+&SGQUITB SETB  1                                                        05650000
+.MEND  MEND                                                             05700000

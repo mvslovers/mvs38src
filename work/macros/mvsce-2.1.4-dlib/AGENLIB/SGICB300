@@ -1,0 +1,34 @@
+         MACRO                                                          00050000
+         SGICB300                                                       00100000
+.* /* START OF SPECIFICATIONS ****                           @G24LB04   00150000
+.*                                                           @G24LB04   00200000
+.*01  MODULE-NAME = SGICB300                                 @G24LB04   00250000
+.*                                                           @G24LB04   00300000
+.*01  DESCRIPTIVE-NAME = MSVC MVS SYSGEN LINKEDIT MACRO      @G24LB04   00350000
+.*                                                           @G24LB04   00400000
+.*01  STATUS = MVS                                           @G24LB04   00450000
+.*                                                           @G24LB04   00500000
+.*01  FUNCTION = SGICB300 LINK EDITS ICBTMSS0                @G24LB04   00550000
+.*               INTO THE TARGET IEANUC01 FROM THE           @G24LB04   00650000
+.*               DISTRIBUTION LIBRARY SYS1.AOSD0.            @G24LB04   00750000
+.*                                                           @G24LB04   00800000
+.*                                                           @G24LB04   00850000
+.*01  OPERATION = VIA THE ASSEMBLER PUNCH COMMAND, A LINKAGE @G24LB04   00900000
+.*                EDITOR INCLUDE STATEMENT IS GENERATED FOR  @G24LB04   00950000
+.*                THE MODULE.                                @G24LB04   00960000
+.*                                                           @G24LB04   01000000
+.*01  MODULE-TYPE = MACRO                                    @G24LB04   01050000
+.*02    PROCESSOR = ASSEMBLER XF                             @G24LB04   01100000
+.*02    MACRO-SIZE = 3 STATEMENTS                            @G24LB04   01150000
+.*                                                           @G24LB04   01200000
+.*01  OUTPUT = LINKAGE EDITOR CONTROL STATEMENT              @G24LB04   01250000
+.*                                                           @G24LB04   01300000
+.*01  INNER-MACRO = NONE                                     @G24LB04   01350000
+.*                                                           @G24LB04   01500000
+.*01  MESSAGES = NONE                                        @G24LB04   01550000
+.*                                                           @G24LB04   01600000
+.*  CHANGE-ACTIVITY = NONE                                   @G24LB04   01650000
+.*                                                           @G24LB04   01800000
+.**** END OF SPECIFICATIONS ***                              @G24LB04*/ 01850000
+ PUNCH ' INCLUDE AOSD0(ICBTMSS0)'                             @G24LB04  02400000
+         MEND                                                           04250000

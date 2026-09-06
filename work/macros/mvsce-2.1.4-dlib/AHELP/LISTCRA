@@ -1,0 +1,61 @@
+)F FUNCTION -                                                           00050003
+   THE LISTCRA COMMAND IS USED TO LIST THE CONTENTS OF A GIVEN          00100003
+   CATALOG RECOVERY AREA (CRA).                                         00150003
+)X SYNTAX -                                                             00200003
+         LISTCRA                                                        00250003
+                   INFILE('DNAME'...)                                   00350003
+                   OUTFILE('DNAME')                                     00400003
+                   COMPARE | NOCOMPARE                                  00450003
+                   DUMP | NAME | SEQUENTIALDUMP                         00500003
+                   CATALOG('CATNAME'/'PASSWORD' 'DNAME')                00550003
+                   MASTERPW('PASSWORD')                                 00600003
+  REQUIRED - INFILE                                                     00700003
+  DEFAULTS - NOCOMPARE                                                  00800003
+             NAME                                                       00850003
+  ABBREVIATIONS -                                                       01000003
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 01050003
+             LISTCRA              LISTR                                 01100003
+             INFILE               IFILE                                 01200003
+             OUTFILE              OFILE                                 01250003
+             COMPARE              CMPR                                  01300003
+             NOCOMPARE            NCMPR                                 01350003
+             MASTERPW             MRPW                                  01400003
+             SEQUENTIALDUMP       SDUMP                                 01450003
+)O OPERANDS -                                                           01700003
+))INFILE('DNAME'...)                                                    02300003
+           - SPECIFIES THE NAMES OF THE DD STATEMENTS THAT IDENTIFY     02350003
+             THE CRAS TO BE LISTED.                                     02400003
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES ONE CRA TO        02450003
+             BE LISTED.                                                 02500003
+))OUTFILE('DNAME')                                                      02550003
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES     02600003
+             AN ALTERNATE OUTPUT DATA SET FOR THE LISTING CREATED       02650003
+             BY LISTCRA.  IF THIS IS NOT GIVEN, THE OUTPUT IS SENT TO   02700003
+             THE TERMINAL.                                              02710003
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE ALTERNATE     02750003
+             OUTPUT DATA SET.                                           02800003
+))COMPARE -  THE CRAS ARE TO BE COMPARED WITH THE CATALOG SPECIFIED     03150003
+             VIA THE CATALOG PARAMETER.                                 03250003
+))NOCOMPARE                                                             03300003
+           - THE CRAS ARE NOT TO BE COMPARED WITH ANY CATALOG.          03350003
+))DUMP     - THE LISTING PRODUCED BY LISTCRA IS TO BE IN DUMP FORMAT.   03450003
+))NAME     - THE LISTING PRODUCED BY LISTCRA IS TO CONSIST ONLY         03600003
+             OF THE NAMES OF THE OBJECTS FOUND IN THE CRA.              03700003
+))SEQUENTIALDUMP                                                        03710003
+           - THE LISTING PRODUCED BY LISTCRA IS AN UNSORTED             03712003
+             FULL DUMP OF THE RECORD CONTENTS OF THE CRA.               03720003
+))MASTERPW - SPECIFIES THE MASTER PASSWORD OF THE MASTER CATALOG.       03750003
+  'PASSWORD'                                                            03850003
+           - SPECIFIES THE MASTER PASSWORD OF THE MASTER CATALOG        03860003
+             FOR THE ENTIRE SYSTEM.                                     03900003
+))CATALOG  - SPECIFIES THE NAME OF A VSAM CATALOG TO BE COMPARED        03950003
+             WITH THE CRAS.                                             04000003
+  'CATNAME'                                                             04050003
+           - GIVES THE NAME OF THE CATALOG TO BE COMPARED WITH THE      04060003
+             CATALOG RECOVERY AREAS.                                    04070003
+  'PASSWORD'                                                            04080003
+           - SPECIFIES THE PASSWORD OF THE CATALOG TO BE COMPARED       04090003
+             WITH THE CATALOG RECOVERY AREAS.                           04092003
+  'DNAME'  - SPECIFIES THE DD STATEMENT THAT IDENTIFIES THE CATALOG     04094003
+             TO BE COMPARED AS A DATA SET.                              04096003
+  REQUIRED - 'CATNAME'                                                  04146003

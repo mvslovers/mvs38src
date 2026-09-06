@@ -1,0 +1,19 @@
+         MACRO                                                          00050002
+         SGIKJ540                                                       00100002
+.* CHANGE LEVEL = 09/12/74                                     @ZM30972 00120003
+.*D-003300,003700                                              @ZM30972 00150003
+         COPY  SGGBLPAK                                          Y02953 00250002
+.*   TARGET = LINKLIB                                            Y02953 00300002
+.*     F. I. B.                                                  Y02953 00360002
+         PUNCH '    COPY OUTDD=LINKLIB,INDD=ACMDLIB'             Y02953 00370102
+         PUNCH '    SELECT MEMBER=(IKJEFF18)'                    Y02953 00370402
+         AIF ('&SGCMDSC(1)' EQ 'NO').TSOCMD1                     Y02953 00372002
+.*     F. I. B.                                                  Y02953 00382002
+         PUNCH '    SELECT MEMBER=(IKJEFF10)'                    Y02953 00384002
+         PUNCH '    COPY OUTDD=LINKLIB,INDD=AOST4'               Y02953 00386002
+         PUNCH '    SELECT MEMBER=(IKJEFF53)'                    Y02953 00390002
+         PUNCH '    SELECT MEMBER=(IKJEFF19)'                    Y02953 00392002
+.*     TIME                                                      Y02953 00400002
+         PUNCH '    SELECT MEMBER=(IKJEFT25)'                    Y02953 01000002
+.TSOCMD1  ANOP                                                   Y02953 01750002
+         MEND                                                           02100002

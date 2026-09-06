@@ -1,0 +1,77 @@
+         MACRO                                                          00050064
+         SGADDR                                                         00080064
+         COPY  SGGBLPAK                                                 00110064
+         LCLC  &ADDR                                                    00140064
+         LCLA  &DITSAVE,&I                                    @ZA42596  00170064
+.***START OF SPECIFICATIONS******************************************** 00250064
+.* MODULE NAME - SGADDR                                               * 00300064
+.*                                                                    * 00350064
+.* DESCRIPTIVE NAME - UPDATE DEVICE POINTER AND DEVICE ADDRESS ARRAYS * 00400064
+.*                                                                    * 00450064
+.* COPYRIGHT - NONE                                                   * 00500064
+.*                                                                    * 00550064
+.* STATUS - CHANGE LEVEL 00                                           * 00600064
+.*                                                                    * 00650064
+.* FUNCTION -                                                         * 00700064
+.*   THE FUNCTION OF THIS MACRO IS TO INCREMENT THE DADRA AND DASPA   * 00750064
+.* ARRAYS AND TO UPDATE THE DEVICE POINTER &SGCNTRA(3). THIS MACRO    * 00800064
+.* SHOULD ONLY BE USED WHEN MULTIPLE UNITS ARE BEING GENERATED AND    * 00850064
+.* A NEW ARRAY ENTRY IS REQUIRED.  IF ONLY ONE UNIT IS TO BE          * 00900064
+.* GENERATED FOR THIS IODEVICE SPECIFICATION, THE SGADDR MACRO        * 00950064
+.* SHOULD NOT BE USED.                                                * 01000064
+.*                                                                    * 01050064
+.* NOTES -  N/A                                                       * 01100064
+.* MODULE TYPE - MACRO                                                * 01150064
+.*                                                                    * 01200064
+.* ENTRY POINT - N/A                                                  * 01250064
+.*                                                                    * 01300064
+.* INPUT - THE FOLLOWING GLOBALS ARE REFERENCED                       * 01350064
+.*                                                                    * 01400064
+.*       &SGCNTRA(3) - DEVICE POINTER                                 * 01450064
+.*                                                                    * 01500064
+.*       &SGADRPC(1) - DEVICE ADDRESS SPECIFICATION                   * 01550064
+.*                                                                    * 01600064
+.*       &SGDTIXA(&I) - DIT INDEX ARRAY                               * 01650064
+.*                                                                    * 02400064
+.* OUTPUT - THE FOLLOWING GLOBALS ARE SET                             * 02450064
+.*                                                                    * 02500064
+.*       &SGCNTRA(3) - DEVICE POINTER                                 * 02550064
+.*                                                                    * 02600064
+.*       &SGADRPC(1) - DEVICE ADDRESS SPECIFICATION                   * 02650064
+.*                                                                    * 02700064
+.*       &SGDADRA(&I) - DEVICE ADDRESS TABLE                          * 02750064
+.*                                                                    * 02800064
+.*       &SGDASPA(&I) - DEVICE POINTER TABLE                          * 02850064
+.*                                                                    * 02900064
+.*       &HEX         - DEVICE ADDRESS IN HEX                         * 02950064
+.*                                                                    * 03000064
+.*       &SGDTIXA(&I) - DIT INDEX ARRAY                                 03050064
+.*                                                                    * 03100064
+.* LOCALS USED:                                                       * 03150064
+.*       &I         DEVICE POINTER INDEX                              * 03200064
+.*                                                                    * 03500064
+.* EXIT,NORMAL - N/A                                                  * 03550064
+.*                                                                    * 03600064
+.* EXIT,ERROR  - N/A                                                  * 03650064
+.*                                                                    * 03700064
+.* EXTERNAL REFERENCES - N/A                                          * 03750064
+.*                                                                    * 03800064
+.* MACROS - CONVERT                                                   * 03850064
+.*                                                                    * 03900064
+.* CHANGE ACTIVITY - C0000400                                @ZA42596 * 03950064
+.*                                                                    * 04000064
+.********************************************************************** 04050064
+&I          SETA &SGCNTRA(3)            GET DEVICE POINTER              04100064
+&DITSAVE    SETA &SGDITXA(&I)           SAVE DIT INDEX                  04150064
+&SGCNTRA(3) SETA &SGCNTRA(3)+1          UPDATE DEVICE COUNTER           04200064
+&I          SETA &SGCNTRA(3)            GET UPDATED POINTER             04250064
+&SGDITXA(&I) SETA &DITSAVE              UPDATE DIT INDEX                04300064
+&ADDR       SETC '&SGADRPC(1)'          GET SPECIFIED ADDR              04350064
+         CONVERT TO=HEX,VALUE=&ADDR,DIGITS=3                            04400064
+&HEX     SETA  &HEX+1                   UP DEVICE ADDRESS               04450064
+&SGDADRA(&I)   SETA &HEX                SET ADDR ARRAY                  04500064
+&SGDASPA(&I)   SETA &I                  SET PTR. ARRAY                  04550064
+         CONVERT TO=EBCDIC,DIGITS=3,VALUE=&HEX                          04600064
+&SGADRPC(1)  SETC  '&EBCDIC'            NEW ADDR SPECIFICATION          04650064
+    MNOTE    *,'     ADDRESS &SGADRPC(1) SPECIFIED '                    04700064
+         MEND                                                           04750064

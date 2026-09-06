@@ -1,0 +1,377 @@
+* /*                                                                 */ 00010002
+* /* MACOMP Y-2 SC1DE/SJD61                                          */ 00020002
+* /* MACSTAT Y-2 73103/Y02020                                        */ 00030002
+* /* MACSTAT Y-2 73155/YM01260                               @YM01260*/ 00032002
+* /* MACSTAT Y-2 73200/Y02113;Y02020                           Y02113*/ 00034002
+* /* MACSTAT Y-2 74161/XA04422                               @XA04422*/ 00036002
+* /* MACSTAT Y-2 74218/ZA00964                               @ZA00964*/ 00038002
+* /* MACSTAT Y-3 75218/ZA04940                               @ZA04940*/ 00038437
+* /* I-02393604                                              @ZA15091*/ 00039237
+* /*                                                                 */ 00040002
+* /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */ 00042002
+* /* THIS MACRO WAS CHANGED AS FOLLOWS:                      @YM01260*/ 00042402
+* /*  VS2-2 CHANGES ARE MARKED AS FOLLOWS:                   @YM01260*/ 00042802
+* /*   Y02113- INDICATES CODE CHANGES FOR VS2-2,(NON-CATLG)  @YM01260*/ 00043202
+* /*   Y02020- INDICATES CODE CHANGES FOR VS2-2 CATLG.       @YM01260*/ 00043602
+* /*   @YXZZZZZ- INDICATES A CHANGE AS THE RESULT OF AN APAR @YM01260*/ 00043702
+* /*              OR PTM.                                    @YM01260*/ 00043802
+* /*   @Y30LSXX- INDICATES CODE CHANGES FOR SS/1 SUPPORT     @Y30LSPS*/ 00047303
+* /*                                                         #YM01260*/ 00050903
+* /*   @Z30SSXX- INDICATES CODE CHANGES FOR REL 2 VSAM       @Z30SSPS*/ 00052937
+* /*   @Z40RSSA- INDICATES CODE CHANGES FOR RACF (VS2-4)     @Z40RSSA*/ 00053737
+* /*   @Z40GSDT- INDICATES PERFORMANCE CHANGES FOR VS2-4.1   @Z40GSDT*/ 00054137
+* /*   @ZA37315- VSAM SUPPORT FOR MSS ENHANCEMENT PGM PRODUCT@ZA37315*/ 00054237
+* /* THIS MACRO MUST BE CHANGED TO PACKAGE THE RECOVERY CODE FOR THE */ 00054403
+* /* VARIOUS AREAS...                                        @YM01260*/ 00057902
+* /*                                                         @YM01260*/ 00067902
+* /* THIS MACRO IS CALLED AT STAGE ONE BY THE GENERATE MACRO.        */ 00069902
+* /* THE PURPOSE OF THIS MACRO IS TO PUNCH OUT LINKEDIT      @YM01260*/ 00071902
+* /* CONTROL STATEMENTS AND ANY JCL STATEMENTS NECESSARY     @YM01260*/ 00076602
+* /* FOR VSAM AND VSAM CATALOG. IN ADDITION, CERTAIN GLOBALS @YM01260*/ 00078602
+* /* ARE SET FOR SUBSEQUENT HANDLING.                        @YM01260*/ 00080602
+* /* THIS MACRO SETS THE FOLLOWING GLOBALS,                  @YM01260*/ 00081002
+* /*  .SGCTRLC(7) - SET THE VOL FOR SYSLMOD DD.              @YM01260*/ 00081102
+* /*  .SGCTRLC(8) - SET THE UNIT NAME FOR SYSLMOD DD.        @YM01260*/ 00081202
+* /*  .SGCTRLC(9) - SET THE SHORT LIB NAME FOR SYSLMOD .     @YM01260*/ 00083202
+* /*  .SGCTRLC(10)- FIRST ADDITIONAL L/E PARM.               @YM01260*/ 00085902
+* /*  .SGCTRLC(11)- SECOND ADDITIONAL L/E PARM.              @YM01260*/ 00087902
+* /* THIS MACRO TESTS THE FOLLOWING GLOBALS,                 @YM01260*/ 00089902
+* /*  .NONE ARE TESTED, SYSTEM IS ASSUMED TO BE VS2-2.       @YM01260*/ 00090302
+* /*  .SGCTRLC(19) - ASSUMED TO HAVE UNIT NAME OF LPALIB.    @YM01260*/ 00100202
+* /*  .SGCTRLC(20) - ASSUMED TO HAVE VOLSER OF LPALIB.       @YM01260*/ 00110202
+* /*                                                         @YM01260*/ 00110402
+* /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */ 00120302
+         MACRO                                                          00130202
+         SGIDA401                                                       00140102
+         COPY  SGGBLPAK                                                 00150002
+&SGCTRLC(7)    SETC '&SGCTRLC(20)'      VOLNO LPALIB                    00250002
+&SGCTRLC(8)    SETC '&SGCTRLC(19)'      UNITNAME LPALIB                 00300002
+&SGCTRLC(9)    SETC 'LPALIB'                                            00350002
+&SGCTRLC(10)   SETC ',RENT'                                             00650002
+&SGCTRLC(11)   SETC ',LET'                                              00700002
+&SGCTRLC(12)   SETC ',SIZE=(256K,96K)'                        @Z30SSPS  00710037
+         COPY  SGLEDPK1                                                 00750002
+ PUNCH '//AOSA0 DD DISP=SHR,VOL=(,RETAIN),DSN=SYS1.AOSA0 '              00800002
+ PUNCH '//AOSC5 DD DISP=SHR,VOL=(,RETAIN),DSN=SYS1.AOSC5 '    @YM01260  00810002
+         COPY  SGLEDPK2                                                 00850002
+.***   CATALOG SERVICES                                       @YM01260  00860002
+         PUNCH ' ORDER IGG0CLA1 '                             @Z30SSRS  00880037
+         PUNCH ' ORDER IGG0CLC9 '                             @Z30SSRS  00890037
+         PUNCH ' ORDER IGG0CLAB '                             @Z30SSRS  00892037
+         PUNCH ' ORDER IGG0CLAT '                             @Z30SSRS  00894037
+         PUNCH ' ORDER IGG0CLAH '                             @Z30SSRS  00896037
+         PUNCH ' ORDER IGG0CLA3 '                             @Z30SSRS  00898037
+         PUNCH ' ORDER IGG0CLAG '                             @Z30SSRS  00898437
+         PUNCH ' ORDER IGG0CLBI '                             @Z30SSRS  00898837
+         PUNCH ' ORDER IGG0CLBQ '                             @Z30SSRS  00899237
+         PUNCH ' ORDER IGG0CLBM '                             @Z30SSRS  00899337
+         PUNCH ' ORDER IGG0CLB6 '                             @Z30SSRS  00899437
+         PUNCH ' ORDER IGG0CLA2 '                             @Z30SSRS  00906437
+         PUNCH ' ORDER IGG0CLAM '                             @Z30SSRS  00906537
+         PUNCH ' ORDER IGG0CLAA '                             @Z30SSRS  00906637
+         PUNCH ' ORDER IGG0CLAY '                             @Z30SSRS  00912037
+         PUNCH ' ORDER IGG0CLAZ '                             @Z30SSRS  00914037
+         PUNCH ' ORDER IGG0CLBA '                             @Z30SSRS  00916037
+         PUNCH ' ORDER IGG0CLBS '                             @Z30SSRS  00916437
+         PUNCH ' ORDER IGG0CLBT '                             @Z30SSRS  00916837
+         PUNCH ' ORDER IGG0CLAV '                             @Z30SSRS  00917237
+         PUNCH ' ORDER IGG0CLAX '                             @Z30SSRS  00917337
+         PUNCH ' ORDER IGG0CLAW '                             @Z30SSRS  00920637
+         PUNCH ' ORDER IGG0CLBW '                             @Z30SSRS  00922637
+         PUNCH ' ORDER IGG0CLB3 '                             @Z30SSRS  00923037
+         PUNCH ' ORDER IGG0CLBV '                             @Z30SSRS  00923137
+         PUNCH ' ORDER IGG0CLBK '                             @Z30SSRS  00923237
+         PUNCH ' ORDER IGG0CLAP '                             @Z30SSRS  00923337
+         PUNCH ' ORDER IGG0CLAS '                             @Z30SSRS  00925537
+         PUNCH ' ORDER IGG0CLAE '                             @Z30SSRS  00927537
+         PUNCH ' ORDER IGG0CLAL '                             @Z30SSRS  00927937
+         PUNCH ' ORDER IGG0CLAN '                             @Z30SSRS  00928037
+         PUNCH ' ORDER IGG0CLBX '                             @Z30SSRS  00928137
+         PUNCH ' ORDER IGG0CLB0 '                             @Z30SSRS  00928237
+         PUNCH ' ORDER IGG0CLBY '                             @Z30SSRS  00928837
+         PUNCH ' ORDER IGG0CLB9 '                             @Z30SSRS  00932037
+         PUNCH ' ORDER IGG0CLB1 '                             @Z30SSRS  00932637
+         PUNCH ' ORDER IGG0CLAJ '                             @Z30SSRS  00933237
+         PUNCH ' ORDER IGG0CLAR '                             @Z30SSRS  00933837
+         PUNCH ' ORDER IGG0CLAU '                             @Z30SSRS  00933937
+         PUNCH ' ORDER IGG0CLBR '                             @Z30SSRS  00934037
+         PUNCH ' ORDER IGG0CLBF '                             @Z30SSRS  00934137
+         PUNCH ' ORDER IGG0CLAK '                             @Z30SSRS  00934237
+         PUNCH ' ORDER IGG0CLA8 '                             @Z30SSRS  00934437
+         PUNCH ' ORDER IGG0CLB8 '                             @Z30SSRS  00935037
+         PUNCH ' ORDER IGG0CLAQ '                             @Z30SSRS  00938037
+         PUNCH ' ORDER IGG0CLA6 '                             @Z30SSRS  00938637
+         PUNCH ' ORDER IGG0CLBU '                             @Z30SSRS  00939237
+         PUNCH ' ORDER IGG0CLA5 '                             @Z30SSRS  00939837
+         PUNCH ' ORDER IGG0CLB5 '                             @Z30SSRS  00940437
+         PUNCH ' ORDER IGG0CLBG '                             @Z30SSRS  00941037
+         PUNCH ' ORDER IGG0CLA7 '                             @Z30SSRS  00941637
+         PUNCH ' ORDER IGG0CLA4 '                             @Z30SSRS  00942237
+         PUNCH ' ORDER IGG0CLBH '                             @Z30SSRS  00942837
+         PUNCH ' ORDER IGG0CLAO '                             @Z30SSRS  00943437
+         PUNCH ' ORDER IGG0CLAF '                             @Z30SSRS  00944037
+         PUNCH ' ORDER IGG0CLBL '                             @Z30SSRS  00944637
+         PUNCH ' ORDER IGG0CLAI '                             @Z30SSRS  00945237
+         PUNCH ' ORDER IGG0CLBN '                             @Z30SSRS  00945637
+         PUNCH ' ORDER IGG0CLBE '                             @Z30SSRS  00945737
+         PUNCH ' ORDER IGG0CLBD '                             @Z30SSRS  00946037
+         PUNCH ' ORDER IGG0CLB2 '                             @Z30SSRS  00946437
+         PUNCH ' ORDER IGG0CLBB '                             @Z30SSRS  00946537
+         PUNCH ' ORDER IGG0CLBC '                             @Z30SSRS  00946637
+         PUNCH ' ORDER IGG0CLBP '                             @Z30SSRS  00946737
+         PUNCH ' ORDER IGG0CLAC '                             @Z30SSRS  00946937
+         PUNCH ' ORDER IGG0CLAD '                             @Z30SSRS  00947037
+         PUNCH ' ORDER IGG0CLBO '                             @Z30SSRS  00947237
+         PUNCH ' ORDER IGG0CLDA '                             @Z30SSRS  00947637
+         PUNCH ' ORDER IGG0CLB4 '                             @Z30SSRS  00948237
+         PUNCH ' ORDER IGG0CLBJ '                             @Z30SSRS  00948837
+         PUNCH ' ORDER IGG0CLB7 '                             @Z30SSRS  00949437
+         PUNCH ' ORDER IGG0CLBZ '                             @Z30SSRS  00950037
+         PUNCH ' ORDER IGG0CLA9 '                             @Z30SSRS  00953637
+         PUNCH ' INCLUDE AOSA0(IGG0CLA1) '                      Y02020  00982637
+         PUNCH ' INCLUDE AOSA0(IGG0CLC9,IGG0CLAA,IGG0CLAB,IGG0CLAC) '   01050037
+         PUNCH ' INCLUDE AOSA0(IGG0CLAD,IGG0CLAE,IGG0CLAF,IGG0CLAG) '   01060037
+         PUNCH ' INCLUDE AOSA0(IGG0CLAH,IGG0CLAI) '                     01062037
+         PUNCH ' INCLUDE AOSA0(IGG0CLAJ,IGG0CLAK,IGG0CLAL,IGG0CLAM) '   01070000
+         PUNCH ' INCLUDE AOSA0(IGG0CLAN,IGG0CLAO) '           @ZA00964  01080002
+         PUNCH ' INCLUDE AOSA0(IGG0CLAP,IGG0CLAQ,IGG0CLAR) '            01082002
+         PUNCH ' INCLUDE AOSA0(IGG0CLAS,IGG0CLAT,IGG0CLAU,IGG0CLAV) '   01090000
+         PUNCH ' INCLUDE AOSA0(IGG0CLAW,IGG0CLAX,IGG0CLAY,IGG0CLAZ) '   01092000
+         PUNCH ' INCLUDE AOSA0(IGG0CLBA,IGG0CLBB,IGG0CLBC,IGG0CLBD) '   01094000
+         PUNCH ' INCLUDE AOSA0(IGG0CLBE,IGG0CLBF,IGG0CLBG,IGG0CLBH) '   01096000
+         PUNCH ' INCLUDE AOSA0(IGG0CLBI) '                              01096403
+         PUNCH ' INCLUDE AOSA0(IGG0CLBJ,IGG0CLBK,IGG0CLBL,IGG0CLBM) '   01098000
+         PUNCH ' INCLUDE AOSA0(IGG0CLBO) '                              01098137
+         PUNCH ' INCLUDE AOSA0(IGG0CLBN,IGG0CLBP,IGG0CLBQ,IGG0CLBR) '   01098400
+         PUNCH ' INCLUDE AOSA0(IGG0CLBS,IGG0CLBT,IGG0CLBU,IGG0CLBV) '   01098800
+         PUNCH ' INCLUDE AOSA0(IGG0CLBW,IGG0CLBX,IGG0CLBY,IGG0CLBZ) '   01099203
+         PUNCH ' INCLUDE AOSA0(IGG0CLB0,IGG0CLB1,IGG0CLB2) '  @Z30SSPS  01099737
+         PUNCH ' INCLUDE AOSA0(IGG0CLB3,IGG0CLB4,IGG0CLB5) '  @Z30SSPS  01109737
+         PUNCH ' INCLUDE AOSA0(IGG0CLB6,IGG0CLB7,IGG0CLB8) '  @Z30SSPS  01111737
+         PUNCH ' INCLUDE AOSA0(IGG0CLB9,IGG0CLDA) '           @Z30SSPS  01112137
+         PUNCH ' INCLUDE AOSA0(IGG0CLA2,IGG0CLA3) '           @YM01260  01112237
+         PUNCH ' INCLUDE AOSA0(IGG0CLA4,IGG0CLA5,IGG0CLA6) '  @Z30SSPS  01122237
+         PUNCH ' INCLUDE AOSA0(IGG0CLA7,IGG0CLA8) '                     01125002
+         PUNCH ' INCLUDE AOSA0(IGG0CLA9) '                       Y02020 01135002
+         PUNCH ' INCLUDE AOSA0(IGG0CLDC,IGG0CLDD) '            @Z40RSRC 01135437
+         PUNCH ' ENTRY IGG0CLA1 '                                Y02020 01150402
+         PUNCH ' NAME IGG0CLA1(R) '                              Y02020 01150802
+         PUNCH ' INCLUDE AOSA0(IFG0191X)   EXPECT IEW0461 FOR IFG0191Y,X01152002
+               IFG0198N '                                      @YM05844 01152402
+         PUNCH ' NAME IFG0191X(R) '                                     01154000
+         PUNCH ' INCLUDE AOSA0(IFG0191Y) '                              01156000
+         PUNCH ' NAME IFG0191Y(R) '                                     01156400
+         PUNCH ' INCLUDE AOSA0(IFG0200N)   EXPECT IEW0461 FOR IFG0190V,X01158002
+               IFG0191F '                                      @YM05844 01158102
+         PUNCH ' ALIAS IFG0550Y '                                       01158400
+         PUNCH ' NAME IFG0200N(R) '                                     01158800
+         PUNCH ' INCLUDE AOSA0(IDACAT13) '                       Y02020 01159202
+         PUNCH ' NAME IDACAT13(R) '                              Y02020 01159602
+.***   VSAM I/O SUPPORT MODULES                               @YM01260  01160002
+         PUNCH ' ORDER IDA0192A(P) '                          @Z40GSDT  01162037
+         PUNCH ' ORDER IDA0192F '                             @Z40GSDT  01164037
+         PUNCH ' ORDER IDA0192B '                             @Z40GSDT  01168037
+         PUNCH ' ORDER IDA0192Z '                             @Z40GSDT  01170037
+         PUNCH ' ORDER IDA0192Y '                             @Z40GSDT  01172037
+         PUNCH ' ORDER IDA0192W '                             @Z40GSDT  01174037
+         PUNCH ' ORDER IDA0192C(P) '                          @Z40GSDT  01176037
+         PUNCH ' ORDER IDA0192M '                             @Z40GSDT  01176437
+         PUNCH ' ORDER IDA0192V '                             @Z40GSDT  01178037
+         PUNCH ' ORDER IDA0192D '                             @Z40GSDT  01180037
+         PUNCH ' ORDER IDA0192G(P) '                          @Z40GSDT  01182037
+         PUNCH ' ORDER IDA0192P '                             @Z40GSDT  01184037
+         PUNCH ' ORDER IDA0192S '                             @Z40GSDT  01184137
+         PUNCH ' ORDER IDA0192I '                             @Z40GSDT  01184437
+         PUNCH ' ORDER IDA0200S '                             @Z40GSDT  01186037
+         PUNCH ' ORDER IDA0200T(P) '                          @Z40GSDT  01188037
+         PUNCH ' ORDER IDA0200B '                             @Z40GSDT  01190037
+         PUNCH ' ORDER IDA0231T(P) '                          @Z40GSDT  01192037
+         PUNCH ' ORDER IDA0231B '                             @Z40GSDT  01194037
+         PUNCH ' ORDER IDA0557A(P) '                          @Z40GSDT  01196037
+         PUNCH ' ORDER IDA0C06C(P) '                          @Z40GSDT  01198037
+         PUNCH ' ORDER IDA0I96C '                             @Z40GSDT  01198437
+         PUNCH ' ORDER IDACKRA1 '                             @Z40GSDT  01198837
+         PUNCH ' ORDER IDA0C05B '                             @Z40GSDT  01199237
+         PUNCH ' ORDER IDA0A05B(P) '                          @Z40GSDT  01199637
+.**** VSAM OPEN MODULES                                                 01199737
+         PUNCH ' INCLUDE AOSA0(IDA0192A) '                              01200002
+         PUNCH ' INCLUDE AOSA0(IDA0192B) '                              01202037
+         PUNCH ' INCLUDE AOSA0(IDA0192F) '                              01212437
+         PUNCH ' INCLUDE AOSA0(IDA0192M) '                              01220037
+         PUNCH ' INCLUDE AOSA0(IDA0192W) '                              01244037
+         PUNCH ' INCLUDE AOSA0(IDA0192Y) '                              01246037
+         PUNCH ' INCLUDE AOSA0(IDA0192Z) '                              01246437
+.**** VSAM CLOSE MODULES                                                01246837
+         PUNCH ' INCLUDE AOSA0(IDA0200T) '                              01248000
+         PUNCH ' INCLUDE AOSA0(IDA0200B) '                              01248137
+.**** VSAM CLOSE,TYPE=T MODULES                                         01250037
+         PUNCH ' INCLUDE AOSA0(IDA0231T) '                              01253437
+         PUNCH ' INCLUDE AOSA0(IDA0231B) '                              01255337
+.**** VSAM END-OF-VOLUME MODULE                                         01256837
+         PUNCH ' INCLUDE AOSA0(IDA0557A) '                              01257237
+.**** VSAM O/C/E GENERAL PURPOSE MODULES                                01258537
+         PUNCH ' INCLUDE AOSA0(IDA0192C) '     CATALOG INTERFACE MODULE 01258637
+         PUNCH ' INCLUDE AOSA0(IDA0192D) '     MSS INTERFACE MODULE     01258737
+         PUNCH ' INCLUDE AOSA0(IDA0192G) '     DATA-SPACE SEC VERIFY    01259437
+         PUNCH ' INCLUDE AOSA0(IDA0192P) '     PROBLEM DETERMINATION    01261137
+         PUNCH ' INCLUDE AOSA0(IDA0192S) '     SMF MODULE               01261237
+         PUNCH ' INCLUDE AOSA0(IDA0192V) '     VOLUME MOUNT MODULE      01261537
+.**** VSAM ISAM INTERFACE MODULES                                       01262337
+         PUNCH ' INCLUDE AOSA0(IDA0192I) '                              01262637
+         PUNCH ' INCLUDE AOSA0(IDA0200S) '                              01262937
+.****  VSAM C/R MODULES                                                 01263437
+         PUNCH '  INCLUDE AOSA0(IDA0C06C,IDA0I96C) '          @Z30SSDT  01264837
+         PUNCH '  INCLUDE AOSA0(IDA0A05B,IDA0C05B) '          @Z30SSDT  01266737
+         PUNCH '  INCLUDE AOSA0(IDACKRA1) '                   @Z30SSDT  01268637
+         PUNCH ' ALIAS IDA0C06C,IDA0I96C,IDA0A05B,IDA0C05B '  @Z30SSDT  01270537
+.*                                                                      01272437
+         PUNCH ' ALIAS IDA0192V,IDA0192P,IDA0192G,IDA0192Y '            01274337
+         PUNCH ' ALIAS IDA0200T,IDA0231T,IDA0557A,IDA0192I '            01276237
+         PUNCH ' ALIAS IDA0200S '                                       01278137
+         PUNCH ' ALIAS IDA0192C '                             @YM01260  01280002
+         PUNCH ' ENTRY IDA0192A '                                       01300002
+         PUNCH ' NAME IDA0192A(R) '                                     01350002
+         PUNCH ' INCLUDE AOSA0(IFG0192A)   EXPECT IEW0461 FOR IFG0198N' 01440037
+.*                                                                      01440402
+         PUNCH ' INCLUDE AOSA0(IDAICIA1) '                       Y02113 01442002
+         PUNCH ' INCLUDE AOSA0(IDAOCEA1) '                       Y02113 01442102
+         PUNCH ' INCLUDE AOSA0(IDAOCEA2) '                       Y02113 01442202
+         PUNCH ' INCLUDE AOSA0(IDAOCEA4) '                    @Z30SSPS  01442337
+.*                                                                      01448002
+         PUNCH ' ALIAS IFG0200T,IFG0231T,IFG0192Y '                     01454137
+         PUNCH ' ALIAS IFG0557A,IFG0192I,IFG0200S '                     01459802
+         PUNCH ' ALIAS IDAOCEA1,IDAOCEA2,IDAOCEA4 '           @Z30SSPS  01465537
+         PUNCH ' ENTRY IFG0192A '                                       01471202
+         PUNCH ' NAME IFG0192A(R) '                                     01476902
+.****    VSAM RECORD MANAGEMENT MODULES                       @YM01260  01482602
+         PUNCH ' ORDER IDA019R1 '                             @Z40GSDT  01483037
+         PUNCH ' ORDER IDA019R4 '                             @Z40GSDT  01483437
+         PUNCH ' ORDER IDA019RZ '                             @Z40GSDT  01483837
+         PUNCH ' ORDER IDA019R2 '                             @Z40GSDT  01484237
+         PUNCH ' ORDER IDA019RW '                             @Z40GSDT  01484337
+         PUNCH ' ORDER IDA019R3 '                             @Z40GSDT  01484437
+         PUNCH ' ORDER IDA019RA '                             @Z40GSDT  01484537
+         PUNCH ' ORDER IDA019RB '                             @Z40GSDT  01484937
+         PUNCH ' ORDER IDA019RC '                             @Z40GSDT  01485337
+         PUNCH ' ORDER IDA019R8 '                             @Z40GSDT  01485737
+         PUNCH ' ORDER IDA019RL(P) '                          @Z40GSDT  01486337
+         PUNCH ' ORDER IDA019RM '                             @Z40GSDT  01486737
+         PUNCH ' ORDER IDA019SA '                             @Z40GSDT  01487137
+         PUNCH ' ORDER IDA019RX(P) '                          @Z40GSDT  01487537
+         PUNCH ' ORDER IDA019RU '                             @Z40GSDT  01487937
+         PUNCH ' ORDER IDA019RS(P) '                          @Z40GSDT  01498237
+         PUNCH ' ORDER IDA019RT '                             @Z40GSDT  01502137
+         PUNCH ' ORDER IDA019SF '                             @Z40GSDT  01512137
+         PUNCH ' ORDER IDA019RY(P) '                          @Z40GSDT  01514137
+         PUNCH ' ORDER IDA019RP '                             @Z40GSDT  01516137
+         PUNCH ' ORDER IDA019RR(P) '                          @Z40GSDT  01518237
+         PUNCH ' ORDER IDA019RQ '                             @Z40GSDT  01520237
+         PUNCH ' ORDER IDA019RV '                             @Z40GSDT  01520637
+         PUNCH ' ORDER IDA019S6 '                             @ZA31009  01521637
+         PUNCH ' ORDER IDA019RE(P) '                          @Z40GSDT  01522737
+         PUNCH ' ORDER IDA019RH '                             @Z40GSDT  01524737
+         PUNCH ' ORDER IDA019RF '                             @Z40GSDT  01525137
+         PUNCH ' ORDER IDA019RI '                             @Z40GSDT  01525237
+         PUNCH ' ORDER IDA019RN '                             @Z40GSDT  01525537
+         PUNCH ' ORDER IDA019RJ '                             @Z40GSDT  01540737
+         PUNCH ' ORDER IDA019RG '                             @Z40GSDT  01550737
+         PUNCH ' ORDER IDA019RK '                             @Z40GSDT  01551137
+         PUNCH ' ORDER IDA019R5(P) '                          @Z40GSDT  01551537
+         PUNCH ' ORDER IDA019SE '                             @ZA15091  01551637
+         PUNCH ' ORDER IDA019RO '                             @Z40GSDT  01556637
+         PUNCH ' ORDER IDA019SN '                             @ZA32757  01558637
+         PUNCH ' ORDER IDA019SG '                             @ZA37315  01559337
+         PUNCH ' ORDER IDA019SH '                             @ZA37315  01560037
+         PUNCH ' ORDER IDA019SL '                             @ZA37315  01560737
+         PUNCH ' ORDER IDA019SM '                             @ZA37315  01561437
+         PUNCH ' ORDER IDA019ST '                             @ZA37315  01561537
+         PUNCH ' ORDER IDA019SU '                             @ZA37315  01561637
+         PUNCH ' INCLUDE AOSA0(IDA019R1) '                              01562237
+         PUNCH ' INCLUDE AOSA0(IDA019R4) '                              01572837
+         PUNCH ' INCLUDE AOSA0(IDA019RZ) '                    @YM01260  01583437
+         PUNCH ' INCLUDE AOSA0(IDA019R2) '                              01594037
+         PUNCH ' INCLUDE AOSA0(IDA019RW) '                   @Z30SSPS   01604037
+         PUNCH ' INCLUDE AOSC5(IDAM19R3) '                   @Z30SSLC   01644037
+         PUNCH ' INCLUDE AOSA0(IDA019RA) '                   @Z30SSPS   01654037
+         PUNCH ' INCLUDE AOSA0(IDA019RB) '                   @Z30SSPS   01664037
+         PUNCH ' INCLUDE AOSA0(IDA019RC) '                   @Z30SSPS   01674037
+         PUNCH ' INCLUDE AOSA0(IDA019R8) '                   @Z30SSPS   01684037
+         PUNCH ' INCLUDE AOSA0(IDA019RL) '                              01694037
+         PUNCH ' INCLUDE AOSA0(IDA019RM) '                              01744037
+         PUNCH ' INCLUDE AOSA0(IDA019SA) '                   @Z30SSPS   01794037
+         PUNCH ' INCLUDE AOSA0(IDA019RX) '                   @Z30SSPS   01814037
+         PUNCH ' INCLUDE AOSA0(IDA019RU) '                   @Z30SSPS   01824037
+         PUNCH ' INCLUDE AOSA0(IDA019RS) '                   @Z30SSPS   01836037
+         PUNCH ' INCLUDE AOSA0(IDA019RT) '                   @Z30SSPS   01838037
+         PUNCH ' INCLUDE AOSA0(IDA019SF) '                   @Z30SSPS   01840037
+         PUNCH ' INCLUDE AOSA0(IDA019RY) '                   @Z30SSPS   01842437
+         PUNCH ' INCLUDE AOSA0(IDA019RP) '                              01844037
+         PUNCH ' INCLUDE AOSA0(IDA019RR) '                   @Z30SSPS   01944037
+         PUNCH ' INCLUDE AOSA0(IDA019RQ) '                   @Z30SSPS   01994037
+         PUNCH ' INCLUDE AOSA0(IDA019RV) '                   @Z30SSPS   02004037
+         PUNCH ' INCLUDE AOSA0(IDA019RE) '                              02044037
+         PUNCH ' INCLUDE AOSA0(IDA019RH) '                              02194037
+         PUNCH ' INCLUDE AOSA0(IDA019RF) '                   @Z30SSPS   02204037
+         PUNCH ' INCLUDE AOSA0(IDA019RI) '                   @Z30SSPS   02304037
+         PUNCH ' INCLUDE AOSA0(IDA019RN) '                              02344037
+         PUNCH ' INCLUDE AOSA0(IDA019RJ) '                   @Z30SSPS   02354037
+         PUNCH ' INCLUDE AOSA0(IDA019RG) '                   @Z30SSPS   02364037
+         PUNCH ' INCLUDE AOSA0(IDA019RK) '                              02374037
+         PUNCH ' INCLUDE AOSA0(IDA019R5) '                              02393637
+         PUNCH ' INCLUDE AOSA0(IDA019SE) '                    @ZA15091  02393737
+         PUNCH ' INCLUDE AOSA0(IDA019RO) '                              02393837
+         PUNCH ' INCLUDE AOSA0(IDA019S6) '                    @ZA31009  02393937
+         PUNCH ' INCLUDE AOSA0(IDA019SN) '                    @ZA32757  02403937
+         PUNCH ' INCLUDE AOSA0(IDA019ST) '                    @ZA29388  02406937
+         PUNCH ' INCLUDE AOSA0(IDA019SU) '                    @ZA29388  02414037
+         PUNCH ' INCLUDE AOSA0(IDA019SG) '                    @ZA37315  02415037
+         PUNCH ' INCLUDE AOSA0(IDA019SH) '                    @ZA37315  02416037
+         PUNCH ' INCLUDE AOSA0(IDA019SL) '                    @ZA37315  02417037
+         PUNCH ' INCLUDE AOSA0(IDA019SM) '                    @ZA37315  02418037
+         PUNCH ' ALIAS IDA019ST '                             @ZA29388  02423937
+         PUNCH ' ENTRY IDA019R1 '                                       02434037
+         PUNCH ' NAME IDA019L1(R) '                                     02444000
+.***** VSAM ASYCHRONOUS ROUTINE                               @YM01260  02494002
+         PUNCH ' INCLUDE AOSC5(IDA121A5) '                    @YM01260  02594037
+         PUNCH ' ALIAS IDA019R7 '                             @YM01260  02604002
+         PUNCH ' ENTRY IDA121A5 '                             @YM01260  02614002
+         PUNCH ' NAME IDA121A5(R) '                           @YM01260  02644002
+.***** VSAM I/O DRIVER APPENDAGE                              @YM01260  02694002
+         PUNCH ' INCLUDE AOSA0(IDA019RD) '                              02894000
+         PUNCH ' NAME IDA019RD(R) '                                     02944002
+.***** VSAM FAST PATH MODULES (ICIP)                                    02946037
+         PUNCH ' ORDER IDA019S1(P) '                          @Z40GSDT  02948037
+         PUNCH ' ORDER IDA019S2 '                             @Z40GSDT  02948437
+         PUNCH ' ORDER IDA019R5 '                             @Z40GSDT  02948837
+         PUNCH ' INCLUDE AOSA0(IDA019S1) '                              02950037
+         PUNCH ' INCLUDE AOSA0(IDA019S2) '                              02952037
+         PUNCH ' INCLUDE AOSA0(IDA019R5) '                              02952437
+         PUNCH ' ENTRY IDA019S1 '                                       02952837
+         PUNCH ' NAME IDA019L2(R) '                                     02953237
+.****   CONTROL BLOCK MANIPULATION                            @YM01260  02954002
+         PUNCH ' INCLUDE AOSA0(IDA019C1) '                              02964000
+         PUNCH ' NAME IDA019C1(R) '                                     02974000
+.***   ISAM CI                                                @YM01260  03024002
+         PUNCH ' INCLUDE AOSA0(IDAIIPM1) '                              03074000
+         PUNCH ' NAME IDAIIPM1(R) '                                     03124000
+         PUNCH ' INCLUDE AOSA0(IDAIIPM2) '                              03174000
+         PUNCH ' NAME IDAIIPM2(R) '                                     03224000
+         PUNCH ' INCLUDE AOSA0(IDAIIPM3) '                              03274000
+         PUNCH ' NAME IDAIIPM3(R) '                                     03324000
+         PUNCH ' INCLUDE AOSA0(IDAIISM1) '                              03374000
+         PUNCH ' NAME IDAIISM1(R) '                                     03424000
+         PUNCH ' INCLUDE AOSA0(IDAIIFBF) '                              03474000
+         PUNCH ' NAME IDAIIFBF(R) '                                     03524000
+.**** VSAM SNAP EXIT ROUTINE                                  @ZA04940  03526037
+         PUNCH ' INCLUDE AOSA0(IDA0195A) '                    @ZA04940  03528037
+         PUNCH ' NAME IDA0195A(R) '                           @ZA04940  03530037
+.****  VSAM AMP PROCESSOR                                     @YM01260  03534002
+.**** THE FOLLOWING IS FOR DOCUMENTATION ONLY                 @YM01260  03536002
+.**** TARGLIB FOR THIS L/E IS SYS1.LPALIB                     @YM01260  03538002
+.****    PUNCH ' INCLUDE AOSA0(IEFVAMP) '                     @YM01260  03544002
+.****    PUNCH ' ALIAS IEFNB902 '                             @YM01260  03554002
+.****    PUNCH ' ENTRY IEFNB902 '                             @YM01260  03564002
+.****    PUNCH ' NAME IEFVAMP(R) '                            @YM01260  03566002
+.****    ANOP                                                 @YM01260  03568002
+         PUNCH '/* '                                         @YM03802   90000002
+.MACEND  MEND                                                           90149937

@@ -1,0 +1,58 @@
+          MACRO                                                         00180001
+          SGIEA500                                                      00230001
+          COPY  SGGBLPAK                                                00330001
+.*  LAST UPDATE = 04/05/72                                       Y02952 00340002
+.*              = 09/15/78                                     @G3800XR 00350000
+.*              = 03/20/81                                     @ZA51850 00355003
+.*                                                             @G3800XR 00360000
+.*  CHANGE-ACTIVITY = OZ51850 - PUNCH IEECVGCI IF DIDOCS GLOBAL         00366603
+.*                              BIT IS SET.                    @ZA51850 00373203
+.*                                                               Y02952 00380002
+.*  FOR AN I/O ONLY SYSGEN SKIP TO SECTION WHICH COPIES          Y02952 00430002
+.*  DEVICE DEPENDENT MODULE                                      Y02952 00480002
+         AIF    (&GETB(3)).IOGEN                                 Y02952 00530002
+.*                                                               Y02952 00580002
+.***********************************************************            01580001
+.* LINKLIB - FROM AOSC5                                                 01630001
+.***********************************************************            01680001
+         PUNCH ' COPY OUTDD=LINKLIB,INDD=AOSC5'                         01730001
+.*                                                                      01740001
+.*                                                                      01750001
+.*                                                                      01780001
+.***** COMMUNICATIONS TASK MODULES *****                                01830001
+.*                                                                      01880001
+         PUNCH ' SELECT MEMBER=(IEAVVINT,IEAVMWTL)'              Y02952 01930002
+.*                                                                      01980001
+.***** EXTENDED PRECISION FLOATING POINT SIMULATOR SUPPORT ***   Y02952 02230002
+.*                                                                      02280001
+         PUNCH ' SELECT MEMBER=(IEAXPSIM,IEAXPDXR,IEAXPALL)'            02330001
+.*                                                                      02340001
+.**** RECOVERY/TERMINATION MODULES****                           Y02952 02350002
+.*                                                                      02380001
+         PUNCH ' SELECT MEMBER=(IEAVTMSI)'                       Y02952 02382002
+.*                                                                      02390001
+.*                                                                      02400001
+.***********************************************************            02430001
+.* LINKLIB - FROM AOSC5                                        @G3800XR 02480000
+.***********************************************************            02500000
+         PUNCH ' COPY OUTDD=LINKLIB,INDD=AOSC5'                @G3800XR 02520000
+.*                                                                      02590001
+.*                                                                      02600001
+.*                                                                      02630001
+.***** DSS MODULES *****                                                02680001
+.*                                                                      02730001
+         PUNCH ' SELECT MEMBER=(IQADVM00)'                       Y02952 02780002
+.*                                                                      02790001
+.**********************************************************      Y02952 02792002
+.IOGEN   ANOP                                                    Y02952 02800002
+         AIF   (&SGSCHDB(5) EQ 0).OUT                          @ZA51850 02818003
+.*                                                               Y02952 02836002
+.***********************************************************     Y02952 02836402
+.* LINKLIB - FROM AOSC5                                          Y02952 02836802
+.***********************************************************     Y02952 02837202
+         PUNCH ' COPY OUTDD=LINKLIB,INDD=AOSC5'                  Y02952 02838002
+.*                                                               Y02952 02838402
+         PUNCH ' SELECT MEMBER=(IEECVGCI)'                       Y02952 02838802
+.*                                                               Y02952 02839202
+.OUT     ANOP                                                    Y02952 02839602
+         MEND                                                           02840002

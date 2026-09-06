@@ -1,0 +1,27 @@
+*        %GOTO BSLDFPL;  /*                                             03000020
+         MACRO                                                          06000020
+         IKJDFPL                                                        09000020
+DFPL     DSECT                                                          12000020
+*********************************************************************** 15000020
+*    THE DEFAULT SERVICE ROUTINE PARAMETER LIST (DFPL) IS A LIST OF   * 18000020
+*    ADDRESSES PASSED FROM THE INVOKER TO DEFAULT VIA REGISTER 1      * 21000020
+*********************************************************************** 24000020
+DFPLUPT  DS    A    PTR TO UPT                                          27000020
+DFPLECT  DS    A    PTR TO ECT                                          30000020
+DFPLECB  DS    A    PTR TO CP'S ECB                                     33000020
+DFPLDFPB DS    A    PTR TO DEFAULT PARAMETER BLOCK                      36000020
+**/                                                                     39000020
+         MEND                                                           42000020
+* %BSLDFPL :  ;                                                         45000020
+* DCL DFPLPTR  PTR(31);                                                 48000020
+* DECLARE                                                               51000020
+*   1 DFPL     BASED(DFPLPTR),                                          54000020
+* /* *************************************************************** */ 57000020
+* /* THE DEFAULT SERVICE ROUTINE PARAMETER LIST (DFPL) IS A LIST OF  */ 60000020
+* /* ADDRESSES PASSED FROM THE INVOKER TO DEFAULT VIA REGISTER 1     */ 63000020
+* /* *************************************************************** */ 66000020
+*    2 DFPLUPT  PTR(31),             /* PTR TO UPT                   */ 69000020
+*    2 DFPLECT  PTR(31),             /* PTR TO ECT                   */ 72000020
+*    2 DFPLECB  PTR(31),             /* PTR TO CP'S ECB              */ 75000020
+*    2 DFPLDFPB PTR(31);             /* PTR TO DEFAULT PARAMETER        78000020
+*                                       BLOCK                        */ 81000020

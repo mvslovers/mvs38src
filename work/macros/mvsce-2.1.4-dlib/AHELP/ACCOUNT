@@ -1,0 +1,406 @@
+)S SUBCOMMANDS -                                                        00200001
+  ADD/A,CHANGE/C,DELETE/D,HELP/H,LIST/L,LISTIDS/LISTI,SYNC/S,END/E      00400002
+)F FUNCTION -                                                           00600001
+  THE ACCOUNT COMMAND PROCESSOR INVOKES THE CONVERSATIONAL PROGRAMS     00800001
+  WHICH PERFORM THE ADMINISTRATIVE FUNCTIONS OF CHANGING, DELETING,     01000001
+  ADDING AND LISTING ENTRIES IN THE USER ATTRIBUTE DATA SET.            01200001
+  NOTE     - THE ACCOUNT COMMAND IS AVAILABLE ONLY TO USERS WITH        01400001
+             ASSIGNED ACCOUNT ABILITY.                                  01600001
+)X SYNTAX  -                                                            01800001
+         ACCOUNT                                                        02000001
+  REQUIRED - NONE                                                       02200001
+  DEFAULTS - NONE                                                       02400001
+)O OPERANDS -                                                           02600001
+         NONE                                                           02800001
+=DELETE=D                                                               03000001
+)F FUNCTION -                                                           03200001
+  THE DELETE SUBCOMMAND PROCESSOR PERFORMS THE ADMINISTRATIVE FUNCTION  03400001
+  OF PURGING A USER FROM THE SYSTEM,  OR OF DELETING SPECIFIED CONTROL  03600001
+  INFORMATION FIELDS FROM AN EXISTING USER ENTRY.   THE DELETE COMMAND  03800001
+  IS AVAILABLE ONLY TO USERS WITH ASSIGNED ACCOUNT ABILITY.             04000001
+)X SYNTAX -                                                             04200001
+         DELETE   ('USERID'/*  'PASSWORD'/*  'ACCTNMBR'/*)              04400001
+                  DATA('PROCNAME',....)                                 04600001
+                   OR                                                   04800001
+         DELETE   ('USERID'/*  'PASSWORD'/*)   DATA('ACCTNMBR',....)    05000001
+                   OR                                                   05200001
+         DELETE   ('USERID'/*)   DATA('PASSWORD',....)                  05400001
+                   OR                                                   05600001
+         DELETE   ('USERID')                                            05800001
+  OPTIONAL -                                                            06000001
+           - DATA('NAME',...)                                           06200001
+  NOTE -     THE ASTERISK IS INVALID IN ANY SYNTAX AT THE DELETE LEVEL, 06400001
+             THAT IS, AT THE LAST LEVEL APPEARING IN THE COMMAND ENTRY. 06600001
+)O OPERANDS -                                                           06800001
+  'USERID' - USER'S UNIQUE SYSTEM IDENTIFICATION                        07000001
+  'PASSWORD'                                                            07200001
+           - USER'S AUTHORIZATION FOR SYSTEM FACILITIES                 07400001
+  'ACCTNMBR'                                                            07600001
+           - USER'S ACCOUNTING DATA IDENTIFICATION                      07800001
+  '*'      - NONSPECIFIC, LEVEL SUBSTITUTE FOR PARAMETER                08000001
+))DATA('PROCNAME',....)                                                 08200001
+           - DEFINES THE ITEM(S) WHICH ARE TO BE DELETED                08400001
+    'PROCNAME'                                                          08600001
+           - NAME OF A PROCEDURE FOR LOGON USE                          08800001
+  NOTE -     A MORE DETAILED DESCRIPTION OF THE LEVEL PARAMETERS CAN BE 09000001
+             OBTAINED BY ENTERING-                                      09200001
+                  HELP  ADD  OPERANDS                                   09400001
+=LIST=L                                                                 09600001
+)F FUNCTION -                                                           09800001
+  THE LIST COMMAND PROCESSOR PERFORMS THE ADMINISTRATIVE FUNCTION OF    10000001
+  DISPLAYING ALL USER ENTRIES, OR ANY INDIVIDUAL ENTRY, OR ANY          10200001
+  SPECIFIED CONTROL INFORMATION IN AN EXISTING ENTRY. THE LIST COMMAND  10400001
+  IS AVAILABLE ONLY TO USERS WITH ASSIGNED ACCOUNT ABILITY.             10600001
+)X SYNTAX -                                                             10800001
+         LIST   ('USERID'/*  'PASSWORD'/*  'ACCTNMBR'/*  'PROCNAME'/*)  11000001
+  REQUIRED - ('USERID'/*)                                               11200001
+  DEFAULTS - NONE                                                       11400001
+  NOTE     - THE FOUR OPERANDS DEFINE THE POINT BELOW WHICH ALL CONTROL 11600001
+             INFORMATION IS TO BE DISPLAYED.                            11800001
+  NOTE     - AN '*' IN ANY POSITION MEANS THAT ALL ENTRIES ON THAT      12000001
+             LEVEL ARE TO BE CONSIDERED VALID.                          12200001
+)O OPERANDS -                                                           12400001
+  'USERID' - USER'S UNIQUE SYSTEM IDENTIFICATION                        12600001
+  'PASSWORD'                                                            12800001
+           - USER'S AUTHORIZATION FOR SYSTEM FACILITIES                 13000001
+  'ACCTNMBR'                                                            13200001
+           - USER'S ACCOUNTING DATA IDENTIFICATION                      13400001
+  'PROCNAME'                                                            13600001
+           - PROCEDURE NAME FOR LOGON                                   13800001
+=LISTIDS=LISTI                                                          14000001
+)F FUNCTION -                                                           14200001
+  THE LISTIDS COMMAND PROCESSOR PERFORMS THE ADMINISTRATIVE FUNCTION    14400001
+  OF DISPLAYING ALL USER IDENTITIES ENTERED IN THE SYSTEM. THE LISTIDS  14600001
+  COMMAND IS AVAILABLE ONLY TO USERS WITH ASSIGNED ACCOUNT ABILITY.     14800001
+)X SYNTAX -                                                             15000001
+         LISTIDS                                                        15200001
+  REQUIRED - NONE                                                       15400001
+  DEFAULTS - NONE                                                       15600001
+)O OPERANDS -                                                           15800001
+         NONE                                                           16000001
+=ADD=A                                                                  16200001
+)F FUNCTION -                                                           16400001
+  THE ADD COMMAND PROCESSOR PERFORMS THE ADMINISTRATIVE FUNCTION OF     16600001
+  ADDING A NEW USER TO THE SYSTEM OR OF ADDING NEW CONTROL INFORMATION  16800001
+  TO AN EXISTING USER ENTRY.  THE ADD COMMAND IS AVAILABLE ONLY TO      17000001
+  USERS WITH ASSIGNED ACCOUNT ABILITY.                                  17200001
+)X SYNTAX -                                                             17400001
+         ADD   ('USERID' 'PASSWORD'/*  'ACCTNMBR'/*  'PROCNAME')        17600002
+               MAXSIZE('INTEGER')/NOLIM  OPER/NOOPER  ACCT/NOACCT       17800001
+               JCL/NOJCL  MOUNT/NOMOUNT  USERDATA('DIGITS')             18000002
+               PERFORM('DIGITS')/NOPERFORM  SIZE('INTEGER')             18100002
+               UNIT('NAME')  DEST('NAME')                               18200002
+                                                                        18300002
+               OR                                                       18400001
+                                                                        18600001
+               ('USERID'/*)  DATA('PASSWORD'/('PASSWORD',...)/*         18800001
+                                  'ACCTNMBR'/('ACCTNMBR',...)/*         19000001
+                                  'PROCNAME'/('PROCNAME',...))          19200001
+               SIZE('INTEGER')  UNIT('NAME')                            19400001
+                                                                        19600001
+               OR                                                       19800001
+                                                                        20000001
+               ('USERID'/* 'PASSWORD'/*)                                20200001
+               DATA('ACCTNMBR'/('ACCTNMBR',...)/*                       20400001
+                    'PROCNAME'/('PROCNAME',...))                        20600001
+               SIZE('INTEGER')  UNIT('NAME')                            20800001
+                                                                        21000001
+               OR                                                       21200001
+                                                                        21400001
+               ('USERID'/* 'PASSWORD'/* 'ACCTNMBR'/*)                   21600001
+               DATA('PROCNAME',...)  SIZE('INTEGER')  UNIT('NAME')      21800001
+                                                                        22000001
+  OPTIONAL - MAXSIZE('INTEGER')/NOLIM  OPER/NOOPER  ACCT/NOACCT         22200002
+             JCL/NOJCL  MOUNT/NOMOUNT  USERDATA('DIGITS')  DEST('NAME') 22300002
+             PERFORM('DIGITS')/NOPERFORM  SIZE('INTEGER')  UNIT('NAME') 22400002
+                                                                        22600001
+  DEFAULTS - NOLIM  NOOPER  NOACCT  NOJCL  NOMOUNT  USERDATA(0000)      22800002
+             DEST('CENTRAL')  NOPERFORM  SIZE(0)  UNIT('        ')      22900002
+                                                                        23000001
+  ALIAS    - A                                                          23200001
+                                                                        23400001
+  NOTE     - THE FIRST FORMAT IS USED TO IDENTIFY A NEW USER TO THE     23600001
+             SYSTEM.  THIS FORMAT IS TO BE USED WHEN THE USER HAS NOT   23800001
+             BEEN PREVIOUSLY IDENTIFIED TO THE SYSTEM.                  24000001
+                                                                        24200001
+  NOTE     - THE '*' IN THE FIRST FORMAT MEANS 'THIS ITEM WILL NOT BE   24400001
+             SUPPORTED FOR THIS USER'.  IF THE '*' IS USED, ALL         24600001
+             SUBSEQUENT REFERENCES TO THIS USER IDENTITY MUST CONTAIN   24800001
+             AN '*' FOR THAT ITEM.                                      25000001
+                                                                        25200001
+  NOTE     - ALL FORMATS OTHER THAN THE FIRST ARE USED TO ADD           25400001
+             ADDITIONAL CONTROL INFORMATION TO AN EXISTING USER ENTRY.  25600001
+             THE FIRST OPERAND IN THESE FORMATS MUST CONTAIN A          25800001
+             COMBINATION OF ITEMS WHICH HAS BEEN PREVIOUSLY ADDED.  THE 26000001
+             FIRST SUBPARAMETER OF THE 'DATA' KEYWORD MUST FORM A NEW   26200001
+             COMBINATION OF ITEMS.                                      26400001
+                                                                        26600001
+  NOTE     - IF AN '*' WAS USED IN A COMMAND OF THE FIRST FORMAT, THEN  26800001
+             AN '*' IN THE CORRESPONDING POSITION IN THE OTHER FORMATS  27000001
+             MEANS 'THIS ITEM IS NOT SUPPORTED FOR THIS USER'.          27200001
+                                                                        27400001
+  NOTE     - IN ALL FORMATS OTHER THAN THE FIRST, AN '*' USED IN THE    27600001
+             FIRST OPERAND (EVERYTHING WITHIN THE FIRST PAIR OF         27800001
+             PARENTHESES) MAY MEAN ALL ITEMS PREVIOUSLY ENTERED IN THE  28000001
+             POSITION WHERE THE '*' APPEARS ARE TO BE USED IN FORMING   28200001
+             THE COMBINATIONS OF ITEMS WHICH ARE TO BE AUGMENTED.       28400001
+)O OPERANDS -                                                           28600001
+  'USERID' - USER'S UNIQUE SYSTEM IDENTIFICATION                        28800001
+             FIRST CHARACTER  - ALPHABETIC OR NATIONAL ($,@,#)          29000001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        29200001
+             MAXIMUM LENGTH   - 7                                       29400001
+  'PASSWORD'                                                            29600001
+           - USER'S AUTHORIZATION FOR SYSTEM FACILITIES                 29800001
+             FIRST CHARACTER  - ALPHABETIC, NATIONAL, OR NUMERIC        30000001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        30200001
+             MAXIMUM LENGTH   - 8                                       30400001
+  'ACCTNMBR'                                                            30600001
+           - USER'S ACCOUNTING DATA IDENTIFICATION                      30800001
+             ANY EBCDIC CHARACTERS EXCEPT BLANK, COMMA, TAB,            31000001
+             SEMICOLON, AND APOSTROPHE                                  31200001
+             MAXIMUM LENGTH   - 40                                      31400001
+  'PROCNAME'                                                            31600001
+           - PROCEDURE NAME FOR LOGON                                   31800001
+             FIRST CHARACTER  - ALPHABETIC OR NATIONAL ($,@,#)          32000001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        32200001
+             MAXIMUM LENGTH   - 8                                       32400001
+))MAXSIZE('INTEGER')                                                    32600001
+           - MAXIMUM REGION SIZE FOR THIS USER IDENTITY, ALLOWED ONLY   32800001
+             WHEN CREATING A NEW USER ENTRY                             33000001
+    'INTEGER'                                                           33200001
+           - NUMBER OF 1024 BYTE UNITS - MAXIMUM VALUE IS 65534         33400001
+))NOLIM    - NO LIMIT TO USER'S MAXIMUM REGION SIZE, ALLOWED ONLY WHEN  33600001
+             CREATING A NEW USER ENTRY                                  33800001
+  NOTE     - NO LIMIT MAY ALSO BE ACHIEVED BY MAXSIZE(0)                34000001
+))OPER     - IDENTIFIES THIS USER AS A TERMINAL USER WITH AUTHORITY TO  34200001
+             ISSUE THE OPERATOR COMMANDS, ALLOWED ONLY WHEN CREATING A  34400001
+             NEW USER ENTRY                                             34600001
+))NOOPER   - MEANS THIS USER MAY NOT ISSUE THE OPERATOR COMMANDS,       34800001
+             ALLOWED ONLY WHEN CREATING A NEW USER ENTRY                35000001
+))ACCT     - IDENTIFIES THIS USER AS A TERMINAL USER WITH AUTHORITY TO  35200001
+             ISSUE THE ACCOUNT COMMANDS, ALLOWED ONLY WHEN CREATING A   35400001
+             NEW USER ENTRY                                             35600001
+))NOACCT   - MEANS THIS USER MAY NOT ISSUE THE ACCOUNT COMMANDS,        35800001
+             ALLOWED ONLY WHEN CREATING A NEW USER ENTRY                36000001
+))JCL      - IDENTIFIES THIS USER AS A TERMINAL USER WITH AUTHORITY TO  36200001
+             ISSUE THE SUBMIT, CANCEL, STATUS, AND OUTPUT COMMANDS,     36400001
+             ALLOWED ONLY WHEN CREATING A NEW USER ENTRY                36600001
+))NOJCL    - MEANS THIS USER MAY NOT ISSUE THE SUBMIT, CANCEL, STATUS,  36800001
+             AND OUTPUT COMMANDS, ALLOWED ONLY WHEN CREATING A NEW USER 37000001
+             ENTRY                                                      37200001
+))MOUNT    - IDENTIFIES THIS USER AS A TERMINAL USER WITH THE ABILITY   37210002
+             TO ISSUE DYNAMIC ALLOCATION REQUESTS THAT CAUSE VOLUME     37220002
+             MOUNTING, ALLOWED ONLY WHEN CREATING A NEW USER ENTRY      37230002
+))NOMOUNT  - MEANS THIS USER MAY NOT USE THE MOUNT FUNCTION, ALLOWED    37236002
+             ONLY WHEN CREATING A NEW USER ENTRY                        37242002
+))USERDATA('DIGITS')                                                    37250001
+           - INSTALLATION DATA FOR THIS USER IDENTITY, ALLOWED ONLY     37300001
+             WHEN CREATING A NEW USER ENTRY                             37350001
+    'DIGITS'                                                            37360001
+           - FOUR EBCDIC CHARACTERS REPRESENTING HEXADECIMAL DIGITS     37370001
+))DEST('NAME')                                                          37380002
+           - DESTINATION TO WHICH SYSOUT DATA SETS WILL BE ROUTED,      37390002
+             ALLOWED ONLY WHEN CREATING A NEW USER ENTRY                37392002
+    'NAME' - FIRST CHARACTER  - ALPHABETIC, NATIONAL, OR NUMERIC        37394002
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        37396002
+             MAXIMUM LENGTH   - 7                                       37398001
+))PERFORM('DIGITS')                                                     37398402
+           - SPECIFIES THE PERFORMANCE GROUPS THE USER IS AUTHORIZED    37398802
+             TO REQUEST AT LOGON, ALLOWED ONLY WHEN CREATING A NEW      37398902
+             USER ENTRY                                                 37399202
+    'DIGITS'                                                            37399602
+           - A LIST OF NUMBERS FROM 1 TO 255                            37399702
+))NOPERFORM                                                             37399802
+           - THIS USER IS NOT AUTHORIZED TO SPECIFY PERFORMANCE GROUPS  37399902
+             AT LOGON, ALLOWED ONLY WHEN CREATING A NEW USER ENTRY      37449902
+))SIZE('INTEGER')                                                       37499902
+           - REGION SIZE FOR PROCEDURE NAMED IN 'PROCNAME'              37600001
+    'INTEGER'                                                           37800001
+           - NUMBER OF 1024 BYTE UNITS - MAXIMUM VALUE IS 65534         38000001
+  NOTE     - THE 'SIZE' VALUE SHOULD BE LESS THAN THE 'MAXSIZE' VALUE.  38200001
+             IF IT IS NOT, THE 'MAXSIZE' VALUE WILL BE USED INSTEAD.    38400001
+))UNIT('NAME')                                                          38600001
+           - DEVICE GROUP ESOTERIC NAME FOR DYNAMIC ALLOCATION          38800001
+    'NAME' - FIRST CHARACTER  - ALPHABETIC, NATIONAL, OR NUMERIC        39000001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        39200001
+             MAXIMUM LENGTH   - 8                                       39400001
+  NOTE     - IF UNIT IS OMITTED, A FIELD OF 8 BLANKS IS CREATED         39600001
+))DATA('PASSWORD'/('PASSWORD',...)/* 'ACCTNMBR'/('ACCTNMBR',...)/*      39800001
+       'PROCNAME'/('PROCNAME',...))                                     40000001
+           - NEW INFORMATION TO BE ADDED TO AN EXISTING ENTRY AS        40200001
+             SPECIFIED IN THE FIRST OPERAND.                            40400001
+    'PASSWORD'                                                          40600001
+           - USER'S AUTHORIZATION FOR SYSTEM FACILITIES                 40800001
+             FIRST CHARACTER  - ALPHABETIC, NATIONAL, OR NUMERIC        41000001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        41200001
+             MAXIMUM LENGTH   - 8                                       41400001
+    'ACCTNMBR'                                                          41600001
+           - USER'S ACCOUNTING DATA IDENTIFICATION                      41800001
+             ANY EBCDIC CHARACTERS EXCEPT BLANK, COMMA, TAB,            42000001
+             SEMICOLON, AND APOSTROPHE                                  42200001
+             MAXIMUM LENGTH   - 40                                      42400001
+    'PROCNAME'                                                          42600001
+           - PROCEDURE NAME FOR LOGON                                   42800001
+             FIRST CHARACTER  - ALPHABETIC OR NATIONAL ($,@,#)          43000001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        43200001
+             MAXIMUM LENGTH   - 8                                       43400001
+=CHANGE=C                                                               43600001
+)F FUNCTION -                                                           43800001
+  THE CHANGE COMMAND PROCESSOR PERFORMS THE ADMINISTRATIVE FUNCTION OF  44000001
+  MODIFYING SPECIFIED CONTROL INFORMATION FIELDS WITHIN AN EXISTING     44200001
+  USER ENTRY.  THE CHANGE COMMAND IS AVAILABLE ONLY TO USERS WITH       44400001
+  ASSIGNED ACCOUNT ABILITY.                                             44600001
+)X SYNTAX -                                                             44800001
+         CHANGE   ('USERID'/* 'PASSWORD'/* 'ACCTNMBR'/* 'PROCNAME'/*)   45000001
+                  MAXSIZE('INTEGER')/NOLIM  OPER/NOOPER  ACCT/NOACCT    45200001
+                  JCL/NOJCL  MOUNT/NOMOUNT  USERDATA('DIGITS')          45250002
+                  DEST('NAME')  PERFORM('DIGITS')/NOPERFORM             45350002
+                  DATA('PROCNAME')  SIZE('INTEGER')  UNIT('NAME')       45450002
+                  OR                                                    45800001
+                  ('USERID'/* 'PASSWORD'/* 'ACCTNMBR'/*)                46000001
+                  MAXSIZE('INTEGER')/NOLIM  OPER/NOOPER  ACCT/NOACCT    46200001
+                  JCL/NOJCL  DATA('ACCTNMBR')                           46400001
+                  OR                                                    46600001
+                  ('USERID'/* 'PASSWORD'/*)  MAXSIZE('INTEGER')/NOLIM   46800001
+                  OPER/NOOPER  ACCT/NOACCT  JCL/NOJCL  DATA('PASSWORD') 47000001
+                  OR                                                    47200001
+                  ('USERID')  MAXSIZE('INTEGER')/NOLIM  OPER/NOOPER     47400001
+                  ACCT/NOACCT  JCL/NOJCL  DATA('USERID')                47600001
+                  OR                                                    47800001
+                  (*)  MAXSIZE('INTEGER')/NOLIM  OPER/NOOPER            48000001
+                  ACCT/NOACCT  JCL/NOJCL  MOUNT/NOMOUNT                 48010002
+                  USERDATA('DIGITS')  DEST('NAME')                      48050002
+                  PERFORM('DIGITS')/NOPERFORM                           48100002
+  REQUIRED - THE POSITIONAL OPERAND (EVERYTHING WITHIN THE FIRST PAIR   48400001
+             OF PARENTHESES).  FOR THE FIRST FORMAT, EITHER 'DATA' OR   48600001
+             'SIZE' OR 'UNIT' MUST ALSO BE USED.  FOR THE SECOND AND    48800001
+             THIRD FORMATS, 'DATA' IS ALSO REQUIRED.  FOR THE FOURTH    49000001
+             AND FIFTH FORMATS, AT LEAST ONE KEYWORD MUST BE ENTERED.   49200001
+  DEFAULTS - NONE                                                       49400001
+  ALIAS    - C                                                          49600001
+  NOTE     - IF AN '*' WAS USED FOR THE PASSWORD AND/OR ACCTNMBR WHEN   49800001
+             THE USER WAS FIRST IDENTIFIED TO THE SYSTEM, THEN AN '*'   50000001
+             MUST BE USED IN THE CORRESPONDING POSITION OF THE CHANGE   50200001
+             COMMAND. THE '*' IN THIS CASE MEANS 'THIS ITEM IS NOT      50400001
+             SUPPORTED FOR THIS USER'.                                  50600001
+  NOTE     - TO CHANGE 'NON-SUPPORT' FOR PASSWORDS AND/OR ACCOUNT       50800001
+             NUMBERS TO 'SUPPORT', OR VICE VERSA, THE DELETE AND ADD    51000001
+             COMMANDS MUST BE USED.                                     51200001
+  NOTE     - EXCEPT AS NOTED ABOVE FOR UNSUPPORTED LEVELS, AN '*' IN    51400001
+             ANY POSITION OF THE FIRST OPERAND MEANS 'ALL ITEMS PRE-    51600001
+             VIOUSLY ENTERED IN THIS POSITION ARE TO BE CONSIDERED      51800001
+             VALID FOR THIS COMMAND'.                                   52000001
+)O OPERANDS -                                                           52200001
+  'USERID' - USER'S UNIQUE SYSTEM IDENTIFICATION                        52400001
+             FIRST CHARACTER  - ALPHABETIC OR NATIONAL ($,@,#)          52600001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        52800001
+             MAXIMUM LENGTH   - 7                                       53000001
+  'PASSWORD'                                                            53200001
+           - USER'S AUTHORIZATION FOR SYSTEM FACILITIES                 53400001
+             FIRST CHARACTER  - ALPHABETIC, NATIONAL, OR NUMERIC        53600001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        53800001
+             MAXIMUM LENGTH   - 8                                       54000001
+  'ACCTNMBR'                                                            54200001
+           - USER'S ACCOUNTING DATA IDENTIFICATION                      54400001
+             ANY EBCDIC CHARACTERS EXCEPT BLANK, COMMA, TAB,            54600001
+             SEMICOLON, AND APOSTROPHE                                  54800001
+             MAXIMUM LENGTH   - 40                                      55000001
+  'PROCNAME'                                                            55200001
+           - PROCEDURE NAME FOR LOGON                                   55400001
+             FIRST CHARACTER  - ALPHABETIC OR NATIONAL ($,@,#)          55600001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        55800001
+             MAXIMUM LENGTH   - 8                                       56000001
+))MAXSIZE('INTEGER')                                                    56200001
+           - MAXIMUM REGION SIZE FOR THIS USER IDENTITY                 56400001
+    'INTEGER'                                                           56600001
+           - NUMBER OF 1024 BYTES UNITS - MAXIMUM VALUE IS 65534        56800001
+))NOLIM    - NO LIMIT TO USER'S MAXIMUM REGION SIZE                     57000001
+  NOTE     - NO LIMIT MAY ALSO BE ACHIEVED BY MAXSIZE(0)                57200001
+))OPER     - IDENTIFIES THIS USER AS A TERMINAL USER WITH AUTHORITY TO  57400001
+             ISSUE THE OPERATOR COMMANDS                                57600001
+))NOOPER   - MEANS THIS USER MAY NOT ISSUE THE OPERATOR COMMANDS        57800001
+))ACCT     - IDENTIFIES THIS USER AS A TERMINAL USER WITH AUTHORITY TO  58000001
+             ISSUE THE ACCOUNT COMMANDS                                 58200001
+))NOACCT   - MEANS THIS USER MAY NOT ISSUE THE ACCOUNT COMMANDS         58400001
+))JCL      - IDENTIFIES THIS USER AS A TERMINAL USER WITH AUTHORITY TO  58600001
+             ISSUE THE SUBMIT, CANCEL, STATUS, AND OUTPUT COMMANDS      58800001
+))NOJCL    - MEANS THIS USER MAY NOT ISSUE THE SUBMIT, CANCEL, STATUS,  59000001
+             AND OUTPUT COMMANDS                                        59200001
+))MOUNT    - IDENTIFIES THIS USER AS A TERMINAL USER WITH THE ABILITY   59250002
+             TO ISSUE DYNAMIC ALLOCATION REQUESTS THAT CAUSE VOLUME     59300002
+             MOUNTING.                                                  59350002
+))NOMOUNT  - MEANS THIS USER MAY NOT USE THE MOUNT FUNCTION.            59360002
+))USERDATA('DIGITS')                                                    59370002
+           - INSTALLATION DATA FOR THIS USER IDENTITY, ALLOWED ONLY     59380002
+             WITH AN EXPANDED UADS                                      59390002
+    'DIGITS'                                                            59392002
+           - FOUR EBCDIC CHARACTERS REPRESENTING HEXADECIMAL DIGITS     59394002
+))DEST('NAME')                                                          59396002
+           - DESTINATION TO WHICH SYSOUT DATA SETS WILL BE ROUTED,      59398002
+             ALLOWED ONLY WITH AN EXPANDED UADS                         59398402
+    'NAME' - FIRST CHARACTER  - ALPHABETIC, NATIONAL, OR NUMERIC        59398802
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        59399202
+             MAXIMUM LENGTH   - 8                                       59399602
+))PERFORM('DIGITS')                                                     59399702
+           - SPECIFIES THE PERFORMANCE GROUPS THE USER IS AUTHORIZED    59399802
+             TO REQUEST AT LOGON, ALLOWED ONLY WITH AN EXPANDED UADS    59399902
+    'DIGITS'                                                            59459902
+           - A LIST OF NUMBERS FROM 1 TO 255                            59469902
+))NOPERFORM                                                             59479902
+           - THIS USER IS NOT AUTHORIZED TO SPECIFY PERFORMANCE GROUPS  59489902
+             AT LOGON, ALLOWED ONLY WITH AN EXPANDED UADS               59491902
+))DATA('USERID'/'PASSWORD'/'ACCTNMBR'/'PROCNAME')                       59499902
+           - NEW INFORMATION TO REPLACE THE EXISTING ITEM NAMED IN THE  59600001
+             LAST FIELD OF THE FIRST OPERAND                            59800001
+    'USERID'                                                            60000001
+           - USER'S UNIQUE SYSTEM IDENTIFICATION                        60200001
+             FIRST CHARACTER  - ALPHABETIC OR NATIONAL ($,@,#)          60400001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        60600001
+             MAXIMUM LENGTH   - 7                                       60800001
+    'PASSWORD'                                                          61000001
+           - USER'S AUTHORIZATION FOR SYSTEM FACILITIES                 61200001
+             FIRST CHARACTER  - ALPHABETIC, NATIONAL, OR NUMERIC        61400001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        61600001
+             MAXIMUM LENGTH   - 8                                       61800001
+    'ACCTNMBR'                                                          62000001
+           - USER'S ACCOUNTING DATA IDENTIFICATION                      62200001
+             ANY EBCDIC CHARACTERS EXCEPT BLANK, COMMA, TAB,            62400001
+             SEMICOLON, AND APOSTROPHE                                  62600001
+             MAXIMUM LENGTH   - 40                                      62800001
+    'PROCNAME'                                                          63000001
+           - PROCEDURE NAME FOR LOGON                                   63200001
+             FIRST CHARACTER  - ALPHABETIC OR NATIONAL ($,@,#)          63400001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        63600001
+             MAXIMUM LENGTH   - 8                                       63800001
+))SIZE('INTEGER')                                                       64000001
+           - REGION SIZE FOR PROCEDURE NAMED IN 'PROCNAME'              64200001
+    'INTEGER'                                                           64400001
+           - NUMBER OF 1024 BYTE UNITS - MAXIMUM VALUE IS 65534         64600001
+  NOTE     - THE 'SIZE' VALUE SHOULD BE LESS THAN THE 'MAXSIZE' VALUE.  64800001
+             IF IT IS NOT, THE 'MAXSIZE' VALUE WILL BE USED INSTEAD.    65000001
+))UNIT('NAME')                                                          65200001
+           - DEVICE GROUP ESOTERIC NAME FOR DYNAMIC ALLOCATION          65400001
+    'NAME' - FIRST CHARACTER  - ALPHABETIC, NATIONAL, OR NUMERIC        65600001
+             OTHER CHARACTERS - ALPHABETIC, NATIONAL, OR NUMERIC        65800001
+             MAXIMUM LENGTH   - 8                                       66000001
+=END                                                                    66200001
+)F FUNCTION -                                                           66400001
+  THE END SUBCOMMAND PROCESSOR MUST BE ENTERED IN ORDER TO TERMINATE    66600001
+  ACCOUNT ACTIVITY AND RETURN CONTROL TO THE SYSTEM.                    66800001
+)X SYNTAX -                                                             67000001
+         END                                                            67200001
+  REQUIRED - NONE                                                       67400001
+  DEFAULTS - NONE                                                       67600001
+)O OPERANDS -                                                           67800001
+         NONE                                                           68000001
+=SYNC=S                                                                 68050002
+)F FUNCTION -                                                           68100002
+  THE SYNC SUBCOMMAND PROCESSOR PERFORMS THE ADMINISTRATIVE FUNCTION    68150002
+  OF FORMATING SYS1.BRODACST AND SYNCHRONIZING THE USERIDS IN THAT      68200002
+  DATA SET WITH THE USERIDS IN SYS1.UADS.                               68202002
+)X SYNTAX -                                                             68250002
+         SYNC                                                           68300002
+  REQUIRED - NONE                                                       68350002
+  DEFAULTS - NONE                                                       68400002
+)O OPERANDS -                                                           68450002
+         NONE                                                           68500002

@@ -1,0 +1,394 @@
+         MACRO                                                          00050002
+&LABEL   IECSCRWA &EP,&F4,&D1=(0),&D2=(0),&ADT=NO                       00100002
+.*                                                                      00150002
+.*       MACRO DELETIONS/CHANGES FOR VS2 RELEASE 2                      00200002
+.*0000                                                           YM1337 00210002
+.*0000                                                           YM7036 00220002
+.*       MACRO DELETIONS/CHANGES FOR VS2 RELEASE 3             @ZM30032 00230003
+.*0000                                                         @Y30LSTG 00240003
+.*       MACRO DELETIONS/ADDITIONS/CHANGES FOR VS2 RELEASE 3.7 @ZA31933 00243008
+.*0000021500-022500                                    DELETED @ZA31933 00244008
+.*0000018560-018620,021500-021700,175944-175996        ADDED   @ZA31933 00245008
+.*0000009000,028500                                    CHANGED @ZA31933 00246008
+.*                                                                      00300002
+.*       SU32 ADDITIONS                                        @G32DSPD 00310032
+.*                                                                      00320032
+.*       SU60 DELETIONS/CHANGES                                @G60ASBJ 00327060
+.*A 182700                                                     @G60ASBJ 00334060
+.*C 182700                                                     @ZA43917 00337460
+.*                                                             @G60ASBJ 00341060
+.********************************************************************** 00350002
+.*                                                                      00400002
+.* MODULE NAME = IECSCRWA (VS2-2)                                       00450002
+.*                                                                      00500002
+.* DESCRIPTIVE NAME = DADSM SCRATCH WORK AREA ADDRESSING MACRO          00550002
+.*                                                                      00600002
+.* COPYRIGHT = NONE                                                     00650002
+.*                                                                      00700002
+.* STATUS = CHANGE LEVEL 000                                            00750002
+.*                                                                      00800002
+.* FUNCTION = DADSM SCRATCH MACRO WHICH PROVIDES ADDRESSABILITY         00850002
+.*            TO THE 896 DECIMAL BYTE WORK AREA (EXCLUDING THE @ZA31933 00900008
+.*            8 WORD PREFIX OR THE 6 WORD RECOVERY ROUTINE PARAMETER    00930008
+.*            LIST) USED BY SCRATCH.                                    00960008
+.*                                                                      01050002
+.* NOTES = THIS MACRO IS AN INTERNAL MACRO USED IN THE FOLLOWING        01100002
+.*         DADSM FUNCTIONS:                                             01150002
+.*                                                                      01200002
+.*             SCRATCH                                                  01250002
+.*                                                                      01300002
+.*         TO REFERENCE THIS WORK AREA WITHIN THE FUNCTIONS LISTED      01350002
+.*         ABOVE, CODE A USING STATEMENT ON THE LABEL 'SCRTHWKA'.       01400002
+.*                                                                      01450002
+.*      DEPENDENCIES = THIS MACRO IS DESIGNED TO BE USED OPTIONALLY     01500002
+.*                     WITH THE IECSDSL1 DSCB MAPPING MACRO, THE        01550002
+.*                     PREFX MACRO (DEFINED IN THE IECDSECS MACRO)      01600002
+.*                     WHICH DEFINES THE 8 WORD WORK AREA PREFIX,       01650002
+.*                     THE 20 WORD EXTENDED WORK AREA PREFIX, AND       01700002
+.*                     THE 4 WORD DADSM WTG TABLE, AND THE DSMADT       01750002
+.*                     MACRO (ALSO DEFINED IN THE IECDSECS MACRO)       01800002
+.*                     WHICH DEFINES THE 6 WORD DADSM AUDIT TRAIL.      01850002
+.*                     THE AUDIT TRAIL MUST APPEAR AS THE      @ZA31933 01856008
+.*                     FINAL 6 WORDS OF THE SCRATCH WORK AREA. @ZA31933 01862008
+.*                                                                      01870008
+.*                     THE FIRST 364 BYTES OF THE SCRATCH AND RENAME    01900002
+.*                     WORK AREAS (ADDRESSED RESPECTIVELY BY MAPPING    01950002
+.*                     MACROS IECSCRWA AND IECRENWA) ARE MAPPED         02000002
+.*                     IDENTICALLY - 8 WORD PREFIX, 20 WORD EXTENDED    02050002
+.*                     PREFIX, 4 WORD DADSM WTG TABLE, 96 BYTE DSCB     02100002
+.*                     AREA, AND 140 BYTE DSCB AREA.  THE 250  @ZA31933 02150008
+.*                     BYTES FROM LABELS 'WKADEB' THROUGH      @ZA31933 02160008
+.*                     'PVOLSER' ARE ALSO MAPPED IDENTICALLY.  @ZA31933 02170008
+.*                                                                      02180008
+.*      RESTRICTIONS = NONE                                             02350002
+.*                                                                      02400002
+.*      REGISTER CONVENTIONS = NOT APPLICABLE                           02450002
+.*                                                                      02500002
+.* PATCH LABEL = NOT APPLICABLE                                         02550002
+.*                                                                      02600002
+.* MODULE TYPE = MACRO                                                  02650002
+.*                                                                      02700002
+.*      PROCESSOR = ASSEMBLER LANGUAGE                                  02750002
+.*                                                                      02800002
+.*      MODULE SIZE = 920 DECIMAL BYTES (EXCLUDING THE PREFIX) @ZA31933 02850008
+.*                                                                      02900002
+.*      ATTRIBUTES = NOT APPLICABLE                                     02950002
+.*                                                                      03000002
+.* ENTRY POINT = SCRPREFX                                               03050002
+.*                                                                      03100002
+.*      PURPOSE = THIS MACRO IS CALLED AT ASSEMBLY TIME BY THE          03150002
+.*                FUNCTIONS LISTED UNDER 'NOTES' TO EXPAND THE          03200002
+.*                SCRATCH WORK AREA.                                    03250002
+.*                                                                      03300002
+.*      LINKAGE =                                                       03350002
+.*                                                                      03400002
+.*                LABEL IECSCRWA EP,F4,D1=(N),D2=(N),ADT=YES            03450002
+.*                                                                      03500002
+.*      INPUT =                                                         03550002
+.*                                                                      03600002
+.*                OPTIONAL LABEL SPECIFIED AS AN ACCEPTABLE ASSEMBLER   03650002
+.*                LABEL WHICH CAN BE USED BY THE CALLING CSECT TO       03700002
+.*                ESTABLISH ADDRESSABILITY TO THE ENTIRE WORK AREA.     03750002
+.*                                                                      03800002
+.*                EP IS THE FIRST POSITIONAL PARAMETER, SPECIFYING      03850002
+.*                THAT THE LABELS FOR EACH OF THE FIELDS IN THE 8       03900002
+.*                WORD PREFIX, THE 20 WORD EXTENDED PREFIX, AND THE 4   03950002
+.*                WORD DADSM WTG TABLE ARE TO BE EXPANDED.  IF THESE    04000002
+.*                FIELDS ARE NOT TO BE DEFINED, A COMMA MUST BE CODED   04050002
+.*                TO INDICATE THE ABSENCE OF THIS PARAMETER.            04100002
+.*                                                                      04150002
+.*                F4 IS THE SECOND POSITIONAL PARAMETER, SPECIFYING     04200002
+.*                THAT THE FIELDS OF THE FORMAT 4 DSCB ARE TO BE        04250002
+.*                EXPANDED USING THE IECSDSL1 DSCB MAPPING MACRO.       04300002
+.*                IF THESE FIELDS ARE NOT TO BE DEFINED AND A           04350002
+.*                KEYWORD PARAMETER FOLLOWS, A COMMA MUST BE            04400002
+.*                CODED TO INDICATE THE ABSENCE OF THIS PARAMETER.      04450002
+.*                                                                      04500002
+.*                D1=(N) IS A KEYWORD PARAMETER THAT SPECIFIES THE      04550002
+.*                FORMAT(S) OF THE DSCB(S) TO BE EXPANDED IN THE        04600002
+.*                FIRST 140 BYTE DSCB AREA, USING THE IECSDSL1 MACRO.   04650002
+.*                N CAN BE A NUMBER FROM 0 - 6.  IF N IS 0 OR 4 OR      04700002
+.*                IF THIS KEYWORD IS OMITTED, NO LABELS ARE EXPANDED.   04750002
+.*                IF N IS 1, 2, 3, 5, OR 6, THE CORRESPONDING FORMAT    04800002
+.*                OF THE DSCB WILL BE EXPANDED.  MORE THAN ONE DSCB     04850002
+.*                FORMAT CAN BE MAPPED IN THE FIRST 140 BYTE DSCB       04900002
+.*                AREA BY SEPARATING THE FORMAT NUMBERS BY COMMAS.      04950002
+.*                                                                      05000002
+.*                D2=(N) IS A KEYWORD PARAMETER THAT SPECIFIES          05050002
+.*                THE FORMAT(S) OF THE DSCB(S) TO BE EXPANDED IN THE    05100002
+.*                SECOND 140 BYTE DSCB AREA, USING THE IECSDSL1 MACRO.  05150002
+.*                N CAN BE A NUMBER FROM 0 - 6.  IF N IS 0 OR 4 OR      05200002
+.*                IF THIS KEYWORD IS OMITTED, NO LABELS ARE EXPANDED.   05250002
+.*                IF N IS 1, 2, 3, 5, OR 6, THE CORRESPONDING FORMAT    05300002
+.*                OF THE DSCB WILL BE EXPANDED.  MORE THAN ONE DSCB     05350002
+.*                FORMAT CAN BE MAPPED IN THE SECOND 140 BYTE DSCB      05400002
+.*                AREA BY SEPARATING THE FORMAT NUMBERS BY COMMAS.      05450002
+.*                                                                      05500002
+.*                ADT=YES IS A KEYWORD PARAMETER WHICH SPECIFIES THAT   05550002
+.*                THE LABELS FOR EACH OF THE FIELDS WITHIN THE 6 WORD   05600002
+.*                DADSM AUDIT TRAIL ARE TO BE EXPANDED.                 05650002
+.*                                                                      05700002
+.*      OUTPUT = DADSM SCRATCH WORK AREA EXPANSION                      05750002
+.*                                                                      05800002
+.* EXIT-NORMAL = MEND STATEMENT                                         05850002
+.*                                                                      05900002
+.* EXIT-ERROR = ERROR MESSAGES:                                         05950002
+.*                                                                      06000002
+.*      MNOTE 12,***  IHB002 INVALID EP OPERAND SPECIFIED-&EP           06050002
+.*      MNOTE 12,***  IHB002 INVALID F4 OPERAND SPECIFIED-&F4           06100002
+.*      MNOTE 12,***  IHB002 INVALID ADT OPERAND SPECIFIED-&ADT         06150002
+.*                                                                      06200002
+.*      THE MACRO EXPANSION CONTINUES AS IF THE INVALID PARAMETER       06250002
+.*      WERE NOT SPECIFIED.                                             06300002
+.*                                                                      06350002
+.* EXTERNAL REFERENCES = NONE                                           06400002
+.*                                                                      06450002
+.*      ROUTINES = NONE                                                 06500002
+.*                                                                      06550002
+.*      DATA AREAS = SCRATCH WORK AREA                                  06600002
+.*                                                                      06650002
+.*      CONTROL BLOCKS = DSCB, ECB, IOB, DCB, DEB                       06700002
+.*                                                                      06750002
+.* TABLES = NONE                                                        06800002
+.*                                                                      06850002
+.* MACROS = IECDSECS DSMADT                                             06900002
+.*          IECDSECS PREFX                                              06950002
+.*          IECSDSL1                                                    07000002
+.*          IHBERMAC                                                    07050002
+.*                                                                      07100002
+.* CHANGE ACTIVITY = SEE DELETIONS/CHANGES PRECEDING THE MACRO PROLOGUE 07150002
+.*       EXTENDED MVS CVOL SUPPORT                             @Z40CSRC 07160008
+.*                                                                      07200002
+.********************************************************************** 07250002
+.*                                                                      07300002
+         LCLA  &C                                                       07350002
+&LABEL   DSECT                                                          07400002
+*********************************************************************** 07450002
+*                                                                       07500002
+*        SCRATCH WORK AREA                                              07550002
+*                                                                       07600002
+*********************************************************************** 07650002
+         SPACE 1                                                        07700002
+*********************************************************************** 07750002
+*        PREFIX, EXTENDED PREFIX, AND WTG TABLE AREA                    07800002
+*********************************************************************** 07850002
+         SPACE 1                                                        07900002
+SCRPREFX DS    8F                       WORK AREA PREFIX                07950002
+SCRTHWKA DS    20F                      EXTENDED PREFIX                 08000002
+FIRST    EQU   SCRTHWKA                                                 08050002
+SWTGTBL  DS    4F                       DADSM WTG TABLE                 08100002
+         AIF   ('&EP' EQ 'EP').SCR0010                                  08150002
+         AIF   ('&EP' EQ '').SCR0020                                    08200002
+         IHBERMAC 1001,EP,&EP                                           08250002
+         AGO   .SCR0020                                                 08300002
+.SCR0010 ANOP                                                           08350002
+         ORG   SCRPREFX                                                 08400002
+         MNOTE '         IECDSECS PREFX,EXPAND=YES'                     08450002
+         IECDSECS PREFX,EXPAND=YES                                      08500002
+.SCR0020 ANOP                                                           08550002
+         SPACE 1                                                        08600002
+*********************************************************************** 08650002
+*        FORMAT 4 DSCB AREA                                             08700002
+*********************************************************************** 08750002
+         SPACE 1                                                        08800002
+VTOCDSCB DS    XL96                     FORMAT 4 DSCB                   08850002
+         AIF   ('&F4' EQ 'F4').SCR0030                                  08900002
+         AIF   ('&F4' EQ '').SCR0040                                    08950002
+         IHBERMAC 1001,F4,&F4                                           09000002
+         AGO   .SCR0040                                                 09050002
+.SCR0030 ANOP                                                           09100002
+         ORG   VTOCDSCB                                                 09150002
+         MNOTE '         IECSDSL1 (4)'                                  09200002
+         IECSDSL1 (4)                                                   09250002
+.SCR0040 ANOP                                                           09300002
+         SPACE 1                                                        09350002
+*********************************************************************** 09400002
+*        FIRST 140-BYTE DSCB AREA                                       09450002
+*********************************************************************** 09500002
+         SPACE 1                                                        09550002
+INDSCB   DS    XL140                    140-BYTE DSCB AREA              09600002
+&C       SETA  1                                                        09650002
+.SCR0050 AIF   (&C GT N'&D1).SCR0060                                    09700002
+         AIF   (&D1(&C) EQ 0 OR &D1(&C) EQ 4).SCR0055                   09750002
+         ORG   INDSCB                                                   09800002
+         MNOTE '         IECSDSL1 (&D1(&C))'                            09850002
+         IECSDSL1 (&D1(&C))                                             09900002
+.SCR0055 ANOP                                                           09950002
+&C       SETA  &C+1                                                     10000002
+         AGO   .SCR0050                                                 10050002
+.SCR0060 ANOP                                                           10100002
+         SPACE 1                                                        10150002
+*********************************************************************** 10200002
+*        SECOND 140-BYTE DSCB AREA                                      10250002
+*********************************************************************** 10300002
+         SPACE 1                                                        10350002
+OUTDSCB  DS    XL140                    140-BYTE DSCB AREA              10400002
+ENQAREA  EQU   OUTDSCB+4                ENQ PARAMETER LIST              10500002
+MJNAME   EQU   ENQAREA+16               MAJOR ELEMENT NAME              10550002
+MINAME   EQU   ENQAREA+24               MINOR ELEMENT NAME              10600002
+&C       SETA  1                                                        10650002
+.SCR0070 AIF   (&C GT N'&D2).SCR0080                                    10700002
+         AIF   (&D2(&C) EQ 0 OR &D2(&C) EQ 4).SCR0075                   10750002
+         ORG   OUTDSCB                                                  10800002
+         MNOTE '         IECSDSL1 (&D2(&C))'                            10850002
+         IECSDSL1 (&D2(&C))                                             10900002
+.SCR0075 ANOP                                                           10950002
+&C       SETA  &C+1                                                     11000002
+         AGO   .SCR0070                                                 11050002
+.SCR0080 ANOP                                                           11100002
+         SPACE 1                                                        11150002
+*********************************************************************** 11200002
+*        THE CONTROL BLOCK AREAS THAT FOLLOW (DEB/DCB, ECB/IOB, AND     11250002
+*        THE CCW'S) ARE USED BY THE SCRATCH ROUTINES TO READ AND WRITE  11260002
+*        THE DSCB'S.                                                    11270002
+*********************************************************************** 11300002
+         SPACE 1                                                        11350002
+WKADEB   DS    F                        DEB                             11400002
+DCB      DS    11F                      DCB                             11450002
+DEBPTR   DS    F                        DCB POINTER TO DEB              11500002
+ECB      DS    F                        ECB                             11800002
+IOB      DS    8F                       IOB                             11850002
+SEEK     DS    D                        DIRECT ACCESS ADDRESS           11900002
+         SPACE 1                                                        11950002
+*********************************************************************** 12000002
+*        SCRATCH CHANNEL CONTROL WORDS AREA                             12050002
+*********************************************************************** 12100002
+         SPACE 1                                                        12150002
+CCW1     DS    D                                                        12200002
+CCW2     DS    D                                                        12250002
+CCW3     DS    D                                                        12300002
+CCW4     DS    D                                                        12350002
+CCW5     DS    D                                                        12400002
+CCW6     DS    D                                                        12450002
+CCW7     DS    D                                                        12500002
+CCW8     DS    D                                                        12550002
+CCW9     DS    D                                                        12600002
+CCW10    DS    D                                                        12650002
+CCW11    DS    D                                                        12700002
+CCW12    DS    D                                                        12750002
+         SPACE 1                                                        12800002
+*********************************************************************** 12850002
+*        SCRATCH WORK AREA FIELDS                                       12900002
+*********************************************************************** 12950002
+         SPACE 1                                                        13000002
+FIELD1   DS    D                        PASSWORD WORK AREA FIELD        13050002
+OLDPLPTR DS    F                        PARAMETER LIST ADDRESS          13100002
+PRUCBPTR DS    F                        PRIMARY (DEMOUNTABLE) UCB ADDR  13150002
+VOLPTR   DS    F                        NEXT VOLUME LIST ENTRY ADDRESS  13200002
+TCBADDR  DS    F                        POINTER TO THE TCB              13250002
+DSABADDR DS    F                        DSAB ADDRESS OF CURRENT VOLUME  13300002
+PRDSABAD DS    F                        DSAB ADDRESS OF PRIMARY UCB     13350002
+VOLNUM   DS    H                        NUMBER OF VOLUMES REMAINING     13400002
+         CNOP  2,4                      ALIGN DSABQDB TO FULLWORD       13450002
+TIOTMNR  DS    CL6                      ASID/DSAB QDB ADDRESS           13500002
+DSABQDB  EQU   TIOTMNR+2                DSAB QDB ADDRESS                13550002
+VOLMINOR DS    CL6                      VOLSER FOR DEQ ON SYSZVOLS      13600002
+ERCODE   DS    H                        ERROR RETURN CODE               13650002
+SISW1    DS    XL1                      SECURITY/INTEGRITY SWITCHES     13700002
+*                                                                       13750002
+TIOTENQ  EQU   X'80'                    ENQ ON SYSTIOT ISSUED           14300002
+DSNENQ   EQU   X'40'                    ENQ ON SYSDSN ISSUED            14350002
+VOLENQ   EQU   X'20'                    ENQ ON SYSZVOLS ISSUED          14400002
+VOLDEQ   EQU   X'10'                    DEQ ON SYSZVOLS TO BE ISSUED    14450002
+UCBALLOC EQU   X'08'                    UCB DYNAMICALLY ALLOCATED       14500002
+DEBSRCH  EQU   X'04'                    DEB SEARCH REQUIRED INDICATOR   14550002
+NOSMFRCD EQU   X'02'                    NO SMF RECORD INDICATOR         14600002
+VOLRACHK EQU   X'01'                    VOL RACHECKED OK       @G32DSPD 14620032
+*                                                                       14650002
+SISW2    DS    XL1                      SECURITY/INTEGRITY SWITCHES     14700002
+*                                                                       14750002
+DEMNTSW  EQU   X'80'                    VOLUME DEMOUNT INDICATOR        15100002
+MOUNTSW  EQU   X'40'                    VOLUME MOUNT/VERIFY INDICATOR   15150002
+VERIFYSW EQU   X'20'                    VOLUME VERIFY INDICATOR         15200002
+UCBFNDSW EQU   X'10'                    ALLOCATED UCB FOUND INDICATOR   15210002
+VIRTMNT  EQU   X'08'                    VIRTUAL MOUNT ISSUED   @Y30LSTG 15220003
+DSNENQCV EQU   X'04'                    ENQ ON SYSCTLG.V------ @Z40CSRC 15230008
+*                                                                       15250002
+         DS    H                        UNUSED                          15260002
+PVOLSER  DS    CL6                      VOLUME SERIAL NUMBER IN         15270002
+*                                       PROTECTED STORAGE               15272002
+PDSNAME  DS    CL44                     DATA SET NAME IN PROTECTED      15280002
+*                                       STORAGE                         15290002
+         DS    H                        UNUSED HALFWORD                 15300002
+         SPACE 1                                                        15350002
+*********************************************************************** 15400002
+*        DADSM EXTENT TABLE                                             15450002
+*********************************************************************** 15500002
+         SPACE 1                                                        15550002
+DADSMTBL DS    0XL68                    DADSM EXTENT TABLE              15600002
+STYPEFLG DS    XL1                      SCRATCH SWITCHES                15650002
+*                                                                       15700002
+ERXTENT  EQU   X'80'                    OVERLAPPING EXTENTS FOUND       16300002
+*                                       IN THE FORMAT 5 DSCB            16310002
+VTOCENQ  EQU   X'40'                    RESERVE ON SYSVTOC ISSUED       16350002
+VIOBIT   EQU   X'20'                    VIO DATA SET INDICATOR          16400002
+NOMNTDEV EQU   X'10'                    NO VOLUME MOUNTED AND           16450002
+*                                       NO DEVICE ALLOCATED             16460002
+SHRCYL   EQU   X'08'                    SHARED CYLINDERS (SPLIT         16500002
+*                                       CYLINDER EXTENT)                16510002
+PSWDCHKD EQU   X'04'                    PASSWORD CHECKED FOR            16550002
+*                                       PASSWORD-PROTECTED DATA SET     16560002
+DOSPACK  EQU   X'02'                    DOS VOLUME INDICATOR            16600002
+EXITBIT  EQU   X'01'                    EXIT INDICATOR (LAST VOLUME     16650002
+*                                       LIST ENTRY PROCESSED)           16660002
+*                                                                       16700002
+EXTNUM   DS    XL1                      NUMBER OF EXTENT ENTRIES        16750002
+*                                       IN DADSMTBL                     16760002
+HOLENUM  DS    H                        NUMBER OF F0 DSCB'S THAT HAVE   16800002
+*                                       BEEN USED                       16810002
+ENTRIES  DS    16F                      SIXTEEN EXTENT ENTRIES          16850002
+         SPACE 1                                                        16900002
+*********************************************************************** 16950002
+*        ABSOLUTE TRACK ADDRESSES                                       17000002
+*********************************************************************** 17050002
+         SPACE 1                                                        17100002
+VTOCADR  DS    XL5                      FORMAT 4 CCHHR                  17150002
+DADSMADR DS    XL5                      FORMAT 5 CCHHR                  17200002
+INCCHHR  DS    XL5                      CHANNEL PROGRAM WORK AREA       17250002
+OUTCCHHR DS    XL5                      CHANNEL PROGRAM WORK AREA       17300002
+         CNOP  0,4                      ALIGN HOLD TO FULLWORD          17350002
+HOLD     DS    XL5                      CHANNEL PROGRAM WORK AREA       17400002
+NEXTDADS DS    XL5                      CHANNEL PROGRAM WORK AREA       17450002
+INLINESK DS    CL6                      SEEK ADDRESS                    17500002
+         SPACE 1                                                        17550002
+***************************************************************@Y30LSTG 17560003
+*        VIRTUAL DEVICE POINTER TO RELINQUISH WORK FIELD       @Y30LSTG 17570003
+***************************************************************@Y30LSTG 17580003
+         SPACE 1                                               @Y30LSTG 17590003
+RELQADR  DS   1F                        PTR TO ICBACREL LIST   @Y30LSTG 17592003
+         SPACE 1                                               @Y30LSTG 17594003
+***************************************************************@ZA31933 17594408
+*        PROTECTED COPIES OF PARAMETERS PASSED BY CALLER       @ZA31933 17594808
+*        AND POINTER TO PROTECTED COPY OF VOLUME LIST          @ZA31933 17595208
+***************************************************************@ZA31933 17595608
+         SPACE 1                                               @ZA31933 17596008
+OPTIONS  DS    XL4                      SCRATCH OPTION CODE    @ZA31933 17596408
+PDSNADDR DS    F                        DATA SET NAME ADDRESS  @ZA31933 17596808
+VOLISTAD DS    F                        CALLER'S VOLUME LIST   @ZA31933 17597208
+*                                       ADDRESS                @ZA31933 17597608
+PVOLNUM  DS    H                        VOLUME COUNT           @ZA31933 17598008
+VOL1ADDR DS    F                        ADDRESS OF FIRST       @ZA31933 17598408
+*                                       VOLUME ID IN VOLUME    @ZA31933 17598808
+*                                       LIST WORK AREA         @ZA31933 17599208
+SCRSAVE  DS    F                        REGISTER 14 SAVE AREA  @ZA43917 17599360
+         SPACE 1                                               @ZA31933 17599608
+*********************************************************************** 17600002
+*        SCRATCH RECOVERY ROUTINE AUDIT TRAIL AREA                      17650002
+*********************************************************************** 17700002
+         SPACE 1                                                        17750002
+SCRADTRL DS    6F                       SCRATCH AUDIT TRAIL WORDS       17800002
+         AIF   ('&ADT' EQ 'YES').SCR0090                                17850002
+         AIF   ('&ADT' EQ 'NO').SCR0100                                 17900002
+         IHBERMAC 1001,ADT,&ADT                                         17950002
+         AGO   .SCR0100                                                 18000002
+.SCR0090 ANOP                                                           18050002
+         ORG   SCRADTRL                                                 18100002
+         MNOTE '         IECDSECS DSMADT,EXPAND=YES'                    18150002
+         IECDSECS DSMADT,EXPAND=YES                                     18200002
+.SCR0100 ANOP                                                           18250002
+         SPACE 1                                                        18300002
+*********************************************************************** 18350002
+SCRWAEND EQU   *                        SCRATCH WORK AREA END           18400002
+SWALNGTH EQU   SCRWAEND-SWTGTBL         WORK AREA LENGTH FOR IECRES GET 18450002
+*********************************************************************** 18500002
+         MEND                                                           18550002

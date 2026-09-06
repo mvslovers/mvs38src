@@ -1,0 +1,82 @@
+         MACRO                                                          00050000
+         SGFDSP01 &UNIT=,&ID=                                           00100000
+         LCLA     &N                                                    00150000
+         LCLC     &PNDSEG,&PNDEXT,&FL5B                        @ZA47883 00200000
+.* FUNCTION - SET DEVICE FEATURES TABLE (DFT) FOR 3203 MODEL 4.         00250000
+.*                                                                      00300000
+.*      CHANGE ACTIVITIES                                               00350000
+.*                                                             @ZA44676 00400000
+.*                                                             @ZA45245 00450000
+.*                                                             @ZA46953 00500000
+.*                                                             @ZA47883 00550000
+.*                                                             @ZA50079 00600000
+.*                                                             @ZA48676 00650000
+.*                                                             @ZA53155 00700000
+.*                                                             @ZA59932 00725000
+         COPY  SGGBLPAK                                                 00750000
+         AIF   ('&UNIT' NE '3203').EXIT01                               00800000
+&N       SETA  &SGADRPC(2)  SET ADDRESS MULTIPLICATION FACTOR           00850000
+         AIF   ('&SGMDLPC' NE '4').ERR01    ERROR IF NOT 3203 MODEL 4   00900000
+         MNOTE *,' DEVICE TYPE 3203-4 SPECIFIED          '     @ZA59932 00925000
+         AIF   (&SGFCNTA NE 0).ERR02   ERROR IF FEATURE(S) SPECIFIED    00950000
+         AIF   (&SGOPCTA EQ 0).CONT01     OPTIONAL CHANNELS ?  @ZA47883 01000000
+     MNOTE  *,'   OPTIONAL CHANNEL '                           @ZA47883 01050000
+&FL5B    SETC   'ALTPATH'                 INDICATE FOR UCB     @ZA47883 01100000
+         AGO   .CONT01     GO BUILD DFT FOR 3203-4                      01150000
+.ERR01   MNOTE 5,'* * * IEIDFT001 &ID -MODEL VALUE &SGMDLPC INVALID'    01200000
+&SGQUITB SETB  1           MODEL=INVALID/OMIT -TURN ON ERROR SWITCH     01250000
+         AGO   .EXIT01                                                  01300000
+.ERR02   MNOTE 5,'* * * IEIDFT002 FEATURE(S) SPECIFIED -  INVALID; THERX01350000
+               E ARE NO OPTIONAL FEATURES FOR 3203-4'                   01400000
+&SGQUITB SETB  1           FEATURE(S) SPECIFIED -TURN ON ERROR SWITCH   01450000
+         AGO   .EXIT01                                                  01500000
+.CONT01  ANOP                                                           01550000
+&SGDT06B(&SGCNTRA(3))   SETB   1   INDICATE DEVICE IS 3211 TO  @32034AP 01600000
+&SGDU06B(&SGCNTRA(3))   SETB   1   ALLOW 3203-4 DEVICE TO BE   @32034AP 01650000
+.*                                 SUPPORTED AS A OUTPUT ONLY  @32034AP 01700000
+.*                                 CONSOLE                              01750000
+&PNDSEG  SETC  'A(UCBE&SGADRPC(1))'                                     01800000
+&PNDEXT  SETC  '16AL1(0)'                                               01850000
+.*                                                                      01900000
+         AIF   (&SGOPCTA EQ 0).CONT02     OPTIONAL CHANNELS ?  @ZA53155 01950000
+.*                                                                      02000000
+.* SET OPTIONAL CHANNEL FLAGS IF SPECIFIED                     @ZA47883 02050000
+.*                                                                      02100000
+         SGOPCHAN  PERMIT=YES,UNIT=&UNIT,ID=&ID                         02150000
+.*                                                                      02200000
+.* BUILD THE DFT FOR THE DEVICE                                         02250000
+.*                     @ZA48676  @ZA47883  @ZA46953  @ZA44676  @ZA45245 02300000
+         SGDFTGBL  ATNTABX=0,DEVTYPE=1080080B,ERRTAB=7,DSEGLEN=4,      X02350000
+               DPNDSEG=&PNDSEG,DPNDEXT=&PNDEXT,CCWPFIX=1,              X02400000
+               UCBFL5=(&FL5B),UCBFLP1=DDRSWAP                           02450000
+         AGO   .CONT03       BYPASS DUP CALL TO SGDFTGBL                02500000
+.CONT02  ANOP                                                           02550000
+.*                                                                      02600000
+.* BUILD THE DFT FOR THE DEVICE WITHOUT OPTIONAL CHAN SPECIFIED         02650000
+.*           @ZA53155  @ZA48676  @ZA47883  @ZA46953  @ZA44676  @ZA45245 02700000
+         SGDFTGBL  ATNTABX=0,DEVTYPE=1080080B,ERRTAB=7,DSEGLEN=4,      X02750000
+               DPNDSEG=&PNDSEG,DPNDEXT=&PNDEXT,CCWPFIX=1,              X02800000
+               UCBFLP1=DDRSWAP                                          02850000
+.CONT03  ANOP                                                           02900000
+.* PROCESS OFFLINE OPTIONS.                                    @ZA50079 02950000
+         AIF   ('&SGOFLPC' NE 'YES').NOTOFFL DID USER SPECIFY OFFLINE   03000000
+.*                                                             @ZA50079 03050000
+&SGDOFFB(&SGCNTRA(3))   SETB   1            INDICATE OFFLINE   @ZA50079 03100000
+         MNOTE *,'      OFFLINE SPECIFIED FOR THIS DEVICE'     @ZA50079 03150000
+.NOTOFFL ANOP                                                  @ZA50079 03200000
+.*                                                                      03250000
+.* CHECK ADDRESS MULTIPLACTION FACTOR AND GENERATE DFT ENTRIES          03300000
+.* AND ADDRESSES FOR THE SPECIFIED NUMBER OF EXITS                      03350000
+.*                                                                      03400000
+         AIF   ('&SGADRPC(1)' EQ 'FFF').EXIT01   INVALID ADDRESS        03450000
+         AIF   (&N LE 1).EXIT01   GENERATION REITERATION COMPLETE       03500000
+.*                                                                      03550000
+.* UPDATE ADDRESS TABLE AND DEVICE COUNT                                03600000
+.*                                                                      03650000
+&N       SETA  &N-1                                                     03700000
+         SGADDR                                                         03750000
+.*                                                                      03800000
+.* RETURN TO SET GLOBLES FOR NEXT ADDRESS                               03850000
+.*                                                                      03900000
+         AGO   .CONT01                                                  03950000
+.EXIT01  MEND                                                           04000000

@@ -1,0 +1,12 @@
+         MACRO                                                          03000006
+         SGIED300                                                       06000006
+.*                                                                      09000006
+.*             VERSION DATED 10/30/73                                   12000006
+.*                                                                      15000006
+         COPY  SGGBLPAK                                                 18000006
+.*                                                                      21000006
+.TCAM    ANOP                                                           45000006
+         AIF   (NOT &SGDMGTB(5)).END                                    48000006
+         PUNCH ' INCLUDE AOS21(IEDQATTN)'                               51000006
+.*                                                                      54000006
+.END     MEND                                                           57000006

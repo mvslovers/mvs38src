@@ -1,0 +1,184 @@
+         MACRO                                                          01000000
+         SGIEC4UC                                                       02000000
+         COPY  SGGBLPAK                                                 03000000
+         LCLA  &X,&Y,&LIMIT                                      Y02072 03050002
+         LCLB  &FLG                                              Y02072 03060002
+         LCLC  &ID(17),&ACC(17),&ALIAS(17),&REP(17),&C1,&C2,&C3  Y02072 03100002
+.*       CHANGE ACTIVITY                                                03110002
+.*                                                                      03120002
+.*       VS2 RELEASE 2                                                  03130002
+.*D80000                                                         YM1445 03140002
+.*       CHANGE ACTIVITY                                                03141037
+.*                                                                      03142037
+.*       VS2 RELEASE 3 ADDITIONS                                        03143037
+.*A069700             04/13/78                                 @ZA31642 03143237
+.*       3203-4 PRINTER SUPPORT         7/18/78                @32034JK 03143437
+.*                                                                      03153437
+         AIF   (NOT (&SGDCLSB(55) OR &SGDCLSB(71) OR                   *03163437
+               &SGGENDB(101))).MEND                            @32034JK 03169437
+.*       IF NEITHER 1403 UCS OR 3211 OR 3203-4 IS SPECIFIED    @32034JK 03183437
+.*       THERE ARE NO UCS IMAGES NEEDED.                       @32034JK 03193437
+.*                                                                      03300002
+.*       GLOBAL SGUCSDC WILL BE SET UP ON ENTRY TO CONTAIN THE IDS      03350002
+.*       OF THE UCS IMAGES THAT ARE TO HAVE THE DEFAULT FLAG SET.       03400002
+.*       THIS GLOBAL IS SET UP BY THE UCSDFLT PARAMETER ON THE          03450002
+.*       DATAMGT MACRO.  EACH OF THE TRAIN IMAGES ARE IN A SEPERATE     03500002
+.*       MODULE IN AOSD0.  EACH MODULES CONTAINS TWO COPIES OF THE      03550002
+.*       IMAGE AS SEPERATE CSECTS.  THE CSECT NAMES ARE THE SAME        03600002
+.*       EXCEPT THE FOURTH CHARACTER OF THE NAME IS D FOR THOSE         03650002
+.*       WITH THE DEFAULT FLAG ON AND N FOR THOSE WITH IT OFF.          03700002
+.*       THERE ARE THREE CHARACTER TYPE ARRAYS IN THIS MACRO -          03750002
+.*       ID (WHICH CONTAINS THE VALID IDS). ACC (WHICH CONTAINS EITHER  03800002
+.*       AN N OR D DEPENDING ON WHETHER THE FLAG IS SUPPOSE TO BE       03850002
+.*       OFF OR ON FOR THE MODULE IN IMAGELIB). REP (WHICH IS           03900002
+.*       EITHER AN N OR D TO SAY WHICH CSECT IS TO BE DELETED).         03950002
+.*       FOR EXAMPLE THE FIRST IMAGE IS AN AND IF IT IS SUPPOSE TO      04000002
+.*       HAVE ITS DEFAULT FLAG ON THEN- ID(1) WILL BE AN, ACC(1)        04050002
+.*       WILL BE D, AND REP(1) WILL BE N.                               04100002
+.*       ALIAS CONTAINS ANY ALIASES FOR THE IMAGES REQUIRED BY HASP     04110002
+.*                                                                      04150002
+.*       FIRST THE VALID ENTRIES WILL BE SET INTO ID.                   04200002
+.*       THE FIRST 12 IMAGES ARE FOR 1403/3203-4 UCS.          @32034JK 04210037
+.*       ALIASES ARE NOT APPLICABLE TO 3203-4 PRINTER.         @32034JK 04220037
+&ID(1)   SETC  'AN'                                              Y02072 04250002
+&ALIAS(1) SETC 'A11'                                             Y02072 04260002
+&ID(2)   SETC  'HN'                                              Y02072 04300002
+&ALIAS(2) SETC 'H11'                                             Y02072 04310002
+&ID(3)   SETC  'PCAN'                                            Y02072 04350002
+&ID(4)   SETC  'PCHN'                                            Y02072 04400002
+&ID(5)   SETC  'PN'                                              Y02072 04450002
+&ALIAS(5) SETC 'P11'                                             Y02072 04460002
+&ID(6)   SETC  'QN'                                              Y02072 04500002
+&ID(7)   SETC  'RN'                                              Y02072 04550002
+&ID(8)   SETC  'SN'                                              Y02072 04600002
+&ID(9)   SETC  'TN'                                              Y02072 04650002
+&ALIAS(9) SETC 'T11'                                             Y02072 04660002
+&ID(10)  SETC  'XN'                                              Y02072 04700002
+&ID(11)  SETC  'YN'                                              Y02072 04750002
+&ID(12)  SETC  'QNC'                                             Y02072 04800002
+.*       THE NEXT 5 IMAGES ARE FOR 3211                                 04850002
+&ID(13)  SETC  'A11'                                             Y02072 04900002
+&ALIAS(13) SETC 'AN'                                             Y02072 04910002
+&ID(14)  SETC  'H11'                                             Y02072 04950002
+&ALIAS(14) SETC 'HN'                                             Y02072 04960002
+&ID(15)  SETC  'G11'                                             Y02072 05000002
+&ID(16)  SETC  'P11'                                             Y02072 05050002
+&ALIAS(16) SETC 'PNRNQN'                THREE ALIASES FOR P11    Y02072 05060002
+&ID(17)  SETC  'T11'                                             Y02072 05100002
+&ALIAS(17) SETC 'TN'                                             Y02072 05110002
+&X       SETA  1                       INITIALIZE LOOP CONTROL   Y02072 05150002
+.*       FIRST THE ACC AND REP PARAMETERS WILL BE INITIALIZED.  IF      05200002
+.*       ALL HAS BEEN SPECIFIED ALL THE ACC FIELDS WILL BE SET TO D     05250002
+.*       OTHERWISE THEY WILL ALL BE SET TO N.  THE REP WILL BE SET TO   05300002
+.*       THE OPPOSITE OF THE ACC.                                       05350002
+         AIF   ('&SGUCSDC(1)' EQ 'ALL').ALLD  ALL IMAGES ARE DEF Y02072 05400002
+&C1      SETC  'N'                     SET SO NONE ARE           Y02072 05450002
+&C2      SETC  'D'                      DEFAULT                  Y02072 05500002
+         AGO   .SETALL                 GO SET UP ACC AND REP FLDSY02072 05550002
+.ALLD    ANOP  ,                                                 Y02072 05600002
+&C1      SETC  'D'                     SET UP SO ALL ARE         Y02072 05650002
+&C2      SETC  'N'                      DEFAULT                  Y02072 05700002
+.SETALL  ANOP  ,                                                 Y02072 05750002
+.*       NOW ALL THE ACC AND REP FIELDS WILL BE SET.  THE ACC ARE       05800002
+.*       SET TO C1 AND THE REPS ARE SET TO C2                           05850002
+&ACC(&X) SETC  '&C1'                                             Y02072 05900002
+&REP(&X) SETC  '&C2'                                             Y02072 05950002
+&X       SETA  &X+1                    INCREMENT CTR             Y02072 06000002
+         AIF   (&X NE 18).SETALL       SET UP ALL FIELDS         Y02072 06050002
+.*       NOW ALL THE ID ACC AND REP FIELDS ARE INITIALIZED       Y02072 06100002
+         AIF   ('&C1' EQ 'D').LINKED    IF ALL WAS SPECIFIED     Y02072 06150002
+.*                                      THEN SKIP THE NEXT STEP  Y02072 06200002
+.*                                                                      06250002
+.*       ALL WAS NOT SPECIFIED SO THE LIST PASSED IN THE SGUCSDC        06300002
+.*       GLOBAL WILL NOW BE SET TO AN ACC OF D AND A REP OF N           06350002
+&X       SETA  1                       INDEX FO SCAN ID ARRAY    Y02072 06400002
+&Y       SETA  1                       INDEX TO SCAN SGUCSDC ARRAY02072 06450002
+.LOOPID  ANOP  ,                                                 Y02072 06500002
+         AIF   ('&SGUCSDC(&Y)' EQ '&ID(&X)').FND  SET THIS IMAGE Y02072 06550002
+&X       SETA  &X+1                    INCREMENT ID INDEX        Y02072 06600002
+         AIF   (&X NE 18).LOOPID       CHECK NEXT ID             Y02072 06650002
+.*       DROPPING THROUGH THE ABOVE LOOP MEANS AN INVALID IMAGE  Y02072 06700002
+.*       WAS PASSED.                                                    06750002
+   MNOTE 0,'* * * IEIUCS105 DEFAULT ID &SGUCSDC(&Y) IS INVALID'  Y02072 06800002
+.SETUP   ANOP  ,                                                 Y02072 06850002
+&X       SETA  1                       RESET ID INDEX            Y02072 06900002
+&Y       SETA  &Y+1                    INCREMENT SGUCSDC INDEX   Y02072 06950037
+         AIF   (&Y EQ 18).LINKED       NO MORE INPUT TO CHECK  @ZA31642 06970037
+         AIF   ('&SGUCSDC(&Y)' NE '').LOOPID MORE INPUT TO CHECK Y02072 07000002
+         AIF   (&FLG).LINKED           AT LEAST ONE VALID INPUT  Y02072 07050002
+   MNOTE 0,'* * * IEIUCS105 NO VALID DEFAULT ID''S SPECIFIED'    Y02072 07100002
+   MNOTE 0,'* * * ALL WILL BE ASSUMED'                           Y02072 07150002
+         AGO   .LINKED                 GO TO LINK-EDIT           Y02072 07200002
+.FND     ANOP  ,                                                 Y02072 07250002
+&ACC(&X) SETC  'D'                     ACCEPT DEFAULT            Y02072 07300002
+&REP(&X) SETC  'N'                     DELETE NON DEFAULT        Y02072 07350002
+&FLG     SETB  1                       TURN ON FLAG              Y02072 07400002
+         AGO   .SETUP                  GO CHECK NEXT INPUT       Y02072 07450002
+.*       THIS SECTION WILL GENERATE THE LINKAGE EDITOR COMMANDS         07500037
+.*       TO MOVE THE IMAGE FROM DLIB 'AOSD0' TO 'IMAGELIB'.    @32034JK 07520037
+.*       IT WILL ALSO CAUSE ONE OF THE CSECTS TO BE DELETED.   @32034JK 07540037
+.*       THE IMAGE WILL BE RENAMED FROM IGGXXXXX TO UCSXXXXX   @32034JK 07560037
+.*       AND THE CSECT WILL BE RENAMED FROM IGGDXXXX OR IGGN-  @32034JK 07580037
+.*       XXXX TO UCS1XXXX OR UCS2XXXX OR UCS3XXXX DEPENDING    @32034JK 07600037
+.*       ON THE CHARACTER IN ACC AND REP.                      @32034JK 07620037
+.*       UCS1XXXX         UCS IMAGE FOR 1403                   @32034JK 07640037
+.*       UCS2XXXX         UCS IMAGE FOR 3211                   @32034JK 07660037
+.*       UCS3XXXX         UCS IMAGE FOR 3203-4                 @32034JK 07680037
+.LINKED  ANOP  ,                                                 Y02072 07800002
+&SGCTRLC(7) SETC '&SGCTRLC(62)'        VOLUME SERIAL OF IMAGELIB Y02072 07850002
+&SGCTRLC(8) SETC '&SGCTRLC(61)'        UNIT NO. OF IMAGELIB      Y02072 07900002
+&SGCTRLC(9) SETC 'IMAGELIB'            OUTPUT LIBRARY            Y02072 07950002
+&SGCTRLC(10) SETC ',OL'                ONLY LOADABLE             YM1445 08050002
+&SGCTRLC(11) SETC ',RENT'              REENTRANT                 YM1445 08100002
+         COPY  SGLEDPK1                                          Y02072 08150002
+  PUNCH '//AOSD0 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSD0' Y02072 08200002
+         COPY  SGLEDPK2                                          Y02072 08250002
+.D1403   ANOP  ,                       1403-U SECTION          @32034AP 08300037
+.*    IF WE DO NOT HAVE ANY 1403-U DEVICES, CHECK FOR 3203     @32034AP 08310037
+         AIF   (NOT &SGDCLSB(55)).D3203                        @32034AP 08320037
+&X       SETA  1                       INIT. INDEX               Y02072 08330037
+.LOP1403 ANOP  ,                                               @32034AP 08340037
+         AIF   (K'&ALIAS(&X) EQ 0).NOAL14  NO ALIAS FOR THIS IMG Y02072 08410002
+         PUNCH '  ALIAS   UCS1&ALIAS(&X)   '  ALIAS NEEDED       Y02072 08420002
+.NOAL14  ANOP  ,                                                 Y02072 08430002
+         PUNCH '  REPLACE IGG&REP(&X)&ID(&X)  ' DELETE CSECT     Y02072 08450002
+         PUNCH '  CHANGE  IGG&ACC(&X)&ID(&X)(UCS1&ID(&X))  '     Y02072 08480037
+.*                                   RENAME  ACC CSECT TO  UCS1  Y02072 08510037
+         PUNCH '  INCLUDE  AOSD0(IGG1&ID(&X))  ' MODULE NAME     Y02072 08600002
+         PUNCH '  NAME   UCS1&ID(&X).(R)  '  NAME MODULE         Y02072 08610002
+&X       SETA  &X+1                          INCREMENT INDEX   @32034AP 08650037
+         AIF   (&X NE 13).LOP1403     ALL 1403 UCS DONE        @32034AP 08652037
+.D3203   ANOP  ,                       3203-4 SECTION          @32034JK 08654037
+.*    IF WE DO NOT HAVE ANY 3203-4 DEVICES, CHECK FOR 3211     @32034AP 08656037
+         AIF   (NOT &SGGENDB(101)).D3211   NO 3203-4           @32034AP 08658037
+&X       SETA  1                       INIT. INDEX             @32034AP 08660037
+.LOP3203 ANOP  ,                                               @32034AP 08662037
+         PUNCH '  REPLACE IGG&REP(&X)&ID(&X)  ' DELETE CSECT   @32034JK 08668037
+         PUNCH '  CHANGE  IGG&ACC(&X)&ID(&X)(UCS3&ID(&X))  '   @32034JK 08677037
+.*                                   RENAME  ACC CSECT TO UCS3 @32034JK 08686037
+         PUNCH '  INCLUDE  AOSD0(IGG3&ID(&X))  ' GET MODULE    @32034JK 08695037
+         PUNCH '  NAME   UCS3&ID(&X).(R)  '  NAME MODULE       @32034JK 08704037
+&X       SETA  &X+1                    INCREMENT INDEX           Y02072 08713037
+         AIF   (&X NE 13).LOP3203      ALL 3203-4 UCS DONE     @32034JK 08733037
+.D3211   ANOP  ,                       3211 SECTION              Y02072 08753037
+.*    IF WE DO NOT HAVE ANY 3211 DEVICES EXIT MACRO            @32034AP 08773037
+         AIF   (NOT &SGDCLSB(71)).END  NO 3211                 @32034AP 08793037
+&X       SETA  13                      INIT INDEX FOR 3211       Y02072 08813037
+.LOP3211 ANOP  ,                                                 Y02072 08833037
+         AIF   (K'&ALIAS(&X) EQ 0).NOAL32  NO ALIAS FOR THIS IMG Y02072 08910002
+&C3      SETC  '&ALIAS(&X)'(1,2)        SET ID FIELD             Y02072 08912002
+         PUNCH '  ALIAS   UCS2&C3  '    ALIAS NEEDED             Y02072 08920002
+         AIF   (K'&ALIAS(&X) EQ 2).NOAL32 ALL ALIASES ASIGNED    Y02072 08922002
+&ALIAS(&X) SETC '&ALIAS(&X)'(3,K'&ALIAS(&X)) DELETE FIRST ALIAS  Y02072 08930002
+         AGO   .LOP3211                 CHECK FOR MORE ALIASES   Y02072 08940037
+.NOAL32  ANOP  ,                                                 Y02072 08942002
+         PUNCH '  REPLACE IGG&REP(&X)&ID(&X)  ' DELETE CSECT     Y02072 08950002
+         PUNCH '  CHANGE  IGG&ACC(&X)&ID(&X)(UCS2&ID(&X))  '     Y02072 08980037
+.*                                   RENAME  ACC CSECT TO  UCS2  Y02072 09010037
+         PUNCH '  INCLUDE  AOSD0(IGG2&ID(&X))  ' MODULE NAME     Y02072 09100002
+         PUNCH '  NAME   UCS2&ID(&X).(R)  '  NAME MODULE         Y02072 09150002
+&X       SETA  &X+1                    INCREMENT INDEX           Y02072 09200002
+         AIF   (&X NE 18).LOP3211      DO ALL 3211               Y02072 09250037
+.END     ANOP  ,                                                 Y02072 09300037
+         PUNCH '/*'                    EOD MARKER                Y02072 09350037
+.MEND    MEND                                                           09400037

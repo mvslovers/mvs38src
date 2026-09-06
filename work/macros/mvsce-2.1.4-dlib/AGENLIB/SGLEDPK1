@@ -1,0 +1,67 @@
+.***** START OF SPECIFICATIONS **************************************   00100000
+.*                                                                      00200000
+.* MODULE NAME - SGLEDPK1                                               00300000
+.*                                                                      00400000
+.* DESCRIPTIVE NAME - SGLEDPK1                                          00500000
+.*                                                                      00600000
+.* COPYRIGHT - NONE                                                     00700000
+.*                                                                      00800000
+.* STATUS - CHANGE LEVEL 02                                             00900000
+.*                                                                      01000000
+.* FUNCTION -                                                           01100000
+.*       THE SGLEDPK1 MACRO IS USED TO SUPPLY A LINKS PROCEDURE JCL TO  01200000
+.*       INTERNAL MACROS VIA THE SETTING OF GLOBALS AND USING PUNCH     01300000
+.*       STATEMENTS.                                                    01400000
+.*                                                                      01500000
+.* NOTES - N/A                                                          01600000
+.*                                                                      01700000
+.* MODULE TYPE - MACRO                                                  01800000
+.*                                                                      01900000
+.* ENTRY POINT - N/A                                                    02000000
+.*                                                                      02100000
+.* INPUT - THE FOLLOWING GLOBALS ARE PASSED TO SGLEDPK1                 02200000
+.*           &SGCTRLA(1) - JOB STEP COUNTER                             02300000
+.*           &SGCTRLC(1) - LINKAGE EDITOR ATTRIBUTE                     02400000
+.*           &SGCTRLC(5) - OBJECT MODULE LIBRARY                        02500000
+.*           &SGCTRLC(6) - MODULE NAME                                  02600000
+.*           &SGCTRLC(7) - VOLUME SERIAL NUMBER                         02700000
+.*           &SGCTRLC(8) - DEVICE TYPE                                  02800000
+.*           &SGCTRLC(9) - LIBRARY MODULE IS LINKED INTO                02900000
+.*           &SGCTRLC(10) - LINKAGE EDITOR ATTRIBUTE                    03000000
+.*           &SGCTRLC(11) - LINKAGE EDITOR ATTRIBUTE                    03100000
+.*           &SGCTRLC(12) - LINKAGE EDITOR ATTRIBUTE                    03200000
+.*           &SGCTRLC(13) - LINKAGE EDITOR ATTRIBUTE                    03300000
+.*           &SGCTRLC(14) - LINKAGE EDITOR ATTRIBUTE                    03400000
+.*           &SGCTRLC(40) - SET TO VALUE OF INDEX PARM IN GENERATE      03500000
+.*           &SGCTRLC(41) - OUTPUT CLASS SET IN GENERATE MACRO          03600000
+.*           &SGCTRLC(63) - SET TO A LEFT PARENTHESIS                   03700000
+.*           &SGCTRLC(64) - SET TO A RIGHT PARENTHESIS                  03800000
+.*                                                                      03900000
+.* OUTPUT - THE LINKS PROCEDURE JCL                                     04000000
+.*                                                                      04100000
+.*       LOCALS USED ARE - NONE                                         04200000
+.*                                                                      04300000
+.* EXIT, NORMAL - N/A                                                   04400000
+.*                                                                      04500000
+.* EXIT, ERROR - N/A                                                    04600000
+.*                                                                      04700000
+.* EXTERNAL REFERENCES - N/A                                            04800000
+.*                                                                      04900000
+.* TABLES - N/A                                                         05000000
+.*                                                                      05100000
+.* MACROS - NONE                                                        05200000
+.*                                                                      05300000
+.* CHANGE ACTIVITY -OY11062,OZ07189,OZ20769                             05400003
+.*                                                                      05500003
+.****** END OF SPECIFICATIONS ***************************************   05600003
+&SGMENTB(45)   SETB ('&SGCTRLC(6)' NE '')    SET UP GLOBALS FOR         05700003
+&SGCTRLC(63)   SETC ' ('(1+&SGMENTB(45),1)   NAME ON SYSLMOD CARD,      05800003
+&SGCTRLC(64)   SETC ' )'(1+&SGMENTB(45),1)   IF NECESSARY               05900003
+&SGCTRLA(1)    SETA &SGCTRLA(1)+1                                       06000000
+ PUNCH '//SG&SGCTRLA(1) EXEC LINKS,'                           @ZA20769 06100003
+ PUNCH '// PARM=''NCAL&SGCTRLC(1)&SGCTRLC(2)&SGCTRLC(10)&SGCTRLC(11)&SG*06150003
+               CTRLC(12)&SGCTRLC(13)&SGCTRLC(14)'','           @ZA20769 06200003
+ PUNCH '//    UNIT=''&SGCTRLC(8)'',SER=&SGCTRLC(7),N=&SGCTRLC(40),NAME=*06400000
+               &SGCTRLC(9),P1=''&SGCTRLC(63)'','                        06500000
+ PUNCH '//    MOD=&SGCTRLC(6),P2=''&SGCTRLC(64)'',OBJ=&SGCTRLC(5),CLASS*06600000
+               =&SGCTRLC(41)'                                           06700000

@@ -1,0 +1,182 @@
+         MACRO                                                          00050002
+         SGIEF213      &ID=SYSGEN                              @G64QPSJ 00100064
+.* CHANGE LEVEL = 7/18/74                                      @YA00820 00100764
+.*              = 11/18/74                                     @ZA02137 00100964
+.*              = 10/16/75                                     @Z40MPSR 00101104
+.*              = 10/16/75                                     @Z40KPSR 00102004
+.*              = 10/16/75                                     @Z30RSSR 00103804
+.*              = 01/14/76                                     @ZA08476 00103951
+.*              = 04/02/76                                     @ZA08476 00104051
+.*              = 06/16/76                                     @G29ANSJ 00104251
+.*              = 09/14/76                                     @G30HNSM 00104351
+.*              = 11/18/76 - VS2 SU 16 - IN THIS MACRO         @G16APPK 00104551
+.*                           SUPPORTS MOHAWK (SU 30 - G30HNSM) @G16APPK 00105251
+.*                           AND VPSS SUPPORT (SU29 -          @G16APPK 00105451
+.*                                                G29ANSJ)     @G16APPK 00107251
+.*              = 01/24/77                                     @ZA15722 00108051
+.*              = 03/01/78   VS2 SYSTEM CONTROL PROGRAM 2      @G64IPSJ 00108164
+.*              = 08/01/78   VS2 SYSTEM CONTROL PROGRAM 2      @G64QPSJ 00108264
+.*              = 09/29/80   ALLOW DEVTYPE >7FFFFFFF           @ZA47060 00108403
+.*              = 05/19/81   CHECK FOR VALID DIT ENTRIES WHEN  @ZA52851 00108503
+.*                           ASSIGNING DUMMY INDEXES           @ZA52851 00108603
+.*C075700                                                      @ZA02137 00108703
+.*C075700                                                      @ZA02137 00108851
+.*A062820                                                      @Y30OPSF 00111251
+.*A026600=026900,075708-076800,077700                          @YM08650 00112003
+.*A062840-062880                                               @Y30LPSF 00120003
+.*                                                             @YM07827 00125003
+.*                                                             @YM04968 00130003
+.*                                                             @YM04743 00135003
+.*C062500,062900                                               @YM04744 00140003
+.*A000000-999999                                                 Y02670 00145003
+.********************************************************************   00150002
+.* THIS IS THE ROOT MACRO FOR SUPPORT OF SCHEDULER TABLES EDTTAB AND    00200002
+.* PREFTAB. OTHER STAGE 1 MACROS INVOLVED ARE SGIEF214,215,216,212 AND  00250002
+.* 211.  THE SGIEF211 MACRO ALSO SUPPORTS OS DEVICE MASK AND NAME       00300002
+.* TABLES, TO BE PHASED OUT IN AN EARLY RELEASE OF MVM. HOWEVER,        00350002
+.* CODE MUST BE RETAINED IN 211 TO SUPPORT ALTERNATE PATH AND UCB       00400002
+.* LOOKUP COMPUTATION.                                                  00450002
+.*                                                                      00500002
+.* STAGE 2 MACROS SUPPORTING THIS FUNCTION ARE SGIEF010,014,016,        00550002
+.* 017,018,019 AND STAGE 2 GLOBAL DECLARE PACK SGIEF020.                00600002
+.*                                                                      00650002
+.* FOR AN OVERALL VIEW OF THE LOGIC OF THESE MACROS, THE READER IS      00700002
+.* REFERRED TO  CHART 9.1 AND SUBORDINATE CHARTS IN THE MVM DEVICE      00750002
+.* ALLOCATION  LOGIC CHARTS.                                            00800002
+.*                                                                      00850002
+.* BRIEFLY, THIS FUNCTION TRANSFORMS INPUT FROM THE INSTALLATION IN     00900002
+.* THE FORM OF UNITNAME AND IODEVICE MACROS AND THE DEVPREF PARAMETER   00950002
+.* OF THE SCHEDULR MACRO INTO OUTPUTS IN THE FORM OF EDTTAB,PREFTAB,    01000002
+.* AND THE NUCLEUS RESIDENT MODULE IEFAQTOP.                            01050002
+.* (THE LATTER IS IN SUPPORT OF THE ALLOCATION QUEUE MANAGER            01100002
+.* FUNCTION.)                                                           01150002
+.*                                                                      01200002
+.* THE KEY PROCESS IN BUILDING THE TABLES IS IN MACRO SGIEF214.         01250002
+.* THAT MACRO SORTS ALL DEVICES IN THE INSTALLATION INTO GROUPS         01300002
+.* ACCORDING TO THEIR ASSOCIATION WITH UNITNAMES. EACH 'GROUP' AS       01350002
+.* DEFINED BY SGIEF214 IS A COLLECTION OF DEVICES, ALL OF WHICH ARE     01400002
+.* EQUALLY ELIGIBLE TO THE IDENTICAL SET OF NAMES.  INFORMATION         01450002
+.* DESCRIBING THE GROUPS IS TRANSMITTED TO STAGE 2 AS PARAMETERS        01500002
+.* OF MACRO CALLS AND THE STAGE 2 MACROS UTILIZE THE INFORMATION TO     01550002
+.* BUILD THE EDTTAB.                                                    01600002
+.*                                                                      01650002
+.* IN ADDITION TO THIS PROCESSING,THE DEVICE PRECEDENCE DERIVED FROM    01700002
+.* USER SPECIFICATION ON DEVPREF, COMBINED WITH IBM DEFAULTS SUPPLIED   01750002
+.* BY SGIEF216 IS ALSO PASSED TO STAGE 2 AND USED THERE FOR GENERATION  01800002
+.* OF THE PREFTAB AND ALSO USED IN ORDERING INFORMATION IN EDTTAB.      01850002
+.*                                                                      01900002
+.* FINALLY, SEVERAL MISCELLANEOUS PROCESSES IN SUPPORT OF THESE         01950002
+.* TABLES IS PERFORMED BY MACRO SGIEF215.  THESE INCLUDE GENERATION     02000002
+.* OF MULTIPLE GENERIC NAMES FOR SOME TAPE DEVICES, GENERATION FOR      02050002
+.* SOME TAPE NAMES OF ELIGIBILITIES TO OTHER TYPES, GENERATION OF THE   02100002
+.* SYSALLDA NAME AND ITS ELIGIBILITIES, AND PROCESSING OF VAM           02150002
+.* ELIGIBILITIES.                                                       02200002
+.*                                                                      02250002
+.* SGIEF212 IS USED AS IN MVT, TO IDENTIFY WHICH GENERIC NAMED TYPES    02300002
+.* OF DEVICES ARE PRESENT IN THE SYSTEM, ASSIGN TYPE CODES, AND         02350002
+.* TRANSMIT THE INFORMATION TO STAGE 2 VIA MACRO SGIEF010.              02370064
+.*                                                                      02450002
+.********************************************************************   02500002
+         COPY  SGGBLPAK                                                 02550002
+         LCLA  &A,&B,&I,&J,&Q,&R,&S,&T,&X,&Y,&Z                @YM08650 02660002
+         LCLA  &RIGHT,&LEFT                                    @YM08650 02670002
+         LCLC  &MASKCNT,&CONT,&IDTEMP                          @G64QPSJ 02680064
+         LCLA  &K,&L                                           @ZA15722 02682064
+         ACTR  10000000                                        @YM08650 02690002
+ SGIEF211                                                               02720003
+.*      NOTE -                                                          02723064
+.*           IF IT IS DESIRED TO ELIMINATE SGIEF211 IN ORDER TO         02726064
+.*           ELIMINATE OLD NAME AND MASK TABLES,  THE ONLY DEPENDENCE   02729064
+.*           WE HAVE ON SGIEF211 PRESENCE IS THE  COMPUTATION OF        02732064
+.*           UCB LOOKUP VALUES DONE THERE.  THAT  COULD BE COPIED INTO  02735064
+.*           THIS CODE JUST BEFORE  SGIEF214 CALL.  THEN MERELY CHANGE  02738064
+.*           NAME OF THIS MACRO TO SGIEF211 AND CHANGE IS COMPLETED.    02741064
+         AIF   (NOT &SGQUITB).A  EXIT IF 211 FAILED SYSGEN              02750002
+         MEXIT                                                          02800002
+.A       ANOP                                                           02850002
+&SGCTRLC(6)  SETC  'IEFEDTTB'                                           02860064
+ COPY SGASMPAK                                                          03050002
+.*                                                             @G64IPSJ 03080064
+.*  CALL SGIEF212 TO PUNCH MACRO CALL FOR SGIEF010 FOR         @G64IPSJ 03130064
+.*  DEVICE ID, NAME AND DEVICE TYPE ASSOCIATION.                        03180064
+.*                                                                      03230064
+         SGIEF212                                                       03280064
+.*                                                             @YM08650 07570802
+.***********************************************************   @YM08650 07571602
+.*  PROCESSING FOR DUMMY DEVICES                               @YM08650 07572402
+.*                                                             @YM08650 07573202
+&A       SETA  0                  INITIALIZE DUMMY COUNTER     @YM08650 07574002
+&I       SETA  0                  INITIALIZE DEVICE INDEX      @YM08650 07574802
+.LOOP1   ANOP                                                  @YM08650 07575602
+&I       SETA  &I+1               INCREMENT DEVICE INDEX       @YM08650 07576402
+         AIF   (&I GT &SGCNTRA(3)).ENDDUM   CHECK FOR END      @YM08650 07577202
+.*                                OF DEVICES                   @YM08650 07578002
+&K       SETA  &SGDASPA(&I)      GET SUBSCRIPT OF IODEVICE     @ZA15722 07578151
+.*                                 MACRO SWITCHES              @YA00820 07578403
+         AIF   (NOT &SGDUMMY(&K)).LOOP1     BRANCH IF THIS IS  @YM08650 07578803
+.*                                NOT A DUMMY DEVICE           @YM08650 07579602
+&B       SETA  &SGDADRA(&I)/X'400000'       GET BITS 23-30     @YM08650 07581202
+.*                                (ID FIELD)                   @YM08650 07581602
+         AIF    (&B NE 0).LOOP1   A DUMMY DEVICE NOT YET       @YM08650 07582002
+.*                                PROCESSED WILL HAVE 0        @YM08650 07582802
+.*                                IN BITS 23-30 OF SGDADRA     @YM08650 07583602
+.INDEXLP ANOP                                                  @ZA52851 07584003
+&SGCNTRA(10) SETA &SGCNTRA(10)+1  CREATE NEW GENERIC ID CODE   @YM08650 07584402
+         AIF ('&SGDTYPC(&SGCNTRA(10))' NE '').INDEXLP          @ZA52851 07584603
+.*                                ENTRY IS VALID, GET ANOTHER  @ZA52851 07584803
+&SGDADRA(&I) SETA &SGDADRA(&I)+&SGCNTRA(10)*X'400000'          @YM08650 07585202
+.*                                INSERT ID IN BITS 23-30      @YM08650 07586002
+&SGGENDB(&SGCNTRA(10)) SETB 1     ASSIGN NEW TYPE FLAG AND     @G64IPSJ 07586864
+.*                                FLAG IT PRESENT              @YM08650 07587602
+&A       SETA    &A+1             INCREMENT DUMMY DEVICE CTR.  @YM08650 07588402
+&Q       SETA  &SGDEVTP(&K)       CHARS. 1-6 OF DEVTYPE        @YM08650 07589203
+&R       SETA  &SGETABA(&K)       CHARS. 7-8 OF DEVTYPE ARE    @YM08650 07590003
+.*                                IN LOW ORDER BYTES           @YM08650 07590802
+&S       SETA  &R-(&R/256)*256    CHARS. 7-8 WITH ERP INDEX    @ZA47060 07591603
+.*                                SHIFTED OUT                  @ZA47060 07592403
+&RIGHT   SETA  (&Q-(&Q/256)*256)*256+&S RIGHT HALF OF DEVTYPE  @ZA47060 07593203
+&LEFT    SETA  &Q/256             LEFT HALF OF DEVTYPE         @ZA47060 07594003
+&MASKCNT SETC  '           X'       DETERMINE CONTINUATION     @YM08650 07594802
+&J       SETA  K'&SGCNTRA(10)+K'&A+K'&LEFT+K'&RIGHT   COLUMN   @YM08650 07595602
+&CONT    SETC  '&MASKCNT'(&J-4,17-&J)                          @YM08650 07596402
+ PUNCH '               &SGCNTRA(10),DMY&A,&LEFT,&RIGHT,                X07597202
+                                &CONT'                                  07599302
+.*       PUNCH CALL TO SGIEF010 FOR THIS DUMMY DEVICE          @YM08650 07602002
+&T       SETA  &I                 SET COMPARISON DEVICE INDEX  @YM08650 07604002
+.LOOP2   ANOP                                                  @YM08650 07606002
+&T       SETA  &T+1               INCREMENT COMPARISON INDEX   @YM08650 07608002
+         AIF   (&T GT &SGCNTRA(3)).LOOP1  BRANCH IF END OF     @YM08650 07610002
+.*                                DEVICES                      @YM08650 07612002
+&L       SETA  &SGDASPA(&T)       GET SUBSCRIPT OF IODEVICE    @ZA15722 07612351
+.*                                MACRO SWITCHES               @YA00820 07613203
+         AIF   (NOT &SGDUMMY(&L)).LOOP2   BRANCH IF NOT DUMMY  @YM08650 07614003
+&B       SETA  &SGDADRA(&T)/X'400000'       GET BITS 23-30     @YM08650 07618002
+         AIF   (&B NE 0).LOOP2    DUMMY DEVICE NOT YET         @YM08650 07620002
+.*                                PROCESSED WILL HAVE 0        @YM08650 07622002
+.*                                IN BITS 23-30                @YM08650 07624002
+&X       SETA  &SGDEVTP(&L)       CHARS. 1-6 OF DEVTYPE        @YM08650 07626003
+&Y       SETA  &SGETABA(&L)       CHARS. 7-8 OF DEVTYPE ARE    @YM08650 07628003
+.*                                IN LOW ORDER BYTES           @YM08650 07630002
+&Z       SETA  &Y-(&Y/256)*256    CHARS. 7-8 WITH ERP INDEX    @ZA47060 07632003
+.*                                SHIFTED OUT                  @ZA47060 07634003
+         AIF   (&X NE &Q OR &Z NE &S).LOOP2  SAME TYPE DUMMY?  @ZA47060 07636003
+&SGDADRA(&T) SETA &SGDADRA(&T)+&SGCNTRA(10)*X'400000'          @YM08650 07638002
+.*                                WITH SAME ID                 @YM08650 07650002
+         AGO   .LOOP2             CHECK FOR MORE OF SAME TYPE  @YM08650 07656002
+.ENDDUM  ANOP                                                  @YM08650 07662002
+ PUNCH '               LAST'                                   @YM08650 07668002
+.*                                                             @YM08650 07674002
+.********************************************************      @YM08650 07680002
+    SGIEF214                                                            07686002
+    SGIEF215   DUMMY=&A                                        @G64IPSJ 07689064
+ PUNCH ' SGIEF014'                                                      08200002
+&IDTEMP  SETC  '&ID'                   COPY ID                 @G64QPSJ 08220064
+         AIF    (NOT &GETB(3)).B       IF NOT IOGEN, USE INPUT @G64QPSJ 08250064
+.*                                       VALUE FROM CALL       @G64QPSJ 08258064
+&IDTEMP  SETC  'IOGEN'                 SET IOGEN VALUE         @G64QPSJ 08266064
+.B       ANOP                                                  @G64QPSJ 08274064
+ PUNCH ' SGIEF016    &IDTEMP '                                 @G64QPSJ 08282064
+ PUNCH ' SGIEF017 '                                                     08300002
+ PUNCH ' END '                                                          08350002
+ PUNCH '/*'                                                             08400002
+         MEND                                                           09000002

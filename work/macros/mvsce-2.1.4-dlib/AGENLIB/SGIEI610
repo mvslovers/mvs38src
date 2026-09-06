@@ -1,0 +1,131 @@
+          MACRO                                                         00800037
+          SGIEI610                                                      01600037
+.* THIS IS ONE OF A SERIES OF MACROS ADDED IN SU32. THEY ARE CALLED     02400037
+.* IN JOB 6 OF GENERATE, AFTER ALL THE WORK IS DONE; ONLY THE LISTPDS   03200037
+.* AND LISTVTOC STEPS REMAIN.  COMPONENTS WHICH NORMALLY DO NOT HAVE    04000037
+.* SYSGEN SUPPORT CAN REPLACE ONE OF THESE DUMMYS WITH AN INNER TO      04800037
+.* INCLUDE THEIR MATERIAL INTO THE NEW SYSTEM.                          05600037
+.*                                                                      06400037
+.* THESE MACROS ARE CALLED ON A COMPLETE GENERATION (GENTYPE=ALL) ONLY. 07200037
+.*                                                                      08000037
+.* CHANGES -- G32DSVN (CREATION)                                        08800037
+.*           @ZA31697                                                   09600037
+         MNOTE *,'DUMMY VERSION OF SGIEI610 EXECUTED.'                  10400037
+         MEND                                                           11200037
+.*                                                                      12000037
+.* THIS MACRO IS A SAMPLE TO SHOW TYPICAL USE. IT HAS MANY EXTRA        12800037
+.* COMMENT CARDS WITH NOTES; THEY MAY BE DELETED FROM A REAL MACRO.     13600037
+.* EDITS, COPYS, IEBUPDTES MAY BE DONE. THIS SAMPLE SHOWS ONLY EDITS;   14400037
+.* SAMPLES OF OTHER WORK MAY BE FOUND IN VARIOUS SYS1.AGENLIB MEMBERS.  15200037
+.*                                                                      16000037
+.* THE FOLLOWING COMMENT CARD MUST BE CHANGED TO PROPERLY DESCRIBE      16100037
+.* THE COMPONENT THAT OWNS THE REAL VERSION OF SGIEI6XX. PUT THE        16200037
+.* COMPONENT ID IN COLS 63-67.  THIS CARD IS FOR APAR ROUTING.          16300037
+*** SGIEI610 *** COMP NAME                                *** SC1?? *** 16400037
+.* **************************************************************       16800037
+.* *   XXXX-XXX COPYRIGHT STATEMENTS IF REQUIRED                *       17600037
+.* **************************************************************       18400037
+          COPY SGGBLPAK                 GET REQUIRED GLOBALS            19200037
+.*                                                                      20000037
+.* THE FOLLOWING RENAME STEP IS NEEDED AS THE TARGET DATA SETS          20800037
+.* ALREADY HAVE THEIR ''SYS1'' PREFIXES.  AN ALTERNATE PREFIX,          21600037
+.* SPECIFIED BY THE CUSTOMER ON THE GENERATE MACRO CALL, IS IN THE      22400037
+.* GLOBAL ''&SGCTRLC(40)''.                                             23200037
+.* ALL DATA SETS TO BE MODIFIED SHOULD BE RENAMED IN THIS STEP.         24000037
+.* **************************************************************       24050037
+.* **** WARNING **** WARNING **** WARNING **** WARNING ****    @ZA31697 24100037
+.* **************************************************************       24150037
+.* THE RENAME STEP REQUIRES NO OTHER JOBS TO BE ENQUED ON THE  @ZA31697 24200037
+.*  SYSTEM DATASETS TO BE RENAMED.                             @ZA31697 24250037
+.* **************************************************************       24300037
+.*                                                                      24800037
+.*  RENAME LPALIB TO "INDEX".LPALIB                                     25600037
+.*  RENAME LINKLIB TO "INDEX".LINKLIB                                   26400037
+.*                                                                      27200037
+         AIF   ('&SGCTRLC(40)' EQ 'SYS1').BYPAS1 RENAME NOT NEEDED      28000037
+&SGCTRLA(1) SETA  &SGCTRLA(1)+1     INCREMENT STEP COUNTER              28800037
+.*                                                                      29600037
+ PUNCH '//LPA&SGCTRLA(1) EXEC PGM=IEHPROGM,COND=(8,LT)'        @ZA31697 30400037
+ PUNCH '//SYSPRINT DD SYSOUT=&SGCTRLC(41)'                              31200037
+ PUNCH '//LPALIB  DD VOLUME=(,RETAIN,SER=&SGDSVLC(12)),UNIT=&SGDSUNC(12X32000037
+               ),DISP=OLD'                                              32800037
+ PUNCH '//LINKLIB DD VOLUME=(,RETAIN,SER=&SGDSVLC(6).),UNIT=&SGDSUNC(6)X33600037
+               ,DISP=OLD'                                               34400037
+ PUNCH '//SYSIN DD *'                                                   35200037
+ PUNCH ' RENAME NEWNAME=&SGCTRLC(40)..LPALIB,DSNAME=SYS1.LPALIB,       X36000037
+                              XXXXXX'                          @ZA31697 36800037
+ PUNCH '               VOL=&SGDSUNC(12)=&SGDSVLC(12)'                   36850037
+ PUNCH ' RENAME NEWNAME=&SGCTRLC(40)..LINKLIB,DSNAME=SYS1.LINKLIB,     X36900037
+                              XXXXXX'                          @ZA31697 36950037
+ PUNCH '               VOL=&SGDSUNC(6)=&SGDSVLC(6)'                     40000037
+ PUNCH '/*'                                                             40800037
+.BYPAS1  ANOP                                                           41600037
+.* THE FOLLOWING VALUES ARE USED BY ''SGLEDPK1'' TO BUILD THE LINKEDIT  42400037
+.* JCL. SET ONLY AS MANY ''LINKEDIT ATTRIBUTE'' GLOBALS AS ARE NEEDED.  43200037
+.* THE GLOBALS ARE NULLED AFTER USE, IN SGLEDPK2.                       44000037
+.* NOTE THAT LIST AND XREF ARE ALWAYS PRESENT.                          44800037
+.* SEE LISTING OF SGLEDPK1 FOR ADDITIONAL DETAILS                       45600037
+&SGCTRLC(10) SETC ',LET'   OPTIONS IN   LINKEDIT ATTRIBUTE              46400037
+&SGCTRLC(11) SETC ',RENT'  ANY ORDER    LINKEDIT ATTRIBUTE              47200037
+&SGCTRLC(12) SETC ',OPT'                LINKEDIT ATTRIBUTE              48000037
+&SGCTRLC(13) SETC ',OPT'   NOTE COMMA   LINKEDIT ATTRIBUTE              48800037
+&SGCTRLC(14) SETC ',OPT'                LINKEDIT ATTRIBUTE              49600037
+&SGCTRLC(9)  SETC 'LPALIB'              TARGET LIBRARY NAME             50400037
+&SGCTRLC(8)  SETC '&SGCTRLC(19)'        TARGET UNIT TYPE                51200037
+&SGCTRLC(7)  SETC '&SGCTRLC(20)'        TARGET VOLID                    52000037
+.*                                                                      52800037
+.*   NEW CODE INTO SYS1.LPALIB                                          53600037
+.*                                                                      54400037
+.* NOTE THAT THE DDNAME USED BELOW MUST MATCH THE NAME OF THE           55200037
+.* DATASET, AS SHOWN IN SAMPLE.  THIS IS AN SMP REQUIREMENT.            56000037
+          COPY SGLEDPK1                 GENERATE LINKEDIT JCL PART 1    56800037
+ PUNCH '//AOSXX DD DSN=SYS1.AOSXX,DISP=SHR' AS MANY AS NEEDED           57600037
+          COPY SGLEDPK2                 JCL PART 2; RESETS GLOBALS      58400037
+.*                                                                      59200037
+ PUNCH ' INCLUDE AOSXX(MODULE1)'        WATCH FOR CLOSING QUOTE         60000037
+ PUNCH ' INCLUDE AOSXX(MODULE2)'        ON THE PUNCH STATEMENTS         60800037
+ PUNCH ' INCLUDE AOSXX(MODULE3)'                                        61600037
+ PUNCH ' ORDER MODULE1(P)'                                              62400037
+ PUNCH ' ALIAS ALIAS1,ALIAS2                                            63200037
+ PUNCH ' ENTRY ENTNAME0'                                                64000037
+ PUNCH ' NAME LOADNAME(R)'                                              64800037
+ PUNCH '/*'                                                             65600037
+.*                                                                      66400037
+.*  NEW CODE INTO SYS1.LINKLIB                                          67200037
+.*                                                                      68000037
+&SGCTRLC(7)  SETC '&SGCTRLC(32)'        VOLID                           68800037
+&SGCTRLC(8)  SETC '&SGCTRLC(31)'        UNIT TYPE                       69600037
+&SGCTRLC(9)  SETC 'LINKLIB'             DATA SET NAME                   70400037
+&SGCTRLC(10) SETC ',LET'                LINKEDIT ATTRIBUTE              71200037
+         COPY SGLEDPK1                                                  72000037
+ PUNCH '//AOSYY DD DSN=SYS1.AOSYY,DISP=SHR'                             72800037
+         COPY SGLEDPK2                                                  73600037
+ PUNCH ' INCLUDE AOSYY(MODULE4)'                                        74400037
+ PUNCH ' INCLUDE AOSYY(MODULE5)'                                        75200037
+ PUNCH ' ALIAS ALIAS3,ALIAS4                                            76000037
+ PUNCH ' ENTRY ENTRYNAM'                                                76800037
+ PUNCH ' SETCODE AC(1)'                                                 77600037
+ PUNCH ' NAME LOADNAME(R)'                                              78400037
+ PUNCH '/*'                                                             79200037
+.*                                                                      80000037
+.*  RENAME "INDEX".LPALIB TO SYS1.LPALIB                                80800037
+.*  RENAME "INDEX".LINKLIB TO SYS1.LINKLIB                              81600037
+.*                                                                      82400037
+         AIF   ('&SGCTRLC(40)' EQ 'SYS1').BYPAS2 NO NEED TO RENAME      83200037
+&SGCTRLA(1) SETA  &SGCTRLA(1)+1     INCREMENT STEP COUNTER              84000037
+ PUNCH '//LPA&SGCTRLA(1) EXEC PGM=IEHPROGM,COND=(8,LT)'        @ZA31697 84800037
+ PUNCH '//SYSPRINT DD SYSOUT=&SGCTRLC(41)'                              85600037
+ PUNCH '//LPALIB  DD VOLUME=(,RETAIN,SER=&SGDSVLC(12)),UNIT=&SGDSUNC(12X86400037
+               ),DISP=OLD'                                              87200037
+ PUNCH '//LINKLIB  DD VOLUME=(,RETAIN,SER=&SGDSVLC(6)),UNIT=&SGDSUNC(6)X88000037
+               ,DISP=OLD'                                               88800037
+ PUNCH '//SYSIN DD *'                                                   89600037
+ PUNCH ' RENAME NEWNAME=SYS1.LPALIB,DSNAME=&SGCTRLC(40)..LPALIB,       X90400037
+                              XXXXXX'                          @ZA31697 91200037
+ PUNCH '               VOL=&SGDSUNC(12)=&SGDSVLC(12)'                   91250037
+ PUNCH ' RENAME NEWNAME=SYS1.LINKLIB,DSNAME=&SGCTRLC(40)..LINKLIB,     X91300037
+                              XXXXXX'                          @ZA31697 91350037
+ PUNCH '               VOL=&SGDSUNC(6)=&SGDSVLC(6)'                     94400037
+ PUNCH '/*'                                                             95200037
+.BYPAS2  ANOP                                                           96000037
+         MEND                                                           96800037

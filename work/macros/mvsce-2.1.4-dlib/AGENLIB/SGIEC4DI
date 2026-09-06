@@ -1,0 +1,250 @@
+         MACRO                                                          00050003
+         SGIEC4DI                                                       00100002
+.*  LAST UPDATE = 11/16/79              FEATURE FDM1133        @G38ESMH 00110000
+.*               CHANGE ACTIVITY                                        00112002
+.*                  VS2-2                                               00114002
+.*                                                               YM2007 00116002
+.*                                                               YM3002 00118002
+.*                  VS2-3                                               00118403
+.*                                                             @Z30TSMI 00118803
+.*                  VS2-3.8                                             00118900
+.*                                                             @ZA37312 00119000
+.*                                      FEATURE FDM1133        @G38ESMH 00119200
+.*                                                                      00122500
+.*  THIS MACRO LINKEDITS SELECTED MODULES INTO LARGE LOAD MODULES       00125800
+.*  IT WAS CHANGED BY @Z30TSMI TO INCLUDE THE LINKEDITS FOR SAM         00129200
+         COPY SGGBLPAK                                                  00150002
+&SGCTRLC(6)  SETC  ''                   SET LOAD MODULE NAME            00160002
+&SGCTRLC(7)  SETC  '&SGCTRLC(20)'       SET VOL NO. FOR SYSRES   YM3002 00170002
+&SGCTRLC(8)  SETC  '&SGCTRLC(19)'       SET UNIT NAME FOR SYSRES YM3002 00180002
+&SGCTRLC(9)  SETC  'LPALIB'             SET OUTPUT DATA SET NAME        00190002
+&SGCTRLC(10) SETC  ',RENT'              SET LINKEDIT PARAMETERS         00192002
+&SGCTRLC(11) SETC  ',REFR'                                              00194002
+         COPY SGLEDPK1                                                  00200002
+         PUNCH  '//AOSD7  DD  DISP=SHR,VOLUME=(,RETAIN),DSN=SYS1.AOSD7' 00250002
+         PUNCH  '//AOSD0  DD  DISP=SHR,VOLUME=(,RETAIN),DSN=SYS1.AOSD0' 00260003
+         COPY SGLEDPK2                                                  00300002
+.*                                                                      00310003
+.*********************************************************************  00320003
+.*                                                                      00330003
+.*       LINK EDIT THE BDAM LARGE LOAD MODULES                          00340003
+.*                                                                      00342003
+.*********************************************************************  00344003
+.*                                                                      00346003
+         PUNCH ' INCLUDE AOSD7(IGCT005C,IGCT105C)'                      00350002
+         PUNCH ' ENTRY IGCT005C'                                        00360002
+         PUNCH ' NAME IGCT005C(R)'                                      00400002
+         PUNCH ' INCLUDE AOSD7(IGG019KA,IGG019KE,IGG019KC,IGG019KQ)'    00450002
+         PUNCH ' INCLUDE AOSD7(IGG019KI,IGG019KK,IGG019KF,IGG019KW)'    00500002
+         PUNCH ' ENTRY IGG019KA'                                        00550002
+         PUNCH ' NAME IGG019KA(R)'                                      00600002
+         PUNCH ' INCLUDE AOSD7(IGG019KJ,IGG019KC,IGG019KQ)'             00650002
+         PUNCH ' INCLUDE AOSD7(IGG019KR,IGG019KW)'                      00700002
+         PUNCH ' ENTRY IGG019KJ'                                        00750002
+         PUNCH ' NAME IGG019KJ(R)'                                      00800002
+         PUNCH ' INCLUDE AOSD7(IGG019KO,IGG019LA)'                      00850002
+         PUNCH ' ENTRY IGG019KO'                                        00900002
+         PUNCH ' NAME IGG019KO(R)'                                      00950002
+         PUNCH ' INCLUDE AOSD7(IGG019KM,IGG019KY)'                      01000002
+         PUNCH ' ENTRY IGG019KM'                                        01050002
+         PUNCH ' NAME IGG019KM(R)'                                      01100002
+         PUNCH ' INCLUDE AOSD7(IGG019KN,IGG019KY)'                      01150002
+         PUNCH ' ENTRY IGG019KN'                                        01200002
+         PUNCH ' NAME IGG019KN(R)'                                      01250002
+.*                                                                      01300003
+.*********************************************************************  01350003
+.*                                                                      01400003
+.*       LINK EDIT THE BDAM CREATE OPEN EXECUTORS                       01450003
+.*                                                                      01500003
+.*********************************************************************  01550003
+.*                                                                      01600003
+         PUNCH ' INCLUDE AOSD7(IGG0191L,IGG0191M,IGG0199L) '            01650003
+         PUNCH ' ORDER   IGG0191L(P),IGG0191M,IGG0199L     '            01700003
+         PUNCH ' ALIAS   IGG0191M,IGG0199L   '                          01750003
+         PUNCH ' ENTRY   IGG0191L               EXPECT IEW046I MESSAGES*01800003
+                FOR:           *'                                       01810003
+         PUNCH '                                IGG0196M '              01820003
+         PUNCH ' NAME    IGG0191L(R)    '                               01850003
+.*                                                                      01900003
+.*********************************************************************  01950003
+.*                                                                      02000003
+.*       LINK EDIT THE SAM OPEN EXECUTORS                               02050003
+.*                                                                      02100003
+.*********************************************************************  02150003
+.*                                                                      02200003
+.********    STAGE 1                                                    02250003
+.*                                                                      02300003
+         PUNCH ' INCLUDE AOSD0(IGG0191A,IGG0196I,IGG0196A) '   @ZA37312 02350000
+         PUNCH ' ORDER   IGG0191A(P),IGG0196I,IGG0196A  '      @ZA37312 02370000
+         PUNCH ' ALIAS   IGG0196I,IGG0196A  '                  @ZA37312 02390000
+         PUNCH ' INCLUDE AOSD0(IGG0196Q)  '                    @ZA37312 02410000
+         PUNCH ' ORDER   IGG0196Q    '                         @ZA37312 02430000
+         PUNCH ' ALIAS   IGG0196Q    '                         @ZA37312 02450000
+         PUNCH ' INCLUDE AOSD0(IGG0191N)  '                    @ZA37312 02470000
+         PUNCH ' ORDER   IGG0191N(P)   '                       @ZA37312 02490000
+         PUNCH ' ALIAS   IGG0191N    '                         @ZA37312 02510000
+         PUNCH ' INCLUDE AOSD0(IGG0191Y,IGG0191B,IGG0196B)   '          02530000
+         PUNCH ' ORDER   IGG0191Y(P),IGG0191B,IGG0196B   '     @ZA37312 02550000
+         PUNCH ' ALIAS   IGG0191Y,IGG0191B,IGG0196B      '              02600003
+         PUNCH ' INCLUDE AOSD0(IGG0191I,IGG0193I)   '                   02650003
+         PUNCH ' ORDER   IGG0191I,IGG0193I    '                         02700003
+         PUNCH ' ALIAS   IGG0191I,IGG0193I    '                         02750003
+         PUNCH ' INCLUDE AOSD0(IGG0191T,IGG0191U,IGG0191V)   '          02800003
+         PUNCH ' ORDER   IGG0191T(P),IGG0191U,IGG0191V    '             02850003
+         PUNCH ' ALIAS   IGG0191T,IGG0191U,IGG0191V   '                 02900003
+         PUNCH ' INCLUDE AOSD0(IGG0197U,IGG0197E,IGG0197F)  '           02950003
+         PUNCH ' ORDER   IGG0197U(P),IGG0197E,IGG0197F   '              03000003
+         PUNCH ' ALIAS   IGG0197U,IGG0197E,IGG0197F    '                03050003
+         PUNCH ' ENTRY   IGG0191A               EXPECT IEW046I MESSAGES*03078000
+                FOR:           *'                                       03084000
+         PUNCH '                                IGG0196M,IGG01911,IGG01*03090000
+               97L,IGG0191D,   *'                                       03096000
+         PUNCH '                                IGG0191G,IGG0191S,IGG01*03102000
+               91J,IGG0191K,   *'                                       03108000
+         PUNCH '                                IGG0191L,IGG0191P,IGG01*03114000
+               91Q,IGG0191R,   *'                                       03120000
+         PUNCH '                                IGG0196S,IGG0197A,IGG01*03126000
+               97C,IGG0191W,   *'                                       03132000
+         PUNCH '                                IGG0191X,IGG0197N,IGG01*03138000
+               97V,IGG0196R '                                           03144000
+         PUNCH ' NAME    IGG0191A(R)    '                               03150003
+.*                                                                      03200003
+.********    STAGE 2 AND 3                                              03250003
+.*                                                                      03300003
+         PUNCH ' INCLUDE AOSD0(IGG01911,IGG0191C,IGG01918)  '           03350000
+         PUNCH ' ORDER   IGG01911(P),IGG0191C,IGG01918   '              03390000
+         PUNCH ' ALIAS   IGG0191C,IGG01918    '                         03430000
+         PUNCH ' INCLUDE AOSD0(IGG0191S,IGG0191H,IGG0199K,IGG0191R) '   03470000
+         PUNCH ' ORDER   IGG0191S(P),IGG0191H,IGG0199K,IGG0191R   '     03510000
+         PUNCH ' ALIAS   IGG0191S,IGG0191H,IGG0199K,IGG0191R     '      03550000
+         PUNCH ' INCLUDE AOSD0(IGG0191X,IGG0191Q,IGG01916)  '           03590000
+         PUNCH ' ORDER   IGG0191X(P),IGG0191Q,IGG01916   '              03630000
+         PUNCH ' ALIAS   IGG0191X,IGG0191Q,IGG01916   '                 03670000
+         PUNCH ' INCLUDE AOSD0(IGG01992,IGG01994)   '                   03710000
+         PUNCH ' ORDER   IGG01992,IGG01994  '                           03750000
+         PUNCH ' ALIAS   IGG01992,IGG01994  '                           03790000
+         PUNCH ' INCLUDE AOSD0(IGG0191W,IGG0191K,IGG01913)  '           03830000
+         PUNCH ' ORDER   IGG0191W(P),IGG0191K,IGG01913  '               03870000
+         PUNCH ' ALIAS   IGG0191W,IGG0191K,IGG01913  '                  03910000
+         PUNCH ' INCLUDE AOSD0(IGG01919,IGG01926)   '                   03950000
+         PUNCH ' ORDER   IGG01919,IGG01926   '                          03990000
+         PUNCH ' ALIAS   IGG01919,IGG01926   '                          04030000
+         PUNCH ' ENTRY   IGG01911               EXPECT IEW046I MESSAGES*04070000
+                FOR:           *'                                       04110000
+         PUNCH '                                IGG0196M,IGG0191G,IGG01*04150000
+               91J,IGG0191D '                                           04190000
+         PUNCH ' NAME    IGG01911(R)   '                                04230000
+.*                                                                      04270000
+         PUNCH ' INCLUDE AOSD0(IGG0191D,IGG0199O,IGG0191O) '            04310000
+         PUNCH ' ORDER   IGG0191D(P),IGG0199O,IGG0191O  '               04350000
+         PUNCH ' ALIAS   IGG0199O,IGG0191O   '                          04390000
+         PUNCH ' INCLUDE AOSD0(IGG0191G,IGG0196K,IGG01910,IGG01917) '   04430000
+         PUNCH ' ORDER   IGG0191G(P),IGG0196K,IGG01910,IGG01917  '      04470000
+         PUNCH ' ALIAS   IGG0191G,IGG0196K,IGG01910,IGG01917  '         04510000
+         PUNCH ' INCLUDE AOSD0(IGG0191J,IGG0196L,IGG01915)  '           04550000
+         PUNCH ' ORDER   IGG0191J(P),IGG0196L,IGG01915  '               04590000
+         PUNCH ' ALIAS   IGG0191J,IGG0196L,IGG01915   '                 04630000
+         PUNCH ' INCLUDE AOSD0(IGG01991,IGG01993)  '                    04670000
+         PUNCH ' ORDER   IGG01991,IGG01993  '                           04710000
+         PUNCH ' ALIAS   IGG01991,IGG01993  '                           04750000
+         PUNCH ' INCLUDE AOSD0(IGG0191P,IGG0196P,IGG0191Z)  '           04790000
+         PUNCH ' ORDER   IGG0191P(P),IGG0196P,IGG0191Z   '              04830000
+         PUNCH ' ALIAS   IGG0191P,IGG0196P,IGG0191Z   '                 04870000
+         PUNCH ' INCLUDE AOSD0(IGG01923,IGG01912)  '                    04910000
+         PUNCH ' ORDER   IGG01923,IGG01912  '                           04950000
+         PUNCH ' ALIAS   IGG01923,IGG01912  '                           04990000
+         PUNCH ' ENTRY   IGG0191D               EXPECT IEW046I MESSAGES*05030000
+                FOR:           *'                                       05070000
+         PUNCH '                                IGG0196M,IGG01911,IGG01*05110000
+               918 '                                                    05150000
+         PUNCH ' NAME    IGG0191D(R)   '                                05190000
+.*                                                             @ZA40410 05300100
+.**************************************************************@ZA40410 05300200
+.*                                                             @ZA40410 05300300
+.*       LINK EDIT FOR SAM EOB ROUTINES, USER TOTALING AND     @ZA40410 05300400
+.*       NON-USER TOTALING HAVE BEEN COMBINED.                 @ZA40410 05300500
+.*                                                             @ZA40410 05300600
+.**************************************************************@ZA40410 05300700
+.*                                                             @ZA40410 05300800
+         PUNCH ' INCLUDE AOSD0(IGG019CD) '                     @ZA40410 05300900
+         PUNCH ' ALIAS   IGG019TD '                            @ZA40410 05301000
+         PUNCH ' NAME    IGG019CD(R) '                         @ZA40410 05301100
+         PUNCH ' INCLUDE AOSD0(IGG019CV) '                     @ZA40410 05301200
+         PUNCH ' ALIAS   IGG019TV '                            @ZA40410 05301300
+         PUNCH ' NAME    IGG019CV(R) '                         @ZA40410 05301400
+         PUNCH ' INCLUDE AOSD0(IGG019C2) '                     @ZA40410 05301500
+         PUNCH ' ALIAS   IGG019T2 '                            @ZA40410 05301600
+         PUNCH ' NAME    IGG019C2(R) '                         @ZA40410 05301700
+.*                                                             @ZA46358 05301800
+.*                                                                      05651000
+.********************************************************************** 05652000
+.*                                                                      05653000
+.*       LINK EDIT THE STOW MODULES                                     05654000
+.*                                                                      05655000
+.********************************************************************** 05656000
+.*                                                                      05657000
+         PUNCH ' INCLUDE AOSD0(IGC0002A,IGG0210A,IGG021AB)  '           05700003
+         PUNCH ' ORDER   IGC0002A(P),IGG0210A,IGG021AB   '              05750003
+         PUNCH ' ENTRY   IGC0002A   '                                   05800003
+         PUNCH ' NAME    IGC0002A(R)   '                                05850003
+.*                                                                      05900003
+.********************************************************************** 05950003
+.*                                                                      06000003
+.*       LINK EDIT THE SYNADAF MODULES                                  06050003
+.*                                                                      06100003
+.********************************************************************** 06150003
+.*                                                                      06200003
+         PUNCH ' INCLUDE AOSD0(IGC0006H,IGC0106H,IGC0206H,IGC0306H)  '  06250003
+         PUNCH ' INCLUDE AOSD0(IGC0406H,IGC0506H,IGC0606H,IGC0706H)  '  06300003
+         PUNCH ' INCLUDE AOSD0(IGC0806H,IGC0906H)   '                   06350003
+         PUNCH ' ORDER   IGC0006H(P),IGC0906H,IGC0206H  '               06400003
+         PUNCH ' ORDER   IGC0106H,IGC0506H   '                          06450003
+         PUNCH ' ORDER   IGC0306H(P),IGC0406H,IGC0606H  '               06500003
+         PUNCH ' ORDER   IGC0706H,IGC0806H   '                          06550003
+         PUNCH ' ENTRY   IGC0006H   '                                   06600003
+         PUNCH ' NAME    IGC0006H(R)   '                                06650003
+.*                                                                      06700003
+.********************************************************************** 06750003
+.*                                                                      06800003
+.*       LINK EDIT THE SAM CLOSE EXECUTORS                              06850003
+.*                                                                      06900003
+.********************************************************************** 06950003
+.*                                                                      07000003
+         PUNCH ' INCLUDE AOSD0(IGG0201A,IGG0201B,IGG0201X)  '           07050003
+         PUNCH ' INCLUDE AOSD0(IGG0201Y,IGG0201Z)   '                   07100003
+         PUNCH ' ORDER   IGG0201Z(P),IGG0201Y,IGG0201B '                07150003
+         PUNCH ' ALIAS   IGG0201Y,IGG0201B  '                           07200003
+         PUNCH ' ORDER   IGG0201A(P),IGG0201X   '                       07250003
+         PUNCH ' ALIAS   IGG0201A,IGG0201X   '                          07300003
+         PUNCH ' ENTRY   IGG0201Z               EXPECT IEW046I MESSAGES*07360003
+                FOR:           *'                                       07370003
+         PUNCH '                                IGG0201P,IGG0206M '     07380003
+         PUNCH ' NAME    IGG0201Z(R)    '                               07400003
+.*                                                                      07550000
+.********************************************************************** 07600000
+.*                                                                      07650000
+.*       LINK EDIT THE SET PRINT MODULES                       @Z40MSMI 07700000
+.*                                                                      07750000
+.********************************************************************** 07800000
+.*                                                                      07850000
+         PUNCH ' INCLUDE AOSD0(IGC0008A,IGG08101,IGG08102,IGG08103)  '  07900000
+         PUNCH ' INCLUDE AOSD0(IGG08104,IGG08110,IGG08111,IGG08112)  '  07950000
+         PUNCH ' INCLUDE AOSD0(IGG08113,IGG08114,IGG08115)   ' @Z40MSMI 08000000
+         PUNCH ' INCLUDE AOSD0(IGG08116,IGG08117)   '          @G38ESMH 11000000
+         PUNCH ' ORDER   IGC0008A(P),IGG08101,IGG08102  '      @Z40MSMI 11050000
+         PUNCH ' ALIAS   IGG08101,IGG08102   '                 @Z40MSAP 11100000
+         PUNCH ' ORDER   IGG08103,IGG08104   '                 @G38ESMH 11150000
+         PUNCH ' ALIAS   IGG08103,IGG08104   '                 @Z40MSAP 11200000
+         PUNCH ' ORDER   IGG08110(P),IGG08111   '              @Z40MSMI 11250000
+         PUNCH ' ALIAS   IGG08110,IGG08111   '                 @Z40MSAP 11300000
+         PUNCH ' ORDER   IGG08112,IGG08113   '                 @G38ESMH 11350000
+         PUNCH ' ALIAS   IGG08112,IGG08113   '                 @Z40MSAP 11400000
+         PUNCH ' ORDER   IGG08114,IGG08115   '                 @G38ESMH 11450000
+         PUNCH ' ALIAS   IGG08114,IGG08115   '                 @Z40MSAP 11500000
+         PUNCH ' ORDER   IGG08116,IGG08117   '                 @G38ESMH 11550000
+         PUNCH ' ALIAS   IGG08116,IGG08117   '                 @G38ESMH 11600000
+         PUNCH ' ENTRY   IGC0008A   '                          @Z40MSMI 11650000
+         PUNCH ' NAME    IGC0008A(R)   '                       @Z40MSMI 11700000
+.*                                                             @Z40MSAP 11750000
+         PUNCH '/*'                                            @Z40MSRB 11800000
+         MEND                                                           11850033

@@ -1,0 +1,22 @@
+)F FUNCTION -                                                           00100020
+  THE WHEN COMMAND IS USED TO CAUSE THE CONDITIONAL INITIATION AND/OR   00150020
+  TERMINATION OF COMMAND PROCEDURES BASED ON THE VALUE OF A PREVIOUSLY  00200020
+  ISSUED RETURN CODE.                                                   00250020
+)X SYNTAX -                                                             00300020
+         WHEN   SYSRC('OPER' 'NNNN') 'COMMAND'                          00350020
+  REQUIRED - SYSRC('OPER' 'NNNN')                                       00400020
+  DEFAULTS - IF NO 'COMMAND ' IS SPECIFIED THE END COMMAND IS ASSUMED.  00450020
+)O OPERANDS -                                                           00500020
+  'COMMAND'- SPECIFIES ANY VALID TSO COMMAND WITH ITS ASSOCIATED        00550020
+             PARAMETERS.                                                00600020
+))SYSRC('OPER' 'NNNN')                                                  00650020
+           - SPECIFIES THAT THE PREVIOUS COMMAND PROCESSOR'S RETURN     00700020
+             CODE IS TO BE TESTED.                                      00750020
+    'OPER' - SPECIFIES THE RELATIONAL OPERATOR TO BE USED. IT MAY BE    00800020
+             ANY OF THE FOLLOWING:                                      00850020
+               EQ (EQUAL)               LT (LESS THAN)                  00900020
+               NE (NOT EQUAL)           GE (GREATER THAN OR EQUAL)      00950020
+               LE (LESS THAN OR EQUAL)  NG (NOT GREATER THAN)           01000020
+               GT (GREATER THAN)        NL (NOT LESS THAN)              01050020
+    'NNNN' - THE ONE TO FOUR CHARACTER NUMERIC VALUE TO WHICH THE       01100020
+             RETURN CODE IS EVALUATED.                                  01150020

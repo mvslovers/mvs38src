@@ -1,0 +1,13 @@
+         MACRO                                                          06000020
+         SGIKJ5EC                                                       09000020
+.*C360000                                                      @OZ72316 09050036
+         COPY  SGGBLPAK                                        @OZ72316 09100036
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOST3'                          12000000
+         PUNCH ' SELECT MEMBER=(IGG019TX)'                              15000000
+         PUNCH ' SELECT MEMBER=(IGG019TY,IGG019TZ,IGG019T3,IGG019T4)'   24000020
+         PUNCH ' SELECT MEMBER=(IGG019T5,IGG019T6,IGG019T7,IGG019T8)'   30000020
+         PUNCH ' SELECT MEMBER=(IGG0196S)'                     @OZ72316 30050036
+         AIF (&SGDMGTB(5) EQ 0).NOTCAM                         @OZ72316 30100036
+         PUNCH ' SELECT MEMBER=(IEDAY3,IEEDAY3)'               @OZ72316 30150036
+.NOTCAM  ANOP                                                  @OZ72316 30200036
+         MEND                                                           84000020

@@ -1,0 +1,1073 @@
+         MACRO                                                          00100003
+         DATASET &LIB,&PAGEDSN=,&NAME=,&VOL=,&SPACE=,&PDS=,&MEMBERS=,  X00200002
+               &ABEAPP=,&CHEAPP=,&EOEAPP=,&PCIAPP=,&SIOAPP=,&RESIDNT=, X00300037
+               &SWAPDSN=                                        Z40WSVN 00301037
+         COPY  SGGBLPAK                                                 00400002
+         LCLA  &A,&N,&M,&P,&C,&D,&T                                     00500002
+         LCLC  &S,&APP,&Q                                               00600002
+.****** START OF SPECIFICATIONS *************************************   00601037
+.*                                                                      00602037
+.* MODULE NAME - DATASET                                                00603037
+.*                                                                      00604037
+.* DESCRIPTIVE NAME - SYSTEM DATA SET SPECIFICATION                     00605037
+.*                                                                      00606037
+.* COPYRIGHT - NONE                                                     00607037
+.*                                                                      00608037
+.* STATUS - CHANGE LEVEL 02                                             00609037
+.*                                                                      00610037
+.* FUNCTION -                                                           00611037
+.*       THE DATASET MACRO IS USED TO SPECIFY THE SYSTEM DATA SETS      00612037
+.*       AND THE VOLUMES ON WHICH THE DATA SETS RESIDE. ONE MACRO       00613037
+.*       CALL PER DATA SET.                                             00614037
+.*                                                                      00615037
+.* $F1 = EDS1102, SDPD, 78124, PLR:   PRODUCT LIBRARY RELEASE           00615337
+.*                                                                      00615637
+.* NOTES - N/A                                                          00616037
+.*                                                                      00617037
+.* MODULE TYPE - MACRO                                                  00618037
+.*                                                                      00619037
+.* ENTRY POINT - N/A                                                    00620037
+.*                                                                      00621037
+.* INPUT - THE FOLLOWING PARAMETERS ARE VALID ON THE DATASET MACRO      00622037
+.*             &LIB     - ONE NAME OUT OF A LIST CONSISTING OF:         00623037
+.*                        BRODCAST,CMDLIB,DCMLIB,DUMP00-09,        @F1C 00624037
+.*                        DUPLEXDS,HELP,IMAGELIB,INDMAC,JES3LIB,        00625037
+.*                        LINKLIB,LPALIB,MACLIB,MANX,MANY,NUCLEUS,      00626037
+.*                        PARMLIB,PROCLIB,STGINDEX,SAMPLIB,             00627037
+.*                        SVCLIB,TELCMLIB,UADS,VSCATLG,VTAMLIB,         00628037
+.*                        TCOMMAC.                             @ZA41353 00628337
+.*             &PAGEDSN - UNIQUE VSAM DATA SET, FOR PAGING              00629037
+.*             &SWAPDSN - UNIQUE VSAM DATA SET, FOR SWAP USAGE          00630037
+.*             &NAME    - VSCATLG OR DUPLEX DATA SET NAME               00631037
+.*             &VOL     - THE VOLUME SERIAL NUMBER AND THE DEVICE TYPE  00632037
+.*                        FOR THE LIBRARY SPECIFIED.                    00633037
+.*             &SPACE   - SPACE ALLOCATION PARMS FOR THE DATA SET       00634037
+.*             &PDS     - NAME OF A LIBRARY CONTAINING MODULES, MACROS, 00635037
+.*                        OR PROCEDURES TO BE COPIED TO THIS LIBRARY.   00636037
+.*             &MEMBERS - MEMBER NAMES FROM THE ABOVE PDS TO COPY       00637037
+.*             &ABEAPP  - USER SUPPLIED ABNORMAL END APPENDAGES - RANGE 00638037
+.*             &CHEAPP  - USER SUPPLIED CHANNEL END APPENDAGES - RANGE  00639037
+.*             &EOEAPP  - USER SUPPLIED END OF EXTENT APPS - RANGE      00640037
+.*             &PCIAPP  - USER SUPPLIED PCI APPENDAGES - RANGE          00641037
+.*             &SIOAPP  - USER SUPPLIED SIO APPENDAGES - RANGE          00642037
+.*             &RESIDNT - MEMBERS TO BE ADDED TO LPA, SVC OR            00643037
+.*                        LINKLIBS, AND TO IEAFIX01.                    00644037
+.*                                                                      00645037
+.* OUTPUT -                                                             00646037
+.*       THE GLOBALS SET ARE -                                          00647037
+.*             &SGMENTB(15)   - ENTRY SWITCH                            00648037
+.*             &SGQUITB       - QUIT SWITCH                             00649037
+.*               THE FOLLOWING NUMBERS CORRESPOND TO LIBRARIES          00650037
+.*               SUCH THAT FOR THE X IN THE FOLLOWING GLOBALS,          00651037
+.*               IF X=5 THE DATA SET IN QUESTION IS SAMPLIB.            00652037
+.*             &SGDSBZA(X)    - BLOCK SIZE SET SIZE                     00653037
+.*             &SGDSA1B(X)    - METHOD OF ALLOCATION SWITCHES           00654037
+.*             &SGDSA2B(X)    - 01-BLKSIZE,10-TRACK,11-CYLINDER         00655037
+.*             &SGDSDFB(X)    - SET WHEN DATASET DEFINED FOR SYSTEM-LIB 00656037
+.*             &SGDSVLC(X)    - VOLUME SERIAL OF DEVICE                 00657037
+.*             &SGDSPSA(X)    - PRIMARY SPACE SET                       00658037
+.*             &SGDSUNC(X)    - DEVICE TYPE                             00659037
+.*             &SGRES1C(X)                                              00660037
+.*                ...         - RESIDENT MEMBERS - ONLY N= 6, 9 AND     00661037
+.*             &SGRESAC(X)      12 ARE ALLOWED.                         00662037
+.*             &SGMB01C(X)                                              00663037
+.*                ...         - MEMBERS TO BE ADDED TO DATA SETS. N     00664037
+.*             &SGMB20C(X)      =2,4,5,6,7,8,9,10,12,13,16,17,18        00665037
+.*                                                                      00666037
+.*             &SGPGVLC(1-25) - VOLUME SER OF PAGING DEVICES            00667037
+.*             &SGPGSPA(1-25) - PRIMARY SPACE FOR PAGE DATA SET         00668037
+.*             &SGPGUNC(1-25) - DEVICE TYPE OF PAGE DEVICE              00669037
+.*             &SGPAGDC(1-25) - NAME OF PAGE DATA SETS                  00670037
+.*                                                                      00671037
+.*             &SGSWVLC(1-10) - VOLUME SER OF SWAP DEVICES              00672037
+.*             &SGSWSPA(1-10) - PRIMARY SPACE FOR SWAP DATA SET         00673037
+.*             &SGSWUNC(1-10) - DEVICE TYPE OF SWAP DEVICE              00674037
+.*             &SGSWPDC(1-10) - NAME OF SWAP DATA SETS                  00675037
+.*                                                                      00676037
+.*             &SGDSSSA(1-23) - SECONDARY SPACE SET                     00677037
+.*             &SGDSDBA(1-23) - DIRECTORY BLOCK ALLOCATION SET          00678037
+.*             &SGVSNMC       - VSCATLG NAME                            00679037
+.*             &SGDUPXC       - DUPLEX DATA SET NAME                    00680037
+.*             &SGDABEA(1)    - PREVIOUS ABNORMAL END RECEIVERS USED    00681037
+.*             &SGDABEA(2)    - PREVIOUS NUMBER OF ABNORMAL END PARMS   00682037
+.*             &SGDCHEA(1)    - PREVIOUS CHANNEL END RECEIVERS USED     00683037
+.*             &SGDCHEA(2)    - PREVIOUS NUMBER OF CHANNEL END PARMS    00684037
+.*             &SGDEOEA(1)    - PREVIOUS END-OF-EXTENT RECEIVERS USED   00685037
+.*             &SGDEOEA(2)    - PREVIOUS NUMBER OF END-OF-EXTENT PARMS  00686037
+.*             &SGDPCIA(1)    - PREVIOUS PCI RECEIVERS USED             00687037
+.*             &SGDPCIA(2)    - PREVIOUS NUMBER OF PCI PARMS            00688037
+.*             &SGDSIOA(1)    - PREVIOUS START I/O RECEIVERS USED       00689037
+.*             &SGDSIOA(2)    - PREVIOUS NUMBER OF START I/O PARMS      00690037
+.*             &SGDSIOC       - TOTAL SIO APPENDAGES                    00691037
+.*             &SGDEOEC       - TOTAL EOE APPENDAGES                    00692037
+.*             &SGDCHEC       - TOTAL CHE APPENDAGES                    00693037
+.*             &SGDABEC       - TOTAL ABE APPENDAGES                    00694037
+.*             &SGDPCIC       - TOTAL PCI APPENDAGES                    00695037
+.*             &SGLSIOC       - LPALIB SIO APPENDAGES                   00696037
+.*             &SGLEOEC       - LPALIB EOE APPENDAGES                   00697037
+.*             &SGLCHEC       - LPALIB CHE APPENDAGES                   00698037
+.*             &SGLABEC       - LPALIB ABE APPENDAGES                   00699037
+.*             &SGLPCIC       - LPALIB PCI APPENDAGES                   00700037
+.*             &SGSSIOC       - SVCLIB SIO APPENDAGES                   00701037
+.*             &SGSEOEC       - SVCLIB EOE APPENDAGES                   00702037
+.*             &SGSCHEC       - SVCLIB CHE APPENDAGES                   00703037
+.*             &SGSABEC       - SVCLIB ABE APPENDAGES                   00704037
+.*             &SGSPCIC       - SVCLIB PCI APPENDAGES                   00705037
+.*                                                                      00706037
+.*       THE LOCALS USED ARE -                                          00707037
+.*             &A   - INDEX TO SUBLIST                                  00708037
+.*             &N   - CHARACTER INDEX                                   00709037
+.*             &M   - SECONDARY ALLOCATION TESTING                      00711037
+.*             &P   - CHARACTER INDEX                                   00712037
+.*             &C   - MEMBER COUNTER                                    00713037
+.*             &S   - SPACE PARAMETER                                   00714037
+.*             &APP - APPENDAGE NAME FOR MESSAGE                        00715037
+.*             &Q   - SPACE PARAMETER                                   00716037
+.*             &D   - INDEX FOR DUMP00-09 DATASETS                      00717037
+.*                                                                      00718037
+.* EXIT, NORMAL - N/A                                                   00719037
+.*                                                                      00720037
+.* EXIT, ERROR - N/A                                                    00721037
+.*                                                                      00722037
+.* EXTERNAL REFERENCES - N/A                                            00723037
+.*                                                                      00724037
+.* TABLES - N/A                                                         00725037
+.*                                                                      00726037
+.* MACROS - NONE                                                        00727037
+.*                                                                      00728037
+.* CHANGE ACTIVITY - MODIFIED FOR Y02036,Z30RSTA,Z40WSVN,VS43004        00729037
+.*                   VS43009                                            00732037
+.*                   @AZ07727,@ZA41353                                  00735037
+.****** END OF SPECIFICATIONS ***************************************   00736037
+&SGMENTB(15) SETB 1                     MACRO ENTRY SWITCH      Z40WSVN 00800037
+         AIF   (T'&LIB NE 'O').DSMAIN3                          Z40WSVN 00810037
+         AIF   (T'&PAGEDSN NE 'O').DSMAIN2                      Z40WSVN 00820037
+         AIF   (T'&SWAPDSN EQ 'O').E3                           Z40WSVN 00830037
+.*                                                                      00900037
+.*       PROCESS SWAPDSN                                        Z40WSVN 00905037
+.*                                                                      00910037
+.DSMAIN1 ANOP                                                   Z40WSVN 00915037
+&A       SETA  1                        SET INDEX TO 1          Z40WSVN 00920037
+.SW1     ANOP                                                   Z40WSVN 00925037
+         AIF   (&A GT 10).E36           TOO MANY SWAPDSN NAMES? Z40WSVN 00930037
+         AIF   ('&SGSWPDC(&A)' EQ '').SW12  THIS ENTRY BLANK?   Z40WSVN 00935037
+&A       SETA  &A+1                     INCREMENT INDEX         Z40WSVN 00940037
+         AGO   .SW1                     LOOK AGAIN              Z40WSVN 00945037
+.*       1ST CHARACTER MUST BE ALPHABETIC                       Z40WSVN 00950037
+.SW12    AIF   ('&SWAPDSN'(1,1) EQ '$').SW125                   Z40WSVN 00955037
+         AIF   ('&SWAPDSN'(1,1) EQ '#').SW125                   Z40WSVN 00960037
+         AIF   ('&SWAPDSN'(1,1) EQ '@').SW125                   Z40WSVN 00965037
+         AIF   ('&SWAPDSN'(1,1) LT 'A' OR '&SWAPDSN'(1,1) GT 'Z').E37  *00970037
+                                                                Z40WSVN 00971037
+.SW125   ANOP                                                   Z40WSVN 00975037
+         AIF   (K'&SWAPDSN GT 44).E37    MAX 44 CHARS IN NAME   Z40WSVN 00980037
+.SW1255  ANOP                                                   Z40WSVN 00985037
+&SGSWPDC(&A)   SETC '&SWAPDSN'          MOVE NAME TO GLOBAL     Z40WSVN 00990037
+         MNOTE *,'     SWAP DATA SET &SWAPDSN SPECIFIED'        Z40WSVN 00995037
+         AIF   (T'&SPACE EQ 'O').SW14   SPACE OMITTED?          Z40WSVN 01000037
+         AIF   (T'&VOL EQ 'O').E38      VOL OMITTED?            Z40WSVN 01005037
+         AIF   (N'&VOL NE 2).E39        MUST BE 2 SUBPARMS      Z40WSVN 01010037
+         AIF   (K'&VOL(1) GT 6).E40     SERIAL GT 6 CHARS       Z40WSVN 01015037
+.*       DEVICE MUST BE 2305-1, 2305-2, 3330,                   Z40WSVN 01020037
+.*       3330-1, 3340, 3350, 3375, 3380, or 3390                 MVS38J 01025037
+.SW1256  AIF   ('&VOL(2)' NE '3330-1' AND '&VOL(2)' NE '2305-1' AND    X01030037
+               '&VOL(2)' NE '2305-2' AND '&VOL(2)' NE '3330' AND       X01035037
+               '&VOL(2)' NE '3340').SWC                         Z40WSVN 01040037
+         AGO   .SWVAL                                           Z40WSVN 01045037
+.SWC     AIF   ('&VOL(2)' NE '3350' AND '&VOL(2)' NE '3380' AND        +01050037
+               '&VOL(2)' NE '3390' AND '&VOL(2)' NE '3375').E41  MVS38J 01052038
+.SWVAL   ANOP                                                   Z40WSVN 01055037
+&SGSWVLC(&A)   SETC '&VOL(1)'           MOVE SERIAL TO GLBL     Z40WSVN 01060037
+&SGSWUNC(&A)   SETC '&VOL(2)'           MOVE UNIT TO GLBL       Z40WSVN 01065037
+.SW1257  AIF   ('&SPACE(1)' NE 'CYL').E42        MUST BE CYL    Z40WSVN 01070037
+         AIF   ('&SPACE(2)'(1,1) NE '(').E42     REQUIRES PRI   Z40WSVN 01075037
+&N       SETA  2                                 COUNT DIGITS   Z40WSVN 01080037
+.SW126   AIF   ('&SPACE(2)'(&N,1) EQ ')').SW127 END/2ND SUBPARM Z40WSVN 01085037
+         AIF   ('&SPACE(2)'(&N,1) EQ ',').E9     SEC ALLOC      Z40WSVN 01090037
+         AIF   ('&SPACE(2)'(&N,1) EQ '').E42     NULL VALUE     Z40WSVN 01095037
+&N       SETA  &N+1                              INC. DIGIT CNT Z40WSVN 01100037
+         AGO   .SW126                            REPEAT         Z40WSVN 01105037
+.SW127   ANOP                                                   Z40WSVN 01110037
+         AIF   (&N EQ 2).E42            NO PRIMARY SPACE        Z40WSVN 01115037
+         AIF   ('&SPACE(2)'(2,&N-2) LT '0' OR '&SPACE(2)'(2,&N-2) GT '6X01120037
+               5535').E19                                       Z40WSVN 01125037
+&S       SETC  '&SPACE(2)'(2,&N-2)                              Z40WSVN 01130037
+&SGSWSPA(&A)   SETA &S                  MOVE PRI SPACE TO GLBL  Z40WSVN 01135037
+         AGO   .END                                             Z40WSVN 01140037
+.SW14    AIF   (T'&VOL EQ 'O').END VOL OMITTED?                 Z40WSVN 01145037
+    MNOTE 0,'* * * VOL PARAMETER IGNORED FOR SWAPDSN &SWAPDSN'  Z40WSVN 01150037
+         AGO   .END                                             Z40WSVN 01155037
+.*                                                                      01300037
+.*       PROCESS PAGEDSN                                                01310037
+.*                                                                      01400002
+.DSMAIN2 AIF   (T'&SWAPDSN NE 'O').E3                           Z40WSVN 01500037
+&A       SETA  1                        SET INDEX TO 1                  01600002
+.PG1     ANOP                                                           01700002
+         AIF   (&A GT 25).E20           TOO MANY PAGEDSN NAMES?         01800002
+         AIF   ('&SGPAGDC(&A)' EQ '').PG12  THIS ENTRY BLANK?           01900002
+&A       SETA  &A+1                     INCREMENT INDEX                 02000002
+         AGO   .PG1                     LOOK AGAIN                      02100002
+.*       1ST CHARACTER MUST BE ALPHABETIC                               02400002
+.PG12    AIF   ('&PAGEDSN'(1,1) EQ '$').PG125                           02500002
+         AIF   ('&PAGEDSN'(1,1) EQ '#').PG125                           02600002
+         AIF   ('&PAGEDSN'(1,1) EQ '@').PG125                           02700002
+         AIF   ('&PAGEDSN'(1,1) LT 'A' OR '&PAGEDSN'(1,1) GT 'Z').E21   02800002
+.PG125   ANOP                                                           02900002
+         AIF   (K'&PAGEDSN GT 44).E21    MAX 44 CHARS IN NAME           03000002
+.PG1255  ANOP                                                   Z40WSVN 03010037
+&SGPAGDC(&A)   SETC '&PAGEDSN'          MOVE NAME TO GLOBAL     Z40WSVN 03020037
+         MNOTE *,'     PAGE DATA SET &PAGEDSN SPECIFIED'        Z40WSVN 03030037
+         AIF   (T'&SPACE EQ 'O').PG14   SPACE OMITTED?          Z40WSVN 03100037
+         AIF   (T'&VOL EQ 'O').E22      VOL OMITTED?                    03200002
+         AIF   (N'&VOL NE 2).E23        MUST BE 2 SUBPARMS              03300002
+         AIF   (K'&VOL(1) GT 6).E24     SERIAL GT 6 CHARS               03400002
+.*       DEVICE MUST BE 2314, 2305-1, 2305-2, 3330,            @Z30RSTA 03500037
+.*       3330-1, 3340, 3350, 3375, 3380, or 3390                 MVS38J 03560037
+.PG1256  AIF   ('&VOL(2)' NE '2314' AND  '&VOL(2)' NE '3330-1' AND     X03600037
+               '&VOL(2)' NE '2305-1' AND '&VOL(2)' NE '2305-2' AND     X03700002
+               '&VOL(2)' NE '3330' AND '&VOL(2)' NE '3340').CONT1       03800037
+         AGO   .VALIDEV                                        @Z30RSTA 03804037
+.CONT1   AIF   ('&VOL(2)' NE '3350' AND '&VOL(2)' NE '3380' AND        +03806037
+               '&VOL(2)' NE '3390' AND '&VOL(2)' NE '3375').E25  MVS38J 03807038
+.VALIDEV ANOP                                                  @Z30RSTA 03808037
+&SGPGVLC(&A)   SETC '&VOL(1)'           MOVE SERIAL TO GLBL             03850002
+&SGPGUNC(&A)   SETC '&VOL(2)'           MOVE UNIT TO GLBL               03860002
+.PG1257  AIF   ('&SPACE(1)' NE 'CYL').E42        MUST BE CYLS   Z40WSVN 03900037
+         AIF   ('&SPACE(2)'(1,1) NE '(').E42     REQ. PRIMARY   Z40WSVN 04000037
+&N       SETA  2                                 COUNT OF DIGITS        04100002
+.PG126   AIF   ('&SPACE(2)'(&N,1) EQ ')').PG127  END OF 2ND SUBPARM     04200002
+         AIF   ('&SPACE(2)'(&N,1) EQ ',').E9     SEC ALLOC      Z40WSVN 04210037
+         AIF   ('&SPACE(2)'(&N,1) EQ '').E42     NULL VALUE     Z40WSVN 04300037
+&N       SETA  &N+1                              INCREMENT DIGIT COUNT  04400002
+         AGO   .PG126                            REPEAT UNTIL PAREN     04500002
+.PG127   ANOP                                                           04600002
+         AIF   (&N EQ 2).E42            NO PRIMARY SPACE        Z40WSVN 04700037
+         AIF   ('&SPACE(2)'(2,&N-2) LT '0' OR '&SPACE(2)'(2,&N-2) GT '6X04800002
+               5535').E19                                       Z40WSVN 04900037
+&S       SETC  '&SPACE(2)'(2,&N-2)                                      05000002
+&SGPGSPA(&A)   SETA &S                  MOVE PRIMARY SPACE TO GLBL      05200002
+         AGO   .END                                                     05700002
+.PG14    AIF   (T'&VOL EQ 'O').END VOL OMITTED?                 Z40WSVN 06100037
+    MNOTE 0,'* * * VOL PARAMETER IGNORED FOR PAGEDSN &PAGEDSN'          06200037
+         AGO   .END                                                     06300002
+.*                                                                      06400002
+.* PROCESS SYSTEM LIB                                                   06500002
+.*                                                                      06600002
+.DSMAIN3 AIF   (T'&PAGEDSN NE 'O' OR T'&SWAPDSN NE 'O').E3      Z40WSVN 07000037
+.D1      AIF   ('&LIB' NE 'INDMAC').D2  INDMAC SPECIFIED?               07100003
+&A       SETA  1                        SET INDEX VALUE                 07200003
+         AGO   .DS41                                                    07300002
+.D2      AIF   ('&LIB' NE 'CMDLIB').D3  CMDLIB SPECIFIED?               07400003
+&A       SETA  2                        SET INDEX VALUE                 07500003
+         AGO   .DS41                                                    07600002
+.D3      AIF   ('&LIB' NE 'HELP').D4    HELP SPECIFIED?         Y30BS04 07650037
+&A       SETA  3                        SET INDEX VALUE                 07660003
+         AGO   .DS41                                                    07670003
+.D4      AIF   ('&LIB' NE 'JES3LIB').D5 JES3LIB SPECIFIED?      Y30BS04 07670237
+&A       SETA  4                        SET INDEX VALUE         Y30BS04 07670437
+         AGO   .DS41                                            Y30BS04 07670637
+.D5      AIF   ('&LIB' NE 'SAMPLIB').D6 SAMPLIB SPECIFIED?              07700002
+&A       SETA  5                        SET INDEX VALUE                 07800002
+         AGO   .DS41                                                    07900002
+.D6      AIF   ('&LIB' NE 'LINKLIB').D7 LINKLIB SPECIFIED?              08000002
+&A       SETA  6                        SET INDEX VALUE                 08100002
+         AGO   .DS41                                                    08200002
+.D7      AIF   ('&LIB' NE 'MACLIB').D8  MACLIB SPECIFIED?               08300002
+&A       SETA  7                        SET INDEX VALUE                 08400002
+         AGO   .DS41                                                    08500002
+.D8      AIF   ('&LIB' NE 'PROCLIB').D9 PROCLIB SPECIFIED?              08600002
+&A       SETA  8                        SET INDEX VALUE                 08700002
+         AGO   .DS41                                                    08800002
+.D9      AIF   ('&LIB' NE 'SVCLIB').D10 SVCLIB SPECIFIED?               08900002
+&A       SETA  9                        SET INDEX VALUE                 09000002
+         AGO   .DS41                                                    09100002
+.D10     AIF   ('&LIB' NE 'TELCMLIB').D11 TELCMLIB SPECIFIED?           09200002
+&A       SETA  10                         SET INDEX VALUE               09300002
+         AGO   .DS41                                                    09400002
+.D11     AIF   ('&LIB' NE 'UADS').D12     UADS SPECIFIED?               09500002
+&A       SETA  11                         SET INDEX VALUE               09600002
+         AGO   .DS41                                                    09700002
+.D12     AIF   ('&LIB' NE 'LPALIB').D13   LPALIB SPECIFIED?             09800003
+&A       SETA  12                         SET INDEX VALUE               09900002
+         AGO   .DS41                                                    10000002
+.D13     AIF   ('&LIB' NE 'VTAMLIB').D14  VTAMLIB SPECIFIED?            10050003
+&A       SETA  13                         SET INDEX VALUE               10060003
+         AGO   .DS41                                                    10070003
+.D14     AIF   ('&LIB' NE 'STGINDEX').D15 STGINDEX SPECIFIED?           10100002
+&A       SETA  14                         SET INDEX VALUE               10200002
+         AGO   .DS41                                                    10400002
+.D15     AIF   ('&LIB' NE 'VSCATLG').D16  VSCATLG SPECIFIED?            10500002
+&A       SETA  15                         SET INDEX VALUE               10600002
+&SGVSNMC SETC '&NAME'                     SAVE NAME OF DATA SET Z40WSVN 10800037
+         AGO   .DS41                                                    11000002
+.D16     AIF   ('&LIB' NE 'IMAGELIB').D17 IMAGELIB SPECIFIED?           11100002
+&A       SETA  16                         SET INDEX                     11200002
+         AGO   .DS41                                                    11300002
+.D17     AIF   ('&LIB' NE 'NUCLEUS').D18  NUCLEUS SPECIFIED?            11400002
+&A       SETA  17                         SET INDEX VALUE               11500002
+         AGO   .DS41                                                    11600002
+.D18     AIF   ('&LIB' NE 'PARMLIB').D19  PARMLIB SPECIFIED?            11700002
+&A       SETA  18                         SET INDEX VALUE               11800002
+         AGO   .DS41                                                    11900002
+.D19     AIF   ('&LIB' NE 'BRODCAST').D20 BRODCAST SPECIFIED?           12000002
+&A       SETA  19                         SET INDEX VALUE               12100002
+         AGO   .DS41                                                    12200002
+.D20     AIF   ('&LIB' NE 'MANX').D21     MANX SPECIFIED?               12300002
+&A       SETA  20                         SET INDEX VALUE               12400002
+         AGO   .DS41                                                    12500002
+.D21     AIF   ('&LIB' NE 'MANY').D22     MANY SPECIFIED?       Z40WSVN 12600037
+&A       SETA  21                         SET INDEX VALUE               12700002
+         AGO   .DS41                                                    12800002
+.D22     AIF   ('&LIB' NE 'DUPLEXDS').D23 DUPLEXDS SPECIFIED?   Z40WSVN 12810037
+&A       SETA  22                         SET INDEX VALUE       Z40WSVN 12820037
+&SGDUPXC SETC '&NAME'                     SAVE NAME OF DATA SET Z40WSVN 12840037
+         AGO   .DS41                                            Z40WSVN 12850037
+.D23     AIF   ('&LIB' NE 'DCMLIB').D24   DCMLIB SPECIFIED?             13200002
+&A       SETA  23                         SET INDEX VALUE               13300002
+         AGO   .DS41                                                    13400002
+.*                                                                 @F1D 13450037
+.D24     ANOP                                                      @F1A 13500037
+.D25     AIF   ('&LIB' NE 'TCOMMAC').D26 TCOMMAC SPECIFIED?    @ZA41353 13701037
+&A       SETA  25                       SET INDEX VALUE                 13702037
+         AGO   .DS41                                                    13703037
+.D26     ANOP                                                   VS43004 13704037
+.D27     ANOP                                                           13709037
+&D       SETA  0                          SET INITIAL COUNT TO ZERO     13752002
+.D27A    ANOP                                                           13754037
+         AIF   ('&LIB' EQ 'DUMP0&D').DS411  DUMP00-09 SPECIFIED?        13756002
+&D       SETA  &D+1                     ADD 1 TO COUNT                  13770002
+         AIF   (&D LE 9).D27A           VALUE OF 0-9 VALID DUMP DATASET 13780037
+         AGO   .E1                      ERROR, NOT VALID DATASET        13800037
+.DS411   ANOP                                                           13850002
+&A       SETA  27+&D                    DUMP00 PLUS SUBSCRIPT VALUE 0-9 13860002
+.DS41    ANOP                                                           13900002
+         AIF   (&SGDSDFB(&A)).E2        PREVIOUSLY DEFINED              14000002
+&SGDSDFB(&A) SETB 1                     SET DATASET DEFINED GLOBAL      14100002
+.*                                                                      14101037
+.* VALIDATE NAME PARAMETER                                              14102037
+.*                                                                      14103037
+         AIF   (&A EQ 15 OR &A EQ 22).NM1  REQ'D?               VS43004 14104037
+         AIF   (T'&NAME NE 'O').E18     ILLEGAL                 Z40WSVN 14105037
+         AGO   .NM9                     OK                      Z40WSVN 14106037
+.NM1     AIF   (T'&NAME EQ 'O').E26     REQUIRED, ABSENT        Z40WSVN 14107037
+         MNOTE *,'         &LIB NAME IS &NAME'                  Z40WSVN 14108037
+.*       1ST CHARACTER MUST BE ALPHABETIC                       Z40WSVN 14109037
+         AIF   ('&NAME'(1,1) EQ '$').NM3                        Z40WSVN 14110037
+         AIF   ('&NAME'(1,1) EQ '#').NM3                        Z40WSVN 14111037
+         AIF   ('&NAME'(1,1) EQ '@').NM3                        Z40WSVN 14112037
+         AIF   ('&NAME'(1,1) LT 'A' OR '&NAME'(1,1) GT 'Z').E7  Z40WSVN 14113037
+.NM3     AIF   (K'&NAME GT 44).E7    MAX 44 CHARS IN NAME       Z40WSVN 14114037
+.*                                                                      14200002
+.*       PROCESS VOL KEYWORD FOR SYSTEM LIB                             14300002
+.*                                                                      14400002
+.NM9     AIF   (T'&VOL EQ 'O').DSMAIN4  OMITTED?                Z40WSVN 14500037
+         AIF   (N'&VOL NE 2).E5         TWO PARAMETERS                  14600037
+         AIF   (K'&VOL(1) GT 6).E4      VOL SERIAL TOO LONG             14700002
+         AIF   ('&VOL(1)' EQ '').W1     SERIAL NULL                     14800002
+&SGDSVLC(&A) SETC '&VOL(1)'             MOVE SERIAL TO GLOBAL           14900002
+.DS415   AIF   ('&VOL(2)' EQ '').W1     UNIT NULL                       15000002
+         AIF   ('&VOL(2)' EQ '2314').DS42  VALID                        15100002
+         AIF   ('&VOL(2)' EQ '2305-1').DS42  VALID                      15200002
+         AIF   ('&VOL(2)' EQ '2305-2').DS42  VALID                      15300002
+         AIF   ('&VOL(2)' EQ '3330').DS42  VALID                        15400002
+         AIF   ('&VOL(2)' EQ '3330-1').DS42  VALID                      15450002
+         AIF   ('&VOL(2)' EQ '3340').DS42 VALID                         15500037
+         AIF   ('&VOL(2)' EQ '3380').DS42 VALID                  MVS38J 15505037
+         AIF   ('&VOL(2)' EQ '3390').DS42 VALID                  MVS38J 15510038
+         AIF   ('&VOL(2)' EQ '3375').DS42 VALID                  MVS38J 15520038
+         AIF   ('&VOL(2)' NE '3350').E6 VALID                  @Z30RSTA 15550037
+.DS42    ANOP                                                           15600002
+&SGDSUNC(&A) SETC '&VOL(2)'             MOVE DEVICE TYPE TO GLOBAL      15700002
+.*                                                                      15701037
+.*       CHECK SPACE KEYWORD                                            15800002
+.*                                                                      15801037
+.DSMAIN4 ANOP                                                           15900002
+.*                                                                 @F1D 15950037
+         AIF        (T'&SPACE EQ 'O').DSMAIN5      OMITTED              16100002
+         AIF   (N'&SPACE NE 2).E11                                      16200002
+         AIF   ('&SPACE(1)' EQ 'CYL').DSS26                             16300002
+.* THE FOLLOWING REQUIRE ALLOCATION IN CYLINDERS                        16301037
+         AIF   (&A EQ 14 OR &A EQ 22).E11                       VS43004 16350037
+         AIF   ('&SPACE(1)' EQ 'TRK').DSS25                             16400002
+         AIF   (T'&SPACE(1) NE 'N').E11                                 16500002
+         AIF   ('&LIB' EQ 'VSCATLG').E11                                16600002
+         AIF   (&SPACE(1) LT 1 OR &SPACE(1) GT 65535).E8                16800002
+&SGDSBZA(&A) SETA &SPACE(1)             SET BLOCKSIZE                   16900002
+&SGDSA2B(&A) SETB 1                     INDICATE BLOCKSIZE              17000002
+         AGO   .DSS3                                                    17100002
+.*                                                                 @F1D 17150037
+.DSS25   ANOP                                                           18000002
+&SGDSA1B(&A) SETB 1                     INDICATE TRK                    18200002
+         AGO   .DSS3                                                    18300002
+.DSS26   ANOP                                                           18400002
+&SGDSA1B(&A) SETB 1                     INDICATE CYL                    18600002
+&SGDSA2B(&A) SETB 1                                                     18700002
+.DSS3    ANOP                                                           18800002
+         AIF   ('&SPACE(2)'(1,1) NE '(').E11                            18900002
+&N       SETA  2                                                        19000002
+.DSS31   AIF   ('&SPACE(2)'(&N,1) EQ ',').DSS34                         19100002
+         AIF   ('&SPACE(2)'(&N,1) EQ ')').DSS34                         19200002
+         AIF   ('&SPACE(2)'(&N,1) EQ ' ').E11                           19300002
+&N       SETA  &N+1                                                     19400002
+         AGO   .DSS31                                                   19500002
+.DSS34   ANOP                                                           19600002
+&M       SETA  &N+1                     SAVE POINTER                    19700002
+         AIF   (&N EQ 2).E11            NO PRIMARY SPACE                19800002
+         AIF   ('&SPACE(2)'(2,&N-2) LT '0' OR '&SPACE(2)'(2,&N-2) GT '6X19900002
+               5535').E12                                               20000002
+&S       SETC  '&SPACE(2)'(2,&N-2)                                      20100002
+&SGDSPSA(&A) SETA &S                                                    20200002
+.DSS35   ANOP                                                           20300002
+         AIF   ('&SPACE(2)'(&N,1) EQ ')').DSS381  NO SECONDARY          20400002
+&N       SETA  &N+1                                                     20500002
+.DSS36   ANOP                                                           20600002
+         AIF   ('&SPACE(2)'(&N,1) EQ ',').DSS37                         20700002
+         AIF   ('&SPACE(2)'(&N,1) EQ ')').DSS37                         20800002
+         AIF   ('&SPACE(2)'(&N,1) EQ ' ').E11                           20900002
+&N       SETA  &N+1                                                     21000002
+         AGO   .DSS36                                                   21100002
+.DSS37   ANOP                                                           21200002
+&P       SETA  &N+1                                                     21300002
+         AIF   (&M EQ &N).DSS38         NO SECONDARY                    21400002
+.* THE FOLLOWING DO NOT ALLOW SECONDARY                                 21401037
+         AIF   (&A EQ 14 OR &A EQ 16 OR &A EQ 17 OR &A EQ 18 OR &A EQ  *21500037
+               19 OR &A EQ 20 OR &A EQ 21 OR &A EQ 22 OR &A EQ 23).E13 *21600037
+                                                        Z40WSVN,VS43004 21670037
+         AIF   (&A EQ 27 OR &A EQ 28 OR &A EQ 29 OR &A EQ 30 OR &A EQ 3*21750002
+               1 OR &A EQ 32 OR &A EQ 33 OR &A EQ 34 OR &A EQ 35 OR &A *21760002
+               EQ 36).E13   DUMP00-09 NO SECONDARY ALLOWED              21770002
+         AIF   ('&SPACE(2)'(&M,&N-&M) LT '0' OR '&SPACE(2)'(&M,&N-&M) GX21800002
+               T '65535').E14                                           21900002
+&Q       SETC  '&SPACE(2)'(&M,&N-&M)                                    22000002
+&SGDSSSA(&A) SETA &Q                                                    22100002
+.DSS38   ANOP                                                           22200002
+         AIF   ('&SPACE(2)'(&N,1) NE ')').DSS385   DIRECTORY BLOCKS     22300002
+.***     FOLLOWING DATA SETS REQUIRE DIRECTORY BLOCKS                   22310037
+.DSS381  AIF   (&A LT 14 OR &A EQ 16).E10                       Y30BS04 22320037
+         AIF   (&A EQ 17 OR &A EQ 18 OR &A EQ 23 OR &A EQ 25).E10       22342037
+.*                                                             @ZA41353 22346037
+         AGO   .DSMAIN5                 DIRECTORY BLOCKS NOT REQUIRED   22350002
+.DSS385  ANOP                                                           22360002
+&N       SETA  &N+1                                                     22400002
+.DSS39   ANOP                                                           22500002
+         AIF   ('&SPACE(2)'(&N,1) EQ ',').E15  TOO MANY PARMS           22600002
+         AIF   ('&SPACE(2)'(&N,1) EQ ' ').E11   INVALID                 22700002
+         AIF   ('&SPACE(2)'(&N,1) EQ ')').DSS395                        22800002
+&N       SETA  &N+1                                                     22900002
+         AGO   .DSS39                                                   23000002
+.DSS395  ANOP                                                           23100002
+         AIF   (&A EQ 23).DSS398        DCMLIB DIR BLK                  23200002
+.*       FOLLOWING LIB NUMBERS MAY NOT HAVE DIRECTORY BLOCKS            23250037
+         AIF   (&A EQ 14 OR &A EQ 19 OR &A EQ 20 OR &A EQ 21 OR &A EQ 2*23300003
+               2).E17                          @ZA41353,Z40WSVN,VS43004 23400037
+         AIF   (&A EQ 27 OR &A EQ 28 OR &A EQ 29 OR &A EQ 30 OR &A EQ 3X23450002
+               1 OR &A EQ 32 OR &A EQ 33 OR &A EQ 34 OR &A EQ 35 OR &A *23460002
+               EQ 36).E17  DUMP00-09 INVALID                            23470002
+.DSS398  ANOP                                                           23500002
+         AIF   ('&SPACE(2)'(&P,&N-&P) LT '0' OR '&SPACE(2)'(&P,&N-&P) GX23600002
+               T '65535').E16           INVALID SIZE                    23700002
+&Q       SETC  '&SPACE(2)'(&P,&N-&P)                                    23800002
+&SGDSDBA(&A) SETA &Q                                                    23900002
+.*                                                                      23901037
+.*       CHECK PDS, MEMBERS PARAMETERS.                                 24000037
+.*                                                                      24001037
+.DSMAIN5 ANOP                                                           24100002
+         AIF   (T'&PDS EQ 'O').DSMAIN6                                  24200002
+.*       FOLLOWING MAY SPECIFY PDS PARM                                 24300037
+         AIF   (&A EQ 2 OR &A EQ 4 OR &A EQ 5 OR &A EQ 6 OR &A EQ 7 OR *24400037
+               &A EQ 8 OR &A EQ 9 OR &A EQ 10 OR &A EQ 12 OR &A EQ 13 O*24450037
+               R &A EQ 16 OR &A EQ 17 OR &A EQ 18 OR &A EQ 26).PDS19    24500037
+.*       REF. ABOVE AIF                @ZA41353,OZ05834,ZM32650,Y30BS04 24550037
+         AGO   .E28                                                     24650002
+.PDS19     ANOP                                                         24660002
+&SGPDSUC(&A) SETC '&PDS'                PUT PDS NAME IN GLOBAL          24700002
+.PDS18   AIF   ('&LIB' NE 'NUCLEUS').PDS11                              24800002
+&C       SETA 20           SET COUNTER TO LIMIT OF MEMBERS     @AZ07727 24900037
+.PDS20   ANOP  PROCESS MEMBERS PARAMETER                                25000037
+         AIF   (T'&MEMBERS EQ 'O').PDS30 MEMBERS OMITTED                25100002
+         AIF   (N'&MEMBERS GT &C).E29   MORE MEMBERS SPEC. THAN ALLOWED 25200002
+.*       MOVE MEMBER NAMES TO GLOBALS                                   25300002
+  MNOTE *,'MEMBERS SPECIFIED FOR &PDS ARE:'                             25400002
+&SGMB01C(&A) SETC '&MEMBERS(1)'                                         25500002
+   MNOTE *,'          &MEMBERS(1)'                                      25600002
+         AIF   (N'&MEMBERS EQ 1).PDS30  LAST ONE?                       25700002
+&SGMB02C(&A) SETC '&MEMBERS(2)'                                         25800002
+   MNOTE *,'          &MEMBERS(2)'                                      25900002
+         AIF   (N'&MEMBERS EQ 2).PDS30  LAST ONE?                       26000002
+&SGMB03C(&A) SETC '&MEMBERS(3)'                                         26100002
+   MNOTE *,'          &MEMBERS(3)'                                      26200002
+         AIF   (N'&MEMBERS EQ 3).PDS30  LAST ONE?                       26300002
+&SGMB04C(&A) SETC '&MEMBERS(4)'                                         26400002
+   MNOTE *,'          &MEMBERS(4)'                                      26500002
+         AIF   (N'&MEMBERS EQ 4).PDS30  LAST ONE?                       26600002
+&SGMB05C(&A) SETC '&MEMBERS(5)'                                         26700002
+   MNOTE *,'          &MEMBERS(5)'                                      26800002
+         AIF   (N'&MEMBERS EQ 5).PDS30  LAST ONE?                       26900002
+&SGMB06C(&A) SETC '&MEMBERS(6)'                                         27000002
+   MNOTE *,'          &MEMBERS(6)'                                      27100002
+         AIF   (N'&MEMBERS EQ 6).PDS30  LAST ONE?                       27200002
+&SGMB07C(&A) SETC '&MEMBERS(7)'                                         27300002
+   MNOTE *,'          &MEMBERS(7)'                                      27400002
+         AIF   (N'&MEMBERS EQ 7).PDS30  LAST ONE?                       27500002
+&SGMB08C(&A) SETC '&MEMBERS(8)'                                         27600002
+   MNOTE *,'          &MEMBERS(8)'                                      27700002
+         AIF   (N'&MEMBERS EQ 8).PDS30  LAST ONE?                       27800002
+&SGMB09C(&A) SETC '&MEMBERS(9)'                                         27900002
+   MNOTE *,'          &MEMBERS(9)'                                      28000002
+         AIF   (N'&MEMBERS EQ 9).PDS30  LAST ONE?                       28100002
+&SGMB10C(&A) SETC '&MEMBERS(10)'                                        28200002
+   MNOTE *,'          &MEMBERS(10)'                                     28300002
+         AIF   (N'&MEMBERS EQ 10).PDS30  LAST ONE?                      28400002
+&SGMB11C(&A) SETC '&MEMBERS(11)'                                        28500002
+   MNOTE *,'          &MEMBERS(11)'                                     28600002
+         AIF   (N'&MEMBERS EQ 11).PDS30  LAST ONE?                      28700002
+&SGMB12C(&A) SETC '&MEMBERS(12)'                                        28800002
+   MNOTE *,'          &MEMBERS(12)'                                     28900002
+         AIF   (N'&MEMBERS EQ 12).PDS30  LAST ONE?                      29000002
+&SGMB13C(&A) SETC '&MEMBERS(13)'                                        29100002
+   MNOTE *,'          &MEMBERS(13)'                                     29200002
+         AIF   (N'&MEMBERS EQ 13).PDS30  LAST ONE?                      29300002
+&SGMB14C(&A) SETC '&MEMBERS(14)'                                        29400002
+   MNOTE *,'          &MEMBERS(14)'                                     29500002
+         AIF   (N'&MEMBERS EQ 14).PDS30  LAST ONE?                      29600002
+&SGMB15C(&A) SETC '&MEMBERS(15)'                                        29700002
+   MNOTE *,'          &MEMBERS(15)'                                     29800002
+         AIF   (N'&MEMBERS EQ 15).PDS30  LAST ONE?                      29900002
+&SGMB16C(&A) SETC '&MEMBERS(16)'                                        30000002
+   MNOTE *,'          &MEMBERS(16)'                                     30100002
+         AIF   (N'&MEMBERS EQ 16).PDS30  LAST ONE?                      30200002
+&SGMB17C(&A) SETC '&MEMBERS(17)'                                        30300002
+   MNOTE *,'          &MEMBERS(17)'                                     30400002
+         AIF   (N'&MEMBERS EQ 17).PDS30  LAST ONE?                      30500002
+&SGMB18C(&A) SETC '&MEMBERS(18)'                                        30600002
+   MNOTE *,'          &MEMBERS(18)'                                     30700002
+         AIF   (N'&MEMBERS EQ 18).PDS30  LAST ONE?                      30800002
+&SGMB19C(&A) SETC '&MEMBERS(19)'                                        30900002
+   MNOTE *,'          &MEMBERS(19)'                                     31000002
+         AIF   (N'&MEMBERS EQ 19).PDS30  LAST ONE?                      31100002
+&SGMB20C(&A) SETC '&MEMBERS(20)'                                        31200002
+   MNOTE *,'          &MEMBERS(20)'                                     31300002
+         AGO   .PDS30                                                   31400002
+.PDS11   ANOP                                                           31500002
+&C       SETA  20                       MAX NUMBER OF MEMBERS           31600002
+         AGO   .PDS20                   GO PROCESS MEMBERS              31700002
+.********************************************************************** 31720002
+.*******             PROCESS APPENDAGES                                 31800002
+.********************************************************************** 31820002
+.***            ABNORMAL END APPENDAGES                                 31840002
+.PDS30   ANOP                                                           31900002
+         AIF   (T'&ABEAPP EQ 'O').PDS32                                 32000002
+&APP     SETC  'ABEAPP'                 SET APPENDAGE NAME FOR MSG      32100002
+         AIF   ('&LIB' NE 'LPALIB' AND '&LIB' NE 'SVCLIB').E305         32150002
+         AIF   (N'&ABEAPP GT 84).E31    MAX 84 ALLOWED                  32200002
+&N       SETA  1                                                        32300002
+.PDS302  ANOP                                                           32400002
+         AIF   ('&ABEAPP(&N)' LT 'WA' OR '&ABEAPP(&N)' GT 'Z9').E30     32500002
+&N       SETA  &N+1                                                     32600002
+         AIF   (&N LE N'&ABEAPP).PDS302 LOOP UNTIL ALL CHECKED          32700002
+&N       SETA  1                        SET INDEX FOR SENDING FIELD     32800002
+&P       SETA  1                        SET INDEX FOR RECIEVE FIELD     32900002
+.*                                                                      32920002
+.******   MOVE 4 APPENDAGE NAMES TO ONE C-TYPE GLOBAL AND PRINT THEM    32940002
+.*                                                                      32960002
+  MNOTE *,'* * * THE FOLLOWING &APP APPENDAGES ARE SPECIFIED'           33000002
+.PDS304  AIF   ('&LIB' EQ 'LPALIB').PDS305     LPALIB OR SVCLIB?        33080002
+&SGSABEC(&P) SETC '&ABEAPP(&N)'.'&ABEAPP(&N+1)'.'&ABEAPP(&N+2)'.'&ABEAP*33100002
+               P(&N+3)'                       SVCLIB APPENDAGES         33120002
+         AGO  .PDS306                                                   33140002
+.PDS305  ANOP                                                           33160002
+&SGLABEC(&P) SETC '&ABEAPP(&N)'.'&ABEAPP(&N+1)'.'&ABEAPP(&N+2)'.'&ABEAP*33200002
+               P(&N+3)'                       LPALIB APPENDAGES         33300002
+.PDS306  ANOP                                                           33310002
+         AIF   (NOT (&SGDABEA(1) EQ 0 AND &SGDABEA(2) EQ 0)).PDS307     33320002
+&SGDABEC(&P) SETC '&ABEAPP(&N)'.'&ABEAPP(&N+1)'.'&ABEAPP(&N+2)'.'&ABEAP*33330002
+               P(&N+3)'                       USED BY SGIEC6AP          33340002
+.PDS307  ANOP                                                           33350002
+.*                                                                      33360002
+  MNOTE *,'      &ABEAPP(&N),&ABEAPP(&N+1),&ABEAPP(&N+2),&ABEAPP(&N+3)' 33370002
+&N       SETA  &N+4                     INCR TO NEXT SUBPARM TO MOVE    33380002
+&P       SETA  &P+1                     INCR TO NEXT RECEIVER           33390002
+         AIF   (&N LE N'&ABEAPP).PDS304 LOOP UNTIL ALL MOVED            33400002
+         AIF   (&SGDABEA(2) EQ 0).PDS316  ABEAPP NOT SPECIFIED BEFORE   33410002
+&P       SETA  &SGDABEA(1)            SET INDEX FOR RECEIVE FIELD       33420002
+&N       SETA  (&P*4-&SGDABEA(2))     NUMBER OF ENTRIES LEFT TO SEND    33430002
+         AIF   (&N NE 3).PDS310       CHECK VALUES TO THREE             33440002
+&SGDABEC(&P) SETC '&SGDABEC(&P)'.'&ABEAPP(1)'.'&ABEAPP(2)'.'&ABEAPP(3)' 33450002
+&N       SETA  4                      NEXT ENTRY TO SEND                33460002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          33470002
+         AGO   .PDS315                                                  33472002
+.PDS310  AIF   (&N NE 2).PDS311       CHECK FOR LESS THAN 2 ENTRIES     33480002
+&SGDABEC(&P) SETC '&SGDABEC(&P)'.'&ABEAPP(1)'.'&ABEAPP(2)'              33490002
+&N       SETA  3                                                        33500002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          33502002
+         AGO   .PDS315                                                  33510002
+.PDS311  AIF   (&N NE 1).PDS312       NO ENTRIES                        33520002
+&SGDABEC(&P) SETC '&SGDABEC(&P)'.'&ABEAPP(1)'                           33530002
+&N       SETA  2                                                        33540002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          33542002
+         AGO   .PDS315                                                  33550002
+.PDS312  ANOP                                                           33560002
+&N       SETA  1                        START WITH FIRST ENTRY          33570002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          33572002
+.PDS314  ANOP                                                           33580002
+&SGDABEC(&P) SETC '&ABEAPP(&N)'.'&ABEAPP(&N+1)'.'&ABEAPP(&N+2)'.'&ABEAP*33590002
+               P(&N+3)'                 USED BY SGIEC6AP                33600002
+&N       SETA  &N+4                     INCR TO NEXT SUBPARM TO MOVE    33610002
+&P       SETA  &P+1                     INCR TO NEXT RECEIVER           33620002
+.PDS315  AIF   (&N LE N'&ABEAPP).PDS314 LOOP UNTIL ALL MOVED            33630002
+         AGO   .PDS32                   GO TO NEXT TYPE OF APPENDAGE    33640002
+.****       SAVE VALUES FOR NEXT EXTRY                                  33650002
+.PDS316  ANOP                                                           33660002
+&SGDABEA(1) SETA  &P-1                  RESET LAST RECEIVER ENTRY       33670002
+&SGDABEA(2) SETA  N'&ABEAPP             SAVE NUMBER OF PARAMETERS       33680002
+.********************************************************************** 33820002
+.***            CHANNEL END APPENDAGES                                  33840002
+.********************************************************************** 33860002
+.PDS32   ANOP                                                           33900002
+         AIF   (T'&CHEAPP EQ 'O').PDS34                                 34000002
+         AIF   ('&LIB' NE 'LPALIB' AND '&LIB' NE 'SVCLIB').E305         34050002
+&APP     SETC  'CHEAPP'                 SET   APPENDAGE NAME FOR MSG    34100002
+         AIF   (N'&CHEAPP GT 84).E31    MAX 84 ALLOWED                  34200002
+&N       SETA  1                        INIT INDEX                      34300002
+.PDS322  ANOP                                                           34400002
+         AIF   ('&CHEAPP(&N)' LT 'WA' OR '&CHEAPP(&N)' GT 'Z9').E30     34500002
+&N       SETA  &N+1                                                     34600002
+         AIF   (&N LE N'&CHEAPP).PDS322 LOOP UNTIL ALL CHECKED          34700002
+&N       SETA  1                        SET INDEX FOR SENDING FIELD     34800002
+&P       SETA  1                        SET INDEX FOR RECEIVE FIELD     34900002
+.*                                                                      34920002
+.******   MOVE 4 APPENDAGE NAMES TO ONE C-TYPE GLOBAL AND PRINT THEM    34940002
+.*                                                                      34960002
+  MNOTE *,'* * * THE FOLLOWING &APP APPENDAGES ARE SPECIFIED'           35000002
+.PDS324  AIF   ('&LIB' EQ 'LPALIB').PDS325        LPALIB OR SVCLIB?     35100002
+&SGSCHEC(&P) SETC '&CHEAPP(&N)'.'&CHEAPP(&N+1)'.'&CHEAPP(&N+2)'.'&CHEAP*35200002
+               P(&N+3)'                           SVCLIB APPENDAGES     35300002
+         AGO   .PDS326                                                  35330002
+.PDS325  ANOP                                                           35340002
+&SGLCHEC(&P) SETC '&CHEAPP(&N)'.'&CHEAPP(&N+1)'.'&CHEAPP(&N+2)'.'&CHEAP*35350002
+               P(&N+3)'                           LPALIB APPENDAGES     35360002
+.PDS326  ANOP                                                           35370002
+         AIF   (NOT (&SGDCHEA(1) EQ 0 AND &SGDCHEA(2) EQ 0)).PDS327     35380002
+&SGDCHEC(&P) SETC '&CHEAPP(&N)'.'&CHEAPP(&N+1)'.'&CHEAPP(&N+2)'.'&CHEAP*35390002
+               P(&N+3)'                           USED BY SGIEC6AP      35400002
+.PDS327  ANOP                                                           35408002
+  MNOTE *,'      &CHEAPP(&N),&CHEAPP(&N+1),&CHEAPP(&N+2),&CHEAPP(&N+3)' 35410002
+&N       SETA  &N+4                     INCR TO NEXT SUBPARM TO MOVE    35420002
+&P       SETA  &P+1                     INCR TO NEXT RECEIVER           35430002
+         AIF   (&N LE N'&CHEAPP).PDS324 LOOP UNTIL ALL MOVED            35440002
+         AIF   (&SGDCHEA(2) EQ 0).PDS336  CHEAPP SPECIFIED PREVIOUSLY?  35450002
+&P       SETA  &SGDCHEA(1)            SET INDEX FOR RECEIVE FIELD       35460002
+&N       SETA  (&P*4-&SGDCHEA(2))     NUMBER OF ENTRIES LEFT TO SEND    35470002
+         AIF   (&N NE 3).PDS330       CHECK VALUES TO THREE             35480002
+&SGDCHEC(&P) SETC '&SGDCHEC(&P)'.'&CHEAPP(1)'.'&CHEAPP(2)'.'&CHEAPP(3)' 35490002
+&N       SETA  4                      NEXT ENTRY TO SEND                35500002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          35502002
+         AGO   .PDS335                                                  35510002
+.PDS330  AIF   (&N NE 2).PDS331       CHECK FOR LESS THAN 2 ENTRIES     35520002
+&SGDCHEC(&P) SETC  '&SGDCHEC(&P)'.'&CHEAPP(1)'.'&CHEAPP(2)'             35530002
+&N       SETA  3                                                        35540002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          35542002
+         AGO   .PDS335                                                  35550002
+.PDS331  AIF   (&N NE 1).PDS332       NO ENTRIES                        35560002
+&SGDCHEC(&P) SETC  '&SGDCHEC(&P)'.'&CHEAPP(1)'                          35570002
+&N       SETA  2                                                        35580002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          35582002
+         AGO   .PDS335                                                  35590002
+.PDS332  ANOP                                                           35600002
+&N       SETA  1                        START WITH FIRST ENTRY          35610002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          35612002
+.PDS334  ANOP                                                           35620002
+&SGDCHEC(&P) SETC '&CHEAPP(&N)'.'&CHEAPP(&N+1)'.'&CHEAPP(&N+2)'.'&CHEAP*35630002
+               P(&N+3)'                 USED BY SGIEC6AP                35640002
+&N       SETA  &N+4                     INCR TO NEXT SUBPARM TO MOVE    35650002
+&P       SETA  &P+1                     INCR TO NEXT RECEIVER           35660002
+.PDS335  AIF   (&N LE N'&CHEAPP).PDS334 LOOP UNTIL ALL MOVED            35670002
+         AGO   .PDS34                   GO TO NEXT TYPE OF APPENDAGE    35680002
+.****       SAVE VALUES FOR NEXT EXTRY                                  35690002
+.PDS336  ANOP                                                           35700002
+&SGDCHEA(1) SETA  &P-1                  RESET LAST RECEIVER ENTRY       35710002
+&SGDCHEA(2) SETA  N'&CHEAPP             SAVE NUMBER OF PARAMETERS       35720002
+.********************************************************************** 35820002
+.***            END OF EXTENT APPENDAGES                                35840002
+.********************************************************************** 35860002
+.PDS34   ANOP                                                           35900002
+         AIF   (T'&EOEAPP EQ 'O').PDS36                                 36000002
+         AIF   ('&LIB' NE 'LPALIB' AND '&LIB' NE 'SVCLIB').E305         36050002
+&APP     SETC  'EOEAPP'                 SET   APPENDAGE NAME FOR MSG    36100002
+         AIF   (N'&EOEAPP GT 84).E31    MAX 84 ALLOWED                  36200002
+&N       SETA  1                                                        36300002
+.PDS342  ANOP                                                           36400002
+         AIF   ('&EOEAPP(&N)' LT 'WA' OR '&EOEAPP(&N)' GT 'Z9').E30     36500002
+&N       SETA  &N+1                                                     36600002
+         AIF   (&N LE N'&EOEAPP).PDS342 LOOP UNTIL ALL CHECKED          36700002
+&N       SETA  1                        SET INDEX FOR SENDING FIELD     36800002
+&P       SETA  1                        SET INDEX FOR RECIEVE FIELD     36900002
+.*                                                                      36920002
+.******   MOVE 4 APPENDAGE NAMES TO ONE C-TYPE GLOBAL AND PRINT THEM    36940002
+.*                                                                      36960002
+  MNOTE *,'* * * THE FOLLOWING &APP APPENDAGES ARE SPECIFIED'           37000002
+.PDS344  AIF   ('&LIB' EQ 'LPALIB').PDS345        LPALIB OR SVCLIB?     37020002
+&SGSEOEC(&P) SETC '&EOEAPP(&N)'.'&EOEAPP(&N+1)'.'&EOEAPP(&N+2)'.'&EOEAP*37040002
+               P(&N+3)'                 SVCLIB APPENDAGES               37060002
+         AGO   .PDS346                                                  37080002
+.PDS345  ANOP                                                           37100002
+&SGLEOEC(&P) SETC '&EOEAPP(&N)'.'&EOEAPP(&N+1)'.'&EOEAPP(&N+2)'.'&EOEAP*37200002
+               P(&N+3)'                 LPALIB APPENDAGES               37300002
+.PDS346  ANOP                                                           37400002
+         AIF   (NOT (&SGDEOEA(1) EQ 0 AND &SGDEOEA(2) EQ 0)).PDS347     37410002
+&SGDEOEC(&P) SETC '&EOEAPP(&N)'.'&EOEAPP(&N+1)'.'&EOEAPP(&N+2)'.'&EOEAP*37420002
+               P(&N+3)'                       USED BY SGIEC6AP          37430002
+.PDS347  ANOP                                                           37440002
+  MNOTE *,'      &EOEAPP(&N),&EOEAPP(&N+1),&EOEAPP(&N+2),&EOEAPP(&N+3)' 37450002
+&N       SETA  &N+4                     INCR TO NEXT SUBPARM TO MOVE    37460002
+&P       SETA  &P+1                     INCR TO NEXT RECEIVER           37470002
+         AIF   (&N LE N'&EOEAPP).PDS344 LOOP UNTIL ALL MOVED            37480002
+         AIF   (&SGDEOEA(2) EQ 0).PDS356   EOEAPP NOT SPECIFIED BEFORE  37490002
+&P       SETA  &SGDEOEA(1)            SET INDEX FOR RECEIVE FIELD       37500002
+&N       SETA  (&P*4-&SGDEOEA(2))     NUMBER OF ENTRIES LEFT TO SEND    37510002
+         AIF   (&N NE 3).PDS350       CHECK VALUES TO THREE             37520002
+&SGDEOEC(&P) SETC '&SGDEOEC(&P)'.'&EOEAPP(1)'.'&EOEAPP(2)'.'&EOEAPP(3)' 37530002
+&N       SETA  4                      NEXT ENTRY TO SEND                37540002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          37542002
+         AGO   .PDS355                                                  37550002
+.PDS350  AIF   (&N NE 2).PDS351       CHECK FOR LESS THAN 2 ENTRIES     37560002
+&SGDEOEC(&P) SETC '&SGDEOEC(&P)'.'&EOEAPP(1)'.'&EOEAPP(2)'              37570002
+&N       SETA  3                                                        37580002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          37582002
+         AGO   .PDS355                                                  37590002
+.PDS351  AIF   (&N NE 1).PDS352       NO ENTRIES                        37600002
+&SGDEOEC(&P) SETC  '&SGDEOEC(&P)'.'&EOEAPP(1)'                          37610002
+&N       SETA  2                                                        37620002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          37622002
+         AGO   .PDS355                                                  37630002
+.PDS352  ANOP                                                           37640002
+&N       SETA  1                        START WITH FIRST ENTRY          37650002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          37652002
+.PDS354  ANOP                                                           37660002
+&SGDEOEC(&P) SETC '&EOEAPP(&N)'.'&EOEAPP(&N+1)'.'&EOEAPP(&N+2)'.'&EOEAP*37672002
+               P(&N+3)'                 USED BY SGIEC6AP                37680002
+&N       SETA  &N+4                     INCR TO NEXT SUBPARM TO MOVE    37690002
+&P       SETA  &P+1                     INCR TO NEXT RECEIVER           37700002
+.PDS355  AIF   (&N LE N'&EOEAPP).PDS354 LOOP UNTIL ALL MOVED            37710002
+         AGO   .PDS36                   GO TO NEXT TYPE OF APPENDAGE    37720002
+.****       SAVE VALUES FOR NEXT EXTRY                                  37730002
+.PDS356  ANOP                                                           37740002
+&SGDEOEA(1) SETA  &P-1                  RESET LAST RECEIVER ENTRY       37750002
+&SGDEOEA(2) SETA  N'&EOEAPP             SAVE NUMBER OF PARAMETERS       37760002
+.********************************************************************** 37820002
+.***            PROGRAMMED-CONTROLLED INTERRUPT APPENDAGES              37840002
+.********************************************************************** 37860002
+.PDS36   ANOP                                                           37900002
+         AIF   (T'&PCIAPP EQ 'O').PDS38                                 38000002
+         AIF   ('&LIB' NE 'LPALIB' AND '&LIB' NE 'SVCLIB').E305         38050002
+&APP     SETC  'PCIAPP'                 SET   APPENDAGE NAME FOR MSG    38100002
+         AIF   (N'&PCIAPP GT 84).E31    MAX 84 ALLOWED                  38200002
+&N       SETA  1                                                        38300002
+.PDS362  ANOP                                                           38400002
+         AIF   ('&PCIAPP(&N)' LT 'WA' OR '&PCIAPP(&N)' GT 'Z9').E30     38500002
+&N       SETA  &N+1                                                     38600002
+         AIF   (&N LE N'&PCIAPP).PDS362 LOOP UNTIL ALL CHECKED          38700002
+&N       SETA  1                        SET INDEX FOR SENDING FIELD     38800002
+&P       SETA  1                        SET INDEX FOR RECEIVE FIELD     38900002
+.*                                                                      38920002
+.******   MOVE 4 APPENDAGE NAMES TO ONE C-TYPE GLOBAL AND PRINT THEM    38940002
+.*                                                                      38960002
+  MNOTE *,'* * * THE FOLLOWING &APP APPENDAGES ARE SPECIFIED'           39000002
+.PDS364  AIF   ('&LIB' EQ 'LPALIB').PDS365        LPALIB OR SVCLIB?     39020002
+&SGSPCIC(&P) SETC '&PCIAPP(&N)'.'&PCIAPP(&N+1)'.'&PCIAPP(&N+2)'.'&PCIAP*39040002
+               P(&N+3)'                 SVCLIB APPENDAGES               39060002
+         AGO   .PDS366                                                  39080002
+.PDS365  ANOP                                                           39100002
+&SGLPCIC(&P) SETC '&PCIAPP(&N)'.'&PCIAPP(&N+1)'.'&PCIAPP(&N+2)'.'&PCIAP*39200002
+               P(&N+3)'                 LPALIB APPENDAGES               39300002
+.PDS366  ANOP                                                           39400002
+         AIF   (NOT (&SGDPCIA(1) EQ 0 AND &SGDPCIA(2) EQ 0)).PDS367     39410002
+&SGDPCIC(&P) SETC '&PCIAPP(&N)'.'&PCIAPP(&N+1)'.'&PCIAPP(&N+2)'.'&PCIAP*39420002
+               P(&N+3)'                       USED BY SGIEC6AP          39430002
+.PDS367  ANOP                                                           39440002
+  MNOTE *,'      &PCIAPP(&N),&PCIAPP(&N+1),&PCIAPP(&N+2),&PCIAPP(&N+3)' 39450002
+&N       SETA  &N+4                     INCR TO NEXT SUBPARM TO MOVE    39460002
+&P       SETA  &P+1                     INCR TO NEXT RECEIVER           39470002
+         AIF   (&N LE N'&PCIAPP).PDS364 LOOP UNTIL ALL MOVED            39480002
+         AIF   (&SGDPCIA(2) EQ 0).PDS376  PCIAPP NOT SPECIFIED BEFORE   39490002
+&P       SETA  &SGDPCIA(1)            SET INDEX FOR RECEIVE FIELD       39500002
+&N       SETA  (&P*4-&SGDPCIA(2))     NUMBER OF ENTRIES LEFT TO SEND    39510002
+         AIF   (&N NE 3).PDS370       CHECK VALUES TO THREE             39520002
+&SGDPCIC(&P) SETC '&SGDPCIC(&P)'.'&PCIAPP(1)'.'&PCIAPP(2)'.'&PCIAPP(3)' 39530002
+&N       SETA  4                      NEXT ENTRY TO SEND                39540002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          39542002
+         AGO   .PDS375                                                  39550002
+.PDS370  AIF   (&N NE 2).PDS371       CHECK FOR LESS THAN 2 ENTRIES     39560002
+&SGDPCIC(&P) SETC  '&SGDPCIC(&P)'.'&PCIAPP(1)'.'&PCIAPP(2)'             39570002
+&N       SETA  3                                                        39580002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          39582002
+         AGO   .PDS375                                                  39590002
+.PDS371  AIF   (&N NE 1).PDS372       NO ENTRIES                        39600002
+&SGDPCIC(&P) SETC  '&SGDPCIC(&P)'.'&PCIAPP(1)'                          39610002
+&N       SETA  2                                                        39620002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          39622002
+         AGO   .PDS375                                                  39630002
+.PDS372  ANOP                                                           39640002
+&N       SETA  1                        START WITH FIRST ENTRY          39650002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          39652002
+.PDS374  ANOP                                                           39660002
+&SGDPCIC(&P) SETC '&PCIAPP(&N)'.'&PCIAPP(&N+1)'.'&PCIAPP(&N+2)'.'&PCIAP*39670002
+               P(&N+3)'                 USED BY SGIEC6AP                39680002
+&N       SETA  &N+4                     INCR TO NEXT SUBPARM TO MOVE    39690002
+&P       SETA  &P+1                     INCR TO NEXT RECEIVER           39700002
+.PDS375  AIF   (&N LE N'&PCIAPP).PDS374 LOOP UNTIL ALL MOVED            39710002
+         AGO   .PDS38                   GO TO NEXT TYPE OF APPENDAGE    39720002
+.****       SAVE VALUES FOR NEXT EXTRY                                  39730002
+.PDS376  ANOP                                                           39740002
+&SGDPCIA(1) SETA  &P-1                  RESET LAST RECEIVER ENTRY       39750002
+&SGDPCIA(2) SETA  N'&PCIAPP             SAVE NUMBER OF PARAMETERS       39760002
+.********************************************************************** 39820002
+.***            START I/O APPENDAGES                                    39840002
+.********************************************************************** 39860002
+.PDS38   ANOP                                                           39900002
+         AIF   (T'&SIOAPP EQ 'O').RES   OMITTED?                        40000002
+         AIF   ('&LIB' NE 'LPALIB' AND '&LIB' NE 'SVCLIB').E305         40050002
+&APP     SETC  'SIOAPP'                 SET APPENDAGE NAME FOR MSG      40100002
+         AIF   (N'&ABEAPP GT 84).E31    MAX 84 ALLOWED                  40200002
+&N       SETA  1                                                        40300002
+.PDS382  ANOP                                                           40400002
+         AIF   ('&SIOAPP(&N)' LT 'WA' OR '&SIOAPP(&N)' GT 'Z9').E30     40500002
+&N       SETA  &N+1                                                     40600002
+         AIF   (&N LE N'&SIOAPP).PDS382 LOOP UNTIL ALL CHECKED          40700002
+&N       SETA  1                        SET INDEX FOR SENDING FIELD     40800002
+&P       SETA  1                        SET INDEX FOR RECIEVE FIELD     40900002
+.*                                                                      40920002
+.******   MOVE 4 APPENDAGE NAMES TO ONE C-TYPE GLOBAL AND PRINT THEM    40940002
+.*                                                                      40960002
+  MNOTE *,'* * * THE FOLLOWING &APP APPENDAGES ARE SPECIFIED'           41000002
+.PDS384  AIF   ('&LIB' EQ 'LPALIB').PDS385        LPALIB OR SVCLIB?     41020002
+&SGSSIOC(&P) SETC '&SIOAPP(&N)'.'&SIOAPP(&N+1)'.'&SIOAPP(&N+2)'.'&SIOAP*41040002
+               P(&N+3)'                 SVCLIB APPENDAGES               41060002
+         AGO   .PDS386                                                  41080002
+.PDS385  ANOP                                                           41100002
+&SGLSIOC(&P) SETC '&SIOAPP(&N)'.'&SIOAPP(&N+1)'.'&SIOAPP(&N+2)'.'&SIOAP*41200002
+               P(&N+3)'                 LPALIB APPENDAGES               41300002
+.PDS386  ANOP                                                           41400002
+         AIF   (NOT (&SGDSIOA(1) EQ 0 AND &SGDSIOA(2) EQ 0)).PDS387     41410002
+&SGDSIOC(&P) SETC '&SIOAPP(&N)'.'&SIOAPP(&N+1)'.'&SIOAPP(&N+2)'.'&SIOAP*41420002
+               P(&N+3)'                 USED BY SGIEC6AP                41430002
+.PDS387  ANOP                                                           41440002
+  MNOTE *,'      &SIOAPP(&N),&SIOAPP(&N+1),&SIOAPP(&N+2),&SIOAPP(&N+3)' 41450002
+&N       SETA  &N+4                     INCR TO NEXT SUBPARM TO MOVE    41460002
+&P       SETA  &P+1                     INCR TO NEXT RECEIVER           41470002
+         AIF   (&N LE N'&SIOAPP).PDS384 LOOP UNTIL ALL MOVED            41480002
+         AIF   (&SGDSIOA(2) EQ 0).PDS396  SIOAPP NOT SPECIFIED BEFORE   41490002
+&P       SETA  &SGDSIOA(1)            SET INDEX FOR RECEIVE FIELD       41500002
+&N       SETA  (&P*4-&SGDSIOA(2))     NUMBER OF ENTRIES LEFT TO SEND    41510002
+         AIF   (&N NE 3).PDS390       CHECK VALUES TO THREE             41520002
+&SGDSIOC(&P) SETC '&SGDSIOC(&P)'.'&SIOAPP(1)'.'&SIOAPP(2)'.'&SIOAPP(3)' 41530002
+&N       SETA  4                      NEXT ENTRY TO SEND                41540002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          41542002
+         AGO   .PDS395                                                  41550002
+.PDS390  AIF   (&N NE 2).PDS391       CHECK FOR LESS THAN 2 ENTRIES     41560002
+&SGDSIOC(&P) SETC '&SGDSIOC(&P)'.'&SIOAPP(1)'.'&SIOAPP(2)'              41570002
+&N       SETA  3                                                        41580002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          41582002
+         AGO   .PDS395                                                  41590002
+.PDS391  AIF   (&N NE 1).PDS392       NO ENTRIES                        41600002
+&SGDSIOC(&P) SETC '&SGDSIOC(&P)'.'&SIOAPP(1)'                           41610002
+&N       SETA  2                                                        41620002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          41622002
+         AGO   .PDS395                                                  41630002
+.PDS392  ANOP                                                           41640002
+&N       SETA  1                        START WITH FIRST ENTRY          41650002
+&P       SETA  &P+1                   INCREMENT RECEIVER COUNT          41652002
+.PDS394  ANOP                                                           41660002
+&SGDSIOC(&P) SETC '&SIOAPP(&N)'.'&SIOAPP(&N+1)'.'&SIOAPP(&N+2)'.'&SIOAP*41670002
+               P(&N+3)'                 USED BY SGIEC6AP                41680002
+&N       SETA  &N+4                     INCR TO NEXT SUBPARM TO MOVE    41690002
+&P       SETA  &P+1                     INCR TO NEXT RECEIVER           41700002
+.PDS395  AIF   (&N LE N'&SIOAPP).PDS394 LOOP UNTIL ALL MOVED            41710002
+         AGO   .RES                     GO TO NEXT TYPE OF APPENDAGE    41720002
+.****       SAVE VALUES FOR NEXT EXTRY                                  41730002
+.PDS396  ANOP                                                           41740002
+&SGDSIOA(1) SETA  &P-1                  RESET LAST RECEIVER ENTRY       41750002
+&SGDSIOA(2) SETA  N'&SIOAPP             SAVE NUMBER OF PARAMETERS       41760002
+.********************************************************************** 41770002
+.******** PROCESS RESIDNT= PARAMETERS                                   41900037
+.********************************************************************** 41910002
+.RES     ANOP                           CHECK RESIDNT= KEYWORD          42000002
+         AIF   (T'&RESIDNT EQ 'O').END  OMITTED?                        42100002
+         AIF   (&A NE 6 AND &A NE 9 AND &A NE 12).E32  DATASET LINKLIB,X42200002
+                                        SVCLIB OR LPALIB?               42300002
+         AIF   (N'&RESIDNT GT 10).E33   MAX 10 ALLOWED                  42400002
+.******** MOVE RESIDNT MEMBER NAMES TO GLOBALS                          42500002
+  MNOTE *,'RESIDNT MEMBERS SPECIFIED FOR &LIB FROM &PDS ARE'            42600002
+&SGRES1C(&A) SETC '&RESIDNT(1)'                                         42700002
+  MNOTE *,'         &RESIDNT(1)'                                        42800002
+         AIF   (N'&RESIDNT EQ 1).RES30  LAST ONE?                       42900002
+&SGRES2C(&A) SETC '&RESIDNT(2)'                                         43000002
+  MNOTE *,'         &RESIDNT(2)'                                        43100002
+         AIF   (N'&RESIDNT EQ 2).RES30  LAST ONE?                       43200002
+&SGRES3C(&A) SETC '&RESIDNT(3)'                                         43300002
+  MNOTE *,'         &RESIDNT(3)'                                        43400002
+         AIF   (N'&RESIDNT EQ 3).RES30  LAST ONE?                       43500002
+&SGRES4C(&A) SETC '&RESIDNT(4)'                                         43600002
+  MNOTE *,'         &RESIDNT(4)'                                        43700002
+         AIF   (N'&RESIDNT EQ 4).RES30  LAST ONE?                       43800002
+&SGRES5C(&A) SETC '&RESIDNT(5)'                                         43900002
+  MNOTE *,'         &RESIDNT(5)'                                        44000002
+         AIF   (N'&RESIDNT EQ 5).RES30  LAST ONE?                       44100002
+&SGRES6C(&A) SETC '&RESIDNT(6)'                                         44200002
+  MNOTE *,'         &RESIDNT(6)'                                        44300002
+         AIF   (N'&RESIDNT EQ 6).RES30  LAST ONE?                       44400002
+&SGRES7C(&A) SETC '&RESIDNT(7)'                                         44500002
+  MNOTE *,'         &RESIDNT(7)'                                        44600002
+         AIF   (N'&RESIDNT EQ 7).RES30  LAST ONE?                       44700002
+&SGRES8C(&A) SETC '&RESIDNT(8)'                                         44800002
+  MNOTE *,'         &RESIDNT(8)'                                        44900002
+         AIF   (N'&RESIDNT EQ 8).RES30  LAST ONE?                       45000002
+&SGRES9C(&A) SETC '&RESIDNT(9)'                                         45100002
+  MNOTE *,'         &RESIDNT(9)'                                        45200002
+         AIF   (N'&RESIDNT EQ 9).RES30  LAST ONE?                       45300002
+&SGRESAC(&A) SETC '&RESIDNT(10)'                                        45400002
+  MNOTE *,'         &RESIDNT(10)'                                       45500002
+.RES30   ANOP                                                           45600002
+         AGO   .END                                                     45700002
+.DSMAIN6 ANOP                                                           45800002
+         AIF   (T'&MEMBERS NE 'O').E27  MEMBERS INVALID W/OUT PDS       45900002
+.DS62    ANOP                                                           46000002
+         AIF   (T'&RESIDNT NE 'O').E34  RESIDNT INVALID W/OUT PDS       46100002
+.DS63    ANOP                                                           46150002
+         AIF   (T'&ABEAPP NE 'O').E35                                   46160002
+         AIF   (T'&CHEAPP NE 'O').E35                                   46170002
+         AIF   (T'&EOEAPP NE 'O').E35                                   46180002
+         AIF   (T'&PCIAPP NE 'O').E35                                   46190002
+         AIF   (T'&SIOAPP NE 'O').E35                                   46192002
+         AGO   .PDS18                                                   46200002
+.W1 MNOTE 0,'* * * IEIDTSW01 VOLUME OR UNIT SUBPARM OF VOL PARM IS NULLX46300002
+               , WILL BE DEFAULTED TO RESVOL'                           46400002
+         AGO   .DSMAIN4                                                 46500002
+.E1 MNOTE 5,'* ** *IEIDTS101 LIBRARY &LIB INVALID'                      46600002
+         AGO   .QUIT                                                    46700002
+.E2 MNOTE 5,'* * * IEIDTS102 LIBRARY &LIB PREVIOUSLY DEFINED'           46800002
+         AGO   .QUIT                                                    46900002
+.E3 MNOTE 5,'* * * IEIDTS103 EXACTLY ONE OF SYSTEM LIB, SWAPDSN, OR PAG*46902037
+               EDSN MUST BE SPECIFIED.'                         Z40WSVN 46903037
+         AGO   .QUIT                                            Z40WSVN 46904037
+.E4 MNOTE 5,'* * * IEIDTS104 VOLUME SERIAL TOO LONG'                    47000002
+&SGQUITB SETB 1                                                         47100002
+         AGO   .DS415                                                   47200002
+.E5 MNOTE 5,'* * * IEIDTS105 WRONG NUMBER OF SUBPARMS IN VOL PARAMETER' 47300002
+&SGQUITB SETB 1                                                         47400002
+         AGO   .DSMAIN4                                                 47500002
+.E6 MNOTE 5,'* * * IEIDTS106 INVALID DEVICE TYPE &VOL(2)'               47600002
+&SGQUITB SETB 1                                                         47700002
+         AGO   .DSMAIN4                                                 47800002
+.E7 MNOTE 5,'* * * IEIDTS107 NAME PARM TOO LONG OR INVALID FIRST CHARAC*47810037
+               TER'                                             Z40WSVN 47820037
+&SGQUITB SETB 1                                                 Z40WSVN 47830037
+         AGO   .NM9                                             Z40WSVN 47840037
+.E8 MNOTE 5,'* * * IEIDTS108 INVALID BLOCKSIZE &SPACE(1)'               47900002
+&SGQUITB SETB 1                                                         48000002
+         AGO   .DSMAIN5                                                 48100002
+.E9 MNOTE 5,'* * * IEIDTS109 SECONDARY SPACE NOT ALLOWED FOR PAGE OR SW*48101037
+               AP DATA SETS'                                    Z40WSVN 48102037
+         AGO   .QUIT                                            Z40WSVN 48103037
+.E10 MNOTE 5,'* * * IEIDTS110 DIRECTORY BLOCKS REQUIRED FOR PDS'        48110002
+&SGQUITB SETB 1                                                         48120002
+         AGO   .DSMAIN5                                                 48130002
+.E11 MNOTE 5,'* * * IEIDTS111 INCORRECT FORMAT/UNITS ON SPACE OPERAND'  48500037
+&SGQUITB SETB 1                                                         48510037
+         AGO   .DSMAIN5                                                 48700037
+.E12 MNOTE 5,'* * * IEIDTS112 PRIMARY SPACE PARAMETER INVALID'          48800002
+&SGQUITB SETB 1                                                         48900002
+         AGO   .DSS35                                                   49000002
+.E13 MNOTE 5,'* * * IEIDTS113 SECONDARY SPACE INVALID FOR &LIB'         49100002
+&SGQUITB SETB 1                                                         49200002
+         AGO   .DSS38                                                   49300002
+.E14 MNOTE 5,'* * * IEIDTS114 SECONDARY SPACE INVALID'                  49400002
+&SGQUITB SETB 1                                                         49500002
+         AGO   .DSS38                                                   49600002
+.E15 MNOTE 5,'* * * IEIDTS115 TOO MANY SUBPARMS IN SPACE PARAMETER'     49700002
+&SGQUITB SETB 1                                                         49800002
+         AGO   .DSMAIN5                                                 49900002
+.E16 MNOTE 5,'* * * IEIDTS116 DIRECTORY BLOCK SIZE INVALID'             50000002
+&SGQUITB SETB 1                                                         50100002
+         AGO   .DSMAIN5                                                 50200002
+.E17 MNOTE 5,'* * * IEIDTS117 DIRECTORY BLOCK INVALID FOR &LIB'         50300002
+&SGQUITB SETB 1                                                         50400002
+         AGO   .DSMAIN5                                                 50500002
+.E18 MNOTE 5,'* * * IEIDTS118 NAME= IS NOT ALLOWED FOR &LIB'    Z40WSVN 50600037
+&SGQUITB SETB 1                                                         50700002
+         AGO   .NM9                                             Z40WSVN 50800037
+.E19 MNOTE 5,'* * * IEIDTS119 PRIMARY SPACE PARAMETER INVALID'  Z40WSVN 50810037
+         AGO   .QUIT                                            Z40WSVN 50820037
+.E20 MNOTE 5,'* * * IEIDTS200 PAGEDSN SPECIFIED MORE THAN 25 TIMES'     50830037
+         AGO   .QUIT                                            Z40WSVN 50840037
+.E21 MNOTE 5,'* * * IEIDTS210 DATASET NAME &PAGEDSN IS INVALID' Z40WSVN 51200037
+&SGQUITB SETB 1                                                         51300002
+         AGO   .PG1255                                                  51400002
+.E22 MNOTE 5,'* * * IEIDTS220 VOL MUST BE SPECIFIED FOR PAGEDSN IF SPACX51500002
+               E IS SPECIFIED'                                          51600002
+&SGQUITB SETB 1                                                         51700002
+         AGO   .PG1257                                                  51800002
+.E23 MNOTE 5,'* * * IEIDTS230 VOL PARAMETER INCORRECTLY SPECIFIED'      51900002
+&SGQUITB SETB 1                                                         52000002
+         AGO   .PG1257                                                  52100002
+.E24 MNOTE 5,'* * * IEIDTS240 VOLUME SERIAL TOO LONG'                   52200002
+&SGQUITB SETB 1                                                         52300002
+         AGO   .PG1256                                                  52400037
+.E25 MNOTE 5,'* * * IEIDTS250 INVALID DEVICE TYPE &VOL(2)'              52500002
+&SGQUITB SETB 1                                                         52600002
+         AGO   .PG1257                                                  52700002
+.E26 MNOTE 5,'* * * IEIDTS260 NAME MUST BE SPECIFIED FOR &LIB'  Z40WSVN 52800037
+&SGQUITB SETB 1                                                         52900002
+         AGO   .NM9                                             Z40WSVN 53000037
+.E27 MNOTE 5,'* * * IEIDTS270 PDS MUST BE SPECIFIED FOR MEMBERS'        53100002
+&SGQUITB SETB 1                                                         53200002
+         AGO   .DS62                                                    53300002
+.E28 MNOTE 5,'* * * IEIDTS280 PDS NOT ALLOWED FOR &LIB'         Z40WSVN 53400037
+         AGO   .QUIT                                                    53500002
+.E29 MNOTE 5,'* * * IEIDTS290 TOO MANY MEMBERS SPECIFIED FOR &PDS'      53600002
+&SGQUITB SETB 1                                                         53700002
+         AGO   .PDS30                                                   53800002
+.E30 MNOTE 5,'* * * IEIDTS300 &N TH APPENDAGE NAME FOR &APP IS INVALID' 53900002
+&SGQUITB SETB 1                                                         54000002
+         AGO   .RES                                                     54100002
+.E305 MNOTE 5,'* * * IEIDTS305 &APP APPENDAGE MUST RESIDE IN LPALIB OR *54150002
+               SVCLIB'                                                  54152002
+&SGQUITB SETB 1                                                         54160002
+         AGO   .RES                                                     54170002
+.E31 MNOTE 5,'* * * IEIDTS310 TOO MANY APPENDAGES SPECIFIED FOR &APP'   54200002
+&SGQUITB SETB 1                                                         54300002
+         AGO .RES                                                       54400002
+.E32 MNOTE 5,'* * * IEIDTS320 RESIDNT KEYWORD INVALID FOR &LIB'         54500002
+         AGO   .QUIT                                                    54600002
+.E33 MNOTE 5,'* * * IEIDTS330 TOO MANY RESIDNT MEMBERS SPECIFIED'       54700002
+         AGO   .QUIT                                                    54800002
+.E34 MNOTE 5,'* * * IEIDTS340 PDS KEYWORD REQUIRED FOR RESIDNT KEYWORD' 54900002
+&SGQUITB SETB 1                                                         54950002
+         AGO   .DS63                                                    55000002
+.E35 MNOTE 5,'* * * IEIDTS350 PDS KEYWORD REQUIRED FOR ALL APPENDAGES ' 55050002
+&SGQUITB SETB 1                                                         55052002
+         AGO   .PDS18                                                   55060002
+.E36 MNOTE 5,'* * * IEIDTS136 SWAPDSN SPECIFIED MORE THAN 10 TIMES'    *55070037
+                                                                Z40WSVN 55071037
+         AGO   .QUIT                                            Z40WSVN 55080037
+.E37 MNOTE 5,'* * * IEIDTS137 DATASET NAME &SWAPDSN IS INVALID' Z40WSVN 55090037
+&SGQUITB SETB 1                                                 Z40WSVN 55100037
+         AGO   .SW1255                                          Z40WSVN 55110037
+.E38 MNOTE 5,'* * * IEIDTS138 VOL MUST BE SPECIFIED FOR SWAPDSN IF SPACX55120037
+               E IS SPECIFIED'                                  Z40WSVN 55130037
+&SGQUITB SETB 1                                                 Z40WSVN 55140037
+         AGO   .SW1257                                          Z40WSVN 55150037
+.E39 MNOTE 5,'* * * IEIDTS139 VOL PARAMETER INCORRECTLY SPECIFIED'      55160037
+&SGQUITB SETB 1                                                 Z40WSVN 55170037
+         AGO   .SW1257                                          Z40WSVN 55180037
+.E40 MNOTE 5,'* * * IEIDTS140 VOLUME SERIAL TOO LONG'           Z40WSVN 55190037
+&SGQUITB SETB 1                                                 Z40WSVN 55200037
+         AGO   .SW1256                                          Z40WSVN 55210037
+.E41 MNOTE 5,'* * * IEIDTS250 INVALID DEVICE TYPE &VOL(2)'      Z40WSVN 55220037
+&SGQUITB SETB 1                                                 Z40WSVN 55230037
+         AGO   .SW1257                                          Z40WSVN 55240037
+.E42 MNOTE 5,'* * * IEIDTS111 INCORRECT FORMAT/UNITS ON SPACE OPERAND'  55250037
+.*       AGO   .QUIT            REMOVE .* FOR NEW MESSAGE       Z40WSVN 55260037
+.QUIT ANOP                                                              70000037
+&SGQUITB SETB 1                                                         70100037
+.END     MEND                                                           70200037

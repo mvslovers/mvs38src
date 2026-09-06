@@ -1,0 +1,178 @@
+         MACRO                                                          00050000
+         SGHMA402                                                       00100000
+         COPY   SGGBLPAK            SYSTEM GLOBALS                      00150000
+&SGCTRLC(7) SETC  '&SGCTRLC(32)'    OUTPUT VOL                          00200000
+&SGCTRLC(8) SETC  '&SGCTRLC(31)'    OUTPUT UNIT                         00250000
+&SGCTRLC(9) SETC  'LINKLIB'         OUTPUT DSNAME                       00300000
+&SGCTRLC(13) SETC  ',SIZE=(512K,100K)'                                  00325000
+         COPY  SGLEDPK1             PUNCH JCL FOR LKED                  00350000
+         PUNCH '//*******************************'                      00358300
+         PUNCH '//*                             *'                      00366600
+         PUNCH '//* SMP 1.4 SYSGEN MACRO        *'                      00374900
+         PUNCH '//*                             *'                      00383200
+         PUNCH '//*******************************'                      00391500
+         PUNCH '//AOS12    DD DSNAME=SYS1.AOS12, '                      00400000
+         PUNCH '//         VOLUME=(,RETAIN),DISP=SHR'                   00450000
+         COPY  SGLEDPK2             NULL GLOBALS,PUNCH SYSLIN           00500000
+         PUNCH ' ORDER HMASMDRV           SMP DRIVER FUNCTION'          00506900
+         PUNCH ' ORDER HMASMDSU,HMASMDC2'                               00513800
+         PUNCH ' ORDER HMASMDS1,HMASMBDL'                               00520700
+         PUNCH ' ORDER HMASMDR1,HMASMDR2'                               00527600
+         PUNCH ' ORDER HMASMIO              SMP IO RTNS'                00534500
+         PUNCH ' ORDER HMASMION,HMASMIO1'                               00541400
+         PUNCH ' ORDER HMASMEIS,HMASMRDS'                               00548300
+         PUNCH ' ORDER HMASMALC'                                        00555200
+         PUNCH ' ORDER HMASMSTA           SMP STAE RTNS'                00562100
+         PUNCH ' ORDER HMASMSER'                                        00569000
+         PUNCH ' ORDER HMASMEFR           X37 RECOVERY @IR09104'        00575900
+         PUNCH ' ORDER HMASMREC           SMP RECEIVE RTNS'             00582800
+         PUNCH ' ORDER HMASMRCC,HMASMRCD'                               00589700
+         PUNCH ' ORDER HMASMRCF,HMASMRCL'                               00596600
+         PUNCH ' ORDER HMASMTBL           SMP ICT BUILD RTNS'           00603500
+         PUNCH ' ORDER HMASMTAD,HMASMTAI'                               00610400
+         PUNCH ' ORDER HMASMTBM,HMASMTCL'                               00617300
+         PUNCH ' ORDER HMASMTSB,HMASMTEC'                               00624200
+         PUNCH ' ORDER HMASMTDD'                                        00631100
+         PUNCH ' ORDER HMASMTPD               ICT PTF BUILD'            00638000
+         PUNCH ' ORDER HMASMTPA,HMASMTPR'                               00644900
+         PUNCH ' ORDER HMASMTPC,HMASMTPL'                               00651800
+         PUNCH ' ORDER HMASMTP2,HMASMTPS'                               00658700
+         PUNCH ' ORDER HMASMTD1,HMASMTPO'                               00665600
+         PUNCH ' ORDER HMASMTCR,HMASMTR1'                               00672500
+         PUNCH ' ORDER HMASMTMJ               INLINE JCLIN'             00679400
+         PUNCH ' ORDER HMASMTMD               ICT MOD BUILD'            00686300
+         PUNCH ' ORDER HMASMTMS,HMASMTRM'                               00693200
+         PUNCH ' ORDER HMASMTM1,HMASMTM2'                               00700100
+         PUNCH ' ORDER HMASMTM3,HMASMTM4'                               00707000
+         PUNCH ' ORDER HMASMTMW,HMASMTID'                               00713900
+         PUNCH ' ORDER HMASMTL1               ICT LMOD BUILD'           00720800
+         PUNCH ' ORDER HMASMTL2,HMASMTL3'                               00727700
+         PUNCH ' ORDER HMASMAAR           SMP APP/ACC/RES RTN'          00734600
+         PUNCH ' ORDER HMASMDLE               DELETE RTN'               00741500
+         PUNCH ' ORDER HMASMCOM,HMASMCPI      COPY INTF'                00748400
+         PUNCH ' ORDER HMASMUPI               UPDATE INTF'              00755300
+         PUNCH ' ORDER HMASMCMP,HMASMASI      ASSEM INTF'               00762200
+         PUNCH ' ORDER HMASMCIL,HMASMLKI      COPY/LINK INTF'           00769100
+         PUNCH ' ORDER HMASMPIN           X37 RECOVERY @IR09104'        00776000
+         PUNCH ' ORDER HMASMULI           X37 RECOVERY @IR09104'        00782900
+         PUNCH ' ORDER HMASMZAP               ZAP INTF'                 00789800
+         PUNCH ' ORDER HMASMCPL               COMPLETION RTNS'          00796700
+         PUNCH ' ORDER HMASMCP2,HMASMPGC'                               00803600
+         PUNCH ' ORDER HMASMIDU,HMASMSUP'                               00810500
+         PUNCH ' ORDER HMASMSEC,HMASMCRW'                               00817400
+         PUNCH ' ORDER HMASMREJ           SMP REJECT RTNS'              00824300
+         PUNCH ' ORDER HMASMRJD'                                        00831200
+         PUNCH ' ORDER HMASMUPD           SMP JCLIN RTNS'               00838100
+         PUNCH ' ORDER HMASMASM,HMASMCPY'                               00845000
+         PUNCH ' ORDER HMASMLKD'                                        00851900
+         PUNCH ' ORDER HMASMBUE,HMASMBUR'                               00858800
+         PUNCH ' ORDER HMASMUCD           SMP UCLIN RTNS'               00865700
+         PUNCH ' ORDER HMASMUC1,HMASMULK        @IR08637'               00872600
+         PUNCH ' ORDER HMASMUC2                 @IR08637'               00879500
+         PUNCH ' ORDER HMASMUC3,HMASMUC4'                               00886400
+         PUNCH ' ORDER HMASMLID           SMP LIST RTNS'                00893300
+         PUNCH ' ORDER HMASMLCD,HMASMLCP'                               00900200
+         PUNCH ' ORDER HMASMLCC,HMASMLOG'                               00907100
+         PUNCH ' ORDER HMASMLC1'                                        00914000
+         PUNCH ' ORDER HMASMFPT,HMASMFVL'                               00920900
+         PUNCH ' ORDER HMASMXRF,HMASMFXF'                               00927800
+         PUNCH ' ORDER HMASMADD                 @IR08637'               00934700
+         PUNCH ' ORDER HMASMARL           SMP REPORT RTNS'              00941600
+         PUNCH ' ORDER HMASMAR1,HMASMAR2'                               00948500
+         PUNCH ' ORDER HMASMAR3,HMASMAR4'                               00955400
+         PUNCH ' ORDER HMASMMPD           SMP SYSMOD PARSE'             00962300
+         PUNCH ' ORDER HMASMMPE,HMASMMPH'                               00969200
+         PUNCH ' ORDER HMASMMPI,HMASMMPV'                               00976100
+         PUNCH ' ORDER HMASMMPL                   @IR18012'             00979500
+         PUNCH ' ORDER HMASMMPA,HMASMMDR  R3 COMPAT PTF @IR64329'       00980500
+         PUNCH ' ORDER HMASMMSG           SMP MESSAGE RTNS'             00983000
+         PUNCH ' ORDER HMASMDC1'                                        00989900
+         PUNCH ' ORDER HMASMSUB           SMP GENERAL RTNS'             00996800
+         PUNCH ' ORDER HMASMCRD,HMASMSCN'                               01003700
+         PUNCH ' ORDER HMASMGTA,HMASMVLU'                               01010600
+         PUNCH ' ORDER HMASMUXC           SMP USER EXIT INTF'           01017500
+         PUNCH ' INCLUDE AOS12(HMASMDRV)           SMP DRIVER FUNCTION' 01024400
+         PUNCH ' INCLUDE AOS12(HMASMDSU,HMASMDC2)'                      01031300
+         PUNCH ' INCLUDE AOS12(HMASMDS1,HMASMBDL)'                      01038200
+         PUNCH ' INCLUDE AOS12(HMASMDR1,HMASMDR2)'                      01045100
+         PUNCH ' INCLUDE AOS12(HMASMIO)            SMP IO RTNS'         01052000
+         PUNCH ' INCLUDE AOS12(HMASMION,HMASMIO1)'                      01058900
+         PUNCH ' INCLUDE AOS12(HMASMEIS,HMASMRDS)'                      01065800
+         PUNCH ' INCLUDE AOS12(HMASMALC)'                               01072700
+         PUNCH ' INCLUDE AOS12(HMASMSTA)           SMP STAE RTNS'       01079600
+         PUNCH ' INCLUDE AOS12(HMASMSER)'                               01086500
+         PUNCH ' INCLUDE AOS12(HMASMEFR)  X37 RECOVERY     @IR09104'    01093400
+         PUNCH ' INCLUDE AOS12(HMASMREC)           SMP RECEIVE RTNS'    01100300
+         PUNCH ' INCLUDE AOS12(HMASMRCC,HMASMRCD)'                      01107200
+         PUNCH ' INCLUDE AOS12(HMASMRCF,HMASMRCL)'                      01114100
+         PUNCH ' INCLUDE AOS12(HMASMTBL)           SMP ICT BUILD RTNS'  01121000
+         PUNCH ' INCLUDE AOS12(HMASMTAD,HMASMTAI)'                      01127900
+         PUNCH ' INCLUDE AOS12(HMASMTBM,HMASMTCL)'                      01134800
+         PUNCH ' INCLUDE AOS12(HMASMTSB,HMASMTEC)'                      01141700
+         PUNCH ' INCLUDE AOS12(HMASMTDD)'                               01148600
+         PUNCH ' INCLUDE AOS12(HMASMTPD)               ICT PTF BUILD'   01155500
+         PUNCH ' INCLUDE AOS12(HMASMTPA,HMASMTPR)'                      01162400
+         PUNCH ' INCLUDE AOS12(HMASMTPC,HMASMTPL)'                      01169300
+         PUNCH ' INCLUDE AOS12(HMASMTP2,HMASMTPS)'                      01176200
+         PUNCH ' INCLUDE AOS12(HMASMTD1,HMASMTPO)'                      01183100
+         PUNCH ' INCLUDE AOS12(HMASMTCR,HMASMTR1)'                      01190000
+         PUNCH ' INCLUDE AOS12(HMASMTMJ)               INLINE JCLIN'    01196900
+         PUNCH ' INCLUDE AOS12(HMASMTMD)               ICT MOD BUILD'   01203800
+         PUNCH ' INCLUDE AOS12(HMASMTMS,HMASMTRM)'                      01210700
+         PUNCH ' INCLUDE AOS12(HMASMTM1,HMASMTM2)'                      01217600
+         PUNCH ' INCLUDE AOS12(HMASMTM3,HMASMTM4)'                      01224500
+         PUNCH ' INCLUDE AOS12(HMASMTMW,HMASMTID)'                      01231400
+         PUNCH ' INCLUDE AOS12(HMASMTL1)               ICT LMOD BUILD'  01238300
+         PUNCH ' INCLUDE AOS12(HMASMTL2,HMASMTL3)'                      01245200
+         PUNCH ' INCLUDE AOS12(HMASMAAR)           SMP APP/ACC/RES RTN' 01252100
+         PUNCH ' INCLUDE AOS12(HMASMDLE)               DELETE RTN'      01259000
+         PUNCH ' INCLUDE AOS12(HMASMCOM,HMASMCPI)      COPY INTF'       01265900
+         PUNCH ' INCLUDE AOS12(HMASMUPI)               UPDATE INTF'     01272800
+         PUNCH ' INCLUDE AOS12(HMASMCMP,HMASMASI)      ASSEM INTF'      01279700
+         PUNCH ' INCLUDE AOS12(HMASMCIL,HMASMLKI)      COPY/LINK INTF'  01286600
+         PUNCH ' INCLUDE AOS12(HMASMPIN)  X37 RECOVERY     @IR09104'    01293500
+         PUNCH ' INCLUDE AOS12(HMASMULI)  X37 RECOVERY     @IR09104'    01300400
+         PUNCH ' INCLUDE AOS12(HMASMZAP)               ZAP INTF'        01307300
+         PUNCH ' INCLUDE AOS12(HMASMCPL)               COMPLETION RTNS' 01314200
+         PUNCH ' INCLUDE AOS12(HMASMCP2,HMASMPGC)'                      01321100
+         PUNCH ' INCLUDE AOS12(HMASMIDU,HMASMSUP)'                      01328000
+         PUNCH ' INCLUDE AOS12(HMASMSEC,HMASMCRW)'                      01334900
+         PUNCH ' INCLUDE AOS12(HMASMREJ)           SMP REJECT RTNS'     01341800
+         PUNCH ' INCLUDE AOS12(HMASMRJD)'                               01348700
+         PUNCH ' INCLUDE AOS12(HMASMUPD)           SMP JCLIN RTNS'      01355600
+         PUNCH ' INCLUDE AOS12(HMASMASM,HMASMCPY)'                      01362500
+         PUNCH ' INCLUDE AOS12(HMASMLKD)'                               01369400
+         PUNCH ' INCLUDE AOS12(HMASMBUE,HMASMBUR)'                      01376300
+         PUNCH ' INCLUDE AOS12(HMASMUCD)           SMP UCLIN RTNS'      01383200
+         PUNCH ' INCLUDE AOS12(HMASMUC1,HMASMULK)        @IR08637'      01390100
+         PUNCH ' INCLUDE AOS12(HMASMUC2)                 @IR08637'      01397000
+         PUNCH ' INCLUDE AOS12(HMASMUC3,HMASMUC4)'                      01403900
+         PUNCH ' INCLUDE AOS12(HMASMLID)           SMP LIST RTNS'       01410800
+         PUNCH ' INCLUDE AOS12(HMASMLCD,HMASMLCP)'                      01417700
+         PUNCH ' INCLUDE AOS12(HMASMLCC,HMASMLOG)'                      01424600
+         PUNCH ' INCLUDE AOS12(HMASMLC1)'                               01431500
+         PUNCH ' INCLUDE AOS12(HMASMFPT,HMASMFVL)'                      01438400
+         PUNCH ' INCLUDE AOS12(HMASMXRF,HMASMFXF)'                      01445300
+         PUNCH ' INCLUDE AOS12(HMASMADD)                 @IR08637'      01452200
+         PUNCH ' INCLUDE AOS12(HMASMARL)           SMP REPORT RTNS'     01459100
+         PUNCH ' INCLUDE AOS12(HMASMAR1,HMASMAR2)'                      01466000
+         PUNCH ' INCLUDE AOS12(HMASMAR3,HMASMAR4)'                      01472900
+         PUNCH ' INCLUDE AOS12(HMASMMPD)           SMP SYSMOD PARSE'    01479800
+         PUNCH ' INCLUDE AOS12(HMASMMPE,HMASMMPH)'                      01486700
+         PUNCH ' INCLUDE AOS12(HMASMMPI,HMASMMPV)'                      01493600
+         PUNCH ' INCLUDE AOS12(HMASMMPL)                   @IR18012'    01497000
+         PUNCH ' INCLUDE AOS12(HMASMMPA,HMASMMDR) R3COMP PTF @IR64329'  01498000
+         PUNCH ' INCLUDE AOS12(HMASMMSG)           SMP MESSAGE RTNS'    01500500
+         PUNCH ' INCLUDE AOS12(HMASMDC1)'                               01507400
+         PUNCH ' INCLUDE AOS12(HMASMSUB)           SMP GENERAL RTNS'    01514300
+         PUNCH ' INCLUDE AOS12(HMASMCRD,HMASMSCN)'                      01521200
+         PUNCH ' INCLUDE AOS12(HMASMGTA,HMASMVLU)'                      01528100
+         PUNCH ' INCLUDE AOS12(HMASMUXC)           SMP USER EXIT INTF'  01535000
+         PUNCH ' ENTRY HMASMDRV'                                        01550000
+         PUNCH ' SETCODE AC(1)'                                         01600000
+         PUNCH ' NAME HMASMP(R)'                                        01650000
+         PUNCH ' INCLUDE AOS12(HMASMUXD)          SMP DUMMY USER EXIT'  01662500
+         PUNCH ' ENTRY HMASMUXD'                                        01675000
+         PUNCH ' NAME HMASMUXD(R)'                                      01687500
+         PUNCH '/*'                                                     01700000
+         MEND                                                           01750000

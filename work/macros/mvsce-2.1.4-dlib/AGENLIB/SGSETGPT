@@ -1,0 +1,295 @@
+          MACRO                                                         00050000
+          SGSETGPT                                                      00100000
+          COPY    SGGBLPAK                                              00150000
+          LCLA      &I,&I1,&I2                                          00200000
+          LCLA      &PREF1,&PREF2                                       00210000
+          LCLA      &P                                                  00220000
+          LCLA      &SWAPPER,&SORTER(200)                               00230000
+.**** START OF SPECIFICATIONS ***************************************** 00250000
+.*                                                                    * 00300000
+.* MODULE NAME - SGSETGPT                                             * 00350000
+.*                                                                    * 00400000
+.* DESCRIPTIVE NAME - GENERIC PREFERENCE TABLE SUPPORT                * 00450000
+.*                                                                    * 00500000
+.* COPYRIGHT - NONE                                                   * 00550000
+.*                                                                    * 00600000
+.* STATUS - CHANGE LEVEL 00                                   @G64HSPD* 00650000
+.*                                                                    * 00700000
+.* FUNCTION -                                                         * 00750000
+.*   THIS MACRO SETS UP THE GENERIC PREFERENCE TABLE (GPT), WHICH     * 00800000
+.*   REPRESENTS THE DEFAULT ORDER IN WHICH GENERICS ARE TO BE         * 00850000
+.*   CONSIDERED FOR DEVICE ALLOCATION. THE VALUE PLACED IN  AN  ENTRY * 00900000
+.*   OF THE TABLE IS THE INDEX INTO &SGGNRIC OF THE GENERIC NAME      * 00920000
+.*   WHICH OCCUPIES THE CORRESPONDING POSITION IN THE GPT. A          * 00940000
+.*   VALUE ASSIGNED TO A GENERIC (&SGPREFA(1-200)) IS USED TO SORT    * 00960000
+.*   THE DIT INDEXES INTO GENERIC PREFERENCE ORDER.                   * 00980000
+.*   THIS MACRO IS CALLED BY GENERATE  FOR ALL AND IO SYSGENS.        * 01000000
+.*                                                                    * 01070000
+.* NOTES - N/A                                                        * 01100000
+.*                                                                    * 01150000
+.* MODULE TYPE - MACRO                                                * 01200000
+.*                                                                    * 01250000
+.* ENTRY POINT - N/A                                                  * 01300000
+.*                                                                    * 01350000
+.* INPUT - NONE                                                       * 01400000
+.*                                                                    * 01450000
+.* OUTPUT -                                                           * 01500000
+.*        THE FOLLOWING GLOBALS ARE SET:                              * 01550000
+.*            &SGGPTXA(1-200) - INDEX INTO &SGGNRIC (IN DEVICE        * 01600000
+.*                              INFORMATION TABLE) OF GENERIC         * 01650000
+.*                              OCCUPYING THIS POSITION IN            * 01700000
+.*                              THE PREFERENCE TABLE.                 * 01750000
+.*                                                                    * 01800000
+.*            &SGPREFA(1-200) - PREFERENCE TABLE ORDER NUMBER         * 01806000
+.*                                                                    * 01812000
+.*        LOCALS USED ARE -                                           * 01818000
+.*             &I - CURRENT ENTRY IN THE GENERIC PREFERENCE TABLE     * 01824000
+.*                                                                    * 01830000
+.*             &I1,&I2,&P - VARIABLES USED TO INDEX THE SORTING       * 01836000
+.*                  ARRAY (&SORTER)                                   * 01842000
+.*                                                                    * 01848000
+.*             &PREF1,&PREF2 - UTILITY VARIABLES USED TO HOLD AND     * 01854000
+.*                  COMPARE PREFERENCE ORDER NUMBERS                  * 01858000
+.*                                                                    * 01862000
+.*             &SORTER -  ARRAY USED FOR SORTING                      * 01866000
+.*                                                                    * 01878000
+.*             &SWAPPER -  VARIABLE USED TO SWAP ADJCENT ENTRIES      * 01884000
+.*                                                                    * 01900000
+.*  EXIT, NORMAL - N/A                                                * 01950000
+.*                                                                    * 02000000
+.*  EXIT, ERROR  - N/A                                                * 02050000
+.*                                                                    * 02100000
+.*  EXTERNAL REFERENCES - N/A                                         * 02150000
+.*                                                                    * 02200000
+.*  TABLES - GENERIC PREFERENCE TABLE (GPT)                           * 02250000
+.*                                                                    * 02300000
+.*  MACROS - N/A                                                      * 02350000
+.*                                                                    * 02400000
+.*  CHANGE ACTIVITY - N/A                                             * 02450000
+.* A                                      CTC GENERIC        @ZA58289 * 02500000
+.******* END OF SPECIFICATIONS **************************************** 02550000
+.*                                                                      02600000
+.*              SET PREFERENCE ORDER NUMBER FOR PRE SU64 DEVICES        02650000
+.*                                                                      02700000
+.*           DIT  1         2305-1                                      02750000
+&SGPREFA(1)  SETA 100       SET PREFERENCE ORDER NUMBER                 02800000
+.*           DIT  2         2305-2                                      02850000
+&SGPREFA(2)  SETA 200                                                   02900000
+.*           DIT  3         3350                                        02950000
+&SGPREFA(3)  SETA 300                                                   03000000
+.*           DIT  4         3330-1                                      03050000
+&SGPREFA(4)  SETA 400                                                   03100000
+.*           DIT  5         3330                                        03150000
+&SGPREFA(5)  SETA 500                                                   03200000
+.*           DIT  6         3340                                        03250000
+&SGPREFA(6)  SETA 600                                                   03300000
+.*           DIT  7         2314                                        03350000
+&SGPREFA(7)  SETA 700                                                   03400000
+.*           DIT  8         2400                                        03450000
+&SGPREFA(8)  SETA 800                                                   03500000
+.*           DIT  9         2400-3                                      03550000
+&SGPREFA(9)  SETA 900                                                   03600000
+.*           DIT  10        2400-4                                      03650000
+&SGPREFA(10) SETA 1000                                                  03700000
+.*           DIT  11        3400-3                                      03750000
+&SGPREFA(11) SETA 1100                                                  03800000
+.*           DIT  12        3400-4                                      03850000
+&SGPREFA(12) SETA 1200                                                  03900000
+.*           DIT  13        2400-1                                      03950000
+&SGPREFA(13) SETA 1300                                                  04000000
+.*           DIT  14        2400-2                                      04050000
+&SGPREFA(14) SETA 1400                                                  04100000
+.*           DIT  15        3400-2                                      04150000
+&SGPREFA(15) SETA 1500                                                  04200000
+.*           DIT  16        3400-5                                      04250000
+&SGPREFA(16) SETA 1600                                                  04300000
+.*           DIT  17        3400-6                                      04350000
+&SGPREFA(17) SETA 1700                                                  04400000
+.*           DIT  18        3800                                        04450000
+&SGPREFA(18) SETA 1800                                                  04500000
+.*           DIT  19        3211                                        04550000
+&SGPREFA(19) SETA 1900                                                  04600000
+.*           DIT  101       3203-4                                      04650000
+&SGPREFA(101) SETA 2000                                                 04700000
+.*           DIT  20        1403                                        04750000
+&SGPREFA(20) SETA 2100                                                  04800000
+.*           DIT  21        1443                                        04850000
+&SGPREFA(21) SETA 2200                                                  04900000
+.*           DIT  22        2501                                        04950000
+&SGPREFA(22) SETA 2300                                                  05000000
+.*           DIT  23        3505                                        05050000
+&SGPREFA(23) SETA 2400                                                  05100000
+.*           DIT  24        3525                                        05150000
+&SGPREFA(24) SETA 2500                                                  05200000
+.*           DIT  25        2671                                        05250000
+&SGPREFA(25) SETA 2600                                                  05300000
+.*           DIT  26        2520                                        05350000
+&SGPREFA(26) SETA 2700                                                  05400000
+.*           DIT  27        2540                                        05450000
+&SGPREFA(27) SETA 2800                                                  05500000
+.*           DIT  28        2540-2                                      05550000
+&SGPREFA(28) SETA 2900                                                  05600000
+.*           DIT  29        1053                                        05650000
+&SGPREFA(29) SETA 3000                                                  05700000
+.*           DIT  30        3210                                        05750000
+&SGPREFA(30) SETA 3100                                                  05800000
+.*           DIT  31        3215                                        05850000
+&SGPREFA(31) SETA 3200                                                  05900000
+.*           DIT  32        3213                                        05950000
+&SGPREFA(32) SETA 3300                                                  06000000
+.*           DIT  33        2250-1                                      06050000
+&SGPREFA(33) SETA 3400                                                  06100000
+.*           DIT  34        2250-3                                      06150000
+&SGPREFA(34) SETA 3500                                                  06200000
+.*           DIT  35        1052                                        06250000
+&SGPREFA(35) SETA 3600                                                  06300000
+.*           DIT  36        3277-1                                      06350000
+&SGPREFA(36) SETA 3700                                                  06400000
+.*           DIT  37        3277-2                                      06450000
+&SGPREFA(37) SETA 3800                                                  06500000
+.*           DIT  38        3158                                        06550000
+&SGPREFA(38) SETA 3900                                                  06600000
+.*           DIT  77        3036                                        06650000
+&SGPREFA(77) SETA 4000                                                  06700000
+.*           DIT  39        3284-1                                      06750000
+&SGPREFA(39) SETA 4100                                                  06800000
+.*           DIT  40        3284-2                                      06850000
+&SGPREFA(40) SETA 4200                                                  06900000
+.*           DIT  41        3286-1                                      06950000
+&SGPREFA(41) SETA 4300                                                  07000000
+.*           DIT  42        3286-2                                      07050000
+&SGPREFA(42) SETA 4400                                                  07100000
+.*           DIT  43        3066                                        07150000
+&SGPREFA(43) SETA 4500                                                  07200000
+.*           DIT  44        2260-1                                      07250000
+&SGPREFA(44) SETA 4600                                                  07300000
+.*           DIT  45        2260-2                                      07350000
+&SGPREFA(45) SETA 4700                                                  07400000
+.*           DIT  46        3890                                        07450000
+&SGPREFA(46) SETA 4800                                                  07500000
+.*           DIT  47        3886                                        07550000
+&SGPREFA(47) SETA 4900                                                  07600000
+.*           DIT  48        1287                                        07650000
+&SGPREFA(48) SETA 5000                                                  07700000
+.*           DIT  49        1288                                        07750000
+&SGPREFA(49) SETA 5100                                                  07800000
+.*           DIT  78        7443                                        07850000
+&SGPREFA(78) SETA 5200                                                  07900000
+.*           DIT  50        1419                                        07950000
+&SGPREFA(50) SETA 5300                                                  08000000
+.*           DIT  51        3895                                        08050000
+&SGPREFA(51) SETA 5400                                                  08100000
+.*           DIT  52        2495                                        08150000
+&SGPREFA(52) SETA 5500                                                  08200000
+.*           DIT  53        3540                                        08250000
+&SGPREFA(53) SETA 5600                                                  08300000
+.*           DIT  54        3851                                        08350000
+&SGPREFA(54) SETA 5700                                                  08400000
+.*           SETA 55        3330V                                       08450000
+&SGPREFA(55) SETA 5800                                                  08500000
+.*           DIT  56        3838                                        08550000
+&SGPREFA(56) SETA 5900                                                  08600000
+.*           DIT  57        1275                                        08650000
+&SGPREFA(57) SETA 6000                                                  08700000
+.*           DIT  58        AAA1 (1030)                                 08750000
+&SGPREFA(58) SETA 6100                                                  08800000
+.*           DIT  59        AAA2 (1050)                                 08850000
+&SGPREFA(59) SETA 6200                                                  08900000
+.*           DIT  60        AAA3 (1060)                                 08950000
+&SGPREFA(60) SETA 6300                                                  09000000
+.*           DIT  61        AAA4 (2260)                                 09050000
+&SGPREFA(61) SETA 6400                                                  09100000
+.*           DIT  62        AAA5 (115A)                                 09150000
+&SGPREFA(62) SETA 6500                                                  09200000
+.*           DIT  63        AAA6 (83B3)                                 09250000
+&SGPREFA(63) SETA 6600                                                  09300000
+.*           DIT  64        AAA7 (TWX)                                  09350000
+&SGPREFA(64) SETA 6700                                                  09400000
+.*           DIT  65        AAA8 (2740)                                 09450000
+&SGPREFA(65) SETA 6800                                                  09500000
+.*           DIT  66        AAA9 (BSC1)                                 09550000
+&SGPREFA(66) SETA 6900                                                  09600000
+.*           DITA 67        AAAA (BSC2)                                 09650000
+&SGPREFA(67) SETA 7000                                                  09700000
+.*           DIT  68        AAAB (BSC3)                                 09750000
+&SGPREFA(68) SETA 7100                                                  09800000
+.*           DIT  69        AAAC (7770)                                 09850000
+&SGPREFA(69) SETA 7200                                                  09900000
+.*           DIT  70        AAAD (WTTA)                                 09950000
+&SGPREFA(70) SETA 7300                                                  10000000
+.*           DIT  71        AAAE (2741P)                                10050000
+&SGPREFA(71) SETA 7400                                                  10100000
+.*           DIT  72        AAAF (2741C)                                10150000
+&SGPREFA(72) SETA 7500                                                  10200000
+.*           DIT  73        3705                                        10250000
+&SGPREFA(73) SETA 7600                                                  10300000
+.*           DIT  74        3791L                                       10350000
+&SGPREFA(74) SETA 7700                                                  10400000
+.*           DIT  75        3704                                        10450000
+&SGPREFA(75) SETA 7800                                                  10500000
+.*           DIT  84        CTC                                @ZA58289 10516600
+&SGPREFA(84) SETA 8400                                         @ZA58289 10533200
+.*                                                                      10550000
+.* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ** 10600000
+.*                                                                    * 10650000
+.* PREPARE TO SORT THE GENERIC PREFERENCE TABLE. THE GENERIC INDEXES  * 10700000
+.* ARE SORTED ACCORDING TO THEIR GENERIC PREFERENCE ORDER NUMBER.     * 10750000
+.*                                                                    * 10850000
+.* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * ** 10900000
+.*                                                                      10950000
+.GET1        ANOP                                                       11000000
+             AIF   (&I GE 200).MEND                                     11050000
+&I           SETA  &I+1                                                 11100000
+             AIF   (NOT (&SGGENDB(&I))).GET1   IS DEVICE GENED ?        11150000
+.* MAKE FIRST ENTRY IN THE SORT ARRAY                                   11200000
+&P           SETA  1           SET FIRST SORT ENTRY                     11250000
+&SGGPTXA(&P) SETA  &I          SET DIT INDEX IN PREF TABLE              11300000
+&SORTER(&P)  SETA  &SGPREFA(&I)      SET PREF NUMBER IN SORT TABLE      11350000
+.START       ANOP                                                       11400000
+             AIF   (&I GE 200).ALLSEQN                                  11450000
+.*  GET NEXT DIT INDEX AND PLACE IN SORT TABLE                          11500000
+&I           SETA  &I+1       INCR DIT INDEX                            11550000
+             AIF   (NOT (&SGGENDB(&I))).START  IS DEVICE GENED ?        11600000
+&PREF1       SETA  &SORTER(&P)      SET FIRST SORT TEST FIELD           11650000
+&P           SETA  &P+1                    YES-INCR SORT ARRAY INDEX    11700000
+&SORTER(&P)  SETA  &SGPREFA(&I)      SET NEXT PREF NUMBER IN SORT TABLE 11750000
+&PREF2       SETA  &SGPREFA(&I)      SET SECOND SORT TESTS FIELD        11800000
+&SGGPTXA(&P) SETA  &I                SET DIT INDEX IN PREF TABLE        11850000
+.*                                                                      11900000
+.*   PERFORM SORT BY COMPARING ADJACENT ENTRIES AND SWAPPING LOW        11950000
+.*   NUMBERS TO THE BOTTOM OF THE LIST.                                 12000000
+.*                                                                      12050000
+.*                  INIT SORT OPERATION                                 12100000
+&I2          SETA  &P                   START AT THE TOP                12150000
+&I1          SETA  &P-1                 SELECT NEXT LOWER ENTRY         12200000
+.*  MAIN SORT SEQUENCE COMPARE                                          12250000
+.UPSWAP      ANOP                                                       12300000
+             AIF   (&PREF1 GT &PREF2).SWAP1                             12350000
+.TSTBOTM     ANOP                                                       12400000
+             AIF   (&I1 EQ 1).START     BOTTOM OF TABLE REACHED ?       12450000
+.*                                      NO. CHECK NEXT LOWER ENTRY      12500000
+&I2          SETA  &I1                  GET NEXT LOWER SORT TABLE INDEX 12550000
+&I1          SETA  &I1-1                GET NEXT NEXT LOWER SORT INDEX  12600000
+.* GET NEXT PREF NUMBER FROM SORT TABLE                                 12650000
+&PREF1       SETA  &SORTER(&I1)         GET NEXT LOWER PREF NUMBER      12700000
+&PREF2       SETA  &SORTER(&I2)         GET NEXT NEXT LOWER NUMBER      12750000
+             AGO   .UPSWAP                                              12800000
+.*                                                                      12850000
+.SWAP1       ANOP                                                       12900000
+&SWAPPER     SETA  &SORTER(&I1)                                         12950000
+&SORTER(&I1) SETA  &SORTER(&I2)                                         13000000
+&SORTER(&I2) SETA  &SWAPPER                                             13050000
+.*  SWAP  DIT INDEXES                                                   13100000
+&SWAPPER     SETA  &SGGPTXA(&I1)                                        13150000
+&SGGPTXA(&I1) SETA &SGGPTXA(&I2)                                        13200000
+&SGGPTXA(&I2) SETA &SWAPPER                                             13250000
+             AGO  .TSTBOTM             GO TEST FOR BOTTOM OF TABLE      13300000
+.ALLSEQN     ANOP                                                       13350000
+ MNOTE *,'              DEFAULT GENERIC PREFERENCE ORDER        '       13400000
+&P           SETA  0                                                    13450000
+.NXENTRY     ANOP                                                       13500000
+&P           SETA &P+1                                                  13550000
+             AIF  ((&SGGPTXA(&P) EQ 0) OR (&P GE 200)).MEND             13600000
+ MNOTE *,' ENTRY &P  &SGGNRIC(&SGGPTXA(&P))    DIT INDEX &SGGPTXA(&P)'  13650000
+             AGO    .NXENTRY                                            13700000
+.MEND        MEND                                                       13750000

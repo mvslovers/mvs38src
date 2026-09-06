@@ -1,0 +1,113 @@
+         MACRO                                                          00050064
+         SGDSPDIT  &UNIT=,&ID=                                          00100064
+         COPY  SGGBLPAK                                                 00150064
+         LCLA  &I                                                       00200064
+.***START OF SPECIFICATIONS******************************************** 00250064
+.*                                                                    * 00300064
+.* MODULE NAME - SGDSPDIT                                             * 00350064
+.*                                                                    * 00400064
+.* DESCRIPTIVE NAME - INVOKE THE DIT BUILD MACROS FOR THE DEVICE      * 00450064
+.*                    SUPPORT PRODUCTS.                               * 00500064
+.*                                                                    * 00550064
+.* COPYRIGHT - NONE                                                   * 00600064
+.*                                                                    * 00650064
+.* STATUS - CHANGE LEVEL 00                                           * 00700064
+.*                                                                    * 00750064
+.* FUNCTION -                                                         * 00800064
+.*    THE FUNCTION OF THIS MACRO IS TO INVOKE THE MACROS              * 00850064
+.* THAT PROVIDE THE DIT INFORMATION FOR DEVICES TO BE SYSGENED.       * 00900064
+.* THE MACROS TO BE INVOKED PROVIDE DIT INFORMATION FOR NEW           * 00950064
+.* DEVICES   TO BE SUPPORTED AFTER MVS RESTRUCTURE. ONLY THOSE        * 00980064
+.* DEVICES THAT HAVE AN ASSIGNED DIT ENTRY WILL HAVE AN ASSIGNED      * 01050064
+.* MACRO TO BUILD THE DIT ENTRY.                                      * 01100064
+.*                                                                    * 01150064
+.* NOTES - N/A                                                        * 01200064
+.*                                                                    * 01250064
+.* MODULE TYPE - MACRO                                                * 01300064
+.*                                                                    * 01350064
+.* ENTRY POINT - N/A                                                  * 01400064
+.*                                                                    * 01450064
+.* INPUT -                                                            * 01500064
+.*                                                                    * 01550064
+.*       UNIT -  UNIT SPECIFIED ON THE IODEVICE MACRO                 * 01600064
+.*                                                                    * 01650064
+.*       ID   -  GENERATED OR USER SPECIFIED DIAGNOSTIC MESSAGE ID    * 01700064
+.*                                                                    * 01750064
+.*       &SGCNTRA(3)  - DEVICE POINTER                                * 01800064
+.*                                                                    * 01850064
+.* OUTPUT -                                                           * 01900064
+.*                                                                    * 01910064
+.*       &SGDFTMA  -  DFT MACRO SELECTION INDEX                       * 01920064
+.*                                                                    * 01950064
+.* GLOBALS REFERENCED-                                                * 02000064
+.*                                                                    * 02050064
+.*       &SGDITXA(&I) - INDEX TO THE DEVICE TABLE                     * 02100064
+.*                                                                    * 02150064
+.* LOCAL SYMBOLS USED:                                                * 02200064
+.*                                                                    * 02250064
+.*       &I -           DEVICE POINTER                                * 02300064
+.*                                                                    * 02350064
+.* EXIT, NORMAL - N/A                                                 * 02400064
+.*                                                                    * 02450064
+.* EXIT, ERROR - N/A                                                  * 02500064
+.*                                                                    * 02550064
+.* EXTERNAL REFERENCES - NONE                                         * 02600064
+.*                                                                    * 02650064
+.* MACROS - DSP MACROS(SGIDSP01 - SGIDSP10). A DEVICE SUPPORT         * 02700064
+.*          PRODUCT(DSP) IS ASSIGNED A MACRO NAME(SGIDSP01-SGIDSP99). * 02740064
+.*          THE NAME IDENTIFIES A MACRO TO BE INVOKED BY SGDSPDIT     * 02780064
+.*          IN ORDER TO FILL THE DIT ENTRY FOR THAT DEVICE. FOR EACH  * 02820064
+.*          ASSIGNMENT, THIS MACRO WILL BE UPDATED WITH THE           * 02860064
+.*          FOLLOWING INSTRUCTION SEQUENCE:                           * 02900064
+.*                                                                    * 02940064
+.*          DITXX SGIDSPXX UNIT=&UNIT,ID=&ID                          * 02980064
+.*                AIF   (&SGIDITXA(&I) EQ 0)DIT1XX+1                  * 03020064
+.*                MEXIT                                               * 03070064
+.*          .DIT1XX+1 ANOP                                            * 03120064
+.*                                                                    * 03250064
+.* CHANGE ACTIVITY -                                                  * 03300064
+.*                                                                    * 03350064
+.********************************************************************** 03400064
+&I       SETA  &SGCNTRA(3)         GET DEVICE POINTER                   03450064
+&SGDFTMA SETA   0                  RESET MACRO NAME INDEX               03500064
+.*    INVOKE THE DEVICE SUPPORT MACROS TO SUPPLY THE DIT TABLE DATA.    03550064
+.DIT101  SGIDSP01      UNIT=&UNIT,ID=&ID                                03600064
+         AIF    (&SGDITXA(&I) EQ 0).DIT102                              03650064
+&SGDFTMA SETA   101                                                     03700064
+         MEXIT                                                          03750064
+.DIT102  SGIDSP02      UNIT=&UNIT,ID=&ID                                03800064
+         AIF    (&SGDITXA(&I) EQ 0).DIT103                              03850064
+&SGDFTMA SETA   102                                                     03900064
+         MEXIT                                                          03950064
+.DIT103  SGIDSP03      UNIT=&UNIT,ID=&ID                                04000064
+         AIF    (&SGDITXA(&I) EQ 0).DIT104                              04050064
+&SGDFTMA SETA   103                                                     04100064
+         MEXIT                                                          04150064
+.DIT104  SGIDSP04      UNIT=&UNIT,ID=&ID                                04200064
+         AIF    (&SGDITXA(&I) EQ 0).DIT105                              04250064
+&SGDFTMA SETA   104                                                     04300064
+         MEXIT                                                          04350064
+.DIT105  SGIDSP05      UNIT=&UNIT,ID=&ID                                04400064
+         AIF    (&SGDITXA(&I) EQ 0).DIT106                              04450064
+&SGDFTMA SETA   105                                                     04500064
+         MEXIT                                                          04550064
+.DIT106  SGIDSP06      UNIT=&UNIT,ID=&ID                                04600064
+         AIF    (&SGDITXA(&I) EQ 0).DIT107                              04650064
+&SGDFTMA SETA   106                                                     04700064
+         MEXIT                                                          04750064
+.DIT107  SGIDSP07      UNIT=&UNIT,ID=&ID                                04800064
+         AIF    (&SGDITXA(&I) EQ 0).DIT108                              04850064
+&SGDFTMA SETA   107                                                     04900064
+         MEXIT                                                          04950064
+.DIT108  SGIDSP08      UNIT=&UNIT,ID=&ID                                05000064
+         AIF    (&SGDITXA(&I) EQ 0).DIT109                              05050064
+&SGDFTMA SETA   108                                                     05100064
+         MEXIT                                                          05150064
+.DIT109  SGIDSP09      UNIT=&UNIT,ID=&ID                                05200064
+         AIF    (&SGDITXA(&I) EQ 0).DIT110                              05250064
+&SGDFTMA SETA   109                                                     05300064
+         MEXIT                                                          05350064
+.DIT110  SGIDSP10      UNIT=&UNIT,ID=&ID                                05400064
+         AIF    (&SGDITXA(&I) EQ 0).XIT                                 05450064
+&SGDFTMA SETA   110                                                     05500064
+.XIT     MEND                                                           05550064

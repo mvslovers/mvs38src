@@ -1,0 +1,26 @@
+         MACRO                                                          00002000
+         SGIED510                                                       00004000
+.*                                                                      00006000
+.*   THIS SYSGEN MACRO, WHICH COPIES NEW BTAM MODULES INTO              00008000
+.*   LPALIB, HAS THE FOLLOWING DEPENDENCIES:                            00010000
+.*                                                                      00012000
+.*      1. THE SYSTEM GENERATE MACRO MUST CALL SGIED510                 00014000
+.*         IMMEDIATELY AFTER CALLING SGIED500.                          00016000
+.*                                                                      00018000
+.*      2. THE TCAM SYSGEN MACRO (SGIED500) MUST CONTINUE TO            00020000
+.*         COPY ALL BTAM LPALIB MODULES NOT COPIED BY SGIED510          00022000
+.* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  00024000
+.*                   *** CHANGE ACTIVITY ***                            00024200
+.*                                                                      00024400
+.*       ZA43136   (11/09/79)           ZA42647   (04/18/80)            00024600
+.*                                                                      00024800
+.*                                                                      00025000
+.* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  00025200
+.*                                                                      00025400
+.*                 VERSION DATED 07/01/79                               00026000
+.*                                                                      00028000
+         COPY SGGBLPAK                                                  00030000
+         AIF  (NOT &SGDMGTB(4)).NOBTAM                                  00032000
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOS20'                          00034000
+         PUNCH ' SELECT MEMBER=(IGE0004D)'                              00036000
+.NOBTAM  MEND                                                           00038000

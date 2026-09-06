@@ -1,0 +1,365 @@
+         MACRO                                                          00050002
+&LABEL   IECRENWA &EP,&F4,&D1=(0),&ADT=NO                               00100002
+.*                                                                      00150002
+.*       MACRO DELETIONS/CHANGES FOR VS2 RELEASE 2                      00200002
+.*0000                                                           YM1337 00210002
+.*0000                                                           YM7036 00220002
+.*       MACRO DELETIONS/CHANGES FOR VS2 RELEASE 3             @ZM30032 00230003
+.*0000                                                         @Y30LSTG 00240003
+.*       MACRO DELETIONS/CHANGES FOR VS2 RELEASE 3.7           @ZA29709 00250032
+.*                                                             @ZA29709 00260032
+.*       SU 32 ADDTIONS                                        @G32DSPD 00270032
+.*0000009000-010000,022000-023000,029000               DELETED @ZA31909 00271032
+.*0000009000-009600,019060-019120,022000-022600        ADDED   @ZA31909 00277032
+.*0000029000-029100,152040-152400                      ADDED   @ZA31909 00284032
+.*                                                                      00300002
+.*        SU60 DELETIONS/CHANGES                               @G60ASBJ 00310060
+.*A 159200                                                     @G60ASBJ 00320060
+.*C 159200                                                     @ZA43918 00324960
+.*                                                             @G60ASBJ 00330060
+.********************************************************************** 00350002
+.*                                                                      00400002
+.* MODULE NAME = IECRENWA (VS2-2)                                       00450002
+.*                                                                      00500002
+.* DESCRIPTIVE NAME = DADSM RENAME WORK AREA ADDRESSING MACRO           00550002
+.*                                                                      00600002
+.* COPYRIGHT = NONE                                                     00650002
+.*                                                                      00700002
+.* STATUS = CHANGE LEVEL 000                                            00750002
+.*                                                                      00800002
+.* FUNCTION = DADSM RENAME MACRO WHICH PROVIDES ADDRESSABILITY          00850002
+.*            TO THE 720 DECIMAL BYTE WORK AREA (NOT INCLUDING @ZA31909 00900032
+.*            THE 8 WORD PREFIX OR THE 6 WORD RECOVERY ROUTINE @ZA31909 00930032
+.*            PARAMETER LIST) USED BY RENAME.                  @ZA31909 00960032
+.*                                                                      01050002
+.* NOTES = THIS MACRO IS AN INTERNAL MACRO USED IN THE FOLLOWING        01100002
+.*         DADSM FUNCTIONS:                                             01150002
+.*                                                                      01200002
+.*             RENAME                                                   01250002
+.*             SCRATCH AND RENAME VOLUME MOUNTING ROUTINE               01300002
+.*                                                                      01350002
+.*         TO REFERENCE THIS WORK AREA WITHIN THE FUNCTIONS LISTED      01400002
+.*         ABOVE, CODE A USING STATEMENT ON THE LABEL 'RENAMWKA'.       01450002
+.*                                                                      01500002
+.*      DEPENDENCIES = THIS MACRO IS DESIGNED TO BE USED OPTIONALLY     01550002
+.*                     WITH THE IECSDSL1 DSCB MAPPING MACRO, THE        01600002
+.*                     PREFX MACRO (DEFINED IN THE IECDSECS MACRO)      01650002
+.*                     WHICH DEFINES THE 8 WORD WORK AREA PREFIX,       01700002
+.*                     THE 20 WORD EXTENDED WORK AREA PREFIX, AND       01750002
+.*                     THE 4 WORD DADSM WTG TABLE, AND THE DSMADT       01800002
+.*                     MACRO (ALSO DEFINED IN THE IECDSECS MACRO)       01850002
+.*                     WHICH DEFINES THE 6 WORD DADSM AUDIT TRAIL.      01900002
+.*                     THE AUDIT TRAIL MUST APPEAR AS THE      @ZA31909 01906032
+.*                     FINAL 6 WORDS OF THE RENAME WORK AREA.  @ZA31909 01912032
+.*                                                                      01920032
+.*                     THE FIRST 364 BYTES OF THE SCRATCH AND RENAME    01950002
+.*                     WORK AREAS (ADDRESSED RESPECTIVELY BY MAPPING    02000002
+.*                     MACROS IECSCRWA AND IECRENWA) ARE MAPPED         02050002
+.*                     IDENTICALLY - 8 WORD PREFIX, 20 WORD EXTENDED    02100002
+.*                     PREFIX, 4 WORD DADSM WTG TABLE, 96 BYTE DSCB     02150002
+.*                     AREA, AND 140 BYTE DSCB AREA.  THE 250  @ZA31909 02200032
+.*                     BYTES FROM LABELS 'WKADEB' THROUGH      @ZA31909 02230032
+.*                     'PVOLSER' ARE ALSO MAPPED IDENTICALLY.  @ZA31909 02260032
+.*                                                                      02350002
+.*      RESTRICTIONS = NONE                                             02400002
+.*                                                                      02450002
+.*      REGISTER CONVENTIONS = NOT APPLICABLE                           02500002
+.*                                                                      02550002
+.* PATCH LABEL = NOT APPLICABLE                                         02600002
+.*                                                                      02650002
+.* MODULE TYPE = MACRO                                                  02700002
+.*                                                                      02750002
+.*      PROCESSOR = ASSEMBLER LANGUAGE                                  02800002
+.*                                                                      02850002
+.*      MODULE SIZE = 744 DECIMAL BYTES (NOT INCLUDING THE     @ZA31909 02900032
+.*                    PREFIX)                                  @ZA31909 02910032
+.*                                                                      02950002
+.*      ATTRIBUTES = NOT APPLICABLE                                     03000002
+.*                                                                      03050002
+.* ENTRY POINT = RENPREFX                                               03100002
+.*                                                                      03150002
+.*      PURPOSE = THIS MACRO IS CALLED AT ASSEMBLY TIME BY THE          03200002
+.*                FUNCTIONS LISTED UNDER 'NOTES' TO EXPAND THE          03250002
+.*                RENAME WORK AREA.                                     03300002
+.*                                                                      03350002
+.*      LINKAGE =                                                       03400002
+.*                                                                      03450002
+.*                LABEL IECRENWA EP,F4,D1=(N),ADT=YES                   03500002
+.*                                                                      03550002
+.*      INPUT =                                                         03600002
+.*                                                                      03650002
+.*                OPTIONAL LABEL SPECIFIED AS AN ACCEPTABLE ASSEMBLER   03700002
+.*                LABEL WHICH CAN BE USED BY THE CALLING CSECT TO       03750002
+.*                ESTABLISH ADDRESSABILITY TO THE ENTIRE WORK AREA.     03800002
+.*                                                                      03850002
+.*                EP IS THE FIRST POSITIONAL PARAMETER, SPECIFYING      03900002
+.*                THAT THE LABELS FOR EACH OF THE FIELDS IN THE 8       03950002
+.*                WORD PREFIX, THE 20 WORD EXTENDED PREFIX, AND THE 4   04000002
+.*                WORD DADSM WTG TABLE ARE TO BE EXPANDED.  IF THESE    04050002
+.*                FIELDS ARE NOT TO BE DEFINED, A COMMA MUST BE CODED   04100002
+.*                TO INDICATE THE ABSENCE OF THIS PARAMETER.            04150002
+.*                                                                      04200002
+.*                F4 IS THE SECOND POSITIONAL PARAMETER, SPECIFYING     04250002
+.*                THAT THE FIELDS OF THE FORMAT 4 DSCB ARE TO BE        04300002
+.*                EXPANDED USING THE IECSDSL1 DSCB MAPPING MACRO.       04350002
+.*                IF THESE FIELDS ARE NOT TO BE DEFINED AND A           04400002
+.*                KEYWORD PARAMETER FOLLOWS, A COMMA MUST BE            04450002
+.*                CODED TO INDICATE THE ABSENCE OF THIS PARAMETER.      04500002
+.*                                                                      04550002
+.*                D1=(N) IS A KEYWORD PARAMETER THAT SPECIFIES THE      04600002
+.*                FORMAT(S) OF THE DSCB(S) TO BE EXPANDED IN THE        04650002
+.*                140 BYTE DSCB AREA, USING THE IECSDSL1 MACRO.         04700002
+.*                N CAN BE A NUMBER FROM 0 - 6.  IF N IS 0 OR 4 OR      04750002
+.*                IF THIS KEYWORD IS OMITTED, NO LABELS ARE EXPANDED.   04800002
+.*                IF N IS 1, 2, 3, 5, OR 6, THE CORRESPONDING FORMAT    04850002
+.*                OF THE DSCB WILL BE EXPANDED.  MORE THAN ONE DSCB     04900002
+.*                FORMAT CAN BE MAPPED IN THE 140 BYTE DSCB AREA        04950002
+.*                BY SEPARATING THE FORMAT NUMBERS BY COMMAS.           05000002
+.*                                                                      05050002
+.*                ADT=YES IS A KEYWORD PARAMETER WHICH SPECIFIES THAT   05100002
+.*                THE LABELS FOR EACH OF THE FIELDS WITHIN THE 6 WORD   05150002
+.*                DADSM AUDIT TRAIL ARE TO BE EXPANDED.                 05200002
+.*                                                                      05250002
+.*      OUTPUT = DADSM RENAME WORK AREA EXPANSION                       05300002
+.*                                                                      05350002
+.* EXIT-NORMAL = MEND STATEMENT                                         05400002
+.*                                                                      05450002
+.* EXIT-ERROR = ERROR MESSAGES:                                         05500002
+.*                                                                      05550002
+.*      MNOTE 12,***  IHB002 INVALID EP OPERAND SPECIFIED-&EP           05600002
+.*      MNOTE 12,***  IHB002 INVALID F4 OPERAND SPECIFIED-&F4           05650002
+.*      MNOTE 12,***  IHB002 INVALID ADT OPERAND SPECIFIED-&ADT         05700002
+.*                                                                      05750002
+.*      THE MACRO EXPANSION CONTINUES AS IF THE INVALID PARAMETER       05800002
+.*      WERE NOT SPECIFIED.                                             05850002
+.*                                                                      05900002
+.* EXTERNAL REFERENCES = NONE                                           05950002
+.*                                                                      06000002
+.*      ROUTINES = NONE                                                 06050002
+.*                                                                      06100002
+.*      DATA AREAS = RENAME WORK AREA                                   06150002
+.*                                                                      06200002
+.*      CONTROL BLOCKS = DSCB, ECB, IOB, DCB, DEB                       06250002
+.*                                                                      06300002
+.* TABLES = NONE                                                        06350002
+.*                                                                      06400002
+.* MACROS = IECDSECS DSMADT                                             06450002
+.*          IECDSECS PREFX                                              06500002
+.*          IECSDSL1                                                    06550002
+.*          IHBERMAC                                                    06600002
+.*                                                                      06650002
+.* CHANGE ACTIVITY = SEE DELETIONS/CHANGES PRECEDING THE MACRO PROLOGUE 06700002
+.*                                                                      06750002
+.********************************************************************** 06800002
+.*                                                                      06850002
+         LCLA  &C                                                       06900002
+&LABEL   DSECT                                                          06950002
+*********************************************************************** 07000002
+*                                                                       07050002
+*        RENAME WORK AREA                                               07100002
+*                                                                       07150002
+*********************************************************************** 07200002
+         SPACE 1                                                        07250002
+*********************************************************************** 07300002
+*        PREFIX, EXTENDED PREFIX, AND WTG TABLE AREA                    07350002
+*********************************************************************** 07400002
+         SPACE 1                                                        07450002
+RENPREFX DS    8F                       WORK AREA PREFIX                07500002
+RENAMWKA DS    20F                      EXTENDED PREFIX                 07550002
+FIRST    EQU   RENAMWKA                                                 07600002
+RWTGTBL  DS    4F                       DADSM WTG TABLE                 07650002
+         AIF   ('&EP' EQ 'EP').REN0010                                  07700002
+         AIF   ('&EP' EQ '').REN0020                                    07750002
+         IHBERMAC 1001,EP,&EP                                           07800002
+         AGO   .REN0020                                                 07850002
+.REN0010 ANOP                                                           07900002
+         ORG   RENPREFX                                                 07950002
+*        IECDSECS PREFX,EXPAND=YES                                      08000002
+         IECDSECS PREFX,EXPAND=YES                                      08050002
+.REN0020 ANOP                                                           08100002
+         SPACE 1                                                        08150002
+*********************************************************************** 08200002
+*        FORMAT 4 DSCB AREA                                             08250002
+*********************************************************************** 08300002
+         SPACE 1                                                        08350002
+VTOCDSCB DS    XL96                     FORMAT 4 DSCB                   08400002
+ENQAREA  EQU   VTOCDSCB+4               ENQ PARAMETER LIST              08500002
+MJNAME   EQU   ENQAREA+16               MAJOR ELEMENT NAME              08550002
+MINAME   EQU   ENQAREA+24               MINOR ELEMENT NAME              08600002
+         AIF   ('&F4' EQ 'F4').REN0030                                  08650002
+         AIF   ('&F4' EQ '').REN0040                                    08700002
+         IHBERMAC 1001,F4,&F4                                           08750002
+         AGO   .REN0040                                                 08800002
+.REN0030 ANOP                                                           08850002
+         ORG   VTOCDSCB                                                 08900002
+*        IECSDSL1 (4)                                                   08950002
+         IECSDSL1 (4)                                                   09000002
+.REN0040 ANOP                                                           09050002
+         SPACE 1                                                        09100002
+*********************************************************************** 09150002
+*        140-BYTE DSCB AREA                                             09200002
+*********************************************************************** 09250002
+         SPACE 1                                                        09300002
+F1DSCB   DS    XL140                    140-BYTE DSCB AREA              09350002
+&C       SETA  1                                                        09400002
+.REN0050 AIF   (&C GT N'&D1).REN0060                                    09450002
+         AIF   (&D1(&C) EQ 0 OR &D1(&C) EQ 4).REN0055                   09500002
+         ORG   F1DSCB                                                   09550002
+         MNOTE '         IECSDSL1 (&D1(&C))'                            09600002
+         IECSDSL1 (&D1(&C))                                             09650002
+.REN0055 ANOP                                                           09700002
+&C       SETA  &C+1                                                     09750002
+         AGO   .REN0050                                                 09800002
+.REN0060 ANOP                                                           09850002
+         DS    F                        UNUSED FULLWORD                 09900002
+         SPACE 1                                                        09950002
+*********************************************************************** 10000002
+*        RENAME INTERNAL DEB/DCB AREA                                   10050002
+*********************************************************************** 10100002
+         SPACE 1                                                        10150002
+WKADEB   DS    F                        DEB                             10200002
+DCB      DS    11F                      DCB                             10250002
+DEBPTR   DS    F                        DCB POINTER TO DEB              10300002
+         SPACE 1                                                        10350002
+*********************************************************************** 10400002
+*        RENAME INTERNAL ECB/IOB AREA                                   10450002
+*********************************************************************** 10500002
+         SPACE 1                                                        10550002
+ECB      DS    F                        ECB                             10600002
+IOB      DS    8F                       IOB                             10650002
+SEEK     DS    D                        DIRECT ACCESS ADDRESS           10700002
+         SPACE 1                                                        10750002
+*********************************************************************** 10800002
+*        RENAME CHANNEL CONTROL WORDS AREA                              10850002
+*********************************************************************** 10900002
+         SPACE 1                                                        10950002
+CCW1     DS    D                                                        11000002
+CCW2     DS    D                                                        11050002
+CCW3     DS    D                                                        11100002
+CCW4     DS    D                                                        11150002
+CCW5     DS    D                                                        11200002
+CCW6     DS    D                                                        11250002
+CCW7     DS    D                                                        11300002
+CCW8     DS    D                                                        11350002
+CCW9     DS    D                                                        11400002
+CCW10    DS    D                                                        11450002
+CCW11    DS    D                                                        11500002
+CCW12    DS    D                                                        11550002
+         SPACE 1                                                        11600002
+*********************************************************************** 11650002
+*        RENAME WORK AREA FIELDS                                        11700002
+*********************************************************************** 11750002
+         SPACE 1                                                        11800002
+FIELD1   DS    D                        PASSWORD WORK AREA FIELD        11850002
+OLDPLPTR DS    F                        PARAMETER LIST ADDRESS          11900002
+PRUCBPTR DS    F                        PRIMARY (DEMOUNTABLE) UCB ADDR  11950002
+VOLPTR   DS    F                        NEXT VOLUME LIST ENTRY ADDRESS  12000002
+TCBADDR  DS    F                        POINTER TO THE TCB              12050002
+DSABADDR DS    F                        DSAB ADDRESS OF CURRENT VOLUME  12100002
+PRDSABAD DS    F                        DSAB ADDRESS OF PRIMARY UCB     12150002
+VOLNUM   DS    H                        NUMBER OF VOLUMES REMAINING     12200002
+         CNOP  2,4                      ALIGN DSABQDB TO FULLWORD       12250002
+TIOTMNR  DS    CL6                      ASID/DSAB QDB ADDRESS           12300002
+DSABQDB  EQU   TIOTMNR+2                DSAB QDB ADDRESS                12350002
+VOLMINOR DS    CL6                      VOLSER FOR DEQ ON SYSZVOLS      12400002
+ERCODE   DS    H                        ERROR RETURN CODE               12450002
+SISW1    DS    XL1                      SECURITY/INTEGRITY SWITCHES     12500002
+*                                                                       12550002
+*        DEFINITION OF SECURITY/INTEGRITY SWITCH 1 BIT SETTINGS         12600002
+*                                                                       12650002
+*        BIT 0 = ENQ ON SYSTIOT ISSUED                                  12700002
+*        BIT 1 = ENQ ON SYSDSN ISSUED                                   12750002
+*        BIT 2 = ENQ ON SYSZVOLS ISSUED                                 12800002
+*        BIT 3 = DEQ ON SYSZVOLS TO BE ISSUED                           12850002
+*        BIT 4 = UCB DYNAMICALLY ALLOCATED                              12900002
+*        BIT 5 = DEB SEARCH REQUIRED                                    12950002
+*        BIT 6 = NO SMF RECORD TO BE BUILT                              13000002
+*        BIT 7 = RACHECK SAID USER HAS VOLUME AUTHORIZATION    @G32DSPD 13020032
+*                                                                       13050002
+TIOTENQ  EQU   X'80'                    TIOT ENQ'ED INDICATOR           13100002
+DSNENQ   EQU   X'40'                    DSN ENQ'ED INDICATOR            13150002
+VOLENQ   EQU   X'20'                    VOLUME ENQ'ED INDICATOR         13200002
+VOLDEQ   EQU   X'10'                    VOLUME TO BE DEQ'ED INDICATOR   13250002
+UCBALLOC EQU   X'08'                    UCB ALLOCATED INDICATOR         13300002
+DEBSRCH  EQU   X'04'                    DEB SEARCH REQUIRED INDICATOR   13350002
+NOSMFRCD EQU   X'02'                    NO SMF RECORD INDICATOR         13400002
+VOLRACHK EQU   X'01'                    VOL RACHECKED OK       @G32DSPD 13420032
+*                                                                       13450002
+SISW2    DS    XL1                      SECURITY/INTEGRITY SWITCHES     13500002
+*                                                                       13550002
+*        DEFINITION OF SECURITY/INTEGRITY SWITCH 2 BIT SETTINGS         13600002
+*                                                                       13650002
+*        BIT 0 = VOLUME TO BE DEMOUNTED                                 13700002
+*        BIT 1 = VOLUME TO BE MOUNTED AND VERIFIED                      13750002
+*        BIT 2 = VOLUME TO BE VERIFIED                                  13800002
+*        BIT 3 = ALLOCATED UNIT HAS BEEN FOUND                          13810002
+*        BIT 4 = MOUNT WAS ISSUED FOR VIRTUAL PACK             @Y30LSTG 13820003
+*                                                                       13850002
+DEMNTSW  EQU   X'80'                    VOLUME DEMOUNT INDICATOR        13900002
+MOUNTSW  EQU   X'40'                    VOLUME MOUNT/VERIFY INDICATOR   13950002
+VERIFYSW EQU   X'20'                    VOLUME VERIFY INDICATOR         14000002
+UCBFNDSW EQU   X'10'                    ALLOCATED UCB FOUND INDICATOR   14010002
+VIRTMNT  EQU   X'08'                    VIRTUAL MOUNT ISSUED   @Y30LSTG 14020003
+*                                                                       14050002
+         DS    H                        UNUSED                          14060002
+PVOLSER  DS    CL6                      PROTECTED VOLUME SERIAL         14070002
+DSRENOPT DS    F                        RENAME OPTION CODE     @ZA29709 14080032
+DSRENOAD DS    F                        POINT TO RENAME OLD DSN@ZA29709 14081032
+DSRENNAD DS    F                        POINT TO RENAME NEW DSN@ZA29709 14082032
+DSRENVAD DS    F                        POINT TO RENAME VOLIST @ZA29709 14083032
+PDSNAME  DS    CL44                     PROTECTED DS OLD NAME  @ZA29709 14088032
+PDSNNAME DS    CL44                     PROTECTED DS NEW NAME  @ZA29709 14090032
+         DS    XL1                      UNUSED BYTE                     14100002
+RTYPEFLG DS    XL1                      RENAME SWITCHES                 14150002
+*                                                                       14200002
+*        DEFINITION OF RENAME SWITCH BIT SETTINGS                       14250002
+*                                                                       14300002
+*        BIT 3 = NO VOLUME MOUNTED AND NO DEVICE ALLOCATED              14350002
+*        BIT 5 = PASSWORD CHECKED FOR PASSWORD-PROTECTED DATA SET       14400002
+*        BIT 7 = EXIT BIT (LAST VOLUME LIST ENTRY PROCESSED)            14450002
+*                                                                       14500002
+NOMNTDEV EQU   X'10'                    NO DEVICE INDICATOR             14550002
+PSWDCHKD EQU   X'04'                    PASSWORD CHECKED INDICATOR      14600002
+EXITBIT  EQU   X'01'                    EXIT INDICATOR                  14650002
+*                                                                       14700002
+         SPACE 1                                                        14750002
+*********************************************************************** 14800002
+*        ABSOLUTE TRACK ADDRESSES                                       14850002
+*********************************************************************** 14900002
+         SPACE 1                                                        14950002
+VTOCADR  DS    XL5                      FORMAT 4 CCHHR                  15000002
+INCCHHR  DS    XL5                      CHANNEL PROGRAM WORK AREA       15050002
+OUTCCHHR DS    XL5                      CHANNEL PROGRAM WORK AREA       15100002
+NEWCCHHR DS    XL5                      CHANNEL PROGRAM WORK AREA       15150002
+         SPACE 1                                                        15200002
+***************************************************************@ZA31909 15204032
+*        PROTECTED COPY OF VOLUME COUNT AND                    @ZA31909 15208032
+*        POINTER TO PROTECTED COPY OF VOLUME LIST              @ZA31909 15212032
+***************************************************************@ZA31909 15216032
+         SPACE 1                                               @ZA31909 15220032
+PVOLNUM  DS    H                        VOLUME COUNT           @ZA31909 15224032
+VOL1ADDR DS    F                        ADDRESS OF FIRST       @ZA31909 15228032
+*                                       VOLUME ID IN VOLUME    @ZA31909 15232032
+*                                       LIST WORK AREA         @ZA31909 15236032
+RENSAVE  DS    F                        REGISTER 14 SAVE AREA  @ZA43918 15237960
+         SPACE 1                                               @ZA31909 15240032
+*********************************************************************** 15250002
+*        RENAME RECOVERY ROUTINE AUDIT TRAIL AREA                       15300002
+*********************************************************************** 15350002
+         SPACE 1                                                        15400002
+RENADTRL DS    6F                       RENAME AUDIT TRAIL WORDS        15450002
+         AIF   ('&ADT' EQ 'YES').REN0090                                15500002
+         AIF   ('&ADT' EQ 'NO').REN0100                                 15550002
+         IHBERMAC 1001,ADT,&ADT                                         15600002
+         AGO   .REN0100                                                 15650002
+.REN0090 ANOP                                                           15700002
+         ORG   RENADTRL                                                 15750002
+*        IECDSECS DSMADT,EXPAND=YES                                     15800002
+         IECDSECS DSMADT,EXPAND=YES                                     15850002
+.REN0100 ANOP                                                           15900002
+         SPACE 1                                                        15950002
+*********************************************************************** 16000002
+RENWAEND EQU   *                        RENAME WORK AREA END            16050002
+RWALNGTH EQU   RENWAEND-RWTGTBL         WORK AREA LENGTH FOR IECRES GET 16100002
+*********************************************************************** 16150002
+         MEND                                                           16200002

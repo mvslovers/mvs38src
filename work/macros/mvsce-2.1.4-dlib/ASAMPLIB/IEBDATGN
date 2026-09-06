@@ -1,0 +1,76 @@
+//IEBDATGN JOB   212,NAME,MSGLEVEL=1                                    01000017
+//   EXEC   PGM=IEBDG                                                   02000017
+//SYSPRINT DD SYSOUT=A                                                  03000017
+//EMMA DD SYSOUT=A,DCB=(RECFM=FA,LRECL=121,BLKSIZE=121,EROPT=ACC)       04000017
+//SYSIN DD *                                                            05000017
+ DSD OUTPUT=(EMMA)                                                      06000017
+ FD NAME=A,LENGTH=10,ACTION=TR,FORMAT=AL                                07000017
+ FD NAME=B,LENGTH=10,ACTION=RP,FORMAT=AN,CHARACTER=2                    08000017
+ FD NAME=C,LENGTH=11,ACTION=SR,FORMAT=AL                                09000017
+ FD NAME=D,LENGTH=10,ACTION=FX,FORMAT=CO,CHARACTER=@                    10000017
+ FD NAME=E,LENGTH=20,PICTURE=20,'        WAVE        ',ACTION=WV        11000017
+ FD NAME=F,LENGTH=11,ACTION=TL,FORMAT=AL                                12000017
+ FD NAME=G,LENGTH=10,ACTION=SL,FORMAT=AL                                13000017
+ FD NAME=H,LENGTH=20,PICTURE=20,'        ROLL        ',ACTION=RO        14000017
+ FD NAME=I,LENGTH=10,ACTION=FX,FORMAT=ZD                                15000017
+ FD NAME=Z,LENGTH=1,PICTURE=1,' ',ACTION=FX                             16000017
+ CREATE QUANTITY=45,NAME=(Z,A,B,C,D,E,F,G,H,I)                         X17000017
+               THIS SAMPLE PROGRAM ILLUSTRATES SEVERAL USES OF THE     X18000017
+               DATA GENERATOR.                                         X19000017
+                                                                       X20000017
+               1. THE SYSPRINT DD CARD IS REQUIRED AND DEFINES THE     X21000017
+                  DATA GENERATOR OUTPUT DATA SET FOR CONTROL CARDS AND X22000017
+                  MESSAGES.                                            X23000017
+                                                                       X24000017
+               2. THE OUTPUT DD CARD IS REQUIRED AND IT DEFINES ASA    X25000017
+                  CHARACTERS USED TO PREVENT CONFLICT WITH THE DATA    X26000017
+                  GENERATOR SYSPRINT DATA SET.                         X27000017
+                                                                       X28000017
+               3. THE SYSIN DD CARD DEFINES THE CONTROL DATA SET WHICH X29000017
+                  CONTAINS THE UTILITY CONTROL STATEMENTS.             X30000017
+                                                                       X31000017
+               4. THE DSD (DATA SET DEFINITION) CARD IS REQUIRED,      X32000017
+                  MARKS THE BEGINNING OF A SET OF UTILITY CONTROL      X33000017
+                  STATEMENTS AND SPECIFIES THE DD NAME DEFINING THE    X34000017
+                     OUTPUT DATA SET.                                  X35000017
+                                                                       X36000017
+               5. THE FD (FIELD DEFINITION) CARDS DEFINE THE CONTENTS  X37000017
+                  AND LENGTH OF EACH FIELD USED TO FORM THE OUTPUT     X38000017
+                  RECORD.                                              X39000017
+                                                                       X40000017
+                  A. NAME=A DEFINES A FIELD 10 BYTES LONG CONSISTING   X41000017
+                     OF ALPHABETIC CHARACTERS BEING TRUNCATED TO THE   X42000017
+                     RIGHT.                                            X43000017
+                  B. NAME=B DEFINES A FIELD 10 BYTES LONG CONSISTING   X44000017
+                     OF AN ALPHANUMERIC PATTERN, BEGINNING WITH THE    X45000017
+                     CHARACTER '2', ILLUSTRATING THE RIPPLE ACTION.    X46000017
+                  C. NAME=C DEFINES A FIELD 11 BYTES LONG, CONSISTING  X47000017
+                     OF ALPHABETIC CHARACTERS BEING SHIFTED TO THE     X48000017
+                     RIGHT.                                            X49000017
+                  D. NAME=D DEFINES A FIELD 10 BYTES LONG, CONSISTING  X50000017
+                     OF A COLLATING SEQUENCE BEGINNING WITH THE '@'.   X51000017
+                  E. NAME=E DEFINES A FIELD 20 BYTES LONG, CONSISTING  X52000017
+                     OF THE PICTURE '    WAVE    ' WHICH ILLUSTRATES   X53000017
+                     THE WAVE ACTION.                                  X54000017
+                  F. NAME=F DEFINES A FIELD THAT IS 11 BYTES LONG,     X55000017
+                     CONSISTING OF AN ALPHABETIC PATTERN BEING         X56000017
+                     TRUNCATED TO THE LEFT.                            X57000017
+                  G. NAME=G DEFINES A FIELD THAT IS 10 BYTES LONG,     X58000017
+                     CONSISTING OF ALPHABETIC CHARACTERS BEING SHIFTED X59000017
+                     TO THE LEFT.                                      X60000017
+                  H. NAME=H DEFINES A FIELD THAT IS 20 BYTES LONG,     X61000017
+                     CONSISTING OF THE PICTURE '    ROLL    ' WHICH    X62000017
+                                                                       X63000017
+                     IS 20 BYTES LONG AND ILLUSTRATES THE ROLL ACTION. X64000017
+                  I. NAME=I DEFINES A FIELD 20 BYTES LONG CONSISTING   X65000017
+                     OF ZONED DECIMAL DIGITS.                          X66000017
+                  J. NAME=Z PLACES A BLANK IN STARTLOC 1 OF THE OUTPUT X67000017
+                     RECORD TO PREVENT LINE SKIPPING AND SPACING.      X68000017
+                                                                       X69000017
+               6. THE CREATE CARD DEFINES THE CONTENTS OF AN OUTPUT    X70000017
+                  RECORD.                                              X71000017
+                                                                       X72000017
+               7. THE END STATEMENT IS REQUIRED AND MARKS THE END OF A X73000017
+                  SET OF UTILITY CONTROL STATEMENTS.                    74000017
+ END                                                                    75000017
+XX  REPLACE THIS CARD WITH A /*.                                        85000017

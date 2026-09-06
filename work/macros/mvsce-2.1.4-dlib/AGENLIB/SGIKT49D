@@ -1,0 +1,55 @@
+         MACRO                                                          00050000
+         SGIKT49D                                                       00100000
+         AGO  .START                                                    00150000
+.* /* START OF SPECIFICATIONS ****                                      00200000
+.*                                                                      00250000
+.*01*  MODULE-NAME = SGIKT49D                                           00300000
+.*                                                                      00350000
+.*01*  DESCRIPTIVE-NAME = SYSGEN MACRO FOR TSO/VTAM                     00400000
+.*                                                                      00450000
+.*                                                                      00500000
+.*01*  COPYRIGHT = NONE                                                 00550000
+.*                                                                      00600000
+.*01*  STATUS = OS/VS2  SU 13 TSO/VTAM LEVEL 1.0               @ZA25677 00650000
+.*                                                                      00700000
+.*01*  FUNCTION = THIS MARCO IS CALLED BY THE SGIKJ4EC.  IT WILL        00750000
+.*                INCLUDE CSECT'S FOR LOAD MODULE IGC0009D THAT         00800000
+.*                PERTAIN TO TSO/VTAM.                                  00850000
+.*                                                                      00900000
+.*01*  NOTES = NONE                                                     00950000
+.*                                                                      01000000
+.*02*    CHARACTER-CODE-DEPENDENCIES = NONE                             01050000
+.*                                                                      01100000
+.*02*    DEPENDENCIES = MVS SYSTEM ONLY                                 01150000
+.*                                                                      01200000
+.*02*    RESTRICTIONS = NONE                                            01250000
+.*                                                                      01300000
+.*02*    REGISTER-CONVENTIONS = N/A                                     01350000
+.*                                                                      01400000
+.*02*    PATCH-LABEL = NONE                                             01450000
+.*                                                                      01500000
+.*01*  MODULE-TYPE = MACRO                                              01550000
+.*                                                                      01600000
+.*02*    PROCESSOR = ASSEMBLER                                          01650000
+.*                                                                      01700000
+.*02*    MACRO-SIZE =          5        STATEMENTS                      01750000
+.*                                                                      01800000
+.*02*    PARAMETER-RECEIVED = NONE                                      01850000
+.*                                                                      01900000
+.*01*  EXTERNAL-REFERENCES = NONE                                       01950000
+.*                                                                      02000000
+.*01*  INNER-MACROS = NONE                                              02050000
+.*                                                                      02100000
+.*01*  SYSTEM-MACROS = NONE                                             02150000
+.*                                                                      02200000
+.*01*  CHANGE-ACTIVITY = SEPT 1977 TIOC/VTIOC SPLIT            @ZA25677 02250000
+.*                       OCT  1977 SPLIT OF IGC0009D           @ZA26925 02270000
+.*                                                                      02300000
+.**** END OF SPECIFICATIONS ***/                                        02350000
+.START   ANOP                                                  @ZA25677 02400000
+         GBLC  &CI555                                          @ZA25677 02450000
+ PUNCH ' INCLUDE &CI555.(IKT0940A,IKT0940C,IKT0940D,IKT0940E)'  Z40DSVN 02500000
+ PUNCH ' INCLUDE &CI555.(IKT0940F,IKT09401,IKT09404,IKT09405)'  Z40DSVN 02550000
+ PUNCH ' INCLUDE &CI555.(IKT09409,IKT09412,IKT09413,IKT09414)'  OZ17877 02600000
+ PUNCH ' INCLUDE &CI555.(IKT0009D)'                            @ZA26925 02650000
+         MEND                                                   Z40DSVN 02700000

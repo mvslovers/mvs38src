@@ -1,0 +1,18 @@
+)S IPCSDDIR                                                             00000145
+)F FUNCTION -                                                           00000245
+   PREPARES A DUMP DIRECTORY DATA SET FOR USE IN DUMP ANALYSIS.         00000345
+   IT SHOULD ONLY BE USED WHEN THE DUMP DIRECTORY DATA SET IS           00000445
+   FIRST ALLOCATED. IPCSDDIR CAN BE USED AS A TSO COMMAND OR AS AN      00000545
+   IPCS SUBCOMMAND.                                                     00000645
+                                                                        00000745
+)X SYNTAX                                                               00000845
+   IPCSDDIR    'DSN'                                                    00000945
+                                                                        00001045
+)O OPERANDS -                                                           00001145
+  'DSN'- DATA SET NAME                                                  00001245
+   DSN SPECIFIES THE NAME OF THE DUMP DIRECTORY TO BE LOADED AND        00001345
+   PREPARED. IF A FULLY QUALIFIED NAME IS NOT SPECIFIED, THE            00001445
+   SUBCOMMAND QUALIFIES IT AS 'TSO_LOGON_ID'.DSN .                      00001545
+                                                                        00001645
+   REQUIRED - YES                                                       00001745
+   DEFAULT  - NONE                                                      00001845

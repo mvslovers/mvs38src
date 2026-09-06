@@ -1,0 +1,87 @@
+         MACRO                                                          00410003
+         SGOPCHAN  &PERMIT=YES,&UNIT=,&ID=                              00410004
+         COPY  SGGBLPAK                                                 00410005
+         LCLA  &I                                                       00410006
+.***START OF SPECIFICATIONS******************************************** 00410007
+.* MODULE NAME - SGOPCHAN                                             * 00410008
+.* DESCRIPTIVE NAME - PROCESS THE OPTIONAL CHANNEL PARAMETER          * 00410009
+.*                                                                    * 00410010
+.* COPYRIGHT - NONE                                                   * 00450064
+.*                                                                    * 00500064
+.* STATUS - CHANGE LEVEL 00                                           * 00550064
+.*                                                                    * 00600064
+.* FUNCTION -                                                         * 00650064
+.*    THE FUNCTION OF THIS MACRO IS TO SET THE GLOBALS THAT           * 00700064
+.* INDICATE THE OPTIONAL CHANNELS FOR THE DEVICE                      * 00750064
+.*                                                                    * 00800064
+.* NOTES - N/A                                                        * 00850064
+.*                                                                    * 00900064
+.* MODULE TYPE - MACRO                                                * 00950064
+.* ENTRY POINT - N/A                                                  * 01000064
+.*                                                                    * 01050064
+.* INPUT -                                                            * 01100064
+.*                                                                    * 01150064
+.*       &ID -          THE GENERATED OR USER NAME FOR MNOTES         * 01200064
+.*                                                                    * 01250064
+.*       &PERMIT -      OPTIONAL CHANNELS PERMITTED                   * 01300064
+.*                                                                    * 01350064
+.*       &SGCNTRA(3) -  DEVICE POINTER                                * 01400064
+.*                                                                    * 01450064
+.*       &SGOPCSB(1 THRU 16) - SWITCHES INDICATING THE OPTIONAL       * 01500064
+.*                      CHANNELS SPECIFIED. &SGOPCSB(16) IS THE       * 01550064
+.*                      SUB CHANNELS INDICATOR                        * 01600064
+.*                                                                    * 01650064
+.*       &UNIT          DEVICE BEING SPECIFIED                        * 01700064
+.*                                                                    * 01750064
+.* OUTPUT - THE FOLLOWING GLOBALS ARE SET:                            * 01800064
+.*                                                                    * 01850064
+.*       &SGOPSUB(&I) - OPTIONAL SUB CHANNEL SWITCH                   * 01900064
+.*                                                                    * 01950064
+.*       &SGOPCHA -     OPTIONAL CHANNEL COUNT                        * 02000064
+.*                                                                    * 02050064
+.*       &SGDAP1B(&I) THRU &SGDAPFB(&I) -                             * 02100064
+.*                      OPTIONAL PATH SWITCH ARRAYS                   * 02150064
+.*                                                                    * 02200064
+.*       &SGQUITB -     AN ERROR HAS BEEN DETECTED                    * 02250064
+.*                                                                    * 02300064
+.*                                                                    * 02350064
+.* LOCAL SYMBOLS USED:                                                * 02400064
+.*                                                                    * 02450064
+.*       &I -           DEVICE POINTER                                * 02500064
+.*                                                                    * 02550064
+.* EXIT, NORMAL - N/A                                                 * 02600064
+.*                                                                    * 02650064
+.* EXIT, ERROR - N/A                                                  * 02700064
+.*                                                                    * 02750064
+.* EXTERNAL REFERENCES - N/A                                          * 02800064
+.*                                                                    * 02850064
+.* MACROS - NONE                                                      * 02900064
+.*                                                                    * 02950064
+.* CHANGE ACTIVITY -                                                  * 03000064
+.*                                                                    * 03050064
+.********************************************************************** 03100064
+         AIF  (&SGOPCTA EQ 0).MEND  ANY OPTONAL CHANLS                  03150064
+&I       SETA &SGCNTRA(3)               GET DEVICE POINTER              03200064
+         AIF  ('&PERMIT' EQ 'YES').SETOPS                               03250064
+    MNOTE 5,'* * * IEIIOD127 &ID-OPCHAN VALUES INVALID ON &UNIT'        03300064
+&SGQUITB SETB 1                                                         03350064
+         AGO  .MEND                                                     03400064
+.SETOPS  ANOP                                                           03900064
+.* SET ALTERNATE PATH SWITCHES                                          03950064
+&SGDAP1B(&I)   SETB   (&SGOPCSB(1))                                     04000064
+&SGDAP2B(&I)   SETB   (&SGOPCSB(2))                                     04050064
+&SGDAP3B(&I)   SETB   (&SGOPCSB(3))                                     04100064
+&SGDAP4B(&I)   SETB   (&SGOPCSB(4))                                     04150064
+&SGDAP5B(&I)   SETB   (&SGOPCSB(5))                                     04200064
+&SGDAP6B(&I)   SETB   (&SGOPCSB(6))                                     04250064
+&SGDAP7B(&I)   SETB   (&SGOPCSB(7))                                     04300064
+&SGDAP8B(&I)   SETB   (&SGOPCSB(8))                                     04350064
+&SGDAP9B(&I)   SETB   (&SGOPCSB(9))                                     04400064
+&SGDAPAB(&I)   SETB   (&SGOPCSB(10))                                    04450064
+&SGDAPBB(&I)   SETB   (&SGOPCSB(11))                                    04500064
+&SGDAPCB(&I)   SETB   (&SGOPCSB(12))                                    04550064
+&SGDAPDB(&I)   SETB   (&SGOPCSB(13))                                    04600064
+&SGDAPEB(&I)   SETB   (&SGOPCSB(14))                                    04650064
+&SGDAPFB(&I)   SETB   (&SGOPCSB(15))                                    04700064
+&SGOPSUB(&I)   SETB   (&SGOPCSB(16))     SET SUB CHANNEL IND.           04750064
+.MEND          MEND                                                     04800064

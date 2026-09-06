@@ -1,0 +1,10 @@
+          MACRO                                                         09000001
+          SGIKJ5EF                                                      18000001
+          COPY  SGGBLPAK                                         Y02953 18010002
+          AIF ('&SGCMDSC(1)' EQ 'NO').TSOCMD1                    Y02953 18020002
+.*   TARGET = CMDLIB                                             Y02953 18050002
+         PUNCH '    COPY OUTDD=CMDLIB,INDD=AOST4'                Y02953 18100002
+.*     CANCEL/STATUS                                             Y02953 18300002
+         PUNCH '    SELECT MEMBER=((IKJEFF58,CANCEL))'           Y02953 18350002
+.TSOCMD1  ANOP                                                   Y02953 18400002
+          MEND                                                          81000001

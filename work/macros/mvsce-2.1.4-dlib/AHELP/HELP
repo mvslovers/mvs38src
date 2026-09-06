@@ -1,0 +1,85 @@
+)F FUNCTION -                                                           01000020
+  THE HELP COMMAND PROVIDES FUNCTION, SYNTAX, AND OPERAND INFORMATION   02000020
+  ON COMMANDS. MESSAGE IDENTIFIER INFORMATION IS SUPPLIED WHEN          03000000
+  AVAILABLE.                                                            03900100
+)X SYNTAX -                                                             04600100
+         HELP   'COMMAND NAME'                                          05400100
+                FUNCTION  SYNTAX  OPERANDS('KEYWORD LIST')  ALL /       05800100
+                MSGID('MESSAGE IDENTIFIER LIST')                        06000000
+                                                                        07000000
+  REQUIRED - NONE                                                       08000000
+  DEFAULTS - ALL IF FUNCTION, SYNTAX, OPERANDS AND MSGID NOT SPECIFIED. 09000000
+  ALIAS    - H                                                          10000000
+  NOTE     - MSGID CAN NOT BE SPECIFIED WITH THE FUNCTION,              11000000
+             SYNTAX, OPERANDS, OR ALL KEYWORDS.                         11400100
+  NOTE     - IF HELP IS ENTERED WITHOUT ANY OPERANDS A LIST OF          11800100
+             AVAILABLE COMMANDS WITH A SHORT DESCRIPTION OF EACH WILL   12000020
+             BE DISPLAYED.                                              13000020
+  NOTE     - 'KEYWORD LIST' IS OPTIONAL WHEN OPERANDS IS USED.          14000000
+)S SYNTAX INTERPRETATION -                                              15000000
+  1. USER SUPPLIED VALUES ARE IN APOSTROPHES. TWO SETS OF APOSTROPHES   16100020
+     MEANS THE VALUE SHOULD BE SUPPLIED WITHIN A SET OF APOSTROPHES.    16150020
+  2. WORDS WITHOUT APOSTROPHES ARE TO BE ENTERED AS SHOWN.              17150000
+  3. COMMAS, PERIODS, PARENTHESES, AND ASTERISKS ARE TO BE ENTERED AS   19000020
+     SHOWN.                                                             19050020
+  4. EXCULSIVE CHOICES ARE INDICATED BY SLASH (/).                      19100020
+  5. MUTUALLY EXCLUSIVE FORMATS ARE SEPARATED BY 'OR'.                  20000000
+)O OPERANDS -                                                           21000020
+  'COMMAND NAME'                                                        22000000
+           - NAME OF THE COMMAND TO BE EXPLAINED.                       23000020
+))FUNCTION - FUNCTION IS TO BE DISPLAYED.                               24000000
+))SYNTAX   - FORMAT IS TO BE DISPLAYED.                                 25000020
+))OPERANDS('KEYWORD LIST')                                              26000000
+           - OPERAND DESCRIPTION IS TO BE DISPLAYED.  IF                27000020
+             'KEYWORD LIST' IS PRESENT, ONLY THOSE KEYWORD DESCRIPTIONS 28000000
+             ARE TO BE DISPLAYED.                                       29000020
+    'KEYWORD LIST'                                                      30000000
+           - KEYWORDS SEPARATED BY COMMAS, BLANKS, OR TABS.             31000020
+))ALL      - FUNCTION, SYNTAX, AND OPERAND DESCRIPTIONS ARE TO BE       31500000
+             DISPLAYED.                                                 32050020
+))MSGID('MESSAGE IDENTIFIER LIST')                                      32150100
+           - THE MESSAGE(S) ASSOCIATED WITH THE GIVEN                   32250100
+             MESSAGE IDENTIFIERS WILL BE DISPLAYED.                     32350100
+    'MESSAGE IDENTIFIER LIST'                                           32450100
+           - A MESSAGE IDENTIFIER OR A LIST OF MESSAGE                  32550100
+             IDENTIFIERS SEPARATED BY COMMAS, BLANKS, OR TABS.          32650100
+=HELP=H                                                                 33250100
+)F FUNCTION -                                                           34000020
+  THE HELP SUBCOMMAND PROVIDES FUNCTION, SYNTAX, AND OPERAND            35000000
+  INFORMATION ON THE CURRENTLY PROCESSING COMMAND AND ITS SUBCOMMANDS.  36000020
+  MESSAGE IDENTIFIER INFORMATION IS SUPPLIED WHEN AVAILABLE.            36900100
+)X SYNTAX -                                                             37400100
+         HELP   'SUBCOMMAND NAME'/'CURRENT COMMAND NAME'                38000020
+                FUNCTION  SYNTAX  OPERANDS('KEYWORD LIST')  ALL /       39400100
+                MSGID('MESSAGE IDENTIFIER LIST')                        39800100
+  REQUIRED - NONE                                                       40300100
+  DEFAULTS - ALL IF FUNCTION, SYNTAX, OPERANDS AND MSGID NOT SPECIFIED. 41000000
+  ALIAS    - H                                                          42000000
+  NOTE     - IF HELP IS ENTERED WITHOUT ANY OPERANDS A LIST OF          43000020
+             SUBCOMMANDS OF THE CURRENT COMMAND WILL BE DISPLAYED.      44000000
+  NOTE     - 'KEYWORD LIST' IS OPTIONAL WHEN OPERANDS IS USED.          46000020
+  NOTE     - MSGID CAN NOT BE SPECIFIED WITH THE FUNCTION,              46400100
+             SYNTAX, OPERANDS, OR ALL KEYWORDS.                         46800100
+)O OPERANDS -                                                           47000020
+  'SUBCOMMAND NAME'                                                     48000000
+           - NAME OF THE SUBCOMMAND OF THE CURRENT COMMAND TO BE        49000020
+             EXPLAINED.                                                 49300000
+  'CURRENT COMMAND NAME'                                                49600000
+           - ENTERED IF THE CURRENTLY PROCESSING COMMAND IS TO BE       50100020
+             EXPLAINED.                                                 50500000
+))FUNCTION - FUNCTION IS TO BE DISPLAYED                                51000020
+))SYNTAX   - FORMAT IS TO BE DISPLAYED.                                 52000000
+))OPERANDS('KEYWORD LIST')                                              53000020
+           - OPERAND DESCRIPTION IS TO BE DISPLAYED. IF                 54000000
+             'KEYWORD LIST' IS PRESENT, ONLY THOSE KEYWORD DESCRIPTIONS 55000020
+             ARE TO BE DISPLAYED.                                       56000000
+    'KEYWORD LIST'                                                      57000020
+           - KEYWORDS SEPARATED BY COMMAS, BLANKS, OR TABS.             58000000
+))ALL      - FUNCTION, SYNTAX, AND OPERAND DESCRIPTIONS ARE TO BE       59000020
+             DISPLAYED.                                                 59050020
+))MSGID('MESSAGE IDENTIFIER LIST')                                      62050100
+           - THE MESSAGE(S) ASSOCIATED WITH THE GIVEN MESSAGE           65050100
+             IDENTIFIER(S) WILL BE DISPLAYED.                           68050100
+    'MESSAGE IDENTIFIER LIST'                                           71050100
+           - A MESSAGE IDENTIFIER OR A LIST OF MESSAGE IDENTIFIERS      74050100
+             SEPARATED BY COMMAS, BLANKS, OR TABS.                      77050100

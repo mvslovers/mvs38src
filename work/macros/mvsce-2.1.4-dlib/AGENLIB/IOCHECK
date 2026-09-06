@@ -1,0 +1,158 @@
+       MACRO                                                            00050000
+       IOCHECK &LOOKFOR=                                                00100000
+       COPY    SGGBLPAK                                                 00150000
+ LCLA &LB,&HB,&I,&ADDR,&TB,&C,&FB,&TABDD,&COMEDD                        00200000
+         ACTR  50000                                                    00250000
+.***** START OF SPECIFICATIONS **************************************   00300000
+.*                                                                      00350000
+.* MODULE NAME - IOCHECK                                                00400000
+.*                                                                      00450000
+.* DESCRIPTIVE NAME - IOCHECK                                           00500000
+.*                                                                      00550000
+.* COPYRIGHT - NONE                                                     00600000
+.*                                                                      00650000
+.* STATUS - CHANGE LEVEL 04                                             00700037
+.*                                                                      00750000
+.* FUNCTION -                                                           00800000
+.*       THE IOCHECK MACRO IS USED TO FIND A PARTICULAR ENTRY IN THE    00850000
+.*       DADRA BOX AND PUT ITS VALUE INTO THE GLOBAL &HEX.              00900000
+.*                                                                      00950000
+.* NOTES - N/A                                                          01000000
+.*                                                                      01050000
+.* MODULE TYPE - MACRO                                                  01100000
+.*                                                                      01150000
+.* ENTRY POINT - N/A                                                    01200000
+.*                                                                      01250000
+.* INPUT - THE FOLLOWING PARAMETERS ARE ALLOWED ON IOCHECK              01300000
+.*             &LOOKFOR - SPECIFIES THE DEVICE YOU ARE LOOKING FOR IN   01350000
+.*                        THE DADRA BOX.                                01400000
+.*                                                                      01450000
+.* OUTPUT -                                                             01500000
+.*       GLOBALS USED ARE -                                             01550000
+.*             &HEX         - A VALUE IF THE DEVICE IS PRESENT          01600000
+.*                            ZERO IF THE DEVICE IS NOT PRESENT         01650000
+.*                                                                      01700000
+.*       LOCALS USED ARE -                                              01750000
+.*             &ADDR   - SET TO AN ADDRESS                              01800000
+.*             &C      - SET TO VALUE OF &LOOKFOR                       01850000
+.*             &COMEDD - USED TO MINIPULATE &C                          01900000
+.*             &FB     - SET TO LOWER BOUNDARY OF DADRA BOX             01950000
+.*             &HB     - SET TO HIGHEST BOUNDARY INDEX                  02000000
+.*             &I      - SET TO MIDDLE OF INDEX                         02050000
+.*             &LB     - SET TO LOWEST BOUNDARY VALUE                   02100000
+.*             &TABDD  - USED TO MINIPULATE &ADDR                       02150000
+.*             &TB     - SET TO UPPER BOUNDARY OF DADRA BOX             02200000
+.*                                                                      02250000
+.* EXIT, NORMAL - N/A                                                   02300000
+.*                                                                      02350000
+.* EXIT, ERROR - N/A                                                    02400000
+.*                                                                      02450000
+.* EXTERNAL REFERENCES - N/A                                            02500000
+.*                                                                      02550000
+.* TABLES - N/A                                                         02600000
+.*                                                                      02650000
+.* MACROS - NONE                                                        02700000
+.*                                                                      02750000
+.* CHANGE ACTIVITY - Z40ASVN                                            02800037
+.*                                                                      02850000
+.****** END OF SPECIFICATIONS ***************************************   02900000
+         AIF   (&SGCNTRA(3) EQ 0).BAD   NO IO DEVICES GIVEN             02950000
+&C     SETA    &LOOKFOR                                                 03000000
+&LB    SETA    1             LOWER BOUNDARY INDEX                       03050000
+&HB    SETA    &SGCNTRA(3)   HIGHER BOUNDARY INDEX                      03100000
+ AIF (&SGCTRLB(1)).LOOPSER  DO SERIAL SEARCH FOR OPTCHAN ENTRY          03150000
+.*   IF  C  OUTSIDE  BOUNDARIES  OF  TABLE  TRANSFER  TO  .BAD          03200037
+       AIF     (&C GT (&SGDADRA(&HB)-&SGDADRA(&HB)/4096*4096)).BAD      03250000
+       AIF     (&C LT (&SGDADRA(1)-&SGDADRA(1)/4096*4096)).BAD          03300000
+.LOOP  AIF     (&LB GE &HB).BAD  NO ENTRY FOR THIS ADDR IN TABLE        03350000
+&TB    SETA    (&SGDADRA(&HB)-&SGDADRA(&HB)/4096*4096)   TOP BOUNDARY   03400000
+&FB    SETA    (&SGDADRA(&LB)-&SGDADRA(&LB)/4096*4096)   LOWER BOUNDARY 03450000
+&I     SETA    (&LB+&HB)/2             INDEX  TO  MIDDLE  TABLE         03500000
+&ADDR  SETA    (&SGDADRA(&I)-&SGDADRA(&I)/4096*4096)     MIDDLE ADDRESS 03550000
+       AIF     (&C EQ &TB).HBX                                          03600000
+       AIF     (&C EQ &ADDR).IHX                                        03650000
+ AGO .NOPTCH              SKIP OPTCHAN ROUTINE                          03700000
+.LOOPSER AIF (&LB GT &HB).BAD          ADDRESS NOT FOUND                03750000
+&ADDR SETA (&SGDADRA(&LB)-&SGDADRA(&LB)/4096*4096)                      03800000
+ AIF (&C EQ &ADDR).IHX                                                  03850000
+ AIF (&LB EQ &SGCTRLA(2)).INDEX                                         03900000
+&TABDD SETA &ADDR-&ADDR/X'100'*X'100'                                   03950000
+&COMEDD SETA &C-&C/X'100'*X'100'                                        04000000
+&I SETA &SGDASPA(&LB)                   GET DEVICE POINTER      Z40ASVN 04050037
+ AIF (NOT &SGDAP1B(&I)).OPT2            OPTCHAN 1                       04100000
+ AIF (&C/X'100' EQ 1).CUDEV             OPTCHAN AND DEV. CHAN 1         04150000
+.OPT2 AIF (NOT &SGDAP2B(&I)).OPT3       OPTCHAN 2                       04200000
+ AIF (NOT &SGOPSUB(&I)).NOTSUB1        NOT SELECTOR SUB CHANNEL         04250000
+&HEX SETA X'D'                                                          04300000
+ AIF (&COMEDD/X'10' EQ &HEX).CHAN      DUPLICATE C.U. POSITION          04350000
+ AGO .OPT3                                                              04400000
+.NOTSUB1 ANOP                                                           04450000
+ AIF (&C/X'100' EQ 2).CUDEV             OPTCHAN AND DEV. CHAN 2         04500000
+.OPT3 AIF (NOT &SGDAP3B(&I)).OPT4       OPTCHAN 3                       04550000
+ AIF (NOT &SGOPSUB(&I)).NOTSUB2        NOT SELECTOR SUB CHANNEL         04600000
+&HEX SETA X'E'                                                          04650000
+ AIF (&COMEDD/X'10' EQ &HEX).CHAN      DUPLICATE C.U. POSITION          04700000
+ AGO .OPT4                                                              04750000
+.NOTSUB2 ANOP                                                           04800000
+ AIF (&C/X'100' EQ 3).CUDEV             OPTCHAN AND DEV. CHAN 3         04850000
+.OPT4 AIF (NOT &SGDAP4B(&I)).OPT5       OPTCHAN 4                       04900000
+ AIF (NOT &SGOPSUB(&I)).NOTSUB3        NOT SELECTOR SUB CHANNEL         04950000
+&HEX SETA X'F'                                                          05000000
+ AIF (&COMEDD/X'10' EQ &HEX).CHAN      DUPLICATE C.U. POSITION          05050000
+ AGO .INDEX                                                             05100000
+.NOTSUB3 ANOP                                                           05150000
+ AIF (&C/X'100' EQ 4).CUDEV             OPTCHAN AND DEV. CHAN 4         05200000
+.OPT5 AIF (NOT &SGDAP5B(&I)).OPT6       OPTCHAN 5                       05250000
+ AIF (&C/X'100' EQ 5).CUDEV             OPTCHAN AND DEV. CHAN 5         05300000
+.OPT6 AIF (NOT &SGDAP6B(&I)).OPT7       NOT OPTCHAN 6                   05350000
+ AIF (&C/X'100' EQ 6).CUDEV             OPTCHAN AND DEV. CHAN 6         05400000
+.OPT7 AIF (NOT &SGDAP7B(&I)).OPT8       NOT OPTCHAN 7                   05450000
+ AIF (&C/X'100' EQ 7).CUDEV             OPTCHAN AND DEV. CHAN 7         05500000
+.OPT8 AIF (NOT &SGDAP8B(&I)).OPT9       NOT OPTCHAN 8                   05550000
+ AIF (&C/X'100' EQ 8).CUDEV             OPTCHAN AND DEV. CHAN 8         05600000
+.OPT9 AIF (NOT &SGDAP9B(&I)).OPTA       NOT OPTCHAN 9                   05650000
+ AIF (&C/X'100' EQ 9).CUDEV             OPTCHAN AND DEV. CHAN 9         05700000
+.OPTA AIF (NOT &SGDAPAB(&I)).OPTB       NOT OPTCHAN 10                  05750000
+ AIF (&C/X'100' EQ 10).CUDEV            OPTCHAN AND DEV. CHAN 10        05800000
+.OPTB AIF (NOT &SGDAPBB(&I)).OPTC       NOT OPTCHAN 11                  05850000
+ AIF (&C/X'100' EQ 11).CUDEV            OPTCHAN AND DEV. CHAN 11        05900000
+.OPTC AIF (NOT &SGDAPCB(&I)).OPTD       NOT OPTCHAN 12                  05950000
+ AIF (&C/X'100' EQ 12).CUDEV            OPTCHAN AND DEV. CHAN 12        06000000
+.OPTD AIF (NOT &SGDAPDB(&I)).OPTE       NOT OPTCHAN 13                  06050000
+ AIF (&C/X'100' EQ 13).CUDEV            OPTCHAN AND DEV. CHAN 13        06100000
+.OPTE AIF (NOT &SGDAPEB(&I)).OPTF       NOT OPTCHAN 14                  06150000
+ AIF (&C/X'100' EQ 14).CUDEV            OPTCHAN AND DEV. CHAN 14        06200000
+.OPTF AIF (NOT &SGDAPFB(&I)).INDEX      NOT OPTCHAN 15                  06250000
+ AIF (&C/X'100' EQ 15).CUDEV            OPTCHAN AND DEV. CHAN 15        06300000
+ AGO .INDEX                                                             06350000
+.CHAN AIF (&ADDR/X'100' NE &C/X'100').INDEX  CHANNELS NOT THE SAME      06400000
+&TABDD SETA &TABDD-&TABDD/X'10'*X'10'  DEVICE PORTION                   06450000
+&COMEDD SETA &COMEDD-&COMEDD/X'10'*X'10'    COMPARISON                  06500000
+.CUDEV AIF (&TABDD EQ &COMEDD).IHX                                      06550000
+.INDEX  ANOP       MOVE TO NEXT ENTRY                                   06600000
+&LB SETA &LB+1                                                          06650000
+ AGO .LOOPSER                                                           06700000
+.NOPTCH AIF (&C EQ &FB).LBX                                             06750000
+       AIF     (&C  LT &ADDR).CHGBD         C  NOT  FOUND               06800000
+.*              REDUCE  SIZE  OF  TABLE                                 06850000
+&LB    SETA    &I+1                    LEAVE  LOWER  HALF  OF  TABLE    06900000
+       AGO     .LOOP                                                    06950000
+.CHGBD ANOP                                                             07000000
+&HB    SETA    &I-1                    LEAVE  HIGHER  HALF  OF  TABLE   07050000
+       AGO     .LOOP                                                    07100000
+.BAD   ANOP              EXIT  ADDR  NOT  FOUND  IN  TABLE              07150000
+&HEX   SETA    0                                                        07200000
+       AGO     .MEND                                                    07250000
+.HBX   ANOP                                                             07300000
+&HEX   SETA    &HB      SET HEX TO VALUE OF HIGHER INDEX                07350000
+       AGO     .MEND                                                    07400000
+.IHX   ANOP                                                             07450000
+ AIF (NOT &SGCTRLB(1)).SETIHX           ENTERED FOR OPTCHAN             07500000
+&HEX SETA &ADDR     SET TO ADDRESS SHOWING CONFLICT                     07550000
+ AGO .MEND                                                              07600000
+.SETIHX ANOP                                                            07650000
+&HEX   SETA    &I     SET HEX TO VALUE OF MIDDLE INDEX                  07700000
+       AGO     .MEND                                                    07750000
+.LBX   ANOP                                                             07800000
+&HEX   SETA    &LB       SET HEX TO VALUE OF LOWER INDEX                07850000
+.MEND  MEND                                                             07900000

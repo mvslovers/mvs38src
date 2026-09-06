@@ -1,0 +1,15 @@
+         MACRO                                                          10000017
+         SGIEC513                                                       20000017
+.*                                                                      20050000
+.*        CHANGES                                                       20100000
+.*        ZA02306  (01/16/75)                                           20150000
+.*                                                                      20200000
+ PUNCH ' EXCLUDE MEMBER=(AS,ASCTR,ASLIST,ASMTRTAB,CHGNTRY)'             20250000
+ PUNCH ' EXCLUDE MEMBER=(CONFIGUR,CTRGROUP,CTRLIST,CTRSCHED,DEULIST)'   20300000
+ PUNCH ' EXCLUDE MEMBER=(DFTRMLST,DISPGUID,GDUAS,GDULIST,GDUTRANS)'     20350000
+ PUNCH ' EXCLUDE MEMBER=(IECTDECB,IHBRDWRT,LERB,LERPRT,LOPEN)'          20400000
+ PUNCH ' EXCLUDE MEMBER=(ONLTST,PARAMNUM,PARMLIST,RELBUF,REQBUF)'       20450000
+ PUNCH ' EXCLUDE MEMBER=(RESETPL,STEND,TGROUP,TPEDIT,TRANSLAT)'         20500000
+ PUNCH ' EXCLUDE MEMBER=(TRNSLATE,TRLIST,TRSLRCTW,TRSLRCT3)'            20550000
+ PUNCH ' EXCLUDE MEMBER=(TRSLSCTW,TRSLSCT3,TWAIT)'                      20600000
+         MEND                                                           70000017

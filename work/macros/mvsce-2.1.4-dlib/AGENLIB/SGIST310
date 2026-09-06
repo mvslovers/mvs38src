@@ -1,0 +1,63 @@
+* /* START OF SPECIFICATIONS ****                                       01000003
+*                                                                       02000003
+*01*  MODULE-NAME = SGIST310                                            03000003
+*                                                                       04000003
+*01*  DESCRIPTIVE-NAME = SYSGEN MACRO FOR VS2                           05000003
+*                                                                       06000003
+*01*  COPYRIGHT = XXXX-XXX COPYRIGHT IBM CORP 1973                      07000003
+*                                                                       08000003
+*01*  FUNCTION = THIS MACRO IS CALLED BY THE GENERATE MACRO. IT WILL    11000003
+*     INCLUDE THE VTAM MODULES ON D-LIB SYS1.AOS26 INTO THE MODULE      12000003
+*     IEANUC01 WHICH IS THE RESIDENT NUCLEUS IN SYS1.NUCLEUS.           13000003
+*                                                                       14000003
+*01*  NOTES = NONE                                                      15000003
+*                                                                       16000003
+*02*    CHARACTER-CODE-DEPENDENCIES = NONE                              17000003
+*                                                                       18000003
+*02*    DEPENDENCIES = VS2 SYSTEM ONLY                                  19000003
+*                                                                       20000003
+*02*    RESTRICTIONS = NONE                                             21000003
+*                                                                       22000003
+*02*    REGISTER-CONVENTIONS = NONE                                     23000003
+*                                                                       24000003
+*02*    PATCH-LABEL = NONE                                              25000003
+*                                                                       26000003
+*01*  MODULE-TYPE = MACRO                                               27000003
+*                                                                       28000003
+*02*    PROCESSOR = ASSEMBLER                                           29000003
+*                                                                       30000003
+*02*    MACRO-SIZE = NUMBER OF STATEMENTS;                              31000003
+*                                                                       33000003
+*02*    ATTRIBUTES = LIST                                               34000003
+*                                                                       35000003
+*01*  ENTRY-POINT = NA                                                  36000003
+*                                                                       37000003
+*01*  EXIT-NORMAL = NA                                                  38000003
+*                                                                       39000003
+*01*  EXIT-ERROR = NA                                                   40000003
+*                                                                       41000003
+*01*  EXTERNAL-REFERENCES = NONE                                        42000003
+*                                                                       43000003
+*02*    DATA-AREA = NONE                                                44000003
+*                                                                       45000003
+*02*    CONTROL-BLOCKS-SYSTEM = NONE                                    46000003
+*                                                                       47000003
+*02*    CONTROL-BLOCKS-ATCAM = NONE                                     48000003
+*                                                                       49000003
+*01*  TABLES = NONE                                                     50000003
+*                                                                       51000003
+*01*  INNER-MACROS = SGGBLPAK                                           52000003
+*                                                                       53000003
+*01*  SYSTEM-MACROS = NONE                                              54000003
+*                                                                       55000003
+*01*  CHANGE-ACTIVITY = NONE                                            56000003
+*                                                                       57000003
+**** END OF SPECIFICATIONS ***/                                         58000003
+         MACRO                                                          59000003
+         SGIST310                                                       60000003
+         COPY  SGGBLPAK                                                 61000003
+  AIF (NOT &SGDMGTB(6)).END                                             61500003
+         PUNCH ' INCLUDE AOS26(ISTAPC22)'                               62000003
+         PUNCH ' INCLUDE AOS26(ISTZFMAA)'                               63000003
+         PUNCH ' INCLUDE AOS26(ISTZFMAB)'                               64000003
+.END     MEND                                                           65000003

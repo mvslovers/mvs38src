@@ -1,0 +1,68 @@
+         MACRO                                                          10000019
+         SGIEC520                                                       20000019
+.****************************************************************       25000003
+.*                                                                      25050002
+.* MODULE-NAME=SGIEC520(OS/VS2)MACRO                           @YM00638 25060002
+.*                                                                      25070002
+.* DESCRIPTIVE-NAME=MICR/OCR SYSGEN MACRO                      @YM00638 25080002
+.*                                                                      25090002
+.* COPYRIGHT=NONE                                              @YM00638 25092002
+.*                                                                      25100003
+.*VS1 REL3 ADDITIONS/CHANGES/DELETIONS                           YM1732 25200003
+.*                                                                      25300003
+.*A250000 - 316000,325000 - 385000                               XM4256 25400003
+.*                                                                      25500003
+.*PURPOSE                                                        XM4256 25600003
+.*       THE PURPOSE OF THIS MACRO IS TO EXCLUDE DEVICE          XM4256 25700003
+.*       SUPPORTED ROCHESTER OWNED MACROS FROM BEING PUT         XM4256 25800003
+.*       INTO 'SYS1.MACLIB ' IF THE DEVICE FOR WHICH THE         XM4256 25900003
+.*       MACRO BELONG IS NOT BEING SYSGEN'D.                     XM4256 26000003
+.*DISCRIPTION                                                    XM4256 26100003
+.*       THIS MACRO WILL CHECK GLOBALS PASSED BY THE GENERATE    XM4256 26200003
+.*       MACRO. EACH GLOBAL CORRESPONDS TO A DEVICE BEING        XM4256 26300003
+.*       SYSGEN'D. THE CORRESPONDING DEVICES ARE:                XM4256 26400003
+.*                                                               XM4256 26500003
+.*         GLOBAL      DEVICE      RELEASE DEVEPOLED             XM4256 26600003
+.*                                                               XM4256 26700003
+.*       &SGDCLSB(58)  1287         OS REL 19                    XM4256 26800003
+.*       &SGDCLSB(59)  1288         OS REL 19                    XM4256 26900003
+.*       &SGDCLSB(86)  3890        VS1 REL 3                     XM4256 27000003
+.*       &SGDCLSB(87)  3886        VS1 REL 3                     XM4256 27100003
+.*                                                               XM4256 27200003
+.*       IF THE GLOBAL FOR THE DEVICES CHECKED ARE NOT SET,      XM4256 27300003
+.*       A CORRESPONDING ' EXCLUDE ' STATEMENT IS CREATED        XM4256 27400003
+.*       BY USE OF THE PUNCH COMMAND.THIS EXCLUDE STATEMENT      XM4256 27500003
+.*       WILL EXCLUDE ALL MACROS FROM ' SYS1.MACLIB ' THAT WAS   XM4256 27600003
+.*       CREATED EXPLICITLY FOR THE DEVICE THAT IS NOT BEING     XM4256 27700003
+.*       SYSGEN'D INTO THE SYSTEM.                               XM4256 27800003
+.*                                                               XM4256 27900003
+.*HISTORY                                                        XM4256 28000003
+.*                                                               XM4256 28100003
+.*       THIS MACRO WAS CREATED IN OS RELEASE 19 FOR             XM4256 28200003
+.*       THE 1287/1288 OCR SUPPORT . CHANGES TO THE MACRO        XM4256 28300003
+.*       WAS MADE IN VS1 RELEASE 3 TO EXCLUDE MACROS FOR THE     XM4256 28400003
+.*       3886 AND/OR 3890 IF THEY ARE NOT GEN'D INTO THE SYSTEM  XM4256 28500003
+.*       RELEASE 3.0 REQUIRED THE ADDITION OF ANOTHER          @ZA00776 28550003
+.*       EXCLUDE TO HANDLE THE THREE NEW MACROS,SBT,SBTBL      @ZA00776 28560003
+.*       AND EXC, USED BY 3890.                                @ZA00776 28570003
+.*                                                               XM4256 28600003
+.*                                                               XM4256 28700003
+         COPY  SGGBLPAK                                          XM4256 28800003
+         AIF   (&SGDCLSB(58) OR &SGDCLSB(59)).NEXT1              XM4256 28900003
+ PUNCH ' EXCLUDE MEMBER=(RESCN,DSPLY,RDLNE,DEFAREA,DEFCCW) '      M0454 32000020
+.NEXT1   ANOP                                                    XM4256 32500003
+         AIF   (&SGDCLSB(86)).NEXT2                              YM1745 33000003
+ PUNCH ' EXCLUDE MEMBER=(ENTR,PCKT,CALL3890,FIELD,SPTX) '      @ZA04487 33500003
+ PUNCH ' EXCLUDE MEMBER=(V,TSI,NSI,OSI,CHI,THI,NHI,OHI,JX) '     XM4256 34000003
+ PUNCH ' EXCLUDE MEMBER=(BCS,BUR,BLS,IA,SOM,STA,SS,SI,ACI) '     XM4256 34500003
+ PUNCH ' EXCLUDE MEMBER=(LCI,CCI,SPH,SPC,SFI,SPI,LSE,LFE,LF)'    XM4256 35000003
+ PUNCH ' EXCLUDE MEMBER=(II,LSW,TI,CST,CT,CI,CA,CVTBL,CSTBL)'    XM4256 35500003
+ PUNCH ' EXCLUDE MEMBER=(JXTBL,IREC,STBL,CTBL,VTBL,DWF,EXT) '    XM4256 36000003
+ PUNCH ' EXCLUDE MEMBER=(IFD,DSGA,DSG,FM,CV) '                   XM4256 36500003
+ PUNCH ' EXCLUDE MEMBER=(SBT,SBTBL,EXC) '                      @ZA00776 36550003
+ PUNCH ' EXCLUDE MEMBER=(LAS,LPS,SAS,SPS) '                    @ZA04487 36600003
+.NEXT2   ANOP                                                    XM4256 37000003
+         AIF   (&SGDCLSB(86) OR &SGDCLSB(87)).NEXT3              XM4256 37500003
+ PUNCH ' EXCLUDE MEMBER=(SETDEV) '                               XM4256 38000003
+.NEXT3   ANOP                                                    XM4256 38500003
+         MEND                                                           40000019

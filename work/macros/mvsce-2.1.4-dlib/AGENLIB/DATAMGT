@@ -1,0 +1,216 @@
+         MACRO                                                          00050002
+         DATAMGT  &ACSMETH=,&GRAPHCS=,&UCSDFLT=,&IND=,&TABLE=  @Z40MSTG 00100004
+         COPY  SGGBLPAK                                                 00150002
+         LCLA  &A,&B,&P                                        @Z40MSTG 00200004
+         LCLC  &ID(5)                                          @Z40MSTG 00210004
+.***** START OF SPECIFICATIONS **************************************   00250002
+.*                                                                      00300002
+.* MODULE NAME - DATAMGT                                                00350002
+.*                                                                      00400002
+.* DESCRIPTIVE NAME - DATA MANAGEMENT GENERATION                        00450002
+.*                                                                      00500002
+.*                                                                      00550002
+.* COPYRIGHT - NONE                                                     00600002
+.*                                                                      00650002
+.* STATUS - CHANGE LEVEL 04                                             00700004
+.*                                                                      00750002
+.* FUNCTION -                                                           00800002
+.*       THE DATAMGT MACRO IS USED TO SPECIFY OPTIONAL ACCESS METHODS   00850002
+.*       AND GRAPHICS PROGRAM SERVICES.                                 00900003
+.*       TRANSLATE TABLES INTO IMAGELIB.                                00920004
+.*                                                                      00950002
+.* NOTES - N/A                                                          01000002
+.*                                                                      01050002
+.* MODULE TYPE - MACRO                                                  01100002
+.*                                                                      01150002
+.* ENTRY POINT - N/A                                                    01200002
+.*                                                                      01250002
+.* INPUT - THE LIST OF PARAMETERS ARE INCLUDED ON THE CALL TO DATAMGT   01300002
+.*             &ACSMETH - SPECIFIES ONE OR MORE OF BTAM, TCAM, ISAM,    01350002
+.*                        VTAM AND GAM.                                 01400003
+.*             &GRAPHCS - PORRTNS SPECIFIES PROBLEM ORIENTED ROUTINES   01450002
+.*                        ARE TO BE INCLUDED IN SYS1.LINKLIB            01500002
+.*                        GPS SPECIFIES THE GRAPHICS SUBROUTINE         01550002
+.*                        PACKAGE IS TO BE INCLUDED.                    01600002
+.*             &UCSDFLT - DEFAULT UCS IMAGES                            01650003
+.*             &IND     - INDUSTRIES WILL BE IN SYSTEM.         VS32758 01700003
+.*             &TABLE   - SPCIFIES OPT XLATE TABLES ADDED TO IMAGELIB   01722004
+.*                                                             @Z40MSTG 01724004
+.*                                                                      01730003
+.* OUTPUT -                                                             01750002
+.*       THE GLOBALS USED ARE -                                         01800002
+.*             &SGMENTB(34) - ENTRY SWITCH                              01850002
+.*             &SGSUPRB(16) - ALLOWS ASYNCHRONUS EXITS WITHOUT RQES     01900002
+.*             &SGUCSUC(17) - DEFAULT UCS IMAGES                        01950002
+.*             &SGSUPRB(17) - SAME AS 16                                02000002
+.*             &SGGRPHB(1)  - PROBLEM ORIENTED ROUTINES - INCLUDED      02050002
+.*             &SGGRPHB(3)  - GRAPHIC SUBROUTINE PACKAGE INCLUDED       02100002
+.*             &SGDMGTB(2)  - ISAM                                      02150002
+.*             &SGDMGTB(4)  - BTAM                                      02250002
+.*             &SGDMGTB(5)  - TCAM                                      02300002
+.*             &SGDMGTB(6)  - VTAM                                      02302003
+.*             &SGSSS2B     - SET IF IND=YES SPECIFIED          VS32758 02342003
+.*             &SGMENTB(12) - GAM                                       02350002
+.*             &SGQUITB     - QUIT SWITCH                               02400002
+.*             &SGAPCSB(1)  - T3211                                     02410004
+.*             &SGAPCSB(2)  - T1403                                     02420004
+.*             &SGAPCSB(3)  - TOCR                                      02430004
+.*             &SGAPCSB(4)  - TKAT                                      02440004
+.*             &SGAPCSB(5)  - TFMT                                      02442004
+.*                                                                      02450002
+.*       THE LOCALS USED ARE -                                          02500002
+.*             &A - INDEX TO PARAMETER SUBLISTS                         02510004
+.*             &B - INDEX TO PARAMETER SUBLISTS                         02512004
+.*             &P - INDEX TO PARAMETER SUBLISTS                         02514004
+.*             &ID(&P) - INDEX TO PARAMETER SUBLISTS                    02516004
+.*                                                                      02520004
+.*                                                                      02600002
+.* EXIT, NORMAL - N/A                                                   02650002
+.*                                                                      02700002
+.* EXIT, ERROR - N/A                                                    02750002
+.*                                                                      02800002
+.* EXTERNAL REFERENCES -                                                02850002
+.*                                                                      02900002
+.* TABLES - N/A                                                         02950002
+.*                                                                      03000002
+.* MACROS - NONE                                                        03050002
+.*                                                                      03100002
+.* CHANGE ACTIVITY - MODIFIED FOR Y02036,VS03045,@Z40MSTG               03150004
+.*                                                                      03200002
+.****** END OF SPECIFICATIONS ***************************************   03250002
+         AIF   (NOT &SGMENTB(34)).E2    PREVIOUSLY ENTERED     @Z40MSAP 03300004
+    MNOTE 5,'* * * IEIDAT103 DATAMGT MACRO PREVIOUSLY USED'    @Z40MSAP 03310004
+&SGQUITB SETB  1                                               @Z40MSAP 03320004
+.E2      ANOP                                                  @Z40MSAP 03330004
+&SGMENTB(34)   SETB 1                   ENTRY SWITCH ON                 03350002
+&SGSUPRB(16) SETB 1 ALLOWS ASYNCHRONOUS EXITS W/O 12*S                  03400002
+&SGSUPRB(17)  SETB  1                                                   03450002
+         AIF   (T'&UCSDFLT NE 'O').UCS5                                 03510002
+         MNOTE 0,'IEIDAT105 ALL IS DEFAULT TAKEN FOR UCS DEFAULT'       03512002
+         AGO    .UCS4                                                   03514002
+.UCS5    AIF   ('&UCSDFLT' EQ 'ALL').UCS3                               03520002
+         MNOTE *,'      THE FOLLOWING UCS IMAGES ARE DEFAULTS'          03550002
+.UCS1    ANOP  BEGINNING OF LOOP FOR UCS IMAGES                         03600002
+&A       SETA  &A+1 INCREMENT INDEX                                     03650002
+         AIF   (&A GT 17).UCS2                                          03700002
+         AIF   (N'&UCSDFLT LT &A).UCSEND                                03750002
+         AIF   ('&UCSDFLT(&A)' EQ '').UCS1                              03800002
+&SGUCSDC(&A) SETC '&UCSDFLT(&A)'         SET GLOBAL TO IMAGE SPECIFIED  03850002
+         MNOTE *,'          &UCSDFLT(&A)'                               03900002
+         AGO   .UCS1                                                    03950002
+.UCS2    AIF   (N'&UCSDFLT LE 17).UCSEND                                04000002
+         MNOTE 0,'          MORE THAN 17 IMAGES HAVE BEEN SPECIFIED, TH*04050003
+               E REST ARE IGNORED'                                      04100002
+         AGO   .UCSEND                                                  04150002
+.UCS3    MNOTE *,'      ALL UCS IMAGES ARE DEFAULTS'                    04210002
+.UCS4    ANOP                                                           04220002
+&SGUCSDC(1) SETC 'ALL'             DEFAULT ALL IMAGES                   04250002
+.UCSEND  ANOP                                                           04300002
+&A       SETA  0    RESET INDEX TO ZERO                                 04350002
+.*********************************************************************  04360003
+.*              GRAPHICS SUPPORT                                        04370003
+.*********************************************************************  04380003
+         AIF   ('&GRAPHCS' EQ '').DM1                                   04400002
+&SGMENTB(12) SETB 1                INDICATE GRAPHICS IN SYSTEM          04450002
+    MNOTE *,'      GRAPHICS SUPPORT TO BE INCLUDED'                     04500002
+         AIF   (N'&GRAPHCS NE 2).DMG                                    04550002
+&SGGRPHB(3) SETB 1                                                      04600002
+&SGGRPHB(1) SETB 1                                                      04650002
+    MNOTE *,'      GRAPHICS SUPPORT GSP AND PORRTNS INCLUDED'           04700002
+         AGO   .DM1                                                     04750002
+.DMG     ANOP                                                           04800002
+         AIF   ('&GRAPHCS' EQ 'GSP').DMG1                               04850002
+         AIF   ('&GRAPHCS' NE 'PORRTNS').DMGERR                         04860002
+&SGGRPHB(1) SETB 1                                                      04900002
+    MNOTE *,'      GRAPHICS SUPPORT TO BE PORRTNS'                      04950002
+         AGO   .DM1                                                     05000002
+.DMG1    ANOP                                                           05060002
+&SGGRPHB(3) SETB 1                                                      05100002
+    MNOTE *,'      GRAPHICS SUPPORT TO BE GSP'                          05150002
+         AGO   .DM1                                                     05170002
+.DMGERR  ANOP                                                           05200002
+    MNOTE 5,'* * * IEIDAT104 GRAPHICS VALUE &GRAPHCS INVALID'           05210002
+&SGQUITB SETB  1                                                        05220002
+.*********************************************************************  05230003
+.*              ACCESS METHODS REQUESTED                                05240003
+.*********************************************************************  05242003
+.DM1     AIF   (T'&ACSMETH EQ 'O').INDUS   PARAMETER OMITTED            05250003
+    MNOTE *,'     OPTIONAL ACCESS METHOD'                               05300002
+.EXITEST AIF   (N'&ACSMETH EQ &A).INDUS    EXIT FROM SCAN ROUTINE       05350003
+&A       SETA  &A+1                        INCREMENT COUNTER            05400002
+         AIF   ('&ACSMETH(&A)' EQ 'BTAM').S1      BTAM OPTION           05450002
+         AIF   ('&ACSMETH(&A)' EQ 'TCAM').S2      TCAM OPTION           05500002
+         AIF   ('&ACSMETH(&A)' EQ 'ISAM').S3      ISAM OPTION           05550002
+         AIF   ('&ACSMETH(&A)' EQ 'GAM').S5       GAM OPTION            05650003
+         AIF   ('&ACSMETH(&A)' EQ 'VTAM').S6      VTAM OPTION           05660003
+&SGQUITB SETB  1                        INVALID SPECIFICATION           05700002
+    MNOTE 5,'* * * IEIDAT101 ACSMETH VALUE &ACSMETH(&A) INVALID'        05750002
+         AGO   .EXITEST                 GO TEST OFR END OF SCAN         05800002
+.S1 MNOTE *,'        BTAM'                                              05850002
+&SGDMGTB(4)    SETB 1                   BTAM SPECIFIED IN ACSMETH OPND  05900002
+         AGO   .EXITEST                 GO TEST FOR END OF SCAN         05950002
+.S2 MNOTE *,'        TCAM'                                              06000002
+&SGDMGTB(5)    SETB 1                   TCAM SPECIFIED IN ACSMETH OPND  06050002
+         AGO   .EXITEST                 GO TEST FOR END OF SCAN         06100002
+.S3 MNOTE *,'         ISAM'                                             06150002
+&SGDMGTB(2)     SETB 1                ISAM SPECIFIED IN ACSMETH OPND    06200002
+        AGO   .EXITEST                                                  06250002
+.S5      MNOTE *,'    GAM'                                              06450003
+&SGMENTB(12) SETB 1                   INDICATE PRESENCE OF GAM          06500002
+         AGO   .EXITEST                                                 06550002
+.S6 MNOTE *,'         VTAM'                                             06560003
+&SGDMGTB(6)     SETB 1                VTAM SPECIFIED IN ACSMETH OPND    06570003
+        AGO   .EXITEST                                                  06580003
+.*********************************************************************  06600003
+.*              INDUSTRIES REQUESTED                                    06650003
+.*********************************************************************  06700003
+.INDUS   AIF   ('&IND' EQ 'NO').ARGON NO INDUSTRY REQUESTED    @Z40MSAP 06710004
+         AIF   ('&IND' EQ '').ARGON   NO INDUSTRY REQUESTED    @Z40MSTG 06800004
+         AIF   ('&IND' NE 'YES').INDERR IMPROPER PARAMETER     @Z40MSAP 06802004
+&SGSSS2B SETB  1                      INDUSTRY REQUESTED        VS32758 06810003
+         MNOTE *,'    IND=YES SPECIFIED '                       VS32758 06860003
+         AGO   .ARGON                                          @Z40MSAP 07100004
+.INDERR  ANOP                                                   VS32758 07110003
+   MNOTE  5,'* * * IEIDAT102 VALUE &IND INVALID FOR IND PARAMETER'      07150003
+&SGQUITB SETB  1                     ERROR BIT ON                       07200003
+.ARGON   ANOP                                                  @Z40MSTG 08000004
+         AIF   (T'&TABLE EQ 'O').FINIS                         @Z40MSTG 08050004
+&P       SETA   1                                              @Z40MSTG 08100004
+         AIF    ('&TABLE(1)' EQ 'ALL').SETALL1                 @Z40MSTG 08150004
+&ID(1)   SETC   'T3211'                3211 IMAGES             @Z40MSTG 08200004
+&ID(2)   SETC   'T1403'                1403 IMAGES             @Z40MSTG 08250004
+&ID(3)   SETC   'TOCR'                 IMAGE SET               @Z40MSTG 08300004
+&ID(4)   SETC   'TKAT'                 IMAGE SET               @Z40MSTG 08350004
+&ID(5)   SETC   'TFMT'                 IMAGE SET               @Z40MSTG 08400004
+&A       SETA   (N'&TABLE)             INIT COUNTER            @Z40MSTG 08450004
+         AIF    (&A GT 5).ERRMSG1      TOO MANY PARMS          @Z40MSTG 08500004
+&B       SETA   0                      CLEAR OUT               @Z40MSTG 08550004
+.TBL1    AIF    (&A EQ &B).FINIS       GO THRU ALL             @Z40MSTG 08600004
+&B       SETA   &B+1                   BUMP COUNTER            @Z40MSTG 08650004
+.TBL2    AIF    ('&TABLE(&B)' EQ '&ID(&P)').SETON1             @Z40MSTG 08700004
+&P       SETA   &P+1                   BUMP COUNTER            @Z40MSTG 08750004
+         AIF    (&P GT 5).ERRMSG2      NOT FOUND               @Z40MSTG 08800004
+         AGO    .TBL2                  BACK TO LOOP            @Z40MSTG 08850004
+.SETALL1 AIF    (&P GT 5).ALLMSG1      SET ALL                 @Z40MSTG 08900004
+&SGAPCSB(&P) SETB 1                    SET GLOBAL              @Z40MSTG 08950004
+&P       SETA   &P+1                   BUMP COUNTER            @Z40MSTG 09000004
+         AGO    .SETALL1               LOOP BACK               @Z40MSTG 09050004
+.ALLMSG1  MNOTE 0,' * * * ALL TABLES INCLUDED'                 @Z40MSTG 09100004
+         AGO    .FINIS                 DONE                    @Z40MSTG 09150004
+.SETON1  AIF    (&SGAPCSB(&P)).ERRMSG3 PRE SPECIFIED           @Z40MSTG 09200004
+&SGAPCSB(&P) SETB 1                    SET GLOBAL              @Z40MSTG 09250004
+         MNOTE 0,' * * * TABLE SET &ID(&P) INCLUDED'           @Z40MSTG 09300004
+&P       SETA   1                      RESET                   @Z40MSTG 09350004
+         AGO    .TBL1                  RETURN                  @Z40MSTG 09400004
+.ERRMSG1 MNOTE 5,' * * * IEIDAT110 INVALID NUMBER OF PARAMETERS'        09450004
+&SGQUITB SETB 1 QUIT                                           @Z40MSTG 09500004
+         AGO    .FINIS                 GET OUT                 @Z40MSTG 09550004
+.ERRMSG2 MNOTE 5,' * * * IEIDAT111 &TABLE(&B) INVALID SPECIFICATION'    09600004
+&SGQUITB SETB   1                      QUIT                    @Z40MSTG 09650004
+&P       SETA   1                      RESET                   @Z40MSTG 09700004
+         AGO    .TBL1                  CHECK REST              @Z40MSTG 09750004
+.ERRMSG3 MNOTE 5,' * * * IEIDAT112 &TABLE(&B) SPECIFICATION REDUNDANT'  09800004
+&SGQUITB SETB   1                      QUIT                    @Z40MSTG 09850004
+&P       SETA   1                      RESET                   @Z40MSTG 09900004
+         AGO    .TBL1                  CHECK REST              @Z40MSTG 09950004
+.FINIS   MEND                          DONE                    @X40MSTG 10000004

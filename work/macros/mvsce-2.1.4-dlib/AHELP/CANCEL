@@ -1,0 +1,17 @@
+)F FUNCTION -                                                           09000020
+  THE CANCEL COMMAND IS USED TO CANCEL JOBS                             18000020
+  PREVIOUSLY SUBMITTED TO THE BACKGROUND                                27000020
+)X SYNTAX  -                                                            36000020
+         CANCEL   (JOBLIST)    PURGE/NOPURGE                            45000002
+  REQUIRED - JOBLIST                                                    54000020
+  DEFAULTS - NOPURGE                                                    63000002
+  ALIAS    - NONE                                                       72000020
+)O OPERANDS-                                                            81000020
+  (JOBLIST)- LIST OF JOBS TO BE CANCELLED, IN THE                       90000002
+             FORM JOBNAME OR JOBNAME(JOBID) WITH                        90050002
+             JOBS SEPARATED BY BLANKS OR COMMAS                         90100002
+           - THE PARENTHESES AREN'T NEEDED WHEN                         90150002
+             ONE JOB IS SPECIFIED                                       90200002
+))PURGE    - IF JOB IS ON OUTPUT QUEUE, ITS OUTPUT                      92200002
+             IS PURGED FROM THE SYSTEM                                  94200002
+))NOPURGE  - JOBS NOT PURGED IF ON OUTPUT QUEUE                         96200002

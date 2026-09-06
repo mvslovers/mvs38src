@@ -1,0 +1,12 @@
+)F FUNCTION -                                                           07000000
+  THE RENAME COMMAND IS USED TO RENAME A DATA SET OR A PARTITIONED DATA 14000000
+  SET MEMBER OR TO CREATE AN ALIAS FOR A PARTITIONED DATA SET MEMBER.   21000020
+)X SYNTAX -                                                             28000020
+         RENAME   'DSNAME1' 'DSNAME2' ALIAS                             35000020
+  REQUIRED - 'DSNAME1' AND 'DSNAME2'                                    42000020
+  DEFAULTS - NONE                                                       49000020
+)O OPERANDS -                                                           56000020
+  'DSNAME1'- THE CURRENT DATA SET NAME.                                 63000020
+  'DSNAME2'- THE NEW DATA SET NAME TO BE ASSIGNED.                      70000020
+))ALIAS    - MEMBER NAME SPECIFIED BY 'DSNAME2' IS TO BE AN ALIAS       77000020
+             RATHER THAN A REPLACEMENT.                                 84000020

@@ -1,0 +1,17 @@
+)F FUNCTION -                                                           07000020
+  THE STATUS COMMAND IS USED TO FIND THE STATUS                         14000020
+  OF JOBS PREVIOUSLY SUBMITTED TO THE BACKGROUND                        21000020
+)X SYNTAX  -                                                            28000020
+         STATUS   (JOBLIST)                                             35000002
+  REQUIRED - NONE                                                       42000020
+  DEFAULTS - IF NO (JOBLIST) IS GIVEN, STATUS WILL                      49000002
+             MAKE UP A LIST OF ALL COMBINATIONS OF                      56000020
+             YOUR USERID PLUS ONE CHARACTER (39 NAMES)                  63000020
+             AND REPORT ON THESE JOBNAMES                               70000002
+  ALIAS    - ST                                                         77000020
+)O OPERANDS                                                             84000020
+  (JOBLIST)- LIST OF JOBS, IN THE FORM JOBNAME OR                       91000002
+             JOBNAME(JOBID) WITH JOBS SEPARATED                         91050002
+             BY BLANKS OR COMMAS                                        91150002
+           - THE PARENTHESES AREN'T NEEDED WHEN ONE                     91200002
+             JOB IS SPECIFIED                                           91250002

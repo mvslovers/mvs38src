@@ -1,0 +1,86 @@
+          MACRO                                                         00050000
+          SGIEH404                                                      00100000
+.* THIS IS THE VS2 VERSION OF THE INNER MACRO FOR                       00150000
+.* DEVICE SUPPORT FACILITIES                                            00200000
+.*                                                                      00250000
+          COPY  SGGBLPAK                                                00300000
+          LCLC  &ULIB                                                   00350000
+&SGCTRLC(7)  SETC  '&SGCTRLC(32)' VOLNO LINKLIB                         00400000
+&SGCTRLC(8)  SETC  '&SGCTRLC(31)' UNITNAME LINKLIB                      00450000
+&SGCTRLC(9)  SETC  'LINKLIB'      SET DATA SET NAME                     00500000
+&SGCTRLC(10) SETC  ',LET'                                               00550043
+&SGCTRLC(11) SETC  ',RENT'                                              00600043
+&SGCTRLC(12) SETC  ',REFR'                                              00650043
+&ULIB    SETC  'AOSU0'                                                  00800000
+         COPY  SGLEDPK1                                                 00850000
+ PUNCH '//&ULIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.&ULIB'         00900000
+         COPY  SGLEDPK2                                                 00950000
+ PUNCH ' INCLUDE &ULIB.(ICKAA01)'                                       01000000
+ PUNCH ' INCLUDE &ULIB.(ICKAN01)'                                       01050000
+ PUNCH ' INCLUDE &ULIB.(ICKAN02)'                                       01100000
+ PUNCH ' INCLUDE &ULIB.(ICKAN03)'                                       01150000
+ PUNCH ' INCLUDE &ULIB.(ICKBI01)'                                       01200000
+ PUNCH ' INCLUDE &ULIB.(ICKBM01)'                                       01250000
+ PUNCH ' INCLUDE &ULIB.(ICKCDAN)'                                       01300000
+ PUNCH ' INCLUDE &ULIB.(ICKCDBI)'                                       01350000
+ PUNCH ' INCLUDE &ULIB.(ICKCDIN)'                                       01400000
+ PUNCH ' INCLUDE &ULIB.(ICKCDIT)'                                       01450000
+ PUNCH ' INCLUDE &ULIB.(ICKCDRF)'                                       01500000
+ PUNCH ' INCLUDE &ULIB.(ICKCDTR)'                                       01550000
+ PUNCH ' INCLUDE &ULIB.(ICKDV00)'                                       01600000
+ PUNCH ' INCLUDE &ULIB.(ICKDV01)'                                       01650000
+ PUNCH ' INCLUDE &ULIB.(ICKDV02)'                                       01700000
+ PUNCH ' INCLUDE &ULIB.(ICKDV03)'                                       01750000
+ PUNCH ' INCLUDE &ULIB.(ICKDV04)'                                       01800000
+ PUNCH ' INCLUDE &ULIB.(ICKDV13)'                                       01850000
+ PUNCH ' INCLUDE &ULIB.(ICKEX01)'                                       01900000
+ PUNCH ' INCLUDE &ULIB.(ICKIN01)'                                       01950000
+ PUNCH ' INCLUDE &ULIB.(ICKIN02)'                                       02000000
+ PUNCH ' INCLUDE &ULIB.(ICKIO01)'                                       02050000
+ PUNCH ' INCLUDE &ULIB.(ICKIO02)'                                       02100000
+ PUNCH ' INCLUDE &ULIB.(ICKIT01)'                                       02150000
+ PUNCH ' INCLUDE &ULIB.(ICKPP01)'                                       02200000
+ PUNCH ' INCLUDE &ULIB.(ICKRF01)'                                       02300000
+ PUNCH ' INCLUDE &ULIB.(ICKRIKT)'                                       02350000
+ PUNCH ' INCLUDE &ULIB.(ICKRILT)'                                       02400000
+ PUNCH ' INCLUDE &ULIB.(ICKRI01)'                                       02450000
+ PUNCH ' INCLUDE &ULIB.(ICKRI02)'                                       02500000
+ PUNCH ' INCLUDE &ULIB.(ICKRP01)'                                       02550000
+ PUNCH ' INCLUDE &ULIB.(ICKSA01)'                                       02600000
+ PUNCH ' INCLUDE &ULIB.(ICKSA02)'                                       02650000
+ PUNCH ' INCLUDE &ULIB.(ICKSA03)'                                       02700000
+ PUNCH ' INCLUDE &ULIB.(ICKSA04)'                                       02725000
+ PUNCH ' INCLUDE &ULIB.(ICKSA05)'                                       02750000
+ PUNCH ' INCLUDE &ULIB.(ICKSA08)'                                       02800000
+ PUNCH ' INCLUDE &ULIB.(ICKSA10)'                                       02850000
+ PUNCH ' INCLUDE &ULIB.(ICKSD01)'                                       02900000
+ PUNCH ' INCLUDE &ULIB.(ICKSD02)'                                       02925000
+ PUNCH ' INCLUDE &ULIB.(ICKTA01)'                                       02950000
+ PUNCH ' INCLUDE &ULIB.(ICKTP01)'                                       02966600
+ PUNCH ' INCLUDE &ULIB.(ICKTP05)'                                       02983200
+ PUNCH ' INCLUDE &ULIB.(ICKTR01)'                                       03000000
+ PUNCH ' INCLUDE &ULIB.(ICKTR02)'                                       03050000
+ PUNCH ' INCLUDE &ULIB.(ICKTSAN0)'                                      03200000
+ PUNCH ' INCLUDE &ULIB.(ICKTSBI0)'                                      03250000
+ PUNCH ' INCLUDE &ULIB.(ICKTSCC0)'                                      03300000
+ PUNCH ' INCLUDE &ULIB.(ICKTSDV0)'                                      03350000
+ PUNCH ' INCLUDE &ULIB.(ICKTSEF0)'                                      03400000
+ PUNCH ' INCLUDE &ULIB.(ICKTSEF1)'                                      03450000
+ PUNCH ' INCLUDE &ULIB.(ICKTSEX0)'                                      03500000
+ PUNCH ' INCLUDE &ULIB.(ICKTSIO0)'                                      03550000
+ PUNCH ' INCLUDE &ULIB.(ICKTSRI0)'                                      03600000
+ PUNCH ' INCLUDE &ULIB.(ICKTSSA0)'                                      03650000
+ PUNCH ' INCLUDE &ULIB.(ICKTSTP1)'                                      03750000
+ PUNCH ' INCLUDE &ULIB.(ICKTSUV0)'                                      03800000
+ PUNCH ' INCLUDE &ULIB.(ICKUSER1)'                                      03825000
+ PUNCH ' INCLUDE &ULIB.(ICKVA01)'                                       03850000
+ PUNCH ' INCLUDE &ULIB.(ICKVLBL)'                                       03950000
+ PUNCH ' INCLUDE &ULIB.(ICKVV01)'                                       04050000
+ PUNCH ' INCLUDE &ULIB.(ICKWI01)'                                       04100000
+ PUNCH ' INCLUDE &ULIB.(ICKWL01)'                                       04150000
+ PUNCH ' INCLUDE &ULIB.(ICKWV01)'                                       04200000
+ PUNCH ' ENTRY ICKSA01'                                                 04250000
+ PUNCH ' SETCODE AC(1)'                                                 04600043
+ PUNCH ' NAME ICKDSF(R)'                                                04650043
+ PUNCH '/*'                                                             04700043
+          MEND                                                          04750043

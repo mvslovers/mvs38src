@@ -1,0 +1,73 @@
+LANGUAGE PROCESSING COMMANDS:                                           01000020
+                                                                        02000020
+ASM        INVOKE ASSEMBLER PROMPTER AND ASSEMBLER F COMPILER.          03000020
+CALC       INVOKE ITF:PL/1 PROCESSOR FOR DESK CALCULATOR MODE.          04000020
+COBOL      INVOKE COBOL PROMPTER AND ANS COBOL COMPILER.                05000020
+FORT       INVOKE FORTRAN PROMPTER AND FORTRAN IV G1 COMPILER.          06000020
+                                                                        07000020
+PROGRAM CONTROL COMMANDS:                                               08000020
+                                                                        09000020
+CALL       LOAD AND EXECUTE THE SPECIFIED LOAD MODULE.                  10000020
+LINK       INVOKE LINK PROMPTER AND LINKAGE EDITOR.                     11000020
+LOADGO     LOAD AND EXECUTE PROGRAM.                                    12000020
+RUN        COMPILE, LOAD, AND EXECUTE PROGRAM.                          13000020
+TEST       TEST USER PROGRAM.                                           14000020
+                                                                        15000020
+DATA MANAGEMENT COMMANDS:                                               16000020
+                                                                        17000020
+ALLOCATE   ALLOCATE A DATA SET.                                         18000020
+CONVERT    SIFT ITF/PL1 AND FORTRAN SOURCE.                             19000020
+COPY       COPY A DATA SET.                                             20000020
+DELETE     DELETE A DATA SET.                                           21000020
+EDIT       CREATE, EDIT, AND/OR EXECUTE A DATA SET.                     22000020
+FORMAT     FORMAT AND PRINT A TEXT DATA SET.                            23000020
+FREE       RELEASE A DATA SET.                                          24000020
+LIST       DISPLAY A DATA SET.                                          25000020
+LISTALC    DISPLAY ACTIVE DATA SETS.                                    26000020
+LISTBC     DISPLAY MESSAGES FROM OPERATOR/USER.                         27000020
+LISTCAT    DISPLAY USER CATALOGUED DATA SETS.                           28000020
+LISTDS     DISPLAY DATA SET ATTRIBUTES.                                 29000020
+MERGE      COMBINE DATA SETS.                                           30000020
+PROTECT    PASSWORD PROTECT DATA SETS.                                  31000020
+RENAME     RENAME A DATA SET.                                           32000020
+                                                                        33000020
+SYSTEM CONTROL COMMANDS:                                                34000020
+                                                                        35000020
+ACCOUNT    MODIFY/ADD/DELETE USER ATTRIBUTES.                           36000020
+OPERATOR   PLACE TERMINAL IN OPERATOR MODE.                             37000020
+                                                                        39000020
+SESSION CONTROL:                                                        40000020
+                                                                        41000020
+EXEC       INVOKE COMMAND PROCEDURE.                                    42000020
+HELP       INVOKE HELP PROCESSOR.                                       43000020
+LOGOFF     END TERMINAL SESSION.                                        44000020
+LOGON      START TERMINAL SESSION.                                      45000020
+PROFILE    DEFINE USER CHARACTERISTICS.                                 46000020
+SEND       SEND MESSAGE TO OPERATOR/USER.                               47000020
+TERMINAL   DEFINE TERMINAL CHARACTERISTICS.                             48000020
+TIME       LOG SESSION USAGE TIME.                                      49000020
+WHEN       CONDITIONALLY EXECUTE NEXT COMMAND.                          49050020
+                                                                        50000020
+FOREGROUND INITIATED BACKGROUND COMMANDS:                               51000020
+                                                                        52000020
+CANCEL     CANCEL BACKGROUND JOB.                                       53000020
+OUTPUT     DIRECT OUTPUT MEDIUM FOR BACKGROUND JOB.                     54000020
+STATUS     LIST STATUS OF BACKGROUND JOB.                               55000020
+SUBMIT     SUBMIT BACKGROUND JOB.                                       56000020
+                                                                        58000002
+ACCESS METHOD SERVICE COMMANDS                                          60000002
+                                                                        62000002
+ALTER       ALTER ATTRIBUTES IN CATALOG ENTRIES.                        64000002
+CNVTCAT     ENTRIES IN AN OS CATALOG ARE CONVERTED TO ENTRIES IN        66000002
+            AN EXISTING VS2 MASTER OR USER CATALOG.                     68000002
+DEFINE      DEFINE USER CATALOGS,DATA SPACES, CLUSTERS, PAGE SPACES,    70000002
+            NONVSAM DATASETS, ALIAS NAMES, AND GENERATION DATA GROUPS.  72000002
+EXPORT      MOVE A CLUSTER OR USER CATALOG ENTRY FROM THE SYSTEM IN     74000002
+            WHICH THE COMMAND IS EXECUTED.                              76000002
+IMPORT      MOVE A CLUSTER OR USER CATALOG ENTRY INTO THE SYSTEM IN     78000002
+            WHICH THE COMMAND IS EXECUTED.                              80000002
+PRINT       LIST ALL OR PART OF AN INDEXED SEQUENTIAL, SEQUENTIAL,      82000002
+            OR VSAM DATASET.                                            84000002
+REPRO       COPY VSAM CLUSTERS, CATALOGS, AND NONVSAM DATASETS.         86000002
+VERIFY      VERIFY END OF FILE.                                         88000002
+                                                                        90000002

@@ -1,0 +1,275 @@
+         MACRO                                                          00050001
+         SGIEA201                                                       00100001
+.*  LAST UPDATE = 1/10/74                                        Y02952 00110002
+.*              = 10/07/75 (TYPE 6 SVC)                        @Z40FPSM 00110240
+.*              = 10/13/75 (NON-PREEMPTIBLE SVC)               @Z40FPSM 00116240
+.*                                                                      00132040
+.* CHANGE = YM06123, YM06064, M02827, M02066                            00138040
+.*                                                                      00144040
+         COPY  SGGBLPAK                                                 00150001
+         LCLA  &I,&TYPE                                          Y02952 00400002
+         LCLA  &ON                                               Y02952 00402002
+         LCLB  &OFF                                              Y02952 00410002
+         LCLC  &NAME,&C,&BLK,&TYPEC,&SVCNO,&CON,&B               Y02952 00450002
+         LCLC  &FUNCT,&FUNC,&LOCK,&COMMA,&HOLD,&FUNCX            Y02952 00500002
+         LCLC  &ZEROS,&ZERO,&ZERO3,&ONE,&TYP,&BYT1,&NP,&NPP    @Z40FPSM 00530040
+         ACTR  32767                                             Y02952 00610002
+&SGCTRLC(6) SETC 'IEASVC00'                                             00650001
+         COPY  SGASMPAK                                                 00700001
+.*                                                                      00750001
+.* PRINT SVC TABLE                                                      00800001
+.*                                                                      00850001
+&ON      SETA  1                                                 Y02952 00852002
+&OFF     SETB  0                                                 Y02952 00860002
+&I       SETA  1                                                        00900001
+&BLK     SETC  '          '                                      Y02952 00950002
+ MNOTE *,'* * * * * * * SVC TABLE * * * * * * * * * * * * * * * * * * ' 00960040
+ MNOTE *,'NO.  TYPE  APF CODE      N/P  LOCKS                         ' 00965040
+ MNOTE *,'                                                            ' 00980040
+ MNOTE *,' 0    1    UNAUTHORIZED  NO   LOCAL                         ' 00985040
+.NEXT0   ANOP                                                           01200001
+.*  DETERMINE THE TYPE OF THE SVC                                Y02952 01250002
+.*                                                               Y02952 01300002
+&TYPE    SETA  (4*&SGSVCAB(&I)+2*&SGSVCBB(&I)+1*&SGSVCCB(&I))           01450001
+         AIF   (&TYPE EQ 0).NEXT2                                       01500001
+&SVCNO   SETC  '&I'.'&BLK'(1,2)                                         01550001
+&TYPEC   SETC  'NOP'                                                    01600001
+         AIF   (&TYPE EQ 5).NEXT1                                       01650001
+&TYPEC   SETC  '&TYPE'                                                  01700001
+.NEXT1   ANOP                                                           01750001
+&TYPEC   SETC  '&TYPEC'.'&BLK'(1,2)                                     01800001
+&TYPEC   SETC  '&TYPEC'(1,3)                                     Y02952 01850002
+&SVCNO   SETC  '&SVCNO'(1,3)                                            01900001
+.*                                                               Y02952 01902002
+.*  DETERMINE THE APF AUTHORIZATION                              Y02952 01904002
+.*                                                               Y02952 01906002
+&FUNCT   SETC  'AUTHORIZED'                                      Y02952 01910002
+         AIF   (&SGSVCFA(&I) EQ &ON).AUTH                       YM06123 01920002
+&FUNCT   SETC  'UNAUTHORIZED'                                    Y02952 01930002
+.AUTH    ANOP                                                    Y02952 01940002
+&FUNC    SETC  '&FUNCT'.'&BLK'(1,2)           ADD 2 BLANKS TO    Y02952 01942002
+.*                                            END OF WORD        Y02952 01942402
+&FUNC    SETC  '&FUNC'(1,12)                  TRUNCATE WORD TO   Y02952 01944002
+.*                   12 CHARACTERS--EITHER 'AUTHORIZED  '  OR    Y02952 01944502
+.*                   'UNAUTHORIZED'                              Y02952 01944602
+.*                                                               Y02952 01944802
+.*  DETERMINE THE LOCKS TO BE ACQUIRED                           Y02952 01945002
+.*                                                               Y02952 01945202
+&COMMA   SETC  ','                                               Y02952 01945402
+&LOCK    SETC  '&BLK'                         SET LOCK TO BLANKS Y02952 01945602
+         AIF   (&TYPE EQ 6).ENDLOCK           NO LOCKS FOR TYPE 6       01946040
+.*                                                             @Z40FPSM 01946440
+         AIF   (&SGSVC1B(&I) EQ &OFF).CMS     LOCAL LOCK?        Y02952 01946902
+&LOCK    SETC  'LOCAL'                        SET LOCK TO 'LOCAL Y02952 01947002
+.CMS     AIF   (&SGSVC2B(&I) EQ &OFF).OPT     CMS LOCK?          Y02952 01947102
+         AIF   ('&LOCK' EQ '&BLK').FIRST      FIRST LOCK FOUND?  Y02952 01947202
+&LOCK    SETC  '&LOCK'.'&COMMA'.'CMS'         SET LOCK TO:       Y02952 01947302
+.*                                            'LOCAL,CMS'        Y02952 01947402
+         AGO   .OPT                                              Y02952 01947502
+.FIRST   ANOP                                                    Y02952 01947602
+&LOCK    SETC   'CMS'                         SET LOCK TO 'CMS'  Y02952 01947702
+.OPT     AIF    (&SGSVC3B(&I) EQ &OFF).SALLOC SRM LOCK?        @Z40FPSM 01947840
+         AIF    ('&LOCK' EQ '&BLK').FIRST1    FIRST LOCK FOUND?  Y02952 01948040
+&LOCK    SETC   '&LOCK'.'&COMMA'.'SRM'        CONCATENATE      @Z40FPSM 01948140
+.*                           'SRM' TO OTHER LOCK NAMES         @Z40FPSM 01948240
+         AGO    .SALLOC                                          Y02952 01948540
+.FIRST1  ANOP                                                    Y02952 01948640
+&LOCK    SETC  'SRM'                          SET LOCK TO      @Z40FPSM 01948740
+.*                                            'SRM'            @Z40FPSM 01948840
+.SALLOC  AIF   (&SGSVC4B(&I) EQ &OFF).DISPAT  SALLOC LOCK?       Y02952 01949240
+         AIF   ('&LOCK' EQ '&BLK').FIRST2     FIRST LOCK FOUND?  Y02952 01949340
+&LOCK    SETC  '&LOCK'.'&COMMA'.'SALLOC'      CONCATENATE        Y02952 01949440
+.*                           'SALLOC' TO PRIOR LOCK NAMES        Y02952 01949540
+         AGO   .DISPAT                                           Y02952 01949602
+.FIRST2  ANOP                                                    Y02952 01949702
+&LOCK    SETC  'SALLOC'                       SET LOCK TO        Y02952 01949802
+.*                                            'SALLOC'           Y02952 01952202
+.DISPAT  AIF   (&SGSVC5B(&I) EQ &OFF).ENDLOCK DISPATCHER LOCK?   Y02952 01954502
+         AIF   ('&LOCK' EQ '&BLK').FIRST3     FIRST LOCK FOUND?  Y02952 01956802
+&LOCK    SETC  '&LOCK'.'&COMMA'.'DISPATCH'    CONCATENATE        Y02952 01959102
+.*                          'DISPATCHER' TO PRIOR LOCK NAMES     Y02952 01961102
+         AGO   .ENDLOCK                                          Y02952 01961402
+.FIRST3  ANOP                                                    Y02952 01963702
+&LOCK    SETC  'DISPATCHER'                   SET LOCK TO        Y02952 01966002
+.*                                            'DISPATCHER'       Y02952 01968002
+.ENDLOCK ANOP                                                    Y02952 01968302
+.*                                                             @Z40FPSM 01969340
+.* DETERMINE IF SVC IS NON-PREEMPTIBLE                         @Z40FPSM 01970340
+.*                                                             @Z40FPSM 01971340
+         AIF  (&SGSVNPB(&I) EQ &OFF).NPOFF                     @Z40FPSM 01972340
+&NP      SETC  'YES'              N/P SPECIFIED                @Z40FPSM 01973340
+         AGO    .PRINT                                         @Z40FPSM 01973840
+.NPOFF   ANOP                                                  @Z40FPSM 01974340
+&NP      SETC  'NO '              N/P NOT SPECIFIED            @Z40FPSM 01975340
+.PRINT   ANOP                                                  @Z40FPSM 01975840
+ MNOTE *,' &SVCNO  &TYPEC  &FUNC  &NP  &LOCK'                  @Z40FPSM 01976040
+.NEXT2   ANOP                                                           02000001
+&I       SETA  &I+1                                                     02050001
+         AIF   (&I LE 255).NEXT0                                        02100001
+ MNOTE *,' * * * * * * * * * * * * * * * * * * * * * * * * * * * * *'   02150002
+.*                                                                      03600001
+.* GENERATE SVC TABLE                                                   03650001
+.*                                                                      03700001
+         PUNCH 'SVCTABLE   CSECT'                                       03900001
+         PUNCH ' DS    0D'                                       M02066 03980002
+.*                                                              YM06064 03988002
+.*  SET BIT VALUES AND PADDING ZEROS TO BE USED                 YM06064 03996002
+.*  IN GENERATING ENTRIES.                                      YM06064 04004002
+.*                                                              YM06064 04012002
+&ZEROS   SETC  '00000000'                                       YM06064 04020002
+&ZERO    SETC  '0'                                              YM06064 04028002
+&ONE     SETC  '1'                                              YM06064 04036002
+&ZERO3   SETC  '000'                                            YM06064 04044002
+.*                                                               Y02952 04060002
+.*  SET NUMBER AND TYPE                                          Y02952 04070002
+.*                                                               Y02952 04080002
+&I       SETA  0                                                        04150001
+&CON     SETC  'V('                           SET SVC 0          Y02952 04200002
+&NAME    SETC  'IGC000'                       NAME               Y02952 04300002
+&B       SETC  ')'                            AND                Y02952 04350002
+&C       SETC  ','                                               Y02952 04360002
+&BYT1    SETC  'X''''00008000'''''            TYPE BYTE=0,     @Z40FPSM 04365040
+.*                                            UNAUTHORIZED,      Y02952 04374002
+.*                                         NON-PREEMPTIBLE,    @Z40FPSM 04375040
+.*                                            LOCAL LOCK         Y02952 04376002
+         AGO   .PUNCH                         PUNCH SVC 0 ENTRY  Y02952 04380002
+.NEXT5   ANOP                                                           04600001
+&I       SETA  &I+1                           INCREMENT TO NEXT         04650002
+.*                                            SVC NUMBER                04660002
+&CON     SETC  'V('                           SET VCON SYMBOL    Y02952 04700002
+&C       SETC  ','                                               Y02952 04800002
+&B       SETC  ')'                                               Y02952 04850002
+&TYP     SETC  '0000'                         SET TYPE BYTE TO 0 Y02952 04860002
+&NPP     SETC  '00'                           NO N/P.          @Z40FPSM 04880040
+&TYPE    SETA  (4*&SGSVCAB(&I)+2*&SGSVCBB(&I)+1*&SGSVCCB(&I))           04900001
+.*                                            CALCULATE TYPE     Y02952 04910002
+         AIF   (&TYPE NE 0).NEXT10                                      04950001
+&NAME    SETC  'IGCERROR'                     SET SVC NAME TO    Y02952 05000002
+.*                                            IGCERROR           Y02952 05002002
+&TYP     SETC  '1000'                         SET TYPE BYTE TO   Y02952 05010002
+.*                                            8 (TYPE 2)         Y02952 05012002
+&FUNCX   SETC  '00'                           UNAUTHORIZED     @Z40FPSM 05014040
+&HOLD    SETC  '00000'                        NO LOCKS           M02827 05040002
+         AGO   .MERGE                                            Y02952 05050002
+.NEXT10  AIF   (NOT(&TYPE EQ 1 OR &TYPE EQ 2 OR &TYPE EQ 6)).NEXT15     05070040
+.*                                            BRANCH IF NOT    @Z40FPSM 05110040
+.*                                            TYPE 1 OR 2 OR 6 @Z40FPSM 05113040
+         AIF   (&TYPE EQ 1).NEXT101                                     05150001
+         AIF   (&TYPE NE 6).TYP2              SET TYPE BYTE    @Z40FPSM 05158040
+.*                                            TO 2 IF TYPE=6   @Z40FPSM 05166040
+&TYP     SETC  '0010'                                          @Z40FPSM 05174040
+         AGO   .NEXT101                                        @Z40FPSM 05182040
+.TYP2    ANOP                                                  @Z40FPSM 05190040
+&TYP     SETC  '1000'                         SET TYPE BYTE TO   Y02952 05200002
+.*                                            8 IF TYPE=2        Y02952 05250002
+.NEXT101 AIF   (&I LT 10).NEXT10A                                       05450001
+         AIF   (&I LT 100).NEXT10B                                      05500001
+&NAME    SETC  'IGC'.'&I'                     SET SVC NAME TO    Y02952 05550002
+.*                                            IGC CONCATENATED   Y02952 05560002
+.*                                            WITH SVC NUMBER    Y02952 05570002
+         AGO   .NEXT25                                                  05600001
+.NEXT10A ANOP                                                           05650001
+&NAME    SETC  'IGC00'.'&I'                   SET SVC NAME TO    Y02952 05700002
+.*                                            IGC00 CONCATENATED Y02952 05710002
+.*                                            WITH SVC NUMBER    Y02952 05720002
+         AGO   .NEXT25                                                  05750001
+.NEXT10B ANOP                                                           05800001
+&NAME    SETC  'IGC0'.'&I'                    SET SVC NAME TO    Y02952 05850002
+.*                                            IGC0 CONCATENATED  Y02952 05860002
+.*                                            WITH SVC NUMBER    Y02952 05870002
+         AGO   .NEXT25                                                  05900001
+.NEXT15  AIF   (NOT(&TYPE EQ 3 OR &TYPE EQ 4)).NEXT20                   05950001
+&TYP     SETC  '1100'                         SET TYPE BYTE TO C Y02952 06000002
+&NAME    SETC  '0'                            SET NAME TO '0'    Y02952 06250002
+&CON     SETC  'A('                           SET ADDCON SYMBOL  Y02952 06300002
+         AGO   .NEXT25                                                  06350001
+.NEXT20  ANOP                                                           06400001
+&NAME    SETC  'IGCRETRN'                     FOR TYPE 5 SVC,    Y02952 06450002
+.*                                            SET NAME TO        Y02952 06460002
+.*                                            'IGCRETRN'         Y02952 06470002
+&CON     SETC  'A('                           SET ADDCON SYMBOL  Y02952 06500002
+.NEXT25  ANOP                                                           06550001
+.*                                                               Y02952 06552002
+.*  SET FUNCTION CODE                                            Y02952 06554002
+.*                                                               Y02952 06556002
+&FUNCX   SETC  '00'                           SET DEFAULT      @Z40FPSM 06558040
+.*                                            FUNC. CODE OF 0    Y02952 06562002
+         AIF   (&SGSVCFA(&I) EQ 0).CHECK1     LEAVE DEFAULT IF   Y02952 06570002
+.*                                            AUTHORIZATION      Y02952 06572002
+.*                                            NOT WANTED         Y02952 06574002
+&FUNCX   SETC  '10'                           SET FUNC CODE TO 1        06576040
+.*                                                             @Z40FPSM 06578040
+.*                                            IF AUTHORIZATION   Y02952 06582002
+.*                                            IS WANTED          Y02952 06584002
+.CHECK1  ANOP                                                    Y02952 06590002
+         AIF  (&SGSVNPB(&I) EQ &OFF).NONP                      @Z40FPSM 06590540
+&NPP     SETC  '10'                           SET N/P          @Z40FPSM 06591040
+.NONP    ANOP                                                  @Z40FPSM 06591540
+.*                                                               Y02952 06592002
+.*  SET UP LOCKS                                                 Y02952 06594002
+.*                                                               Y02952 06596002
+         AIF   (&TYPE NE 6).LOCKS             ZERO OUT LOCKS   @Z40FPSM 06596340
+&HOLD    SETC  '&ZEROS'                       IF TYPE = 6      @Z40FPSM 06596540
+         AGO   .CONCAT                                         @Z40FPSM 06596940
+.LOCKS   ANOP                                                  @Z40FPSM 06597240
+&HOLD    SETC  '&ZERO'                        SET FIRST LOCK     Y02952 06597702
+.*                                            BIT TO DEFAULT     Y02952 06597802
+.*                                            OF ZERO            Y02952 06597902
+         AIF   (&SGSVC1B(&I) EQ &OFF).CHECK2  LOCAL LOCK TO BE   Y02952 06598002
+.*                                            HELD?              Y02952 06598102
+&HOLD    SETC  '&ONE'                         YES,SET FIRST      Y02952 06598202
+.*                                            LOCK BIT TO 1      Y02952 06600102
+.CHECK2  AIF   (&SGSVC2B(&I) EQ &OFF).ADD0A   CMS LOCK TO BE     Y02952 06606302
+.*                                            HELD?              Y02952 06608002
+&HOLD    SETC  '&HOLD'.'&ONE'                 YES, SET SECOND    Y02952 06608202
+.*                                            LOCK BIT TO 1      Y02952 06609102
+         AGO   .CHECK3                                           Y02952 06610102
+.ADD0A   ANOP                                                    Y02952 06612002
+&HOLD    SETC  '&HOLD'.'&ZERO'                NO, SET SECOND     Y02952 06613902
+.*                                            LOCK BIT TO 0      Y02952 06614302
+.CHECK3  AIF   (&SGSVC3B(&I) EQ &OFF).ADD0B   SRM LOCK TO      @Z40FPSM 06615040
+.*                                            BE HELD?           Y02952 06616202
+&HOLD    SETC  '&HOLD'.'&ONE'                 YES,SET 3RD LOCK   Y02952 06617702
+.*                                            BIT TO 1           Y02952 06618102
+         AGO   .CHECK4                                           Y02952 06619602
+.ADD0B   ANOP                                                    Y02952 06621502
+&HOLD    SETC  '&HOLD'.'&ZERO'                NO, SET 3RD LOCK   Y02952 06623402
+.*                                            BIT TO 0           Y02952 06623802
+.CHECK4  AIF   (&SGSVC4B(&I) EQ &OFF).ADD0C   SALLOC LOCK TO BE  Y02952 06625302
+.*                                            HELD?              Y02952 06625702
+&HOLD    SETC  '&HOLD'.'&ONE'                 YES, SET 4TH LOCK  Y02952 06627202
+.*                                            BIT TO 1           Y02952 06628002
+         AGO   .CHECK5                                           Y02952 06629102
+.ADD0C   ANOP                                                    Y02952 06631002
+&HOLD    SETC  '&HOLD'.'&ZERO'                NO, SET 4TH LOCK   Y02952 06632902
+.*                                            BIT TO 0           Y02952 06633302
+.CHECK5  AIF   (&SGSVC5B(&I) EQ &OFF).ADD0D   DISPATCHER LOCK    Y02952 06634802
+.*                                            TO BE HELD?        Y02952 06635202
+&HOLD    SETC  '&HOLD'.'&ONE'                 YES, SET 5TH LOCK  Y02952 06636702
+.*                                            BIT TO 1           Y02952 06637102
+         AGO   .MERGE                                            Y02952 06638602
+.ADD0D   ANOP                                                    Y02952 06640502
+&HOLD    SETC  '&HOLD'.'&ZERO'                NO, SET 5TH LOCK   Y02952 06642402
+.*                                            BIT TO 0           Y02952 06642802
+.MERGE   ANOP                                                    Y02952 06644302
+&HOLD    SETC  '&HOLD'.'&ZERO3'               ADD 3 ZEROS TO     Y02952 06646202
+.*                                            COMPLETE LOCK BYTE Y02952 06646602
+.CONCAT  ANOP                                                  @Z40FPSM 06647340
+&TYP     SETC  '&TYP'.'&FUNCX'.'&NPP'         CONCATENATE TYPE @Z40FPSM 06647740
+.*                                            BYTE,FUNC BITS   @Z40FPSM 06648540
+.*                                            AND N/P BITS.    @Z40FPSM 06649040
+&BYT1    SETC  'B''''&TYP.&ZEROS.&HOLD.&ZEROS'''''  CONCATENATE  Y02952 06650002
+.*                                            BYTES CONTAINING   Y02952 06700002
+.*                                            TYPE, FUNC. CODE,  Y02952 06750002
+.*                                            N/P AND LOCKS    @Z40FPSM 06770040
+.PUNCH   ANOP                                                           07200001
+         PUNCH ' DC &CON&NAME&B&C&BYT1'       PUNCH SVC ENTRY    Y02952 07250002
+         AIF   (&I LT 255).NEXT5                                 M02066 07400002
+.*                                                                      07500002
+.*  ENTRY POINT FOR TYPE 5 SVCS                                         07510002
+.*                                                                      07520002
+         PUNCH 'IGCRETRN SR    15,15 '                                  07533301
+         PUNCH '         BR    14 '                                     07550001
+         PUNCH '         END'                                           07600001
+         PUNCH '/*'                                                     07650001
+         MEND                                                           07700001

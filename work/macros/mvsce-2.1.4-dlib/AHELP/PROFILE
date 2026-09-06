@@ -1,0 +1,79 @@
+)F FUNCTION -                                                           00050020
+  THE PROFILE COMMAND IS USED EITHER TO SPECIFY TO THE SYSTEM CERTAIN   00100001
+  USER CHARACTERISTICS WHICH ARE TO BE USED TO CONTROL THE FLOW OF      00150020
+  INFORMATION TO AND FROM THE TERMINAL OR TO LIST THE USER PROFILE.     00160001
+  THE USER PROFILE IS RETAINED THROUGHOUT EACH TERMINAL SESSION         00170001
+  UNLESS THE USER WISHES TO CHANGE IT BY ISSUING THE PROFILE COMMAND    00200001
+  AGAIN AND SPECIFYING THE APPROPRIATE OPERANDS.                        00250001
+)X SYNTAX  -                                                            00350020
+         PROFILE   LINE('CHARACTER')/LINE(ATTN)/LINE(CTLX)/NOLINE       00360020
+                   CHAR('CHARACTER')/CHAR(BS)/NOCHAR                    00370020
+                   PROMPT/NOPROMPT  INTERCOM/NOINTERCOM                 00380020
+                   PAUSE/NOPAUSE  MSGID/NOMSGID                         00390002
+                   MODE/NOMODE  WTPMSG/NOWTPMSG                         00393002
+                   PREFIX('PREFIX')/NOPREFIX    LIST                    00396002
+  REQUIRED - NONE                                                       00400020
+  DEFAULTS - FOR PREFIX THE DEFAULT IS THE LOGON USERID                 00450002
+  ALIAS    - PROF                                                       00500020
+  NOTE     - IF THE COMMAND IS ENTERED WITH NO OPERANDS, THE COMMAND    00550020
+             IS IGNORED.                                                00600020
+)O OPERANDS-                                                            00650020
+))LINE('CHARACTER')                                                     00700020
+           - SPECIFIES THE CHARACTER WHICH IS TO BE USED FOR            00750020
+             DELETING A LINE.                                           00800020
+    'CHARACTER'                                                         00810020
+           - IS ANY VALID CHARACTER.                                    00820020
+))LINE(ATTN)                                                            00830020
+           - SPECIFIES THAT ATTENTION IS TO BE USED TO DELETE A LINE.   00840020
+             THIS IS THE SYSTEM DEFAULT DELETE CHARACTER FOR THE        00840420
+             KEYBOARD TYPE TERMINAL.                                    00840820
+))LINE(CTLX)                                                            00842020
+           - SPECIFIES THAT CTLX IS TO BE USED TO DELETE A LINE         00844001
+             FOR THE TELETYPE TERMINAL. THIS IS THE SYSTEM DEFAULT      00846020
+             DELETE CHARACTER FOR THE TELETYPE TERMINAL.                00848020
+))NOLINE   - SPECIFIES THAT THERE IS TO BE NO LINE DELETING CHARACTER.  00850020
+))CHAR('CHARACTER')                                                     00900020
+           - SPECIFIES THE CHARACTER TO BE USED TO DELETE A CHARACTER.  00950020
+    'CHARACTER'                                                         01000020
+           - IS ANY VALID CHARACTER.                                    01050020
+))CHAR(BS) - SPECIFIES THAT BACKSPACE IS TO BE USED TO DELETE A         01100020
+             CHARACTER. THIS IS THE SYSTEM DEFAULT VALUE.               01150020
+))NOCHAR   - SPECIFIES THAT THERE IS NO CHARACTER DELETE CHARACTER.     01200020
+))PROMPT   - SPECIFIES THAT THE USER IS TO BE PROMPTED FOR NECESSARY    01250020
+             INFORMATION.                                               01300020
+))NOPROMPT - SPECIFIES THAT THE USER IS NOT TO BE PROMPTED FOR          01350020
+             INFORMATION.                                               01450020
+))INTERCOM - SPECIFIES THAT THE USER WILL ACCEPT MESSAGES FROM OTHER    01500020
+             TERMINAL USERS.                                            01550020
+))NOINTERCOM                                                            01600020
+           - SPECIFIES THAT THE USER WILL NOT ACCEPT MESSAGES FROM      01650020
+             OTHER TERMINAL USERS.                                      01700020
+))PAUSE    - SPECIFIES THAT SECOND LEVEL MESSAGES WILL BE AVAILABLE     01860020
+             TO THE USER WHILE OPERATING IN A COMMAND PROCEDURE.        01870020
+             IF SPECIFIED, THE SYSTEM WILL PROMPT THE USER TO           01880020
+             ENTER A QUESTION MARK OR A NULL LINE AFTER A COMMAND THAT  01890020
+             HAS ISSUED A MESSAGE WITH MULTIPLE LEVELS OF OUTPUT.       01892020
+))NOPAUSE  - SPECIFIES THAT SECOND LEVEL MESSAGES WILL NOT BE AVAILABLE 01900020
+             TO THE USER WHILE OPERATING IN A COMMAND PROCEDURE.        01950020
+))MSGID    - SPECIFIES THAT TERMINAL MESSAGES WILL INCLUDE MESSAGE      02000020
+             IDENTIFIERS.                                               02050020
+))NOMSGID  - SPECIFIES THAT TERMINAL MESSAGES WILL NOT INCLUDE          02100020
+             MESSAGE IDENTIFIERS.                                       02150020
+))MODE     - SPECIFIES THAT THE USER WISHES TO RECEIVE MODE MESSAGES    02200002
+             AT HIS TERMINAL                                            05200002
+))NOMODE   - SPECIFIES THAT THE USER DOES NOT WISH TO RECEIVE           08200002
+             MODE MESSAGES AT HIS TERMINAL                              11200002
+))PREFIX('PREFIX')                                                      14200002
+           - SPECIFIES A PREFIX WHICH WILL BE APPENDED TO ALL           17200002
+             NON-FULLY QUALIFIED DSNAMES.                               20200002
+    'PREFIX'                                                            23200002
+           - IS ANY VALID DSNAME QUALIFIER OF 1-7 ALPHAMERIC            26200002
+             CHARACTERS THAT BEGINS WITH AN ALPHABETIC OR               29200002
+             NATIONAL CHARACTER                                         32200002
+))NOPREFIX - SPECIFIES NO PREFIXING OF DSNAMES BY ANY QUALIFIER         35200002
+             WILL BE PERFORMED                                          38200002
+))WTPMSG   - SPECIFIES THE USER WISHES TO RECEIVE WRITE TO              41200002
+             PROGRAMMER MESSAGES AT HIS TERMINAL                        44200002
+))NOWTPMSG - SPECIFIES THE USER DOES NOT WISH TO RECEIVE WRITE TO       47200002
+             PROGRAMMER MESSAGES AT HIS TERMINAL                        50200002
+))LIST     - SPECIFIES THAT THE USER PROFILE IS TO BE LISTED.           53200002

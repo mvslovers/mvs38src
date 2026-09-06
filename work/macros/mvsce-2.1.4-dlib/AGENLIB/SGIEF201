@@ -1,0 +1,13 @@
+         MACRO                                                          00020000
+         SGIEF201                                                       00040000
+         COPY  SGGBLPAK                                            4554 00060000
+         LCLB  &VLMOUNT,&TAVR5,&TAVR8                            Y01029 00140001
+&SGCTRLC(6) SETC  'IEFSGOPT'                                       4554 00180000
+         COPY  SGASMPAK                                            4554 00200000
+&VLMOUNT SETB  (&SGSCHDB(14))                                      4554 00445013
+&TAVR5   SETB  (&SGSCHDB(23))                                      4554 00450013
+&TAVR8   SETB  (&SGSCHDB(24))                                      4554 00455013
+.PUNCH1  PUNCH '    SGIEF002  &VLMOUNT,&TAVR5,&TAVR8'            Y01029 00500001
+         PUNCH '    END'                                                00560000
+         PUNCH '/*'                                                     00580000
+         MEND                                                           00600000

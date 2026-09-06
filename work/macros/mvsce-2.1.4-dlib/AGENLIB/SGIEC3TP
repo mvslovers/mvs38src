@@ -1,0 +1,15 @@
+         MACRO                                                          00020000
+         SGIEC3TP                                                       00040000
+.*                                                                      00050002
+.* CHANGE ACTIVITY                                                      00052002
+.*            APARS                       PTMS                          00054002
+.*                                    YM4088  (10/31/73)                00056002
+.*                                                                      00058002
+         COPY  SGGBLPAK                                                 00060000
+         AIF   (NOT &SGDMGTB(4)).END0                            YM4088 00080002
+         PUNCH ' INCLUDE AOS20(IGC058) '                                00130002
+         AIF   (NOT &SGDCLSB(80)).END0                           YM4088 02080002
+         PUNCH ' INCLUDE AOS20(IECTATEN) '                              05080002
+.*       3 LINES DELETED BY THE FOLLOWING PTM                    YM4088 16080002
+.*          DELETE PUNCHING TCAM NUCLEUS MODULES                 YM4088 16130002
+.END0    MEND                                                           40140020

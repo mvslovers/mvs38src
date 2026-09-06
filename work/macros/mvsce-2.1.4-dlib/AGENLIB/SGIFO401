@@ -1,0 +1,63 @@
+         MACRO                                                          00050000
+         SGIFO401                                                       00100000
+         COPY  SGGBLPAK                                                 00150000
+&SGCTRLC(6) SETC ''                                                     00200000
+&SGCTRLC(7) SETC '&SGCTRLC(32)'        VOLUME SER VALUE                 00250000
+&SGCTRLC(8) SETC '&SGCTRLC(31)'        UNIT VALUE                       00300000
+&SGCTRLC(9) SETC 'LINKLIB'             OUTPUT LIBRARY                   00350000
+&SGCTRLC(10) SETC ''                                                    00400000
+         COPY  SGLEDPK1                                                 00450000
+  PUNCH  '//AOS03 DD DISP=SHR,VOL=(,RETAIN),DSN=SYS1.AOS03'             00500000
+         COPY  SGLEDPK2                                                 00550000
+  PUNCH  '  INCLUDE  AOS03(IFOX0A,IFOX0B)'                              00600000
+  PUNCH  '  ENTRY  IFOX0A01'                                            00650000
+  PUNCH  '  ALIAS  ASMBLR,IEUASM'                                       00700000
+  PUNCH  '  NAME  IFOX00(R)'                                            00750000
+  PUNCH  '  INCLUDE  AOS03(IFOX0C)'                                     00800000
+  PUNCH  '  ENTRY IFOX0C01'                                             00820000
+  PUNCH  '  NAME  IFOX01(R)'                                            00850000
+  PUNCH  '  INCLUDE  AOS03(IFOX0D,IFOX0J)'                              00900000
+  PUNCH  '  ENTRY IFOX0D01'                                             00920000
+  PUNCH  '  NAME  IFOX02(R)'                                            00950000
+  PUNCH  '  INCLUDE  AOS03(IFOX0E)'                                     01000000
+  PUNCH  '  ENTRY  IFOX0E01'                                            01050000
+  PUNCH  '  NAME  IFOX03(R)'                                            01100000
+  PUNCH  '  INCLUDE  AOS03(IFOX0F)'                                     01150000
+  PUNCH  '  ENTRY IFOX0F01'                                             01170000
+  PUNCH  '  NAME  IFOX04(R)'                                            01200000
+  PUNCH  '  INCLUDE  AOS03(IFOX0G)'                                     01250000
+  PUNCH  '  ENTRY IFOX0G01'                                             01270000
+  PUNCH  '  NAME  IFOX05(R)'                                            01300000
+  PUNCH  '  INCLUDE  AOS03(IFOX0H)'                                     01350000
+  PUNCH  '  ENTRY IFOX0H01'                                             01370000
+  PUNCH  '  NAME  IFOX06(R)'                                            01400000
+  PUNCH  '  INCLUDE  AOS03(IFOX0I)'                                     01450000
+  PUNCH  '  ENTRY IFOX0I01'                                             01470000
+  PUNCH  '  NAME  IFOX07(R)'                                            01500000
+  PUNCH  '  INCLUDE  AOS03(IFNX1A,IFNX1J,IFNX1K,IFNX1S)'                01550000
+  PUNCH  '  ENTRY  IFNX1A01'                                            01600000
+  PUNCH  '  NAME  IFOX11(R)'                                            01650000
+  PUNCH  '  INCLUDE  AOS03(IFNX2A)'                                     01700000
+  PUNCH  '  ENTRY IFNX2A01'                                             01720000
+  PUNCH  '  NAME  IFOX21(R)'                                            01750000
+  PUNCH  '  INCLUDE  AOS03(IFNX3A,IFNX3B,IFNX3K,IFNX3N)'                01800000
+  PUNCH  '  ENTRY  IFNX3A01'                                            01850000
+  PUNCH  '  NAME  IFOX31(R)'                                            01900000
+  PUNCH  '  INCLUDE  AOS03(IFNX4D,IFNX4E,IFNX4M,IFNX4S,IFNX4V)'         01950000
+  PUNCH  '  ENTRY  IFNX4M01'                                            02000000
+  PUNCH  '  NAME  IFOX41(R)'                                            02050000
+  PUNCH  '  INCLUDE  AOS03(IFNX4E,IFNX4N,IFNX4S,IFNX4T,IFNX4V)'         02100000
+  PUNCH  '  ENTRY  IFNX4T01'                                            02150000
+  PUNCH  '  NAME  IFOX42(R)'                                            02200000
+  PUNCH  '  INCLUDE  AOS03(IFNX5A,IFNX5C,IFNX5D,IFNX5F)'                02250000
+  PUNCH  '  INCLUDE  AOS03(IFNX5L,IFNX5M,IFNX5P,IFNX5V)'                02300000
+  PUNCH  '  ENTRY  IFNX5C01'                                            02350000
+  PUNCH  '  NAME  IFOX51(R)'                                            02400000
+  PUNCH  '  INCLUDE  AOS03(IFNX6A)'                                     02450000
+  PUNCH  '  ENTRY IFNX6A01'                                             02470000
+  PUNCH  '  NAME  IFOX61(R)'                                            02500000
+  PUNCH  '  INCLUDE  AOS03(IFNX6B,IFNX6C)'                              02550000
+  PUNCH  '  ENTRY  IFNX6B01'                                            02600000
+  PUNCH  '  NAME  IFOX62(R)'                                            02650000
+  PUNCH  '/*'                                                           02700000
+         MEND                                                           02750000

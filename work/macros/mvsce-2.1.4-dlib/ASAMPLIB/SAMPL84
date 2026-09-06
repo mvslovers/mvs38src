@@ -1,0 +1,7 @@
+//COPYSA   EXEC PGM=IEBGENER                                            00050000
+//SYSPRINT DD  SYSOUT=A                                                 00100000
+//SYSIN    DD  DUMMY,DCB=BLKSIZE=80                                     00150000
+//SYSUT1   DD  DSN=ASAMPLIB(ICLSAV2),DISP=SHR,                          00200000
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=1680)                     00250000
+//SYSUT2   DD  UNIT=2400,LABEL=(,NL),DISP=(,KEEP),                      00300000
+//             DCB=(RECFM=F,LRECL=80,BLKSIZE=80)                        00350000

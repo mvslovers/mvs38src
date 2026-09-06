@@ -1,0 +1,325 @@
+         MACRO                                                          00200002
+         UNITNAME   &UNIT=,&NAME=,&VIO=NO                               00400002
+         COPY  SGSYSPAK                                                 00600002
+         LCLA  &A,&N,&LENGTH                                            00800002
+         LCLB  &RTNSW,&MULTAD,&S                                        01000002
+         LCLC  &C,&D,&E,&ADDR                                           01200002
+.***** START OF SPECIFICATIONS **************************************   01400002
+.*                                                                      01600002
+.* MODULE NAME - UNITNAME                                               01800002
+.*                                                                      02000002
+.* DESCRIPTIVE NAME - UNITNAME                                          02200002
+.*                                                                      02400002
+.* COPYRIGHT - NONE                                                     02600002
+.*                                                                      02800002
+.* STATUS - CHANGE LEVEL 04                                             03000037
+.*                                                                      03200002
+.* FUNCTION -                                                           03400002
+.*       THE UNITNAME MACRO IS USED TO NAME A GROUP OF I/O DEVICES.     03600002
+.*       ONE IS REQUIRED FOR EACH GROUP OF DEVICES IN THE SYSTEM.       03800002
+.*                                                                      04000002
+.* NOTES - N/A                                                          04200002
+.*                                                                      04400002
+.* MODULE TYPE - MACRO                                                  04600002
+.*                                                                      04800002
+.* ENTRY POINT - N/A                                                    05000002
+.*                                                                      05200002
+.* INPUT - THE FOLLOWING PARAMETERS ARE ALLOWED ON UNITNAME             05400002
+.*             &UNIT    - SPECIFIES A GROUP OF ADDRESSES TO BE          05600002
+.*                        RECOGNIZED BY THE ASSOCIATED NAME.            05800002
+.*             &NAME    - SPECIFIES THE NAME TO BE ASSIGNED TO THE      06000002
+.*                        ABOVE DEVICES. 1 TO 8 CHARACTERS, GENERIC     06200002
+.*                        OR ESOTERIC.                                  06400002
+.*             &VIO     - SPECIFIES THE INCLUSION OR EXCLUSION OF       06600002
+.*                        VIRTUAL I/O FOR THE SPECIFIED NAME.           06800002
+.*                                                                      07000002
+.* OUTPUT -                                                             07200002
+.*       GLOBALS USED ARE -                                             07400002
+.*             &SGMENTB(36) - UNIT NAME MACRO CALLED                    07600002
+.*             &SGCNTRA(4)  - COUNT OF ESOTERIC NAMES FROM UNITNAME     07800002
+.*             &SGCNTRA(5)  - COUNT OF ADDRESSES FROM UNITNAME          08000002
+.*             &SGCNTRA(6)  - CONTROL IN UNITNAME                       08200002
+.*             &SGUNSGA     - TOTAL COUNT OF ESOTERIC AND GENERIC NAMES 08400002
+.*             &SGUNVA      - COUNT OF VIO NAMES                        08600002
+.*             &SGQUITB     - QUIT SWITCH                               08800002
+.*             &SGUNVB(1-100)  - VIO BIT FOR ESOTERIC LIST              09000002
+.*             &SGUNNMC(1-100) - NAMES GIVEN IN MACRO CALL              09200002
+.*             &SGUNNVC(1-100) - VIO DEVICE NAMES                       09400002
+.*             &SGUNNMA(1-1028)- ADDRESSES ASSOCIATED WITH NAMES        09600037
+.*                                                                      09800002
+.*       LOCALS USED ARE -                                              10000002
+.*             &A      - SUBLIST INDEX                                  10200002
+.*             &N      - ARITHMETIC CALCULATION FOR NO OF CHARACTERS    10400002
+.*                       AND MULTIPLE ADDRESS OPERAND                   10600002
+.*             &LENGTH - LENGTH OF MULTIPLE ADDRESS OPERAND             10800002
+.*             &RTNSW  - SWITCH DEPICTING END OF UNIT PARAMETER         11000002
+.*             &MULTAD - MULTIPLE ADDRESS SWITCH                        11200002
+.*             &C      - USED TO CHECK VALIDITY OF THE NAME FIELD       11400002
+.*             &D      - SECOND CHARACTER OF UNIT ADDRESS               11600002
+.*             &E      - THIRD CHARACTER OF UNIT ADDRESS                11800002
+.*             &ADDR   - UNIT ADDRESS                                   12000002
+.*                                                                      12200002
+.* EXIT, NORMAL - N/A                                                   12400002
+.*                                                                      12600002
+.* EXIT, ERROR - N/A                                                    12800002
+.*                                                                      13000002
+.* EXTERNAL REFERENCES - N/A                                            13200002
+.*                                                                      13400002
+.* TABLES - N/A                                                         13600002
+.*                                                                      13800002
+.* MACROS - NONE                                                        14000002
+.*                                                                      14200002
+.* CHANGE ACTIVITY - MODIFIED FOR Y02036,OZ03914,OZ11135                14400037
+.*                   Z40ASVN                                            14400137
+.*                       OZ03914,OZ11135,OZ34962,OZ36647                14400237
+.*                                                                      14600002
+.****** END OF SPECIFICATIONS ***************************************   14800002
+         AIF   (T'&NAME EQ 'O').E8      NAME ALWAYS REQUIRED            15000002
+         AIF   (&SGMENTB(36)).VIO       FIRST ENTRY?                    15200002
+&SGMENTB(36)   SETB   1                 UNITNAME ENTRY SWITCH.          15400002
+    MNOTE *,'     MAXIMUM OF 100 UNIT NAMES ALLOWED -- MAXIMUM UNITS'   15600002
+    MNOTE *,'     ALLOWED IS 2056 MINUS THE NUMBER OF NAMES'    Z40ASVN 15800037
+.********************************************************************** 16000002
+.****                  GENERIC NAME WITH VIO                       **** 16200002
+.********************************************************************** 16400002
+.VIO     AIF (NOT ('&VIO' EQ 'YES')).ESOTERC     4 LINE CHANGE @AZ11135 16600037
+.*               ASMF ONLY ALLOWS 2 CONTINUATIONS                MVS38J 16640038
+         AIF    ('&NAME' EQ '3380').VIOGNRC  3380, VIO=YES       MVS38J 16650038
+         AIF    ('&NAME' EQ '3390').VIOGNRC  3390, VIO=YES       MVS38J 16660038
+         AIF    ('&NAME' EQ '3375').VIOGNRC  3375, VIO=YES       MVS38J 16670038
+         AIF (NOT ('&NAME' EQ '3350' OR '&NAME' EQ '3330-1' OR '&NAME' X16700037
+               EQ '3330' OR '&NAME' EQ '3340' OR '&NAME' EQ '2314' OR  X16800037
+               '&NAME' EQ '2305-1' OR '&NAME' EQ '2305-2')).ESOTERC     16900037
+.VIOGNRC ANOP                                                    MVS38J 16950038
+         AIF   (T'&UNIT EQ 'O').VIO1      UNIT OMITTED                  17200002
+    MNOTE 0,'  UNIT ADDRESS &UNIT IGNORED FOR GENERIC NAME WHEN VIO SPEX17400002
+               CIFIED'                                                  17600002
+.VIO1    AIF   (NOT (K'&NAME GT 8 OR K'&NAME LE 0)).VIO2                17800002
+    MNOTE 5,'* * * IEIUNI103 NAME VALUE &NAME INVALID'                  18000002
+&SGQUITB SETB  1                                                        18200002
+.VIO2    AIF   (&SGUNSGA LT 100).VIO3      NAMES LIMITED TO 100         18400002
+    MNOTE 5,'* * * IEIUNI101 &NAME - MAXIMUM NUMBER OF NAMES EXCEEDED'  18600002
+&SGQUITB SETB  1                                                        18800002
+        AGO    .MEND                        ERROR EXIT                  19000002
+.VIO3   ANOP                                                            19200002
+&SGUNVA          SETA   &SGUNVA+1           INCREMENT VIO NAME COUNT    19400002
+&SGUNSGA         SETA   &SGUNSGA+1          INCREMENT TOTAL NAME COUNT  19600002
+&SGUNNVC(&SGUNVA)  SETC   '&NAME'           VIO UNITNAME LIST           19800002
+    MNOTE *,'       &NAME IS A GENERIC NAME FOR VIO ONLY'               20000002
+.VIO7    AGO   .MEND                                                    20200002
+.********************************************************************** 20400002
+.****                      ESOTERIC NAME                           **** 20600002
+.********************************************************************** 20800002
+.ESOTERC ANOP                                                  @ZA36647 21000037
+   AIF ('&NAME' EQ '3350' OR '&NAME' EQ '3330-1' OR '&NAME' EQ '3330' OX21004037
+               R '&NAME' EQ '3340' OR '&NAME' EQ '2314' OR '&NAME' EQ  X21008037
+               '2305-1' OR '&NAME' EQ '2305-2').E6             @ZA36647 21012037
+  AIF ('&NAME' EQ '2400' OR '&NAME' EQ '2400-1' OR '&NAME' EQ '2400-2' X21016037
+               OR '&NAME' EQ '2400-3' OR '&NAME' EQ '2495' OR '&NAME' EX21020037
+               Q '2400-4' OR '&NAME' EQ '3400-2').E6           @ZA36647 21024037
+  AIF ('&NAME' EQ '3400-3' OR '&NAME' EQ '3400-4' OR '&NAME' EQ        X21028037
+               '3400-5' OR '&NAME' EQ '3400-6' OR '&NAME' EQ '1052'    X21032037
+               OR '&NAME' EQ '1053' OR '&NAME' EQ '1403').E6   @ZA36647 21036037
+  AIF ('&NAME' EQ '1419' OR '&NAME' EQ '3890' OR '&NAME' EQ '7770' OR  X21040037
+               '&NAME' EQ '3540' OR '&NAME' EQ '3800').E6      @ZA36647 21044037
+  AIF ('&NAME' EQ '1443' OR '&NAME' EQ '1443' OR '&NAME' EQ '2501' OR  X21048037
+               '&NAME' EQ '2520' OR '&NAME' EQ '2540-1' OR '&NAME' EQ  X21052037
+               '2540-2' OR '&NAME' EQ '2671').E6               @ZA36647 21056037
+  AIF ('&NAME' EQ '3066' OR '&NAME' EQ '3158' OR '&NAME' EQ '3210' OR  X21081037
+               '&NAME' EQ '3211' OR '&NAME' EQ '3213' OR '&NAME' EQ '32X21086037
+               15' OR '&NAME' EQ '3505' OR '&NAME' EQ '3525').E6        21091037
+  AIF ('&NAME' EQ '3838' OR '&NAME' EQ '7443' OR '&NAME' EQ '3851' OR  X21096037
+               '&NAME' EQ '2250-1' OR '&NAME' EQ '2250-3' OR '&NAME'   X21101037
+               EQ '2260-1' OR '&NAME' EQ '2260-2').E6          @ZA36647 21106037
+  AIF ('&NAME' EQ '2265' OR '&NAME' EQ '3036' OR '&NAME' EQ '3277-1'   X21110037
+               OR '&NAME' EQ '3284-2' OR '&NAME' EQ '1287' OR '&NAME' EX21114037
+               Q '3286-1' OR '&NAME' EQ '3286-2').E6           @ZA36647 21118037
+  AIF ('&NAME' EQ '1275' OR '&NAME' EQ '3277-2' OR '&NAME' EQ '3284-1' X21122037
+               OR '&NAME' EQ '1288' OR '&NAME' EQ '2955' OR '&NAME' EQ X21126037
+               '3886' OR '&NAME' EQ '3895').E6                 @ZA36647 21130037
+.ESOTERD ANOP                                                  @ZA34962 21156037
+         AIF   (T'&UNIT EQ 'O').E7      UNIT REQUIRED FOR ESOTERIC NAME 21182037
+         AIF   (K'&NAME GT 8 OR K'&NAME LE 0).EA  VALIDITY OF NAME      21200002
+         AIF   ('&VIO' EQ 'NO').VALIDNM           NO VIO SPECIFIED      21400002
+         AIF   ('&VIO' EQ 'YES').VIOYES           VIO FOR THIS NAME     21600002
+    MNOTE 5,'* * * IEIUNI109 VIO VALUE &VIO INVALID MUST BE YES OR NO'  21800002
+&SGQUITB SETB 1                                                         22000002
+         AGO   .VALIDNM                                                 22200002
+.VIOYES  ANOP                           VIO SPECIFIED                   22400002
+         AIF   (&SGCNTRA(4) EQ 0).VIOCNT    INITIAL UNITNAME CALL       22410002
+         AIF   ('&SGUNNMC(&SGCNTRA(4))' EQ '&NAME').TESTVIO  REPEATED   22450002
+.VIOCNT  ANOP                                                           22500002
+&SGUNVA  SETA  &SGUNVA+1                INCREMENT VIO NAME COUNT        22600002
+  MNOTE   *,'       VIO SPECIFIED FOR &NAME'                            22650002
+         AGO   .TESTNM                                                  22660002
+.TESTVIO AIF   (&SGUNVA EQ 0).NOPVIO    NO VIO TESTED YET       OZ03914 22690037
+         AIF  ('&SGUNNVC(&SGUNVA)' EQ '&NAME').ON3 BYP NAME TST OZ03914 22700037
+.NOPVIO  ANOP                                                   OZ03914 22710037
+  MNOTE  0,'* * * VIO SPECIFIED ON SECOND UNITNAME CALL FOR &NAME AND NX22750002
+               OT ON PREVIOUS ONE'                                      22760002
+&SGUNVA  SETA  &SGUNVA+1                INCREMENT COUNT                 22770002
+&SGUNNVC(&SGUNVA)      SETC  '&NAME'    UNITNAME IN VIO NAME LIST       22780002
+&SGUNVB(&SGCNTRA(4))   SETB  1          ESOTERIC NAME HAS VIO           22790002
+         AGO   .ON3                     BYPASS NAME TESTING IF REPEATED 22792002
+.********************************************************************** 22800002
+.***    CHECK EACH CHARACTER OF NAME TO VERIFY VALIDITY   ***           23000002
+.********************************************************************** 23200002
+.VALIDNM AIF   (&SGCNTRA(4) EQ 0).TESTNM    INITIAL ALWAYS              23250002
+         AIF   ('&SGUNNMC(&SGCNTRA(4))' NE '&NAME').TESTNM  DIFF NAME   23300002
+         AIF   (&SGUNVA EQ 0).ON3      NO VIO SPECIFIED YET             23302002
+.*              SAME NAME  -  CHECK IF VIO SPECIFIED ON LAST CALL       23310002
+         AIF   ('&SGUNNVC(&SGUNVA)' NE '&NAME').ON3                     23350002
+   MNOTE  0,'* * * VIO SPECIFIED ON PREVIOUS UNITNAME CALL FOR &NAME ANX23360002
+               D NOT ON THIS ONE'                                       23370002
+         AGO   .ON3                     BYPASS NAME CHECK IF SAME NAME  23380002
+.TESTNM  AIF (&A EQ K'&NAME).DONENM     ALL CHARACTERS OF NAME CHECKED  23400002
+&A SETA &A+1                            INCREMENT SUBLIST INDEX         23600002
+&C SETC '&NAME'(&A,1)                   CHECK NEXT CHARACTER OF SUBLIST 23800002
+ AIF (('&C' GE 'A' AND '&C' LE 'I') OR ('&C' GE 'J' AND '&C' LE 'R') OR*24000002
+               ('&C' GE 'S' AND '&C' LE 'Z') OR ('&C' GE '0' AND '&C' L*24200002
+               E '9')).TESTNM                                           24400002
+ AIF ('&C' EQ '@' OR '&C' EQ '$' OR '&C' EQ '#' OR '&C' EQ '/' OR '&C' *24600002
+               EQ '-').TESTNM                                           24800002
+         AGO   .EA                      NOT A VALID CHARACTER           25000002
+.*                                                                      25200002
+.***       STORE NAME IN NAME LIST AND UNIT ADDRESSES IN TABLE      *** 25400002
+.*                                                                      25600002
+.DONENM  ANOP                           VALID CHARACTERS IN NAME        25800002
+&A SETA 0                               RESET SUBLIST INDEX             26000002
+.ON MNOTE *,'     &NAME IS THE SYMBOLIC NAME ASSOCIATED WITH     '      26600002
+    MNOTE *,'     THE DEVICES AT THE FOLLOWING ADDRESSES -      '       26800002
+         AIF   (&SGCNTRA(4) EQ 0).INITIAL    FIRST TIME ONLY            27000002
+         AIF   (&SGUNSGA GE 100).E1     MAXIMUM NUMBER OF NAMES         27200002
+&SGCNTRA(4)    SETA &SGCNTRA(4)+1       INCREMENT NAME COUNT            27400002
+&SGUNSGA    SETA    &SGUNSGA+1          INCREMENT TOTAL NAME COUNT      27600002
+.***         UNIT NAME INTO LIST              ***                       27800002
+&SGUNNMC(&SGCNTRA(4))  SETC  '&NAME'    UNITNAME IN LIST                28000002
+         AIF   ('&VIO' NE 'YES').ONG                                    28200002
+&SGUNNVC(&SGUNVA)      SETC  '&NAME'    UNITNAME IN VIO NAME LIST       28400002
+&SGUNVB(&SGCNTRA(4))   SETB  1          ESOTERIC NAME HAS VIO           28600002
+.ONG     AIF   (&SGCNTRA(5) GE 1028).E2  MAX. NUMBER OF UNITS   Z40ASVN 28800037
+         AIF   (&SGCNTRA(6) LT 3).FILLIN                                29000002
+&SGCNTRA(5)    SETA &SGCNTRA(5)+1  COUNT OF SETC'S IN USE FOR ADDRESSES 29200002
+&SGCNTRA(6)    SETA 1              SET FLIP SWITCH TO ONE.              29400002
+.FILLIN  ANOP              FFF MEANS END OF ONE NAME'S ADDRESSES.       29600002
+&SGUNNMA(&SGCNTRA(5))  SETA 4096*&SGUNNMA(&SGCNTRA(5))+X'FFF'           29800002
+&SGCNTRA(6)    SETA &SGCNTRA(6)+1                                       30000002
+         AGO   .ON2                                                     30200002
+.INITIAL ANOP            INITIALIZATION ROUTINE.                        30400002
+&SGUNSGA       SETA &SGUNSGA+1     INCREMENT TOTAL NAME COUNTER         30600002
+&SGCNTRA(4)    SETA 1         SET NAME COUNTER                          30800002
+&SGCNTRA(5)    SETA 1         SET ADDRESS COUNTER TO ONE.               31000002
+&SGCNTRA(6)    SETA 1         SET FLIP MECHANISM TO ONE.                31200002
+.***         UNIT NAME INTO LIST              ***                       31400002
+&SGUNNMC(&SGCNTRA(4))  SETC  '&NAME'   UNITNAME IN LIST                 31600002
+         AIF   ('&VIO' NE 'YES').ON3                                    31800002
+&SGUNNVC(&SGUNVA)      SETC  '&NAME'   UNITNAME IN VIO NAME LIST        32000002
+&SGUNVB(&SGCNTRA(4))   SETB  1         ESOTERIC NAME HAS VIO            32200002
+.*                                                                      32400002
+.***              UNIT ADDRESSES INTO TABLE              ***            32600002
+.*                                                                      32800002
+.ON3     AIF   (&RTNSW).LOOP           IF ON, GENERATE MULTIPLE ADDRESS 33000002
+         AIF   (N'&UNIT EQ 0).E7       UNIT REQUIRED FOR ESOTERIC NAME  33200002
+         AIF   (&A EQ N'&UNIT).MEND    ALL UNITS IN ADDRESS TABLE       33400002
+&A       SETA  &A+1                    INCREMENT SUBLIST INDEX          33600002
+         AIF   (K'&UNIT(&A) LT 3).E3   3-CHARACTER ADDRESS REQUIRED     33800002
+         AIF   (K'&UNIT(&A) GT 3).MULT IF GT, CHECK FOR MULT ADDRESS    34000002
+&C       SETC  '&UNIT(&A)'(1,1)        SINGLE UNIT ADDRESS-1ST CHAR     34200002
+&D       SETC  '&UNIT(&A)'(2,1)        2ND CHARACTER                    34400002
+&E       SETC  '&UNIT(&A)'(3,1)        3RD CHARACTER                    34600002
+         AGO   .AIF                    BYPASS MULTIPLE ADDRESS SETUP    34800002
+.MULT    ANOP                          MULTIPLE ADDRESS                 35000002
+&MULTAD  SETB  1                       MULTIPLE ADDRESS SWITCH          35200002
+&LENGTH  SETA  K'&UNIT(&A)             LENGTH OF MULT ADDRESS OPERAND   35400002
+         AIF   (&LENGTH LE 6).E4       MINIMUM OF 7 FOR MULTIPLE ADDR   35600002
+         AIF   ('&UNIT(&A)'(5,1) NE ',').E4  IMPROPER UNIT ADDRESS      35800002
+&LENGTH  SETA  &LENGTH-6               NO. CHAR - MULTIPLE ADDR OPERAND 36000002
+         AIF   (&LENGTH GT 3).E5       LIMIT OF 3                       36200002
+&N       SETA  &LENGTH                 USE TO CHECK VALIDITY            36400002
+.TEST    AIF   (&N EQ 0).VALID         ALL INCREMENTAL DIGITS CHECKED   36600002
+&C       SETC  '&UNIT(&A)'(&N+5,1)     CHECK VALIDITY OF INCREMENTAL    36800002
+         AIF   (NOT('&C' GE '0' AND '&C' LE '9')).E5  NOT A DIGIT       37000002
+&N       SETA  &N-1                    DECREMENT DIGIT COUNT            37200002
+         AGO   .TEST                   CHECK NEXT DIGIT                 37400002
+.VALID   ANOP                          ALL INCREMENTAL DIGITS CHECKED   37600002
+&RTNSW   SETB  1                       ON WHILE UNITS BEING STORED      37800002
+&C       SETC  '&UNIT(&A)'(6,&LENGTH)  CHARACTERS IN OPERAND            38000002
+&N       SETA  &C                      ARITMETIC VALUE OF OPERAND       38200002
+&ADDR    SETC  '&UNIT(&A)'(2,3)        ADDRESS TO BE INCREMENTED        38400002
+.LOOP    ANOP                                                           38600002
+&C       SETC  '&ADDR'(1,1)            1ST CHAR OF MULTIPLE ADDRESS     38800002
+&D       SETC  '&ADDR'(2,1)            2ND CHARACTER                    39000002
+&E       SETC  '&ADDR'(3,1)            3RD CHARACTER                    39200002
+.AIF     ANOP                                                           39400002
+ AIF (NOT(('&C' GE '0' AND '&C' LE '9')OR('&C' GE 'A' AND '&C' LE 'F'))*39600002
+               ).E3                    CHECK 1ST CHARACTER FOR VALIDITY 39800002
+ AIF (NOT(('&D' GE '0' AND '&D' LE '9')OR('&D' GE 'A' AND '&D' LE 'F'))*40000002
+               ).E3                    VALIDITY OF 2ND CHARACTER        40200002
+ AIF (NOT(('&E' GE '0' AND '&E' LE '9')OR('&E' GE 'A' AND '&E' LE 'F'))*40400002
+               ).E3                    VALIDITY OF 3RD CHARACTER        40600002
+         AIF   (&MULTAD).CONV          MULTIPLE ADDRESS                 40800002
+         CONVERT TO=HEX,DIGITS=3,VALUE=&UNIT(&A)  DECIMAL VALUE OF UNIT 41000002
+ AIF     (&HEX EQ X'FFF').E3           NO VALID FFF ADDRESS             41200002
+         AGO   .MAX                                                     41400002
+.CONV    CONVERT    TO=HEX,DIGITS=3,VALUE=&ADDR   DECIMAL VALUE OF UNIT 41600002
+         AIF   (&HEX EQ X'FFF').E4     NO VALID FFF ADDRESS             41800002
+.MAX     AIF   (&SGCNTRA(5) EQ 1028 AND &SGCNTRA(6) NE 1).E2 MAX UNITS *42000037
+                                                                Z40ASVN 42001037
+.*                                                                      42200002
+.***           CALCULATE VALUE FOR UNIT ADDRESS IN TABLE          ***   42400002
+.*                                                                      42600002
+&SGUNNMA(&SGCNTRA(5)) SETA 4096*&SGUNNMA(&SGCNTRA(5))+&HEX    DECIMAL   42800002
+         AIF   (&MULTAD).AD                                             43000002
+    MNOTE *,'        &UNIT(&A)'        MESSAGE FOR SINGLE ADDRESS       43200002
+         AGO   .INC                                                     43400002
+.AD MNOTE *,'        &ADDR'            MULTIPLE ADDRESS MESSAGE         43600002
+&N       SETA  &N-1                    DECREMENT MULTIPLE ADDR OPERAND  43800002
+         AIF   (&N NE 0).SET           ALL UNITS NOT IN TABLE           44000002
+&RTNSW   SETB  0                       ALL UNITS IN THE TABLE           44200002
+&MULTAD  SETB  0                       RESET MULTIPLE ADDRESS SWITCH    44400002
+         AGO   .INC                                                     44600002
+.SET     ANOP                          CONTINUE UNIT CHECK              44800002
+&HEX     SETA  &HEX+1                  INCREMENT ADDRESS TO NEXT UNIT   45000002
+         CONVERT   TO=EBCDIC,VALUE=&HEX,DIGITS=3    CHANGE TO HEX       45200002
+&ADDR    SETC  '&EBCDIC'                HEX VALUE IN GLOBAL             45400002
+.INC     ANOP                                                           45600002
+&SGCNTRA(6)    SETA &SGCNTRA(6)+1       INCREMENT CONTROL COUNT         45800002
+.***        RESET CONTROL AND INCREMENT INDEX OF ADDRESS TABLE      *** 46000002
+.***              IF TWO ADDRESSES HAVE BEEN STORED                 *** 46200002
+.ON2     AIF   (&SGCNTRA(6) LT 3).ON3   ONLY ONE ADDRESS STORED         46400002
+&SGCNTRA(5)    SETA &SGCNTRA(5)+1       TWO ADDRESSES STORED            46600002
+&SGCNTRA(6)    SETA 1                   RESET CONTROL                   46800002
+         AGO   .ON3                    CONTINUE STORE OF UNIT ADDRESSES 47000002
+.*                                                                      47200002
+.********************************************************************** 47400002
+.*                 ERROR MESSAGES                                       47600002
+.********************************************************************** 47800002
+.EA MNOTE 5,'* * * IEIUNI100 NAME VALUE &NAME INVALID   '               47850002
+&SGQUITB SETB  1                                                        47900002
+         AGO   .DONENM                   BYPASS NAME CHECK              47950002
+.E1 MNOTE 5,'* * * IEIUNI101 &NAME-MAXIMUM NUMBER OF NAMES EXCEEDED'    48000002
+&SGQUITB SETB  1                                                        48200002
+         AGO   .ON3                                                     48400002
+.E2 MNOTE 5,'* * * IEIUNI102 &NAME-EXCESSIVE ADDRESS VALUES'            48450002
+         AGO   .BEND                                                    48500002
+.E3      AIF   (&MULTAD).ER3             MULTIPLE ADDRESS               49200002
+&ADDR    SETC  '&UNIT(&A)'               SINGLE ADDRESS                 49400002
+.ER3  MNOTE 5,'* * * IEIUNI103 &NAME-UNIT VALUE &ADDR INVALID'          49600002
+.ER3A    ANOP                                                           49650002
+&SGQUITB SETB  1                                                        49800002
+&RTNSW   SETB  0                        RESET AND PREVENT LOOP          50000002
+&MULTAD  SETB  0                        RESET                           50200002
+         AGO   .ON3                                                     50400002
+.E4 MNOTE 5,'* * * IEIUNI104 &NAME-MULTIPLE ADDRESS VALUE INVALID'      51200002
+         AGO   .ER3A                                                    51600002
+.E5 MNOTE 5,'* * * IEIUNI105 &NAME-MULTIPLE ADDRESS INCREMENT INVALID'  51800002
+         AGO   .ER3A                                                    52200002
+.E6 MNOTE 5,'* * * IEIUNI106 &NAME-DEVICE TYPE ESOTERIC NAME INVALID'   52250037
+&SGQUITB SETB  1                                               @ZA34962 52300037
+         AGO   .ESOTERD                                        @ZA34962 52330037
+.E7 MNOTE 5,'* * * IEIUNI107 &NAME HAS NO ASSIGNED UNITS.'              52400002
+         AGO   .BEND                                                    52600002
+.E8 MNOTE 5,'* * * IEIUNI108 UNIT AND/OR NAME PARAMETERS ARE REQUIRED'  52800002
+.BEND    ANOP                                                           53000002
+&SGQUITB SETB  1                                                        53200002
+.MEND  MEND                                                             53400002

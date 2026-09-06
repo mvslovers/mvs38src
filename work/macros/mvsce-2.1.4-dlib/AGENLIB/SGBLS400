@@ -1,0 +1,736 @@
+*** START OF SPECIFICATIONS******************************************** 00050045
+*                                                                     * 00080045
+* $MAC(SGBLS400) COMP(SC132) PROD(IPCS): MVS IPCS SYSGEN MACRO        * 00110045
+*                                                                     * 00140045
+*   COPYRIGHT= NONE                                                   * 00170045
+*                                                                     * 00200045
+*   FUNCTION= PRODUCE A JCL STREAM WHICH WILL PLACE MVS IPCS IN A     * 00230045
+*     CUSTOMER SYSTEM                                                 * 00260045
+*                                                                     * 00290045
+*   CHANGE ACTIVITY:                                                  * 00320045
+*                                                                     * 00350045
+* $L0= MVSIPCS,257,780001,DMGPNA: MVS  IPCS INITIAL RELEASE CODE      * 00380045
+* $L1= STATUS,257,790225,DMGPRW: STATUS SUBCOMMAND                    * 00410045
+* $L2= SUMMARY,257,790225,DMGPRW: SUMMARY SUBCOMMAND                  * 00440045
+* $L3= COPYDUMP,257,790225,DMGPRW: COPYDUMP SUBCOMMAND                * 00470045
+*                                                                     * 00500045
+* $D1= ENTRY,257,790225,DMGPGW: ENTRY STATEMENTS FOR LINK EDITS       * 00530045
+* $D2= ORDER,257,790226,DMGPGW: ORDER STATEMENTS FOR LINK EDITS       * 00560045
+* $D3= QUALITY,257,790226,DMGPGW: IMPROVED COMMENTS, REMARKS          * 00590045
+*                                                                     * 00620045
+* $01= OZ35531,257,790100,DMGPGW: CUSTOMER COMMAND VALIDATION EXIT    * 00650045
+*                                                                     * 00680045
+***** END OF SPECIFICATIONS******************************************** 00710045
+         MACRO                                                          00740045
+         SGBLS400                                                       00770045
+         COPY SGGBLPAK                                                  00800000
+&SGCTRLC(7) SETC  '&SGCTRLC(23)'                                        00850000
+&SGCTRLC(8) SETC  '&SGCTRLC(24)'                                        00900000
+&SGCTRLC(9) SETC  'CMDLIB'                                              00950000
+&SGCTRLC(10) SETC ',LET'                                                01000000
+&SGCTRLC(12) SETC ',RENT'                                               01050045
+&SGCTRLC(13) SETC ',SIZE=(600K,80K)'                                    01100045
+.* ************************************************************         01200000
+.*                                                                      01250000
+.*  THIS FIRST SET OF LINKEDITS REQUIRES THE RENT ATTRIBUTE             01300000
+.*  FOR THE LOADS BEING CREATED....                                     01350000
+.*                                                                      01400000
+.* ************************************************************         01450000
+         COPY SGLEDPK1                                                  01500000
+ PUNCH '//AOS32 DD DSN=SYS1.AOS32,DISP=SHR'                             01550000
+         COPY SGLEDPK2                                                  01600000
+ PUNCH ' INCLUDE AOS32(BLSRASCX)' ASCBEXIT SUBCOMMAND              @D3C 01650045
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 01690445
+ PUNCH ' ENTRY BLSRASCX'          --------------------------------      01730845
+ PUNCH ' NAME BLSRASCX(R)'        --------------------------------      01771245
+ PUNCH ' INCLUDE AOS32(BLSRASM7)' ASMCHECK SUBCOMMAND              @D3C 01811645
+ PUNCH ' ENTRY BLSRASM7'          -------------------------------- @D1C 01852045
+ PUNCH ' NAME BLSRASM7(R)'        -------------------------------- @L2P 01892445
+ PUNCH ' INCLUDE AOS32(BLSRCOMK)' COMCHECK SUBCOMMAND              @D3C 01932845
+ PUNCH ' ENTRY BLSRCOMK'          -------------------------------- @D1A 01973245
+ PUNCH ' NAME BLSRCOMK(R)'        --------------------------------      02013645
+ PUNCH ' INCLUDE AOS32(BLSRCOMP)' COMPARE SUBCOMMAND               @D3C 02054045
+ PUNCH ' INCLUDE AOS32(BLSRVPAD)' ADDRESS CHECK                    @D3C 02094445
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 02134845
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @D3C 02175245
+ PUNCH ' INCLUDE AOS32(BLSUVPVA)' VALUE CHECK                      @D3C 02215645
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @D3C 02256045
+ PUNCH ' INCLUDE AOS32(BLSUVP32)' INTEGER RANGE CHECK              @D3C 02296445
+ PUNCH ' ENTRY BLSRCOMP'          --------------------------------      02336845
+ PUNCH ' NAME BLSRCOMP(R)'        --------------------------------      02377245
+ PUNCH ' INCLUDE AOS32(BLSRCOPY)' COPYDUMP SUBCOMMAND              @L3C 02417645
+ PUNCH ' INCLUDE AOS32(BLSRCOHD)' HEADER RECORD PROCESSING         @L3C 02458045
+ PUNCH ' INCLUDE AOS32(BLSRCOIN)' ALLOCATE INPUT DATA SET          @L3C 02498445
+ PUNCH ' INCLUDE AOS32(BLSRCOTA)' ALLOCATE TARGET DATA SET         @L3C 02538845
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @L3C 02579245
+ PUNCH ' ENTRY BLSRCOPY'          -------------------------------- @L3A 02619645
+ PUNCH ' NAME BLSRCOPY(R)'        -------------------------------- @L3A 02660045
+ PUNCH ' INCLUDE AOS32(BLSRDUAL)' ALLOCATE DUMP DATA SET           @D3C 02700445
+ PUNCH ' INCLUDE AOS32(BLSRDUOP)' OPEN DUMP DATA SET               @D3C 02740845
+ PUNCH ' ENTRY BLSRDUAL'          --------------------------------      02781245
+ PUNCH ' NAME BLSRDUAL(R)'        --------------------------------      02821645
+ PUNCH ' INCLUDE AOS32(BLSRDUDE)' DROPDUMP SUBCOMMAND              @D3C 02862045
+ PUNCH ' ENTRY BLSRDUDE'          -------------------------------- @D1A 02902445
+ PUNCH ' NAME BLSRDUDE(R)'        --------------------------------      02942845
+ PUNCH ' INCLUDE AOS32(BLSRDUDR)' DROPDUMP SERVICE ROUTINE         @D3C 02983245
+ PUNCH ' ENTRY BLSRDUDR'          -------------------------------- @D1A 03023645
+ PUNCH ' NAME BLSRDUDR(R)'        --------------------------------      03064045
+ PUNCH ' INCLUDE AOS32(BLSRDUIN)' DUMP INITIALIZATION              @D3C 03104445
+ PUNCH ' INCLUDE AOS32(BLSRDUIC)' CPU STATUS RECORD PROCESSOR      @D3C 03144845
+ PUNCH ' INCLUDE AOS32(BLSRDUIH)' HEADER RECORD PROCESSOR          @D3C 03185245
+ PUNCH ' INCLUDE AOS32(BLSRDUIS)' STORAGE RECORD PROCESSOR         @D3C 03225645
+ PUNCH ' ORDER BLSRDUIN,BLSRDUIS,BLSRDUIH,BLSRDUIC'                @D2A 03266045
+ PUNCH ' ENTRY BLSRDUIN'          --------------------------------      03306445
+ PUNCH ' NAME BLSRDUIN(R)'        --------------------------------      03346845
+ PUNCH ' INCLUDE AOS32(BLSRDULS)' LISTDUMP SUBCOMMAND              @D3C 03387245
+ PUNCH ' ENTRY BLSRDULS'          -------------------------------- @D1A 03427645
+ PUNCH ' NAME BLSRDULS(R)'        --------------------------------      03468045
+ PUNCH ' INCLUDE AOS32(BLSRDUSC)' SYSDSCAN TSO COMMAND             @D3C 03508445
+ PUNCH ' INCLUDE AOS32(BLSUVP99)' CHECK INTEGER RANGE              @D3C 03548845
+ PUNCH ' ALIAS SYSDSCAN'          --------------------------------      03589245
+ PUNCH ' ENTRY BLSRDUSC'          --------------------------------      03629645
+ PUNCH ' NAME BLSRDUSC(R)'        --------------------------------      03670045
+ PUNCH ' INCLUDE AOS32(BLSRENQK)' ENQCHECK SUBCOMMAND              @D3C 03710445
+ PUNCH ' ENTRY BLSRENQK'          -------------------------------- @D1A 03750845
+ PUNCH ' NAME BLSRENQK(R)'        --------------------------------      03791245
+ PUNCH ' INCLUDE AOS32(BLSREQU)'  EQUATE SUBCOMMAND                @D3C 03831645
+ PUNCH ' INCLUDE AOS32(BLSRVPAD)' ADDRESS CHECK                    @D3C 03872045
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 03912445
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @D3C 03952845
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @D3C 03993245
+ PUNCH ' INCLUDE AOS32(BLSUVP32)' INTEGER RANGE CHECK              @D3C 04033645
+ PUNCH ' ENTRY BLSREQU'           --------------------------------      04074045
+ PUNCH ' NAME BLSREQU(R)'         --------------------------------      04114445
+ PUNCH ' INCLUDE AOS32(BLSRESDR)' DROPDUMP SUBCOMMAND              @D3C 04154845
+ PUNCH ' ENTRY BLSRESDR'          -------------------------------- @D1A 04195245
+ PUNCH ' NAME BLSRESDR(R)'        --------------------------------      04235645
+ PUNCH ' INCLUDE AOS32(BLSRESRU)' COMMON LISTSYM/DROPSYM DIAGNOSIS @D3C 04276045
+ PUNCH ' ENTRY BLSRESRU'          -------------------------------- @D1A 04316445
+ PUNCH ' NAME BLSRESRU(R)'        --------------------------------      04356845
+ PUNCH ' INCLUDE AOS32(BLSREVAL)' EVALUATE SUBCOMMAND              @D3C 04397245
+ PUNCH ' INCLUDE AOS32(BLSRVPAD)' ADDRESS CHECK                    @D3C 04437645
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 04478045
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @D3C 04518445
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @D3C 04558845
+ PUNCH ' INCLUDE AOS32(BLSUVP32)' INTEGER RANGE CHECK              @D3C 04599245
+ PUNCH ' ENTRY BLSREVAL'          --------------------------------      04639645
+ PUNCH ' NAME BLSREVAL(R)'        --------------------------------      04680045
+ PUNCH ' INCLUDE AOS32(BLSRFIND)' FIND SUBCOMMAND                  @D3C 04720445
+ PUNCH ' INCLUDE AOS32(BLSRVPAD)' ADDRESS CHECK                    @D3C 04760845
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 04801245
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @D3C 04841645
+ PUNCH ' INCLUDE AOS32(BLSUVPVA)' VALUE CHECK                      @D3C 04882045
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @D3C 04922445
+ PUNCH ' INCLUDE AOS32(BLSUVP32)' INTEGER RANGE CHECK              @D3C 04962845
+ PUNCH ' ENTRY BLSRFIND'          --------------------------------      05003245
+ PUNCH ' NAME BLSRFIND(R)'        --------------------------------      05043645
+ PUNCH ' INCLUDE AOS32(BLSRFMOD)' FINDMOD SUBCOMMAND               @D3C 05084045
+ PUNCH ' ENTRY BLSRFMOD'          -------------------------------- @D1A 05124445
+ PUNCH ' NAME BLSRFMOD(R)'        --------------------------------      05164845
+ PUNCH ' INCLUDE AOS32(BLSRFUCB)' FINDUCB SUBCOMMAND               @D3C 05205245
+ PUNCH ' INCLUDE AOS32(BLSUVPX1)' HEXADECIMAL DIGIT CHECK          @D3C 05245645
+ PUNCH ' ENTRY BLSRFUCB'          --------------------------------      05286045
+ PUNCH ' NAME BLSRFUCB(R)'        --------------------------------      05326445
+ PUNCH ' INCLUDE AOS32(BLSRIOSK)' IOSCHECK SUBCOMMAND              @D3C 05366845
+ PUNCH ' ENTRY BLSRIOSK'          -------------------------------- @D1A 05407245
+ PUNCH ' NAME BLSRIOSK(R)'        --------------------------------      05447645
+ PUNCH ' INCLUDE AOS32(BLSRLIST)' LIST SUBCOMMAND                  @D3C 05488045
+ PUNCH ' INCLUDE AOS32(BLSRVPAD)' ADDRESS CHECK                    @D3C 05528445
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 05568845
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @D3C 05609245
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @D3C 05649645
+ PUNCH ' INCLUDE AOS32(BLSUVP32)' INTEGER RANGE CHECK              @D3C 05690045
+ PUNCH ' ENTRY BLSRLIST'          --------------------------------      05730445
+ PUNCH ' NAME BLSRLIST(R)'        --------------------------------      05770845
+ PUNCH ' INCLUDE AOS32(BLSRLSYM)' LISTSYM SUBCOMMAND               @D3C 05811245
+ PUNCH ' ENTRY BLSRLSYM'          -------------------------------- @D1A 05851645
+ PUNCH ' NAME BLSRLSYM(R)'        --------------------------------      05892045
+ PUNCH ' INCLUDE AOS32(BLSRPHAR)' STORE PH RECORD                  @D3C 05932445
+ PUNCH ' ENTRY BLSRPHAR'          -------------------------------- @D1A 05972845
+ PUNCH ' NAME BLSRPHAR(R)'        --------------------------------      06013245
+ PUNCH ' INCLUDE AOS32(BLSRPHGE)' GET PH RECORD                    @D3C 06053645
+ PUNCH ' ENTRY BLSRPHGE'          -------------------------------- @D1A 06094045
+ PUNCH ' NAME BLSRPHGE(R)'        --------------------------------      06134445
+ PUNCH ' INCLUDE AOS32(BLSRRDAR)' STORE RD RECORD                  @D3C 06174845
+ PUNCH ' ENTRY BLSRRDAR'          -------------------------------- @D1A 06215245
+ PUNCH ' NAME BLSRRDAR(R)'        --------------------------------      06255645
+ PUNCH ' INCLUDE AOS32(BLSRRDGE)' GET RD RECORD                    @D3C 06296045
+ PUNCH ' ENTRY BLSRRDGE'          -------------------------------- @D1A 06336445
+ PUNCH ' NAME BLSRRDGE(R)'        --------------------------------      06376845
+ PUNCH ' INCLUDE AOS32(BLSRRDPU)' ADD RD RECORD                    @D3C 06417245
+ PUNCH ' ENTRY BLSRRDPU'          -------------------------------- @D1A 06457645
+ PUNCH ' NAME BLSRRDPU(R)'        --------------------------------      06498045
+ PUNCH ' INCLUDE AOS32(BLSRRNCH)' RUNCHAIN SUBCOMMAND              @D3C 06538445
+ PUNCH ' INCLUDE AOS32(BLSRVPAD)' ADDRESS CHECK                    @D3C 06578845
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 06619245
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @D3C 06659645
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @D3C 06700045
+ PUNCH ' INCLUDE AOS32(BLSUVP32)' INTEGER RANGE CHECK              @D3C 06740445
+ PUNCH ' ENTRY BLSRRNCH'          --------------------------------      06780845
+ PUNCH ' NAME BLSRRNCH(R)'        --------------------------------      06821245
+ PUNCH ' INCLUDE AOS32(BLSRSADE)' DROPMAP SUBCOMMAND               @D3C 06861645
+ PUNCH ' INCLUDE AOS32(BLSRVPAD)' ADDRESS CHECK                    @D3C 06902045
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 06942445
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @D3C 06982845
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @D3C 07023245
+ PUNCH ' INCLUDE AOS32(BLSUVP32)' INTEGER RANGE CHECK              @D3C 07063645
+ PUNCH ' ENTRY BLSRSADE'          --------------------------------      07104045
+ PUNCH ' NAME BLSRSADE(R)'        --------------------------------      07144445
+ PUNCH ' INCLUDE AOS32(BLSRSALI)' LISTMAP SUBCOMMAND               @D3C 07184845
+ PUNCH ' INCLUDE AOS32(BLSRVPAD)' ADDRESS CHECK                    @D3C 07225245
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 07265645
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @D3C 07306045
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @D3C 07346445
+ PUNCH ' INCLUDE AOS32(BLSUVP32)' INTEGER RANGE CHECK              @D3C 07386845
+ PUNCH ' ENTRY BLSRSALI'          --------------------------------      07427245
+ PUNCH ' NAME BLSRSALI(R)'        --------------------------------      07467645
+ PUNCH ' INCLUDE AOS32(BLSRSCAN)' SCAN SUBCOMMAND                  @D3C 07508045
+ PUNCH ' INCLUDE AOS32(BLSRVPAD)' ADDRESS CHECK                    @D3C 07548445
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 07588845
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @D3C 07629245
+ PUNCH ' INCLUDE AOS32(BLSUVP21)' INTEGER CHECK                    @D3C 07669645
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @D3C 07710045
+ PUNCH ' INCLUDE AOS32(BLSUVP32)' INTEGER RANGE CHECK              @D3C 07750445
+ PUNCH ' ENTRY BLSRSCAN'          --------------------------------      07790845
+ PUNCH ' NAME BLSRSCAN(R)'        --------------------------------      07831245
+ PUNCH ' INCLUDE AOS32(BLSRSETD)' SETDEF SUBCOMMAND                @D3C 07871645
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 07912045
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @D3C 07952445
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @D3C 07992845
+ PUNCH ' ENTRY BLSRSETD'          --------------------------------      08033245
+ PUNCH ' NAME BLSRSETD(R)'        --------------------------------      08073645
+ PUNCH ' INCLUDE AOS32(BLSRST00)' STATUS SUBCOMMAND                @L1A 08114045
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @L1A 08154445
+ PUNCH ' ENTRY BLSRST00'          -------------------------------- @D1A 08194845
+ PUNCH ' NAME BLSRST00(R)'        -------------------------------- @L1A 08235245
+ PUNCH ' INCLUDE AOS32(BLSRSUMM)' SUMMARY SUBCOMMAND               @D3C 08275645
+ PUNCH ' INCLUDE AOS32(BLSRSUTC)' TCB PROCESSING                   @L2C 08316045
+ PUNCH ' INCLUDE AOS32(BLSRSURB)' RB PROCESSING                    @L2C 08356445
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 08396845
+ PUNCH ' INCLUDE AOS32(BLSRVPTC)' TCB NAME CHECK                   @L2C 08437245
+ PUNCH ' ENTRY BLSRSUMM'          --------------------------------      08477645
+ PUNCH ' NAME BLSRSUMM(R)'        --------------------------------      08518045
+ PUNCH ' INCLUDE AOS32(BLSRSYRB)' COMPUTE MINUMUM/MAXIMUM SYMBOL   @D3C 08558445
+ PUNCH ' ENTRY BLSRSYRB'          -------------------------------- @D1A 08598845
+ PUNCH ' NAME BLSRSYRB(R)'        --------------------------------      08639245
+ PUNCH ' INCLUDE AOS32(BLSRTCBX)' TCBEXIT SUBCOMMAND               @D3C 08679645
+ PUNCH ' INCLUDE AOS32(BLSRVPAD)' ADDRESS CHECK                    @D3C 08720045
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 08760445
+ PUNCH ' INCLUDE AOS32(BLSRVPCP)' CPU ADDRESS CHECK                @D3C 08800845
+ PUNCH ' INCLUDE AOS32(BLSUVP31)' INTEGER CHECK                    @D3C 08841245
+ PUNCH ' INCLUDE AOS32(BLSUVP32)' INTEGER RANGE CHECK              @D3C 08881645
+ PUNCH ' ENTRY BLSRTCBX'          --------------------------------      08922045
+ PUNCH ' NAME BLSRTCBX(R)'        --------------------------------      08962445
+ PUNCH ' INCLUDE AOS32(BLSRVRBX)' VERBEXIT SUBCOMMAND              @D3C 09002845
+ PUNCH ' ENTRY BLSRVRBX'          -------------------------------- @D1A 09043245
+ PUNCH ' NAME BLSRVRBX(R)'        --------------------------------      09083645
+ PUNCH ' INCLUDE AOS32(BLSRVSLD)' IPCSDDIR TSO COMMAND             @D3C 09124045
+ PUNCH ' INCLUDE AOS32(BLSRVPVS)' DUMP DIRECTORY DSNAME CHECK      @D3C 09164445
+ PUNCH ' ENTRY BLSRVSLD'          --------------------------------      09204845
+ PUNCH ' ALIAS IPCSDDIR'          --------------------------------      09245245
+ PUNCH ' NAME BLSRVSLD(R)'        --------------------------------      09285645
+ PUNCH ' INCLUDE AOS32(BLSR3270)' DSPL3270 SUBCOMMAND              @D3C 09326045
+ PUNCH ' INCLUDE AOS32(BLSRVPAS)' ASID CHECK                       @D3C 09366445
+ PUNCH ' ENTRY BLSR3270'          --------------------------------      09406845
+ PUNCH ' NAME BLSR3270(R)'        --------------------------------      09447245
+ PUNCH ' INCLUDE AOS32(BLSSASCB)' FIND ASCB                        @D3C 09487645
+ PUNCH ' ENTRY BLSSASCB'          -------------------------------- @D1A 09528045
+ PUNCH ' NAME BLSSASCB(R)'        --------------------------------      09568445
+ PUNCH ' INCLUDE AOS32(BLSSASMV)' FIND ASMVT                       @D3C 09608845
+ PUNCH ' ENTRY BLSSASMV'          -------------------------------- @D1A 09649245
+ PUNCH ' NAME BLSSASMV(R)'        --------------------------------      09689645
+ PUNCH ' INCLUDE AOS32(BLSSASVT)' FIND ASVT                        @D3C 09730045
+ PUNCH ' ENTRY BLSSASVT'          -------------------------------- @D1A 09770445
+ PUNCH ' NAME BLSSASVT(R)'        --------------------------------      09810845
+ PUNCH ' INCLUDE AOS32(BLSSASXB)' FIND ASXB                        @D3C 09851245
+ PUNCH ' ENTRY BLSSASXB'          -------------------------------- @D1A 09891645
+ PUNCH ' NAME BLSSASXB(R)'        --------------------------------      09932045
+ PUNCH ' INCLUDE AOS32(BLSSCDE)'  FIND CDE                         @D3C 09972445
+ PUNCH ' ENTRY BLSSCDE'           -------------------------------- @D1A 10012845
+ PUNCH ' NAME BLSSCDE(R)'         --------------------------------      10053245
+ PUNCH ' INCLUDE AOS32(BLSSCOMM)' FIND COMMON AREA                 @D3C 10093645
+ PUNCH ' ENTRY BLSSCOMM'          -------------------------------- @D1A 10134045
+ PUNCH ' NAME BLSSCOMM(R)'        --------------------------------      10174445
+ PUNCH ' INCLUDE AOS32(BLSSCSD)'  FIND CSD                         @D3C 10214845
+ PUNCH ' ENTRY BLSSCSD'           -------------------------------- @D1A 10255245
+ PUNCH ' NAME BLSSCSD(R)'         --------------------------------      10295645
+ PUNCH ' INCLUDE AOS32(BLSSCVT)'  FIND CVT                         @D3C 10336045
+ PUNCH ' ENTRY BLSSCVT'           -------------------------------- @D1A 10376445
+ PUNCH ' NAME BLSSCVT(R)'         --------------------------------      10416845
+ PUNCH ' INCLUDE AOS32(BLSSCVT2)' FIND CVTXTNT2                    @D3C 10457245
+ PUNCH ' ENTRY BLSSCVT2'          -------------------------------- @D1A 10497645
+ PUNCH ' NAME BLSSCVT2(R)'        -------------------------------- @D1C 10538045
+ PUNCH ' INCLUDE AOS32(BLSSIOC)'  FIND IOCOM                       @D3C 10578445
+ PUNCH ' ENTRY BLSSIOC'           -------------------------------- @D1A 10618845
+ PUNCH ' NAME BLSSIOC(R)'         --------------------------------      10659245
+ PUNCH ' INCLUDE AOS32(BLSSIOX)'  FIND IOCOM EXTENSION             @D3C 10699645
+ PUNCH ' ENTRY BLSSIOX'           -------------------------------- @D1A 10740045
+ PUNCH ' NAME BLSSIOX(R)'         --------------------------------      10780445
+ PUNCH ' INCLUDE AOS32(BLSSLCCA)' FIND LCCA                        @D3C 10820845
+ PUNCH ' ENTRY BLSSLCCA'          -------------------------------- @D1A 10861245
+ PUNCH ' NAME BLSSLCCA(R)'        --------------------------------      10901645
+ PUNCH ' INCLUDE AOS32(BLSSLCCV)' FIND LCCV                        @D3C 10942045
+ PUNCH ' ENTRY BLSSLCCV'          -------------------------------- @D1A 10982445
+ PUNCH ' NAME BLSSLCCV(R)'        --------------------------------      11022845
+ PUNCH ' INCLUDE AOS32(BLSSLLPA)' FIND LPA MODULE                  @D3C 11063245
+ PUNCH ' ENTRY BLSSLLPA'          -------------------------------- @D1A 11103645
+ PUNCH ' NAME BLSSLLPA(R)'        --------------------------------      11144045
+ PUNCH ' INCLUDE AOS32(BLSSLPDE)' FIND LPDE                        @D3C 11184445
+ PUNCH ' ENTRY BLSSLPDE'          -------------------------------- @D1A 11224845
+ PUNCH ' NAME BLSSLPDE(R)'        --------------------------------      11265245
+ PUNCH ' INCLUDE AOS32(BLSSPCCA)' FIND PCCA                        @D3C 11305645
+ PUNCH ' ENTRY BLSSPCCA'          -------------------------------- @D1A 11346045
+ PUNCH ' NAME BLSSPCCA(R)'        --------------------------------      11386445
+ PUNCH ' INCLUDE AOS32(BLSSPCCV)' FIND PCCAVT                      @D3C 11426845
+ PUNCH ' ENTRY BLSSPCCV'          -------------------------------- @D1A 11467245
+ PUNCH ' NAME BLSSPCCV(R)'        --------------------------------      11507645
+ PUNCH ' INCLUDE AOS32(BLSSPFT)'  FIND PFT                         @D3C 11548045
+ PUNCH ' ENTRY BLSSPFT'           -------------------------------- @D1A 11588445
+ PUNCH ' NAME BLSSPFT(R)'         --------------------------------      11628845
+ PUNCH ' INCLUDE AOS32(BLSSPGTE)' FIND PAGE TABLE                  @D3C 11669245
+ PUNCH ' ENTRY BLSSPGTE'          -------------------------------- @D1A 11709645
+ PUNCH ' NAME BLSSPGTE(R)'        --------------------------------      11750045
+ PUNCH ' INCLUDE AOS32(BLSSPRIV)' FIND PRIVATE AREA                @D3C 11790445
+ PUNCH ' ENTRY BLSSPRIV'          -------------------------------- @D1A 11830845
+ PUNCH ' NAME BLSSPRIV(R)'        --------------------------------      11871245
+ PUNCH ' INCLUDE AOS32(BLSSPSA)'  FIND PSA                         @D3C 11911645
+ PUNCH ' ENTRY BLSSPSA'           -------------------------------- @D1A 11952045
+ PUNCH ' NAME BLSSPSA(R)'         --------------------------------      11992445
+ PUNCH ' INCLUDE AOS32(BLSSPVT)'  FIND PVT                         @D3C 12032845
+ PUNCH ' ENTRY BLSSPVT'           -------------------------------- @D1A 12073245
+ PUNCH ' NAME BLSSPVT(R)'         --------------------------------      12113645
+ PUNCH ' INCLUDE AOS32(BLSSSGTE)' FIND SEGMENT TABLE               @D3C 12154045
+ PUNCH ' ENTRY BLSSSGTE'          -------------------------------- @D1A 12194445
+ PUNCH ' NAME BLSSSGTE(R)'        --------------------------------      12234845
+ PUNCH ' INCLUDE AOS32(BLSSTCB)'  FIND TCB                         @D3C 12275245
+ PUNCH ' ENTRY BLSSTCB'           -------------------------------- @D1A 12315645
+ PUNCH ' NAME BLSSTCB(R)'         --------------------------------      12356045
+ PUNCH ' INCLUDE AOS32(BLSSUCB)'  FIND UCB                         @D3C 12396445
+ PUNCH ' ENTRY BLSSUCB'           -------------------------------- @D1A 12436845
+ PUNCH ' NAME BLSSUCB(R)'         --------------------------------      12477245
+ PUNCH ' INCLUDE AOS32(BLSSUCM)'  FIND UCM                         @D3C 12517645
+ PUNCH ' ENTRY BLSSUCM'           -------------------------------- @D1A 12558045
+ PUNCH ' NAME BLSSUCM(R)'         --------------------------------      12598445
+ PUNCH ' INCLUDE AOS32(BLSSXTLS)' FIND XTLST                       @D3C 12638845
+ PUNCH ' ENTRY BLSSXTLS'          -------------------------------- @D1A 12679245
+ PUNCH ' NAME BLSSXTLS(R)'        --------------------------------      12719645
+ PUNCH ' INCLUDE AOS32(BLSTB4)'   FORMAT BIT DATA--16 BYTES/LINE   @D3C 12760045
+ PUNCH ' ENTRY BLSTB4'            -------------------------------- @D1A 12800445
+ PUNCH ' NAME BLSTB4(R)'          --------------------------------      12840845
+ PUNCH ' INCLUDE AOS32(BLSTB5)'   FORMAT BIT DATA--32 BYTES/LINE   @D3C 12881245
+ PUNCH ' ENTRY BLSTB5'            -------------------------------- @D1A 12921645
+ PUNCH ' NAME BLSTB5(R)'          --------------------------------      12962045
+ PUNCH ' INCLUDE AOS32(BLSTM4)'   FORMAT STRUCTURE--16 BYTES/LINE  @D3C 13002445
+ PUNCH ' ENTRY BLSTM4'            -------------------------------- @D1A 13042845
+ PUNCH ' NAME BLSTM4(R)'          --------------------------------      13083245
+ PUNCH ' INCLUDE AOS32(BLSTM5)'   FORMAT STRUCTURE--32 BYTES/LINE  @D3C 13123645
+ PUNCH ' ENTRY BLSTM5'            -------------------------------- @D1A 13164045
+ PUNCH ' NAME BLSTM5(R)'          --------------------------------      13204445
+ PUNCH ' INCLUDE AOS32(BLSTU4)'   FORMAT AREA--16 BYTES/LINE       @D3C 13244845
+ PUNCH ' ENTRY BLSTU4'            -------------------------------- @D1A 13285245
+ PUNCH ' NAME BLSTU4(R)'          --------------------------------      13325645
+ PUNCH ' INCLUDE AOS32(BLSTU5)'   FORMAT AREA--32 BYTES/LINE       @D3C 13366045
+ PUNCH ' ENTRY BLSTU5'            -------------------------------- @D1A 13406445
+ PUNCH ' NAME BLSTU5(R)'          --------------------------------      13446845
+ PUNCH ' INCLUDE AOS32(BLST04A)'  DISPLAY MACHINE--ABSOLUTE        @D3C 13487245
+ PUNCH ' ENTRY BLST04A'           -------------------------------- @D1A 13527645
+ PUNCH ' NAME BLST04A(R)'         --------------------------------      13568045
+ PUNCH ' INCLUDE AOS32(BLST04BS)' DISPLAY MACHINE                  @D3C 13608445
+ PUNCH ' ENTRY BLST04BS'          -------------------------------- @D1A 13648845
+ PUNCH ' ALIAS BLST04C,BLST04H'   CPU STATUS, HEADER               @D3C 13689245
+ PUNCH ' NAME BLST04BS(R)'        --------------------------------      13729645
+ PUNCH ' INCLUDE AOS32(BLST04CV)' DISPLAY MACHINE--VIRTUAL         @D3C 13770045
+ PUNCH ' ENTRY BLST04CV'          -------------------------------- @D1A 13810445
+ PUNCH ' ALIAS BLST04CR'          REAL                             @D3C 13850845
+ PUNCH ' NAME BLST04CV(R)'        --------------------------------      13891245
+ PUNCH ' INCLUDE AOS32(BLSUHELP)' HELP SUBCOMMAND                  @D3C 13931645
+ PUNCH ' NAME BLSUHELP(R)'        --------------------------------      13972045
+ PUNCH ' INCLUDE AOS32(BLSUMTOD)' FORMAT TOD CLOCK                 @01C 14012445
+ PUNCH ' ENTRY BLSUMTOD'          -------------------------------- @D1A 14052845
+ PUNCH ' NAME BLSUMTOD(R)'        -------------------------------- @L1A 14093245
+ PUNCH ' INCLUDE AOS32(BLSUNOTE)' NOTE SUBCOMMAND                  @L1C 14133645
+ PUNCH ' ENTRY BLSUNOTE'          -------------------------------- @D1A 14174045
+ PUNCH ' NAME BLSUNOTE(R)'        --------------------------------      14214445
+ PUNCH ' INCLUDE AOS32(BLSUTSO)'  TSO SUBCOMMAND                   @D3C 14254845
+ PUNCH ' INCLUDE AOS32(BLSUGWDM)' INSTALLATION EXIT                @01A 14295245
+ PUNCH ' ENTRY BLSUTSO'           -------------------------------- @D1A 14335645
+ PUNCH ' NAME BLSUTSO(R)'         --------------------------------      14376045
+ PUNCH ' INCLUDE AOS32(BLSVASCB)' SCAN ASCB                        @D3C 14416445
+ PUNCH ' ENTRY BLSVASCB'          -------------------------------- @D1A 14456845
+ PUNCH ' NAME BLSVASCB(R)'        --------------------------------      14497245
+ PUNCH ' INCLUDE AOS32(BLSVASVT)' SCAN ASVT                        @D3C 14537645
+ PUNCH ' ENTRY BLSVASVT'          -------------------------------- @D1A 14578045
+ PUNCH ' NAME BLSVASVT(R)'        --------------------------------      14618445
+ PUNCH ' INCLUDE AOS32(BLSVASXB)' SCAN ASXB                        @D3C 14658845
+ PUNCH ' ENTRY BLSVASXB'          -------------------------------- @D1A 14699245
+ PUNCH ' NAME BLSVASXB(R)'        --------------------------------      14739645
+ PUNCH ' INCLUDE AOS32(BLSVCDE)'  SCAN CDE                         @D3C 14780045
+ PUNCH ' ENTRY BLSVCDE'           -------------------------------- @D1A 14820445
+ PUNCH ' NAME BLSVCDE(R)'         --------------------------------      14860845
+ PUNCH ' INCLUDE AOS32(BLSVCVT)'  SCAN CVT                         @L1C 14901245
+ PUNCH ' ENTRY BLSVCVT'           -------------------------------- @D1A 14941645
+ PUNCH ' NAME BLSVCVT(R)'         --------------------------------      14982045
+ PUNCH ' INCLUDE AOS32(BLSVCVT2)' SCAN CVTXTNT2                    @D3C 15022445
+ PUNCH ' ENTRY BLSVCVT2'          -------------------------------- @D1A 15062845
+ PUNCH ' NAME BLSVCVT2(R)'        -------------------------------- @L1A 15103245
+ PUNCH ' INCLUDE AOS32(BLSVIOC)'  SCAN IOCOM                       @D3C 15143645
+ PUNCH ' ENTRY BLSVIOC'           -------------------------------- @D1A 15184045
+ PUNCH ' NAME BLSVIOC(R)'         --------------------------------      15224445
+ PUNCH ' INCLUDE AOS32(BLSVIOX)'  SCAN IOCOM EXTENSION             @D3C 15264845
+ PUNCH ' ENTRY BLSVIOX'           -------------------------------- @D1A 15305245
+ PUNCH ' NAME BLSVIOX(R)'         --------------------------------      15345645
+ PUNCH ' INCLUDE AOS32(BLSVLCCA)' SCAN LCCA                        @D3C 15386045
+ PUNCH ' ENTRY BLSVLCCA'          -------------------------------- @D1A 15426445
+ PUNCH ' NAME BLSVLCCA(R)'        --------------------------------      15466845
+ PUNCH ' INCLUDE AOS32(BLSVLCCV)' SCAN LCCAVT                      @D3C 15507245
+ PUNCH ' ENTRY BLSVLCCV'          -------------------------------- @D1A 15547645
+ PUNCH ' NAME BLSVLCCV(R)'        --------------------------------      15588045
+ PUNCH ' INCLUDE AOS32(BLSVLPDE)' SCAN LPDE                        @D3C 15628445
+ PUNCH ' ENTRY BLSVLPDE'          -------------------------------- @D1A 15668845
+ PUNCH ' NAME BLSVLPDE(R)'        --------------------------------      15709245
+ PUNCH ' INCLUDE AOS32(BLSVPCCA)' SCAN PCCA                        @D3C 15749645
+ PUNCH ' ENTRY BLSVPCCA'          -------------------------------- @D1A 15790045
+ PUNCH ' NAME BLSVPCCA(R)'        --------------------------------      15830445
+ PUNCH ' INCLUDE AOS32(BLSVPCCV)' SCAN PCCAVT                      @D3C 15870845
+ PUNCH ' ENTRY BLSVPCCV'          -------------------------------- @D1A 15911245
+ PUNCH ' NAME BLSVPCCV(R)'        --------------------------------      15951645
+ PUNCH ' INCLUDE AOS32(BLSVPGTE)' SCAN PAGE TABLE                  @D3C 15992045
+ PUNCH ' ENTRY BLSVPGTE'          -------------------------------- @D1A 16032445
+ PUNCH ' NAME BLSVPGTE(R)'        --------------------------------      16072845
+ PUNCH ' INCLUDE AOS32(BLSVPSA)'  SCAN PSA                         @D3C 16113245
+ PUNCH ' ENTRY BLSVPSA'           -------------------------------- @D1A 16153645
+ PUNCH ' NAME BLSVPSA(R)'         --------------------------------      16194045
+ PUNCH ' INCLUDE AOS32(BLSVPVT)'  SCAN PVT                         @D3C 16234445
+ PUNCH ' ENTRY BLSVPVT'           -------------------------------- @D1A 16274845
+ PUNCH ' NAME BLSVPVT(R)'         --------------------------------      16315245
+ PUNCH ' INCLUDE AOS32(BLSVQCBA)' SCAN MAJOR QCB                   @D3C 16355645
+ PUNCH ' ENTRY BLSVQCBA'          -------------------------------- @D1A 16396045
+ PUNCH ' NAME BLSVQCBA(R)'        --------------------------------      16436445
+ PUNCH ' INCLUDE AOS32(BLSVQCBB)' SCAN MINOR QCB                   @D3C 16476845
+ PUNCH ' ENTRY BLSVQCBB'          -------------------------------- @D1A 16517245
+ PUNCH ' NAME BLSVQCBB(R)'        --------------------------------      16557645
+ PUNCH ' INCLUDE AOS32(BLSVQEL)'  SCAN QEL                         @D3C 16598045
+ PUNCH ' ENTRY BLSVQEL'           -------------------------------- @D1A 16638445
+ PUNCH ' NAME BLSVQEL(R)'         --------------------------------      16678845
+ PUNCH ' INCLUDE AOS32(BLSVRB)'   SCAN RB                          @D3C 16719245
+ PUNCH ' ENTRY BLSVRB'            -------------------------------- @D1A 16759645
+ PUNCH ' NAME BLSVRB(R)'          --------------------------------      16800045
+ PUNCH ' INCLUDE AOS32(BLSVSGTE)' SCAN SEGMENT TABLE               @D3C 16840445
+ PUNCH ' ENTRY BLSVSGTE'          -------------------------------- @D1A 16880845
+ PUNCH ' NAME BLSVSGTE(R)'        --------------------------------      16921245
+ PUNCH ' INCLUDE AOS32(BLSVTCB)'  SCAN TCB                         @D3C 16961645
+ PUNCH ' ENTRY BLSVTCB'           -------------------------------- @D1A 17002045
+ PUNCH ' NAME BLSVTCB(R)'         --------------------------------      17042445
+ PUNCH ' INCLUDE AOS32(BLSVUCB)'  SCAN UCB                         @D3C 17082845
+ PUNCH ' ENTRY BLSVUCB'           -------------------------------- @D1A 17123245
+ PUNCH ' NAME BLSVUCB(R)'         --------------------------------      17163645
+ PUNCH ' INCLUDE AOS32(BLSVXTLS)' SCAN XTLST                       @D3C 17204045
+ PUNCH ' ENTRY BLSVXTLS'          -------------------------------- @D1A 17244445
+ PUNCH ' NAME BLSVXTLS(R)'        --------------------------------      17284845
+ PUNCH ' INCLUDE AOS32(BLSDIFP0)' PROCESS SYS1.PARMLIB(IPCSPRNN)   @D3C 17325245
+ PUNCH ' INCLUDE AOS32(BLSUINI1)' IPCS TSO COMMAND INITIALIZATION  @D3C 17365645
+ PUNCH ' INCLUDE AOS32(BLSUPROP)' OPEN PRINT FILE                  @D3C 17406045
+ PUNCH ' INCLUDE AOS32(BLSUVSOP)' OPEN IPCSDDIR--PRIMARY MODULE    @D3C 17446445
+ PUNCH ' INCLUDE AOS32(BLSUVSOQ)' OPEN IPCSDDIR--SECONDARY MODULE  @D3C 17486845
+ PUNCH ' ORDER BLSUINI1'          -------------------------------- @D2A 17527245
+ PUNCH ' ENTRY BLSUINI1'          --------------------------------      17567645
+ PUNCH ' NAME BLSUINI1(R)'        --------------------------------      17608045
+ PUNCH ' INCLUDE AOS32(BLSUINI2)' PROCESSING TASK INITIALIZATION   @D3C 17648445
+ PUNCH ' INCLUDE AOS32(BLSDDEQP)' --------------------------------      17688845
+ PUNCH ' INCLUDE AOS32(BLSDENQP)' --------------------------------      17729245
+ PUNCH ' INCLUDE AOS32(BLSDSTAE)' --------------------------------      17769645
+ PUNCH ' INCLUDE AOS32(BLSDTIME)' --------------------------------      17810045
+ PUNCH ' INCLUDE AOS32(BLSDVECT)' --------------------------------      17850445
+ PUNCH ' INCLUDE AOS32(BLSEAUTH)' --------------------------------      17890845
+ PUNCH ' INCLUDE AOS32(BLSELPCC)' --------------------------------      17931245
+ PUNCH ' INCLUDE AOS32(BLSELPCL)' --------------------------------      17971645
+ PUNCH ' INCLUDE AOS32(BLSELPCT)' --------------------------------      18012045
+ PUNCH ' INCLUDE AOS32(BLSELPFM)' --------------------------------      18052445
+ PUNCH ' INCLUDE AOS32(BLSELPFR)' --------------------------------      18092845
+ PUNCH ' INCLUDE AOS32(BLSELPOP)' --------------------------------      18133245
+ PUNCH ' INCLUDE AOS32(BLSFBP00)' --------------------------------      18173645
+ PUNCH ' INCLUDE AOS32(BLSFCLOS)' --------------------------------      18214045
+ PUNCH ' INCLUDE AOS32(BLSFCN00)' --------------------------------      18254445
+ PUNCH ' INCLUDE AOS32(BLSFDALL)' --------------------------------      18294845
+ PUNCH ' INCLUDE AOS32(BLSFDEL)'  --------------------------------      18335245
+ PUNCH ' INCLUDE AOS32(BLSFDERS)' --------------------------------      18375645
+ PUNCH ' INCLUDE AOS32(BLSFDF00)' --------------------------------      18416045
+ PUNCH ' INCLUDE AOS32(BLSFDS00)' --------------------------------      18456445
+ PUNCH ' INCLUDE AOS32(BLSFERAS)' --------------------------------      18496845
+ PUNCH ' INCLUDE AOS32(BLSFFL00)' --------------------------------      18537245
+ PUNCH ' INCLUDE AOS32(BLSFFP00)' --------------------------------      18577645
+ PUNCH ' INCLUDE AOS32(BLSFGD00)' --------------------------------      18618045
+ PUNCH ' INCLUDE AOS32(BLSFGG00)' --------------------------------      18658445
+ PUNCH ' INCLUDE AOS32(BLSFGP00)' --------------------------------      18698845
+ PUNCH ' INCLUDE AOS32(BLSFLALL)' --------------------------------      18739245
+ PUNCH ' INCLUDE AOS32(BLSFLP00)' --------------------------------      18779645
+ PUNCH ' INCLUDE AOS32(BLSFND00)' --------------------------------      18820045
+ PUNCH ' INCLUDE AOS32(BLSFND01)' --------------------------------      18860445
+ PUNCH ' INCLUDE AOS32(BLSFOD00)' --------------------------------      18900845
+ PUNCH ' INCLUDE AOS32(BLSFOPEN)' --------------------------------      18941245
+ PUNCH ' INCLUDE AOS32(BLSFPERA)' --------------------------------      18981645
+ PUNCH ' INCLUDE AOS32(BLSFPERS)' --------------------------------      19022045
+ PUNCH ' INCLUDE AOS32(BLSFPS00)' --------------------------------      19062445
+ PUNCH ' INCLUDE AOS32(BLSFSCRT)' --------------------------------      19102845
+ PUNCH ' INCLUDE AOS32(BLSFSD00)' --------------------------------      19143245
+ PUNCH ' INCLUDE AOS32(BLSFSL00)' --------------------------------      19183645
+ PUNCH ' INCLUDE AOS32(BLSFTL00)' --------------------------------      19224045
+ PUNCH ' INCLUDE AOS32(BLSFUD00)' --------------------------------      19264445
+ PUNCH ' INCLUDE AOS32(BLSFUP00)' --------------------------------      19304845
+ PUNCH ' INCLUDE AOS32(BLSRACC)'  DUMP ACCESS                      @D2C 19345245
+ PUNCH ' INCLUDE AOS32(BLSRACCL)' DUMP ACCESS                      @D2C 19385645
+ PUNCH ' INCLUDE AOS32(BLSRACCQ)' DUMP ACCESS                      @D2C 19426045
+ PUNCH ' INCLUDE AOS32(BLSRADDP)' ADDRESS RESOLUTION               @D3C 19466445
+ PUNCH ' INCLUDE AOS32(BLSRADDR)' ADDRESS RESOLUTION               @D3C 19506845
+ PUNCH ' INCLUDE AOS32(BLSRADDS)' ADDRESS RESOLUTION               @D3C 19547245
+ PUNCH ' INCLUDE AOS32(BLSRADDT)' ADDRESS RESOLUTION               @D3C 19587645
+ PUNCH ' INCLUDE AOS32(BLSRADDU)' ADDRESS RESOLUTION               @D3C 19628045
+ PUNCH ' INCLUDE AOS32(BLSRADD1)' ADDRESS RESOLUTION               @D3C 19668445
+ PUNCH ' INCLUDE AOS32(BLSRADD2)' ADDRESS RESOLUTION               @D3C 19708845
+ PUNCH ' INCLUDE AOS32(BLSRADD3)' ADDRESS RESOLUTION               @D3C 19749245
+ PUNCH ' INCLUDE AOS32(BLSRADD4)' ADDRESS RESOLUTION               @D3C 19789645
+ PUNCH ' INCLUDE AOS32(BLSRCOCL)' CLOSE COPYDUMP INPUT FILE        @L3C 19830045
+ PUNCH ' INCLUDE AOS32(BLSRDUCC)' CLOSE DUMP                       @D3C 19870445
+ PUNCH ' INCLUDE AOS32(BLSRDUCK)' CHECK DUMP                       @D3C 19910845
+ PUNCH ' INCLUDE AOS32(BLSRESAR)' STORE ES RECORD                  @D3C 19951245
+ PUNCH ' INCLUDE AOS32(BLSRESCK)' CHECK ES RECORD                  @D3C 19991645
+ PUNCH ' INCLUDE AOS32(BLSRESGC)' GET ES RECORD                    @D3C 20032045
+ PUNCH ' INCLUDE AOS32(BLSRESGE)' GET ES RECORD                    @D3C 20072445
+ PUNCH ' INCLUDE AOS32(BLSRESGQ)' GET ES RECORD                    @D3C 20112845
+ PUNCH ' INCLUDE AOS32(BLSRESGU)' GET ES RECORD                    @D3C 20153245
+ PUNCH ' INCLUDE AOS32(BLSRESPU)' PUT ES RECORD                    @D3C 20193645
+ PUNCH ' INCLUDE AOS32(BLSRESSA)' SCAN A BLOCK                     @D3C 20234045
+ PUNCH ' INCLUDE AOS32(BLSRMSGA)' FORMAT ADDRESS SPACE             @D3C 20274445
+ PUNCH ' INCLUDE AOS32(BLSRMSGB)' FORMAT STORAGE ATTRIBUTES        @D3C 20314845
+ PUNCH ' INCLUDE AOS32(BLSRMSGD)' FORMAT DATA TYPE                 @D3C 20355245
+ PUNCH ' INCLUDE AOS32(BLSRPADS)' PROCESS DISPLAY OPTIONS          @D3C 20395645
+ PUNCH ' INCLUDE AOS32(BLSRRAAR)' STORE RA RECORD                  @D3C 20436045
+ PUNCH ' INCLUDE AOS32(BLSRRACR)' MAP REAL STORAGE                 @D3C 20476445
+ PUNCH ' INCLUDE AOS32(BLSRRACV)' MAP VIRTUAL STORAGE              @D3C 20516845
+ PUNCH ' INCLUDE AOS32(BLSRRAGE)' GET RA RECORD                    @D3C 20557245
+ PUNCH ' INCLUDE AOS32(BLSRSAAR)' STORE RA RECORD                  @D3C 20597645
+ PUNCH ' INCLUDE AOS32(BLSRSAG)'  PROCESS RA RECORD                @D3C 20638045
+ PUNCH ' INCLUDE AOS32(BLSRSAGC)' GET RA RECORD                    @D3C 20678445
+ PUNCH ' INCLUDE AOS32(BLSRSAGE)' GET RA RECORD                    @D3C 20718845
+ PUNCH ' INCLUDE AOS32(BLSRSAGN)' GET RA RECORD                    @D3C 20759245
+ PUNCH ' INCLUDE AOS32(BLSRSAGQ)' GET RA RECORD                    @D3C 20799645
+ PUNCH ' INCLUDE AOS32(BLSRSAGU)' GET RA RECORD                    @D3C 20840045
+ PUNCH ' INCLUDE AOS32(BLSRSAPC)' IDENTIFY BLOCK IN ERROR          @D3C 20880445
+ PUNCH ' INCLUDE AOS32(BLSRSAPU)' PUT RA RECORD                    @D3C 20920845
+ PUNCH ' INCLUDE AOS32(BLSRVECT)' RVT                              @D3C 20961245
+ PUNCH ' INCLUDE AOS32(BLSTB)'    FORMAT BIT                       @D3C 21001645
+ PUNCH ' INCLUDE AOS32(BLSTC)'    FORMAT CHARACTER                 @D3C 21042045
+ PUNCH ' INCLUDE AOS32(BLSTF)'    FORMAT SIGNED                    @D3C 21082445
+ PUNCH ' INCLUDE AOS32(BLSTM)'    FORMAT STRUCTURE                 @D3C 21122845
+ PUNCH ' INCLUDE AOS32(BLSTR)'    FORMAT REGISTERS                 @D3C 21163245
+ PUNCH ' INCLUDE AOS32(BLSTU)'    FORMAT AREA                      @D3C 21203645
+ PUNCH ' INCLUDE AOS32(BLSTY)'    FORMAT UNSIGNED                  @D3C 21244045
+ PUNCH ' INCLUDE AOS32(BLST01)'   FETCH, FORMAT, AND DISPLAY       @D3C 21284445
+ PUNCH ' INCLUDE AOS32(BLST02)'   FORMAT AND DISPLAY               @D3C 21324845
+ PUNCH ' INCLUDE AOS32(BLST03)'   DISPLAY BASIC HEADER MESSAGES    @D3C 21365245
+ PUNCH ' INCLUDE AOS32(BLST04)'   DISPLAY MACHINE                  @D3C 21405645
+ PUNCH ' INCLUDE AOS32(BLST05)'   FORMAT AND DISPLAY STORAGE       @D3C 21446045
+ PUNCH ' INCLUDE AOS32(BLST06)'   FORMAT AND DISPLAY STORAGE       @D3C 21486445
+ PUNCH ' INCLUDE AOS32(BLST08)'   FETCH, FORMAT, & DISPLAY STORAGE @D3C 21526845
+ PUNCH ' INCLUDE AOS32(BLSUBLDD)' DELETE PROGRAM BLDL TABLE        @D3C 21567245
+ PUNCH ' INCLUDE AOS32(BLSUBLDL)' IPCS PROGRAM BLDL SERVICE        @D3C 21607645
+ PUNCH ' INCLUDE AOS32(BLSUGWDM)' INSTALLATION EXIT                @01A 21648045
+ PUNCH ' INCLUDE AOS32(BLSUMON)'  MONITOR MAIN MODULE              @D3C 21688445
+ PUNCH ' INCLUDE AOS32(BLSUMONA)' MONITOR--ATTACH TSO COMMAND      @D3C 21728845
+ PUNCH ' INCLUDE AOS32(BLSUMONC)' MONITOR--IMPLICIT EXEC           @D3C 21769245
+ PUNCH ' INCLUDE AOS32(BLSUMOND)' MONITOR--CALL IPCS SUBCOMMAND    @D3C 21809645
+ PUNCH ' INCLUDE AOS32(BLSUMONI)' MONITOR--STAX EXIT               @D3C 21850045
+ PUNCH ' INCLUDE AOS32(BLSUMONL)' MONITOR--ROUTER                  @D3C 21890445
+ PUNCH ' INCLUDE AOS32(BLSUMONT)' MONITOR--TSO COMMAND             @D3C 21930845
+ PUNCH ' INCLUDE AOS32(BLSUMONX)' MONITOR--TMP SIMULATOR           @D3C 21971245
+ PUNCH ' INCLUDE AOS32(BLSUMON2)' MONITOR--IKJSCAN INTERFACE       @D3C 22011645
+ PUNCH ' INCLUDE AOS32(BLSUMPKN)' COMPRESS MESSAGE TEXT            @D3C 22052045
+ PUNCH ' INCLUDE AOS32(BLSUMPK1)' COMPRESS MESSAGE TEXT            @D3C 22092445
+ PUNCH ' INCLUDE AOS32(BLSUPARI)' IKJPARS INTERFACE                @D3C 22132845
+ PUNCH ' INCLUDE AOS32(BLSUPARU)' PROCESS ROUTING OPERANDS         @D3C 22173245
+ PUNCH ' INCLUDE AOS32(BLSUPGMC)' CALL NON-RESIDENT IPCS PROGRAM   @D3C 22213645
+ PUNCH ' INCLUDE AOS32(BLSUPGMD)' DELETE IPCS PROGRAM              @D3C 22254045
+ PUNCH ' INCLUDE AOS32(BLSUPGML)' LOAD IPCS PROGRAM                @D3C 22294445
+ PUNCH ' INCLUDE AOS32(BLSUPGMR)' CALL NON-RESIDENT IPCS PROGRAM   @D3C 22334845
+ PUNCH ' INCLUDE AOS32(BLSUPRTA)' PRINT MESSAGE                    @D3C 22375245
+ PUNCH ' INCLUDE AOS32(BLSUPRTN)' PRINT MESSAGE                    @D3C 22415645
+ PUNCH ' INCLUDE AOS32(BLSUPRTT)' PRINT SUBTITILE                  @D3C 22456045
+ PUNCH ' INCLUDE AOS32(BLSUPUTA)' ROUTE MESSAGE                    @D3C 22496445
+ PUNCH ' INCLUDE AOS32(BLSUPUTC)' ROUTE MESSAGE                    @D3C 22536845
+ PUNCH ' INCLUDE AOS32(BLSUPUTD)' ROUTE MESSAGE                    @D3C 22577245
+ PUNCH ' INCLUDE AOS32(BLSUPUTO)' ROUTE MESSAGE                    @D3C 22617645
+ PUNCH ' INCLUDE AOS32(BLSUPUTT)' ROUTE MESSAGE                    @D3C 22658045
+ PUNCH ' INCLUDE AOS32(BLSUPUTV)' ROUTE MESSAGE                    @D3C 22698445
+ PUNCH ' INCLUDE AOS32(BLSUTRMA)' TRANSMIT MESSAGE                 @D3C 22738845
+ PUNCH ' INCLUDE AOS32(BLSUVECT)' BVT                              @D3C 22779245
+ PUNCH ' INCLUDE AOS32(BLSUVSAR)' STORE IPCSDDIR RECORD            @D3C 22819645
+ PUNCH ' INCLUDE AOS32(BLSUVSCR)' CREATE AN RPL                    @D3C 22860045
+ PUNCH ' INCLUDE AOS32(BLSUVSEN)' ENDREQ INTERFACE                 @D3C 22900445
+ PUNCH ' INCLUDE AOS32(BLSUVSER)' ERASE INTERFACE                  @D3C 22940845
+ PUNCH ' INCLUDE AOS32(BLSUVSGE)' GET INTERFACE                    @D3C 22981245
+ PUNCH ' INCLUDE AOS32(BLSUVSGU)' GET INTERFACE                    @D3C 23021645
+ PUNCH ' INCLUDE AOS32(BLSUVSMR)' MODIFY AN RPL                    @D3C 23062045
+ PUNCH ' INCLUDE AOS32(BLSUVSPO)' POINT INTERFACE                  @D3C 23102445
+ PUNCH ' INCLUDE AOS32(BLSUVSPU)' PUT INTERFACE                    @D3C 23142845
+ PUNCH ' INCLUDE AOS32(BLSUZZ2R)' REFRESH TASK VARIABLE            @D3C 23183245
+ PUNCH ' ORDER BLSUINI2,BLSRCOCL' -------------------------------- @L3C 23223645
+ PUNCH ' ORDER BLSRDUCC,BLSUBLDD,BLSUMONI,BLSRVECT'                @L3A 23264045
+ PUNCH ' ORDER BLSUVECT,BLSUMON2,BLSUMON,BLSUMONL,BLSUMOND'             23304445
+ PUNCH ' ORDER BLSUGWDM'          INSTALLATION EXIT                @01A 23344845
+ PUNCH ' ORDER BLSUZZ2R,BLSRDUCK,BLSUPARI,BLSUBLDL,BLSUPGMC'            23385245
+ PUNCH ' ORDER BLSUPGMD,BLSUPGML,BLSUPGMR,BLSUMONA,BLSUMONC'            23425645
+ PUNCH ' ORDER BLSUMONT,BLSUMONX,BLSUMPK1,BLSUMPKN,BLSUPARU'            23466045
+ PUNCH ' ORDER BLSUPUTO,BLSUPUTV,BLSUPUTA,BLSUTRMA,BLSUPRTA'            23506445
+ PUNCH ' ORDER BLSRPADS,BLSRMSGA,BLSRMSGB,BLSRMSGD,BLST01'              23546845
+ PUNCH ' ORDER BLST03,BLSTU,BLSTM,BLSTB,BLSTC'                          23587245
+ PUNCH ' ORDER BLST08,BLSRACC,BLSRACCQ,BLSRRAAR,BLSRRAGE'               23627645
+ PUNCH ' ORDER BLSRRACR,BLSRRACV,BLSUVSAR,BLSUVSCR,BLSUVSEN'            23668045
+ PUNCH ' ORDER BLSUVSER,BLSUVSGE,BLSUVSPO,BLSUVSPU,BLSRESAR'            23708445
+ PUNCH ' ORDER BLSRESCK,BLSRESGC,BLSRESGE,BLSRESGQ,BLSRESGU'            23748845
+ PUNCH ' ORDER BLSRESPU,BLSRESSA' -------------------------------- @L1C 23789245
+ PUNCH ' ORDER BLSRSAAR,BLSRSAGC,BLSRSAGE,BLSRSAG'                 @L1A 23829645
+ PUNCH ' ORDER BLSRSAGN,BLSRSAGQ,BLSRSAGU,BLSRSAPC,BLSRSAPU'            23870045
+ PUNCH ' ORDER BLSRADDP,BLSRADDR,BLSRADDS,BLSRADDT,BLSRADDU'            23910445
+ PUNCH ' ORDER BLSRADD1,BLSRADD2,BLSRADD3,BLSRADD4,BLSTF'               23950845
+ PUNCH ' ORDER BLSTR,BLSTY,BLST02,BLST04,BLST05'                        23991245
+ PUNCH ' ORDER BLST06,BLSUPRTN,BLSUPRTT,BLSUPUTC,BLSUPUTD'              24031645
+ PUNCH ' ORDER BLSUVSGU,BLSUVSMR,BLSRACCL,BLSUPUTT,BLSDVECT'            24072045
+ PUNCH ' ENTRY BLSUINI2'          --------------------------------      24112445
+ PUNCH ' NAME BLSUINI2(R)'        --------------------------------      24152845
+ PUNCH ' INCLUDE AOS32(BLSU)'     IPCS TSO COMMAND                 @D3C 24193245
+ PUNCH ' INCLUDE AOS32(BLSCAAMS)' --------------------------------      24233645
+ PUNCH ' INCLUDE AOS32(BLSCABLD)' --------------------------------      24274045
+ PUNCH ' INCLUDE AOS32(BLSCADST)' --------------------------------      24314445
+ PUNCH ' INCLUDE AOS32(BLSCADYN)' --------------------------------      24354845
+ PUNCH ' INCLUDE AOS32(BLSCAINT)' --------------------------------      24395245
+ PUNCH ' INCLUDE AOS32(BLSCALOC)' --------------------------------      24435645
+ PUNCH ' INCLUDE AOS32(BLSCAMER)' --------------------------------      24476045
+ PUNCH ' INCLUDE AOS32(BLSCAMIN)' --------------------------------      24516445
+ PUNCH ' INCLUDE AOS32(BLSCAMOD)' --------------------------------      24556845
+ PUNCH ' INCLUDE AOS32(BLSCAMPR)' --------------------------------      24597245
+ PUNCH ' INCLUDE AOS32(BLSCANAL)' --------------------------------      24637645
+ PUNCH ' INCLUDE AOS32(BLSCANLE)' --------------------------------      24678045
+ PUNCH ' INCLUDE AOS32(BLSCANLI)' --------------------------------      24718445
+ PUNCH ' INCLUDE AOS32(BLSCCLSE)' --------------------------------      24758845
+ PUNCH ' INCLUDE AOS32(BLSCENDD)' --------------------------------      24799245
+ PUNCH ' INCLUDE AOS32(BLSCERSE)' --------------------------------      24839645
+ PUNCH ' INCLUDE AOS32(BLSCFAMS)' --------------------------------      24880045
+ PUNCH ' INCLUDE AOS32(BLSCFDYN)' --------------------------------      24920445
+ PUNCH ' INCLUDE AOS32(BLSCFREE)' --------------------------------      24960845
+ PUNCH ' INCLUDE AOS32(BLSCGETT)' --------------------------------      25001245
+ PUNCH ' INCLUDE AOS32(BLSCGMF)'  --------------------------------      25041645
+ PUNCH ' INCLUDE AOS32(BLSCHOK)'  --------------------------------      25082045
+ PUNCH ' INCLUDE AOS32(BLSCOPEN)' --------------------------------      25122445
+ PUNCH ' INCLUDE AOS32(BLSCPOIN)' --------------------------------      25162845
+ PUNCH ' INCLUDE AOS32(BLSCPUTT)' --------------------------------      25203245
+ PUNCH ' INCLUDE AOS32(BLSCRECV)' --------------------------------      25243645
+ PUNCH ' INCLUDE AOS32(BLSCRFM)'  --------------------------------      25284045
+ PUNCH ' INCLUDE AOS32(BLSCRQST)' --------------------------------      25324445
+ PUNCH ' INCLUDE AOS32(BLSCRTCB)' --------------------------------      25364845
+ PUNCH ' INCLUDE AOS32(BLSCSETT)' --------------------------------      25405245
+ PUNCH ' INCLUDE AOS32(BLSCVALT)' --------------------------------      25445645
+ PUNCH ' INCLUDE AOS32(BLSDADSD)' ALLOCATE DATA SET DIRECTORY      @D3C 25486045
+ PUNCH ' INCLUDE AOS32(BLSDAPDR)' ALLOCATE PROBLEM DIRECTORY       @D3C 25526445
+ PUNCH ' INCLUDE AOS32(BLSDENQ0)' --------------------------------      25566845
+ PUNCH ' INCLUDE AOS32(BLSDFDSD)' FREE DATA SET DIRECTORY          @D3C 25607245
+ PUNCH ' INCLUDE AOS32(BLSDFPDR)' FREE PROBLEM DIRECTORY           @D3C 25647645
+ PUNCH ' INCLUDE AOS32(BLSDMSGS)' MESSAGE TEXT                     @D3C 25688045
+ PUNCH ' INCLUDE AOS32(BLSDMSG0)' ROUTE MESSAGE                    @D3C 25728445
+ PUNCH ' INCLUDE AOS32(BLSDWAIT)' --------------------------------      25768845
+ PUNCH ' INCLUDE AOS32(BLSRDUCL)' CLOSE/FREE DUMP DATA SET         @D3C 25809245
+ PUNCH ' INCLUDE AOS32(BLSUALLO)' AUTOMATIC STORAGE POOL MANAGER   @D3C 25849645
+ PUNCH ' INCLUDE AOS32(BLSUDYNA)' SVC 99 INTERFACE                 @D3C 25890045
+ PUNCH ' INCLUDE AOS32(BLSUIT01)' INTER-TASK SVC 99 (DYNALLOC)     @D3C 25930445
+ PUNCH ' INCLUDE AOS32(BLSUIT02)' INTER-TASK SVC 19 (OPEN)         @D3C 25970845
+ PUNCH ' INCLUDE AOS32(BLSUIT03)' INTER-TASK SVC 20 (CLOSE)        @D3C 26011245
+ PUNCH ' INCLUDE AOS32(BLSUPRCL)' CLOSE PRINT                      @D3C 26051645
+ PUNCH ' INCLUDE AOS32(BLSUPUTN)' ROUTE MESSAGE                    @D3C 26092045
+ PUNCH ' INCLUDE AOS32(BLSUSTAE)' MASTER TASK ESTAE EXIT           @D3C 26132445
+ PUNCH ' INCLUDE AOS32(BLSUSTAI)' PROCESSING TASK ESTAI EXIT       @D3C 26172845
+ PUNCH ' INCLUDE AOS32(BLSUTRMN)' TRANSMIT MESSAGE                 @D3C 26213245
+ PUNCH ' INCLUDE AOS32(BLSUTRMO)' TRANSMIT MESSAGE                 @D3C 26253645
+ PUNCH ' INCLUDE AOS32(BLSUTRMV)' TRANSMIT MESSAGE                 @D3C 26294045
+ PUNCH ' INCLUDE AOS32(BLSUVSCL)' CLOSE IPCSDDIR                   @D3C 26334445
+ PUNCH ' INCLUDE AOS32(BLSUZZ2C)' CREATE TASK VARIABLE             @D3C 26374845
+ PUNCH ' INCLUDE AOS32(BLSUZZ2D)' DELETE TASK VARIABLE             @D3C 26415245
+ PUNCH ' ORDER BLSU'              -------------------------------- @D3A 26455645
+ PUNCH ' ENTRY BLSU'              --------------------------------      26496045
+ PUNCH ' ALIAS IPCS'              --------------------------------      26536445
+ PUNCH ' NAME BLSU(R)'            --------------------------------      26576845
+ PUNCH ' INCLUDE AOS32(BLSDC070)' --------------------------------      26617245
+ PUNCH ' INCLUDE AOS32(BLSDC128)' --------------------------------      26657645
+ PUNCH ' INCLUDE AOS32(BLSDC600)' --------------------------------      26698045
+ PUNCH ' INCLUDE AOS32(BLSDDT00)' --------------------------------      26738445
+ PUNCH ' INCLUDE AOS32(BLSDSV00)' --------------------------------      26778845
+ PUNCH ' INCLUDE AOS32(BLSDTIME)' --------------------------------      26819245
+ PUNCH ' INCLUDE AOS32(BLSDTM00)' --------------------------------      26859645
+ PUNCH ' INCLUDE AOS32(BLSEADPR)' --------------------------------      26900045
+ PUNCH ' INCLUDE AOS32(BLSEADP1)' --------------------------------      26940445
+ PUNCH ' ENTRY BLSEADPR'          --------------------------------      26980845
+ PUNCH ' NAME BLSEADPR(R)'        --------------------------------      27021245
+ PUNCH ' INCLUDE AOS32(BLSEDELC)' --------------------------------      27061645
+ PUNCH ' INCLUDE AOS32(BLSEDEL0)' --------------------------------      27102045
+ PUNCH ' INCLUDE AOS32(BLSEDEL1)' --------------------------------      27142445
+ PUNCH ' INCLUDE AOS32(BLSFDDDP)' --------------------------------      27182845
+ PUNCH ' ENTRY BLSEDEL0'          --------------------------------      27223245
+ PUNCH ' NAME BLSEDEL0(R)'        --------------------------------      27263645
+ PUNCH ' INCLUDE AOS32(BLSDPC00)' --------------------------------      27304045
+ PUNCH ' INCLUDE AOS32(BLSDSV00)' --------------------------------      27344445
+ PUNCH ' INCLUDE AOS32(BLSELPDR)' --------------------------------      27384845
+ PUNCH ' INCLUDE AOS32(BLSELP00)' --------------------------------      27425245
+ PUNCH ' ENTRY BLSELP00'          --------------------------------      27465645
+ PUNCH ' NAME BLSELP00(R)'        --------------------------------      27506045
+ PUNCH ' INCLUDE AOS32(BLSDC070)' --------------------------------      27546445
+ PUNCH ' INCLUDE AOS32(BLSDC128)' --------------------------------      27586845
+ PUNCH ' INCLUDE AOS32(BLSDC600)' --------------------------------      27627245
+ PUNCH ' INCLUDE AOS32(BLSDDT00)' --------------------------------      27667645
+ PUNCH ' INCLUDE AOS32(BLSDSV00)' --------------------------------      27708045
+ PUNCH ' INCLUDE AOS32(BLSDTIME)' --------------------------------      27748445
+ PUNCH ' INCLUDE AOS32(BLSDTM00)' --------------------------------      27788845
+ PUNCH ' INCLUDE AOS32(BLSEADP1)' --------------------------------      27829245
+ PUNCH ' INCLUDE AOS32(BLSEMDPR)' --------------------------------      27869645
+ PUNCH ' INCLUDE AOS32(BLSEMDP1)' --------------------------------      27910045
+ PUNCH ' ENTRY BLSEMDPR'          --------------------------------      27950445
+ PUNCH ' NAME BLSEMDPR(R)'        --------------------------------      27990845
+ PUNCH ' INCLUDE AOS32(BLSDC600)' --------------------------------      28031245
+ PUNCH ' INCLUDE AOS32(BLSFAD00)' --------------------------------      28071645
+ PUNCH ' INCLUDE AOS32(BLSFAV00)' --------------------------------      28112045
+ PUNCH ' ENTRY BLSFAD00'          --------------------------------      28152445
+ PUNCH ' NAME BLSFAD00(R)'        --------------------------------      28192845
+ PUNCH ' INCLUDE AOS32(BLSELPDS)' --------------------------------      28233245
+ PUNCH ' INCLUDE AOS32(BLSFCONF)' --------------------------------      28273645
+ PUNCH ' INCLUDE AOS32(BLSFDD00)' --------------------------------      28314045
+ PUNCH ' INCLUDE AOS32(BLSFLONE)' --------------------------------      28354445
+ PUNCH ' INCLUDE AOS32(BLSFPARS)' --------------------------------      28394845
+ PUNCH ' INCLUDE AOS32(BLSFVRFY)' --------------------------------      28435245
+ PUNCH ' ENTRY BLSFDD00'          --------------------------------      28475645
+ PUNCH ' NAME BLSFDD00(R)'        --------------------------------      28516045
+ PUNCH ' INCLUDE AOS32(BLSFLD00)' --------------------------------      28556445
+ PUNCH ' ENTRY BLSFLD00'          --------------------------------      28596845
+ PUNCH ' NAME BLSFLD00(R)'        --------------------------------      28637245
+ PUNCH ' INCLUDE AOS32(BLSDC600)' --------------------------------      28677645
+ PUNCH ' INCLUDE AOS32(BLSFMD00)' --------------------------------      28718045
+ PUNCH ' ENTRY BLSFMD00'          --------------------------------      28758445
+ PUNCH ' NAME BLSFMD00(R)'        --------------------------------      28798845
+ PUNCH '/*'                                                             28900000
+.* ************************************************************         28950000
+.*                                                                      29000000
+.*  THIS SECOND LINKEDIT REQUIRES THE REUS ATTRIBUTE                    29050000
+.*  WITHOUT THE RENT ATTRIBUTE FOR THE LOAD BEING CREATED               29100000
+.*                                                                      29150000
+.* ************************************************************         29200000
+&SGCTRLC(7) SETC  '&SGCTRLC(23)'                                        29250000
+&SGCTRLC(8) SETC  '&SGCTRLC(24)'                                        29300000
+&SGCTRLC(9) SETC  'CMDLIB'                                              29350000
+&SGCTRLC(10) SETC ',LET'                                                29400000
+&SGCTRLC(12) SETC ',REUS'                                               29450045
+&SGCTRLC(13) SETC ',SIZE=(100K,20K)'                                    29500045
+         COPY SGLEDPK1                                                  29550045
+ PUNCH '//AOS32 DD DSN=SYS1.AOS32,DISP=SHR'                             29600045
+         COPY SGLEDPK2                                                  29650045
+ PUNCH ' INCLUDE AOS32(BLSUPUT)'  INITIALIZED IPCS DATA AREAS      @D3C 29700045
+ PUNCH ' ENTRY BLSUPUT'           --------------------------------      29750045
+ PUNCH ' ALIAS BLSUZZ1'           --------------------------------      29800045
+ PUNCH ' NAME BLSUPUT(R)'         --------------------------------      29850045
+ PUNCH '/*'                                                             29900045
+         MEND                                                           29950045

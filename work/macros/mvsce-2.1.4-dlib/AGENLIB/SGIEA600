@@ -1,0 +1,292 @@
+          MACRO                                                         21457601
+          SGIEA600                                                      21467601
+.*  LAST UPDATE = 04/05/74                                       Y02952 21469602
+.*              = 05/08/75                                     @Z40WPSF 21470140
+.*              =09/21/76    FIX FOR ONE SWAP DATSET REQUEST   @ZA14211 21472140
+.* CHANGE = YM08616,YM04655,M02635                                      21475640
+.*                                                                      21476640
+          COPY  SGGBLPAK                                                21477601
+          LCLA  &I,&N,&M,&J,&X,&Y,&A                           @Z40WPSM 21487640
+          LCLC  &D(2),&C(10),&H(18),&F,&P(25)                    Y02952 21497602
+          LCLC  &B,&Z(10),&W,&V,&SGRES,&BLANK                    Y02952 21519602
+          LCLC  &MASKCNT,&CONT,&PAREN                            Y02952 21521602
+          LCLC  &S(10),&MORE,&MASK                             @Z40WPSF 21524640
+&SGCTRLC(6) SETC 'PARMLIB'                                              21527601
+&SGCTRLC(7) SETC '&SGDSUNC(18)'                                         21537601
+&SGCTRLC(9) SETC '&SGDSVLC(18)'                                         21547601
+          COPY  SGUPDPAK                                                21557601
+&BLANK    SETC  ''                                               Y02952 21559602
+          PUNCH './   ADD  NAME=IEASYS00,LIST=ALL'                      21567601
+          PUNCH './   NUMBER  NEW1=01,INCR=05'                          21577601
+          AIF   (&SGSUPRA(3) EQ 0).NOREAL                        Y02952 21579602
+          PUNCH ' REAL=&SGSUPRA(3),'                             Y02952 21581602
+.NOREAL   ANOP                                                   Y02952 21583602
+          AIF   (&SGSUPRA(12) EQ 0).NOCSA                        Y02952 21585602
+          PUNCH ' CSA=&SGSUPRA(12),'                             Y02952 21585702
+.NOCSA    ANOP                                                   Y02952 21586002
+          AIF   (&SGSUPRA(11) EQ 0).NOVRR                        Y02952 21586402
+          PUNCH ' VRREGN=&SGSUPRA(11),'                          Y02952 21586802
+.NOVRR    ANOP                                                   Y02952 21596802
+          AIF   (&SGCPRGA(6) EQ 0).NOSQA                         Y02952 21616802
+          PUNCH ' SQA=&SGCPRGA(6),'                              Y02952 21626802
+.NOSQA    ANOP                                                   Y02952 21627202
+          AIF   ('&SGCPRGC(1)' EQ '&BLANK').NOAPF                Y02952 21637202
+          PUNCH ' APF=00,'                                       Y02952 21647202
+.NOAPF    ANOP                                                   Y02952 21657202
+          PUNCH ' PAGNUM=(&SGSUPRA(5),&SGSUPRA(6)),'           @Z40WPSF 21657540
+          AIF   ('&SGDUPXC' EQ '&BLANK').NODUPLX               @Z40WPSF 21657740
+          PUNCH ' DUPLEX=&SGDUPXC,'                            @Z40WPSM 21658140
+.NODUPLX ANOP                                                  @Z40WPSF 21658440
+.**************************************************************@Z40WPSF 21658540
+.*                                                             @Z40WPSF 21658640
+.*    SET UP SWAP PARAMETERS                                   @Z40WPSF 21658740
+.*                                                             @Z40WPSF 21658840
+.**************************************************************@Z40WPSF 21658940
+          AIF   ('&SGSWPDC(1)' EQ '&BLANK').NOSWAP             @Z40WPSF 21659140
+&N        SETA  1                                              @Z40WPSF 21659240
+.MORE     ANOP                                                 @Z40WPSF 21659340
+&S(&N)    SETC  '&SGSWPDC(&N)'                                 @Z40WPSM 21659640
+&N        SETA  &N+1                                           @Z40WPSF 21659940
+          AIF   (&N GT 10).NOMORE                              @Z40WPSF 21660240
+          AIF   ('&SGSWPDC(&N)' NE '&BLANK').MORE              @Z40WPSF 21660540
+.NOMORE   ANOP                                                 @Z40WPSF 21660840
+.* ALL DATASET NAME HAS A MINIMUM OF 1 AND A MAXIMUM OF 44     @Z40WPSF 21661140
+.* CHARACTERS.  &MORE AND &MASK WILL HAVE TO BE RECALCULATED   @Z40WPSF 21661440
+.* IF THE ABOVE LIMITS WERE CHANGED.                           @Z40WPSF 21661740
+&MASK     SETC  '                                           X' @Z40WPSF 21662040
+&A        SETA  1                                              @Z40WPSF 21662340
+          AIF   (&A EQ &N-1).ONESWAP  IS THIS ONE SWAP REQUEST @ZA14211 21662440
+&MORE     SETC  '&MASK'(K'&S(1),45-K'&S(1))                    @Z40WPSF 21662640
+          PUNCH ' SWAP=(&S(1),                   &MORE'        @Z40WPSF 21662940
+.MOREPCH  ANOP                                                 @Z40WPSF 21663240
+&A        SETA  &A+1                                           @Z40WPSF 21663540
+          AIF   (&A EQ &N-1).LASTSWP                           @Z40WPSF 21663840
+&MORE     SETC  '&MASK'(K'&S(&A),45-K'&S(&A))                  @Z40WPSF 21664040
+          PUNCH '               &S(&A),           &MORE'       @Z40WPSF 21664440
+          AGO   .MOREPCH                                       @Z40WPSF 21664740
+.ONESWAP  PUNCH ' SWAP=&S(1),'      ONE SWAP DATASET REQUEST   @ZA14211 21664840
+          AGO   .NOSWAP             SWAP DATASET PROC COMPLETE @ZA14211 21664940
+.LASTSWP   ANOP                                                @Z40WPSF 21665240
+          PUNCH '               &S(&A)),'                      @Z40WPSF 21665340
+.NOSWAP    ANOP                                                @Z40WPSF 21665640
+          AIF   (NOT &SGSUPRB(20)).NOF                                  21667601
+&F        SETC  'F'                                                     21677601
+.NOF      ANOP                                                          21679601
+          PUNCH ' BLDL&F.=00,'                                   Y02952 21687602
+.*********                                                              21697601
+          AIF   ('&SGRES1C(6)' NE '&BLANK').YESFIX   LINKLIB     Y02952 21707602
+.*                                  MODULES TO BE RESIDENT?      Y02952 21709602
+          AIF   ('&SGRES1C(9)' NE '&BLANK').YESFIX   SVCLIB      Y02952 21717602
+.*                                  MODLUES TO BE RESIDENT?      Y02952 21719602
+          AIF   ('&SGRES1C(12)' NE '&BLANK').YESFIX  LPALIB      Y02952 21727602
+.*                                  MODULES TO BE RESIDENT?      Y02952 21737602
+          AGO   .HARDCPY            NO USER MODULES TO BE FIXED  Y02952 21739602
+.YESFIX   PUNCH ' FIX=01,'                                       Y02952 21741602
+.*********                                                              21747601
+.*  SET UP HARDCOPY PARAMETER                                    Y02952 21749602
+.**********                                                      Y02952 21751602
+.HARDCPY  ANOP                                                          21757601
+          AIF   (&SGSCHDB(36)).SYSLOG                                   21767601
+&H(1)     SETC  '&SGSCHDC(14)'                                          21777601
+          AGO   .HARDCP2                                                21787601
+.SYSLOG   ANOP                                                          21797601
+&H(1)     SETC  'SYSLOG'                                                21807601
+.HARDCP2  ANOP                                                          21817601
+&SGSCHHB(1) SETB 1                                                      21827601
+&SGSCHHB(2) SETB 1                                                      21837601
+          AIF   (&SGSCHHB(1) AND &SGSCHHB(2) AND &SGSCHHB(3) AND &SGSCH*21847601
+               HB(4) AND &SGSCHHB(5) AND &SGSCHHB(6) AND &SGSCHHB(7) AN*21857601
+               D &SGSCHHB(8)).ALL1                                      21867601
+          AGO   .D1                                                     21877601
+.ALL1     AIF   (&SGSCHHB(9) AND &SGSCHHB(10) AND &SGSCHHB(11) AND &SGS*21887601
+               CHHB(12) AND &SGSCHHB(13) AND &SGSCHHB(14) AND &SGSCHHB(*21897601
+               15) AND &SGSCHHB(16)).ALL                                21907601
+.D1       ANOP                                                          21917601
+&D(1)     SETC  '('                                                     21927601
+&D(2)     SETC  ')'                                                     21937601
+.*********                                                              21947601
+.NEXTI    ANOP                                                          21957601
+&I        SETA  &I+1                                                    21967601
+          AIF   (&I GT 16).ROUTDUN                                      21977601
+          AIF   (NOT &SGSCHHB(&I)).NEXTI                                21987601
+&H(&I+1)  SETC  '&I.,'                                                  21997601
+&M        SETA  &I                                                      22007601
+          AGO   .NEXTI                                                  22027601
+.*********                                                              22037601
+.ROUTDUN  ANOP                                                          22047601
+&H(&M+1)  SETC  '&M'                                                    22057601
+&I        SETA  1                                                       22067601
+          AGO   .HARDCP3                                                22077601
+.ALL      ANOP                                                          22087601
+&H(2)     SETC  'ALL'                                                   22097601
+.HARDCP3  ANOP                                                          22107601
+          AIF   (&SGSCHDB(37) OR &SGSCHDB(42) OR &SGSCHDB(43)).INDIVID  22117601
+&H(18)    SETC  'NOCMDS'                                                22127601
+          AGO   .PUNCHRD                                                22137601
+.INDIVID  AIF   (NOT &SGSCHDB(37)).INCMDS                               22147601
+&H(18)    SETC  'CMDS'                                                  22157601
+          AGO   .PUNCHRD                                                22167601
+.INCMDS   AIF   (NOT &SGSCHDB(42)).STCMDS                               22177601
+&H(18)    SETC  'INCMDS'                                                22187601
+          AGO   .PUNCHRD                                                22197601
+.STCMDS   ANOP                                                          22207601
+&H(18)    SETC  'STCMDS'                                                22217601
+.PUNCHRD PUNCH ' HARDCPY=(&H(1).,&D(1)&H(2)&H(3)&H(4)&H(5)&H(6)&H(7)&H(*22227601
+               8)&H(9)&H(10)&H(11)&H(12)&H(13)&H(14)&H(15)&H(16)&H(17)&*22237601
+               D(2).,&H(18).),'                                         22247601
+.********************************************************************   22259601
+.*       SET UP PAGE PARAMETERS                                         22260001
+.********************************************************************   22261601
+.PAGE     ANOP                                                          22267601
+&P(1)     SETC  '&SGPAGDC(1)'      1ST PAGING DATA SET          YM08616 22667640
+&P(2)     SETC  '&SGPAGDC(2)'      2ND PAGING DATA SET          YM08616 22697640
+&P(3)     SETC  '&SGPAGDC(3)'      3RD PAGING DATA SET         @Z40WPSM 22727640
+&N        SETA  4                                              @Z40WPSF 22817640
+.CHECKPG  ANOP                                                   Y02952 22867602
+          AIF   ('&SGPAGDC(&N)' EQ '&BLANK').LASTPGE   ANOTHER   Y02952 22917602
+.*                                   PAGING DATA SET SPECIFIED?  Y02952 22967602
+&P(&N)    SETC  '&SGPAGDC(&N)'                                  YM08616 23037640
+&N        SETA  &N+1                                             Y02952 23117602
+          AIF   (&N LE 25).CHECKPG   UP TO 25 PAGING DATA SETS   Y02952 23167602
+.*                                   MAY BE SPECIFIED            Y02952 23177602
+.LASTPGE  ANOP                                                   Y02952 23217602
+&MASKCNT  SETC  '                                           X'  YM08616 23267602
+&J        SETA  1                                                Y02952 23317602
+&CONT     SETC  '&MASKCNT'(K'&P(1),45-K'&P(1))     SET UP       YM08616 23367602
+.*                                   CONTINUTATION CHARACTER     Y02952 23377602
+.*                                   BASED UPON LENGTH OF FIRST  Y02952 23387602
+.*                                   DATA SET NAME               Y02952 23397602
+          PUNCH ' PAGE=(&P(1),                   &CONT'   PUNCH  Y02952 23417602
+.*                                   FIRST DATA SET NAME         Y02952 23427602
+.NEXTPNC  ANOP                                                   Y02952 23467602
+&J        SETA  &J+1                                             Y02952 23517602
+          AIF   (&J EQ &N-1).OUTPGE  BRANCH IF ON LAST NAME      Y02952 23567602
+&CONT     SETC  '&MASKCNT'(K'&P(&J),45-K'&P(&J))  SET UP        YM08616 23617602
+.*                                   CONTINUATION CHARACTER      Y02952 23627602
+.*                                   BASED UPON LENGTH OF        Y02952 23637602
+.*                                   DATA SET NAME               Y02952 23647602
+          PUNCH '               &P(&J),           &CONT'  PUNCH  Y02952 23667602
+.*                                   PAGING DATA SET NAME        Y02952 23677602
+          AGO   .NEXTPNC                                         Y02952 23717602
+.OUTPGE   ANOP                                                   Y02952 23767602
+&PAREN    SETC  ')'                                              Y02952 23777602
+          PUNCH '               &P(&J)&PAREN'  PUNCH LAST NAME   Y02952 23817602
+          PUNCH './   ENDUP'                                            24907601
+          PUNCH '/*'                                                    24917601
+.*************************************************************** Y02952 24919602
+.*          SET UP FIX LIST                                      Y02952 24921602
+.*************************************************************** Y02952 24923602
+          AIF   (('&SGRES1C(6)' EQ '&BLANK') AND ('&SGRES1C(9)' EQ '&BL*24927602
+               ANK') AND ('&SGRES1C(12)' EQ '&BLANK')).NIXFIX    Y02952 24927702
+&SGCTRLC(6) SETC 'PARMLIB'                                       Y02952 24929802
+&SGCTRLC(7) SETC '&SGDSUNC(18)'                                  Y02952 24930102
+&SGCTRLC(9) SETC '&SGDSVLC(18)'                                  Y02952 24930402
+          COPY  SGUPDPAK                                         Y02952 24930702
+          PUNCH './   ADD NAME=IEAFIX01,LIST=ALL'                Y02952 24931002
+          PUNCH './   NUMBER NEW1=01,INCR=05'                    Y02952 24931302
+          AIF   ('&SGRES1C(6)' EQ '&BLANK').NOLINK   BRANCH IF   Y02952 24931602
+.*                                   NO LINKLIB MODULES TO FIX   Y02952 24941602
+&X        SETA  6                    SET INDEX FOR LINKLIB       Y02952 24981602
+.VALUES   ANOP                       PICK UP NAMES OF MODULES    Y02952 25031602
+.*                                   TO BE MADE RESIDENT         Y02952 25041602
+&Z(1)     SETC  '&SGRES1C(&X)'                                   Y02952 25081602
+&Z(2)     SETC  '&SGRES2C(&X)'                                   Y02952 25131602
+&Z(3)     SETC  '&SGRES3C(&X)'                                   Y02952 25181602
+&Z(4)     SETC  '&SGRES4C(&X)'                                   Y02952 25183602
+&Z(5)     SETC  '&SGRES5C(&X)'                                   Y02952 25185602
+&Z(6)     SETC  '&SGRES6C(&X)'                                   Y02952 25187602
+&Z(7)     SETC  '&SGRES7C(&X)'                                   Y02952 25189602
+&Z(8)     SETC  '&SGRES8C(&X)'                                   Y02952 25190002
+&Z(9)     SETC  '&SGRES9C(&X)'                                   Y02952 25190402
+&Z(10)    SETC  '&SGRESAC(&X)'                                   Y02952 25190502
+&I        SETA  1                                                Y02952 25240502
+.COMMA    ANOP                       SET UP COMMAS               Y02952 25290502
+&C(&I)    SETC  ','                                              Y02952 25340502
+&I        SETA  &I+1                                             Y02952 25390502
+          AIF   (&I LE 10).COMMA                                 Y02952 25490502
+&I        SETA  1                                                Y02952 25540502
+.TEST     AIF   ('&Z(&I)' EQ '&BLANK').BLANKIT   CHECK FOR LAST  Y02952 25590502
+.*                                   MODULE NAME IN LIST         Y02952 25600502
+&I        SETA  &I+1                                             Y02952 25640502
+          AIF   (&I GT 10).BLANKIT   MAXIMUM OF 10 NAMES         Y02952 25650502
+          AGO   .TEST                                            Y02952 25690502
+.BLANKIT  ANOP                                                   Y02952 25740502
+&Y        SETA  &I                   'Y' HOLDS NIMBER OF MODULE  Y02952 25790502
+.*                                   NAMES PLUS 1                Y02952 25800502
+          AIF   (&X EQ 9).LASTONE    WORKING ON SVCLIB?          Y02952 25840502
+          AIF   (&X EQ 6).LPANEXT    WORKING ON LINKLIB?         Y02952 25890502
+&N        SETA  9                    SET UP TO CHECK FOR ANY     Y02952 25990502
+.*                                   SVCLIB VALUES               Y02952 26040502
+          AGO   .NOCOMMA                                         Y02952 26090502
+.LPANEXT  ANOP                                                   Y02952 26140502
+&N        SETA  12                   SET UP TO CHECK FOR ANY     Y02952 26190502
+.*                                   LPALIB VALUES               Y02952 26240502
+.NOCOMMA  ANOP                                                   Y02952 26290502
+          AIF   ('&SGRES1C(&N)' NE '&BLANK').LEAVEIT    LEAVE    Y02952 26340502
+.*                                   COMMA AFTER LAST MODULE     Y02952 26350502
+.*                                   NAME IF THERE ARE MODULES   Y02952 26360502
+.*                                   FROM OTHER LIBRAIRES TO     Y02952 26370502
+.*                                   FOLLOW                      Y02952 26380502
+.LASTONE  ANOP                                                   Y02952 26390502
+&I        SETA  &I-1                                             Y02952 26440502
+.LEAVEIT  ANOP                                                   Y02952 26490502
+&C(&I)    SETC  ''                   BLANK OUT EXCESS COMMAS     Y02952 26540502
+&I        SETA  &I+1                                             Y02952 26590502
+          AIF   (&I LE 10).LEAVEIT   MAXIMUM OF TEN COMMAS       Y02952 26640502
+          AIF   (&X EQ 12).PNCHLPA   WORKING ON LPA MODULES?     Y02952 26690502
+          AIF   (&X EQ 9).PNCHSVC    WORKING ON SVCLIB MODULES?  Y02952 26740502
+ PUNCH ' SYS1.LINKLIB &Z(1)&C(1)&Z(2)&C(2)&Z(3)&C(3)&Z(4)&C(4)&Z(5)&C(5*28100802
+               )'                                                Y02952 28110802
+          AIF   (&Y LE 6).NOLINK                                 Y02952 28120802
+ PUNCH ' &Z(6)&C(6)&Z(7)&C(7)&Z(8)&C(8)&Z(9)&C(9)&Z(10)&C(10)'   Y02952 28130802
+.NOLINK   ANOP                                                   Y02952 28131202
+          AIF   ('&SGRES1C(12)' EQ '&BLANK').SVCLB               Y02952 28131702
+&X        SETA  12                   SET INDEX FOR LPALIB        Y02952 28131802
+          AGO   .VALUES              GO PICK UP LPALIB MODULES   Y02952 28132002
+.PNCHLPA  ANOP                                                   Y02952 28132402
+ PUNCH ' SYS1.LPALIB &Z(1)&C(1)&Z(2)&C(2)&Z(3)&C(3)&Z(4)&C(4)&Z(5)&C(5)*28132802
+               '                                                 Y02952 28133202
+          AIF   (&Y LE 6).SVCLB                                  Y02952 28134802
+ PUNCH ' &Z(6)&C(6)&Z(7)&C(7)&Z(8)&C(8)&Z(9)&C(9)&Z(10)&C(10)'   Y02952 28136802
+.SVCLB    ANOP                                                   Y02952 28137202
+          AIF   ('&SGRES1C(9)' EQ '&BLANK').FINITO               Y02952 28145302
+&X        SETA  9                    SET INDEX FOR SVCLIB        Y02952 28147302
+          AGO   .VALUES              GO PICK UP SVCLIB MODULES   Y02952 28151802
+.PNCHSVC  ANOP                                                   Y02952 28158302
+ PUNCH ' SYS1.SVCLIB &Z(1)&C(1)&Z(2)&C(2)&Z(3)&C(3)&Z(4)&C(4)&Z(5)&C(5)*28164802
+               '                                                 Y02952 28166802
+          AIF   (&Y LE 6).FINITO                                 Y02952 28171302
+ PUNCH ' &Z(6)&C(6)&Z(7)&C(7)&Z(8)&C(8)&Z(9)&C(9)&Z(10)&C(10)'   Y02952 28177802
+.FINITO   PUNCH './    ENDUP'                                    Y02952 28184302
+          PUNCH '/*'                                             Y02952 28190802
+.NIXFIX   ANOP                                                   Y02952 28240802
+.******************************************************          Y02952 28290802
+.*  SET UP APF LIST                                              Y02952 28340802
+.******************************************************          Y02952 28390802
+          AIF  ('&SGCPRGC(1)' EQ '&BLANK').NIXAPF                Y02952 28440802
+&SGCTRLC(6) SETC  'PARMLIB'                                      Y02952 28540802
+&SGCTRLC(7) SETC  '&SGDSUNC(18)'                                 Y02952 28590802
+&SGCTRLC(9) SETC  '&SGDSVLC(18)'                                 Y02952 28640802
+          COPY  SGUPDPAK                                         Y02952 28690802
+          PUNCH './   ADD NAME=IEAAPF00,LIST=ALL'                Y02952 28740802
+          PUNCH './   NUMBER NEW1=01,INCR=05'                    Y02952 28790802
+&B        SETC  ' '                                              Y02952 28840802
+&N        SETA  1                                                Y02952 28890802
+&C(1)     SETC  ','                                              Y02952 28940802
+.NEXTAPF  AIF   ('&SGCPRGC(&N)' EQ '&BLANK').FINAPF  ANOTHER     Y02952 28990802
+.*                                   LIBRARY NAME?               Y02952 29000802
+&W        SETC  '&SGCPRGC(&N)'       PICK UP LIBRARY NAME        Y02952 29040802
+&V        SETC  '&SGCPRAC(&N)'       PICK UP VOLID               Y02952 29090802
+&N        SETA  &N+1                 INDEX TO NEXT ENTRY         Y02952 29140802
+          AIF   (&N GT 16).OUTAPF    FOUND 16 ENTRIES            M02635 29190802
+          AIF   ('&SGCPRGC(&N)' NE '&BLANK').PUNAPF   IF ANOTHER Y02952 29240802
+.*                                   NAME TO FOLLOW,LEAVE COMMA  Y02952 29250802
+.*                                   AFTER THIS ENTRY            Y02952 29260802
+.OUTAPF   ANOP                                                   Y02952 29290802
+&C(1)     SETC  ''                   BLANK OUT COMMA             Y02952 29390802
+.PUNAPF   PUNCH ' &W&B&V&C(1)'       PUNCH ENTRY                 Y02952 29440802
+          AIF   (&N LE 16).NEXTAPF   MAXIMUN OF 16 ENTRIES       M02635 29500802
+.FINAPF   PUNCH './   ENDUP'                                     Y02952 29540802
+          PUNCH '/*'                                             Y02952 29590802
+.NIXAPF   ANOP                                                   Y02952 29640802
+          MEND                                                          29690802

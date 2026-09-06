@@ -1,0 +1,44 @@
+                MACRO                                                   02000021
+                SGHEW410                                                04000021
+                COPY SGGBLPAK                                           06000021
+&SGCTRLC(7)     SETC '&SGCTRLC(32)'                                     08000021
+&SGCTRLC(8)     SETC '&SGCTRLC(31)'                                     10000021
+&SGCTRLC(9)     SETC 'LINKLIB'                                          12000021
+&SGCTRLC(10)    SETC ',OVLY'                                            14000021
+&SGCTRLC(11)    SETC ',XCAL'                                            16000021
+&SGCTRLC(12)    SETC ',LET'                                             18000021
+.*                                                                      20000021
+                COPY SGLEDPK1           PUNCH L.E. JCL                  22000021
+   PUNCH '//AOS04 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS04 '      24000021
+                COPY SGLEDPK2                                           26000021
+   PUNCH ' INCLUDE AOS04(HEWLFROU,HEWLFAPT,HEWLFINT,HEWLFOPT) '         28000021
+   PUNCH ' INCLUDE AOS04(HEWLFINP,HEWLFESD,HEWLFEND,HEWLFSYM) '         30000021
+   PUNCH ' INCLUDE AOS04(HEWLFRCG,HEWLFSCN,HEWLFRAT,HEWLFIDR) '         32000021
+  PUNCH ' INCLUDE AOS04(HEWLFINC,HEWLFMAP,HEWLFADA) '                   34000021
+   PUNCH ' INCLUDE AOS04(HEWLFENT,HEWLFENS,HEWLFOUT,HEWLFREL) '         36000021
+   PUNCH ' INCLUDE AOS04(HEWLFSCD,HEWLFFNL,HEWLFBTP) '                  38000021
+   PUNCH ' INCLUDE SYSPUNCH(HEWLF064) '                                 40000021
+   PUNCH ' INSERT HEWLFROU,HEWLFAPT,HEWLFDEF '                          40050003
+   PUNCH ' OVERLAY ONE  *** VALID EXCLUSIVE CALL TO HEWLFINP *** '      42000021
+   PUNCH ' INSERT HEWLFINT,HEWLFOPT '                                   44000021
+ PUNCH ' OVERLAY ONE **VALID EXCL. CALLS TO HEWLFADA,IEWLCFNI,HEWLFADA' 46000021
+   PUNCH ' INSERT HEWLFINP,HEWLFESD,HEWLFEND,HEWLFSYM,HEWLFRCG '        48000021
+  PUNCH ' INSERT HEWLFSCN,HEWLFRAT,HEWLFTXT,HEWLFINC,HEWLFIDR '         50000021
+   PUNCH ' OVERLAY ONE '                                                52000021
+   PUNCH ' INSERT HEWLFMAP '                                            54000021
+ PUNCH ' OVERLAY TWO **VALID EXCL. CALLS TO HEWLFFNL,HEWLFSCD,HEWLFFNL' 56000021
+   PUNCH ' INSERT HEWLFADA,HEWLFENT,HEWLFENS,HEWLFOUT'                  58000021
+   PUNCH ' OVERLAY TWO   *** VALID EXCLUSIVE CALL TO HEWLFFNL *** '     60000021
+   PUNCH ' INSERT HEWLFREL,HEWLFSCD,HEWLFSIO '                          62000021
+   PUNCH ' OVERLAY TWO   *** VALID EXCLUSIVE CALL TO HEWLENAM *** '     64000002
+   PUNCH ' INSERT HEWLFFNL,HEWLFBTP '                                   66000002
+   PUNCH ' ENTRY HEWLFROU '                                             68000021
+   PUNCH ' ALIAS IEWL '                                                 70000021
+   PUNCH ' ALIAS IEWLF440 '                                             70050002
+   PUNCH ' ALIAS IEWLF880 '                                             70100002
+   PUNCH ' ALIAS IEWLF128 '                                             70150002
+   PUNCH ' ALIAS HEWL '                                                 71000021
+   PUNCH ' ALIAS LINKEDIT '                                             72000021
+   PUNCH ' NAME HEWLF064(R)'                                            74000021
+   PUNCH '/* '                                                          76000021
+               MEND                                                     78000021

@@ -1,0 +1,50 @@
+         MACRO                                                          00050000
+         SGICG500                                                       00100000
+.* /* START OF SPECIFICATIONS ****                                      00150000
+.*                                                                      00200000
+.*01  MODULE-NAME = SGICG500                                            00250000
+.*                                                                      00300000
+.*01  DESCRIPTIVE-NAME = MSCTC AND TRACE REPORTS VS/2 SYSGEN            00350000
+.*                       LINKLIB COPY MACRO                             00400000
+.*                                                                      00450000
+.*01  STATUS = OS/VS2 RELEASE 3 LEVEL 0                                 00500000
+.*                                                                      00550000
+.*01  FUNCTION = SGICG500 COPIES MSC TABLE CREATE MODULES               00600000
+.*               INTO THE TARGET SYS1.LINKLIB (VS2) FROM THE            00650000
+.*               DISTRIBUTION LIBRARY SYS1.AOSD0                        00700000
+.*                                                                      00750000
+.*               SGICG500 COPIES TRACE REPORT MODULES                   00760000
+.*               INTO THE TARGET SYS1.LINKLIB (VS2) FROM THE            00770000
+.*               DISTRIBUTION LIBRARY SYS1.AOSD0                        00780000
+.*                                                                      00790000
+.*01  OPERATION = VIA THE ASSEMBLER PUNCH COMMAND, IEBCOPY              00800000
+.*                SELECT STATEMENTS ARE GENERATED                       00850000
+.*                FOR THE MODULES                                       00900000
+.*                                                                      00950000
+.*01  MODULE-TYPE = MACRO                                               01000000
+.*02    PROCESSOR = ASSEMBLER XF                                        01050000
+.*02    MACRO-SIZE = 16 STATEMENTS                                      01100000
+.*                                                                      01150000
+.*01  OUTPUT = IEBCOPY JCL AND CONTROL STATEMENTS                       01200000
+.*                                                                      01250000
+.*01  INNER-MACRO = SGGBLPAK - DEFINE SYSTEM GLOBALS                    01300000
+.*                                                                      01450000
+.*01  MESSAGES = NONE                                                   01500000
+.*                                                                      01550000
+.**** END OF SPECIFICATIONS ***/                                        01600000
+         COPY  SGGBLPAK                DEFINE SYSTEM GLOBAL VARIABLES   01650000
+.* COPY MSCTC COMPONENT MODULES                                         01700000
+ PUNCH ' COPY   OUTDD=LINKLIB,INDD=AOSD0'                               01750000
+ PUNCH ' SELECT MEMBER=(ICGDSMSG,ICGDSSCN,ICGDSS01,ICGDSS02)'           01800000
+ PUNCH ' SELECT MEMBER=(ICGDSS04,ICGDSS05,ICGDSS06,ICGDSS08)'           01810000
+ PUNCH ' SELECT MEMBER=(ICGDSS09,ICGDSS99,ICGDSANL,ICGDSA01)'           01820000
+ PUNCH ' SELECT MEMBER=(ICGDSA02,ICGDSA04,ICGDSA05,ICGDSA06)'           01830000
+ PUNCH ' SELECT MEMBER=(ICGDSA07,ICGDSA08,ICGDSA09,ICGDSBLD)'           01840000
+ PUNCH ' SELECT MEMBER=(ICGDSB01,ICGDSB03,ICGDSB05,ICGDSB06)'           01842000
+ PUNCH ' SELECT MEMBER=(ICGDSB07,ICGDSB08,ICGDSB09,ICGDSB10)'           01844000
+ PUNCH ' SELECT MEMBER=(ICGDSB11,ICGDSB12,ICGDSB13,ICGDSB14)'           01846000
+ PUNCH ' SELECT MEMBER=(ICGDSB15,ICGDSB16,ICGDSB18,ICGDSB19)'           01848000
+ PUNCH ' SELECT MEMBER=(ICGDSB20)'                                      01848400
+.* COPY TRACE REPORT COMPONENT MODULES                                  01850000
+ PUNCH ' SELECT MEMBER=(ICGTRINT,ICGTRSUM,ICGTRDST,ICGTRVID)'           01900000
+         MEND                                                           01950000

@@ -1,0 +1,60 @@
+         MACRO                                                          00050000
+         SGIKT49C                                                       00100000
+         AGO  .START                                                    00150000
+.* /* START OF SPECIFICATIONS ****                                      00200000
+.*                                                                      00250000
+.*01*  MODULE-NAME = SGIKT49C                                           00300000
+.*                                                                      00350000
+.*01*  DESCRIPTIVE-NAME = SYSGEN MACRO TSO/VTAM                         00400000
+.*                                                                      00450000
+.*                                                                      00500000
+.*01*  COPYRIGHT = NONE                                                 00550000
+.*                                                                      00600000
+.*01*  STATUS = OS/VS2  SU 58  TSO/VTAM LEVEL 2.0                       00650000
+.*                                                                      00700000
+.*01*  FUNCTION = THIS MARCO IS CALLED BY SGIKJ4EC.  IT WILL INCLUDE    00750000
+.*                CSECT'S FOR LOAD MODULE IGC0009C THAT PERTAIN TO      00800000
+.*                TSO/VTAM.                                             00850000
+.*                                                                      00900000
+.*01*  NOTES = NONE                                                     00950000
+.*                                                                      01000000
+.*02*    CHARACTER-CODE-DEPENDENCIES = NONE                             01050000
+.*                                                                      01100000
+.*02*    DEPENDENCIES = MVS SYSTEM ONLY                                 01150000
+.*                                                                      01200000
+.*02*    RESTRICTIONS = NONE                                            01250000
+.*                                                                      01300000
+.*02*    REGISTER-CONVENTIONS = NONE                                    01350000
+.*                                                                      01400000
+.*02*    PATCH-LABEL = NONE                                             01450000
+.*                                                                      01500000
+.*01*  MODULE-TYPE = MACRO                                              01550000
+.*                                                                      01600000
+.*02*    PROCESSOR = ASSEMBLER                                          01650000
+.*                                                                      01700000
+.*02*    MACRO-SIZE =         5        STATEMENTS                       01750000
+.*                                                                      01800000
+.*02*    PARAMETER-RECEIVED = NONE                                      01850000
+.*                                                                      01900000
+.*01*  EXTERNAL-REFERENCES = NONE                                       01950000
+.*                                                                      02000000
+.*02*    DATA-SETS = NONE                                               02050000
+.*                                                                      02100000
+.*02*    DATA-AREA = NONE                                               02150000
+.*                                                                      02200000
+.*01*  TABLES = NONE                                                    02250000
+.*                                                                      02300000
+.*01*  INNER-MACROS = NONE                                              02350000
+.*                                                                      02400000
+.*01*  SYSTEM-MACROS = NONE                                             02450000
+.*                                                                      02500000
+.*01*  CHANGE-ACTIVITY = SEPT 1977 - TIOC/VTIOC SPLIT          @ZA25677 02550000
+.*     @ZA36932 - ADDING IKT0009C TO LOAD MODULE IGC0009C.              02570000
+.*     @ZA38661 - NEEDED TO SUP UZ23543, NO CHANGES HERE                02580000
+.*                                                                      02600000
+.**** END OF SPECIFICATIONS ***/                                        02650000
+.START   ANOP                                                           02700000
+         GBLC  &CI555                                          @ZA25677 02750000
+ PUNCH ' INCLUDE &CI555.(IKT0009C,IKTVTGET,IKTVTPUT,IKTASTPT)' @ZA36932 02800000
+ PUNCH ' INCLUDE &CI555.(IKTXMTPT,IKT93EST)'                   @ZA36932 02850000
+         MEND                                                   Z40DSVN 02900000

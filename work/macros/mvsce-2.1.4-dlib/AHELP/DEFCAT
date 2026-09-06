@@ -1,0 +1,197 @@
+)F FUNCTION -                                                           00600002
+  THE DEFINE COMMAND CAN BE USED TO DEFINE USER CATALOGS.               01200002
+)X SYNTAX -                                                             01800002
+         DEFINE    USERCATALOG                                          02400002
+                   (  NAME('ENTRYNAME')                                 03000002
+                      FILE('DNAME')                                     03600002
+                      VOLUME('VOLSER')                                  04200002
+                      TRACKS('PRIMARY' 'SECONDARY') |                   04800002
+                         CYLINDERS('PRIMARY' 'SECONDARY') |             05400002
+                         RECORDS('PRIMARY' 'SECONDARY')                 06000002
+                      BUFFERSPACE('SIZE')                               06600002
+                      MASTERPW('PASSWORD')                              07200002
+                      CONTROLPW('PASSWORD')                             07800002
+                      UPDATEPW('PASSWORD')                              08400002
+                      READPW('PASSWORD')                                09000002
+                      CODE('CODE')                                      09600002
+                      ATTEMPTS('NUMBER')                                10200002
+                      AUTHORIZATION('ENTRYPOINT' 'STRING')              10800002
+                      OWNER('OWNERID')                                  11400002
+                      TO('DATE') | FOR('DAYS')                          12000002
+                      WRITECHECK | NOWRITECHECK                         12600002
+                      DESTAGEWAIT | NODESTAGEWAIT                       12650003
+                      RECOVERABLE | NOTRECOVERABLE                      12700003
+                      MODEL('ENTRYNAME/PASSWORD' 'CATNAME/PASSWORD'))   13200003
+                   DATA('OPTIONS')                                      14400002
+                   INDEX('OPTIONS')                                     15000002
+                   CATALOG('MASTERCATNAME/PASSWORD')                    15600002
+  REQUIRED - USERCATALOG, NAME, VOLUME AND TRACKS|CYLINDERS|RECORDS     16200002
+  DEFAULTS - NOWRITECHECK                                               16800002
+             NODESTAGEWAIT                                              16900003
+             NOTRECOVERABLE                                             16950003
+             BUFFERSPACE(3072)                                          17400002
+  ABBREVIATIONS -                                                       18000002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 18600002
+             USERCATALOG          UCAT                                  19200002
+             TRACKS               TRK                                   19800002
+             BUFFERSPACE          BUFSPC OR BUFSP                       20400002
+             MASTERPW             MRPW                                  21000002
+             CONTROLPW            CTLPW                                 21600002
+             UPDATEPW             UPDPW                                 22200002
+             READPW               RDPW                                  22800002
+             WRITECHECK           WCK                                   23400002
+             NOWRITECHECK         NWCK                                  24000002
+             DESTAGEWAIT          DSTGW                                 24050003
+             NODESTAGEWAIT        NDSTGW                                24100003
+             RECOVERABLE          RVBL                                  24150003
+             NOTRECOVERABLE       NRVBL                                 24200003
+             INDEX                IX                                    24300002
+)O OPERANDS -                                                           24600002
+))USERCATALOG                                                           25200002
+           - SPECIFIES THAT A USER CATALOG IS TO BE DEFINED.            25800002
+))NAME('ENTRYNAME')                                                     26400002
+           - SPECIFIES THE NAME OF THE CATALOG BEING DEFINED.           27000002
+  'ENTRYNAME'                                                           27600002
+           - NAME OF THE CATALOG BEING DEFINED.                         28200002
+))FILE('DNAME')                                                         28800002
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES THE 29400002
+             DEVICE AND VOLUME TO BE USED FOR THE CATALOG.              30000002
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE DEVICE AND    30600002
+             VOLUME TO BE USED FOR THE CATALOG.                         31200002
+))VOLUME('VOLSER')                                                      31800002
+           - SPECIFIES THE VOLUME THAT IS TO CONTAIN THE CATALOG.       32400002
+  'VOLSER' - VOLUME SERIAL NUMBER OF THE VOLUME THAT IS TO CONTAIN THE  33000002
+             CATALOG.                                                   33600002
+))TRACKS('PRIMARY' 'SECONDARY')                                         34200002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  34800002
+             TRACKS.                                                    35400002
+  'PRIMARY'                                                             36000002
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                36600002
+  'SECONDARY'                                                           37200002
+           - SIZE OF THE SECONDARY EXTENT TO BE ALLOCATED.              37800002
+  REQUIRED - 'PRIMARY'                                                  38400002
+))CYLINDERS('PRIMARY' 'SECONDARY')                                      39000002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  39600002
+             CYLINDERS.                                                 40200002
+  'PRIMARY'                                                             40800002
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                41400002
+  'SECONDARY'                                                           42000002
+           - SIZE OF THE SECONDARY EXTENT TO BE ALLOCATED.              42600002
+  REQUIRED - 'PRIMARY'                                                  43200002
+))RECORDS('PRIMARY' 'SECONDARY')                                        43800002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  44400002
+             RECORDS.                                                   45000002
+  'PRIMARY'                                                             45600002
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                46200002
+  'SECONDARY'                                                           46800002
+           - SIZE OF THE SECONDARY EXTENT TO BE ALLOCATED.              47400002
+  REQUIRED - 'PRIMARY'                                                  48000002
+))BUFFERSPACE('SIZE')                                                   48600002
+           - SPECIFIES THE MINIMUM SPACE TO BE PROVIDED FOR BUFFERS     49200002
+             WHEN USING THE CATALOG.                                    49800002
+  'SIZE'   - AMOUNT OF SPACE TO BE PROVIDED FOR BUFFERS.                50400002
+))MASTERPW('PASSWORD')                                                  51000002
+           - SPECIFIES A MASTER LEVEL PASSWORD FOR THE CATALOG BEING    51600002
+             DEFINED.                                                   52200002
+  'PASSWORD'                                                            52400002
+           - MASTER LEVEL PASSWORD FOR THE CATALOG BEING DEFINED.       52600002
+))CONTROLPW('PASSWORD')                                                 52800002
+           - SPECIFIES A CONTROL LEVEL PASSWORD FOR THE CATALOG BEING   53400002
+             DEFINED.                                                   54000002
+  'PASSWORD'                                                            54200002
+           - CONTROL LEVEL PASSWORD FOR THE CATALOG BEING DEFINED.      54400002
+))UPDATEPW('PASSWORD')                                                  54600002
+           - SPECIFIES AN UPDATE LEVEL PASSWORD FOR THE CATALOG BEING   55200002
+             DEFINED.                                                   55800002
+  'PASSWORD'                                                            56000002
+           - UPDATE LEVEL PASSWORD FOR THE CATALOG BEING DEFINED.       56200002
+))READPW('PASSWORD')                                                    56400002
+           - SPECIFIES A READ LEVEL PASSWORD FOR THE CATALOG BEING      57000002
+             DEFINED.                                                   57600002
+  'PASSWORD'                                                            57800002
+           - READ LEVEL PASSWORD FOR THE CATALOG BEING DEFINED.         58000002
+))CODE('CODE')                                                          58200002
+           - SPECIFIES A CODE NAME FOR THE CATALOG BEING DEFINED.       58800002
+  'CODE'   - CODE NAME FOR THE CATALOG BEING DEFINED.                   59400002
+))ATTEMPTS('NUMBER')                                                    60000002
+           - SPECIFIES THE MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY 60600002
+             TO ENTER A CORRECT PASSWORD IN RESPONSE TO A PROMPTING     61200002
+             MESSAGE.                                                   61800002
+  'NUMBER' - MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY TO ENTER A    62400002
+             CORRECT PASSWORD IN RESPONSE TO A PROMPTING MESSAGE.       63000002
+))AUTHORIZATION('ENTRYPOINT' 'STRING')                                  63600002
+           - SPECIFIES THAT A USER-SECURITY-VERIFICATION ROUTINE (USVR) 64200002
+             IS AVAILABLE FOR ADDITIONAL SECURITY VERIFICATION.         64800002
+  'ENTRYPOINT'                                                          65400002
+           - ENTRY POINT OF THE USVR.                                   66000002
+  'STRING' - SPECIFIES INFORMATION TO BE PASSED TO THE USVR WHEN IT     66600002
+             RECEIVES CONTROL TO VERIFY AUTHORIZATION.                  67200002
+  REQUIRED - 'ENTRYPOINT'                                               67500002
+))OWNER('OWNERID')                                                      67800002
+           - SPECIFIES THE IDENTIFICATION OF THE OWNER OF THE CATALOG   68400002
+             BEING DEFINED.                                             69000002
+  'OWNERID'                                                             69600002
+           - IDENTIFICATION OF THE OWNER OF THE CATALOG BEING DEFINED.  70200002
+))TO('DATE')                                                            70800002
+           - SPECIFIES THE RETENTION PERIOD FOR THE CATALOG BEING       71400002
+             DEFINED.                                                   72000002
+  'DATE'   - DATE (YYDDD) THROUGH WHICH THE CATALOG BEING DEFINED IS TO 72600002
+             BE KEPT.                                                   73200002
+))FOR('DAYS')                                                           73800002
+           - SPECIFIES THE RETENTION PERIOD FOR THE CATALOG BEING       74400002
+             DEFINED.                                                   75000002
+  'DAYS'   - NUMBER OF DAYS FOR WHICH THE CATALOG BEING DEFINED IS TO   75600002
+             BE KEPT.                                                   76200002
+))WRITECHECK                                                            76800002
+           - THE CATALOG IS TO BE CHECKED BY A MACHINE ACTION CALLED    77400002
+             'WRITE-CHECK' WHEN A RECORD IS WRITTEN INTO IT.            78000002
+))NOWRITECHECK                                                          78600002
+           - THE CATALOG IS NOT TO BE CHECKED BY A MACHINE ACTION       79200002
+             CALLED 'WRITE-CHECK' WHEN A RECORD IS WRITTEN INTO IT.     79800002
+))DESTAGEWAIT                                                           79850003
+           - INDICATES THAT DESTAGING IS TO BE COMPLETED BEFORE         79900003
+             CONTROL IS RETURNED FROM VSAM TO THE PROGRAM THAT ISSUES   79950003
+             THE CLOSE MACRO.                                           80000003
+))NODESTAGEWAIT                                                         80050003
+           - INDICATES THAT NOTIFICATION OF UNSUCCESSFUL DESTAGING IS   80100003
+             TO BE MADE ONLY BY A MESSAGE TO THE OPERATOR AND TO        80150003
+             THE MESSAGES (SYSPRINT) DATA SET.                          80200003
+))RECOVERABLE                                                           80250003
+           - SPECIFIES THAT A CATALOG RECOVERY SPACE IS TO BE           80300003
+             CREATED ON EACH VOLUME OWNED BY THE CATALOG.               80350003
+))NOTRECOVERABLE                                                        80360003
+           - SPECIFIES THAT NO CATALOG RECOVERY SPACE IS TO BE          80370003
+             CREATED ON VOLUMES OWNED BY THE CATALOG.                   80380003
+))MODEL('ENTRYNAME/PASSWORD' 'CATNAME/PASSWORD')                        80400003
+           - SPECIFIES THAT AN EXISTING CATALOG IS TO BE USED AS A      81000002
+             MODEL FOR THE USER CATALOG BEING DEFINED.                  81600002
+  'ENTRYNAME'                                                           82200002
+           - NAME OF THE CATALOG TO BE USED AS A MODEL.                 82800002
+  'PASSWORD'                                                            83400002
+           - PASSWORD OF THE CATALOG TO BE USED AS A MODEL.             84000002
+  'CATNAME'                                                             84600002
+           - NAME OF THE CATALOG TO BE USED AS A MODEL.                 85200002
+  'PASSWORD'                                                            85800002
+           - PASSWORD OF THE 'CATNAME' CATALOG.                         86400002
+  REQUIRED - 'ENTRYNAME'                                                88200002
+))DATA('OPTIONS')                                                       88250002
+           - SPECIFIES ATTRIBUTES OF THE DATA COMPONENT OF THE CATALOG. 88300002
+  'OPTIONS'                                                             88350002
+           - THE PARAMETERS THAT CAN BE SPECIFIED ARE - TRACKS,         88400002
+             CYLINDERS, RECORDS, WRITECHECK, NOWRITECHECK,              88450003
+             DESTAGEWAIT, NODESTAGEWAIT, RECOVERABLE, NOTRECOVERABLE    88500003
+             AND BUFFERSPACE.                                           88510003
+))INDEX('OPTIONS')                                                      88550002
+           - SPECIFIES ATTRIBUTES OF THE INDEX COMPONENT OF THE         88600002
+             CATALOG.                                                   88620002
+  'OPTIONS'                                                             88650002
+           - THE PARAMETERS THAT CAN BE SPECIFIED ARE - TRACKS,         88700002
+             CYLINDERS, RECORDS, WRITECHECK ,NOWRITECHECK,              88750003
+             DESTAGEWAIT AND NODESTAGEWAIT.                             88760003
+))CATALOG('MASTERCATNAME/PASSWORD')                                     88800002
+           - SPECIFIES THE NAME AND PASSWORD OF THE MASTER CATALOG.     89400002
+  'MASTERCATNAME'                                                       90000002
+           - NAME OF THE MASTER CATALOG.                                90600002
+  'PASSWORD'                                                            91200002
+           - PASSWORD OF THE MASTER CATALOG.                            91800002
+  REQUIRED - 'MASTERCATNAME'                                            92400002

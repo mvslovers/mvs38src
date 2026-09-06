@@ -1,0 +1,9 @@
+               MACRO                                                    00050002
+               SGIHG501                                                 00100002
+.* UTILTY SYSGEN MACRO FOR AOS                                          00150002
+.* D 002500,003500-004000                                       YL026VD 00160002
+.* COPY SVC39 TO LPALIB UNCONDITIONALLY                         YL026VD 00170002
+               COPY          SGGBLPAK  DEFINE SYSTEM GLOBALS            00200002
+ PUNCH ' COPY OUTDD=LPALIB,INDD=AOSU0'                                  00300002
+.B2 PUNCH ' SELECT MEMBER=(IGC0003I)'                                   00450002
+               MEND                                                     00500002

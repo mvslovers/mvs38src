@@ -1,0 +1,61 @@
+)F FUNCTION -                                                           01000002
+  THE CNVTCAT COMMAND CAUSES ENTRIES IN AN OS CATALOG TO BE CONVERTED   02000002
+  TO ENTRIES IN AN EXISTING VS2 MASTER OR USER CATALOG.                 03000002
+)X SYNTAX -                                                             04000002
+         CNVTCAT  INFILE('DNAME') | INDATASET('ENTRYNAME')              05000002
+                  CATALOG('CATNAME/PASSWORD')                           06000003
+                  MASTERCATALOG('CATNAME/PASSWORD')                     07000002
+                  CVOLEQUATES(('CATNAME'('VOLSER' ...)) ...)            08000002
+                  LIST | NOLIST                                         09000002
+  REQUIRED - INFILE('DNAME') | INDATASET('ENTRYNAME')                   10000002
+             MASTERCATALOG (IF CVOLEQUATES SPECIFIED)                   10500002
+  DEFAULTS - LIST                                                       11000002
+  ABBREVIATIONS -                                                       12000002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 13000002
+             INFILE                IFILE                                14000002
+             INDATASET             IDS                                  15000002
+             MASTERCATALOG         MCAT OR MRCAT                        17000002
+             CVOLEQUATES           CVEQU                                18000002
+             NOLIST                NLIST                                19000002
+)O OPERANDS -                                                           20000002
+))INFILE('DNAME')                                                       21000002
+           - SPECIFIES THE NAME OF A DD STATEMENT THAT IDENTIFIES THE   22000002
+             OS CATALOG THAT IS TO BE CONVERTED.                        23000002
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE OS CATALOG    24000003
+             THAT IS TO BE CONVERTED.                                   25000002
+))INDATASET('ENTRYNAME')                                                26000002
+           - SPECIFIES THE NAME OF THE OS CATALOG THAT IS TO BE         27000002
+             CONVERTED.                                                 28000002
+  'ENTRYNAME'                                                           29000002
+           - NAME OF THE OS CATALOG THAT IS TO BE CONVERTED.            30000002
+))CATALOG('CATNAME/PASSWORD')                                           31000003
+           - SPECIFIES THE NAME OF A CATALOG THAT IS TO RECEIVE THE     32000002
+             CONVERTED ENTRIES.                                         33000002
+  'CATNAME'                                                             34000002
+           - NAME OF A CATALOG THAT IS TO RECEIVE THE CONVERTED         35000002
+             ENTRIES.                                                   36000002
+  'PASSWORD'                                                            37000002
+           - PASSWORD OF THE CATALOG THAT IS TO RECEIVE THE CONVERTED   38000002
+             ENTRIES.                                                   39000002
+  REQUIRED - 'CATNAME'                                                  42000002
+))MASTERCATALOG('CATNAME/PASSWORD')                                     43000002
+           - SPECIFIES THE NAME OF THE MASTER CATALOG INTO WHICH        44000002
+             ANY ALIASES FOR USER CATALOGS ARE TO BE PLACED.            45000002
+  'CATNAME'                                                             46000002
+           - NAME OF MASTER CATALOG INTO WHICH ANY ALIASES FOR          47000002
+             USER CATALOGS ARE TO BE PLACED.                            48000002
+  'PASSWORD'                                                            49000002
+           - PASSWORD OF THE MASTER CATALOG.                            50000002
+  REQUIRED - 'CATNAME'                                                  51000002
+))CVOLEQUATES(('CATNAME'('VOLSER' ...)) ...)                            52000002
+           - SPECIFIES THE NAME OF AN EXISTING VSAM CATALOG AND THE     53000002
+             VOLUME SERIAL NUMBERS OF ONE OR MORE CVOL'S FOR WHICH      54000002
+             CVPE'S ARE TO BE CONVERTED.                                55000002
+  'CATNAME'                                                             56000002
+           - NAME OF AN EXISTING VSAM CATALOG.                          57000002
+  'VOLSER' - THE VOLUME SERIAL NUMBER(S) OF ONE OR MORE CVOL'S FOR      58000002
+             WHICH ENTRIES HAVE BEEN OR ARE TO BE CONVERTED.            59000002
+))LIST     - SPECIFIES THAT ENTRIES ARE TO BE LISTED AFTER THEY ARE     60000002
+             CONVERTED.                                                 61000002
+))NOLIST   - SPECIFIES THAT ENTRIES ARE NOT TO BE LISTED AFTER THEY     62000002
+             ARE CONVERTED.                                             63000002

@@ -1,0 +1,94 @@
+         MACRO                                                          00010000
+         SGIKT400                                                       00012000
+.* /* START OF SPECIFICATIONS ****                                      00014000
+.*                                                                      00020000
+.*01*  MODULE-NAME = SGIKT400                                           00030000
+.*                                                                      00040000
+.*01*  DESCRIPTIVE-NAME = SYSGEN MACRO FOR TCAS                         00050000
+.*                                                                      00055000
+.*                                                                      00066000
+.*01*  COPYRIGHT = NONE                                                 00074000
+.*                                                                      00082000
+.*01*  STATUS = OS/VS2  SU 13                                           00100000
+.*                                                                      00108000
+.*01*  FUNCTION = THIS MARCO IS CALLED BY THE GENERATE MACRO.  IT WILL  00116000
+.*                DO LINK EDITING OF MODULES ON SYS1.AOST3 INTO         00124000
+.*                SYS1.LINKLIB                                          00132000
+.*                                                                      00150000
+.*01*  NOTES = NONE                                                     00158000
+.*                                                                      00166000
+.*02*    CHARACTER-CODE-DEPENDENCIES = NONE                             00174000
+.*                                                                      00182000
+.*02*    DEPENDENCIES = MVS SYSTEM ONLY                                 00200000
+.*                                                                      00208000
+.*02*    RESTRICTIONS = NONE                                            00216000
+.*                                                                      00224000
+.*02*    REGISTER-CONVENTIONS = NONE                                    00232000
+.*                                                                      00250000
+.*02*    PATCH-LABEL = NONE                                             00258000
+.*                                                                      00266000
+.*01*  MODULE-TYPE = MACRO                                              00274000
+.*                                                                      00282000
+.*02*    PROCESSOR = ASSEMBLER                                          00300000
+.*                                                                      00308000
+.*02*    MACRO-SIZE =         45        STATEMENTS                      00316000
+.*                                                                      00324000
+.*02*    PARAMETER-RECEIVED = NONE                                      00332000
+.*                                                                      00350000
+.*01*  EXTERNAL-REFERENCES = NONE                                       00358000
+.*                                                                      00366000
+.*02*    DATA-SETS = NONE                                               00374000
+.*                                                                      00382000
+.*02*    DATA-AREA = NONE                                               00400000
+.*                                                                      00408000
+.*01*  TABLES = NONE                                                    00416000
+.*                                                                      00424000
+.*01*  INNER-MACROS = NONE                                              00432000
+.*                                                                      00450000
+.*01*  SYSTEM-MACROS = NONE                                             00460000
+.*                                                                      00470000
+.*01*  CHANGE-ACTIVITY = NONE                                           00480000
+.*                                                                      00490000
+.**** END OF SPECIFICATIONS ***/                                        00500000
+         COPY  SGGBLPAK                                                 00524000
+&SGCTRLC(7)  SETC  '&SGCTRLC(32)'     SET VOLUME FOR LINKLIB            00532000
+&SGCTRLC(8)  SETC  '&SGCTRLC(31)'     SET UNIT NAME FOR LINKLIB         00550000
+&SGCTRLC(9)  SETC  'LINKLIB'          DSNAME FOR OUTPUT                 00558000
+&SGCTRLC(6)  SETC  ''                 SET NULL PROG NAME                00566000
+&SGCTRLC(10) SETC  ',LET'             PARM FIELD OPTIONS                00574000
+&SGCTRLC(11) SETC  ',REUS'                                              00582000
+         COPY  SGLEDPK1                                                 00600000
+  PUNCH '//AOST3 DD DISP=SHR,DSNAME=SYS1.AOST3'                         00608000
+         COPY SGLEDPK2                                                  00616000
+  PUNCH ' INCLUDE AOST3(IKTCAS00)'                                      00624000
+  PUNCH ' NAME  IKTCAS00(R)'                                            00632000
+  PUNCH ' INCLUDE AOST3(IKTCAS20)'                                      00650000
+  PUNCH ' INCLUDE AOST3(IKTCAS21)'                                      00658000
+  PUNCH ' INCLUDE AOST3(IKTCAS22)'                                      00666000
+  PUNCH ' INCLUDE AOST3(IKTCAS23)'                                      00674000
+  PUNCH ' INCLUDE AOST3(IKTCAS24)'                                      00682000
+  PUNCH ' INCLUDE AOST3(IKTCASOX)'                                      00700000
+  PUNCH ' INCLUDE AOST3(IKTCASCX)'                                      00708000
+  PUNCH ' ENTRY IKTCAS20'                                               00716000
+  PUNCH ' NAME  IKTCAS20(R)'                                            00724000
+  PUNCH ' INCLUDE AOST3(IKTCAS30)'                                      00732000
+  PUNCH ' INCLUDE AOST3(IKTCAS31)'                                      00750000
+  PUNCH ' INCLUDE AOST3(IKTCAS32)'                                      00758000
+  PUNCH ' INCLUDE AOST3(IKTCAS33)'                                      00766000
+  PUNCH ' ENTRY IKTCAS30'                                               00774000
+  PUNCH ' NAME  IKTCAS30(R)'                                            00782000
+  PUNCH ' INCLUDE AOST3(IKTCAS40)'                                      00800000
+  PUNCH ' INCLUDE AOST3(IKTCAS41)'                                      00808000
+  PUNCH ' INCLUDE AOST3(IKTCAS42)'                                      00816000
+  PUNCH ' ENTRY IKTCAS40'                                               00824000
+  PUNCH ' NAME  IKTCAS40(R)'                                            00832000
+  PUNCH ' INCLUDE AOST3(IKTCAS51)'                                      00850000
+  PUNCH ' INCLUDE AOST3(IKTCAS52)'                                      00858000
+  PUNCH ' INCLUDE AOST3(IKTCAS53)'                                      00866000
+  PUNCH ' INCLUDE AOST3(IKTCAS54)'                                      00874000
+  PUNCH ' INCLUDE AOST3(IKTCAS55)'                                      00882000
+  PUNCH ' INCLUDE AOST3(IKTCAS56)'                                      00900000
+  PUNCH ' ENTRY IKTCAS51'                                               00908000
+  PUNCH ' NAME  IKTCAS51(R)'                                            00916000
+  PUNCH '/*'                                                            00924000
+         MEND                                                           00932000

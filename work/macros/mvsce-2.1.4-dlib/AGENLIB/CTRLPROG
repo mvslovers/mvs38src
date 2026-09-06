@@ -1,0 +1,365 @@
+         MACRO                                                          00200002
+         CTRLPROG   &OPTIONS=,&SQA=,&APFLIB=,&VRREGN=,&REAL=,          *00400002
+               &TZ=,&ASCII=EXCLUDE,&CSA=,&STORAGE=0,&WARN=0,           *00600002
+               &DEBTINC=80,&DEBTSZE=80,&ACRCODE=YES,                   *00800004
+               &PAGNUM=(1,1)                                    Z40WSVN 00810004
+         COPY  SGSYSPAK                                                 01000002
+         LCLA  &A,&I,&X,&K,&N                                           01200002
+         LCLB  &T                                                       01400002
+         LCLC  &M,&PM                                                   01600002
+.***** START OF SPECIFICATIONS **************************************   01800002
+.*                                                                      02000002
+.* MODULE NAME - CTRLPROG                                               02200002
+.*                                                                      02400002
+.* DESCRIPTIVE NAME - CONTROL PROGRAM GENERATION                        02600002
+.*                                                                      02800002
+.* COPYRIGHT - NONE                                                     03000002
+.*                                                                      03200002
+.* STATUS - CHANGE LEVEL 03                                             03400003
+.*                                                                      03600002
+.* FUNCTION -                                                           03800002
+.*       THE CTRLPROG MACRO IS USED TO SPECIFY THE CONTROL PROGRAM      04000002
+.*       SUPERVISOR OPTIONS. DEFAULTS FOR REAL, CSA, VRREGN AND SQA     04200002
+.*       ARE NOT TO BE SET HERE - RE DCRR 20867                         04400002
+.*       WARN=N IS DEFAULTED HERE - ICR CODE                            04600002
+.*                                                                      04800002
+.* NOTES - N/A                                                          05000002
+.*                                                                      05200002
+.* MODULE TYPE - MACRO                                                  05400002
+.*                                                                      05600002
+.* ENTRY POINT - N/A                                                    05800002
+.*                                                                      06000002
+.* INPUT -                                                              06200002
+.*         THE FOLLOWING PARAMETERS MAY BE CODED ON THE CALL TO         06400002
+.*         CTRLPROG                                                     06600002
+.*             &OPTIONS - SPECIFIES WHICH OF THE FOLLOWING CONTROL      06800002
+.*                        PROGRAM OPTIONS ARE TO BE INCLUDED: DEVSTAT,  07000002
+.*                        RER, BLDL, RDE, CRH, AND VM                   07200004
+.*             &SQA     - SPECIFIES THE NUMBER OF 64K SEGMENTS          07400002
+.*                        RESERVED FOR SYSTEM QUEUE SPACE.              07600002
+.*             &APFLIB  - SPECIFIES THE AUTHORIZED LIBRARIES ALONG      07800002
+.*                        WITH THEIR VOLIDS (LIMIT OF 16).              08000002
+.*             &VRREGN  - SPECIFIES THE MINIMUM AMOUNT OF REAL          08200002
+.*                        STORAGE WHICH MAY BE ALLOCATED AT ANY         08400002
+.*                        GIVEN TIME TO A JOB REQUIRING V=R SPACE.      08600004
+.*             &REAL    - NUMBER OF 1K BLOCKS TO BE RESERVED FOR        08800002
+.*                        THE V=R AREA.                                 09000002
+.*             &TZ      - ZONE DEVIATION FROM GREENWICH MEAN TIME.      09200004
+.*             &ASCII   - ASCII CHARACTER SET INCLUDED                  09400002
+.*             &CSA     - SIZE OF THE COMMON SERVICE AREA               09600002
+.*             &STORAGE - ADDRESS OF HIGHEST BLOCK OF STORAGE           09800002
+.*             &DEBTINC - INCREMENT BY WHICH THE DEB TABLE IS           10000002
+.*                        EXPANDED.                                     10200002
+.*             &DEBTSZE - INITIAL SIZE OF THE DEB TABLE.                10400002
+.*             &ACRCODE - SYSTEM REQUIRES ACR AND VARY CPU CODE         10600002
+.*             &WARN    - ICR CODE - OPTIONAL VALUE                     10800002
+.*             &PAGNUM  - MAX. NUMBER OF PAGE AND SWAP DATA     Z40WSVN 10802004
+.*                        SETS THAT MAY BE ADDED BY OPERATOR    Z40WSVN 10803004
+.*                                                                      11000002
+.* OUTPUT -                                                             11200002
+.*       THE GLOBALS USED ARE -                                         11400002
+.*             &SGCPRGA(2)   - WARN=0 OR (1 THRU MAX OF 16777215)       12000003
+.*             &SGCPRGA(3)   - DEB TABLE SIZE                           12200002
+.*             &SGCPRGA(4)   - DEB TABLE INCREMENT                      12400002
+.*             &SGCPRGA(6)   - SQA SIZE IN 64K SEGMENTS                 12600002
+.*             &SGCPRGB(8)   - VS2 FLAG                                 12800002
+.*             &SGCPRGB(9)   - ACR CODE AND VARY CPU CODE INCLUDED      12810004
+.*             &SGCPRGB(12)  - OPTIONS=CRH FOR 168MP            Z30CUOS 12850003
+.*             &SGCPRGB(13)  - WARN VALUE GT ZER0                       12860004
+.*             &SGCPRGC(1-16)- DSNAMES OF APF LIBRARIES                 13000002
+.*             &SGCPRAC(1-16)- VOLIDS OF APF LIBRARIES                  13200002
+.*             &SGCSTOA(1)   - ADDR OF HIGHEST BLOCK OF STORAGE         13400002
+.*             &SGMENTB(5)   - ENTRY SWITCH                             13600002
+.*             &SGQUITB      - QUIT SWITCH                              13800002
+.*             &SGMENTB(87)  - OPTIONS=DEVSTAT - SMARTNIP               14000002
+.*             &SGTIMEA      - MODIFICATION TO TIME ZONE                14200002
+.*             &SGSUPRA(1)   - TRACE TABLE ENTRIES                      14201004
+.*             &SGSUPRA(3)   - REAL STORAGE REQUIRED FOR 1:1 REGION     14400002
+.*             &SGSUPRA(5)   - NO. OF ADDABLE PAGE DATA SETS    Z40WSVN 14401004
+.*             &SGSUPRA(6)   - NO. OF ADDABLE SWAP DATA SETS    Z40WSVN 14402004
+.*             &SGSUPRA(11)  - VIRTUAL REGION SIZE                      14800002
+.*             &SGSUPRA(12)  - COMMON SERVICE AREA SIZE                 15000002
+.*             &SGSUPRB(9)   - OPTIONS=VM VM/370                        15200003
+.*             &SGSUPRB(20)  - FIXED BLDL TABLE                         15250003
+.*             &SGSUPRB(23)  - STORAGE PROTECTION FEATURE               15400002
+.*             &SGSUPRB(26)  - OLTEP                                    15600002
+.*             &SGSUPRB(28)  - MCH                                      15800002
+.*             &SGSUPRB(29)  - CCH                                      16000002
+.*             &SGSUPRB(32)  - REDUCED ERROR RECOVERY                   16200002
+.*             &SGSUPRB(33)  - DDR                                      16400002
+.*             &SGSUPRB(41)  - ASCII IN SYSTEM                          16600002
+.*             &SGSUPRB(43)  - RELIABILITY DATA EXTRACTOR               16800002
+.*             &SGSUPRB(45)  - FETCH PROTECT                            17000002
+.*                                                                      17200002
+.*       THE LOCALS USED ARE -                                          17400002
+.*             &A    - INDEX TO SUBLIST FOR &OPTIONS AND &TZ            17600002
+.*             &I    - NUMBER OF LIBRARIES IN &APFLIB, USED AS INDEX    17800002
+.*             &X    - NUMBER OF LIBRARIES AND VOLIDS IN &APFLIB        18000002
+.*             &K    - NUMBER OF CHARACTERS IN AN &APFLIB PARAMETER     18200002
+.*             &N    - NUMBER OF PARAMETERS IN &APFLIB                  18400002
+.*             &T    - ON FOR W, OFF FOR E                              18600002
+.*             &M    - SPEC WHETHER &DEBSIZE EXACT OR ROUNDED           18800002
+.*             &PM   - EAST OR WEST OF GREENWICH                        19000002
+.*                                                                      19200002
+.* EXIT, NORMAL - N/A                                                   19400002
+.*                                                                      19600002
+.* EXIT, ERROR - N/A                                                    19800002
+.*                                                                      20000002
+.* EXTERNAL REFERENCES - N/A                                            20200002
+.*                                                                      20400002
+.* TABLES - N/A                                                         20600002
+.*                                                                      20800002
+.* MACROS - NONE                                                        21000002
+.*                                                                      21200002
+.* CHANGE ACTIVITY - MODIFIED FOR Y02036,Z03CUOS,Z40WSVN                21400004
+.****** END OF SPECIFICATIONS ***************************************   21800002
+         AIF   (&SGMENTB(5)).ERR                                        22000002
+&SGMENTB(5)    SETB  1                                                  22200002
+&SGCPRGB(8)    SETB  1        SET AOS/2 FLAG                            22400004
+&SGSUPRB(23)   SETB  1        PROTECT STANDARD                          22600002
+&SGSUPRB(26)   SETB  1        OLTEP STANDARD                            22800002
+&SGSUPRB(28)   SETB  1        RMS STANDARD                              23000002
+&SGSUPRB(29)   SETB  1        CCH STANDARD                              23200002
+&SGSUPRB(33)   SETB  1        DDR STANDARD                              23400002
+         AIF   (T'&OPTIONS EQ 'O').VRREGN                               23600002
+    MNOTE *,'     THE FOLLOWING OPTION(S) HAVE BEEN SELECTED'           23800002
+.OPT     AIF   (&A EQ N'&OPTIONS).VRREGN                                24000002
+&A       SETA  &A+1                                                     24200002
+         AIF   ('&OPTIONS(&A)' EQ 'BLDL').OPT1                          24400002
+         AIF   ('&OPTIONS(&A)' EQ 'DEVSTAT').OPT2                       24600002
+         AIF   ('&OPTIONS(&A)' EQ 'RER').OPT3                           24800002
+         AIF   ('&OPTIONS(&A)' EQ 'RDE').OPT4                           25000002
+         AIF   ('&OPTIONS(&A)' EQ 'CRH').OPT5                   Z30CUOS 25050003
+         AIF   ('&OPTIONS(&A)' EQ 'VM').OPT6                            25100003
+    MNOTE 5,'* * * IEICTR101 OPTIONS VALUE &OPTIONS(&A) INVALID'        25200002
+&SGQUITB SETB  1                                                        25400002
+         AGO   .OPT                                                     25600002
+.OPT1 MNOTE *,'        FIXED BLDL TABLE'                                25800002
+&SGSUPRB(20)   SETB  1                                                  26000002
+         AGO   .OPT                                                     26200002
+.OPT2 MNOTE *,'        NIP SUPPORT'                                     26400002
+&SGMENTB(87)   SETB  1                                                  26600003
+         AGO   .OPT                                                     26800002
+.OPT3 MNOTE *,'        REDUCED TAPE ERROR RECOVERY'                     27000002
+&SGSUPRB(32)   SETB  1                                                  27200002
+         AGO   .OPT                                                     27400002
+.OPT4 MNOTE *,'        RELIABILITY DATA EXTRACTOR'                      27600002
+&SGSUPRB(43)   SETB  1                                                  27800003
+         AGO   .OPT                                                     28000002
+.OPT5 MNOTE *,'        CHANNEL RECONFIGURATION HARDWARE'        Z30CUOS 28050003
+&SGCPRGB(12)   SETB  1                                          Z30CUOS 28100003
+         AGO   .OPT                                             Z30CUOS 28150003
+.OPT6 MNOTE *,'        VM/370 OPTION'                                   28160003
+&SGSUPRB(9)  SETB  1                                                    28170003
+         AGO   .OPT                                                     28180003
+.VRREGN         AIF  (T'&VRREGN EQ 'O').VRREGN2                         28200002
+                AIF (T'&VRREGN EQ 'N').VRREGN1                          28400002
+     MNOTE 5,'* * * IEICTR104 VRREGN VALUE &VRREGN INVALID'             28600002
+&SGQUITB SETB   1                                                       28800002
+     AGO  .QSP                                                          29000002
+.VRREGN1 ANOP                                                           29200002
+&SGSUPRA(11)  SETA  &VRREGN                                             29400002
+ MNOTE *,'* * * &SGSUPRA(11) BLOCKS OF V=R ALLOCATED TO VRREGN'         29600002
+     AGO  .QSP                                                          29800002
+.VRREGN2  ANOP                                                          30000002
+     MNOTE 0,'* * * IEICTR901 64 BLOCKS OF V=R ALLOCATION ARE THE DEFAU*30200002
+               LT TAKEN'                                                30400002
+.QSP     AIF   (T'&SQA EQ 'N').QSP1                                     30600002
+         AIF   (T'&SQA NE 'O').QSP0                                     30800002
+     MNOTE 0,'     1 64K SEGMENT RESERVED SYSTEM QUEUE SPACE DEFAULT'   31000002
+         AGO   .REAL                                                    31200002
+.QSP0    ANOP                                                           31400002
+    MNOTE 5,'* * * IEICTR102 SQA VALUE &SQA INVALID'                    31600002
+&SGQUITB SETB  1                                                        31800002
+         AGO   .REAL                                                    32000002
+.QSP1    ANOP                                                           32200002
+     MNOTE *,'     &SQA 64K SEGMENTS RESERVED SYSTEM QUEUE SPACE'       32400002
+&SGCPRGA(6)    SETA  &SQA                                               32600002
+.REAL    ANOP                                                           32800002
+         AIF   (T'&REAL EQ 'N').REAL1     NUMERIC?                      33000002
+         AIF   (T'&REAL EQ 'O').REAL2                                   33200002
+        MNOTE 5,'* * * IEICTR109 REAL VALUE &REAL INVALID'              33400002
+&SGQUITB SETB  1                                                        33600002
+         AGO   .STORAGE                                                 33800002
+.REAL1   ANOP                                                           34000002
+.*                                                                      34200002
+.*     CHECK SPECIFIED VALUE AND ROUND UP TO MULTIPLE OF 4              34400002
+.*                                                                      34600002
+&SGSUPRA(3) SETA &REAL                                                  34800002
+     AIF  (&SGSUPRA(3)/4*4 NE &SGSUPRA(3)).RNDUP                        35000002
+     MNOTE *,'    &SGSUPRA(3) 1K BLOCKS OF VIRTUAL=REAL SPACE'          35200002
+         AGO   .STORAGE                                                 35400002
+.RNDUP    ANOP                                                          35600002
+&SGSUPRA(3) SETA   (&REAL/4*4+4)                                        35800002
+     MNOTE 0,' &SGSUPRA(3) 1K BLOCKS OF VIRTUAL=REAL SPACE '            36000002
+         AGO   .STORAGE                                                 36200002
+.REAL2   ANOP                                                           36400002
+     MNOTE 0,' 76 1K BLOCKS OF VIRTUAL=REAL SPACE DEFAULT'              36600002
+.*******************************************************************    36800002
+.*        ADDRESS OF HIGHEST BLOCK OF STORAGE                           37000002
+.*******************************************************************    37200002
+.STORAGE        AIF  (T'&STORAGE EQ 'O').STG2                           37400002
+                AIF  (T'&STORAGE EQ 'N').STG1                           37600002
+.ERR6   MNOTE 5,'* * * IEICTR106 STORAGE VALUE &STORAGE INVALID'        37800002
+&SGQUITB SETB   1                                                       38000002
+     AGO  .CSA                                                          38200002
+.STG1 ANOP                                                              38400002
+       AIF   (&STORAGE LT 0 OR &STORAGE GT 16777216).ERR6               38600002
+&SGCSTOA(1)  SETA  &STORAGE                                             38800002
+ MNOTE *,'* * * &STORAGE IS ADDRESS OF HIGHEST BLOCK OF STORAGE'        39000002
+     AGO  .CSA                                                          39200002
+.STG2  ANOP                                                             39400002
+   MNOTE 0,'* * * IEICTR902 ACTUAL AMOUNT OF STORAGE ONLINE AT IPL IS H*39600002
+               IGHEST ADDRESS'                                          39800002
+.CSA ANOP                                                               40000002
+     AIF  (T'&CSA EQ 'O').CSA1                                          40200002
+&SGSUPRA(12)  SETA  &CSA                                                40400002
+    MNOTE *,'  &SGSUPRA(12) 1K BLOCKS RESERVED FOR COMMON SERVICE AREA' 40600002
+         AGO   .APFLIB                                                  40800002
+.CSA1    ANOP                                                           41000002
+  MNOTE 0,'  100 1K BLOCKS DEFAULT FOR COMMON SERVICE AREA'             41200002
+.********************************************************************** 41400002
+.**************           APFLIB VALUES SET           ***************** 41600002
+.********************************************************************** 41800002
+.APFLIB  ANOP                                                           42000002
+         AIF   (T'&APFLIB EQ 'O').TZONE   NO APFLIB VALUES              42200002
+&N       SETA  N'&APFLIB            NUMBER IN SUBLIST                   42400002
+         AIF   (&N GT 32).NOAPF     LIMIT IS 16 LIBRARIES AND VOLIDS    42600002
+&I       SETA  1                    COUNT OF LIBRARIES                  42800002
+&X       SETA  1                    COUNT OF LIBRARIES AND VOLIDS       43000002
+.APFLUP  ANOP                                                           43200002
+&K       SETA  K'&APFLIB(&X)        NUMBER OF CHARS IN PARM             43400002
+         AIF   (&K LE 44).SETGLOB   SIZE IS VALID                       43600002
+         MNOTE 5,'* * * IEICTR103 &APFLIB(&X) IS INVALID FOR APFLIB'    43800002
+&SGQUITB SETB  1                                                        44000002
+&I       SETA  &I+1                 INCREMENT LIBRARY COUNT             44200002
+&X       SETA  &X+2                 INCREMENT PARAMETER COUNT           44400002
+         AIF   (&X LT &N).APFLUP    CHECK FOR NEXT LIBRARY              44600002
+         AGO   .TZONE                                                   44800002
+.SETGLOB ANOP                       SET GLOBALS FOR VALID LIBRARY       45000002
+&SGCPRGC(&I)   SETC  '&APFLIB(&X)'  PDS NAME                            45200002
+&X       SETA  &X+1                 INCREMENT PARAMETER COUNT           45400002
+&K       SETA  K'&APFLIB(&X)        NO. OF CHARS IN VOLID               45600002
+         AIF   (&K LT 1 OR &K GT 6).A1ERR   INVALID VOLID               45800002
+&SGCPRAC(&I)   SETC  '&APFLIB(&X)'  VOLID                               46000002
+  MNOTE *,'     APF LIBRARY &SGCPRGC(&I) ON VOLUME &SGCPRAC(&I)  '      46200002
+         AGO   .NXTAPF                                                  46400002
+.A1ERR   ANOP                                                           46600002
+  MNOTE 5,'* * * IEICTR107 &APFLIB(&X) IS INVALID FOR VOLID'            46800002
+&SGQUITB SETB  1                    ERROR CONDITION                     47000002
+.NXTAPF  ANOP                                                           47200002
+&X       SETA  &X+1                 INCREMENT PARAMETER COUNT           47400002
+&I       SETA  &I+1                 INCREMENT LIBRARY COUNT             47600002
+         AIF   (&X LT &N).APFLUP    ANY MORE LIBRARIES                  47800002
+         AGO   .TZONE                                                   48000002
+.NOAPF    ANOP                                                          48200002
+    MNOTE 5,'* * * IEICTR105 INVALID NUMBER OF PARAMETERS IN APFLIB'    48400002
+&SGQUITB  SETB 1                                                        48600002
+.TZONE   AIF   (T'&TZ NE 'O').TZ1                                       48800002
+.TZ0 MNOTE *,'     GREENWICH MEAN TIME ASSUMED'                         49000002
+         AGO   .ASCII                                                   49200002
+.TZ1     ANOP                                                           49400002
+&A       SETA  1                                                        49600002
+         AIF   (N'&TZ LT 2).TZERR                                       49800002
+         AIF   ('&TZ(1)' NE 'E' AND '&TZ(1)' NE 'W').TZERR              50000002
+&T       SETB  ('&TZ(1)' EQ 'W')                                        50200002
+.TZ2     AIF   (&A EQ N'&TZ).TD                                         50400002
+&A       SETA  &A+1                                                     50600002
+         AIF   (T'&TZ(&A) NE 'N').TZERR      TIME MUST BE NUMERIC       50800002
+         AIF   (&TZ(&A) LT 0).TZERR                                     51000002
+         AIF   (&A EQ 3).TZ3                                            51200002
+         AIF   (&TZ(2) GT 12).TZERR     MAX OF 12 HOURS                 51400002
+         AGO   .TZ4                                                     51600002
+.TZ3     AIF   (&TZ(3) GT 59).TZERR                                     51800002
+         AIF   (&TZ(2) EQ 12 AND &TZ(3) NE 0).TZERR                     52000002
+.TZ4     AIF   (&T).TZ5                                                 52200002
+&SGTIMEA(&A-1) SETA &TZ(&A)                                             52400002
+&PM      SETC  'EAST'                                                   52600002
+         AGO   .TZ2                                                     52800002
+.TZ5     ANOP                                                           53000002
+&SGTIMEA(&A-1) SETA &SGTIMEA(&A-1)-&TZ(&A)                              53200002
+&PM      SETC  'WEST'                                                   53400002
+         AGO   .TZ2                                                     53600002
+.TZERR MNOTE 5,'* * * IEICTR113 TZ VALUE &TZ(&A) INVALID'               53800002
+&SGQUITB SETB  1                                                        54000002
+         AGO   .ASCII                                                   54200002
+.TD      AIF   (&SGTIMEA(1) EQ 0 AND &SGTIMEA(2) EQ 0).TZ0              54400002
+  MNOTE *,'     DEVIATION FROM GMT -- &SGTIMEA(1) HRS, &SGTIMEA(2) MIN *54600002
+               &PM'                                                     54800002
+.ASCII   AIF   ('&ASCII' EQ 'EXCLUDE').ASEX                             55000002
+         AIF   ('&ASCII' EQ 'INCLUDE').ASIN                             55200002
+    MNOTE 5,'* * * IEICTR124 ASCII VALUE &ASCII INVALID'                55400002
+&SGQUITB SETB  1                                                        55600002
+         AGO   .DEBTS                                                   55800002
+.ASEX MNOTE *,'     THE ASCII TRANSLATE SVC IS EXCLUDED'                56000002
+         AGO   .DEBTS                                                   56200002
+.ASIN MNOTE *,'     THE ASCII TRANSLATE SVC IS INCLUDED'                56400002
+&SGSUPRB(41)   SETB  1                                                  56600002
+.DEBTS   AIF   (T'&DEBTSZE NE 'N').DE1            MUST BE NUMERIC       56800002
+         AIF   (&DEBTSZE LT 8 OR &DEBTSZE GT 34760).DE1                 57000002
+         AIF   (&DEBTSZE NE &DEBTSZE/8*8).DEB1    MUST BE MULT. OF 8    57200002
+&M          SETC ''                                                     57400002
+&SGCPRGA(3) SETA &DEBTSZE                                               57600002
+         AGO   .DM1                                                     57800002
+.DEB1    ANOP                                                           58000002
+&M          SETC 'ROUNDED'                                              58200002
+&SGCPRGA(3) SETA (&DEBTSZE/8+1)*8                 ROUND UPWARD          58400002
+.DM1 MNOTE *,'     INITIAL DEB TABLE SIZE IS &SGCPRGA(3) BYTES &M'      58600002
+         AGO   .DEBTI                                                   58800002
+.DE1 MNOTE 5,'* * * IEICTR125 DEBTSZE VALUE &DEBTSZE INVALID'           59000002
+&SGQUITB SETB  1                                                        59200002
+.DEBTI   AIF   (T'&DEBTINC NE 'N').DE2            MUST BE NUMERIC       59400002
+         AIF   (&DEBTINC LT 8 OR &DEBTINC GT 32752).DE2                 59600002
+         AIF   (&DEBTINC NE &DEBTINC/8*8).DEB2    MUST BE MULT. OF 8    59800002
+&M          SETC ''                                                     60000002
+&SGCPRGA(4) SETA &DEBTINC                                               60200002
+         AGO   .DM2                                                     60400002
+.DEB2    ANOP                                                           60600002
+&M          SETC 'ROUNDED'                                              60800002
+&SGCPRGA(4) SETA (&DEBTINC/8+1)*8                 ROUND UPWARD          61000002
+.DM2 MNOTE *,'     DEB TABLE INCREMENT IS &SGCPRGA(4) BYTES &M'         61200002
+         AGO   .SYSSEC                                                  61400002
+.DE2 MNOTE 5,'* * * IEICTR126 DEBTINC VALUE &DEBTINC INVALID'           61600002
+&SGQUITB SETB  1                                                        61800002
+         AGO   .SYSSEC                                                  62000002
+.ERR MNOTE 5,'* * * IEICTR100 CTRLPROG MACRO USED PREVIOUSLY'           62200002
+&SGQUITB SETB  1                                                        62400002
+.SYSSEC  ANOP  LEAVE IN AOS2 ONLY IF &SGSUPRB(45) NEEDED FOR FETCH      62600002
+.*                                      PROTECTION FOR AN INNER MACRO   62800002
+&SGSUPRB(45)  SETB 1                                                    63000002
+         AIF   ('&ACRCODE' EQ 'NO').WARN                                63200002
+         AIF   ('&ACRCODE' NE 'YES').ERR9                               63400002
+     MNOTE *,'     ACRCODE INCLUDED'                                    63410004
+&SGCPRGB(9) SETB 1                                                      63600002
+         AGO   .WARN                                                    63800002
+.ERR9    MNOTE 5,'* * * IEICTR127 ACRCODE VALUE NOT YES OR NO'          64000002
+&SGQUITB SETB  1                                                        64200002
+.WARN    AIF   (T'&WARN NE 'N').ERR10   WARN VALUE A DECIMAL NUMBER     64600002
+         AIF   (&WARN EQ 0).WARN1       WARN VALUE EQ ZERO              64650002
+         AIF   (&WARN LT 1 OR &WARN GT 16777215).ERR10                  65400002
+&SGCPRGB(13)   SETB 1                       INDICATE WARN IN SYSTEM     65600002
+.WARN1   ANOP                                                           65800002
+&SGCPRGA(2)    SETA &WARN                   SET WARN VALUE              66000002
+         AGO   .PAGNUM                      NEXT OPERAND        Z40WSVN 66010004
+.ERR10   MNOTE 5,'* * * IEICTR128 WARN VALUE &WARN INVALID'             66020002
+&SGQUITB SETB  1                            SET QUIT BIT                66030002
+.PAGNUM  ANOP                                                   Z40WSVN 66140004
+&SGSUPRA(5) SETA 1                      DEFAULT PAGE DS'S       Z40WSVN 66150004
+&SGSUPRA(6) SETA 1                      DEFAULT SWAP DS'S       Z40WSVN 66160004
+         AIF (N'&PAGNUM EQ 2).PAG1      MUST HAVE 2 OPERANDS    Z40WSVN 66170004
+ MNOTE 5,'* * * IEICTR130 PAGNUM MUST HAVE 2 PARAMETERS'        Z40WSVN 66180004
+&SGQUITB SETB  1                                                Z40WSVN 66200004
+         AGO   .MEND                    QUIT                    Z40WSVN 66210004
+.PAG1    AIF (&PAGNUM(1) GE 0 AND &PAGNUM(1) LE 64).PAG2        Z40WSVN 66220004
+ MNOTE 5,'* * * IEICTR131 PAGNUM VALUE -&PAGNUM(1)- INVALID'    Z40WSVN 66230004
+&SGQUITB SETB  1                                                Z40WSVN 66240004
+         AGO   .PAG3                    TRY NEXT                Z40WSVN 66250004
+.PAG2 MNOTE *,'     MAX ADDABLE PAGE DATASETS &PAGNUM(1)'       Z40WSVN 66260004
+&SGSUPRA(5) SETA &PAGNUM(1)             SET PP                  Z40WSVN 66270004
+.PAG3    AIF (&PAGNUM(2) GE 0 AND &PAGNUM(2) LE 9).PAG4         Z40WSVN 66280004
+ MNOTE 5,'* * * IEICTR132 PAGNUM VALUE -&PAGNUM(2)- INVALID'    Z40WSVN 66290004
+&SGQUITB SETB  1                                                Z40WSVN 66300004
+         AGO   .MEND                    QUIT                    Z40WSVN 66310004
+.PAG4 MNOTE *,'     MAX ADDABLE SWAP DATASETS &PAGNUM(2)'       Z40WSVN 66320004
+&SGSUPRA(6) SETA &PAGNUM(2)             SET PP                  Z40WSVN 66330004
+.MEND    MEND                                                   Z40WSVN 66340004

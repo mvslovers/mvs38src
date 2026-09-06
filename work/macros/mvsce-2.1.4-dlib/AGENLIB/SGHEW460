@@ -1,0 +1,21 @@
+         MACRO                                                          04000021
+         SGHEW460                                                       08000021
+         COPY  SGGBLPAK                                                 12000021
+&SGCTRLC(8) SETC '&SGCTRLC(31)'    SET LINKLIB DEVICE                   16000021
+&SGCTRLC(7) SETC '&SGCTRLC(32)'    SET LINKLIB VOLID                    20000021
+&SGCTRLC(9) SETC 'LINKLIB'         SET SYSLMOD NAME                     24000021
+&SGCTRLC(10) SETC ',RENT'          SET                                  28000021
+&SGCTRLC(11) SETC ',REFR'            LINKAGE EDITOR                     32000021
+&SGCTRLC(12) SETC ',REUS'              ATTRIBUTES                       36000021
+&SGCTRLC(13) SETC ',OL'                                                 40000021
+         COPY  SGLEDPK1                                                 44000021
+ PUNCH '//AOS05  DD DSNAME=SYS1.AOS05,DISP=SHR,VOLUME=(,RETAIN)'        48000021
+         COPY  SGLEDPK2                                                 52000021
+ PUNCH ' INCLUDE AOS05(HEWLDIOC,HEWLDREL,HEWLDLIB,HEWLDIDY)'            56000000
+ PUNCH ' ENTRY HEWLIOCA'                                                64000021
+ PUNCH ' ALIAS IEWLOAD'                                                 68000021
+ PUNCH ' ALIAS IEWLOADR'                                                70000021
+ PUNCH ' ALIAS HEWLOAD'                                                 72000021
+ PUNCH ' NAME HEWLOADR(R)'                                              74000021
+ PUNCH '/*'                                                             76000021
+         MEND                                                           80000021

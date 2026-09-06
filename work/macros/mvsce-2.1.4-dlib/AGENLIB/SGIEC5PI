@@ -1,0 +1,22 @@
+         MACRO                                                          00050000
+         SGIEC5PI                                                       00100000
+.*     VS2 RELEASE 2 CHANGES                                            00102002
+.*D3500-4540                                                     YM3002 00104002
+.*     VS2 RELEASE 3.7 CHANGES                                 @32034JK 00110037
+         COPY  SGGBLPAK                                                 00140037
+         AIF   (NOT (&SGDCLSB(71) OR &SGDCLSB(74) OR                   X00170037
+               &SGGENDB(101))).MEND                            @32034JK 00200037
+*    PLACE IMAGES INTO SYS1.IMAGELIB                                    00270037
+         PUNCH ' COPY OUTDD=IMAGELIB,INDD=AOSD0 '                YM3002 00310037
+         AIF   (NOT &SGDCLSB(74)).MAAA                                  00350037
+*         NEXT STATEMENT INCLUDES 2245 IMAGES                           00462000
+         PUNCH ' SELECT MEMBER=((IGG019FH,FCBKSTD1)) '                  00470002
+         PUNCH ' SELECT MEMBER=((IGG019FI,FCBKSTD2)) '                  00470402
+.MAAA    ANOP                                                           00472000
+         AIF   (NOT (&SGDCLSB(71) OR &SGGENDB(101))).MEND               00480037
+*        NEXT STATEMENT INCLUDES 3203-4/3211 IMAGES            @32034JK 00530037
+         PUNCH ' SELECT MEMBER=((IGG0197J,FCB2STD1)) '                  00700002
+         PUNCH ' SELECT MEMBER=((IGG0197K,FCB2STD2)) '                  00710002
+         PUNCH ' SELECT MEMBER=((IASFCB26,FCB26)) '                     00720002
+         PUNCH ' SELECT MEMBER=((IASFCB28,FCB28)) '                     00730002
+.MEND    MEND                                                           00750000

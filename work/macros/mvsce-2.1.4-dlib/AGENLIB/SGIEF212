@@ -1,0 +1,151 @@
+         MACRO                                                          00020000
+         SGIEF212                                                       00040064
+.*************************************************************          00046064
+.*                                                                      00052064
+.*  MACRO    -  SGIEF212                                                00060064
+.*                                                                      00080064
+.*  STATUS   -  VS2 SYSTEM CONTROL PROGRAM 2                   @G64IPSJ 00086064
+.*                                                                      00100064
+.*  FUNCTION - THIS MACRO REFORMATS THE ADDR BOXES(&SGDADRA)            00106064
+.*             FOR USE BY OTHER SCHEDULER SYSGEN MACROS.  IT            00120064
+.*             ALSO PUNCHES THE SGIEF010 MACRO CALL SO THAT             00123064
+.*             STAGE II CAN ASSOCIATE DEVICE ID'S WITH THE              00140064
+.*             GENERIC NAME AND DEVTYPE.                                00146064
+.*                                                                      00160064
+.*  OPERATION - DATA CONCERNING DEVICE SPECIFIED IS STORED              00166064
+.*              IN SYSGEN GOBAL VARIABLES.  THIS MACRO                  00180064
+.*              OBTAINS THAT DATA AND PUTS IN INTO THE ADDR             00186064
+.*              BOXES FOR DEVICE TABLE PROCESSING.  THIS                00200064
+.*              ROUTINE THEN SCANS THE DEVICE INFORMATION               00206064
+.*              TABLES(DIT) AND PUNCHES THE CALL FOR MACRO              00220064
+.*              SGIEF010.  THIS MACRO IS ENTERED THREE TIMES            00225064
+.*              FOR DIFFERENT STAGE II ASSEMBLY STEPS BEING             00230064
+.*              BUILT.  THE ADDR BOXES ARE REFORMATED ONLY              00240064
+.*              ONCE.                                                   00260064
+.*                                                                      00266064
+.*  ENTRY POINT - SGIEF212 FROM SGIEF211 AND SGIEF213                   00280064
+.*                                                                      00286064
+.*  EXIT - TO CALLER                                                    00300064
+.*                                                                      00306064
+.*  EXTERNAL REFERENCES - SGGBLPAK - GLOBAL DATA AREA                   00320064
+.*                                                                      00326064
+.*  OUTPUT - &SGDADRA - REFORMATED                                      00340064
+.*           &SGCNTRA(8) - COUNT OF UNIQUE DEVICE TYPES SYSGENED        00346064
+.*           &SGNCTRA(9) - COUNT OF SUPPORTED DEVICES SYSGENED          00360064
+.*           &SGCNTRA(10) - COUNT OF UNIQUE DEVICE TYPES POSSIBLE       00366064
+.*                                                                      00380064
+.*  CHANGE LEVEL - REWRITTEN - DEVICE INDEPENDENT RESTRUCTURE  @G64IPSJ 00386064
+.*                 VS49151                                     @VS49151 00393064
+.*                                                                      00400064
+.*  MNOTES - NONE                                                       00406064
+.*                                                                      00420064
+.*************************************************************          00426064
+.*  ACCESS GLOBAL DATA AREA                                             00440064
+         COPY  SGGBLPAK                                                 00446064
+.*  DEFINE LOCAL VARIABLES                                              00460064
+         LCLA  &A,&SWCHPTR                                              00465064
+         LCLB  &SPECDEV,&DEV2305                                        00468064
+         LCLC  &HLFLIST,&TYPLIST,&WORKSTR                               00471064
+.*  SET ACTR VALUE = 1 + 7*#DEVICES + 3*#DIT ENTRIES                    00482064
+         ACTR  14020                                                    00488064
+.*************************************************************          00500064
+.*                                                                      00506064
+.*   THIS SECTION OF CODE REFORMATS THE ADDR BOXES(&SGDADRA)            00520064
+.*   FOR USE IN PROCESSING THE DEVICE ALLOCATION TABLES.   IT           00525064
+.*   IS DONE ONLY ON THE FIRST CALL - &SGMENTB(83) = '0'B.              00530064
+.*   THE ADDR BOX ORIGINALLY CONTAINS THE DEVICE ADDRESS IN             00540064
+.*   HEX(RIGHT-HAND 3 DIGITS).  AFTER PROCESSING, THE ADDR BOX          00560064
+.*   HAS THE FOLLOWING FORMAT:                                          00566064
+.*             HEX ADDRESS  -  BITS  1-12                               00580064
+.*             ZERO'S       -  BITS 12-22                               00585064
+.*             DEVICE ID    -  BITS 13-30                               00590064
+.*             VALID DEVTYP -  BIT  31                                  00600064
+.*      NOTE:                                                           00620064
+.*           ADDR BOX BITS ARE NUMBERED RIGHT TO LEFT                   00626064
+.*           STARTING WITH NUMBER 1.                                    00640064
+.*                                                                      00646064
+.*************************************************************          00660064
+         AIF   (&SGMENTB(83)).NOFRMT   IF ADDR BOXES FORMATED           00666064
+.*                                       ALREADY, CONTINUE              00680064
+&SGMENTB(83) SETB 1                    INDICATE ADDR BOXES              00686064
+.*                                       FORMATED                       00700064
+&A       SETA  0                       INITIALIZE ADDR BOX              00706064
+.*                                       INDEX                          00720064
+&SGCNTRA(10) SETA 0                    INITIALIZE COUNT OF UNIQUE       00726064
+.*                                       DEVICE TYPES                   00740064
+.NXTADDR ANOP                          LOOP TO PROCESS A BOX            00745064
+&A       SETA  &A+1                    INCREMENT DEVICE INDEX           00750064
+         AIF   (&A GT &SGCNTRA(3) OR &SGCNTRA(9) GT &SGCNTRA(3)).NOFRMT 00755064
+.*                                     IF NO MORE, EXIT                 00760064
+&SWCHPTR SETA  &SGDASPA(&A)            OBTAIN SWITCH INDEX     @VS49151 00762064
+         AIF   (&SGCNTRA(10) GT &SGDITXA(&SWCHPTR)).CONT       @VS49151 00766064
+.*                                     IF STILL GREATEST, CONTINUE      00770064
+&SGCNTRA(10)  SETA  &SGDITXA(&SWCHPTR) SAVE LARGER VALUE       @VS49151 00774064
+.CONT    ANOP                                                           00778064
+         AIF   (&SGDUMMY(&SWCHPTR)).NXTADDR  IF DUMMY, DON'T PROCESS    00782064
+.*                                                             @VS49151 00786064
+&SGDADRA(&A) SETA &SGDADRA(&A)-&SGDADRA(&A)/X'1000'*X'1000'+&SGDITXA(&SX00790064
+               WCHPTR)*X'400000'+X'40000000' SET ADDR BOX TO   @VS49151 00794064
+.*                                       ADDRESS - BITS 1-12            00806064
+.*                                       0'S     - BITS 13-22           00820064
+.*                                       ID      - BITS 23-30           00826064
+.*                                       VALID   - BIT 31               00840064
+&SGCNTRA(9) SETA &SGCNTRA(9)+1         INCREMENT NUMBER OF              00846064
+.*                                     SUPPORTED DEVICES                00856064
+&DEV2305 SETB  (&SGDT03B(&SWCHPTR) AND &SGDU08B(&SWCHPTR))              00880064
+.*                                     SET 2305 INDICATOR               00886064
+         AIF   (NOT &DEV2305).NOT2305  IF 2305 THEN                     00900064
+&A       SETA  &A+7                    INCREMENT AROUND REST            00906064
+.*                                     OF 2305 ADDRESSES                00920064
+         AGO   .NOTSPEC                BYPASS OTHER CHECKS              00926064
+.NOT2305 ANOP                          ELSE                             00940064
+         AIF   (NOT &SGDT06B(&SWCHPTR)).NOTSPEC     IF NOT A            00946064
+.*                                     SPECIAL DEVICE CLASS,            00960064
+.*                                     BYPASS CHECKS                    00966064
+&SPECDEV SETB  (&SGDU04B(&SWCHPTR) OR &SGDU05B(&SWCHPTR))               00980064
+.*                                     SET ON IF 1419 OR 1275           00986064
+         AIF   (NOT &SPECDEV).NOTSPEC  IF SPECIAL DEVICE THEN           01000064
+&A       SETA  &A+1                    INCREMENT COUNTER                01006064
+.NOTSPEC ANOP                                                           01020064
+         AGO   .NXTADDR                PROCESS NEXT ADDR BOX            01026064
+.NOFRMT  ANOP                          EXIT FOR ADDR BOX                01040064
+.*                                       FORMATING                      01046064
+.*************************************************************          01060064
+.*                                                                      01066064
+.*   THIS SECTION OF CODE PUNCHES THE SGIEF010 MACRO CALL.              01080064
+.*   THIS MACRO ASSOCIATES THE DEVICE ID(&SGDITXA) WITH                 01088064
+.*   THE GENERIC NAME(&SGGNRIC) AND DEVICE TYPE(&SGDTYPC).              01096064
+.*   AS A BY PRODUCT OF THIS PROCESSING, THE NUBMER OF                  01104064
+.*   UNIQUE DEVICE TYPES SYSGENED IS ACCUMULATED.                       01112064
+.*                                                                      01120064
+.*************************************************************          01140064
+&A       SETA  0                       INITIALIZE DIT INDEX             01146064
+&SGCNTRA(8) SETA 0                     INITIALIZE UNIQUE                01160064
+.*                                       DEVTYPE COUNTER                01166064
+         PUNCH '         SGIEF010                                      X01180064
+                               X'                                       01186064
+.*                                      PUNCH MACRO CALL                01200064
+.NEXTYPE ANOP                           LOOP TO PROCESS DIT             01204064
+&A       SETA  &A+1                     INCREMENT DIT INDEX             01208064
+         AIF   (&A GT &SGDITDA).NOMORE IF NO MORE ENTRIES,              01212064
+.*                                       EXIT LOOP                      01220064
+         AIF   (NOT &SGGENDB(&A)).NEXTYPE   IF ENTRY NOT                01226064
+.*                                          SYSGENED, CONTUNUE          01240064
+.*                                          WITH NEXT ENTRY             01260064
+&SGCNTRA(8) SETA &SGCNTRA(8)+1          INCREMENT UNIQUE                01266064
+.*                                        DEVTYPE COUNTER               01280064
+&WORKSTR SETC  '&SGDTYPC(&A)'          MOVE TO WORK AREA                01285064
+&TYPLIST SETC  '&WORKSTR'(1,4)         FILL FIRST HALF OF               01290064
+.*                                       DEVTYPE                        01300064
+&HLFLIST SETC  '&WORKSTR'(5,4)         FILL SECOND HALF OF              01320064
+.*                                       DEVTYPE                        01326064
+         PUNCH '               &A,&SGGNRIC(&A),X''&TYPLIST'',X''&HLFLISX01340064
+               T'',                           XXXXXXXX'                 01342064
+.*                                     PUNCH OPERANDS FOR               01350064
+.*                                       THIS DEVICE TYPE               01360064
+         AGO   .NEXTYPE                PROCESS NEXT ENTRY               01376064
+.NOMORE ANOP                           EXIT FOR SGIEF010 PROCESSING     01378064
+.*                                                                      01380064
+.*  END OF SGIEF010 MACRO PROCESSING                                    01384064
+.*                                                                      01400064
+        MEND                                                            01420064

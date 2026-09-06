@@ -1,0 +1,62 @@
+)F FUNCTION -                                                           00050003
+   THE EXPORTRA COMMAND IS USED TO MOVE CLUSTERS, USER CATALOGS,        00100003
+   ALTERNATE INDEXES, NONVSAMS, GDG BASES, AND ALIASES FROM A SYSTEM TO 00150003
+   A PORTABLE DATA SET.  THE CATALOG RECOVERY AREAS ARE USED TO PROVIDE 00160003
+   THE NECESSARY CATALOG INFORMATION.                                   00170003
+)X SYNTAX -                                                             00200003
+         EXPORTRA                                                       00250003
+                   FORCE | NOFORCE                                      00260003
+                   OUTFILE('DNAME')                                     00400003
+                   CRA(('PARMLIST')...)                                 00450003
+                   MASTERPW('PASSWORD')                                 00500003
+                   'PARMLIST'- 'DNAME1'                                 00510003
+                     ALL INFILE('DNAME2')                               00550003
+                     NONE                                               00600003
+                     ENTRIES(('ENTRYNAME' 'DNAME3')...)                 00650003
+  REQUIRED - OUTFILE                                                    00700003
+             CRA                                                        00750003
+  DEFAULTS - NOFORCE                                                    00800003
+             ALL                                                        00850003
+  ABBREVIATIONS -                                                       01000003
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 01050003
+             EXPORTRA             XPRA                                  01100003
+             OUTFILE              OFILE                                 01250003
+             FORCE                FRC                                   01300003
+             NOFORCE              NFRC                                  01350003
+             INFILE               IFILE                                 01400003
+             MASTERPW             MRPW                                  01450003
+)O OPERANDS -                                                           01700003
+))OUTFILE('DNAME')                                                      01710003
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES     01720003
+             THE OUTPUT DATA SET TO BE CREATED AS A RESULT OF THE       01730003
+             EXPORTRA COMMAND.                                          01740003
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE OUTPUT DATA   01742003
+             SET.                                                       01744003
+))MASTERPW - SPECIFIES THE MASTER PASSWORD OF THE MASTER CATALOG.       01746003
+))FORCE    - SPECIFIES THAT THE OBJECTS ARE TO BE EXPORTED FROM THE     01748003
+             CRA DESPITE A TIMESTAMP MISMATCH BETWEEN THE CATALOG       01748403
+             AND THE VOLUME.                                            01748803
+))NOFORCE  - SPECIFIES THAT THE OBJECTS ARE NOT TO BE EXPORTED          01749203
+             FROM THE CRA IF THERE IS A TIMESTAMP MISMATCH BETWEEN      01749603
+             THE CATALOG AND THE VOLUME.                                01749703
+))CRA('PARMLIST')                                                       01750003
+           - SPECIFIES THE NAMES OF THE DD STATEMENTS                   01760003
+             OF THE CRAS FROM WHICH THE EXPORT IS TO BE DONE.           01770003
+  'PARMLIST' IS DEFINED UNDER SYNTAX.                                   01800003
+  'DNAME1' - SPECIFIES THE NAME OF THE DD STATEMENT IDENTIFYING THE     01850003
+             CATALOG RECOVERY AREA.                                     01900003
+))ALL      - SPECIFIES THAT ALL OBJECTS IN THE CRA ARE TO BE EXPORTED.  01950003
+))INFILE   - GIVES THE NAME OF THE DD STATEMENTS FOR ANY ADDITIONAL     02000003
+             CRAS THAT MUST BE REFERENCED DURING THE EXPORT OF THE      02050003
+             OBJECTS FROM THE NAMED CRA.                                02100003
+  'DNAME2' - SPECIFIES THE NAME OF THE DD STATEMENT FOR THE             02110003
+             ADDITIONAL CRAS.                                           02120003
+))NONE     - INDICATES THAT THE CRA IS GIVEN SIMPLY BECAUSE IT MUST BE  02150003
+             REFERENCED DURING AN EXPORT FROM ANOTHER CRA.  NO OBJECTS  02200003
+             ARE TO BE EXPORTED FROM IT.                                02250003
+))ENTRIES  - SPECIFIES A LIST OF OBJECTS TO BE EXPORTED FROM ONE CRA.   02300003
+))INFILE   - GIVES THE NAME OF THE DD STATEMENTS FOR ANY ADDITIONAL     02350003
+             CRAS THAT MUST BE REFERENCED DURING THE EXPORT OF THE      02400003
+             OBJECTS FROM THE NAMED CRA.                                02450003
+  'DNAME3' - SPECIFIES THE NAME OF THE DD STATEMENT FOR THE             02460003
+             ADDITIONAL CRAS.                                           02470003

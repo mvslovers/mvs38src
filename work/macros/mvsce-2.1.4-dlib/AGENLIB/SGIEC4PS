@@ -1,0 +1,749 @@
+         MACRO                                                          00050002
+         SGIEC4PS                                                       00100002
+.*                                                                      00150002
+.*       MACRO DELETIONS/CHANGES FOR VS2 RELEASE 02                     00160002
+.*       MACRO DELETIONS/CHANGES FOR VS2 RELEASE 03                     00162002
+.*0000225200-225300                                             ZA00112 00170002
+.*0000                                                         @Z30JSDM 00172003
+.*0000145400                                                   @ZA02868 00176002
+.*0000143700-145400                                            @ZA07192 00178037
+.*       MACRO DELETIONS/CHANGES FOR VS2 SU60                  @G60ASBJ 00181037
+.*A 116830,315000-322500                                       @G60ASBJ 00184037
+.*C 116800                                                     @G60ASBJ 00187037
+.*       MACRO DELETIONS/CHANGES FOR VS2 RELEASE 038                    00190037
+.*0000                                                         @ZA37313 00193037
+.*C 116300                                                     @ZA43317 00196437
+.********************************************************************** 00200002
+.*                                                                      00250002
+.* MODULE NAME = SGIEC4PS (OS/VS2)                                      00300002
+.*               NOTE - TABLE OF CONTENTS = SEQUENCE NO. 034000         00350002
+.*                                                                      00400002
+.* DESCRIPTIVE NAME = OPEN/CLOSE/EOV SYSGEN TYPE 4 MACRO                00450002
+.*                                                                      00500002
+.* COPYRIGHT = NONE.                                                    00550002
+.*                                                                      00600002
+.* STATUS = CHANGE LEVEL 000                                            00650002
+.*                                                                      00700002
+.* FUNCTION = THIS MACRO IS CALLED AT SYSGEN TO LINK EDIT               00750002
+.*            OPEN/CLOSE/EOV CSECTS INTO LARGE LOAD MODULES.            00800002
+.*                                                                      00850002
+.* NOTES = ONE O/C/EOV MODULE IS CALLED BY ANOTHER SYSGEN MACRO:        00900002
+.*         IEAVNP16 IS COPIED FROM AOSC5 TO SYS1.NUCLEUS BY SGIEA502.   00910002
+.*                                                                      00950002
+.*      DEPENDENCIES = OS/VS2 DEPENDENT                                 01000002
+.*                                                                      01050002
+.*      RESTRICTIONS = NONE                                             01100002
+.*                                                                      01150002
+.*      REGISTER CONVENTIONS = NOT APPLICABLE.                          01200002
+.*                                                                      01250002
+.* PATCH LABEL = NOT APPLICABLE.                                        01300002
+.*                                                                      01350002
+.* MODULE TYPE = MACRO                                                  01400002
+.*                                                                      01450002
+.*      PROCESSOR = ASSEMBLER LANGUAGE                                  01500002
+.*                                                                      01550002
+.*      MODULE SIZE = NOT APPLICABLE.                                   01600002
+.*                                                                      01650002
+.*      ATTRIBUTES = NOT APPLICABLE.                                    01700002
+.*                                                                      01750002
+.* ENTRY POINT = SGIEC4PS                                               01800002
+.*                                                                      01850002
+.*      PURPOSE = THIS MACRO WILL PUNCH LINK EDIT CONTROL CARDS         01900002
+.*                AND JCL CARDS TO LINK EDIT OPEN/CLOSE/EOV             01950002
+.*                CSECTS INTO LARGE LOAD MODULES IN LPALIB.             02000002
+.*                                                                      02050002
+.*      LINKAGE = SGIEC4PS                                              02100002
+.*                                                                      02150002
+.*      INPUT = SGGLBPAK                                                02200002
+.*                                                                      02250002
+.*      OUTPUT = LINK EDIT JCL AND CONTROL CARDS.                       02300002
+.*                                                                      02350002
+.* EXIT NORMAL = MEND STATEMENT                                         02400002
+.*                                                                      02450002
+.* EXIT ERROR = NONE.                                                   02500002
+.*                                                                      02550002
+.* EXTERNAL REFERENCES = SGGLBPAK,SGLEDPK1,SGLEDPK2.                    02600002
+.*                                                                      02650002
+.*      ROUTINES = NONE.                                                02700002
+.*                                                                      02750002
+.*      DATA AREAS = AOSD0                                              02800002
+.*                                                                      02850002
+.*      CONTROL BLOCKS = NONE.                                          02900002
+.*                                                                      02950002
+.* TABLES = NONE.                                                       03000002
+.*                                                                      03050002
+.* MACROS = NONE.                                                       03100002
+.*                                                                      03150002
+.* CHANGE ACTIVITY = SEE DELETIONS/CHANGES PRECEDING THE MACRO PROLOGUE 03200002
+.*                                                                      03250002
+.********************************************************************** 03300002
+.*                                                                      03350002
+.* TABLE OF CONTENTS: ************************************************* 03400002
+.*                                                                      03450002
+.* IFG0RR0A = 056000                                                    03500002
+.* IFG0TC0A = 067000                                                    03550002
+.* IFG019RA = 075000                                                    03600002
+.* IFG019TR = 082500                                                    03650002
+.* IFG0190P = 090500                                                    03700002
+.* IFG0194A = 112000                                                    03800002
+.* IFG0199B = 128500                                                    03850002
+.* IGC0001I = 139500                                                    03900002
+.* IGC00020 = 183500                                                    03950002
+.* IGC0005E = 220000                                                    04000002
+.* IGC0006D = 261500                                                    04050002
+.* IGC0010C = 269000                                                    04100002
+.* IMDUSRFF = 276500                                                    04150002
+.* EMODVOL1 = 284000                                                    04200002
+.* OMODVOL1 = 292000                                                    04250002
+.* READPSWD = 300000                                                    04300002
+.* SECLOADA = 307500                                                    04350002
+.* IFG0EX0A = 316000                                                    04400037
+.*                                                                      04500002
+.********************************************************************** 04550002
+.*                                                                      04600002
+         COPY  SGGBLPAK                                                 04650002
+         LCLC  &NAME                                                    04700002
+&NAME    SETC  'AOSD0'                                                  04750002
+&SGCTRLC(6) SETC ''                     SET MODULE NAME NULL            04800002
+&SGCTRLC(7) SETC '&SGCTRLC(20)'         SET LPALIB VOLUME SERIAL        04850002
+&SGCTRLC(8) SETC '&SGCTRLC(19)'         SET LPALIB UNIT NAME            04900002
+&SGCTRLC(9) SETC 'LPALIB'               SYSLMOD OUTPUT LIBRARY          04950002
+.*                                                                      05000002
+.*       DEFAULT OPTIONS = LIST,XREF,NCAL                               05050002
+.*                                                                      05100002
+&SGCTRLC(10) SETC ',LET'                LKED PARM - IGNORE ERROR CODE 4 05150002
+&SGCTRLC(11) SETC ',RENT'               LKED PARM - REENTRANT           05200002
+.*                                                                      05250002
+         COPY  SGLEDPK1                                                 05300002
+         PUNCH '//&NAME DD DSN=SYS1.&NAME,DISP=SHR'                     05350002
+         COPY  SGLEDPK2                                                 05400002
+.*                                                                      05450002
+.********************************************************************** 05500002
+.*                                                                      05550002
+.* ASSOCIATED MACRO =                   NONE                            05600002
+.* DESCRIPTIVE NAME =                   O/C/E/D RECOVERY ROUTINE        05650002
+.* LARGE LOAD MODULE =                  IFG0RR0A                        05700002
+.* LIBRARY =                            SYS1.LPALIB                     05750002
+.* NUMBER OF CSECTS =                   04                              05800002
+.*                                                                      05850002
+.********************************************************************** 05900002
+.*                                                                      05950002
+         PUNCH '         ENTRY IFG0RR0A                 EXPECT IEW046I X06000002
+               MESSAGES FOR -  C'                                       06010002
+         PUNCH '                                        IDAOCEA1, IGG02X06020002
+               13Z, IGG020T1,  C'                                       06030002
+         PUNCH '                                        IGG0202B, IGG02X06040002
+               0FC, HASPXSUB,  C'                                       06050002
+         PUNCH '                                        IFG0553B, IFG02X06060002
+               02E, IFG0554T'                                           06070002
+         PUNCH '         ORDER IFG0RR0F(P)'                             06080002
+         PUNCH '         ORDER IFG0RR0A'                                06100002
+         PUNCH '         ORDER IFG0RR0B(P)'                             06150002
+         PUNCH '         ORDER IFG0RR0E(P)'                             06200002
+         PUNCH '         INCLUDE &NAME.(IFG0RR0A)'                      06250002
+         PUNCH '         INCLUDE &NAME.(IFG0RR0B)'                      06300002
+         PUNCH '         INCLUDE &NAME.(IFG0RR0E)'                      06350002
+         PUNCH '         INCLUDE &NAME.(IFG0RR0F)'                      06400002
+         PUNCH '         ALIAS IFG0RR0F'                                06450002
+         PUNCH '         NAME IFG0RR0A(R)'                              06500002
+.*                                                                      06550002
+.********************************************************************** 06600002
+.*                                                                      06650002
+.* ASSOCIATED MACRO =                   NONE                            06700002
+.* DESCRIPTIVE NAME =                   TASK CLOSE RESOURCE MANAGER     06750002
+.* LARGE LOAD MODULE =                  IFG0TC0A                        06800002
+.* LIBRARY =                            SYS1.LPALIB                     06850002
+.* NUMBER OF CSECTS =                   01                              06900002
+.*                                                                      06950002
+.********************************************************************** 07000002
+.*                                                                      07050002
+         PUNCH '         ENTRY IFG0TC0A                 EXPECT IEW046I X07100002
+               MESSAGES FOR -  C'                                       07110002
+         PUNCH '                                        IDAVBPS2, IGG02X07120002
+               02C, IDACAT13,  C'                                       07130002
+         PUNCH '                                        IDAOCEA2, IGG02X07140002
+               03Z'                                                     07150002
+         PUNCH '         ORDER IFG0TC0A(P)'                             07160002
+         PUNCH '         INCLUDE &NAME.(IFG0TC0A)'                      07200002
+         PUNCH '         ALIAS IFG0TC4A'                                07250002
+         PUNCH '         NAME IFG0TC0A(R)'                              07300002
+.*                                                                      07350002
+.********************************************************************** 07400002
+.*                                                                      07450002
+.* ASSOCIATED MACRO =                   IECRES                          07500002
+.* DESCRIPTIVE NAME =                   O/C/E/D COMMON ROUTINE          07550002
+.* LARGE LOAD MODULE =                  IFG019RA                        07600002
+.* LIBRARY =                            SYS1.LPALIB                     07650002
+.* NUMBER OF CSECTS =                   01                              07700002
+.*                                                                      07750002
+.********************************************************************** 07800002
+.*                                                                      07850002
+         PUNCH '         ENTRY IFG019RA                 EXPECT IEW046I X07900002
+               MESSAGES FOR -  C'                                       07910002
+         PUNCH '                                        IFG0RR0A, IFG0RX07920002
+               R0F, IFG0TC0A,  C'                                       07930002
+         PUNCH '                                        IFG0TC4A, IFG01X07940002
+               9TR'                                                     07950002
+         PUNCH '         ORDER IFG019RA(P)'                             07960002
+         PUNCH '         INCLUDE &NAME.(IFG019RA)'                      08000002
+         PUNCH '         NAME IFG019RA(R)'                              08050002
+.*                                                                      08100002
+.********************************************************************** 08150002
+.*                                                                      08200002
+.* ASSOCIATED MACRO =                   NONE                            08250002
+.* DESCRIPTIVE NAME =                   OPEN/CLOSE/EOV TRACE ROUTINE    08300002
+.* LARGE LOAD MODULE =                  IFG019TR                        08350002
+.* LIBRARY =                            SYS1.LPALIB                     08400002
+.* NUMBER OF CSECTS =                   01                              08450002
+.*                                                                      08500002
+.********************************************************************** 08550002
+.*                                                                      08600002
+         PUNCH '         ENTRY IFG019TR'                                08650002
+         PUNCH '         ORDER IFG019TR(P)'                             08700002
+         PUNCH '         INCLUDE &NAME.(IFG019TR)'                      08750002
+         PUNCH '         ALIAS IFG020TR,IFG023TR,IFG055TR'              08800002
+         PUNCH '         NAME IFG019TR(R)'                              08850002
+.*                                                                      08900002
+.********************************************************************** 08950002
+.*                                                                      09000002
+.* ASSOCIATED MACRO =                   DMABCOND                        09050002
+.* DESCRIPTIVE NAME =                   PROBLEM DETERMINATION           09100002
+.*                                      INITIALIZATION ROUTINE          09110002
+.* LARGE LOAD MODULE =                  IFG0190P                        09150002
+.* LIBRARY =                            SYS1.LPALIB                     09200002
+.* NUMBER OF CSECTS =                   05                              09250002
+.*                                                                      09300002
+.********************************************************************** 09350002
+.*                                                                      09400002
+         PUNCH '         ENTRY IFG0190P                 EXPECT IEW046I X09450002
+               MESSAGES FOR -  C'                                       09460002
+         PUNCH '                                        IFG0199B, IFG01X09470002
+               98N, IFG0209B,  C'                                       09480002
+         PUNCH '                                        IFG0202L, IFG02X09490002
+               39B, IFG0232Z,  C'                                       09500002
+         PUNCH '                                        IFG0559B, IFG05X09510002
+               52X'                                                     09520002
+         PUNCH '         ORDER IFG0190P(P)'                             09530002
+         PUNCH '         ORDER IFG0200P'                                09550002
+         PUNCH '         ORDER IFG0230P'                                09600002
+         PUNCH '         ORDER IFG0550P'                                09650002
+         PUNCH '         ORDER IGG0196M'                                09700002
+         PUNCH '         INCLUDE &NAME.(IFG0190P)'                      09750002
+         PUNCH '         INCLUDE &NAME.(IFG0200P)'                      09800002
+         PUNCH '         ALIAS IFG0200P,IGG0206M'                       09850002
+         PUNCH '         INCLUDE &NAME.(IFG0230P)'                      09900002
+         PUNCH '         ALIAS IFG0230P'                                09950002
+         PUNCH '         INCLUDE &NAME.(IFG0550P)'                      10000002
+         PUNCH '         ALIAS IFG0550P'                                10050002
+         PUNCH '         INCLUDE &NAME.(IGG0196M)'                      10100002
+         PUNCH '         ALIAS IGG0196M'                                10150002
+         PUNCH '         NAME IFG0190P(R)'                              10200002
+.*                                                                      10250002
+.********************************************************************** 11100002
+.*                                                                      11150002
+.* ASSOCIATED MACRO =                   OPEN/CLOSE/EOV                  11200002
+.* DESCRIPTIVE NAME =                   VOLUME VERIFICATION ROUTINE     11250002
+.* LARGE LOAD MODULE =                  IFG0194A                        11300002
+.* LIBRARY =                            SYS1.LPALIB                     11350002
+.* NUMBER OF CSECTS =                   07                              11400002
+.*                                                                      11450002
+.********************************************************************** 11500002
+.*                                                                      11550002
+         PUNCH '         ENTRY IFG0194A                 EXPECT IEW046I X11600002
+               MESSAGES FOR -  C'                                       11610002
+         PUNCH '                                        IFG0190P, IFG05X11620002
+               54T, IFG0550P,  C'                              @ZA43317 11630037
+         PUNCH '                                        IFG0195T, IFG05X11640002
+               54P, IFG0193C,  C'                                       11650002
+         PUNCH '                                        OMODVOL1, EMODVX11660002
+               OL1, IFG0195A,  C'                                       11670037
+         PUNCH '                                        IFG0198N, IFG0EX11675037
+               X0A'                                            @G60ASBJ 11680037
+         PUNCH '         ORDER IFG0194A(P)'                             11690002
+         PUNCH '         ORDER IFG0194C(P)'                             11700002
+         PUNCH '         ORDER IFG0194F(P)'                             11750002
+         PUNCH '         ORDER IFG0194J(P)'                             11800002
+         PUNCH '         ORDER IFG0193D(P)'                             11850002
+         PUNCH '         ORDER IFG0193E'                                11900002
+         PUNCH '         ORDER IFG0195G'                                11950002
+         PUNCH '         INCLUDE &NAME.(IFG0194A)'                      12000002
+         PUNCH '         ALIAS IFG0204A,IFG0554A'                       12050002
+         PUNCH '         INCLUDE &NAME.(IFG0194C)'                      12100002
+         PUNCH '         ALIAS IFG0554C'                                12150002
+         PUNCH '         INCLUDE &NAME.(IFG0194F)'                      12200002
+         PUNCH '         ALIAS IFG0554F'                                12250002
+         PUNCH '         INCLUDE &NAME.(IFG0194J)'                      12300002
+         PUNCH '         ALIAS IFG0194J,IFG0204J,IFG0554J'              12350002
+         PUNCH '         INCLUDE &NAME.(IFG0193D)'                      12400002
+         PUNCH '         ALIAS IGG0190A,IGG0550P'                       12450002
+         PUNCH '         INCLUDE &NAME.(IFG0193E)'                      12500002
+         PUNCH '         INCLUDE &NAME.(IFG0195G)'                      12550002
+         PUNCH '         ALIAS IFG0195G'                                12600002
+         PUNCH '         NAME IFG0194A(R)'                              12650002
+.*                                                                      12700002
+.********************************************************************** 12750002
+.*                                                                      12800002
+.* ASSOCIATED MACRO =                   DMABCOND                        12850002
+.* DESCRIPTIVE NAME =                   PROBLEM DETERMINATION ROUTINES  12900002
+.* LARGE LOAD MODULE =                  IFG0199B                        12950002
+.* LIBRARY =                            SYS1.LPALIB                     13000002
+.* NUMBER OF CSECTS =                   03                              13050002
+.*                                                                      13100002
+.********************************************************************** 13150002
+.*                                                                      13200002
+         PUNCH '         ENTRY IFG0199B                 EXPECT IEW046I X13250002
+               MESSAGES FOR -  C'                                       13260002
+         PUNCH '                                        IFG0196V, IFG02X13270002
+               00W, IFG0559C'                                           13280002
+         PUNCH '         ORDER IFG0199B(P)'                             13300002
+         PUNCH '         ORDER IFG0199D'                                13350002
+         PUNCH '         ORDER IFG0199E'                                13400002
+         PUNCH '         INCLUDE &NAME.(IFG0199B)'                      13450002
+         PUNCH '         ALIAS IFG0209B,IFG0239B,IFG0559B'              13500002
+         PUNCH '         INCLUDE &NAME.(IFG0199D)'                      13550002
+         PUNCH '         ALIAS IFG0209D,IFG0239D,IFG0559D'              13600002
+         PUNCH '         INCLUDE &NAME.(IFG0199E)'                      13650002
+         PUNCH '         ALIAS IFG0209E,IFG0239E,IFG0559E'              13700002
+         PUNCH '         NAME IFG0199B(R)'                              13750002
+.*                                                                      13800002
+.********************************************************************** 13850002
+.*                                                                      13900002
+.* ASSOCIATED MACRO =                   OPEN                            13950002
+.* DESCRIPTIVE NAME =                   OPEN AND OPEN TYPE=J            14000002
+.* LARGE LOAD MODULE =                  IGC0001I                        14050002
+.* LIBRARY =                            SYS1.LPALIB                     14100002
+.* NUMBER OF CSECTS =                   30                              14150002
+.*                                                                      14200002
+.********************************************************************** 14250002
+.*                                                                      14300002
+         PUNCH '         ENTRY IGC0001I                 EXPECT IEW046I X14350002
+               MESSAGES FOR -  C'                                       14360002
+         PUNCH '                                        IFG0191X, IFG01X14363037
+               92Y, IEFAB4DC,  C'                                       14366037
+         PUNCH '                                        IFG0190P, IFG01X14370002
+               94A, IFG0192A,  C'                                       14380002
+         PUNCH '                                        IFG0192I, IFG01X14390002
+               92F, IDA0192P,  C'                                       14400002
+         PUNCH '                                        IFG0194J, NSLOHX14410037
+               DRI, READPSWD,  C'                                       14420037
+         PUNCH '                                        IDA0192G, NSLOHX14430037
+               DRO, IGG0191A,  C'                                       14440037
+         PUNCH '                                        IGG0192A, IGG01X14450037
+               93A, IGG0193M,  C'                                       14460037
+         PUNCH '                                        IGG0193Y, IGG01X14470037
+               935, IGG01930,  C'                                       14480037
+         PUNCH '                                        IGG01946, IGG01X14490037
+               91C, IGG0199F,  C'                                       14500037
+         PUNCH '                                        IGG0198B, IGG01X14510037
+               9SI, IGG019JD,  C'                                       14520037
+         PUNCH '                                        IGG0196M'       14530037
+         PUNCH '         ORDER IGC0002B(P)'                             14550002
+         PUNCH '         ORDER IGC0001I'                                14560002
+         PUNCH '         ORDER IFG0193A'                                14570002
+         PUNCH '         ORDER IFG0195A(P)'                             14580002
+         PUNCH '         ORDER IFG0195B'                                14600002
+         PUNCH '         ORDER IFG0195C'                                14650002
+         PUNCH '         ORDER IFG0195D'                                14700002
+         PUNCH '         ORDER IFG0195H'                                14750002
+         PUNCH '         ORDER IFG0195J'                                14800002
+         PUNCH '         ORDER IFG0195K'                                14850002
+         PUNCH '         ORDER IFG0195N'                                14900002
+         PUNCH '         ORDER IFG0554L     = IFG0195F'                 14950002
+         PUNCH '         ORDER IFG0195T(P)'                             15000002
+         PUNCH '         ORDER IFG0195V'                                15050002
+         PUNCH '         ORDER IFG0195U'                                15100002
+         PUNCH '         ORDER IFG0196J(P)'                             15150002
+         PUNCH '         ORDER IFG0196K'                                15200002
+         PUNCH '         ORDER IFG0196L'                                15250002
+         PUNCH '         ORDER IFG0196M'                                15300002
+         PUNCH '         ORDER IFG0196O(P)'                             15350002
+         PUNCH '         ORDER IFG0555J     = IFG0196P'                 15400002
+         PUNCH '         ORDER IFG0196N(P)'                             15450002
+         PUNCH '         ORDER IFG0196Q'                                15500002
+         PUNCH '         ORDER IFG0196T'                                15550002
+         PUNCH '         ORDER IFG0196U'                                15600002
+         PUNCH '         ORDER IFG0196V(P)'                             15650002
+         PUNCH '         ORDER IGG0193K'                                15700002
+         PUNCH '         ORDER IFG0196W(P)'                             15750002
+         PUNCH '         ORDER IFG0196X'                                15800002
+         PUNCH '         ORDER IFG0198N'                                15850002
+         PUNCH '         INCLUDE &NAME.(IGC0001I)'                      15900002
+         PUNCH '         ALIAS IGC0101I'                                15950002
+         PUNCH '         INCLUDE &NAME.(IGC0002B)'                      16000002
+         PUNCH '         ALIAS IGC0002B'                                16050002
+         PUNCH '         INCLUDE &NAME.(IFG0193A)'                      16100002
+         PUNCH '         ALIAS IFG0193A'                                16150002
+         PUNCH '         INCLUDE &NAME.(IFG0195A)'                      16200002
+         PUNCH '         INCLUDE &NAME.(IFG0195B)'                      16250002
+         PUNCH '         INCLUDE &NAME.(IFG0195C)'                      16300002
+         PUNCH '         INCLUDE &NAME.(IFG0195D)'                      16350002
+         PUNCH '         ALIAS IGG0190B'                                16400002
+         PUNCH '         INCLUDE &NAME.(IFG0554L)'                      16450002
+         PUNCH '         ALIAS IFG0554L     = IFG0195F'                 16500002
+         PUNCH '         INCLUDE &NAME.(IFG0195H)'                      16550002
+         PUNCH '         INCLUDE &NAME.(IFG0195J)'                      16600002
+         PUNCH '         INCLUDE &NAME.(IFG0195K)'                      16650002
+         PUNCH '         INCLUDE &NAME.(IFG0195N)'                      16700002
+         PUNCH '         INCLUDE &NAME.(IFG0195T)'                      16750002
+         PUNCH '         ALIAS IFG0195T'                                16800002
+         PUNCH '         ALIAS IFG0555T'                                16850002
+         PUNCH '         INCLUDE &NAME.(IFG0195U)'                      16900002
+         PUNCH '         ALIAS IFG0195U'                                16950002
+         PUNCH '         INCLUDE &NAME.(IFG0195V)'                      17000002
+         PUNCH '         ALIAS IFG0195V'                                17050002
+         PUNCH '         INCLUDE &NAME.(IFG0196J)'                      17100002
+         PUNCH '         INCLUDE &NAME.(IFG0196K)'                      17150002
+         PUNCH '         INCLUDE &NAME.(IFG0196L)'                      17200002
+         PUNCH '         INCLUDE &NAME.(IFG0196M)'                      17250002
+         PUNCH '         INCLUDE &NAME.(IFG0196N)'                      17300002
+         PUNCH '         INCLUDE &NAME.(IFG0196O)'                      17350002
+         PUNCH '         ALIAS IGG0190R'                                17400002
+         PUNCH '         INCLUDE &NAME.(IFG0555J)'                      17450002
+         PUNCH '         ALIAS IFG0555J     = IFG0196P'                 17500002
+         PUNCH '         INCLUDE &NAME.(IFG0196Q)'                      17550002
+         PUNCH '         INCLUDE &NAME.(IFG0196T)'                      17600002
+         PUNCH '         INCLUDE &NAME.(IFG0196U)'                      17650002
+         PUNCH '         INCLUDE &NAME.(IFG0196V)'                      17700002
+         PUNCH '         ALIAS IFG0196V'                                17750002
+         PUNCH '         INCLUDE &NAME.(IFG0196W)'                      17800002
+         PUNCH '         ALIAS IGG0190S'                                17850002
+         PUNCH '         INCLUDE &NAME.(IFG0196X)'                      17900002
+         PUNCH '         INCLUDE &NAME.(IFG0198N)'                      17950002
+         PUNCH '         ALIAS IFG0198N'                                18000002
+         PUNCH '         INCLUDE &NAME.(IGG0193K)'                      18050002
+         PUNCH '         ALIAS IGG0193K'                                18100002
+         PUNCH '         NAME IGC0001I(R)'                              18150002
+.*                                                                      18200002
+.********************************************************************** 18250002
+.*                                                                      18300002
+.* ASSOCIATED MACRO =                   CLOSE                           18350002
+.* DESCRIPTIVE NAME =                   CLOSE AND CLOSE TYPE=T          18400002
+.* LARGE LOAD MODULE =                  IGC00020                        18450002
+.* LIBRARY =                            SYS1.LPALIB                     18500002
+.* NUMBER OF CSECTS =                   25                              18550002
+.*                                                                      18600002
+.********************************************************************** 18650002
+.*                                                                      18700002
+         PUNCH '         ENTRY IGC00020                 EXPECT IEW046I X18750002
+               MESSAGES FOR -  C'                                       18760002
+         PUNCH '                                        IFG0200P, IFG02X18770002
+               00N, IFG0231T,  C'                                       18780002
+         PUNCH '                                        IFG0RR0B, IGC01X18790002
+               01I, IFG0230P,  C'                                       18800002
+         PUNCH '                                        NSLCTRLO, NSLETX18810002
+               RLI, IGG020P1,  C'                                       18820002
+         PUNCH '                                        IFG0201A, IGG02X18830002
+               06M, IGG02029,  C'                                       18840002
+         PUNCH '                                        IGG0202A, IGG02X18850002
+               02I, IGG0202D,  C'                                       18860002
+         PUNCH '                                        IGG02028, IGG02X18870002
+               03A, IGG0201Z,  C'                                       18880002
+         PUNCH '                                        IGG02030, IGG02X18890002
+               01A, IGG0201D,  C'                                       18900002
+         PUNCH '                                        IGG0203M, IGG02X18910002
+               03Y, IGG02046,  C'                                       18920002
+         PUNCH '                                        IGG0203B, IGG02X18930002
+               035, IGG0201W,  C'                                       18940002
+         PUNCH '                                        IFG0200U, IDA01X18950002
+               92P, IFG0200T,  C'                                       18960002
+         PUNCH '                                        IFG0200S, IFG02X18970002
+               04A, ISTOCMDC'                                   Y30ASJC 18980003
+         PUNCH '         ORDER IGC00020(P)'                             18990002
+         PUNCH '         ORDER IFG0200V'                                19000002
+         PUNCH '         ORDER IFG0200W'                                19010002
+         PUNCH '         ORDER IGG0203K'                                19020002
+         PUNCH '         ORDER IFG0200Y(P)'                             19030002
+         PUNCH '         ORDER IFG0200Z'                                19040002
+         PUNCH '         ORDER IFG0201R'                                19100002
+         PUNCH '         ORDER IFG0202A'                                19150002
+         PUNCH '         ORDER IFG0202B'                                19200002
+         PUNCH '         ORDER IFG0202C'                                19250002
+         PUNCH '         ORDER IFG0202D'                                19300002
+         PUNCH '         ORDER IFG0202E'                                19350002
+         PUNCH '         ORDER IFG0202F'                                19400002
+         PUNCH '         ORDER IFG0202H(P)'                             19450002
+         PUNCH '         ORDER IFG0202I'                                19500002
+         PUNCH '         ORDER IFG0202J(P)'                             19550002
+         PUNCH '         ORDER IFG0202K'                                19600002
+         PUNCH '         ORDER IFG0202L'                                19650002
+         PUNCH '         ORDER IGC0002C(P)'                             19700002
+         PUNCH '         ORDER IFG0232D'                                19750002
+         PUNCH '         ORDER IFG0232G'                                19800002
+         PUNCH '         ORDER IFG0232J'                                19850002
+         PUNCH '         ORDER IFG0232M'                                19900002
+         PUNCH '         ORDER IFG0232S'                                19950002
+         PUNCH '         ORDER IFG0232Z'                                20000002
+         PUNCH '         INCLUDE &NAME.(IGC00020)'                      20050002
+         PUNCH '         ALIAS IGC0002{,IGC01020'                       20100002
+         PUNCH '         INCLUDE &NAME.(IFG0200V)'                      20150002
+         PUNCH '         ALIAS IFG0200V'                                20200002
+         PUNCH '         INCLUDE &NAME.(IFG0200W)'                      20250002
+         PUNCH '         ALIAS IFG0200W'                                20260002
+         PUNCH '         INCLUDE &NAME.(IFG0200Y)'                      20300002
+         PUNCH '         ALIAS IGG0200F,IGG0200G'                       20350002
+         PUNCH '         INCLUDE &NAME.(IFG0200Z)'                      20400002
+         PUNCH '         INCLUDE &NAME.(IFG0201R)'                      20450002
+         PUNCH '         INCLUDE &NAME.(IFG0202A)'                      20500002
+         PUNCH '         INCLUDE &NAME.(IFG0202B)'                      20550002
+         PUNCH '         ALIAS IFG0232Y,IFG0556B,IGG0200B'              20600002
+         PUNCH '         INCLUDE &NAME.(IFG0202C)'                      20650002
+         PUNCH '         INCLUDE &NAME.(IFG0202D)'                      20700002
+         PUNCH '         INCLUDE &NAME.(IFG0202E)'                      20750002
+         PUNCH '         ALIAS IFG0202E'                                20800002
+         PUNCH '         INCLUDE &NAME.(IFG0202F)'                      20850002
+         PUNCH '         INCLUDE &NAME.(IFG0202H)'                      20900002
+         PUNCH '         ALIAS IFG0553B'                                20950002
+         PUNCH '         INCLUDE &NAME.(IFG0202I)'                      21000002
+         PUNCH '         INCLUDE &NAME.(IFG0202J)'                      21050002
+         PUNCH '         INCLUDE &NAME.(IFG0202K)'                      21100002
+         PUNCH '         INCLUDE &NAME.(IFG0202L)'                      21150002
+         PUNCH '         ALIAS IFG0202L'                                21200002
+         PUNCH '         INCLUDE &NAME.(IGC0002C)'                      21250002
+         PUNCH '         ALIAS IGC0002C'                                21300002
+         PUNCH '         INCLUDE &NAME.(IFG0232D)'                      21350002
+         PUNCH '         INCLUDE &NAME.(IFG0232G)'                      21400002
+         PUNCH '         INCLUDE &NAME.(IFG0232J)'                      21450002
+         PUNCH '         INCLUDE &NAME.(IFG0232M)'                      21500002
+         PUNCH '         INCLUDE &NAME.(IFG0232S)'                      21550002
+         PUNCH '         INCLUDE &NAME.(IFG0232Z)'                      21600002
+         PUNCH '         ALIAS IFG0232Z'                                21650002
+         PUNCH '         INCLUDE &NAME.(IGG0203K)'                      21700002
+         PUNCH '         ALIAS IGG0203K'                                21750002
+         PUNCH '         NAME IGC00020(R)'                              21800002
+.*                                                                      21850002
+.********************************************************************** 21900002
+.*                                                                      21950002
+.* ASSOCIATED MACRO =                   EOV & FEOV                      22000002
+.* DESCRIPTIVE NAME =                   END OF VOLUME                   22050002
+.* LARGE LOAD MODULE =                  IGC0005E                        22100002
+.* LIBRARY =                            SYS1.LPALIB                     22150002
+.* NUMBER OF CSECTS =                   31                              22200003
+.*                                                                      22250002
+.********************************************************************** 22300002
+.*                                                                      22350002
+         PUNCH '         ENTRY IGC0005E                 EXPECT IEW046I X22400002
+               MESSAGES FOR -  C'                                       22410002
+         PUNCH '                                        IFG0550P, IFG05X22420002
+               54J, NSLEHDRO,  C'                                       22430002
+         PUNCH '                                        IFG0555T, NSLEHX22440002
+               DRI, IFG0557A,  C'                                       22450002
+         PUNCH '                                        IFG0550Y, IFG05X22460002
+               54A, NSLETRLI,  C'                                       22470002
+         PUNCH '                                        NSLETRLO, IFG05X22480002
+               53B, IGC01020,  C'                                       22490002
+         PUNCH '                                        IFG0554L, IGG05X22500002
+               53A, IFG0555J,  C'                                       22510002
+         PUNCH '                                        IFG0556B, IFG0RX22520002
+               R0B'                                             ZA00112 22530002
+         PUNCH '         ORDER IGC0003A(P)'                             22540002
+         PUNCH '         ORDER IFG0551D'                       @ZA37313 22550037
+         PUNCH '         ORDER IGC0005E(P)'                    @ZA37313 22570037
+         PUNCH '         ORDER IFG0551B'                                22590037
+         PUNCH '         ORDER IFG0552X(P)'                             22650002
+         PUNCH '         ORDER IFG0551F'                                22700002
+         PUNCH '         ORDER IFG0551H'                                22750002
+         PUNCH '         ORDER IFG0551L(P)'                             22800002
+         PUNCH '         ORDER IFG0558X'                       @Z30JSDM 22810003
+         PUNCH '         ORDER IFG0554B'                       @ZA37313 22850037
+         PUNCH '         ORDER IFG0551P(P)'                             22880037
+         PUNCH '         ORDER IFG0551R'                                22910037
+         PUNCH '         ORDER IFG0551T'                                22940037
+         PUNCH '         ORDER IFG0552N'                       @ZA37313 22970037
+         PUNCH '         ORDER IFG0552B(P)'                             23000037
+         PUNCH '         ORDER IFG0552D'                                23030037
+         PUNCH '         ORDER IFG0552F'                                23060037
+         PUNCH '         ORDER IFG0552R(P)'                             23200002
+         PUNCH '         ORDER IFG0552T'                                23250002
+         PUNCH '         ORDER IFG0552V'                                23300002
+         PUNCH '         ORDER IFG0553F(P)'                             23350002
+         PUNCH '         ORDER IFG0553H'                                23400002
+         PUNCH '         ORDER IFG0553P(P)'                             23450002
+         PUNCH '         ORDER IFG0553X'                                23500002
+         PUNCH '         ORDER IFG0553Z'                                23550002
+         PUNCH '         ORDER IFG0554N(P)'                    @ZA37313 23600037
+         PUNCH '         ORDER IFG0554P'                                23650037
+         PUNCH '         ORDER IFG0554Z'                                23700037
+         PUNCH '         ORDER IFG0555B'                       @ZA37313 23750037
+         PUNCH '         ORDER IFG0555H(P)'                             23800037
+         PUNCH '         ORDER IFG0554T'                                23900002
+         PUNCH '         INCLUDE &NAME.(IGC0005E)'                      23950002
+         PUNCH '         INCLUDE &NAME.(IGC0003A)'                      24000002
+         PUNCH '         ALIAS IGC0003A'                                24050002
+         PUNCH '         INCLUDE &NAME.(IFG0551B)'                      24100002
+         PUNCH '         INCLUDE &NAME.(IFG0551D)'                      24150002
+         PUNCH '         INCLUDE &NAME.(IFG0551F)'                      24200002
+         PUNCH '         ALIAS IFG0551F'                                24250002
+         PUNCH '         INCLUDE &NAME.(IFG0551H)'                      24300002
+         PUNCH '         INCLUDE &NAME.(IFG0551L)'                      24350002
+         PUNCH '         ALIAS IFG0551N'                                24400002
+         PUNCH '         INCLUDE &NAME.(IFG0558X)'             @Z30JSDM 24410003
+         PUNCH '         INCLUDE &NAME.(IFG0551P)'                      24450002
+         PUNCH '         INCLUDE &NAME.(IFG0551R)'                      24500002
+         PUNCH '         INCLUDE &NAME.(IFG0551T)'                      24550002
+         PUNCH '         ALIAS IGG0550F'                                24600002
+         PUNCH '         INCLUDE &NAME.(IFG0552B)'                      24650002
+         PUNCH '         INCLUDE &NAME.(IFG0552D)'                      24700002
+         PUNCH '         INCLUDE &NAME.(IFG0552F)'                      24750002
+         PUNCH '         INCLUDE &NAME.(IFG0552N)'                      24800002
+         PUNCH '         ALIAS IGG0550H'                                24850002
+         PUNCH '         INCLUDE &NAME.(IFG0552R)'                      24900002
+         PUNCH '         ALIAS IGG0550B'                                24950002
+         PUNCH '         INCLUDE &NAME.(IFG0552T)'                      25000002
+         PUNCH '         INCLUDE &NAME.(IFG0552V)'                      25050002
+         PUNCH '         INCLUDE &NAME.(IFG0552X)'                      25100002
+         PUNCH '         ALIAS IFG0552X'                                25150002
+         PUNCH '         INCLUDE &NAME.(IFG0553F)'                      25200002
+         PUNCH '         INCLUDE &NAME.(IFG0553H)'                      25250002
+         PUNCH '         ALIAS IGG0550D'                                25300002
+         PUNCH '         INCLUDE &NAME.(IFG0553P)'                      25350002
+         PUNCH '         INCLUDE &NAME.(IFG0553X)'                      25400002
+         PUNCH '         INCLUDE &NAME.(IFG0553Z)'                      25450002
+         PUNCH '         INCLUDE &NAME.(IFG0554B)'                      25500002
+         PUNCH '         INCLUDE &NAME.(IFG0554N)'                      25550002
+         PUNCH '         INCLUDE &NAME.(IFG0554P)'                      25600002
+         PUNCH '         ALIAS IFG0554P'                                25650002
+         PUNCH '         INCLUDE &NAME.(IFG0554T)'                      25700002
+         PUNCH '         ALIAS IFG0554T'                                25750002
+         PUNCH '         INCLUDE &NAME.(IFG0554Z)'                      25800002
+         PUNCH '         INCLUDE &NAME.(IFG0555H)'                      25850002
+         PUNCH '         INCLUDE &NAME.(IFG0555B)'                      25900002
+         PUNCH '         NAME IGC0005E(R)'                              25950002
+.*                                                                      26000002
+.********************************************************************** 26050002
+.*                                                                      26100002
+.* ASSOCIATED MACRO =                   RDJFCB                          26150002
+.* DESCRIPTIVE NAME =                   READ JFCB ROUTINE               26200002
+.* LARGE LOAD MODULE =                  IGC0006D                        26250002
+.* LIBRARY =                            SYS1.LPALIB                     26300002
+.* NUMBER OF CSECTS =                   01                              26350002
+.*                                                                      26400002
+.********************************************************************** 26450002
+.*                                                                      26500002
+         PUNCH '         ENTRY IGC0006D                 EXPECT IEW046I X26550002
+               MESSAGES FOR -  C'                                       26560002
+         PUNCH '                                        IGG0196M'       26570002
+         PUNCH '         ORDER IGC0006D(P)'                             26600002
+         PUNCH '         INCLUDE &NAME.(IGC0006D)'                      26650002
+         PUNCH '         NAME IGC0006D(R)'                              26700002
+.*                                                                      26750002
+.********************************************************************** 26800002
+.*                                                                      26850002
+.* ASSOCIATED MACRO =                   XLATE                           26900002
+.* DESCRIPTIVE NAME =                   ASCII TRANSLATE ROUTINE         26950002
+.* LARGE LOAD MODULE =                  IGC0010C                        27000002
+.* LIBRARY =                            SYS1.LPALIB                     27050002
+.* NUMBER OF CSECTS =                   01                              27100002
+.*                                                                      27150002
+.********************************************************************** 27200002
+.*                                                                      27250002
+         PUNCH '         ENTRY IGC0010C'                                27300002
+         PUNCH '         ORDER IGC0010C(P)'                             27350002
+         PUNCH '         INCLUDE &NAME.(IGC0010C)'                      27400002
+         PUNCH '         NAME IGC0010C(R)'                              27450002
+.*                                                                      27500002
+.********************************************************************** 27550002
+.*                                                                      27600002
+.* ASSOCIATED MACRO =                   GTRACE                          27650002
+.* DESCRIPTIVE NAME =                   GTF TRACE FORMAT ROUTINE        27700002
+.* LARGE LOAD MODULE =                  IMDUSRFF                        27750002
+.* LIBRARY =                            SYS1.LPALIB                     27800002
+.* NUMBER OF CSECTS =                   01                              27850002
+.*                                                                      27900002
+.********************************************************************** 27950002
+.*                                                                      28000002
+         PUNCH '         ENTRY IMDUSRFF'                                28050002
+         PUNCH '         ORDER IMDUSRFF(P)'                             28100002
+         PUNCH '         INCLUDE &NAME.(IMDUSRFF)'                      28150002
+         PUNCH '         ALIAS AMDUSRFF'                        ZA00112 28160002
+         PUNCH '         ALIAS HMDUSRFF'                        ZA00112 28170002
+         PUNCH '         NAME IMDUSRFF(R)'                              28200002
+.*                                                                      28250002
+.********************************************************************** 28300002
+.*                                                                      28350002
+.* ASSOCIATED MACRO =                   EOV (TAPE VOLUME LABEL EDITOR)  28400002
+.* DESCRIPTIVE NAME =                   EMODVOL1                        28450002
+.* LARGE LOAD MODULE =                  EMODVOL1                        28500002
+.* LIBRARY =                            SYS1.LPALIB                     28550002
+.* NUMBER OF CSECTS =                   01                              28600002
+.*                                                                      28650002
+.********************************************************************** 28700002
+.*                                                                      28750002
+         PUNCH '         ENTRY EMODVOL1                 EXPECT IEW046I X28800002
+               MESSAGES FOR -  C'                                       28810002
+         PUNCH '                                        IGG0550P'       28820002
+         PUNCH '         ORDER IFG0553C(P)'                             28850002
+         PUNCH '         INCLUDE &NAME.(IFG0553C)'                      28900002
+         PUNCH '         ALIAS IFG0553C'                                28950002
+         PUNCH '         NAME EMODVOL1(R)'                              29000002
+.*                                                                      29050002
+.********************************************************************** 29100002
+.*                                                                      29150002
+.* ASSOCIATED MACRO =                   OPEN (TAPE VOLUME LABEL EDITOR) 29200002
+.* DESCRIPTIVE NAME =                   OMODVOL1                        29250002
+.* LARGE LOAD MODULE =                  OMODVOL1                        29300002
+.* LIBRARY =                            SYS1.LPALIB                     29350002
+.* NUMBER OF CSECTS =                   01                              29400002
+.*                                                                      29450002
+.********************************************************************** 29500002
+.*                                                                      29550002
+         PUNCH '         ENTRY OMODVOL1                 EXPECT IEW046I X29600002
+               MESSAGES FOR -  C'                                       29610002
+         PUNCH '                                        IGG0190A'       29620002
+         PUNCH '         ORDER IFG0193C(P)'                             29650002
+         PUNCH '         INCLUDE &NAME.(IFG0193C)'                      29700002
+         PUNCH '         ALIAS IFG0193C'                                29750002
+         PUNCH '         NAME OMODVOL1(R)'                              29800002
+.*                                                                      29850002
+.********************************************************************** 29900002
+.*                                                                      29950002
+.* ASSOCIATED MACRO =                   NONE                            30000002
+.* DESCRIPTIVE NAME =                   WTOR READ PASSWORD ROUTINE      30050002
+.* LARGE LOAD MODULE =                  READPSWD                        30100002
+.* LIBRARY =                            SYS1.LPALIB                     30150002
+.* NUMBER OF CSECTS =                   01                              30200002
+.*                                                                      30250002
+.********************************************************************** 30300002
+.*                                                                      30350002
+         PUNCH '         ENTRY READPSWD                 EXPECT IEW046I X30400002
+               MESSAGES FOR -  C'                                       30410002
+         PUNCH '                                        IFG0195U'       30420002
+         PUNCH '         ORDER READPSWD(P)'                             30450002
+         PUNCH '         INCLUDE &NAME.(READPSWD)'                      30500002
+         PUNCH '         NAME READPSWD(R)'                              30550002
+.*                                                                      30600002
+.********************************************************************** 30650002
+.*                                                                      30700002
+.* ASSOCIATED MACRO =                   NONE                            30750002
+.* DESCRIPTIVE NAME =                   SCRATCH/RENAME/RESTART PASSWORD 30800002
+.* LARGE LOAD MODULE =                  SECLOADA                        30850002
+.* LIBRARY =                            SYS1.LPALIB                     30900002
+.* NUMBER OF CSECTS =                   01                              30950002
+.*                                                                      31000002
+.********************************************************************** 31050002
+.*                                                                      31100002
+         PUNCH '         ENTRY SECLOADA                 EXPECT IEW046I X31150002
+               MESSAGES FOR -  C'                                       31160002
+         PUNCH '                                        IFG0195V, IGG03X31170002
+               001, IGG0290A,  C'                                       31180002
+         PUNCH '                                        IGC0N05B'       31190002
+         PUNCH '         ORDER SECLOADA(P)'                             31200002
+         PUNCH '         INCLUDE &NAME.(SECLOADA)'                      31250002
+         PUNCH '         NAME SECLOADA(R)'                              31300002
+.*                                                                      31350002
+.********************************************************************** 31400002
+.*                                                                      31450002
+.* ASSOCIATED MACRO =                   NONE                            31500037
+.* DESCRIPTIVE NAME =                   OPEN/EOV DUMMY DSCB EXIT        31550037
+.* LARGE LOAD MODULE =                  IFG0EX0A                        31600037
+.* LIBRARY =                            SYS1.LPALIB                     31650037
+.* NUMBER OF CSECTS =                   01                              31700037
+.*                                                                      31750037
+.********************************************************************** 31800037
+.*                                                                      31850037
+         PUNCH '         ENTRY IFG0EX0A'                       @G60ASBJ 31900037
+         PUNCH '         ORDER IFG0EX0A(P)'                    @G60ASBJ 31950037
+         PUNCH '         INCLUDE &NAME.(IFG0EX0A)'             @G60ASBJ 32000037
+         PUNCH '         NAME IFG0EX0A(R)'                     @G60ASBJ 32050037
+         PUNCH '/*'                                                     32100037
+.*                                                                      32150037
+         MEND                                                           32200037

@@ -1,0 +1,88 @@
+         MACRO                                                          10550021
+         SGIEC5PV                                                       10600000
+         COPY  SGGBLPAK                                                 10650021
+.*    VS2 RELEASE 01 DELETIONS                                          10651001
+.*D119000-120000,1315000-132000,133000-133500,134500             YM0900 10651101
+.*D106505,106912,218500-221000,222000-225000                     YM0965 10661101
+.*       VS2 RELEASE 02                                                 10666102
+.*139500                                                         Y02072 10671102
+.*                                                               Y02144 10681102
+.*                                                               YM1434 10683102
+.*                                                               YM3140 10685102
+.*                                                               YM3146 10687102
+.*       VS2 RELEASE 03                                                 10689103
+.*                                                             @Z30TSMI 10689503
+.*D216820-216984                                                ZA11124 10689900
+.*A108600,108700,225500,238000,268000,298000,328000,358000      ZA11124 10690900
+.*A568000                                                       ZA11124 10691900
+.*       VS2 RELEASE 04                                                 10692900
+.*A213500                                                      @Z40MSRB 10693900
+.*    10/12/74       LEVEL=007                                          10694900
+         AIF   (NOT &GETB(3)).ALLGEN                                    10700021
+.*      A FULL SYSGEN WAS NOT REQUESTED.                         YM0965 10750001
+.*      TEST FOR 1419 MODULES                                    YM0965 10800001
+         AIF   (&SGDCLSB(65) OR &SGDCLSB(66)).RPSSUP                    10850000
+.*      TEST FOR 3211 OR 2245 MODULES                           ZA11124 10860000
+         AIF   (&SGDCLSB(71) OR &SGDCLSB(74)).LAB02             ZA11124 10870000
+         MEXIT                                                          10900021
+.ALLGEN  ANOP                                                           10950021
+         PUNCH ' COPY OUTDD=&SGCTRLC(36),INDD=AOSD0 '                   11000000
+         PUNCH ' SELECT MEMBER=(IGCT0018,IGCT0021,IGCT002D) '    Y02144 11010002
+         PUNCH ' SELECT MEMBER=(IGCT002E,IGCT006H,IGCT0069) '    Y02144 11020002
+         PUNCH ' SELECT MEMBER=(IGCT1081,IGCT010E,IGG020T1) '    Y02144 11030002
+         PUNCH ' SELECT MEMBER=(IGC0010E) '                             11050021
+         PUNCH ' SELECT MEMBER=(IGG019AA,IGG019AB,IGG019AC,IGG019AD) '  11100021
+         PUNCH ' SELECT MEMBER=(IGG019AF,IGG019AG,IGG019AI,IGG019AJ) '  11150021
+         PUNCH ' SELECT MEMBER=(IGG019AK,IGG019AL,IGG019AM,IGG019AN) '  11200021
+         PUNCH ' SELECT MEMBER=(IGG019AQ,IGG019AR,IGG019AT,IGG019AV) '  11250021
+         PUNCH ' SELECT MEMBER=(IGG019AW,IGG019AX) '                    11300000
+         PUNCH ' SELECT MEMBER=(IGG019BA,IGG019BB,IGG019BD,IGG019BE) '  11370000
+         PUNCH ' SELECT MEMBER=(IGG019BF,IGG019BG,IGG019BI,IGG019BL) '  11440000
+         PUNCH ' SELECT MEMBER=(IGG019BM,IGG019BN,IGG019BO,IGG019BP) '  11510000
+         PUNCH ' SELECT MEMBER=(IGG019BQ) '                      YM1434 11550000
+         PUNCH ' SELECT MEMBER=(IGG019CA,IGG019CB,IGG019CC) '  @ZA49715 11600000
+         PUNCH ' SELECT MEMBER=(IGG019CE,IGG019CF,IGG019CH) '           11650000
+         PUNCH ' SELECT MEMBER=(IGG019CL,IGG019CM,IGG019CN,IGG019CO) '  11700000
+         PUNCH ' SELECT MEMBER=(IGG019CP,IGG019CQ,IGG019CR,IGG019CS) '  11750000
+         PUNCH ' SELECT MEMBER=(IGG019CT,IGG019CX,IGG019CY,IGG019CZ) '  11800000
+         PUNCH ' SELECT MEMBER=(IGG019C0,IGG019C1,IGG019C3) '  @ZA40410 11850000
+         PUNCH ' SELECT MEMBER=(IGG019C4) '                             12070000
+         PUNCH ' SELECT MEMBER=(IGG019EI,IGG019EJ) '                    12150021
+         PUNCH ' SELECT MEMBER=(IGG019FB,IGG019FD,IGG019FF,IGG019FG) '  12200021
+         PUNCH ' SELECT MEMBER=(IGG019FJ,IGG019FL,IGG019JD) '    YM1283 12250002
+         PUNCH ' SELECT MEMBER=(IFG0559C,IGGMSG01,IGGMSG02) '    YM1283 12260002
+         PUNCH ' SELECT MEMBER=(IGG019FP) '                             12350000
+         PUNCH ' SELECT MEMBER=(IGG019HT) '                             12400000
+         PUNCH ' SELECT MEMBER=(IGG019TC) '                    @ZA40410 12450000
+         PUNCH ' SELECT MEMBER=(IGC0002E,IGC0002D) '           @Z30TSMI 13900003
+         PUNCH ' SELECT MEMBER=(IGC0006I) '                             14000021
+.*                                                             @Z40MSAP 14050000
+.*  THE NEXT MODULES ARE NAMED IGGR19XX BUT WILL BE SELECTED BY  YM0965 21400001
+.*  THEIR ALIAS NAME IGG019XX.                                   YM0965 21450001
+         PUNCH ' SELECT MEMBER=(IGG019AE,IGG019BC,IGG019BH,IGG019BK) '  21500000
+         PUNCH ' SELECT MEMBER=(IGG019CG,IGG019CI,IGG019CJ,IGG019CU) '  21530000
+         PUNCH ' SELECT MEMBER=(IGG019CW) '                    @ZA40410 21600000
+         PUNCH ' SELECT MEMBER=(IGG019TW) '                    @ZA40410 21610000
+.*  THE FOLLOWING MODULES ARE FOR SAM SI                         Y02072 21655002
+         PUNCH ' SELECT MEMBER=(IGG0199F,IGG0199G,IGG0199W,IGG0198L) '  21660002
+         PUNCH ' SELECT MEMBER=(IGG019DJ,IGG019DK,IGG019AH,IGG0201W) '  21665002
+         PUNCH ' SELECT MEMBER=(IGG020FC) '                      YM3140 21667002
+.*  THE FOLLOWING MODULES WERE FORMERLY COPIED BY SGIEC5PL       Y02072 21675002
+         PUNCH ' SELECT MEMBER=(IECQBFG1,IECBBFB1,IGG019B0) '    Y02072 21680002
+    AGO  .LAB01                                                         21740700
+.RPSSUP  ANOP                                                           21750021
+ PUNCH ' COPY  OUTDD=&SGCTRLC(36),INDD=AOSD0'                           21800000
+.*   TEST WHETHER 1419 MODULES ARE TO BE SELECTED.               YM0965 22150001
+.LAB01   AIF   (NOT (&SGDCLSB(65) OR &SGDCLSB(66))).PTEST       ZA11124 22550000
+*                                                                       22600021
+* 1419 MODULES                                                          22650021
+*                                                                       22700021
+         PUNCH ' SELECT MEMBER=(IGG019V1,IGG019V2,IGG019V3,IGG019V4) '  22750021
+         PUNCH ' SELECT MEMBER=(IGG0197C,IGG0197D,IGG0201D) '    YM3146 22800002
+    AGO  .PTEST                                                 ZA11124 23800000
+.LAB02   ANOP                                                   ZA11124 26800000
+ PUNCH ' COPY  OUTDD=&SGCTRLC(36),INDD=AOSD0'                   ZA11124 29800000
+.*   TEST TO SEE IF 3211 MODULES TO BE SELECTED                 ZA11124 32800000
+.PTEST   AIF   (NOT &SGDCLSB(71)).MEND                          ZA11124 32850000
+         PUNCH ' SELECT MEMBER=(IGG019FR,IGG019FS) '            ZA11124 32900000
+.MEND    MEND                                                           32950037

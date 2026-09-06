@@ -1,0 +1,83 @@
+)F FUNCTION -                                                           01000002
+  THE PRINT COMMAND IS USED TO LIST PART OR ALL OF AN INDEXED-          02000002
+  SEQUENTIAL, SEQUENTIAL, OR VSAM DATA SET.                             03000002
+)X SYNTAX -                                                             04000002
+         PRINT     INFILE('DNAME/PASSWORD') |                           05000002
+                       INDATASET('ENTRYNAME/PASSWORD')                  06000002
+                   OUTFILE('DNAME')                                     07000002
+                   FROMKEY('KEY') | FROMADDRESS('ADDRESS') |            08000002
+                       FROMNUMBER('NUMBER') | SKIP('COUNT')             09000003
+                   TOKEY('KEY') | TOADDRESS('ADDRESS') |                10000003
+                       TONUMBER('NUMBER') | COUNT('COUNT')              10050003
+                   HEX | CHARACTER | DUMP                               11000002
+  REQUIRED - INFILE | INDATASET                                         12000002
+  DEFAULT  - DUMP                                                       13000002
+  ABBREVIATIONS -                                                       14000002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 15000002
+             INFILE               IFILE                                 16000002
+             INDATASET            IDS                                   17000002
+             OUTFILE              OFILE                                 18000002
+             FROMKEY              FKEY                                  19000002
+             FROMADDRESS          FADDR                                 20000002
+             FROMNUMBER           FNUM                                  20050003
+             TOADDRESS            TADDR                                 21000002
+             TONUMBER             TNUM                                  21050003
+)O OPERANDS -                                                           22000002
+))INFILE('DNAME/PASSWORD')                                              23000002
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES     24000002
+             THE DATA SET OR COMPONENT TO BE PRINTED.                   25000002
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE DATA SET      26000002
+             OR COMPONTENT TO BE PRINTED.                               27000002
+  'PASSWORD'                                                            28000002
+           - PASSWORD OF DATA SET OR COMPONENT TO BE PRINTED.           29000002
+  REQUIRED - 'DNAME'                                                    30000002
+))INDATASET('ENTRYNAME/PASSWORD')                                       31000002
+           - SPECIFIES THE NAME OF THE ENTRY TO BE PRINTED.             32000002
+  'ENTRYNAME'                                                           33000002
+           - NAME OF THE ENTRY TO BE PRINTED.                           34000002
+  'PASSWORD'                                                            35000002
+           - PASSWORD OF THE ENTRY TO BE PRINTED.                       36000002
+  REQUIRED - 'ENTRYNAME'                                                37000002
+))OUTFILE('DNAME')                                                      38000002
+           - SPECIFIES THE NAME OF A DD STATEMENT THAT IDENTIFIES AN    39000002
+             OUTPUT DATA SET OTHER THAN SYSPRINT.                       39500002
+  'DNAME'  - NAME OF A DD STATEMENT THAT IDENTIFIES AN ALTERNATE        40000002
+             OUTPUT DATA SET.                                           40500002
+))FROMKEY('KEY')                                                        41000002
+           - SPECIFIES THE KEY OF THE FIRST RECORD TO BE PRINTED.       42000002
+  'KEY'    - KEY OF THE FIRST RECORD TO BE PRINTED.                     43000002
+))FROMADDRESS('ADDRESS')                                                44000002
+           - SPECIFIES THE RELATIVE BYTE ADDRESS OF THE FIRST RECORD    45000002
+             TO BE PRINTED.                                             46000002
+  'ADDRESS'                                                             47000002
+           - RELATIVE BYTE ADDRESS OF THE FIRST RECORD TO BE PRINTED.   48000002
+))FROMNUMBER('NUMBER')                                                  48050003
+           - SPECIFIES THE RELATIVE RECORD NUMBER OF THE FIRST RECORD   48100003
+             TO BE PRINTED.                                             48150003
+  'NUMBER' - RELATIVE RECORD NUMBER OF THE FIRST RECORD TO BE PRINTED.  48200003
+))SKIP('COUNT')                                                         49000002
+           - SPECIFIES THE NUMBER OF LOGICAL RECORDS TO BE SKIPPED      50000002
+             BEFORE THE PRINTING BEGINS.                                51000002
+  'COUNT'  - NUMBER OF LOGICAL RECORDS TO BE SKIPPED BEFORE PRINTING.   52000002
+))TOKEY('KEY')                                                          53000002
+           - SPECIFIES THE KEY OF THE LAST RECORD TO BE PRINTED.        54000002
+  'KEY'    - KEY OF THE LAST RECORD TO BE PRINTED.                      55000002
+))TOADDRESS('ADDRESS')                                                  56000002
+           - SPECIFIES THE RELATIVE BYTE ADDRESS OF THE LAST RECORD     57000002
+             TO BE PRINTED.                                             58000002
+  'ADDRESS'                                                             59000002
+           - RELATIVE BYTE ADDRESS OF THE LAST RECORD TO BE PRINTED.    60000002
+))TONUMBER('NUMBER')                                                    60050003
+           - SPECIFIES THE RELATIVE RECORD NUMBER OF THE LAST RECORD    60100003
+             TO BE PRINTED.                                             60150003
+  'NUMBER' - RELATIVE RECORD NUMBER OF THE LAST RECORD TO BE PRINTED.   60200003
+))COUNT('COUNT')                                                        61000002
+           - SPECIFIES THE NUMBER OF LOGICAL RECORDS TO BE PRINTED.     62000002
+  'COUNT'  - NUMBER OF LOGICAL RECORDS TO BE PRINTED.                   63000002
+))HEX      - SPECIFIES THAT EACH BYTE IN THE LOGICAL RECORD TO TO BE    64000002
+             PRINTED AS TWO HEXADECIMAL DIGITS.                         65000002
+))CHARACTER                                                             66000002
+           - SPECIFIES THAT EACH BYTE IN THE LOGICAL RECORD IS TO BE    67000002
+             PRINTED AS A CHARACTER.                                    68000002
+))DUMP     - SPECIFIES THAT EACH BYTE IN THE LOGICAL RECORD IS TO BE    69000002
+             PRINTED IN BOTH HEXADECIMAL AND CHARACTER FORMAT.          70000002

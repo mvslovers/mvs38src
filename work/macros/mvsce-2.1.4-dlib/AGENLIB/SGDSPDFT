@@ -1,0 +1,94 @@
+         MACRO                                                          00050064
+         SGDSPDFT &UNIT=,&ID=                                           00100064
+         COPY    SGGBLPAK                                               00110064
+         LCLA     &I                                                    00120064
+.***START OF SPECIFICATIONS******************************************** 00150064
+.*                                                                    * 00200064
+.* MODULE NAME - SGDSPDFT                                             * 00250064
+.*                                                                    * 00300064
+.* DESCRIPTIVE NAME - INVOKE THE DSP MACRO EXITS THAT BUILD THE DFT   * 00350064
+.*                                                                    * 00400064
+.* COPYRIGHT - NONE                                                   * 00450064
+.*                                                                    * 00500064
+.* STATUS - CHANGE LEVEL 00                                           * 00550064
+.*                                                                    * 00600064
+.* FUNCTION -                                                         * 00650064
+.*    THE FUNCTION OF THIS MACRO IS TO INVOKE THE MACROS              * 00700064
+.* THAT PROVIDE THE DFT INFORMATION FOR DEVICES TO BE SYSGENED.       * 00750064
+.* THE DFT APPLIES TO POST MVS RESTRUCTRE(SU64) DEVICES.              * 00800064
+.*                                                                    * 00850064
+.*                                                                    * 00900064
+.* NOTES - N/A                                                        * 00950064
+.*                                                                    * 01000064
+.* MODULE TYPE - MACRO                                                * 01050064
+.* ENTRY POINT - N/A                                                  * 01100064
+.*                                                                    * 01150064
+.* INPUT -                                                            * 01200064
+.*                                                                    * 01250064
+.*       &ID -        THE GENERATED OR USER NAME FOR MNOTES           * 01300064
+.*                                                                    * 01350064
+.*       &UNIT -      SPECIFIED DEVICE                                * 01400064
+.*                                                                    * 01450064
+.*       &SGDFTMA -   DFT MACRO SELECTION INDEX                       * 01460064
+.*                                                                    * 01470064
+.* OUTPUT -                                                           * 01500064
+.*                                                                    * 01550064
+.*       NONE                                                         * 01600064
+.*                                                                    * 01750064
+.* EXIT, NORMAL - N/A                                                 * 01800064
+.*                                                                    * 01850064
+.* EXIT, ERROR - N/A                                                  * 01900064
+.*                                                                    * 01950064
+.* EXTERNAL REFERENCES - NONE                                         * 02000064
+.*                                                                    * 02050064
+.* MACROS - DSP MACROS(SGFDSP01 - SGFDSP10). DEVICE SUPPORT NAMES     * 02100064
+.*          ARE  ASSIGNED FOR SELECTED DEVICE CATEGORIES . THE        * 02150064
+.*          MACROS ARE INVOKED HERE TO PROVIDE INFORMATION TO THE     * 02200064
+.*          DEVICE FEATURES TABLE FOR THE UNIT(S) BEING PROCESSED.    * 02250064
+.*                                                                    * 02650064
+.* CHANGE ACTIVITY -                                                  * 02700064
+.*                                                                    * 02750064
+.********************************************************************** 02800064
+.*     GET DEVICE POINTER                                               02850064
+.*     SELECT DFT ASSIGNED MACRO USING  &SGDFTMA INDEX                  02900064
+         AIF    (&SGDFTMA EQ  101).DFT101                               02950064
+         AIF    (&SGDFTMA EQ  102).DFT102                               03000064
+         AIF    (&SGDFTMA EQ  103).DFT103                               03050064
+         AIF    (&SGDFTMA EQ  104).DFT104                               03100064
+         AIF    (&SGDFTMA EQ  105).DFT105                               03150064
+         AIF    (&SGDFTMA EQ  106).DFT106                               03200064
+         AIF    (&SGDFTMA EQ  107).DFT107                               03250064
+         AIF    (&SGDFTMA EQ  108).DFT108                               03300064
+         AIF    (&SGDFTMA EQ  109).DFT109                               03350064
+         AIF    (&SGDFTMA EQ  110).DFT110                               03400064
+         AGO     .MEND                                                  03450064
+.DFT101  ANOP                                                           03500064
+        SGFDSP01  UNIT=&UNIT,ID=&ID                                     03550064
+        MEXIT                      EXIT                                 03600064
+.DFT102  ANOP                                                           03650064
+         SGFDSP02  UNIT=&UNIT,ID=&ID                                    03700064
+         MEXIT                      EXIT                                03750064
+.DFT103   ANOP                                                          03800064
+         SGFDSP03  UNIT=&UNIT,ID=&ID                                    03850064
+         MEXIT                      EXIT                                03900064
+.DFT104   ANOP                                                          03950064
+         SGFDSP04  UNIT=&UNIT,ID=&ID                                    04000064
+         MEXIT                      EXIT                                04050064
+.DFT105   ANOP                                                          04100064
+         SGFDSP05  UNIT=&UNIT,ID=&ID                                    04150064
+         MEXIT                     EXIT                                 04200064
+.DFT106  ANOP                                                           04250064
+         SGFDSP06  UNIT=&UNIT,ID=&ID                                    04300064
+         MEXIT                      EXIT                                04350064
+.DFT107  ANOP                                                           04400064
+         SGFDSP07  UNIT=&UNIT,ID=&ID                                    04450064
+         MEXIT                      EXIT                                04500064
+.DFT108   ANOP                                                          04550064
+         SGFDSP08  UNIT=&UNIT,ID=&ID                                    04600064
+         MEXIT                      EXIT                                04650064
+.DFT109   ANOP                                                          04700064
+         SGFDSP09  UNIT=&UNIT,ID=&ID                                    04750064
+         MEXIT                      EXIT                                04800064
+.DFT110   ANOP                                                          04850064
+         SGFDSP10  UNIT=&UNIT,ID=&ID                                    04900064
+.MEND    MEND                                             .             04950064

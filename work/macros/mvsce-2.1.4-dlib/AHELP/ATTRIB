@@ -1,0 +1,113 @@
+)F FUNCTION-                                                            01000001
+   THE ATTRIB COMMAND ALLOWS DCB PARAMETERS TO BE DYNAMICALLY           02000002
+   INTRODUCED AND NAMED FOR USE WITH A SUBSEQUENT ALLOCATE COMMAND.     03000002
+)X SYNTAX-                                                              06000002
+      ATTRIB ATTR-LIST-NAME  BFALN('BUFFER BOUNDARY ALLIGNMENT')        07000002
+             BFTEK('BUFFER TECHNIQUE')  BLKSIZE('BLOCK SIZE')           08000002
+             BUFL('BUFFER LENGTH')  BUFNO('NUMBER OF BUFFERS')          09000002
+             BUFOFF('BUFFER OFFSET')  DEN('MAGNETIC TAPE DENSITY')      09050002
+             DIAGNS('TRACE OPTION')  DSORG('DATA SET ORGANIZATION')     09100002
+             EROPT('ERROR OPTION')  KEYLEN('KEY LENGTH')                10000002
+             LIMCT('LIMCT LENGTH')  LRECL('LOGICAL RECORD LENGTH')      10050002
+             NCP('MAX. NO. R/W MACROS')  OPTCD('OPTIONAL SERVICES')     11000002
+             RECFM('RECORD FORMAT')  TRTCH('RECORDING TECHNIQUE')       12000002
+             INPUT  OUTPUT  EXPDT('YYDDD')  RETPD('NNNN')               13000001
+   REQUIRED - ATTR-LIST-NAME                                            14000001
+   ALIAS - ATTR                                                         15000001
+   DEFAULTS - NONE                                                      16000001
+   NOTE - ATTRIBUTE LISTS ARE KNOWN TO THE SYSTEM FOR THE DURATION OF   17000002
+          A TERMINAL SESSION OR UNTIL RELEASED VIA THE FREE COMMAND     18000002
+        - BEFORE USING THIS COMMAND THE USER SHOULD BE FAMILIAR WITH    18050002
+          THE PROPER COMBINATIONS AND USAGE OF DCB PARAMETERS           18100002
+        - ALL VALUES MUST BE SEPARATED BY BLANKS OR COMMAS              18150002
+)O OPERANDS -                                                           20000001
+))ATTR-LIST-NAME - NAME TO BE ASSIGNED TO THE ATTRIBUTES.  THIS NAME    21000002
+                   WILL BE THE NAME SPECIFIED ON THE ALLOCATE OR FREE   22000002
+                   COMMAND.                                             24000002
+))BFALN          - BUFFER BOUNDARY ALIGNMENT                            25000001
+                     D--DOUBLE WORD BOUNDARY                            27000001
+                     F--FULL WORD BOUNDARY                              27050002
+))BFTEK          - TYPE OF BUFFERING                                    28000001
+                     A--AUTOMATIC RECORD AREA CONSTRUCTION              29000001
+                     E--EXCHANGE BUFFERING                              29050002
+                     R--RECORD BUFFERING                                30000001
+                     S--SIMPLE BUFFERING                                31000001
+))BLKSIZE        - BLOCK SIZE (0 TO 32760 VALUE)                        33000002
+))BUFL           - BUFFER LENGTH (0 TO 32760 VALUE)                     34000002
+))BUFNO          - NUMBER OF BUFFERS (0 TO 255 VALUE)                   35000002
+))BUFOFF         - BLOCK PREFIX LENGTH (0 TO 99 VALUE OR CHARACTER L)   35050002
+                     L--BLOCK PREFIX FIELD IS FOUR BYTES LONG AND       35052002
+                        CONTAINS THE BLOCK LENGTH                       35054002
+))DEN            - MAGNETIC TAPE DENSITY                                35060002
+                     0--200 BITS-PER-INCH FOR 7-TRACK TAPE              35070002
+                     1--556 BITS-PER-INCH FOR 7-TRACK TAPE              35072002
+                     2--800 BITS-PER-INCH FOR 7 AND 9-TRACK TAPES       35074002
+                     3--1600 BITS-PER-INCH FOR 9-TRACK TAPE             35076002
+                     4--6250 BITS-PER-INCH FOR 9-TRACK TAPE             35078001
+                        WITH 6250 BPI FEATURE                           35115001
+))DIAGNS         - REQUESTS THE OPEN/CLOSE/EOV TRACE OPTION             35152002
+                     TRACE--GIVES A MODULE BY MODULE TRACE OF OPEN/     35154002
+                            CLOSE/EOV'S WORKAREA AND USER'S DCB         35156002
+))DSORG          - DATA SET ORGANIZATION                                35170002
+                     DA--DIRECT ACCESS                                  35180002
+                     DAU--DIRECT ACCESS UNMOVABLE                       35200002
+                     PO--PARTITIONED ORGANIZATION                       35250002
+                     POU--PARTITIONED ORGANIZATION UNMOVABLE            35300002
+                     PS-PHYSICAL SEQUENTIAL                             35350002
+                     PSU--PHYSICAL SEQUENTIAL UNMOVABLE                 35400002
+))EROPT          - ERROR OPTION                                         36000001
+                     ABE--ABNORMAL END OF TASK                          36050002
+                     ACC--ACCEPT BLOCK CAUSING ERROR                    37000001
+                     SKP--SKIP BLOCK CAUSING ERROR                      38000001
+))KEYLEN         - KEY LENGTH (0 TO 255 VALUE)                          40000002
+))LIMCT          - NUMBER OF BLOCKS OR TRACKS TO BE SEARCHED FOR A      40050002
+                   BLOCK OR AVAILABLE SPACE (0 TO 32760 VALUE)          40100002
+))LRECL          - LOGICAL RECORD LENGTH (0 TO 32760 VALUE OR           41000002
+                   CHARACTER X)                                         41050002
+                     X--LRECL VALUE EXCEEDS 32756 FOR VARIABLE-LENGTH   41100002
+                        SPANNED RECORDS PROCESSED UNDER QSAM            41150002
+))NCP            - MAXIMUM NUMBER OF READ/WRITE MACROS BEFORE A CHECK   42000002
+                   (0 TO 99 VALUE)                                      42050002
+))OPTCD          - OPTIONAL SERVICES CODES                              43000001
+                     A--ACTUAL DEVICE ADDRESSES PRESENTED IN READ AND   43050002
+                        WRITE MACRO INSTRUCTIONS                        43100002
+                     B--END-OF-FILE RECOGNITION DISREGARDED FOR TAPES   43150002
+                     C--CHAINED SCHEDULING IS TO BE USED                44000001
+                     E--EXTENDED SEARCH FOR BLOCK OR AVAILABLE SPACE    44050002
+                     F--FEEDBACK MAY BE REQUESTED IN READ AND WRITE     44100002
+                        MACRO INSTRUCTIONS                              44150002
+                     H--CHECK FOR AND BYPASS ANY DOS CHECKPOINT RECORDS 44200002
+                        FOUND ON A DOS TAPE INPUT FILE                  44250002
+                     Q--ANSI TRANSLATE                                  45050002
+                     T--REQUESTS USER TOTALING FACILITY                 45100002
+                     W--REQUESTS A VALIDITY CHECK FOR WRITE OPERATIONS  46000002
+                        ON DIRECT ACCESS DEVICES                        47000002
+                     Z--FOR MAGNETIC TAPE INPUT, REQUESTS THE CONTROL   47050002
+                        PROGRAM TO SHORTEN ERROR RECOVERY PROCEDURE     47100002
+))RECFM          - RECORD FORMAT                                        49000001
+                     A--ASA PRINTER CHARACTERS                          49010002
+                     B--BLOCKED                                         49020002
+                     D--VARIABLE LENGTH ASCII RECORDS                   49050002
+                     F--FIXED                                           50000001
+                     M--MACHINE CONTROL CHARACTER                       50050002
+                     S--STANDARD BLOCKS                                 50100002
+                     T--TRACK OVERFLOW                                  50150002
+                     U--UNDEFINED                                       50200002
+                     V--VARIABLE                                        51000001
+))TRTCH          - RECORDING TECHNIQUE FOR 7-TRACK TAPE                 51050002
+                     C--DATA CONVERSION, WITH ODD PARITY AND NO         51100002
+                        TRANSLATION                                     51150002
+                     E--EVEN PARITY, WITH NO DATA CONVERSION AND NO     51200002
+                        TRANSLATION                                     51250002
+                     ET--EVEN PARITY AND NO CONVERSION, WITH BCD TO     51260002
+                        EBCDIC TRANSLATION WHEN READING AND EBCDIC TO   51270002
+                        BCD WHEN WRITING                                51280002
+                     T--ODD PARITY AND NO CONVERSION, WITH BCD TO       51300002
+                        EBCDIC TRANSLATION WHEN READING AND EBCDIC TO   51310002
+                        BCD WHEN WRITING                                51320002
+))INPUT          - SPECIFIES THAT THE DATA SET IS TO BE PROCESSED FOR   58000002
+                   INPUT ONLY                                           59000002
+))OUTPUT         - SPECIFIES THAT THE DATA SET IS TO BE PROCESSED FOR   60000002
+                   OUTPUT ONLY                                          61000002
+))EXPDT          - DATA SET EXPIRATION DATE (YYDDD)                     62000001
+))RETPD          - DATA SET RETENTION PERIOD  (NNNN)                    63000000

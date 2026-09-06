@@ -1,0 +1,167 @@
+)S SUBCOMMANDS -                                                        00050002
+  CONTINUE,SAVE,HELP,END                                                00100002
+)F FUNCTION -                                                           00150002
+  TO ACCESS SYSOUT DATASETS FROM BACKGROUND JOBS, FOR USERS AUTHORIZED  00200002
+  TO USE THE FOREGROUND INITIATED BACKGROUND COMMANDS.                  00250002
+)X SYNTAX -                                                             00300002
+         OUTPUT   ('JOBNAME(JOBID) LIST')  CLASS('CLASSNAME LIST')      00350002
+                                                                        00400002
+                  PRINT('*' / 'DSNAME')                                 00450002
+                     BEGIN / HERE / NEXT                                00500002
+                     PAUSE / NOPAUSE                                    00550002
+                     KEEP / NOKEEP                                      00600002
+                     HOLD / NOHOLD                                      00650002
+                                                                        00700002
+                  DELETE                                                00750002
+                                                                        00800002
+                  NEWCLASS('CLASSNAME')  DEST('REMOTE STATION ID')      00850002
+                     HOLD / NOHOLD                                      00860002
+                                                                        00870002
+  REQUIRED - 'JOBNAME(JOBID)' OR 'JOBNAME(JOBID) LIST'                  00900002
+  DEFAULTS - PRINT(*) HERE NOPAUSE NOKEEP NOHOLD                        00950002
+             CLASS DEFAULTS TO ALL HELD CLASSES FOR THE JOB             01000002
+  ALIAS    - OUT                                                        01050002
+  NOTE     - CHOOSE EITHER 'PRINT/DELETE/ROUTING' OPTION, OR LET        01100002
+             'PRINT' DEFAULT.                                           01150002
+  NOTE     - OPERANDS SHOULD NOT BE MIXED ACROSS THE THREE OPTIONS.     01200002
+             (E.G. - 'DELETE' WITH 'PAUSE').                            01250002
+  NOTE     - 'NOKEEP' AND 'HOLD/NOHOLD' ARE CONFLICTING KEYWORDS        01300002
+             FOR THE PRINT OPTION.  'HOLD/NOHOLD' ARE VALID FOR PRINT   01350002
+             ONLY IF 'KEEP' IS SPECIFIED.                               01360002
+  NOTE     - IF 'JOBNAME' (AND OPTIONALLY 'CLASSNAME') IS SPECIFIED     01370002
+             WITH ONLY 'HOLD/NOHOLD', THE COMMAND IS EXECUTED AS        01380002
+             A ROUTING REQUEST, NOT AS A PRINT REQUEST.                 01390002
+)O OPERANDS -                                                           01400002
+  'JOBNAME(JOBID) LIST'                                                 01450002
+           - JOBNAME OR LIST OF JOBNAMES FOR WHICH SYSOUT IS TO BE      01500002
+             ACCESSED.  JOBID IS OPTIONAL, HOWEVER IT INSURES           01550002
+             UNIQUENESS IN CASE OF DUPLICATE JOBNAMES.                  01600002
+))CLASS('CLASSNAME LIST')                                               01650002
+           - CLASSNAME OR LIST OF CLASSES FROM WHICH SYSOUT IS TO BE    01700002
+             ACCESSED.  IF OMITTED, ALL HELD CLASSES WILL BE SEARCHED.  01750002
+    'CLASSNAME LIST'                                                    01850002
+           - CLASS NAMES SEPARATED BY COMMAS OR BLANKS.                 01900002
+))PRINT('*'/'DSNAME')                                                   01950002
+           - DIRECTS SYSOUT TO THE DATASET SPECIFIED.                   02000002
+    '*'    - AN ASTERISK INDICATES THAT THE SYSOUT IS TO BE DIRECTED    02050002
+             TO THE USER'S TERMINAL.                                    02100002
+    'DSNAME'                                                            02150002
+           - IF THE DATASET SPECIFIED IS OLD, ITS CONTENTS WILL BE      02200002
+             REPLACED.  IF THE DATASET IS OLD AND PARTITIONED, A        02250002
+             MEMBER NAME MUST BE GIVEN.  IF THE DATASET DOES NOT        02300002
+             EXIST, A NEW DATASET WILL BE ALLOCATED.                    02350002
+))BEGIN    - INDICATES INTERRUPTED SYSOUT (CHECKPOINTED DURING A        02400002
+             PREVIOUS OUTPUT COMMAND) IS TO BE PRINTED FROM THE         02450002
+             BEGINNING.                                                 02500002
+))HERE     - INDICATES INTERRUPTED SYSOUT IS TO BE RESUMED FROM THE     02550002
+             LAST POINT OF INTERRUPTION (APPROXIMATELY TEN LINES BACK). 02600002
+))NEXT     - INDICATES OUTPUT IS TO BEGIN AT THE BEGINNING OF THE       02650002
+             NEXT DATASET WHICH HAS NOT BEEN PREVIOUSLY CHECKPOINTED.   02700002
+))PAUSE    - INDICATES OUTPUT IS TO PAUSE AFTER PROCESSING EACH         02750002
+             DATASET TO ALLOW THE USER TO ENTER A SAVE, CONTINUE,       02800002
+             HELP, OR END SUCBCOMMAND.  A NULL LINE ENTERED AT A        02850002
+             PAUSE WILL CAUSE PROCESSING TO CONTINUE.                   02900002
+))NOPAUSE  - INDICATES PROCESSING IS TO BE UNINTERRUPTED (UNLESS USER   02950002
+             HITS ATTENTION).                                           03000002
+))KEEP     - INDICATES THAT THE SYSOUT IS TO BE RETAINED BY THE         03050002
+             SYSTEM AFTER IT HAS BEEN PRINTED AT THE TERMINAL.          03100002
+))NOKEEP   - INDICATES THAT THE SYSOUT IS TO BE DELETED AFTER           03150002
+             PRINTING AT THE TERMINAL.                                  03200002
+))HOLD     - INDICATES THAT THE SYSOUT IS TO REMAIN AVAILABLE TO        03250002
+             THE TERMINAL USER FOR FUTURE REFERENCE (EVEN AFTER         03300002
+             PRINTING IF 'PRINT' IS SPECIFIED).                         03350002
+))NOHOLD   - INDICATES THAT THE SYSOUT IS TO BE RELEASED FOR            03400002
+             PRINTING BY THE SUBSYSTEM (AFTER PRINTING IF 'PRINT'       03450002
+             IS SPECIFIED, OR AFTER ROUTING IF 'NEWCLASS' OR            03500002
+             'DEST' IS SPECIFIED).                                      03550002
+))DELETE   - INDICATES THAT THE SYSOUT FROM THE CLASS(ES) SPECIFIED     03600002
+             IN THE CLASS KEYWORD IS TO BE DELETED FROM THE SYSTEM.     03650002
+))NEWCLASS('CLASSNAME')                                                 03700002
+           - INDICATES THAT THE SYSOUT IS TO BE REMOVED FROM THE        03750002
+             CLASS(ES) SPECIFIED IN THE CLASS KEYWORD, AND PLACED       03800002
+             IN THE CLASS SPECIFIED IN NEWCLASS.                        03850002
+    'CLASSNAME'                                                         03900002
+           - ANY VALID SYSOUT CLASS MAY BE SPECIFIED.                   03950002
+))DEST('REMOTE STATION ID')                                             04000002
+           - INDICATES THAT THE SYSOUT IS TO BE ROUTED TO A REMOTE      04050002
+             STATION.                                                   04100002
+    'REMOTE STATION ID'                                                 04150002
+           - ANY VALID STATION ID MAY BE SPECIFIED.                     04200002
+=CONTINUE=C                                                             04250002
+)F FUNCTION -                                                           04300002
+  RESUME OUTPUT THAT WAS INTERRUPTED BECAUSE 'PAUSE' WAS SPECIFIED      04350002
+  OR BECAUSE THE USER PRESSED ATTENTION.                                04400002
+)X SYNTAX -                                                             04450002
+         CONTINUE   BEGIN / HERE / NEXT                                 04500002
+                    PAUSE / NOPAUSE                                     04550002
+  REQUIRED - NONE                                                       04600002
+  DEFAULTS - NEXT                                                       04650002
+  ALIAS    - C                                                          04700002
+  NOTE     - UNLESS 'PAUSE' OR 'NOPAUSE' IS SPECIFIED, THE CURRENT      04750002
+             OPTION REMAINS.  IF EITHER KEYWORD IS SPECIFIED, IT        04800002
+             OVERRIDES THE EXISTING STATUS.                             04850002
+)O OPERANDS -                                                           04900002
+))BEGIN    - INDICATES INTERRUPTED OUTPUT IS TO BE RESUMED FROM         04950002
+             THE BEGINNING OF THE CHECKPOINTED DATASET.                 05000002
+))HERE     - INDICATES INTERRUPTED OUTPUT IS TO BE RESUMED AT THE       05050002
+             POINT OF INTERRUPTION:  APPROXIMATELY TEN LINES BACK IF    05100002
+             ATTENTION WAS HIT OR AT THE BEGINNING OF THE NEXT          05150002
+             DATASET IF PAUSE OCCURRED.                                 05200002
+))NEXT     - INDICATES INTERRUPTED OUTPUT IS TO BE RESUMED WITH THE     05250002
+             NEXT DATASET.  BEGIN/HERE/NEXT ON THE COMMAND DETERMINES   05300002
+             WHERE PROCESSING OF THE NEXT DATASET IS TO BEGIN.          05350002
+))PAUSE    - INDICATES OUTPUT IS TO PAUSE AFTER PROCESSING EACH         05400002
+             DATASET TO ALLOW THE USER TO ENTER A SAVE, CONTINUE,       05450002
+             HELP, OR END SUBCOMMAND.  A NULL LINE ENTERED AT A         05500002
+             PAUSE WILL CAUSE PROCESSING TO CONTINUE.                   05550002
+))NOPAUSE  - INDICATES PROCESSING IS TO BE UNINTERRUPTED (UNLESS USER   05600002
+             HITS ATTENTION).                                           05620002
+=SAVE=S                                                                 05650002
+)F FUNCTION -                                                           05700002
+  CAUSE THE SYSOUT DATASET CURRENTLY BEING PROCESSED TO BE COPIED       05750002
+  INTO THE SPECIFIED DATASET.                                           05800002
+)X SYNTAX -                                                             05850002
+         SAVE   'DSNAME'                                                05900002
+  REQUIRED - 'DSNAME'                                                   05950002
+  DEFAULTS - NONE                                                       06000002
+  ALIAS     - S                                                         06050002
+)O OPERANDS -                                                           06100002
+  'DSNAME' - NAME OF DATASET TO WHICH THE SYSOUT DATASET IS TO BE       06150002
+             COPIED.  IF THE DATASET SPECIFIED IS OLD, ITS CONTENTS     06200002
+             WILL BE REPLACED.  IF THE DATASET IS OLD AND PARTITIONED,  06250002
+             A MEMBER NAME MUST BE GIVEN.  IF THE DATASET DOES NOT      06300002
+             EXIST, A NEW DATASET WILL BE ALLOCATED.                    06350002
+=END                                                                    06400002
+)F FUNCTION -                                                           06450002
+  TERMINATE OUTPUT PROCESSING.                                          06500002
+)X SYNTAX -                                                             06550002
+         END                                                            06600002
+  REQUIRED - NONE                                                       06650002
+  DEFAULTS - NONE                                                       06700002
+  ALIAS    - NONE                                                       06750002
+)O OPERANDS - NONE                                                      06800002
+=HELP=H                                                                 06850002
+)F FUNCTION -                                                           06900002
+  PROVIDE FUNCTION, SYNTAX, AND OPERAND INFORMATION FOR THE SUBCOMMANDS 06950002
+  OF OUTPUT.                                                            07000002
+)X SYNTAX -                                                             07050002
+         HELP   'SUBCOMMAND-NAME'  FUNCTION  SYNTAX                     07100002
+                 OPERANDS('KEYWORDLIST')  ALL                           07150002
+  REQUIRED - NONE                                                       07200002
+  DEFAULTS - ALL IF NO OPERANDS ARE SPECIFIED                           07250002
+  ALIAS    - H                                                          07300002
+  NOTE     - IF HELP IS ENTERED WITHOUT ANY OPERANDS A LIST OF          07350002
+             AVAILABLE SUBCOMMANDS WILL BE DISPLAYED.                   07400002
+  NOTE     - 'KEYWORDLIST' IS OPTIONAL WHEN 'OPERANDS' IS USED.         07450002
+)O OPERANDS -                                                           07500002
+  'SUBCOMMAND-NAME'                                                     07550002
+           - NAME OF SUBCOMMAND TO BE EXPLAINED.                        07600002
+))FUNCTION - FUNCTION IS TO BE DISPLAYED.                               07650002
+))SYNTAX   - SYNTAX IS TO BE DISPLAYED.                                 07700002
+))OPERANDS('KEYWORDLIST')                                               07750002
+           - DESCRIPTION OF OPERANDS IS TO BE DISPLAYED.                07800002
+             IF 'KEYWORDLIST' IS PRESENT, ONLY THOSE KEYWORD            07850002
+             DESCRIPTIONS ARE TO BE DISPLAYED.                          07900002
+    'KEYWORDLIST'                                                       07950002
+           - KEYWORDS SEPARATED BY COMMAS OR BLANKS.                    08000002
+))ALL      - FUNCTION, SYNTAX, AND OPERAND DESCRIPTIONS ARE DISPLAYED.  08050002

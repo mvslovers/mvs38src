@@ -1,0 +1,112 @@
+)F FUNCTION -                                                           01000002
+  THE REPRO COMMAND IS USED TO COPY VSAM CLUSTERS, ALTERNATE INDEXES,   02000003
+  CATALOGS AND NON-VSAM DATA SETS.                                      03000003
+)X SYNTAX -                                                             04000002
+         REPRO     INFILE('DNAME/PASSWORD' ENVIRONMENT(DUMMY) ) |       05000003
+                       INDATASET('ENTRYNAME/PASSWORD'                   06000003
+                       ENVIRONMENT(DUMMY) )                             07000003
+                   OUTFILE('DNAME/PASSWORD') |                          08000002
+                       OUTDATASET('ENTRYNAME/PASSWORD')                 09000002
+                   FROMKEY('KEY') | FROMADDRESS('ADDRESS') |            10000002
+                       FROMNUMBER('NUMBER') | SKIP('COUNT')             11000003
+                   TOKEY('KEY') | TOADDRESS('ADDRESS') |                12000003
+                       TONUMBER('NUMBER') | COUNT('COUNT')              12050003
+                   REPLACE | NOREPLACE                                  12100003
+                   REUSE | NOREUSE                                      12150003
+  REQUIRED - INFILE|INDATASET, OUTFILE|OUTDATASET                       14000002
+  ABBREVIATIONS -                                                       16000002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 17000002
+             INFILE               IFILE                                 18000002
+             INDATASET            IDS                                   19000002
+             OUTFILE              OFILE                                 20000002
+             OUTDATASET           ODS                                   21000002
+             FROMKEY              FKEY                                  22000002
+             FROMADDRESS          FADDR                                 23000002
+             FROMNUMBER           FNUM                                  23050003
+             TOADDRESS            TADDR                                 24000002
+             TONUMBER             TNUM                                  24050003
+             NOREPLACE            NREP                                  24100003
+             REUSE                RUS                                   24150003
+             NOREUSE              NRUS                                  24200003
+)O OPERANDS -                                                           25000002
+))INFILE('DNAME/PASSWORD')                                              26000002
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES     27000002
+             THE DATA SET TO BE COPIED.                                 28000002
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE DATA SET      29000002
+             TO BE COPIED.                                              30000002
+  'PASSWORD'                                                            31000002
+           - PASSWORD OF THE DATA SET TO BE COPIED.                     32000002
+  REQUIRED - 'DNAME'                                                    33000002
+))INDATASET('ENTRYNAME/PASSWORD')                                       34000002
+           - SPECIFIES THE NAME OF THE ENTRY TO BE COPIED.              35000002
+  'ENTRYNAME'                                                           36000002
+           - NAME OF THE ENTRY TO BE COPIED.                            37000002
+  'PASSWORD'                                                            38000002
+           - PASSWORD OF THE ENTRY TO BE COPIED.                        39000002
+  REQUIRED - 'ENTRYNAME'                                                40000002
+))ENVIRONMENT(DUMMY)                                                    41000002
+           - SPECIFIES THAT DUMMY ISAM RECORDS ARE TO BE COPIED.        42000002
+))OUTFILE('DNAME/PASSWORD')                                             43000002
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES     44000002
+             THE OUTPUT DATA SET.                                       45000002
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE OUTPUT DATA   46000002
+             SET.                                                       47000002
+  'PASSWORD'                                                            48000002
+           - PASSWORD FOR THE OUTPUT DATA SET.                          49000002
+  REQUIRED - 'DNAME'                                                    50000002
+))OUTDATASET('ENTRYNAME/PASSWORD')                                      51000002
+           - SPECIFIES THE NAME OF THE OUTPUT DATA SET.                 52000002
+  'ENTRYNAME'                                                           53000002
+           - NAME OF THE OUTPUT DATA SET.                               54000002
+  'PASSWORD'                                                            55000002
+           - PASSWORD FOR THE OUTPUT DATA SET.                          56000002
+  REQUIRED - 'ENTRYNAME'                                                57000002
+))FROMKEY('KEY')                                                        58000002
+           - SPECIFIES THE KEY OF THE FIRST RECORD TO BE COPIED.        59000002
+  'KEY'    - KEY OF THE FIRST RECORD TO BE COPIED.                      60000002
+))FROMADDRESS('ADDRESS')                                                61000002
+           - SPECIFIES THE RELATIVE BYTE ADDRESS OF THE FIRST RECORD    62000002
+             TO BE COPIED.                                              63000002
+  'ADDRESS'                                                             64000002
+           - RELATIVE BYTE ADDRESS OF THE FIRST RECORD TO BE COPIED.    65000002
+))FROMNUMBER('NUMBER')                                                  65050003
+           - SPECIFIES THE RELATIVE RECORD NUMBER OF THE FIRST RECORD   65100003
+             TO BE COPIED.                                              65150003
+  'NUMBER' - RELATIVE RECORD NUMBER OF THE FIRST RECORD TO BE COPIED.   65200003
+))SKIP('COUNT')                                                         66000002
+           - SPECIFIES THE NUMBER OF LOGICAL RECORDS TO BE SKIPPED      67000002
+             BEFORE COPYING BEGINS.                                     68000002
+  'COUNT'  - NUMBER OF LOGICAL RECORDS TO BE SKIPPED BEFORE COPYING     69000002
+             BEGINS.                                                    70000002
+))TOKEY('KEY')                                                          71000002
+           - SPECIFIES THE KEY OF THE LAST RECORD TO BE COPIED.         72000002
+  'KEY'    - KEY OF LAST RECORD TO BE COPIED.                           73000002
+))TOADDRESS('ADDRESS')                                                  74000002
+           - SPECIFIES THE RELATIVE BYTE ADDRESS OF THE LAST RECORD TO  75000002
+             BE COPIED.                                                 76000002
+  'ADDRESS'                                                             77000002
+           - RELATIVE BYTE ADDRESS OF THE LAST RECORD TO BE COPIED.     78000002
+))TONUMBER('NUMBER')                                                    78050003
+           - SPECIFIES THE RELATIVE RECORD NUMBER OF THE LAST RECORD    78100003
+             TO BE COPIED.                                              78150003
+  'NUMBER' - RELATIVE RECORD NUMBER OF THE LAST RECORD TO BE COPIED.    78200003
+))COUNT('COUNT')                                                        79000002
+           - SPECIFIES THE NUMBER OF RECORDS TO BE COPIED.              80000002
+  'COUNT'  - NUMBER OF RECORDS TO BE COPIED.                            81000002
+))REPLACE  - WHEN COPYING INTO A NON-EMPTY KSDS, OR RRDS, REPLACE       81050003
+             SPECIFIES THAT ANY SOURCE RECORD WHICH HAS A KEY OR        81100003
+             RECORD NUMBER IDENTICAL TO A KEY OR RECORD NUMBER OF       81110003
+             A TARGET RECORD IS TO REPLACE THE TARGET RECORD.           81150003
+  DEFAULT  - NOREPLACE                                                  81200003
+))NOREPLACE- WHEN COPYING INTO A NON-EMPTY KSDS, OR RRDS, NOREPLACE     81250003
+             SPECIFIES THAT ANY SOURCE RECORD WHICH HAS A KEY OR        81260003
+             RECORD NUMBER IDENTICAL TO A KEY OR RECORD NUMBER OF       81270003
+             OF A TARGET RECORD IS NOT TO REPLACE THE TARGET RECORD.    81350003
+  DEFAULT  - NOREPLACE                                                  81400003
+))REUSE    - SPECIFIES THAT THE DATA SET IS REOPENABLE AS A NEW DATA    81450003
+             SET. THIS IMPLIES THAT EXISTING DATA ON AN OUTFILE DATA    81500003
+             SET MAY BE OVERLAID BY A REPRO OPERATION.                  81600003
+  DEFAULT  - NOREUSE                                                    81650003
+))NOREUSE  - SPECIFIES THAT THE DATA SET IS NOT REOPENABLE AS A NEW     81700003
+             DATA SET.                                                  81750003
+  DEFAULT  - NOREUSE                                                    81800003

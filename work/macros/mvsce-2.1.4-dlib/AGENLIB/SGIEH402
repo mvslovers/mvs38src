@@ -1,0 +1,278 @@
+         MACRO                                                          00020000
+         SGIEH402                                                       00040000
+.*C 1408                                                       @YM07117 00041302
+.*A 1408,1411                                                  @YM07104 00042702
+.*D 1407                                                       @YM07104 00044002
+.*A 1407-1426                                                  @YM04033 00045304
+.*C 1435,1458,1484,1510,1536,1562,1588,1614,1640,1666,1692,    @YM04033 00046602
+.*C 1718,1744                                                  @YM04033 00049102
+.*A 1316-1489                                                  @YM02129 00049602
+.*D 1037,1059,1081,1103,1125,1147,1169,1191,1213,1235,1257,    @YM02129 00050902
+.*D 1279,1301                                                  @YM02129 00052202
+.* 012400                                                        A44303 00053502
+.* THIS IS THE OS/370 VERSION OF INNER MACRO SGIEH402            X010XX 00054802
+.*A3300-3320                                                     Y02918 00055202
+.*D2200-2800,4200-4400,7640-7820                                YL026VC 00056102
+.*A 12520                                                       YL026VC 00057402
+.*A 000970                                                      YL026VD 00058702
+.* 000622-000626,000630-000634,000644-000648,000652-000656,      X010XX 00060002
+.* 000664-000668,000672-000676,000686-000690,000694-000698,      X010XX 00061302
+.* 000708-000712,000716-000720                                   X010XX 00062602
+.* 000728-000768 DUE TO IEBCOPY'S NEW OVERLAY STRUCTURE          X010XX 00063902
+.* 000770-001000 NOW RENUMBERED TO 000950-001150                 X010XX 00065202
+.* 000732                                                        S20201 00066502
+.*1922009200,009600,010000,012672,012699,012726,012753,012771      000I 00067802
+.*1922012789                                                       000I 00069102
+.* 012400                                                        A20878 00070402
+.* SYSGEN MACRO CHANGED FOR UTILITY TRANSFER IN RELEASE 19              00071702
+.* 000744,000768                                                 A33288 00073002
+.*                                                               A32407 00074302
+.* 005900                                                         P3770 00075602
+.* 003220-003240,004500-004520,007680-007820                   @Z40CSJH 00076004
+.*C001532                                                      @ZA04445 00076199
+.*D001545,001558                                               @ZA04445 00076299
+.*A001552,001556                                               @ZA10938 00076399
+.*C001506,001532                                               @ZA10938 00076499
+         COPY  SGGBLPAK                                                 00076902
+         LCLC  &ULIB                                             X010XX 00078202
+&SGCTRLC(7)   SETC   '&SGCTRLC(32)'   VOLNO LINKLIB                     00079502
+&SGCTRLC(8)   SETC   '&SGCTRLC(31)'   UNITNAME LINKLIB                  00080802
+&SGCTRLC(9) SETC 'LINKLIB'             SET DATA SET NAME                00082102
+&SGCTRLC(6) SETC 'IEBPTPCH'                                             00083402
+&SGCTRLC(10) SETC ',OVLY'                                               00084702
+&SGCTRLC(11)   SETC  ',LET'                                        000H 00086002
+&ULIB    SETC  'AOSU0'                                           X010XX 00087302
+ COPY SGLEDPK1                                                          00088602
+ PUNCH '//&ULIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.&ULIB'  X010XX 00089902
+ COPY SGLEDPK2                                                          00091202
+ PUNCH ' INCLUDE &ULIB.(IEBPPUN1,IEBPPMSG)'                      X010XX 00092502
+ PUNCH ' INCLUDE &ULIB.(IEBPPAL1,IEBCCS02)'                      X010XX 00093802
+ PUNCH ' INCLUDE &ULIB.(IEBPPCH1)'                               X010XX 00095102
+ PUNCH ' ENTRY PRPCH'                                                   00096402
+ PUNCH ' NAME    IEBPTPCH(R)'                                           00097702
+ PUNCH ' INCLUDE &ULIB.(IEBGENRT,IEBGMESG)'                      X010XX 00099002
+ PUNCH ' INCLUDE &ULIB.(IEBCCS02,IEBGSCAN)'                      X010XX 00100302
+ PUNCH ' INCLUDE &ULIB.(IEBGENR3,IEBCONP2,IEBCONH2)'             X010XX 00101602
+ PUNCH ' INCLUDE &ULIB.(IEBCONZ2,IEBEDIT2,IEBLENP2)'             X010XX 00102902
+ PUNCH ' INCLUDE &ULIB.(IEBMOVE2)'                               X010XX 00104202
+ PUNCH ' INCLUDE &ULIB.(IEBGENS3)'                               X010XX 00105502
+ PUNCH ' INCLUDE &ULIB.(IEBGEN03)'                               X010XX 00106802
+ PUNCH ' ENTRY IEBGENER'                                                00108102
+ PUNCH ' NAME    IEBGENER(R)'                                           00109402
+ PUNCH ' INCLUDE &ULIB.(IEBCROOT,IEBCOMPM,IEBCULET)'             X010XX 00110702
+ PUNCH ' INCLUDE &ULIB.(IEBCCS02,IEBCANAL)'                      X010XX 00112002
+ PUNCH ' INCLUDE &ULIB.(IEBCMAIN,IEBCQSAM)'                      X010XX 00113302
+ PUNCH ' ENTRY   COMPARE'                                               00114602
+ PUNCH ' NAME    IEBCOMPR(R)'                                           00115902
+ PUNCH ' INCLUDE &ULIB.(IEBUPDTE,IEBUPLOG,IEBUPDT2,IEBUPXIT)'    X010XX 00117202
+ PUNCH ' INCLUDE &ULIB.(IEBUPNIT)'                               X010XX 00118502
+ PUNCH ' INCLUDE &ULIB.(IEBASCAN,IEBBSCAN)'                      X010XX 00119802
+ PUNCH ' ENTRY IEBUPDTE'                                           000H 00121102
+ PUNCH ' NAME IEBUPDTE(R)'                                         000H 00122402
+ PUNCH ' INCLUDE &ULIB.(IEBDSCPY,IEBVMS)'                        X010XX 00123702
+ PUNCH ' INCLUDE &ULIB.(IEBDV1,IEBLDUL)'                         X010XX 00125002
+ PUNCH ' INCLUDE &ULIB.(IEBSCN)'                                 X010XX 00126302
+ PUNCH ' INCLUDE &ULIB.(IEBVCT)'                                 X010XX 00127602
+ PUNCH ' INCLUDE &ULIB.(IEBIOE)'                                 X010XX 00128902
+ PUNCH ' INCLUDE &ULIB.(IEBRSAM,IEBCNVT,IEBDRD)'                 X010XX 00130202
+ PUNCH ' INCLUDE &ULIB.(IEBWSAM,IEBDSU)'                         X010XX 00131502
+ PUNCH ' INCLUDE &ULIB.(IEBWSU,IEBDWR)'                          X010XX 00132802
+ PUNCH ' INCLUDE &ULIB.(IEBBAM)'                                 X010XX 00134102
+ PUNCH ' INCLUDE &ULIB.(IEBVDM)'                                 X010XX 00135402
+ PUNCH ' INCLUDE &ULIB.(IEBDRB)'                                 X010XX 00136702
+ PUNCH ' INCLUDE &ULIB.(IEBMCM)'                                 X010XX 00138002
+ PUNCH ' INCLUDE &ULIB.(IEBVTT)'                                 X010XX 00139302
+ PUNCH ' INCLUDE &ULIB.(IEBVTM)'                                 X010XX 00140602
+ PUNCH ' ORDER IEBDSMCA(P)'                                    @YM07117 00141502
+ PUNCH ' INSERT IEBDSMCA'                                      @YM04033 00142802
+ PUNCH ' INSERT IEBDSCP2'                                      @YM07104 00144102
+ PUNCH ' INSERT IEBVMTXT'                                      @YM04033 00145402
+ PUNCH ' INSERT IEBDV1MG'                                      @YM04033 00146702
+ PUNCH ' INSERT IEBIOEMG'                                      @YM04033 00148002
+ PUNCH ' INSERT IEBWSUMG'                                      @YM04033 00149302
+ PUNCH ' INSERT IEBDSCPY,IEBVMS,IEBDV1'                        @ZA10938 00150699
+ PUNCH ' OVERLAY 1'                                            @YM04033 00151902
+ PUNCH ' INSERT IEBLDUL'                                       @ZA10938 00153299
+ PUNCH ' OVERLAY 1'                                            @ZA10938 00155299
+ PUNCH ' INSERT IEBSCN'                                        @ZA10938 00155699
+ PUNCH ' OVERLAY 1'                                            @YM04033 00157102
+ PUNCH ' INSERT IEBVCT'                                        @YM02129 00158402
+ PUNCH ' OVERLAY 1'                                            @YM04033 00159702
+ PUNCH ' INSERT IEBIOE'                                        @YM02129 00161002
+ PUNCH ' OVERLAY 1'                                            @YM04033 00162302
+ PUNCH ' INSERT IEBRSAM,IEBCNVT,IEBDRD'                        @YM02129 00163602
+ PUNCH ' OVERLAY 2'                                            @YM04033 00164902
+ PUNCH ' INSERT IEBWSAM,IEBDSU'                                @YM02129 00166202
+ PUNCH ' OVERLAY 2'                                            @YM04033 00167502
+ PUNCH ' INSERT IEBWSU,IEBDWR'                                 @YM02129 00168802
+ PUNCH ' OVERLAY 3'                                            @YM04033 00170102
+ PUNCH ' INSERT IEBBAM'                                        @YM02129 00171402
+ PUNCH ' OVERLAY 3'                                            @YM04033 00172702
+ PUNCH ' INSERT IEBVDM'                                        @YM02129 00174002
+ PUNCH ' OVERLAY 3'                                            @YM04033 00175302
+ PUNCH ' INSERT IEBDRB'                                        @YM02129 00176602
+ PUNCH ' OVERLAY 3'                                            @YM04033 00177902
+ PUNCH ' INSERT IEBMCM'                                        @YM02129 00179202
+ PUNCH ' OVERLAY 3'                                            @YM04033 00180502
+ PUNCH ' INSERT IEBVTT'                                        @YM02129 00181802
+ PUNCH ' OVERLAY 3'                                            @YM04033 00183102
+ PUNCH ' INSERT IEBVTM'                                        @YM02129 00184402
+ PUNCH ' ENTRY IEBDSCPY'                                         X010XX 00185702
+ PUNCH ' SETCODE AC(1)'                                         YL026VD 00187002
+ PUNCH ' NAME    IEBCOPY(R)'                                     X010XX 00188302
+ PUNCH '/*'                                                      X010XX 00189602
+&SGCTRLC(6)   SETC  ''                                           X010XX 00190902
+&SGCTRLC(7)   SETC  '&SGCTRLC(32)'                               X010XX 00192202
+&SGCTRLC(8)   SETC  '&SGCTRLC(31)'                                      00193502
+&SGCTRLC(9)   SETC  'LINKLIB'                                           00194802
+&SGCTRLC(10)  SETC ',REUS'                                              00196102
+&SGCTRLC(11)  SETC ',LET'                                               00197402
+ COPY SGLEDPK1                                                          00198702
+ PUNCH '//&ULIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.&ULIB'  X010XX 00200000
+ COPY SGLEDPK2                                                          00210017
+ PUNCH ' INCLUDE &ULIB.(IEHMVESU) '                              X010XX 00300000
+ PUNCH ' NAME       IEHMVESU(R)      '                                  00320000
+ PUNCH ' INCLUDE &ULIB.(IEHMVESI)'                             @Z40CSJH 00322004
+ PUNCH ' NAME       IEHMVESI(R)      '                         @Z40CSJH 00324004
+ PUNCH ' INCLUDE &ULIB.(IEHMVESH) '                              Y02918 00330002
+ PUNCH ' NAME       IEHMVESH(R)      '                           Y02918 00332002
+ PUNCH ' INCLUDE &ULIB.(IEHMVESO)'                               X010XX 00340000
+ PUNCH ' NAME       IEHMVESO(R)      '                                  00360000
+ PUNCH ' INCLUDE &ULIB.(IEHMVESP)'                               X010XX 00380000
+ PUNCH ' NAME       IEHMVESP(R)      '                                  00400000
+ PUNCH ' INCLUDE &ULIB.(IEHMVESC)'                             @Z40CSJH 00450004
+ PUNCH ' NAME       IEHMVESC(R)      '                         @Z40CSJH 00452004
+ PUNCH ' INCLUDE &ULIB.(IEHMVESK)'                               X010XX 00460000
+ PUNCH ' NAME       IEHMVESK(R)      '                                  00480000
+ PUNCH ' INCLUDE &ULIB.(IEHMVESR)'                               X010XX 00500000
+ PUNCH ' NAME       IEHMVESR(R)      '                                  00520000
+ PUNCH ' INCLUDE &ULIB.(IEHMVESJ)'                               X010XX 00540000
+ PUNCH ' NAME       IEHMVESJ(R)      '                                  00560000
+ PUNCH '/*'                                                             00566019
+&SGCTRLC(6) SETC 'IEHMVXSF'                                             00572019
+&SGCTRLC(9)    SETC  'LINKLIB'                                          00578019
+&SGCTRLC(10) SETC ',REUS'                                               00584019
+ COPY SGLEDPK1                                                          00596019
+ PUNCH '//&ULIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.&ULIB'  X010XX 00602000
+ COPY SGLEDPK2                                                          00608019
+ PUNCH ' INCLUDE &ULIB.(IEHMVXSF,IEHMVSSF)'                      X010XX 00614000
+ PUNCH ' ENTRY   IEHMVXSF'                                              00620019
+ PUNCH ' NAME    IEHMVXSF(R)'                                           00626019
+ PUNCH ' INCLUDE &ULIB.(IEHMVSRX,IEHMVSRM,IEHMVSSY)'             X010XX 00632000
+ PUNCH ' INCLUDE &ULIB.(IEHMVMSY)'                               X010XX 00638000
+ PUNCH ' ENTRY   IEHMVESY'                                              00644019
+ PUNCH ' NAME    IEHMVESY(R)'                                           00650019
+ PUNCH ' INCLUDE &ULIB.(IEHMVSSX,IEHMVSRY,IEHMVSTC)'             X010XX 00656000
+ PUNCH ' INCLUDE &ULIB.(IEHMVMRY)'                               X010XX 00662000
+ PUNCH ' ENTRY   IEHMVESY'                                              00668019
+ PUNCH ' NAME    IEHMVESV(R)'                                           00674019
+ PUNCH ' INCLUDE &ULIB.(IEHMVSRV,IEHMVSRZ,IEHMVSRK)'             X010XX 00680000
+ PUNCH ' INCLUDE &ULIB.(IEHMVMRZ)'                               X010XX 00686000
+ PUNCH ' ENTRY   IEHMVESZ'                                              00692019
+ PUNCH ' NAME    IEHMVESX(R)'                                           00698019
+ PUNCH ' INCLUDE &ULIB.(IEHMVSSZ,IEHMVSSV)'                      X010XX 00704000
+ PUNCH ' INCLUDE &ULIB.(IEHMVMRZ)'                               X010XX 00710000
+ PUNCH ' ENTRY   IEHMVESZ'                                              00716019
+ PUNCH ' NAME    IEHMVESZ(R)'                                           00722019
+ PUNCH ' INCLUDE &ULIB.(IEHMVSRD,IEHMVSRM)'                      X010XX 00728000
+ PUNCH ' ENTRY   IEHMVERD'                                              00734019
+ PUNCH ' NAME    IEHMVERD(R)'                                           00740019
+ PUNCH ' INCLUDE &ULIB.(IEHMVSRA,IEHMVSRK)'                      X010XX 00746000
+ PUNCH ' ENTRY   IEHMVERA'                                              00752019
+ PUNCH ' NAME    IEHMVERA(R)'                                           00758019
+ PUNCH ' INCLUDE &ULIB.(IEHMVSTA,IEHMVSRK,IEHMVSRM)'           @Z40CSJH 00768004
+ PUNCH ' INCLUDE &ULIB.(IEHMVMTA)'                             @Z40CSJH 00778004
+ PUNCH ' ENTRY   IEHMVETA'                                     @Z40CSJH 00780004
+ PUNCH ' NAME    IEHMVETA(R)'                                  @Z40CSJH 00782004
+ PUNCH ' INCLUDE &ULIB.(IEHMVSTL,IEHMVSRK,IEHMVSRM)'             X010XX 00788000
+ PUNCH ' INCLUDE &ULIB.(IEHMVMTL)'                               X010XX 00794000
+ PUNCH ' ENTRY   IEHMVETL'                                              00800019
+ PUNCH ' NAME    IEHMVETL(R)'                                           00806019
+ PUNCH ' INCLUDE &ULIB.(IEHMVSSS)'                               X010XX 00812000
+ PUNCH ' ENTRY   IEHMVESS'                                              00818019
+ PUNCH ' NAME    IEHMVESS(R)'                                           00824019
+ PUNCH ' INCLUDE &ULIB.(IEHMVETG)'                               X010XX 00830000
+ PUNCH ' ENTRY IEHMVETG'                                                00836019
+ PUNCH ' NAME IEHMVETG(R)'                                              00842019
+ PUNCH ' INCLUDE &ULIB.(IEHMVESM)'                               X010XX 00848000
+ PUNCH ' ENTRY IEHMVESM'                                                00854019
+ PUNCH ' NAME IEHMVESM(R)'                                              00860019
+ PUNCH ' INCLUDE &ULIB.(IEHMVESL)'                               X010XX 00866000
+ PUNCH ' ENTRY IEHMVESL'                                                00872019
+ PUNCH ' NAME IEHMVESL(R)'                                              00878019
+ PUNCH ' INCLUDE &ULIB.(IEHMVETJ)'                               X010XX 00884000
+ PUNCH ' ENTRY IEHMVETJ'                                                00890019
+ PUNCH ' NAME IEHMVETJ(R)'                                              00896019
+ PUNCH ' INCLUDE &ULIB.(IEHMVESQ,IEHMVMSQ)'                      X010XX 00902000
+ PUNCH ' ENTRY IEHMVESQ'                                                00908019
+ PUNCH ' NAME IEHMVESQ(R)'                                              00914019
+ PUNCH ' INCLUDE &ULIB.(IEHMVESN,IEHMVMSN)'                      X010XX 00920000
+ PUNCH ' ENTRY IEHMVESN'                                                00926019
+ PUNCH ' NAME IEHMVESN(R)'                                              00932019
+ PUNCH ' INCLUDE &ULIB.(IEHMVESA)'                               X010XX 00938000
+ PUNCH ' ENTRY IEHMVESA'                                                00944019
+ PUNCH ' NAME IEHMVESA(R)'                                              00950019
+ PUNCH '/*'                                                             01020000
+&SGCTRLC(9)    SETC 'LINKLIB'                                           01040000
+&SGCTRLC(10)   SETC ',LET'                                              01060000
+ COPY SGLEDPK1                                                          01070017
+ PUNCH '//&ULIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.&ULIB'  X010XX 01080000
+ COPY SGLEDPK2                                                          01090017
+ PUNCH ' INCLUDE &ULIB.(IEHMVXSE)'                                      01100000
+ PUNCH ' ALIAS      IEHMVESE         '                                  01120000
+ PUNCH ' NAME       IEHMVXSE(R)      '                                  01140000
+ PUNCH ' INCLUDE &ULIB.(IEHMVEST)'                               X010XX 01200000
+ PUNCH ' NAME       IEHMVEST(R)      '                                  01220000
+ PUNCH ' INCLUDE &ULIB.(IEHMOVE)'                                X010XX 01240000
+ PUNCH ' ENTRY IEHMVESD '                                        A32407 01250020
+ PUNCH ' SETCODE AC(1)'                                         YL026VC 01252002
+ PUNCH ' NAME       IEHMOVE(R)       '                                  01260000
+ PUNCH '/*'                                                       000G  01260416
+&SGCTRLC(7)     SETC   '&SGCTRLC(32)'                              000G 01260916
+&SGCTRLC(8)     SETC     '&SGCTRLC(31)'                            000G 01261816
+&SGCTRLC(9)     SETC     'LINKLIB'                                 000G 01262716
+&SGCTRLC(10)    SETC     ',RENT'                                        01263617
+&SGCTRLC(11)    SETC    ',LET'                                     000G 01264516
+ COPY SGLEDPK1                                                          01265017
+ PUNCH '//&ULIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.&ULIB'  X010XX 01265500
+ COPY SGLEDPK2                                                          01266017
+ PUNCH ' INCLUDE &ULIB.(IEBISAM)'                                X010XX 01266500
+ PUNCH ' NAME IEBISAM(R)'                                          000I 01267318
+ PUNCH ' INCLUDE &ULIB.(IEBISU,IEBISSO)'                         X010XX 01268100
+ PUNCH ' ENTRY IEBISU '                                            000G 01269016
+ PUNCH ' NAME IEBISU(R)'                                           000I 01269918
+ PUNCH ' INCLUDE &ULIB.(IEBISL,IEBISSI)'                         X010XX 01270800
+ PUNCH ' ENTRY IEBISL '                                            000G 01271716
+ PUNCH ' NAME IEBISL(R)'                                           000I 01272618
+ PUNCH ' INCLUDE &ULIB.(IEBISF,IEBISMES)'                        X010XX 01273500
+ PUNCH ' ENTRY IEBISF '                                            000G 01274416
+ PUNCH ' NAME IEBISF(R)'                                           000I 01275318
+ PUNCH ' INCLUDE &ULIB.(IEBISC)'                                 X010XX 01276200
+ PUNCH ' NAME IEBISC(R)'                                           000I 01277118
+ PUNCH ' INCLUDE &ULIB.(IEBISPL)'                                X010XX 01278000
+ PUNCH ' NAME IEBISPL(R)'                                          000I 01279018
+ PUNCH '/*'                                                             01280000
+&SGCTRLC(7)    SETC  '&SGCTRLC(32)'                                000H 01280817
+&SGCTRLC(8)    SETC  '&SGCTRLC(31)'                                000H 01281617
+&SGCTRLC(9)    SETC  'LINKLIB'                                     000H 01282417
+&SGCTRLC(10)   SETC  ',RENT'                                       000H 01283217
+&SGCTRLC(11)   SETC  ',REFR'                                       000H 01284017
+ COPY SGLEDPK1                                                     000H 01284817
+ PUNCH '//&ULIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.&ULIB'  X010XX 01285600
+ COPY SGLEDPK2                                                     000H 01286417
+ PUNCH ' INCLUDE &ULIB.(IEBDG)'                                  X010XX 01287200
+ PUNCH ' NAME IEBDG(R)'                                            000H 01288017
+ PUNCH ' INCLUDE &ULIB.(IEBDGCUP)'                               X010XX 01288800
+ PUNCH ' NAME IEBDGCUP(R)'                                         000H 01289617
+ PUNCH ' INCLUDE &ULIB.(IEBFDANL)'                               X010XX 01290400
+ PUNCH ' NAME IEBFDANL(R)'                                         000H 01291217
+ PUNCH ' INCLUDE &ULIB.(IEBFDTBL)'                               X010XX 01292000
+ PUNCH ' NAME IEBFDTBL(R)'                                         000H 01292817
+ PUNCH ' INCLUDE &ULIB.(IEBCRANL)'                               X010XX 01293600
+ PUNCH ' NAME IEBCRANL(R)'                                         000H 01294417
+ PUNCH ' INCLUDE &ULIB.(IEBCREAT)'                               X010XX 01295200
+ PUNCH ' NAME IEBCREAT(R)'                                         000H 01296017
+ PUNCH ' INCLUDE &ULIB.(IEBDGMSG)'                               X010XX 01296800
+ PUNCH ' NAME IEBDGMSG(R)'                                         000H 01297617
+ PUNCH '/*'                                                        000H 01298417
+         MEND                                                           01300000

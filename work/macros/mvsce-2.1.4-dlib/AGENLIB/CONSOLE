@@ -1,0 +1,741 @@
+         MACRO                                                          00050002
+         CONSOLE &MCONS=,&SECONS=,&ALTCONS=,&ROUTCDE=,&VALDCMD=,&USE=, *00100002
+               &AREA=,&PFK=,&IOC=NO,&OLDWTOR=,&TYPE=                    00150002
+         COPY  SGSYSPAK                                                 00200002
+         LCLA  &A1,&A2,&A3,&A,&E                                        00250002
+         LCLB  &B1,&B2,&B3,&B4,&SW1,&SW2,&SW3,&SCR,&B(10)               00300002
+         LCLC  &C1,&C2,&LI,&LO,&PI,&PO,&C                               00350002
+.**** BEGINNING OF SPECIFICATIONS ***********************************   00400002
+.*                                                                      00450002
+.* MODULE NAME - CONSOLE                                                00500002
+.*                                                                      00550002
+.* DESCRIPTIVE NAME - CONSOLE DEFINITION MACRO                          00600002
+.*                                                                      00650002
+.* COPYRIGHT - NONE                                                     00700002
+.*                                                                      00750002
+.* STATUS - CHANGE LEVEL 02                                             00800000
+.*                                                                      00850002
+.* FUNCTION -                                                           00900002
+.*       THE CONSOLE MACRO IS USED TO SPECIFY THE CONSOLES FOR THE      00950002
+.*       STANDARD MCS FUNCTION OR THE MASTER CONSOLE ONLY IF THERE      01000002
+.*       ARE NO SECONDARY CONSOLES.                                     01050002
+.*                                                                      01100002
+.* NOTES - N/A                                                          01150002
+.*                                                                      01200002
+.* MODULE TYPE - MACRO                                                  01250002
+.*                                                                      01300002
+.* ENTRY POINT - N/A                                                    01350002
+.*                                                                      01400002
+.* INPUT - THE PARAMETERS DESCRIBED HERE ARE USED ON THE CALLS TO       01450002
+.*         THE CONSOLE MACRO                                            01500002
+.*             &MCONS   - THE ADDRESS OR ADDRESSES OF THE SYSTEM        01550002
+.*                        MASTER CONSOLE.                               01600002
+.*             &SECONS  - THE ADDRESS OR ADDRESSES OF A SECONDARY       01650002
+.*                        CONSOLE.                                      01700002
+.*             &ALTCONS - THE ADDRESS OR ADDRESSES OF THE ALTERNATE     01750002
+.*                        CONSOLE OF A MASTER OR SECONDARY CONSOLE.     01800002
+.*             &ROUTCDE - ROUTING CODES THAT THE CONSOLE WILL           01850002
+.*                        RECEIVE.                                      01900002
+.*             &VALDCMD - WHICH COMMANDS CAN BE ENTERED FROM THE        01950002
+.*                        CONSOLE.                                      02000002
+.*             &IOC     - INTEGRATED OPERATORS CONSOLE                  02050002
+.*             &OLDWTOR - ROUTING CODES TO BE ASSIGNED TO ALL WTO       02100002
+.*                        MESSAGES THAT DO NOT ALREADY HAVE CODES.      02150002
+.*             &AREA    - LENGTH OF DISPLAY AREAS                       02200002
+.*             &USE     - TYPE OF LIMITED USAGE                         02250002
+.*             &PFK     - NUMBER OF PAROGRAMMED FUNCTION KEYS.          02300002
+.*                                                                      02350002
+.* OUTPUT -                                                             02400002
+.*       THE GLOBALS SET ARE -                                          02450002
+.*             &SGSCHDB(25)  - PROGRAM FUNCTION KEYS INCLUDED           02500002
+.*             &SGSCHDC(1)   - I/O ADDRESS OF CONSOLE                   02550002
+.*             &SGSCHDC(2)   - I/O ADDRESS OF ALTERNATE CONSOLE         02600002
+.*             &SGSCHDC(16)  - MASTER - INTEGRATED OPERATORS CONSOLE    02650002
+.*             &SGSCHRB(1- ) - ROUTE CODES FOR MASTER CONSOLE           02700002
+.*             &SGSCHOB(1-16)- OLD WTOR                                 02750002
+.*             &SGSCHAA(1-11)- DISPLAY AREAS - MAXTER CONSOLE           02800002
+.*             &SGSCHAA(12)  - TOTAL FOR MASTER                         02850002
+.*             &SGSCHDA(16)  - NUMBER OF PFKS                           02900002
+.*             &SGSCNYA(1)   - NUMBER OF SECONDARY CONSOLES             02950002
+.*             &SGSCNYA(2)   - NUMBER OF SECONDARY CONSOLE CALLS        03000002
+.*             &SGSCNYA(3)   - NUMBER OF CONSOLE DEVICES                03010002
+.*             &SGSCNCC(1-98)- MCS SECONDARY CONSOLE ADDRESSES          03050002
+.*             &SGSCNAC(1-98)- MCS ALTERNATE CONSOLE ADDRESSES          03100002
+.*             &SGQUITB      - QUIT SWITCH                              03150002
+.*             &SGSIOCC(1-98)- IOC SETTING FOR SECONDARY CONSOLES       03200002
+.*             &SGSCNPA(1-98)- NUMBER OF PFKS                           03250002
+.*             &SGSCMSB(1-98)- LIM CAP CONSOLE - MESSAGE STREAM MODE    03300002
+.*             &SGSCSDB(1-98)- LIM CAP CONSOLE - STATUS DISPLAY MODE    03350002
+.*             &SGAR01A(1-98)- LENGTH OF NTH CRT DISPLAY AREA           03400002
+.*                 ...              N = 1 TO 11                         03450002
+.*             &SGAR11A(1-98)-                                          03500002
+.*             &SGAR12A(1-98)- TOTAL LENGTH                             03550002
+.*             &SGRT01B(1-98)- NTH ROUTE CODE  N = 1 TO 16              03600002
+.*                 ...                                                  03650002
+.*             &SGRT16B(1-98)-                                          03700002
+.*             &SGCMD1B(1-98)- COMMAND GROUP 1                          03750002
+.*             &SGCMD2B(1-98)- COMMAND GROUP 2                          03800002
+.*             &SGCMD3B(1-98)- COMMAND GROUP 3                          03850002
+.*                                                                      03900002
+.*       THE LOCALS USED ARE -                                          03950002
+.*             &A1  - NUMBER OF OPERANDS SPEC IN SECONS                 04000002
+.*             &A2  - DUPLICATE GLOBAL INDEX                            04050002
+.*             &A3  - INCR FOR COMPOSITE ALTERNATE                      04100002
+.*             &A   - SUBLIST INDEX                                     04150002
+.*             &E   - ROUTE CODE GLOBAL INDEX                           04200002
+.*             &B1  - I SPECIFIED                                       04250002
+.*             &B2  - O SPECIFIED                                       04300002
+.*             &B3  - COMPOSITE ALTERNATE I ADDRESS                     04350002
+.*             &B4  - COMPOSITE ALTERNATE O ADDRESS                     04400002
+.*             &SW1 - OUTPUT ONLY CONSOLE                               04450002
+.*             &SW2 - COMPOSITE CONSOLE                                 04500002
+.*             &SW3 -                                                   04550002
+.*             &SCR - ERROR IN SECONSOLE SPECIFICATION                  04600002
+.*             &B   - I AND O ADDRESS SPECIFIED SWITCHES                04650002
+.*             &C1  - SECONDARY CONSOLE I-                              04700002
+.*             &C2  - SECONDARY CONSOLE O-                              04750002
+.*             &LI  - INPUT HALF                                        04800002
+.*             &LO  - OUTPUT HALF                                       04850002
+.*             &PI  - INPUT FROM GLOBAL FOR DUPLICATE CHECK             04900002
+.*             &PO  - OUTPUT FROM GLOBAL FOR DUPLICATE CHECK            04950002
+.*             &C   - HALF OF CONSOLE ADDRESS                           05000002
+.*                                                                      05050002
+.* EXIT, NORMAL - N/A                                                   05100002
+.*                                                                      05150002
+.* EXIT, ERROR - N/A                                                    05200002
+.*                                                                      05250002
+.* EXTERNAL REFERENCES - N/A                                            05300002
+.*                                                                      05350002
+.* TABLES - N/A                                                         05400002
+.*                                                                      05450002
+.* MACROS - NONE                                                        05500002
+.*                                                                      05550002
+.* CHANGE ACTIVITY - VS01199,OZ03843,OZ04246,OZ11147                    05600037
+.*                                                                      05650002
+.*                                                                      05700002
+.***** END OF SPECIFICATIONS ***************************************    05750002
+.*                                                                      05800002
+.*   START OF MASTER CONSOLE PARAMETER CHECKS                           05850002
+.*      NOTE: SINCE DIFFERENT GLOBALS ARE SET FOR SECONDARY CONSOLE     05900002
+.*           PARAMETERS, COMMON KEYWORDS ARE CHECKED IN BOTH SECTIONS   05950002
+.*           OF THIS MACRO.                                             06000002
+.* * * JES * * *                    * * * JES * * *       * * *         06050002
+         AIF   (T'&TYPE EQ 'O').NJ                                      06100002
+         AIF   ('&TYPE' NE 'JES').MJ1      INVALID TYPE VALUE           06150002
+.***     CHECK IF OTHER PARAMTERS USED - ONLY VALDCMD ACCEPTABLE  ***   06200002
+.***           FOR TYPE=JES                                       ***   06250002
+.CKJES   AIF   (T'&MCONS NE 'O' OR T'&SECONS NE 'O' OR T'&USE NE 'O'   X06300002
+                OR T'&ROUTCDE NE 'O' OR T'&ALTCONS NE 'O').MJ2          06350002
+         AIF   (T'&AREA NE 'O' OR T'&OLDWTOR NE 'O' OR T'&PFK NE 'O'   X06400002
+                OR '&IOC' NE 'NO').MJ2     INVALID PARMS WITH JES       06450002
+&SGSCNYA(3)  SETA  &SGSCNYA(3)+1           INCREMENT DEVICE COUNT       06500002
+&SGSCNYA(2)  SETA  &SGSCNYA(2)+1           INCREMENT COUNTER            06550002
+         AIF (&SGSCNYA(2) GT 98).M0        EXCEEDS SEC CONSOLE LIMIT    06600002
+&SGSCNYA(1)  SETA  &SGSCNYA(1)+1           INCREMENT CONSOLE INDEX      06650002
+&SGSCNCC(&SGSCNYA(1))  SETC  'JESJES'      JES INDICATOR IN ADDRESS     06700002
+&SGSCJSB(&SGSCNYA(1))  SETB  1             JES CONSOLE BIT              06750002
+         AGO   .C8                         CHECK VALDCMD PARAMETER      06800002
+.*********************************************************************  06850002
+.*                                                                      06860002
+.*   START OF MASTER CONSOLE PARAMETER CHECKS                           06870002
+.*      NOTE: SINCE DIFFERENT GLOBALS ARE SET FOR SECONDARY CONSOLE     06880002
+.*           PARAMETERS, COMMON KEYWORDS ARE CHECKED IN BOTH SECTIONS   06890002
+.*           OF THIS MACRO.                                             06900002
+.*                                                                      06950002
+.*********************************************************************  06960002
+.* * * MCONS * * *                    * * * MCONS * * *       * * *     06970002
+.*                                                                      07000002
+.NJ      AIF   (T'&MCONS EQ 'O').R0        MCONS OMITTED                07050002
+         AIF  (T'&SECONS NE 'O').M3        PARMS MUTUALLY EXCLUSIVE     07100002
+         AIF ('&SGSCHDC(1)' NE '').MJ      PREVIOSLY SPECIFIED          07150002
+         AIF   (N'&MCONS GT 2 OR (N'&MCONS EQ 1 AND                    *07200002
+                                  K'&MCONS NE 3)).MK VALIDITY           07250002
+         AIF   (N'&MCONS NE 1).CO1      COMPOSITE CONSOLE               07300002
+         AIF   ('&IOC' EQ 'NO').CO      NOT INTEGRATED OPERATOR         07350002
+         AIF   ('&IOC' NE 'YES').MT     IF NOT YES, INVALID             07400002
+&SGSCHDC(16)   SETC  '&MCONS'                                           07450002
+&SGSCNYA(3)  SETA  &SGSCNYA(3)+1        INCREMENT DEVICE COUNT          07500002
+.CO      ANOP                                                           07550002
+&SGSCHDC(1) SETC '&MCONS.&MCONS'        ADDR - ADDR                     07600002
+    MNOTE *,'     CONSOLE ADDRESS &MCONS SPECIFIED'                     07650002
+         AGO   .ALT                      ALTCONS NEXT                   07700002
+.*                                                                      07710002
+.***                  COMPOSITE MASTER CONSOLE                          07720002
+.*                                                                      07730002
+.CO1     ANOP                                                           07750002
+         AIF   ('&IOC' EQ 'NO').NIOC     NOT INTEGRATED OPERATOR CONS   07800002
+         AIF   ('&IOC' NE 'YES').MT      IF NOT YES, INVALID            07850002
+&SGSCHDC(16)   SETC '&MCONS'(4,3)        IOC ADDRESS - OUTPUT CONSOLE   07900002
+.NIOC  MNOTE *,'     COMPOSITE CONSOLE SPECIFIED--'                     08000002
+&A       SETA  0                         CLEAR                          08050002
+.CO2     ANOP                            LOOP                           08100002
+&A       SETA  &A+1                      INCREMENT SUBLIST              08150002
+         AIF   (&A GT N'&MCONS).CO8      FINISHED                       08200002
+&C       SETC  '&MCONS(&A)'(3,3)         ADDRESS ***                    08250002
+         AIF   ('&MCONS(&A)'(1,2) NE 'I-').CO3  I-*** OF COMPOSITE      08300002
+         AIF   (&B(1)).MK0               I-ADDR REDUNDANT               08350002
+&B(1)    SETB  1                         I-ADDR SPECIFIED               08400002
+&SGSCHDC(1) SETC '&C&SGSCHDC(1)'         I-ADDR                         08450002
+&SGSCNYA(3)  SETA  &SGSCNYA(3)+1         INCREMENT DEVICE COUNT         08500002
+    MNOTE *,'          INPUT ADDRESS=&C'                                08550002
+         AGO   .CO2                      GET OUTPUT                     08600002
+.CO3     AIF   ('&MCONS(&A)'(1,2) NE 'O-').MK0  O-*** OF COMPOSITE      08650002
+         AIF   (&B(2)).MK0               O-ADDR REDUNDANT               08700002
+&B(2)    SETB  1                         O-ADDR SPECIFIED               08750002
+&SGSCHDC(1) SETC '&SGSCHDC(1)&C'         O-ADDR                         08800002
+&SGSCNYA(3)  SETA  &SGSCNYA(3)+1         INCREMENT DEVICE COUNT         08850002
+    MNOTE *,'          OUTPUT ADDRESS=&C'                               08900002
+         AGO   .CO2                      END OF GET INPUT               08950002
+.CO8     AIF   (NOT(&B(1) AND &B(2))).MK0    I-ADDR AND O-ADDR REQ'D    09000002
+.*********************************************************************  09010002
+.* * * ALTCONS * * *     FOR MASTER CONSOLE        * * * ALTCONS * * *  09050002
+.*********************************************************************  09060002
+.ALT     AIF   (T'&ALTCONS EQ 'O').AL9  ALTCONS SPEC'D     **SCS**      09100002
+         AIF   (N'&ALTCONS GT 2 OR (N'&ALTCONS EQ 1 AND                *09150002
+                                    K'&ALTCONS NE 3)).ML VALIDITY       09200002
+         AIF   (N'&ALTCONS NE 1).AL1    COMPOSITE CONSOLE               09250002
+&SGSCHDC(2) SETC '&ALTCONS.&ALTCONS'    ADDR - ADDR                     09300002
+    MNOTE *,'     ALTERNATE CONSOLE ADDRESS &ALTCONS SPECIFIED'         09350002
+         AGO   .RC                      LOOK AT ROUTCDE                 09400002
+.AL1     ANOP                                                           09450002
+    MNOTE *,'     COMPOSITE ALTERNATE CONSOLE SPECIFIED--'              09500002
+&A       SETA  0                        CLEAR SUBLIST INDEX             09550002
+.AL2     ANOP                                LOOP                       09600002
+&A       SETA  &A+1                          INCREMENT SUBLIST          09650002
+         AIF   (&A GT N'&ALTCONS).AL8        FINISHED                   09700002
+&C       SETC  '&ALTCONS(&A)'(3,3)           ADDR ***                   09750002
+         AIF   ('&ALTCONS(&A)'(1,2) NE 'I-').AL3  I-ADDR OF COMPOSITE   09800002
+         AIF   (&B(3)).ML0                   I-ADDR REDUNDANT           09850002
+&B(3)    SETB  1                             I-ADDR SPECIFIED           09900002
+&SGSCHDC(2) SETC '&C&SGSCHDC(2)'             I-ADDR                     09950002
+    MNOTE *,'          INPUT ADDRESS=&C'                                10000002
+         AGO   .AL2                          GET OUTPUT                 10050002
+.AL3     AIF   ('&ALTCONS(&A)'(1,2) NE 'O-').ML0  O-ADDR OF COMPOSITE   10100002
+         AIF   (&B(4)).ML0                   O-ADDR REDUNDANT           10150002
+&B(4)    SETB  1                             O-ADDR SPECIFIED           10200002
+&SGSCHDC(2) SETC '&SGSCHDC(2)&C'             O-ADDR                     10250002
+    MNOTE *,'          OUTPUT ADDRESS=&C'                               10300002
+         AGO   .AL2                          END OR GET INPUT           10350002
+.AL8     AIF   (NOT(&B(3) AND &B(4))).ML0    WTOBFRS NEXT               10400002
+.AL9     AIF   (T'&ALTCONS NE 'O').RC  ALTCONS SPEC'D     **SCS**       10450002
+&SGSCHDC(2) SETC '&SGSCHDC(1)'          INDICATE NO ALTCONS**SCS**      10500002
+.*********************************************************************  10510002
+.* * * ROUTCDE * * *     FOR MASTER CONSOLE     * * * ROUTCDE * * *     10550002
+.*********************************************************************  10560002
+.RC MNOTE *,'     MCS ROUTE-CODES ASSIGNED TO THE MASTER CONSOLE--'     10600002
+    MNOTE *,'               1 ALWAYS'                                   10650002
+    MNOTE *,'               2 ALWAYS'                                   10700002
+&SGSCHRB(1) SETB 1                 SET ROUTE CODE 1 VALID               10750002
+&SGSCHRB(2) SETB 1                 SET ROUTE CODE 2 VALID               10800002
+         AIF   (T'&ROUTCDE EQ 'O').OW        OMITTED, ASSIGN 1 ONLY     10850002
+         AIF   ('&ROUTCDE' EQ 'ALL').RC3     IF ALL SPEC. SET GLOBALS   10900002
+&E       SETA  1                                                        10950002
+.RC1     AIF   (N'&ROUTCDE LT &E).OW         FINISHED                   11000002
+         AIF   ('&ROUTCDE(&E)' LT '0').MM        NOT NUMERIC            11050002
+         AIF   (&ROUTCDE(&E) LT 1 OR &ROUTCDE(&E) GT 16).MM VALIDITY    11100002
+         AIF   (NOT(&SGSCHRB(&ROUTCDE(&E)))).RC6 IF ROUT CODE SPECIFIED 11150002
+         AIF   (&ROUTCDE(&E) GT 2).MN  AND IT IS NOT 1 OR 2 IT IS       11200002
+.*                                     INVALID                          11250002
+.RC6     ANOP                                                           11300002
+&SGSCHRB(&ROUTCDE(&E)) SETB 1                SET ROUTE-CODE GLOBAL      11350002
+         AIF   (&ROUTCDE(&E) EQ 1 OR &ROUTCDE(&E) EQ 2).RC2             11400002
+    MNOTE *,'               &ROUTCDE(&E)'                               11450002
+.RC2     ANOP                                                           11500002
+&E       SETA  &E+1                                                     11550002
+         AGO   .RC1                                                     11600002
+.RC3     ANOP                                                           11650002
+&E       SETA  3                   SET INDEX INTO ROUTE CODE GLBLS      11700002
+.RC4     ANOP                                                           11750002
+&SGSCHRB(&E) SETB 1                SET ROUTE CODE VALUE                 11800002
+         MNOTE *,'               &E'                                    11850002
+         AIF   (&E EQ 16).OW       HAVE ALL BEEN SET                    11900002
+&E       SETA  &E+1                INCR TO NEXT GLOBAL                  11950002
+         AGO   .RC4                CONTINUE UNTIL ALL ARE SET           12000002
+.*********************************************************************  12010002
+.* * * OLDWTOR * * *     FOR MASTER CONSOLE       * * * OLDWTOR * * *   12050002
+.*********************************************************************  12060002
+.OW      AIF   (T'&OLDWTOR NE 'O').OW0       NOT OMITTED                12100002
+    MNOTE *,'     ALL CONSOLES WILL RECEIVE WTOR MESSAGES'      OZ03843 12150037
+    MNOTE *,'     THAT ARE NOT ASSIGNED A MCS ROUTE-CODE'               12200002
+&E       SETA  1                   INITIALIZE COUNT                     12250002
+.OW3     AIF   (&E GT 16).AR       IF FINISHED, GO ON                   12300002
+&SGSCHOB(&E) SETB 1                SET OLDWTOR GLOBAL                   12350002
+&E       SETA  &E+1                INCREMENT COUNT                      12400002
+         AGO   .OW3                LOOP TO DO THE NEXT                  12450002
+.OW0     ANOP                                                           12500002
+    MNOTE *,'     WTOR MESSAGES THAT ARE NOT ASSIGNED A MCS ROUTE-'     12550002
+    MNOTE *,'     CODE WILL BE ROUTED WITH THE FOLLOWING CODE(S)--'     12600002
+&E       SETA  1                                                        12650002
+.OW1A    AIF   (N'&OLDWTOR LT &E).AR    FINISHED, NEXT                  12700002
+         AIF   ('&OLDWTOR(&E)' LT '0').MO    NOT NUMERIC                12750002
+         AIF   (&OLDWTOR(&E) LT 1 OR &OLDWTOR(&E) GT 16).MO VALIDITY    12800002
+         AIF   (&SGSCHOB(&OLDWTOR(&E))).MP   N REDUNDANT                12850002
+&SGSCHOB(&OLDWTOR(&E)) SETB 1                                           12900002
+    MNOTE *,'               &OLDWTOR(&E)' MESSAGE                       12950002
+.OW2     ANOP                                                           13000002
+&E       SETA  &E+1                                                     13050002
+         AGO   .OW1A                                                    13100002
+.*********************************************************************  13110002
+.* * * AREA * * *        FOR MASTER CONSOLE       * * * AREA  * * *     13150002
+.*********************************************************************  13160002
+.AR      AIF   (T'&AREA EQ 'O').PF      OMITTED                         13200002
+         AIF   (N'&AREA GT 11).MQ       TOO MANY PARAMETERS             13250002
+.AX MNOTE *,'     STATUS DISPLAY AREAS FOR MASTER CONSOLE HAVE'         13300002
+    MNOTE *,'     LENGTHS OF --'                                        13350002
+&A       SETA  0                        INITIALIZE                      13400002
+.AR2     AIF   (&A EQ N'&AREA).PF       PARAMETERS EXHAUSTED            13450002
+&A       SETA  &A+1                     INCREMENT                       13500002
+         AIF   ('&AREA(&A)' LT '0').MR  NUMERIC VALIDITY                13550002
+         AIF   (&AREA(&A) LT 4 OR &AREA(&A) GT 47).MR  RANGE VALIDITY   13600002
+&SGSCHAA(12) SETA &SGSCHAA(12)+&AREA(&A)     ACCUMULATED VALUE          13650002
+&SGSCHAA(&A) SETA &AREA(&A)                  NTH VALUE                  13700002
+     MNOTE *,'               &AREA(&A)'                                 13750002
+         AGO   .AR2                                                     13800002
+.*********************************************************************  13810002
+.* * * PFK * * *         FOR MASTER CONSOLE        * * * PFK * * *      13850002
+.*********************************************************************  13860002
+.PF      AIF   (T'&PFK EQ 'O').CK1      OMITTED                         13900002
+         AIF   ('&PFK' LT '0').MS       NUMERIC VALIDITY                13950002
+         AIF   (&PFK GT 12).MS          12 MAXIMUM                      14000002
+&SGSCHDA(16) SETA &PFK                  GLOBAL VALUE                    14050002
+&SGSCHDB(25)  SETB   1                  PFK INCLUDED IN SYSTEM          14100002
+    MNOTE *,'     MASTER CONSOLE WILL HAVE &PFK PROGRAM FUNCTION KEYS'  14150002
+.CK1     AIF   (T'&USE NE 'O').MH           INVALID WITH MCONS          14200002
+.CK2     AIF   (T'&VALDCMD NE 'O').MI       INVALID WITH MCONS          14250002
+         AGO   .MEND                                                    14300002
+.*********************************************************************  14310002
+.*           END OF MASTER CONSOLE CHECKS                               14400002
+.*********************************************************************  14410002
+.*                                                                      14420002
+.*        BEGIN CHECKS FOR SECONDARY CONSOLES                           14450002
+.*                                                                      14500002
+.*********************************************************************  14510002
+.* * * SECONS * * *         * * *    * * *        * * * SECONS * * *    14550002
+.R0      ANOP                                                           14600002
+&SGSCNYA(2) SETA &SGSCNYA(2)+1          NUMBER OF SECONS PARMS          14650002
+         AIF   (&SGSCNYA(2) GT 98).M0   MAX 98 SECONDARY CONSOLES       14700000
+         AIF   (T'&SECONS EQ 'O').M1    SECONS VALUE OMITTED            14750002
+         AIF   (N'&SECONS NE 1).R2      MORE THAN ONE SECONDARY CONSOLE 14800002
+&C1      SETC  '&SECONS'(1,2)                                           14850002
+.*               *************************************                  14852002
+.***                 OUTPUT ONLY SECONDARY CONSOLE                 ***  14860002
+.*               *************************************                  14870002
+         AIF   ('&C1' NE 'O-').R1       O-ONLY BEGIN                    14900002
+         AIF   (K'&SECONS NE 5).M2      O-XXX FORMAT REQUIRED           14950002
+&C1      SETC  '&SECONS'(3,3)           UNIT ADDRESS                    15000002
+&C2      SETC  'FFF'                    NULL ADDRESS                    15050002
+&SGSCNYA(1)    SETA &SGSCNYA(1)+1       INCREMENT SECONS COUNT          15100002
+&SGSCNYA(3)  SETA  &SGSCNYA(3)+1        INCREMENT DEVICE COUNT          15150002
+&SGSCNCC(&SGSCNYA(1))  SETC  '&C2&C1'   STORE UNIT ADDR-NULL ADDR       15200002
+    MNOTE *,'     OUTPUT ONLY CONSOLE ADDRESS &C1'                      15250002
+&SW1     SETB  1                        OUTPUT-ONLY-CONSOLE SWITCH      15300002
+         AGO   .DUPCK                   O-ONLY END                      15350002
+.*               *************************************                  15360002
+.***                 INPUT-OUTPUT CONSOLE                          ***  15370002
+.*               *************************************                  15380002
+.R1      AIF   (K'&SECONS NE 3).M2      I/O CAPABILITY BEGIN            15400002
+&SGSCNYA(1)    SETA &SGSCNYA(1)+1       INCREMENT SECONS COUNT          15450002
+&SGSCNYA(3)  SETA  &SGSCNYA(3)+1        INCREMENT DEVICE COUNT          15500002
+&SGSCNCC(&SGSCNYA(1))  SETC  '&SECONS&SECONS' IN-OUT ADDRESSES SAME     15550002
+    MNOTE *,'     CONSOLE ADDRESS &SECONS'                              15600002
+         AGO   .DUPCK                   I/O CAPABILITY END              15650002
+.*               *************************************                  15660002
+.***                   COMPOSITE CONSOLE                          ***   15670002
+.*               *************************************                  15680002
+.R2      AIF   (N'&SECONS NE 2).M2      COMPOSITE BEGIN                 15700002
+         AIF   (K'&SECONS(1) NE 5 OR K'&SECONS(2) NE 5).M2              15750002
+    MNOTE *,'     COMPOSITE CONSOLE WITH FOLLOWING ADDRESSES---'        15800002
+&SGSCNYA(1)    SETA &SGSCNYA(1)+1       INCREMENT SECONS COUNT          15850002
+.R3      AIF   (&A1 EQ 2).R5            FINISHED                        15900002
+&A1      SETA  &A1+1                    INCREMENT SUBLIST INDEX         15950002
+&C1      SETC  '&SECONS(&A1)'(3,3)      FIRST ADDRESS                   16000002
+&C2      SETC  '&SECONS(&A1)'(1,2)      FIRST 2 CHARACTERS I- OR O-     16050002
+         AIF   ('&C2' NE 'I-').R4       NOT I-, CHECK FOR O-            16100002
+         AIF   (&B1).M20                I- REPEATED                     16150002
+&B1      SETB  1                        INPUT CONSOLE SWITCH            16200002
+&SGSCNCC(&SGSCNYA(1)) SETC '&C1&SGSCNCC(&SGSCNYA(1))' I-ADDR(O-ADDR)    16250002
+&SGSCNYA(3)  SETA  &SGSCNYA(3)+1        INCREMENT DEVICE COUNT          16300002
+    MNOTE *,'        &C1 - INPUT'       INPUT ADDRESS                   16350002
+         AGO   .R3                      REPEAT FOR OUTPUT CONSOLE       16400002
+.R4      AIF   ('&C2' NE 'O-').M20      CHECK FOR OUTPUT                16450002
+         AIF   (&B2).M20                OUTPUT REPEATED?                16500002
+&B2      SETB  1                        OUTPUT CONSOLE SWITCH ON        16550002
+&SGSCNCC(&SGSCNYA(1)) SETC '&SGSCNCC(&SGSCNYA(1))&C1' (I-ADDR)O-ADDR    16600002
+&SGSCNYA(3)  SETA  &SGSCNYA(3)+1        INCREMENT DEVICE COUNT          16650002
+    MNOTE *,'        &C1 - OUTPUT'                                      16700002
+         AGO   .R3                      CHECK NEXT COMPOSITE ADDRESS    16750002
+.R5      ANOP                           COMPOSITE END                   16800002
+&SW2     SETB  1                        COMPOSITE CONSOLE SWITCH        16850002
+.*           **********************************************             16860002
+.****          CHECK FOR DUPLICATION OF CONSOLE ADDRESSES               16870002
+.*           **********************************************             16880002
+.DUPCK   AIF   (&SGSCNYA(1) EQ 1).S1B NO PREVIOUS CONSOLES      OZ04246 16900037
+&LI      SETC  '&SGSCNCC(&SGSCNYA(1))'(1,3)   ADDRESS OF INPUT CONSOLE  16950002
+&LO      SETC  '&SGSCNCC(&SGSCNYA(1))'(4,3)   ADDRESS OF OUTPUT CONSOLE 17000002
+&A2      SETA  &SGSCNYA(1)              SECONDARY CONSOLE COUNT         17050002
+.D1      ANOP                                                           17100002
+&A2      SETA  &A2-1                    DECREMENT SECONS COUNT          17150002
+&PO      SETC  '&SGSCNCC(&A2)'(4,3)     PREVIOUS OUTPUT CONSOLE         17200002
+         AIF   ('&LO' NE '&PO').D2      COMPARE OUTPUT CONSOLES         17250002
+.XX MNOTE 5,'* * * IEICON000 SECONS VALUE &LO PREVIOUSLY SPECIFIED'     17300002
+&SGQUITB SETB  1                                                        17350002
+&SCR     SETB  1                                                        17400002
+.D2      AIF   (NOT &SW2).D3            NOT COMPOSITE CONSOLE           17450002
+&PI      SETC  '&SGSCNCC(&A2)'(1,3)     PREVIOUS INPUT CONSOLE          17500002
+         AIF   ('&LI' NE '&PI').D3      COMPARE INPUT CONSOLES          17550002
+    MNOTE 5,'* * * IEICON000 SECONS VALUE &LI PREVIOUSLY SPECIFIED'     17600002
+&SGQUITB SETB  1                                                        17650002
+&SCR     SETB  1                        ERROR IN SECONS SPECIFICATION   17700002
+.D3      AIF   (&A2 GT 1).D1            REPEAT FOR ALL PREV CONSOLES    17750002
+         AIF   (NOT &SCR).S1            NO ERROR IN SECONS SPECS        17800002
+&SGSCNCC(&SGSCNYA(1)) SETC ''           NULLIFY SECONS ADDRESS          17850002
+&SGSCNYA(1)    SETA &SGSCNYA(1)-1       DECREMENT SECONS COUNT          17900002
+         MEXIT                          ERROR EXIT                      17950002
+.*                  ******************************                      17960002
+.*                    IOC FOR SECONDARY CONSOLES                        17970002
+.*                  ******************************                      17980002
+.S1      AIF   ('&SGSCHDC(16)' EQ '').S1B NO MASTER YET        @AZ11147 18100037
+         AIF   ('&LO' EQ '&SGSCHDC(1)'(1,3)).XX SAME AS MASTER CONSOLE  18120037
+.S1B     AIF   ('&IOC' EQ 'NO').S1A NOT INTEGRATED OPER CONSOLE OZ04246 18150037
+         AIF   ('&SGSCNCC(&SGSCNYA(1))'(1,3) EQ 'FFF').IOCE  OUTPUT     18200002
+&SGSIOCC(&SGSCNYA(1)) SETC '&SGSCNCC(&SGSCNYA(1))'(1,3)                 18250002
+         AGO   .S1A                                                     18300002
+.IOCE    ANOP                                                           18350002
+         MNOTE 5,'* *IEICON032 IOC CANNOT BE SPECIFIED FOR OUTPUT ONLY' 18400002
+         MEXIT                                                          18450002
+.***           **********************************                       18460002
+.* * *           ALTCONS  FOR SECONDARY CONSOLE                  * * *  18470002
+.***           **********************************                       18480002
+.S1A     AIF   (T'&ALTCONS EQ 'O').BC   ALTERNATE CONSOLE SPECIFIED     18500002
+         AIF   (N'&ALTCONS NE 1).S3     OUTPUT ONLY ALTERNATE CONSOLE   18550002
+&C1      SETC  '&ALTCONS'(1,2)          CHECK 1ST TWO CHAR OF ADDRESS   18600002
+         AIF   ('&C1' NE 'O-').S2       O- INDICATES OUTPUT ONLY        18650002
+         AIF   (NOT &SW1).M9            OUTPUT ONLY SECONS SWITCH       18700002
+         AIF   (K'&ALTCONS NE 5).M4     O-XXX ADDRESS FORMAT REQUIRED   18750002
+&C1      SETC  '&ALTCONS'(3,3)          UNIT ADDRESS                    18800002
+&C2      SETC  'FFF'                    NULL ADDRESS                    18850002
+&SGSCNAC(&SGSCNYA(1))  SETC  '&C2&C1'   UNIT AND NULL ADDRESS STORED    18900002
+    MNOTE *,'     OUTPUT ONLY ALTCONS ADDRESS &C1'                      18950002
+         AGO   .BC                      CHECK NEXT PARAMETER            19000002
+.S2      AIF   (K'&ALTCONS NE 3).M4     INPUT-OUTPUT ALTERNATE CONSOLE  19050002
+&SGSCNAC(&SGSCNYA(1))  SETC  '&ALTCONS&ALTCONS'     STORE ADDRESS       19100002
+    MNOTE *,'     ALTCONS ADDRESS &ALTCONS'                             19150002
+         AGO   .BC                       CHECK NEXT PARAMETER           19200002
+.S3      AIF   (N'&ALTCONS NE 2).M4      COMPOSITE ALTERNATE CONSOLE    19250002
+         AIF   (K'&ALTCONS(1) NE 5 OR K'&ALTCONS(2) NE 5).M4            19300002
+    MNOTE *,'     COMPOSITE ALTERNATE CONSOLE WITH FOLLOWING'           19350002
+    MNOTE *,'      ADDRESSES---'                                        19400002
+.S4      AIF   (&A3 EQ 2).BC             CHECK IF BOTH ADDRESSES STORED 19450002
+&A3      SETA  &A3+1                     INCREMENT SUBLIST INDEX        19500002
+&C1      SETC  '&ALTCONS(&A3)'(3,3)      ADDRESS                        19550002
+&C2      SETC  '&ALTCONS(&A3)'(1,2)      I-  OR  O-                     19600002
+         AIF   ('&C2' NE 'I-').S5        CHECK IF INPUT ADDRESS         19650002
+         AIF   (&B3).M40                 CONPOSITE ALTCONS INPUT SWITCH 19700002
+&B3      SETB  1                         SET SWITCH                     19750002
+&SGSCNAC(&SGSCNYA(1)) SETC '&C1&SGSCNAC(&SGSCNYA(1))'  I-ADDR(O-ADDR)   19800002
+    MNOTE *,'        &C1 - INPUT'                                       19850002
+         AGO   .S4                       REPEAT FOR OUTPUT ALTCONS      19900002
+.S5      AIF   ('&C2' NE 'O-').M40       INVALID CHARACTERS             19950002
+         AIF   (&B4).M40                 COMPOSITE ALTCONS OUTPUT SW    20000002
+&B4      SETB  1                         SET SWITCH                     20050002
+&SGSCNAC(&SGSCNYA(1)) SETC '&SGSCNAC(&SGSCNYA(1))&C1'  (I-ADDR)O-ADDR   20100002
+    MNOTE *,'        &C1 - OUTPUT'                                      20150002
+         AGO   .S4                       REPEAT FOR INPUT ALTCONS       20200002
+.***           **********************************                       20210002
+.* * *           ROUTCDE FOR SECONDARY CONSOLES                         20250002
+.***           **********************************                       20260002
+.BC      AIF   (T'&ROUTCDE EQ 'O').C7    OMITTED                        20300002
+         AIF   ('&ROUTCDE' EQ 'ALL').C4  ALL ROUTE CODES                20350002
+&A1      SETA  1                                                        20400002
+    MNOTE *,'     ROUTING CODES ASSIGNED TO THIS CONSOLE ARE---'        20450002
+.BE      AIF   (N'&ROUTCDE LT &A1).C8       EXHAUSTED                   20500002
+         AIF   (T'&ROUTCDE(&A1) NE 'N').M5  NOT NUMERIC                 20550002
+         AIF   ('&ROUTCDE(&A1)' LT '1' OR '&ROUTCDE(&A1)' GT '16').M5   20600002
+.* THE FOLLOWING CHECKS EACH ROUTING CODE FOR ALREADY SPECIFIED -       20650002
+.* IF IT HAS NOT BEEN SPECIFIED, IT WILL COME THROUGH ALL CHECKS        20700002
+.* WITHOUT BRANCHING.                                                   20750002
+  AIF  (&SGRT01B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ  '1').M55 DUPLIC'D 20800002
+  AIF  (&SGRT02B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ  '2').M55 DUPLIC'D 20850002
+  AIF  (&SGRT03B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ  '3').M55 DUPLIC'D 20900002
+  AIF  (&SGRT04B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ  '4').M55 DUPLIC'D 20950002
+  AIF  (&SGRT05B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ  '5').M55 DUPLIC'D 21000002
+  AIF  (&SGRT06B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ  '6').M55 DUPLIC'D 21050002
+  AIF  (&SGRT07B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ  '7').M55 DUPLIC'D 21100002
+  AIF  (&SGRT08B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ  '8').M55 DUPLIC'D 21150002
+  AIF  (&SGRT09B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ  '9').M55 DUPLIC'D 21200002
+  AIF  (&SGRT10B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ '10').M55 DUPLIC'D 21250002
+  AIF  (&SGRT11B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ '11').M55 DUPLIC'D 21300002
+  AIF  (&SGRT12B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ '12').M55 DUPLIC'D 21350002
+  AIF  (&SGRT13B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ '13').M55 DUPLIC'D 21400002
+  AIF  (&SGRT14B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ '14').M55 DUPLIC'D 21450002
+  AIF  (&SGRT15B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ '15').M55 DUPLIC'D 21500002
+  AIF  (&SGRT16B(&SGSCNYA(1)) AND '&ROUTCDE(&A1)' EQ '16').M55 DUPLIC'D 21550002
+    MNOTE *,'        &ROUTCDE(&A1)'                                     21600002
+.***           **********************************                       21610002
+.***              SET ROUTCDE BIT AS SPECIFIED                          21620002
+.***           **********************************                       21630002
+&SGRT01B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ  '1' OR &SGRT01B(&SGSCNY*21650002
+               A(1)))                                                   21700002
+&SGRT02B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ  '2' OR &SGRT02B(&SGSCNY*21750002
+               A(1)))                                                   21800002
+&SGRT03B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ  '3' OR &SGRT03B(&SGSCNY*21850002
+               A(1)))                                                   21900002
+&SGRT04B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ  '4' OR &SGRT04B(&SGSCNY*21950002
+               A(1)))                                                   22000002
+&SGRT05B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ  '5' OR &SGRT05B(&SGSCNY*22050002
+               A(1)))                                                   22100002
+&SGRT06B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ  '6' OR &SGRT06B(&SGSCNY*22150002
+               A(1)))                                                   22200002
+&SGRT07B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ  '7' OR &SGRT07B(&SGSCNY*22250002
+               A(1)))                                                   22300002
+&SGRT08B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ  '8' OR &SGRT08B(&SGSCNY*22350002
+               A(1)))                                                   22400002
+&SGRT09B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ  '9' OR &SGRT09B(&SGSCNY*22450002
+               A(1)))                                                   22500002
+&SGRT10B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ '10' OR &SGRT10B(&SGSCNY*22550002
+               A(1)))                                                   22600002
+&SGRT11B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ '11' OR &SGRT11B(&SGSCNY*22650002
+               A(1)))                                                   22700002
+&SGRT12B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ '12' OR &SGRT12B(&SGSCNY*22750002
+               A(1)))                                                   22800002
+&SGRT13B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ '13' OR &SGRT13B(&SGSCNY*22850002
+               A(1)))                                                   22900002
+&SGRT14B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ '14' OR &SGRT14B(&SGSCNY*22950002
+               A(1)))                                                   23000002
+&SGRT15B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ '15' OR &SGRT15B(&SGSCNY*23050002
+               A(1)))                                                   23100002
+&SGRT16B(&SGSCNYA(1)) SETB ('&ROUTCDE(&A1)' EQ '16' OR &SGRT16B(&SGSCNY*23150002
+               A(1)))                                                   23200002
+.C0      ANOP                                                           23250002
+&A1      SETA  &A1+1                    INCREMENT COUNT FOR ROUTCDE     23300002
+         AGO   .BE                      REPEAT FOR NEXT ROUTCDE PARM    23350002
+.C4 MNOTE *,'     ALL ROUTING CODES ARE ASSIGNED TO THIS CONSOLE'       23400002
+&SGRT01B(&SGSCNYA(1)) SETB 1            SET ALL ROUTCDE BITS            23450002
+&SGRT02B(&SGSCNYA(1)) SETB 1                                            23500002
+&SGRT03B(&SGSCNYA(1)) SETB 1                                            23550002
+&SGRT04B(&SGSCNYA(1)) SETB 1                                            23600002
+&SGRT05B(&SGSCNYA(1)) SETB 1                                            23650002
+&SGRT06B(&SGSCNYA(1)) SETB 1                                            23700002
+&SGRT07B(&SGSCNYA(1)) SETB 1                                            23750002
+&SGRT08B(&SGSCNYA(1)) SETB 1                                            23800002
+&SGRT09B(&SGSCNYA(1)) SETB 1                                            23850002
+&SGRT10B(&SGSCNYA(1)) SETB 1                                            23900002
+&SGRT12B(&SGSCNYA(1)) SETB 1                                            23950002
+&SGRT11B(&SGSCNYA(1)) SETB 1                                            24000002
+&SGRT13B(&SGSCNYA(1)) SETB 1                                            24050002
+&SGRT14B(&SGSCNYA(1)) SETB 1                                            24100002
+&SGRT15B(&SGSCNYA(1)) SETB 1                                            24150002
+&SGRT16B(&SGSCNYA(1)) SETB 1                                            24200002
+         AGO   .C8                                                      24250002
+.C7 MNOTE *,'     NO ROUTING CODES ARE ASSIGNED TO THIS CONSOLE'        24300002
+.***           **********************************                       24310002
+.***             VALDCMD FOR SECONDARY CONSOLES                         24320002
+.***           **********************************                       24330002
+.C8      AIF   (T'&VALDCMD EQ 'O').CE     OMITTED                       24350002
+ AIF (&SW1).M8                            OUTPUT ONLY CONSOLE           24400002
+    MNOTE *,'     COMMAND CODES ASSIGNED TO THIS CONSOLE ARE---'        24450002
+&A1      SETA  1                          RESET SUBLIST INDEX           24500002
+.CA      AIF   (N'&VALDCMD LT &A1).T1     EXHAUSTED                     24600002
+         AIF   ('&VALDCMD(&A1)' LT '1' OR '&VALDCMD(&A1)' GT '3').M6    24650002
+  AIF  (&SGCMD1B(&SGSCNYA(1)) AND '&VALDCMD(&A1)' EQ '1').M7 DUPLIC'D   24700002
+  AIF  (&SGCMD2B(&SGSCNYA(1)) AND '&VALDCMD(&A1)' EQ '2').M7 DUPLIC'D   24750002
+  AIF  (&SGCMD3B(&SGSCNYA(1)) AND '&VALDCMD(&A1)' EQ '3').M7 DUPLIC'D   24800002
+    MNOTE *,'        &VALDCMD(&A1)'                                     24850002
+&SGCMD1B(&SGSCNYA(1)) SETB ('&VALDCMD(&A1)' EQ '1' OR &SGCMD1B(&SGSCNYA*24900002
+               (1)))                                                    24950002
+&SGCMD2B(&SGSCNYA(1)) SETB ('&VALDCMD(&A1)' EQ '2' OR &SGCMD2B(&SGSCNYA*25000002
+               (1)))                                                    25050002
+&SGCMD3B(&SGSCNYA(1)) SETB ('&VALDCMD(&A1)' EQ '3' OR &SGCMD3B(&SGSCNYA*25100002
+               (1)))                                                    25150002
+.CC      ANOP                                                           25200002
+&A1      SETA  &A1+1                    INCREMENT SUBLIST INDEX         25250002
+         AGO   .CA                      REPEAT FOR NEXT VALDCMD PARM    25300002
+.CE MNOTE *,'     COMMANDS ''DISPLAY,LOG'' ARE ASSIGNED TO THIS CONSOLE*25350002
+               '                                                        25400002
+.***           **********************************                       25410002
+.***               USE FOR SECONDARY CONSOLES                           25450002
+.***           **********************************                       25460002
+.T1      AIF   (T'&USE EQ 'O').E1       OMITTED                         25500002
+         AIF   ('&USE' NE 'MS').T2      GO CHECK FOR SD                 25550002
+    MNOTE *,'     LIMITED CAPACITY CONSOLE-MESSAGE STREAM MODE'         25600002
+&SGSCMSB(&SGSCNYA(1)) SETB 1            MSG STREAM MODE USE BIT         25650002
+         AGO   .E1                      CHECK NEXT PARAMETER            25700002
+.T2      AIF   ('&USE' NE 'SD').MA      ANY OTHER INVALID               25750002
+    MNOTE *,'     LIMITED CAPACITY CONSOLE-STATUS DISPLAY MODE'         25800002
+&SGSCSDB(&SGSCNYA(1)) SETB 1            STATUS DISPLAY MODE USE BIT     25850002
+.***           **********************************                       25860002
+.***               AREA FOR SECONDARY CONSOLES                          25900002
+.***           **********************************                       25910002
+.E1      AIF   (T'&AREA EQ 'O').G1           OMITTED                    25950002
+         AIF   (&SGSCMSB(&SGSCNYA(1))).MB    ERROR IF MS CONSOLE        26000002
+         AIF   (N'&AREA GT 11).MC            TOO MANY AREAS DEFINED     26050002
+    MNOTE *,'     STATUS DISPLAY AREAS FOR THIS CONSOLE HAVE LENGTHS OF*26100002
+               --'                                                      26150002
+&A1      SETA  1                             RESET SUBLIST INDEX        26200002
+.E2      AIF   (&A1 GT N'&AREA).E4           PARAMETERS EXHAUSTED       26250002
+         AIF   ('&AREA(&A1)' LT '4' OR '&AREA(&A1)' GT '47').MD         26300002
+    MNOTE *,'        &AREA(&A1)'                                        26350002
+&SGAR12A(&SGSCNYA(1)) SETA &SGAR12A(&SGSCNYA(1))+&AREA(&A1)  TOTAL LNG  26400002
+.E3      ANOP                                                           26450002
+&A1      SETA  &A1+1                         INCREMENT SUBLIST INDEX    26500002
+         AGO   .E2                           REPEAT FOR ALL PARAMETERS  26550002
+.E4      AIF   (&SW3).G1                     ERROR IN PARAMETER         26600002
+         AIF   (N'&AREA EQ 1).F1                                        26650002
+         AIF   (N'&AREA EQ 2).F2                                        26700002
+         AIF   (N'&AREA EQ 3).F3                                        26750002
+         AIF   (N'&AREA EQ 4).F4                                        26800002
+         AIF   (N'&AREA EQ 5).F5                                        26850002
+         AIF   (N'&AREA EQ 6).F6                                        26900002
+         AIF   (N'&AREA EQ 7).F7                                        26950002
+         AIF   (N'&AREA EQ 8).F8                                        27000002
+         AIF   (N'&AREA EQ 9).F9                                        27050002
+         AIF   (N'&AREA EQ 10).F10                                      27100002
+&SGAR11A(&SGSCNYA(1)) SETA &AREA(11)    STORE LNG FOR EACH DISPLAY AREA 27150002
+.F10     ANOP                                                           27200002
+&SGAR10A(&SGSCNYA(1)) SETA &AREA(10)                                    27250002
+.F9      ANOP                                                           27300002
+&SGAR09A(&SGSCNYA(1)) SETA &AREA(9)                                     27350002
+.F8      ANOP                                                           27400002
+&SGAR08A(&SGSCNYA(1)) SETA &AREA(8)                                     27450002
+.F7      ANOP                                                           27500002
+&SGAR07A(&SGSCNYA(1)) SETA &AREA(7)                                     27550002
+.F6      ANOP                                                           27600002
+&SGAR06A(&SGSCNYA(1)) SETA &AREA(6)                                     27650002
+.F5      ANOP                                                           27700002
+&SGAR05A(&SGSCNYA(1)) SETA &AREA(5)                                     27750002
+.F4      ANOP                                                           27800002
+&SGAR04A(&SGSCNYA(1)) SETA &AREA(4)                                     27850002
+.F3      ANOP                                                           27900002
+&SGAR03A(&SGSCNYA(1)) SETA &AREA(3)                                     27950002
+.F2      ANOP                                                           28000002
+&SGAR02A(&SGSCNYA(1)) SETA &AREA(2)                                     28050002
+.F1      ANOP                                                           28100002
+&SGAR01A(&SGSCNYA(1)) SETA &AREA(1)                                     28150002
+.***           **********************************                       28160002
+.***               PFK FOR SECONDARY CONSOLES                           28170002
+.***           **********************************                       28180002
+.G1      AIF   (T'&PFK EQ 'O').H2            OMITTED                    28200002
+         AIF   ('&PFK' LT '0').ME            NOT NUMERIC                28250002
+         AIF   ('&PFK' GT '12').ME           12 MAXIMUM                 28300002
+&SGSCNPA(&SGSCNYA(1)) SETA &PFK              STORE NUMBER OF PFKS       28350002
+&SGSCHDB(25)  SETB   1                       PFK INCLUDED IN SYSTEM     28400002
+    MNOTE *,'     CONSOLE WILL HAVE &PFK PROGRAM FUNCTION KEYS'         28450002
+.H2      AIF   (T'&OLDWTOR NE 'O').MG       INVALID WITH SECONS         28550002
+         MEXIT                              END OF SECONS PARAMETERS    28600002
+.*********************************************************************  28610002
+.* * * * * *          * * *  ERROR MESSAGES  * * *         * * * * * *  28650002
+.*********************************************************************  28660002
+.*                                                                      28670002
+.M0 MNOTE 5,'* * * IEICON001 MAXIMUM 98 SECONDARY CONSOLES ARE ALLOWED' 28700000
+&SGQUITB SETB 1                                                         28750002
+         MEXIT                                                          28800002
+.M1 MNOTE 5,'* * * IEICON002 MCONS OR SECONS VALUE NOT SPECIFIED'       28850002
+&SGQUITB SETB 1                                                         28900002
+         MEXIT                                                          28950002
+.M20     ANOP                                                           29000002
+&SGSCNCC(&SGSCNYA(1)) SETC ''                                           29050002
+&SGSCNYA(1) SETA &SGSCNYA(1)-1                                          29100002
+.M2 MNOTE 5,'* * * IEICON003 SECONS VALUE &SECONS INVALID'              29150002
+&SGQUITB SETB 1                                                         29200002
+         MEXIT                                                          29250002
+.M3 MNOTE 5,'* * * IEICON004 SECONS AND MCONS PARAMETERS MUTUALLY EXLUS*29300002
+               IVE'                                                     29350002
+&SGQUITB SETB 1                                                         29400002
+         MEXIT                                                          29450002
+.M40     ANOP                                                           29500002
+&SGSCNAC(&SGSCNYA(1)) SETC ''                                           29550002
+.M4 MNOTE 5,'* * * IEICON005 ALTCONS VALUE &ALTCONS INVALID'            29600002
+&SGQUITB SETB 1                                                         29650002
+         AGO   .BC                                                      29700002
+.M5 MNOTE 5,'* * * IEICON006 ROUTCDE VALUE &ROUTCDE(&A1) INVALID'       29750002
+&SGQUITB SETB 1                                                         29800002
+         AGO   .C0                                                      29850002
+.M55 MNOTE 5,'* * * IEICON007 ROUTCDE VALUE &ROUTCDE(&A1) DUPLICATED'   29900002
+&SGQUITB SETB 1                                                         29950002
+         AGO  .C0                                                       30000002
+.M6  MNOTE  0,'* * * IEICON034 WARNING- VALDCMD VALUE &VALDCMD(&A1)    *30050002
+               INVALID AND IGNORED'                                     30100002
+         AGO   .CC                                                      30150002
+.M7 MNOTE 5,'* * * IEICON008 VALDCMD VALUE &VALDCMD(&A1) DUPLICATED'    30200002
+&SGQUITB SETB 1                                                         30250002
+         AGO  .CC                                                       30300002
+.M8 MNOTE 5,'* * * IEICON009 VALDCMD SPECIFICATION FOR OUTPUT ONLY DEVI*30350002
+               CE INVALID'                                              30400002
+&SGQUITB SETB  1                                                        30450002
+         AGO   .CC                                                      30500002
+.M9 MNOTE 5,'* * * IEICON010 OUTPUT ONLY ALTCONS DEVICE INVALID WITH CO*30550002
+               NSOLE DEVICE HAVING INPUT CAPABILITY'                    30600002
+&SGQUITB SETB  1                                                        30650002
+         AGO  .BC                                                       30700002
+.MA MNOTE 5,'* * * IEICON011 USE VALUE &USE INVALID'                    30750002
+&SGQUITB SETB  1                                                        30800002
+         AGO   .E1                                                      30850002
+.MB MNOTE 5,'* * * IEICON012 AREA SPECIFICATION INVALID WITH CONSOLE IN*30900002
+                MESSAGE STREAM MODE'                                    30950002
+&SGQUITB SETB  1                                                        31000002
+         AGO   .G1                                                      31050002
+.MC MNOTE 5,'* * * IEICON013 MAXIMUM OF 11 AREAS MAY BE DEFINED'        31100002
+&SGQUITB SETB  1                                                        31150002
+         AGO   .G1                                                      31200002
+.MD MNOTE 5,'* * * IEICON014 AREA VALUE &AREA(&A1) INVALID'             31250002
+&SGQUITB SETB  1                                                        31300002
+&SW3     SETB  1                                                        31350002
+         AGO   .E3                                                      31400002
+.ME MNOTE 5,'* * * IEICON015 PFK VALUE &PFK INVALID'                    31450002
+&SGQUITB SETB  1                                                        31500002
+         AGO   .H2                                                      31550002
+.MG MNOTE 5,'* * * IEICON017 OLDWTOR PARAMETER ONLY VALID WITH MCONS'   31600002
+&SGQUITB SETB  1                                                        31650002
+         AGO   .MEND                                                    31700002
+.MH MNOTE 5,'* * * IEICON018 USE PARAMETER INVALID FOR MASTER CONSOLE'  31750002
+&SGQUITB SETB  1                                                        31800002
+         AGO   .CK2                                                     31850002
+.MI MNOTE 5,'* * * IEICON019 VALDCMD PARAMETER INVALID FOR MASTER CONSO*31900002
+               LE'                                                      31950002
+&SGQUITB SETB  1                                                        32000002
+         AGO   .MEND                                                    32050002
+.MJ MNOTE 5,'* * * IEICON020 MCONS PARAMETER PREVIOUSLY SPECIFIED'      32100002
+&SGQUITB SETB  1                                                        32150002
+         AGO   .MEND                                                    32200002
+.MJ1 MNOTE 5,'* * * IEICON023 TYPE=&TYPE VALUE INVALID'                 32250002
+&SGQUITB SETB 1                                                         32300002
+         AGO   .CKJES                                                   32350002
+.MJ2 MNOTE 5,'* * * IEICON024 ONLY VALDCMD VALID WITH TYPE=JES'         32400002
+&SGQUITB SETB 1                                                         32450002
+         AGO   .NJ                                                      32500002
+.MK0     ANOP                                                           32550002
+&SGSCHDC(1) SETC   ''                                                   32600002
+.MK MNOTE 5,'* * * IEICON021 MCONS=&MCONS VALUE INVALID'                32650002
+&SGQUITB SETB  1                                                        32700002
+         AGO   .ALT                                                     32750002
+.ML0     ANOP                                                           32800002
+&SGSCHDC(2) SETC   ''                                                   32850002
+.ML MNOTE 5,'* * * IEICON022 ALTCONS=&ALTCONS VALUE INVALID'            32900002
+&SGQUITB SETB  1                                                        32950002
+         AGO   .RC                                                      33000002
+.MM MNOTE 5,'* * * IEICON006 ROUTCDE=-&ROUTCDE(&E)- VALUE INVALID'      33050002
+&SGQUITB SETB  1                                                        33100002
+         AGO   .RC2                                                     33150002
+.MN MNOTE 5,'* * * IEICON007 ROUTCDE=-&ROUTCDE(&E)- VALUE DUPLICATED'   33200002
+&SGQUITB SETB  1                                                        33250002
+         AGO   .RC2                                                     33300002
+.MO MNOTE 5,'* * * IEICON013 OLDWTOR=-&OLDWTOR(&E)- VALUE INVALID'      33350002
+&SGQUITB SETB  1                                                        33400002
+         AGO   .OW2                                                     33450002
+.MP MNOTE 5,'* * * IEICON026 OLDWTOR=-&OLDWTOR(&E)- VALUE DUPLICATED'   33500002
+&SGQUITB SETB  1                                                        33550002
+         AGO   .OW2                                                     33600002
+.MQ MNOTE 5,'* * * IEICON027 MAXIMUM OF 11 AREAS MAY BE DEFINED'        33650002
+&SGQUITB SETB  1                                                        33700002
+         AGO   .AX                                                      33750002
+.MR MNOTE 5,'* * * IEICON014 AREA=-&AREA(&A)- VALUE INVALID'            33800002
+&SGQUITB SETB  1                                                        33850002
+         AGO   .AR2                                                     33900002
+.MS MNOTE 5,'* * * IEICON015 PFK=&PFK VALUE INVALID'                    33950002
+&SGQUITB SETB  1                                                        34000002
+         AGO   .CK1                                                     34050002
+.MT      MNOTE 5,'* * *  IEICON030  IOC VALUE &IOC IS INVALID'          34100002
+&SGQUITB SETB  1                                                        34150002
+         AGO   .CO                                                      34200002
+       AGO    .RC                                                       34250002
+.MEND    MEND                                                           34300002

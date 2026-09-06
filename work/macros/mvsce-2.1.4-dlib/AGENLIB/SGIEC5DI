@@ -1,0 +1,34 @@
+         MACRO                                                          00020000
+         SGIEC5DI                                                       00040000
+         COPY  SGGBLPAK                                                 00040401
+.*       VS1 RELEASE 01 DELETIONS                                       00050001
+.*D000720,003210-003275                                          XM6194 00060001
+.*       VS2 RELEASE 01 DELETIONS                                       00060401
+.*D000420,003214-003311                                                 00060802
+.*       VS2 RELEASE 02 DELETIONS                                       00061202
+.*001100,002500,003000                                           Y02072 00061602
+.*                                                               YM1434 00061702
+.*       VS2 RELEASE 03 DELETIONS                                       00061803
+.*                                                             @Z30TSMI 00061903
+.*       VS2 RELEASE 03+ DELETIONS                                      00066103
+.*001200,001450                                                @ZA08000 00068103
+.*       CHANGE LEVEL 04 OCTOBER 12,1974                                00070603
+         AIF   (NOT &GETB(3)).ALLGEN                                    00074803
+.*  A FULL SYSGEN WAS NOT REQUESTED.                             YM0965 00079003
+.*  GO TO EXIT.                                                  YM0965 00083203
+      MEXIT                                                      YM0965 00087403
+.ALLGEN  ANOP                                                           00091603
+         PUNCH ' COPY OUTDD=&SGCTRLC(36),INDD=AOSD7 '            YM0321 00095803
+         PUNCH ' SELECT MEMBER=(IGG019KG)'                       Y02072 00100002
+         PUNCH ' SELECT MEMBER=(IGG019KU,IGG0193A)'              Y02072 00140002
+         PUNCH ' SELECT MEMBER=(IGG019JA)'                     @ZA08000 00145003
+         PUNCH ' SELECT MEMBER=(IGG0203A,IGG019DC)'            @Z30TSMI 00190003
+         PUNCH ' SELECT MEMBER=(IGG019BR,IGG019BS,IGG019BT)'   @Z30TSMI 00230003
+         PUNCH ' SELECT MEMBER=(IGG019BU,IGG019BV)'              YM1434 00232002
+         PUNCH ' SELECT MEMBER=(IGG019KH)'                     @Z30TSMI 00240003
+         PUNCH ' SELECT MEMBER=(IGC0005C,IGC0005G)'              Y02072 00260002
+         PUNCH ' SELECT MEMBER=(IGG019LC,IGG019LI)'              Y02072 00280002
+         PUNCH ' SELECT MEMBER=(IGG019LE)'                       Y02072 00320002
+         PUNCH ' SELECT MEMBER=(IGG019DA,IGG019DB,IGG019DD)'     YM0965 00332001
+         PUNCH ' SELECT MEMBER=(IGCT005G)'                       Y02072 00333802
+         MEND                                                           00340000

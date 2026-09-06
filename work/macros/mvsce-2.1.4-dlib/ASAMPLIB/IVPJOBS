@@ -1,0 +1,231 @@
+//IVPJOB JOB PS40230301,MSGLEVEL=1,CLASS=A,MSGCLASS=A,REGION=256K       00400003
+// D U,,,,999                                                           00800003
+//IVP EXEC PGM=IEBPTPCH                                                 01200003
+//*            THIS IS THE IVP JOB STREAM                               01600003
+//SYSABEND DD SYSOUT=A                                                  02000003
+//SYSPRINT DD SYSOUT=A,DCB=(RECFM=FB,LRECL=121,BLKSIZE=121)             02400003
+//SYSUT1 DD DSNAME=SYS1.PARMLIB,DISP=SHR                                02800003
+//SYSUT2 DD SYSOUT=A                                                    03200003
+//SYSIN DD *                                                            03600003
+ PRINT TYPORG=PO,MAXFLDS=1                                              04000003
+ RECORD FIELD=(80)                                                      04400003
+//ASM  EXEC  PGM=IFOX00,PARM='NODECK,LOAD',REGION=256K                  04800003
+//SYSLIB  DD  DSN=SYS1.MACLIB,DISP=SHR                                  05200003
+//SYSUT1  DD  DSN=&UT1,UNIT=SYSSQ,SPACE=(1700,(400,50)),               *05600003
+//            SEP=(SYSLIB)                                              06000003
+//SYSUT2  DD  DSN=&UT2,UNIT=(SYSSQ,SEP=(SYSUT1)),SPACE=(1700,(400,50))  06400003
+//SYSUT3  DD  DSN=&UT3,SPACE=(1700,(400,50)),                          *06800003
+//            UNIT=(SYSSQ,SEP=(SYSUT2,SYSUT1,SYSLIB))                   07200003
+//SYSPRINT  DD  SYSOUT=A                                                07600003
+//SYSGO  DD  DSN=&LOADSET,UNIT=SYSSQ,SPACE=(400,(40,10)),              *08000003
+//           DISP=(MOD,PASS),DCB=(LRECL=80,BLKSIZE=400,RECFM=FB)        08400003
+//SYSIN  DD  *                                                          08800003
+EXAM     TITLE 'SAMPLE PROGRAM'                                         09200003
+         PRINT DATA                                                     09600003
+*                                                                       10000003
+*        THIS IS THE MACRO DEFINITION                                   10400003
+*                                                                       10800003
+         MACRO                                                          11200003
+         MOVE  &TO,&FROM                                                11600003
+.*                                                                      12000003
+.*       DEFINE SETC SYMBOL                                             12400003
+.*                                                                      12800003
+         LCLC  &TYPE                                                    13200003
+.*                                                                      13600003
+.*       CHECK NUMBER OF OPERANDS                                       14000003
+.*                                                                      14400003
+         AIF   (N'&SYSLIST NE 2).ERROR1                                 14800003
+.*                                                                      15200003
+.*       CHECK TYPE ATTRIBUTES OF OPERANDS                              15600003
+.*                                                                      16000003
+         AIF   (T'&TO NE T'&FROM).ERROR2                                16400003
+         AIF   (T'&TO EQ 'C' OR T'&TO EQ 'G' OR T'&TO EQ 'K').TYPECGK   16800003
+         AIF   (T'&TO EQ 'D' OR T'&TO EQ 'E' OR T'&TO EQ 'H').TYPEDEH   17200003
+         AIF   (T'&TO EQ 'F').MOVE                                      17600003
+         AGO   .ERROR3                                                  18000003
+.TYPEDEH ANOP                                                           18400003
+.*                                                                      18800003
+.*       ASSIGN TYPE ATTRIBUTE TO SETC SYMBOL                           19200003
+.*                                                                      19600003
+&TYPE    SETC  T'&TO                                                    20000003
+.MOVE    ANOP                                                           20400003
+*        NEXT TWO STATEMENTS GENERATED FOR MOVE MACRO                   20800003
+         L&TYPE   2,&FROM                                               21200003
+         ST&TYPE  2,&TO                                                 21600003
+         MEXIT                                                          22000003
+.*                                                                      22400003
+.*       CHECK LENGTH ATTRIBUTES OF OPERANDS                            22800003
+.*                                                                      23200003
+.TYPECGK AIF   (L'&TO NE L'&FROM OR L'&TO GT 256).ERROR4                23600003
+*        NEXT STATEMENT GENERATED FOR MOVE MACRO                        24000003
+         MVC   &TO,&FROM                                                24400003
+         MEXIT                                                          24800003
+.*                                                                      25200003
+.*       ERROR MESSAGES FOR INVALID MOVE MACRO INSTRUCTIONS             25600003
+.*                                                                      26000003
+.ERROR1  MNOTE 1,'IMPROPER NUMBER OF OPERANDS, NO STATEMENTS GENERATED' 26400003
+         MEXIT                                                          26800003
+.ERROR2  MNOTE 1,'OPERAND TYPES DIFFERENT, NO STATEMENTS GENERATED'     27200003
+         MEXIT                                                          27600003
+.ERROR3  MNOTE 1,'IMPROPER OPERAND TYPES, NO STATEMENTS GENERATED'      28000003
+         MEXIT                                                          28400003
+.ERROR4  MNOTE 1,'IMPROPER OPERAND LENGTHS, NO STATEMENTS GENERATED'    28800003
+         MEND                                                           29200003
+*                                                                       29600003
+*        MAIN ROUTINE                                                   30000003
+*                                                                       30400003
+SAMPLR   CSECT                                                          30800003
+BEGIN    SAVE  (14,12),,*                                               31200003
+         BALR  R12,0         ESTABLISH ADDRESSABILITY OF PROGRAM        31600003
+         USING *,R12         AND TELL THE ASSEMBLER WHAT BASE TO USE    32000003
+         ST    13,SAVE13                                                32400003
+         LM    R5,R7,=A(LISTAREA,16,LISTEND)  LOAD LIST AREA PARAMETERS 32800003
+         USING LIST,R5      REGISTER 5 POINTS TO THE LIST               33200003
+MORE     BAL   R14,SEARCH   FIND LIST ENTRY IN TABLE                    33600003
+         TM    SWITCH,NONE  CHECK TO SEE IF NAME WAS FOUND              34000003
+         BO    NOTTHERE     BRANCH IF NOT                               34400003
+         USING TABLE,R1     REGISTER 1 NOW POINTS TO TABLE ENTRY        34800003
+         MOVE  TSWITCH,LSWITCH          MOVE FUNCTIONS                  35200003
+         MOVE  TNUMBER,LNUMBER               FROM LIST ENTRY            35600003
+         MOVE  TADDRESS,LADDRESS                  TO TABLE ENTRY        36000003
+LISTLOOP BXLE  R5,R6,MORE   LOOP THROUGH THE LIST                       36400003
+         CLC   TESTTABL(240),TABLAREA                                   36800003
+         BNE   NOTRIGHT                                                 37200003
+         CLC   TESTLIST(96),LISTAREA                                    37600003
+         BNE   NOTRIGHT                                                 38000003
+         WTO   'ASSEMBLER SAMPLE PROGRAM SUCCESSFUL'                    38400003
+         WTO '********************************************************' 38800003
+         WTO '* PLEASE PROVIDE A CARD COPY OF THE STAGE I INPUT DECK *' 39200003
+         WTO '* USE THE IBM SUPPLIED LABELS/ENVELOPES FOR MAILING    *' 39600003
+         WTO '********************************************************' 40000003
+EXIT     L     R13,SAVE13                                               40400003
+         RETURN (14,12),RC=0                                            40800003
+*                                                                       41200003
+NOTRIGHT WTO   'ASSEMBLER SAMPLE PROGRAM UNSUCCESSFUL'                  41600003
+         WTO '********************************************************' 42000003
+         WTO '* PLEASE PROVIDE A CARD COPY OF THE STAGE I INPUT DECK *' 42400003
+         WTO '* USE THE IBM SUPPLIED LABELS/ENVELOPES FOR MAILING    *' 42800003
+         WTO '********************************************************' 43200003
+         B     EXIT                                                     43600003
+NOTTHERE OI    LSWITCH,NONE TURN ON SWITCH IN LIST ENTRY                44000003
+         B     LISTLOOP     GO BACK AND LOOP                            44400003
+SAVE13   DC    F'0'                                                     44800003
+SWITCH   DC    X'00'                                                    45200003
+NONE     EQU   X'80'                                                    45600003
+*                                                                       46000003
+*        BINARY SEARCH ROUTINE                                          46400003
+*                                                                       46800003
+SEARCH   NI    SWITCH,255-NONE TURN OFF NOT FOUND SWITCH                47200003
+         LM    R1,R3,=F'128,4,128' LOAD TABLE PARAMETERS                47600003
+         LA    R1,TABLAREA-16(R1)  GET ADDRESS OF MIDDLE ENTRY          48000003
+LOOP     SRL   R3,1                DIVIDE INCREMENT BY 2                48400003
+         CLC   LNAME,TNAME         COMPARE LIST ENTRY WITH TABLE ENTRY  48800003
+         BH    HIGHER              BRANCH IF SHOULD BE HIGHER IN TABLE  49200003
+         BCR   8,R14               EXIT IF FOUND                        49600003
+         SR    R1,R3               OTHERWISE IT IS LOWER IN THE TABLE  X50000003
+                                     SO SUBTRACT INCREMENT              50400003
+         BCT   R2,LOOP             LOOP 4 TIMES                         50800003
+         B     NOTFOUND            ARGUMENT IS NOT IN THE TABLE         51200003
+HIGHER   AR    R1,R3               ADD INCREMENT                        51600003
+         BCT   R2,LOOP             LOOP 4 TIMES                         52000003
+NOTFOUND OI    SWITCH,NONE         TURN ON NOT FOUND SWITCH             52400003
+         BR    R14                 EXIT                                 52800003
+*                                                                       53200003
+*        THIS IS THE TABLE                                              53600003
+*                                                                       54000003
+         DS    0D                                                       54400003
+TABLAREA DC    XL8'0',CL8'ALPHA'                                        54800003
+         DC    XL8'0',CL8'BETA'                                         55200003
+         DC    XL8'0',CL8'DELTA'                                        55600003
+         DC    XL8'0',CL8'EPSILON'                                      56000003
+         DC    XL8'0',CL8'ETA'                                          56400003
+         DC    XL8'0',CL8'GAMMA'                                        56800003
+         DC    XL8'0',CL8'IOTA'                                         57200003
+         DC    XL8'0',CL8'KAPPA'                                        57600003
+         DC    XL8'0',CL8'LAMBDA'                                       58000003
+         DC    XL8'0',CL8'MU'                                           58400003
+         DC    XL8'0',CL8'NU'                                           58800003
+         DC    XL8'0',CL8'OMICRON'                                      59200003
+         DC    XL8'0',CL8'PHI'                                          59600003
+         DC    XL8'0',CL8'SIGMA'                                        60000003
+         DC    XL8'0',CL8'ZETA'                                         60400003
+*                                                                       60800003
+*        THIS IS THE LIST                                               61200003
+*                                                                       61600003
+LISTAREA DC    CL8'LAMBDA',X'0A',FL3'29',A(BEGIN)                       62000003
+         DC    CL8'ZETA',X'05',FL3'5',A(LOOP)                           62400003
+         DC    CL8'THETA',X'02',FL3'45',A(BEGIN)                        62800003
+         DC    CL8'TAU',X'00',FL3'0',A(1)                               63200003
+         DC    CL8'LIST',X'1F',FL3'465',A(0)                            63600003
+LISTEND  DC    CL8'ALPHA',X'00',FL3'1',A(123)                           64000003
+*                                                                       64400003
+*        THIS IS THE CONTROL TABLE                                      64800003
+*                                                                       65200003
+         DS    0D                                                       65600003
+TESTTABL DC    FL3'1',X'00',A(123),CL8'ALPHA'                           66000003
+         DC    XL8'0',CL8'BETA'                                         66400003
+         DC    XL8'0',CL8'DELTA'                                        66800003
+         DC    XL8'0',CL8'EPSILON'                                      67200003
+         DC    XL8'0',CL8'ETA'                                          67600003
+         DC    XL8'0',CL8'GAMMA'                                        68000003
+         DC    XL8'0',CL8'IOTA'                                         68400003
+         DC    XL8'0',CL8'KAPPA'                                        68800003
+         DC    FL3'29',X'0A',A(BEGIN),CL8'LAMBDA'                       69200003
+         DC    XL8'0',CL8'MU'                                           69600003
+         DC    XL8'0',CL8'NU'                                           70000003
+         DC    XL8'0',CL8'OMICRON'                                      70400003
+         DC    XL8'0',CL8'PHI'                                          70800003
+         DC    XL8'0',CL8'SIGMA'                                        71200003
+         DC    FL3'5',X'05',A(LOOP),CL8'ZETA'                           71600003
+*                                                                       72000003
+*        THIS IS THE CONTROL LIST                                       72400003
+*                                                                       72800003
+TESTLIST DC    CL8'LAMBDA',X'0A',FL3'29',A(BEGIN)                       73200003
+         DC    CL8'ZETA',X'05',FL3'5',A(LOOP)                           73600003
+         DC    CL8'THETA',X'82',FL3'45',A(BEGIN)                        74000003
+         DC    CL8'TAU',X'80',FL3'0',A(1)                               74400003
+         DC    CL8'LIST',X'9F',FL3'465',A(0)                            74800003
+         DC    CL8'ALPHA',X'00',FL3'1',A(123)                           75200003
+*                                                                       75600003
+*        THESE ARE THE SYMBOLIC REGISTERS                               76000003
+*                                                                       76400003
+R0       EQU   0                                                        76800003
+R1       EQU   1                                                        77200003
+R2       EQU   2                                                        77600003
+R3       EQU   3                                                        78000003
+R5       EQU   5                                                        78400003
+R6       EQU   6                                                        78800003
+R7       EQU   7                                                        79200003
+R12      EQU   12                                                       79600003
+R13      EQU   13                                                       80000003
+R14      EQU   14                                                       80400003
+R15      EQU   15                                                       80800003
+*                                                                       81200003
+*        THIS IS THE FORMAT DEFINITION OF LIST ENTRYS                   81600003
+*                                                                       82000003
+LIST     DSECT                                                          82400003
+LNAME    DS    CL8                                                      82800003
+LSWITCH  DS    C                                                        83200003
+LNUMBER  DS    FL3                                                      83600003
+LADDRESS DS    F                                                        84000003
+*                                                                       84400003
+*        THIS IS THE FORMAT DEFINITION OF TABLE ENTRYS                  84800003
+*                                                                       85200003
+TABLE    DSECT                                                          85600003
+TNUMBER  DS    FL3                                                      86000003
+TSWITCH  DS    C                                                        86400003
+TADDRESS DS    F                                                        86800003
+TNAME    DS    CL8                                                      87200003
+         END   BEGIN                                                    87600003
+//LKED  EXEC  PGM=IEWL,PARM=(XREF,LET,LIST,NCAL),REGION=256K,          *88000003
+//            COND=(8,LT,ASM)                                           88400003
+//SYSLIN  DD  DSN=&LOADSET,DISP=(OLD,DELETE)                            88800003
+//        DD  DDNAME=SYSIN                                              89200003
+//SYSLMOD  DD  DSN=&GOSET(GO),UNIT=SYSDA,SPACE=(1024,(50,20,1)),       *89600003
+//             DISP=(MOD,PASS)                                          90000003
+//SYSUT1  DD  DSN=&UT1,UNIT=(SYSDA,SEP=(SYSLIN,SYSLMOD)),              *90400003
+//            SPACE=(1024,(50,20))                                      90800003
+//SYSPRINT  DD  SYSOUT=A                                                91200003
+//GO  EXEC  PGM=*.LKED.SYSLMOD,COND=((8,LT,ASM),(4,LT,LKED))            91600003
+// EXEC PGM=EXPCT806,COND=EVEN         FORCING ABEND AND DUMP           92000003
+//SYSABEND DD SYSOUT=A                                                  92400003

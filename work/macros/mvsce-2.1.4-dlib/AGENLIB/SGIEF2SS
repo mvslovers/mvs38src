@@ -1,0 +1,157 @@
+         MACRO                                                          00050002
+         SGIEF2SS                                                       00100002
+.*A000000-999999                                                 Y02668 00110002
+.********************************************************************** 00150002
+.*                                                                      00200002
+.*  MACRO NAME = SGIEF2SS                                               00250002
+.*                                                                      00300002
+.*  DESCRIPTIVE NAME = GROUP 2 SYSGEN MACRO PRIMARY AND SECONDARY       00350002
+.*                     MASTER SUBSYSTEM NAME CONTROL ROUTINE            00400002
+.*                                                                      00450002
+.*  FUNCTION = GENERATES THE ASSEMBLY JCL AND THE GROUP O MACRO SOURCE  00500002
+.*                STATEMENTS TO ASSEMBLE THE                            00550002
+.*                   1) MASTER SUBSYSTEM START JCL       MACRO SGIEE0MS 00600002
+.*                   2) JOB ENTRY SUBSYSTEM NAMES TABLE  MACRO SGIEF0SS 00650002
+.*                                                                      00700002
+.*  DEPENDENCIES = SCHEDULR SYSGEN MACRO:                               00750002
+.*                  -PROVIDE NAME OF PRIMARY JOB ENTRY SUBSYSTEM        00800002
+.*                   IN GLOBAL &SGSPRIC(1)                              00850002
+.*                  -PROVIDE NAME(S) OF SECONDARY JOB ENTRY SUBSYSTEM   00900002
+.*                   IN GLOBAL ARRAY &SGSUBSC(15)                       00950002
+.*                                                                      01000002
+.*                 SGGBLPAK:                                            01050002
+.*                  -CONTAIN THE ABOVE GLOBALS                          01100002
+.*                                                                      01150002
+.*  INPUT = SGGBLPAK                                                    01200002
+.*             1) &SGSPRIC(1)  -  PRIMARY SUBSYSTEM NAME                01250002
+.*             2) &SGSUBSC(15) -  SECONDARY SUBSYSTEM NAME(S)           01300002
+.*                                                                      01350002
+.*  EXIT-NORMAL = MEND TO GENERATE                                      01400002
+.*                                                                      01450002
+.*  EXIT-ERROR = NONE                                                   01500002
+.*                                                                      01550002
+.*  EXTERNAL REFERENCES = SGGBLPAK                                      01600002
+.*                        SGASMPAK                                      01650002
+.*                                                                      01700002
+.*  MESSAGES =NONE                                                      01750002
+.*                                                                      01800002
+.********************************************************************** 01850002
+         COPY  SGGBLPAK                                                 01950002
+.********************************************************************** 02050002
+.*                                                                      02060002
+.*  THESE ARE THE LOCAL VARIABLES USED IN THIS MACRO                    02100002
+.*                                                                      02150002
+.********************************************************************** 02200002
+         LCLA  &I,&K,&COUNT                                             02300002
+         LCLC  &BLANKS,&MASK,&COMMALP,&RTPAREN,&COMMA                   02350002
+.********************************************************************** 02450002
+.*                                                                      02500002
+.*  THIS SECTION OF CODE COPIES THE ASSEMBLY JCL AND ISSUES             02550002
+.*       THE MACRO CALL FOR SGIEE0MS SO THAT THE MASTER                 02600002
+.*       SUBSYSTEM JCL STARTS THE PRIMARY SUBSYSTEM.                    02650002
+.*                                                                      02660002
+.********************************************************************** 02700002
+&SGCTRLC(6)    SETC   'MSTRJCL'        SET THE SYSPUNCH DSNAME          02800002
+         COPY  SGASMPAK                COPY THE ASSEMBLY JCL            02850002
+         PUNCH  '         SGIEE0MS   &SGSPRIC(1)'                       02950002
+.*                                     PUNCH THE MACRO CALL WITH THE    03000002
+.*                                     PRIMARY SUBSYSTEM NAME AS PARM   03050002
+         PUNCH  '         END'         PUNCH THE END CARD               03100002
+         PUNCH  '/*'                   PUNCH THE /* CARD                03150002
+.********************************************************************** 03250002
+.*                                                                      03300002
+.*  THIS SECTION OF CODE SEARCHES THE SECONDARY SUBSYSTEM NAME LIST     03350002
+.*       AND DETERMINES HOW MANY WERE SPECIFIED.                        03400002
+.*                                                                      03500002
+.********************************************************************** 03550002
+&I       SETA  1                       INITIALIZE TO NO SECONDARY NAMES 03700002
+.LP1     ANOP                          LOOP LABEL TO FIND NUMBER OF     03800002
+.*                                     SECONDARY NAMES AND PRIMAR NAME  03850002
+         AIF (&I GT 15).ENDLP1         TEST FOR END OF POSSIBLE SEC NMS 03900002
+.*                                     EXIT LOOP IF AT END OF LIST      03950002
+         AIF ('&SGSUBSC(&I)' EQ '').ENDLP1                              04000002
+.*                                     IF A NULL NAME IS ENCOUNTERED,   04050002
+.*                                     THERE ARE NO MORE AND EXIT       04100002
+&I       SETA  &I+1                    INCREMENT &I TO EXAMINE NEXT ONE 04400002
+         AGO   .LP1                    GO EXAMINE THIS NEXT ENTRY       04450002
+.ENDLP1  ANOP       EXIT LABEL FOR .LP1 LOOP                            04500002
+&I       SETA  &I-1                    DECREMENT &I TO GET THE INDEX    05000002
+.*                                     VALUE OF THE LAST NAME           05050002
+.********************************************************************** 06100002
+.*                                                                      06150002
+.*  THIS SECTION OF CODE COPIES THE ASSEMBLY JCL AND ISSUES             06200002
+.*       THE MACRO CALL FOR SGIEF0SS. THE MACRO CALL CAN TAKE           06250002
+.*       ONE OF THE FOLLOWING FORMATS:                                  06300002
+.*          1)  SGIEF0SS   PRINAME                                      06350002
+.*          2)  SGIEF0SS   PRINAME,SECNAME                              06400002
+.*          3)  SGIEF0SS   PRINAME,(SECNAME1,                         X 06450002
+.*                                  SECNAME2,                         X 06500002
+.*                                  .....                             X 06550002
+.*                                  SECNAMEN)                           06600002
+.*                                                                      06650002
+.********************************************************************** 06700002
+&SGCTRLC(6)    SETC   'IEFJESNM'       SET THE SYSPUNCH DSNAME          06800002
+         COPY  SGASMPAK                COPY THE ASSEMBLY JCL            06850002
+.*                                                                      06900002
+.*   INITIALIZE THE WORK FIELDS                                         06950002
+.*                                                                      07000002
+&COMMA   SETC  ','                                                      07050002
+&COMMALP SETC  ',('                                                     07100002
+&RTPAREN SETC  ')'                                                      07150002
+&MASK    SETC  '      X'               SET MASK FOR CONT MARK           07200002
+         AIF (&I NE 0).SSCNT1          IF &I IS NOT 0, A FORMAT         07300002
+.*                                     2) OR 3) CALL IS NECESSARY ELSE  07350002
+.*                                     A 0 INDICATES FORMAT 1)          07400002
+.*                                                                      07402002
+.*       FORMAT  1                                                      07410002
+.*                                                                      07420002
+         PUNCH  '         SGIEF0SS   &SGSPRIC(1)'                       07450002
+.*                                     PUNCH A FORMAT 1) CARD SINCE     07500002
+.*                                     THERE ARE NO SECONDARY NAMES     07550002
+         AGO   .TERM                   EXIT TO FINISH JCL               07600002
+.*                                                                      07610002
+.*       FORMAT  2                                                      07620002
+.*                                                                      07630002
+.SSCNT1  ANOP                          LABEL FOR FORMAT 2) OR 3)        07650002
+         AIF (&I GT 1).SSCNT2          IF &I IS GT 1 THEN A FORMAT 3)   07700002
+.*                                     CALL IS NECESSARY                07750002
+.*                                     A 1 INDICATES FORMAT 2)          07800002
+         PUNCH  '         SGIEF0SS   &SGSPRIC(1)&COMMA&SGSUBSC(1)'      07850002
+.*                                     PUNCH A FORMAT 2) CARD SINCE     07900002
+.*                                     THERE IS ONLY ONE SECONDARY NAME 07950002
+         AGO   .TERM                   EXIT TO FINISH JCL               08000002
+.*                                                                      08010002
+.*       FORMAT  3                                                      08020002
+.*                                                                      08030002
+.SSCNT2  ANOP                          FORMAT 3) LABEL                  08050002
+&COUNT   SETA  K'&SGSPRIC(1)+K'&SGSUBSC(1)                              08100002
+.*                                     CALCULATE DISPLACEMENT FOR       08150002
+.*                                     CONTINUATION MARK                08200002
+&BLANKS  SETC   '&MASK'(&COUNT-1,9-&COUNT)       SET CONTINUATION MARK  08250002
+         PUNCH  '         SGIEF0SS   &SGSPRIC(1)&COMMALP&SGSUBSC(1)&COMX08300002
+               MA                                        &BLANKS'       08400002
+.*                                     PUNCH BEGINNING OF FORMAT 3)     08450002
+.*                                     MORE CARDS WILL FOLLOW FOR OTHER 08500002
+.*                                     SECONDARY NAMES                  08550002
+&K       SETA  2                       PREPARE TO PUNCH REMAINING NAMES 08700002
+.LP3     ANOP                          LOOP LABEL TO PUNCH OTHER NAMES  08750002
+         AIF (&K EQ &I).LASTNM         IF &K INDEX EQUAL &I INDEX THEN  08800002
+.*                                     THE LAST CARD IS TO BE PUNCHED   08850002
+&COUNT   SETA  K'&SGSUBSC(&K)          CALCULATE DISPLACEMENT FOR       08900002
+.*                                     CONTINUETION MARK                08950002
+&BLANKS  SETC   '&MASK'(&COUNT+3,5-&COUNT)       SET CONTINUATION MARK  09000002
+         PUNCH  '               &SGSUBSC(&K)&COMMA                     X09050002
+                                             &BLANKS'                   09100002
+.*                                     PUNCH SUBLIST CARD FOR FORMAT 3) 09150002
+&K       SETA  &K+1                    INCREMENT &K INDEX TO PUNCH      09250002
+.*                                     NEXT SUBLIST CARD                09300002
+         AGO   .LP3                    GO PROCESS NEXT SUBLIST ENTRY    09350002
+.LASTNM  ANOP                          LAST NAME EXIT LABEL             09400002
+         PUNCH  '               &SGSUBSC(&I)&RTPAREN'                   09450002
+.*                                     PUNCH LAST NAME OF SUBLIST FOR   09500002
+.*                                     FORMAT 3) CALL                   09550002
+.TERM    ANOP                          JCL TERMINATION LABEL            09600002
+         PUNCH  '         END'         PUNCH END CARD                   09650002
+         PUNCH  '/*'                   PUNCH /* CARD                    09700002
+.MACEND  ANOP                                                           09750002
+         MEND                                                           09800002

@@ -1,0 +1,62 @@
+)F FUNCTION -                                                           00050000
+  THE DEFINE COMMAND CAN BE USED TO CATALOG A NONVSAM DATA SET IN A     00100000
+  VSAM CATALOG.                                                         00150000
+)X SYNTAX -                                                             00200000
+         DEFINE    NONVSAM                                              00250000
+                   (  NAME('ENTRYNAME')                                 00300000
+                      DEVICETYPES('DEVTYPE' ...)                        00350000
+                      VOLUMES('VOLSER' ...)                             00400000
+                      OWNER('OWNERID')                                  00450000
+                      TO('DATE') | FOR('DAYS')                          00500000
+                      FILESEQUENCENUMBERS('NUMBER' ...)  )              00550000
+                   CATALOG('CATNAME/PASSWORD')                          00600003
+  REQUIRED - NONVSAM, NAME, DEVICETYPES, VOLUMES                        00650000
+  DEFAULTS - NONE                                                       00700000
+  ABBREVIATIONS -                                                       00750000
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 00800000
+             NONVSAM              NVSAM                                 00850000
+             DEVICETYPES          DEVT                                  00900000
+             FILESEQUENCENUMBERS  FSEQN                                 00950000
+)O OPERANDS -                                                           01000000
+))NONVSAM  - SPECIFIES THAT A NONVSAM DATA SET IS TO BE DEFINED.        01050000
+))NAME('ENTRYNAME')                                                     01200000
+           - SPECIFIES THE NAME OF THE NONVSAM DATA SET BEING DEFINED.  01250000
+  'ENTRYNAME'                                                           01350000
+           - NAME OF THE NONVSAM DATA SET BEING DEFINED.                01400000
+))DEVICETYPES('DEVTYPE' ...)                                            01700000
+           - SPECIFIES THE DEVICE TYPES OF THE VOLUMES CONTAINING THE   01750000
+             NONVSAM DATA SET BEING DEFINED.                            01800000
+  'DEVTYPE'                                                             01850000
+           - DEVICE TYPE OF THE VOLUME CONTAINING THE NONVSAM DATA SET  01900000
+             BEING DEFINED.                                             01950000
+))VOLUMES('VOLSER' ...)                                                 01960000
+           - SPECIFIES THE VOLUMES TO CONTAIN THE NONVSAM DATA SET.     01970000
+  'VOLSER' - VOLUME SERIAL NUMBER OF THE VOLUME TO CONTAIN THE NONVSAM  01990000
+             DATA SET.                                                  01992000
+))OWNER('OWNERID')                                                      01994000
+           - SPECIFIES THE IDENTIFICATION OF THE OWNER OF THE ENTRY     01996000
+             BEING DEFINED.                                             01998000
+  'OWNERID'                                                             01998400
+           - IDENTIFICATION OF THE OWNER OF THE ENTRY BEING DEFINED.    01998800
+))TO('DATE')                                                            01999200
+           - SPECIFIES THE RETENTION PERIOD FOR THE ENTRY BEING         01999600
+             DEFINED.                                                   01999700
+  'DATE'   - DATE (YYDDD) THROUGH WHICH THE ENTRY BEING DEFINED IS TO   01999800
+             BE KEPT.                                                   01999900
+))FOR('DAYS')                                                           02016600
+           - SPECIFIES THE RETENTION PERIOD FOR THE ENTRY BEING         02026600
+             DEFINED.                                                   02028600
+  'DAYS'   - NUMBER OF DAYS FOR WHICH THE ENTRY BEING DEFINED IS TO     02030600
+             BE KEPT.                                                   02032600
+))FILESEQUENCENUMBERS('NUMBER' ...)                                     02033300
+           - SPECIFIES THE FILE SEQUENCE NUMBER OF THE NONVSAM DATA     02050000
+             SET BEING DEFINED.                                         02100000
+  'NUMBER' - FILE SEQUENCE NUMBER OF NONVSAM DATA SET BEING DEFINED.    02150000
+))CATALOG('CATNAME/PASSWORD')                                           03150003
+           - IDENTIFIES THE CATALOG IN WHICH THE NONVSAM DATA SET       03200000
+             IS TO BE DEFINED.                                          03250000
+  'CATNAME'                                                             03300000
+           - NAME OF THE CATALOG IN WHICH THE ENTRY IS TO BE DEFINED.   03350000
+  'PASSWORD'                                                            03400000
+           - PASSWORD OF THE CATALOG.                                   03450000
+  REQUIRED - 'CATNAME'                                                  03650000

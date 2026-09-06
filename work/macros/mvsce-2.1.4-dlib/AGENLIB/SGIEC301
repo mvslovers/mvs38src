@@ -1,0 +1,100 @@
+         MACRO                                                          00050064
+         SGIEC301                                                       00100064
+         COPY  SGGBLPAK            COPY THE GLOBAL PACK                 00150064
+         LCLA  &I,&W                                                    00200064
+         LCLC  &C                                                       00250064
+.******* START OF SPECIFICATIONS ************************************** 00300064
+.*                                                                      00350064
+.* MODULE NAME - SGIEC301                                               00400064
+.*                                                                      00450064
+.* DESCRIPTIVE NAME - INCLUDE NUCLEUS MODULES FOR SYSGENED DEVICES      00500064
+.*                                                                      00550064
+.* COPYRIGHT - NONE                                                     00600064
+.*                                                                      00650064
+.* STATUS - CHANGE LEVEL 00                                             00700064
+.*                                                                      00750064
+.* FUNCTION -                                                           00800064
+.*   THIS MACRO SCANS THE DIT. FOR EVERY ENTRY WHICH HAS BEEN           00850064
+.*   GENERATED, THE NUCLEUS MODULES SPECIFED IN THE ENTRY ARE           00900064
+.*   INCLUDED INTO THE SYSTEM BY PUNCHING LINKAGE EDITOR                00950064
+.*   CONTROL STATEMENTS.                                                01000064
+.*                                                                      01050064
+.*   THIS MACRO IS INVOKED BY GENERATE.                                 01100064
+.*                                                                      01150064
+.* NOTES - N/A                                                          01200064
+.*                                                                      01250064
+.* MODULE TYPE - MACRO                                                  01300064
+.*                                                                      01350064
+.* ENTRY POINT - N/A                                                    01400064
+.*                                                                      01450064
+.* INPUT -                                                              01500064
+.*         NO PARAMETERS ARE PASSED DIRECTLY.                           01550064
+.*                                                                      01600064
+.*         THE FOLLOWING GLOBALS ARE USED-                              01650064
+.*           &SGCPRGB(8)    - VS2 SYSTEM BEING GENERATED                01700064
+.*           &SGDITDA       - NUMBER OF DIT ENTRIES TO BE SEARCHED      01750064
+.*           &SGGENDB(1-X)  - DEVICE OF THIS GENERIC HAS BEEN GENNED    01800064
+.*           &SGNUCDC(1-X)  - DLIB NAME FOR NUC MODULES                 01850064
+.*           &SGNUCMC(1-X)  - NUC MODULE NAMES TO BE INCLUDED           01900064
+.*              (WHERE X IS THE VALUE IN &SGDITDA)                      01950064
+.*                                                                      02000064
+.* OUTPUT -                                                             02050064
+.*       THE FOLLOWING GLOBALS ARE SET -                                02100064
+.*           &SGQUITB         - QUIT SWITCH IF AN INVALID NAME          02150064
+.*                              LIST IS FOUND                           02200064
+.*                                                                      02250064
+.*                                                                      02300064
+.*       LOCALS USED ARE -                                              02350064
+.*          &I - USED AS LOOP VARIABLE THROUGH DIT. POINTS TO           02400064
+.*               ENTRY BEING PROCESSED.                                 02450064
+.*          &W - WORK VARIABLE. USED TO VALIDITY CHECK LENGTH           02500064
+.*               OF NUCLEUS NAMES. ALSO USED TO LOOP THROUGH            02550064
+.*               NUCLEUS CHARACTER STRINGS.                             02600064
+.*          &C - CHARACTER WORK VARIABLE. USED TO CONTAIN CURRENT       02650064
+.*               NUCLEUS NAME TO BE PUNCHED.                            02700064
+.*                                                                      02750064
+.*                                                                      02800064
+.* EXIT, NORMAL - N/A                                                   02850064
+.*                                                                      02900064
+.* EXIT, ERROR - N/A                                                    02950064
+.*                                                                      03000064
+.* EXTERNAL REFERENCES - N/A                                            03050064
+.*                                                                      03100064
+.* TABLES - DEVICE INFORMATION TABLE (DIT)                              03150064
+.*                                                                      03200064
+.* MACROS - N/A                                                         03250064
+.*                                                                      03300064
+.* CHANGE ACTIVITY - N/A                                                03350064
+.*                                                                      03400064
+.*A-000000-999999                                              @G64HPLP 03450064
+.******* END OF SPECIFICATIONS **************************************** 03460064
+.LP      ANOP                      PROCESS NAMES IN DIT                 03500064
+&I       SETA  &I+1                INCREMENT LOOP VARIABLE              03550064
+         AIF   (&I GT &SGDITDA).MEND EXIT IF DONE WITH DIT              03600064
+.* IF THE DEVICE HAS NOT BEEN SYSGENED GO TO NEXT ENTRY. IF THE         03650064
+.* DEVICE IS DUMMY (I=76) THEN &SGGENDB WILL NOT BE ON AND THE          03656064
+.* ENTRY SHOULD BE PROCESSED TO GET DUMMY SUPPORT INTO THE              03662064
+.* SYSTEM. THE &SGGENDB CANNOT BE SET FOR DUMMY BECAUSE ALLOCATION      03668064
+.* REQUIRES IT. DUMMY DEVICES ARE PROCESSED FOR ALLOCATION IN A         03674064
+.* DIFFERENT WAY. SEE ALLOCATION MACROS FOR SUPPORT.                    03680064
+         AIF   (&I EQ 76).LP1           DUMMY ENTRY IS 76.     @ZM49049 03686064
+         AIF   (NOT &SGGENDB(&I)).LP                           @ZM49049 03689064
+.LP1     ANOP                                                  @ZM49049 03692064
+.*  IGNORE ENTRY IF NUCLEUS DLIB OR NUCLEUS NAME LIST IS NUL            03700064
+         AIF   (K'&SGNUCDC(&I) EQ 0 OR K'&SGNUCMC(&I) EQ 0).LP          03750064
+&W       SETA  1+K'&SGNUCMC(&I)    1+NUMBER OF CHARS SPECIFIED          03800064
+         AIF   (&W-&W/9*9 NE 0).ERROR ERROR IF LENGTH NOT MULT OF 9     03850064
+&W       SETA  1                                                        03900064
+.NUCLP   ANOP                                                           03950064
+&C       SETC  '&SGNUCDC(&I)'.'('.'&SGNUCMC(&I)'(&W,8).')'              04000064
+         PUNCH ' INCLUDE &C DEVICE=&SGGNRIC(&I)'               @ZM49120 04050064
+&W       SETA  &W+9                INCREMENT TO NEXT NAME IN LIST       04100064
+         AIF   (&W LT K'&SGNUCMC(&I)).NUCLP CONTINUE IF ANY MORE        04150064
+         AGO   .LP                 PROCESS NEXT DIT ENTRY               04200064
+.*  ERROR IN NAME LIST--INCORRECT FORMAT                                04250064
+.ERROR   ANOP                                                           04300064
+         MNOTE 5,'SGIEC301--NUCLEUS NAME LIST INVALID FOR DIT ENTRY &I,X04350064
+                GENERIC &SGGNRIC(&I)'                                   04400064
+&SGQUITB SETB  1                                                        04450064
+         AGO   .LP                 PROCESS NEXT DIT ENTRY               04500064
+.MEND    MEND                                                           04550064

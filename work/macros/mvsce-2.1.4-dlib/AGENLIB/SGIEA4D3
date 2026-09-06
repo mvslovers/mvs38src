@@ -1,0 +1,32 @@
+         MACRO                                                          00050000
+         SGIEA4D3                                                       00100000
+         COPY SGGBLPAK                                                  00150000
+         LCLA &N                                                        00200000
+.*                                                                      00250000
+.*  THIS MACRO CREATED FOR AOS/2 RELEASE 2 DIDOCS (SD CODE Y02958).     00300000
+.*  IT CREATES LINK EDIT JCL TO INCLUDE THE IEEPFKEY BLOCKS INTO        00350000
+.*  THE SYS1.DCMLIB.                                                    00400000
+.*                                                                      00450000
+         AIF   (&SGSCHDA(16) NE 0).KEYPCH                               00900000
+.TRYAGIN ANOP                                                           00950000
+&N       SETA  &N+1                                                     01000000
+         AIF   (&N GT &SGSCNYA(1)).OUT                                  01050000
+         AIF   (&SGSCNPA(&N) EQ 0).TRYAGIN                              01100000
+.KEYPCH  ANOP                                                           01150000
+.*  THE FOLLOWING COMMENT CARD WILL BE GENERATED INTO THE STAGE 1       01160000
+.*  OUTPUT TO IDENTIFY THE LEVEL AND CHANGE DATE ASSOCIATED WITH        01170000
+.*  THE COPY OF SGIEA4D3 BEING USED IN ANY GIVEN SYSGEN.                01180000
+.*  THE COMMENT SHOULD BE UPDATED WITH A NEW LEVEL NUMBER               01190000
+.*  AND DATE WHENEVER ANY CHANGES ARE MADE TO THIS MACRO                01192000
+.*                                                                      01194000
+*** SGIEA4D3 *** DIDOCS *** 03/22/74 *** CHANGE LEVEL 02 ***  MB YM4302 01196000
+.*                                                                      01198000
+&SGCTRLC(7) SETC '&SGCTRLC(54)' SET DCMLIB VOLSER             MB YM2821 01200000
+&SGCTRLC(8) SETC '&SGCTRLC(53)' SET DCMLIB UNIT               MB YM2821 01250000
+&SGCTRLC(9) SETC 'DCMLIB' SET NAME                                      01300000
+         COPY  SGLEDPK1                                                 01350000
+         COPY  SGLEDPK2                                                 01400000
+         PUNCH '    INCLUDE SYSPUNCH(IEEPFKEY)  '                       01450000
+         PUNCH '    NAME  IEEPFKEY(R)  '                                01500000
+         PUNCH '/*'                                                     01550000
+.OUT     MEND                                                           01600000

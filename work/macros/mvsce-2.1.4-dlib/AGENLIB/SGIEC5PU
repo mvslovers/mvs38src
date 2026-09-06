@@ -1,0 +1,11 @@
+         MACRO                                                          00050002
+         SGIEC5PU                                                       00100002
+.*        CHANGE LEVEL                                                  00110002
+.*        VS2 RELEASE 2 CHANGES                                         00120002
+.*                                                                      00130002
+.*                                                               YM3146 00140002
+.*COPY FROM AOSD0 TO SVCLIB FOR PCI APPENDAGE                           00150002
+         COPY SGGBLPAK                                                  00200002
+         PUNCH ' COPY OUTDD=SVCLIB,INDD=AOSD0 '                         00250002
+         PUNCH ' SELECT MEMBER=(IGG019V5,IGG019V6,IGG019V7) '    YM3146 00300000
+         MEND                                                           03300000

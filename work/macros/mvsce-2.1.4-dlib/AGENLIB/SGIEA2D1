@@ -1,0 +1,98 @@
+         MACRO                                                          01000000
+         SGIEA2D1                                                       02000000
+.*                                                                      03000000
+.*  GLOBAL DEFINITION                                                   04000000
+         COPY SGGBLPAK                                                  05000000
+.*  LOCAL A DEFINITION                                                  06000000
+         LCLA &I,&N,&X,&DEV,&NUM(5),&LIM(5),&J,&K              @ZA14064 07000000
+.*  LOCAL C DEFINITION                                                  08000000
+         LCLC &H(2),&TYPC,&ADDR(495)                           @ZA14064 09000000
+.*                                                                      10000000
+.*  THIS MACRO WAS CREATED FOR VS/2 RELEASE 2 DIDOCS (SD CODE Y02958)   11000000
+.*  TO ASSEMBLE A PAGEABLE DCM FOR EACH CRT CONSOLE TYPE GENERATED      12000000
+.*  TO RESIDE ON SYS1.LPALIB.                                           13000000
+.*  THE NAMING CONVENTION IS DCMXXX WHERE XXX IS THE DEVICE ADDRESS.    14000000
+.*  A CSECT NAME AND UP TO 15 ALIAS NAMES WILL BE GENERATED FOR EACH    15000000
+.*  PAGEABLE DCM.                                                       16000000
+&H(1)    SETC  '&SGSCHDC(1)'(1,3)                                       17000000
+&H(2)    SETC  '&SGSCHDC(1)'(4,3)                                       18000000
+&LIM(1)  SETA  0                                               @ZA14064 19000000
+&NUM(2)  SETA  99                                              @ZA14064 20000000
+&LIM(2)  SETA  99                                              @ZA14064 21000000
+&NUM(3)  SETA  198                                             @ZA14064 22000000
+&LIM(3)  SETA  198                                             @ZA14064 23000000
+&NUM(4)  SETA  297                                             @ZA14064 24000000
+&LIM(4)  SETA  297                                             @ZA14064 25000000
+&NUM(5)  SETA  396                                             @ZA14064 26000000
+&LIM(5)  SETA  396                                             @ZA14064 27000000
+.STARTI  ANOP                                                           28000000
+&I       SETA  1                                                        29000000
+         AIF   ('&H(1)' NE '&H(2)').LEAVEI                              30000000
+.NEXTI   ANOP                                                           31000000
+&I       SETA  2                                                        32000000
+.LEAVEI  CONVERT TO=HEX,VALUE=&H(&I),DIGITS=3                           33000000
+&X       SETA  &HEX                                                     34000000
+         IOCHECK LOOKFOR=&X                                             35000000
+&X       SETA  &SGDASPA(&HEX)                                  @ZA15421 36000000
+         AIF   (NOT &SGDT05B(&X)).HALFDUN                               37000000
+&DEV     SETA  4                                              MB YM4087 38000000
+         AIF   (&SGDU10B(&X) OR &SGDU08B(&X) AND &SGDM02B(&X) OR &SGDU1X39000000
+               3B(&X)).GR                                      @G51AK02 39500000
+&DEV     SETA  5                                              MB YM4087 40000000
+         AIF   (&SGDU08B(&X) AND &SGDM01B(&X)).GR                       41000000
+&DEV     SETA  3                                              MB YM4087 42000000
+         AIF   (&SGDU02B(&X)).GR                                        43000000
+&DEV     SETA  2                                              MB YM4087 44000000
+         AIF   (&SGDU01B(&X)).GR                                        45000000
+&DEV     SETA  1                                              MB YM4087 46000000
+         AIF   (NOT &SGDU06B(&X)).HALFDUN                               47000000
+.GR      ANOP                                                           48000000
+&NUM(&DEV) SETA  &NUM(&DEV)+1                                 MB YM4087 49000000
+&ADDR(&NUM(&DEV)) SETC 'DCM&H(&I)'      SET PAGEABLE DCM NAME MB YM4087 50000000
+.HALFDUN AIF   ('&H(2)' NE 'FFF' AND &I EQ 1).NEXTI                     51000000
+.JESCON  AIF   (&N GE &SGSCNYA(1)).OUT                      JE @ZM32389 52000000
+&N       SETA  &N+1                                                     53000000
+         AIF   ('&SGSCNCC(&N)' EQ 'JESJES').JESCON          JE @ZM32389 54000000
+&H(1)    SETC  '&SGSCNCC(&N)'(1,3)                                      55000000
+&H(2)    SETC  '&SGSCNCC(&N)'(4,3)                                      56000000
+.FMSET   AIF   ('&H(1)' EQ 'FFF').NEXTI                                 57000000
+         AGO   .STARTI                                                  58000000
+.OUT     ANOP                                                 MB YM4087 59000000
+         AIF   (&NUM(1)+&NUM(2)+&NUM(3)+&NUM(4)+&NUM(5) LE 990).NOPCH   60000000
+.*                                                             @ZA14064 60500000
+.*  THE FOLLOWING COMMENT CARD WILL BE GENERATED INTO THE STAGE 1       61000000
+.*  OUTPUT TO IDENTIFY THE LEVEL AND CHANGE DATE ASSOCIATED WITH        62000000
+.*  THE COPY OF SGIEA2D1 BEING USED IN ANY GIVEN SYSGEN.                63000000
+.*  THE COMMENT SHOULD BE UPDATED WITH A NEW LEVEL NUMBER AND DATE      64000000
+.*  WHENEVER ANY CHANGES ARE MADE TO THIS MACRO                         65000000
+.*                                                                      66000000
+*** SGIEA2D1 *** DIDOCS *** 05/23/77 *** CHANGE LEVEL 03 ***   @G51AK02 67000000
+&J       SETA  0                                              MB YM4087 68000000
+&DEV     SETA  1                                              MB YM4087 69000000
+.GENLOOP ANOP                                                 MB YM4087 70000000
+&K       SETA  0                                               @ZA14064 70500000
+&J       SETA  &J+1                                           MB YM4087 71000000
+         AIF   (&J GT &NUM(&DEV)).NXTYPE                      MB YM4087 72000000
+&TYPC    SETC  'ABCDE'(&DEV,1)                                MB YM4087 73000000
+&SGCTRLC(6) SETC '&ADDR(&J)'        SET PAGEABLE DCM NAME     MB YM4087 74000000
+         COPY  SGASMPAK                                                 75000000
+         PUNCH '&ADDR(&J)    CSECT '                          MB YM4087 76000000
+.ENTRY   ANOP                                                 MB YM4087 77000000
+         AIF   (&K EQ 15).ENDDCM                               @ZA14064 77300000
+&K       SETA  &K+1                                            @ZA14064 77600000
+&J       SETA  &J+1                                           MB YM4087 78000000
+         AIF   (&J GT &NUM(&DEV)).ENDDCM                      MB YM4087 79000000
+         PUNCH '         ENTRY &ADDR(&J)'                     MB YM4087 80000000
+         PUNCH '&ADDR(&J) EQU   *'                            MB YM4087 81000000
+         AGO   .ENTRY                                          @ZA14064 82000000
+.ENDDCM  ANOP                                                 MB YM4087 83000000
+         PUNCH '         IEECDCM DEVICE=&TYPC'                MB YM4087 84000000
+         PUNCH '         END '                                          85000000
+         PUNCH '/*'                                                     86000000
+         AGO   .GENLOOP                                        @ZA14064 87600000
+.NXTYPE  ANOP                                                 MB YM4087 88000000
+&DEV     SETA  &DEV+1                                          @ZA14064 90000000
+         AIF   (&DEV GE 6).NOPCH                               @ZA14064 90200000
+&J       SETA  &LIM(&DEV)                                      @ZA14064 90500000
+         AGO   .GENLOOP                                        @ZA14064 91000000
+.NOPCH   MEND                                                 MB YM4302 92000000

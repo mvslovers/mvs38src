@@ -1,0 +1,36 @@
+         MACRO                                                          03000002
+         SGIFD402                                                       06000002
+         COPY  SGGBLPAK                                                 09000002
+         AIF   (NOT &SGSUPRB(26)).REMANAL                      @Z38AFAA 12000000
+         AIF   (&GETB(3)).REMANAL                              @Z38AFAA 15000000
+.SETREM  ANOP                                                  @ZA39288 15050000
+&SGCTRLC(7)    SETC '&SGCTRLC(20)'                                      18000002
+&SGCTRLC(8)    SETC '&SGCTRLC(19)'                                      21000002
+&SGCTRLC(9)    SETC 'LPALIB'                                            24000002
+&SGCTRLC(6)    SETC 'IFDOLT'                                            27000002
+&SGCTRLC(10)   SETC ',RENT'                                             30000002
+         COPY  SGLEDPK1                                                 33000000
+ PUNCH  '//AOS06 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS06'        33050000
+         COPY  SGLEDPK2                                                 33100000
+         AIF   (NOT &SGSUPRB(26)).REMAN1                       @Z38AFAA 33150000
+         AIF   (&GETB(3)).REMAN1                               @Z38AFAA 33200000
+ PUNCH ' INCLUDE AOS06(IGC0005I,IGC0505I,IGC0905I)'                     33250000
+ PUNCH ' ENTRY IGC0005I'                                                33300000
+ PUNCH ' NAME IGC0005I(R)'                                              33350000
+.REMAN1  ANOP                                                  @ZA39288 33400000
+         AIF   (NOT &SGDCLSB(72)).REMAN2                       @ZA39288 33450000
+ PUNCH ' INCLUDE AOS06(IGE0019I)'                              @ZA39288 33500000
+ PUNCH ' NAME  IGE0019I(R)'                                    @ZA39288 33550000
+ PUNCH ' INCLUDE AOS06(IGE0119I)'                              @ZA39288 33600000
+ PUNCH ' NAME  IGE0119I(R)'                                    @ZA39288 33650000
+.REMAN2  ANOP                                                  @ZA39288 33700000
+ PUNCH '/*'                                                             33750000
+         AGO   .END                                            @ZA39288 33800000
+.*                                                                      54050000
+.*             REMOTE ANALYSIS SUPPORT                         @Z38AFAA 54100000
+.*                                                                      54150000
+.REMANAL ANOP                                                           54200000
+         AIF   (NOT &SGDCLSB(72)).END                          @Z38AFAA 54250000
+         AGO   .SETREM                                         @ZA39288 54300000
+.END     MEND                                                           54350000
+./  ENDUP                                                               00540001

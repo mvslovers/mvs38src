@@ -1,0 +1,79 @@
+       MACRO                                                            00050002
+         SGAMA401                                                       00100002
+.*A-040530                                                      @Y02160 00101002
+.*D010000-011500,015500-016500,022500-040000                     Y02006 00102002
+.*A006100,008100-008300,015100-015300,022500-029500              Y02006 00110002
+.*C020000-020100                                                 Y02006 00120002
+*C 000000-999999                                                 Y01987 00150002
+* C  041000                                                      YM3043 00160002
+         COPY SGGBLPAK             DEFINE SYSTEM GLOBAL SYMBOLS         00200002
+&SGCTRLC(7) SETC    '&SGCTRLC(32)' SET VOLUME NO. FOR LINKLIB           00250002
+&SGCTRLC(8) SETC    '&SGCTRLC(31)' SET UNIT NAME FOR LINKLIB            00300002
+&SGCTRLC(9) SETC    'LINKLIB'      SET DATA SET NAME FOR OUTPUT         00350002
+         COPY SGLEDPK1             PUNCH JCL CARDS                      00400002
+ PUNCH '//AOS12 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS12'         00450002
+         COPY SGLEDPK2                                                  00500002
+ PUNCH ' ORDER AMDPRCTL,AMDPRCOM,AMDPRRDC,AMDPRPMG,AMDPRSEG '  @ZA60088 00516600
+ PUNCH ' ORDER AMDPREAD,AMDPRUIM '                             @ZA63799 00533200
+ PUNCH ' INCLUDE AOS12(AMDPRCTL,AMDPRCOM,AMDPRRDC)'                     00550002
+ PUNCH ' INCLUDE AOS12(AMDPRPMG,AMDPRSEG)'                              00600002
+ PUNCH ' INCLUDE AOS12(AMDPREAD,AMDPRUIM)'                       Y02006 00610002
+ PUNCH ' ENTRY AMDPRDMP'                                                00650002
+ PUNCH ' ALIAS IMDPRDMP'                                                00700002
+ PUNCH ' ALIAS HMDPRDMP'                                                00750002
+ PUNCH ' NAME AMDPRDMP(R)'                                              00800002
+ PUNCH ' INCLUDE AOS12(AMDPRFSC,AMDPRFCB)'                       Y02006 00810002
+ PUNCH ' ENTRY AMDPRFSC'                                         Y02006 00820002
+ PUNCH ' NAME AMDPRFSR(R)'                                       Y02006 00830002
+ PUNCH ' INCLUDE AOS12(AMDPRSCN,AMDPRSN2,AMDPRSN3,AMDPRSMG,AMDPREID)'   00850002
+.*                                                                      00900002
+ PUNCH ' ENTRY AMDPRSCN'                                                00950002
+ PUNCH ' NAME AMDPRSCN(R)'                                              01000002
+ PUNCH ' INCLUDE AOS12(AMDPRFRM,AMDPRFMG,AMDPRGET,AMDPRFLT)'            01200002
+ PUNCH ' INCLUDE AOS12(AMDPREXT,AMDPRAPP,AMDPRREC)'                     01250002
+ PUNCH ' ENTRY AMDPRFRM'                                                01300002
+ PUNCH ' NAME AMDPRXED(R)'                                              01350002
+ PUNCH ' INCLUDE AOS12(AMDSALDR,AMDSAMSG)'                              01400002
+ PUNCH ' ENTRY AMDSALDR'                                                01450002
+ PUNCH ' NAME AMDSALDR(R)'                                              01500002
+ PUNCH ' INCLUDE AOS12(AMDSAPGE,AMDSAIOI,AMDSAPGI,AMDSASVI)'     Y02006 01510002
+ PUNCH ' INCLUDE AOS12(AMDSATXT,AMDSASIO,AMDSAWAT,AMDSATAP)'     Y02006 01510402
+ PUNCH ' INCLUDE AOS12(AMDSACON,AMDSAGTM,AMDSAFRM,AMDSAASM)'     Y02006 01510802
+ PUNCH ' INCLUDE AOS12(AMDSASIN,AMDSAUPD,AMDSATER,AMDSACSA)'     Y02006 01511202
+ PUNCH ' INCLUDE AOS12(AMDSAAID,AMDSAAUD,AMDSABUF,AMDSADER)'     Y02006 01511602
+ PUNCH ' INCLUDE AOS12(AMDSAARD,AMDSAMDM,AMDSARSM)'            @Z40WI3F 01511740
+ PUNCH ' INCLUDE AOS12(AMDSAGTF,AMDSAUCB,AMDSAVCK)'              Y02006 01511802
+ PUNCH ' ORDER AMDSAPGE'                                         Y02006 01512002
+ PUNCH ' ENTRY AMDSAPGE'                                         Y02006 01520002
+ PUNCH ' NAME AMDSAPGE(R)'                                       Y02006 01530002
+ PUNCH '/*'                                                             01700002
+&SGCTRLC(9)  SETC  'LINKLIB'         SET TARGET LIBRARY NAME            01750002
+&SGCTRLC(11) SETC  ',AC=1'           SET APF CODE                       01810002
+          COPY  SGLEDPK1             PUNCH JCL STATEMENTS               01850002
+ PUNCH '//AOS11 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS11'         01900002
+          COPY  SGLEDPK2                                                01950002
+ PUNCH ' INCLUDE AOS11(AHLGTFI,AHLSCAN,AHLTCTL1,AHLTSCN)'        Y02006 02000002
+ PUNCH ' INCLUDE AOS11(AHLTPMT,AHLT103,AHLTTAB,AHLTCTL2)'        Y02006 02010002
+ PUNCH ' ENTRY AHLGTFI'                                                 02050002
+ PUNCH ' ALIAS IHLGTF'                                                  02100002
+ PUNCH ' ALIAS HHLGTF'                                                  02150002
+ PUNCH ' NAME AHLGTF(R)'                                                02200002
+ PUNCH ' INCLUDE AOS11(AHLWTASK,AHLWTMSG)'                       Y02006 02250002
+ PUNCH ' ENTRY AHLWTASK'                                         Y02006 02300002
+ PUNCH ' NAME AHLWTASK(R)'                                       Y02006 02350002
+ PUNCH ' INCLUDE AOS11(AHLTMON,AHLTMMSG)'                        Y02006 02400002
+ PUNCH ' ENTRY AHLTMON'                                          Y02006 02450002
+ PUNCH ' NAME AHLTMON(R)'                                        Y02006 02500002
+ PUNCH ' INCLUDE AOS11(AHLIWRIT,AHLWRMSG)'                       Y02006 02550002
+ PUNCH ' ENTRY AHLIWRIT'                                         Y02006 02600002
+ PUNCH ' NAME AHLIWRIT(R)'                                       Y02006 02650002
+ PUNCH ' INCLUDE AOS11(AHLCWRIT,AHLWRMSG)'                       Y02006 02700002
+ PUNCH ' ENTRY AHLCWRIT'                                         Y02006 02750002
+ PUNCH ' NAME AHLCWRIT(R)'                                       Y02006 02800002
+ PUNCH ' INCLUDE AOS11(AHLWWRIT,AHLWRMSG)'                       Y02006 02850002
+ PUNCH ' ENTRY AHLWWRIT'                                         Y02006 02900002
+ PUNCH ' NAME AHLWWRIT(R)'                                       Y02006 02950002
+ PUNCH '/*'                                                             04050002
+ SGAMA402                                                       @Y02160 04053002
+ SGHMB401                                                        YM3043 61150002
+.END     MEND                                                           64150002

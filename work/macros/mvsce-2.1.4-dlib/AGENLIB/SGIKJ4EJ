@@ -1,0 +1,21 @@
+          MACRO                                                         00050002
+         SGIKJ4EJ                                                       00100002
+.********************************************************************   00250002
+.***  THIS MACRO PRODUCES THE LINKEDIT CONTROL STATEMENTS               00300002
+.***  FOR THE UTILITY COMMANDS  RENAME, AND PROTECT.                    00350002
+.********************************************************************   00400002
+          COPY SGGBLPAK                                                 00450002
+&SGCTRLC(7)   SETC  '&SGCTRLC(20)'        CMDVOL                        00500002
+&SGCTRLC(8)   SETC  '&SGCTRLC(19)'        UNIT NAME OF CMDVOL           00550002
+&SGCTRLC(9)   SETC  'LPALIB'              LIBRARY NAME                  00600002
+&SGCTRLC(11)   SETC  ',REFR'                                            00650002
+&SGCTRLC(12)   SETC  ',RENT'                                            00700002
+          COPY SGLEDPK1                                                 00750002
+ PUNCH '//ACMDLIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.ACMDLIB'     00800002
+          COPY SGLEDPK2                                                 00850002
+ PUNCH '  ENTRY IKJEHDEF'                                               00860003
+ PUNCH '  INCLUDE ACMDLIB(IKJEHDEF,IKJEHCIR)'                           00900002
+ PUNCH '  ALIAS IKJDFLT,IKJEHCIR'                                       00950002
+ PUNCH '  NAME IKJEHDEF(R)'                                             01050002
+ PUNCH '/*'                                                             01700002
+          MEND                                                          01750002

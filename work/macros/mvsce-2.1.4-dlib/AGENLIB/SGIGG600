@@ -1,0 +1,92 @@
+* /*                                                                 */ 00002002
+* /* MACOMP Y-2 SC1DE/SJD61                                          */ 00004002
+* /* MACSTAT Y-2 73222/Y02020                                        */ 00006002
+* /*                                                                 */ 00008002
+         MACRO                                                          00010002
+         SGIGG600                                                       00020002
+         COPY  SGGBLPAK                                                 00030002
+.* /* START OF SPECIFICATIONS ****                                      00050002
+.*                                                                      00100002
+.*01  MODULE-NAME = SGIGG600                                            00150002
+.*                                                                      00250002
+.*01  DESCRIPTIVE-NAME = MASTER CATALOG CREATE LARGE MODULE             00300002
+.*                                                                      00350002
+.*01  COPYRIGHT = NONE                                                  00400002
+.*                                                                      00450002
+.*01  STATUS = NEW                                                      00500002
+.*                                                                      00550002
+.*01  FUNCTION = THIS MACRO CAUSES THE TARGET SYSTEM MACRO CATALOG TO   00600002
+.*    BE CREATED                                                        00610002
+.*                                                                      00650002
+.*01  NOTES = NONE                                                      00700002
+.*                                                                      00750002
+.*02    CHARACTER-CODE-DEPENDENCIES = NONE                              00800002
+.*                                                                      00850002
+.*02    DEPENDENCIES = NONE                                             00900002
+.*                                                                      00950002
+.*02    RESTRICTIONS = NONE                                             01000002
+.*                                                                      01050002
+.*02    REGISTER-CONVENTIONS = NONE                                     01100002
+.*                                                                      01150002
+.*02    PATCH-LABEL = NONE                                              01200002
+.*                                                                      01250002
+.*01  MODULE-TYPE = MACRO                                               01300002
+.*                                                                      01310002
+.*02    PROCESSOR = ASSEMBLER                                           01320002
+.*                                                                      01342002
+.*02    MACRO-SIZE = 100 STATEMENTS                                     01344002
+.*                                                                      01346002
+.*02    PARAMETER-RECEIVED = SCGBLPAK                                   01348002
+.*                                                                      01349502
+.*02    EXTERNAL-REFERENCES = N/A                                       01349602
+.*                                                                      01349702
+.*02    ROUTINES = N/A                                                  01349802
+.*                                                                      01350002
+.*02    DATA-SETS = N/A                                                 01366602
+.*                                                                      01378602
+.*02    DATA-AREA = N/A                                                 01380602
+.*                                                                      01383002
+.*01  TABLES = N/A                                                      01383102
+.*                                                                      01388802
+.*01  INNER-MACROS = NONE                                               01390802
+.*                                                                      01393202
+.*01  SYSTEM-MACROS = NONE                                              01393602
+.*                                                                      01394402
+.*01  CHANGE-ACTIVITY = NEW                                             01400002
+.*                                                                      01450002
+.*02    A = ALL                                                         01500002
+.*                                                                      01600002
+.*02    D = NONE                                                        01650002
+.*                                                                      01750002
+.*02    C = NONE                                                        01800002
+.*                                                                      01900002
+.**** END OF SPECIFICATIONS ***/                                        01950002
+         LCLC  &UNIT,&VOL                                               10050002
+.* DETERMINE UNIT AND VOLUME FOR MASTER CATALOGUE IF NOT SPECIFIED GOES 10100002
+.* ON SYSRES                                                            10150002
+&UNIT    SETC  '&SGDSUNC(15)'                                           10200002
+&VOL     SETC  '&SGDSVLC(15)'                                           10250002
+         AIF   ('&UNIT' NE '').UNITOK   CHECK IF UNIT SPECIFIED         10300002
+&UNIT    SETC  '&SGCTRLC(29)'           USE SYSTEM UNIT                 10350002
+.UNITOK  ANOP                                                           10400002
+         AIF   ('&VOL' NE '').VOLOK     CHECK IF VOLUME SPECIFIED       10450002
+&VOL     SETC  '&SGCTRLC(30)'           USE SYSTEM VOLUME               10500002
+.VOLOK   ANOP                                                           10550002
+         PUNCH '//STEPA EXEC PGM=IDCAMS,REGION=512K'                    10600002
+         PUNCH '//SYSPRINT DD SYSOUT=&SGCTRLC(41)'                      10650002
+         PUNCH '//CATLG DD DSNAME=&SGVSNMC.,'                           10700002
+         PUNCH '//   UNIT=&UNIT.,VOL=SER=&VOL.,DISP=OLD'                10750002
+         PUNCH '//SYSIN DD *'                                           10800002
+         PUNCH '         DEFINE -'                                      10850002
+         PUNCH '         MASTERCATALOG -'                               10900002
+         PUNCH '         (NAME (&SGVSNMC.) -'                           10950002
+         PUNCH '         FILE (CATLG) -'                                11000002
+         PUNCH '         VOLUMES(&VOL.) -'                              11050002
+         AIF   (&SGDSA2B(15) EQ 1).CYL                                  11100002
+         PUNCH '         TRACKS(&SGDSPSA(15). &SGDSSSA(15).));'         11150002
+         AGO   .TRK                                                     11200002
+.CYL     ANOP                                                           11250002
+         PUNCH '         CYLINDERS(&SGDSPSA(15). &SGDSSSA(15).));'      11300002
+.TRK     ANOP                                                           11350002
+         PUNCH    '/*'                                                  11400002
+         MEND                                                           11450002

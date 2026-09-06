@@ -1,0 +1,36 @@
+//MSVIDEF JOB MSGLEVEL=1                                                03000003
+//*******************************************************************   03050003
+//* SAMPLE MSVC INVENTORY DEFINITION                                    06000003
+//*******************************************************************   09000003
+//STEP1  EXEC  PGM=IDCAMS,REGION=350K                                   12000003
+//SYSPRINT  DD  SYSOUT=A                                                15000003
+//MSVI  DD  VOL=SER=VS2WTS,UNIT=3330,DISP=OLD                           18000003
+//SYSIN  DD  *                                                          21000003
+ DEFINE -                                                               24000003
+  CLUSTER -                                                             27000003
+   (NAME (MSVCCAT.MSVI) -                                               30000003
+   FILE (MSVI) -                                                        33000003
+   VOLUMES (VS2WTS) -                                                   36000003
+   CYL (4,1) -                                                          39000003
+   RECORDSIZE (2041 2041) -                                             42000003
+   UNIQUE -                                                             45000003
+   CONTROLINTERVALSIZE (2048) -                                         48000003
+   KEYS (13 0))                                                         51000003
+//STEP2  EXEC  PGM=IDCAMS,REGION=350K                                   54000003
+//*******************************************************************   54050003
+//* SAMPLE MSVC JOURNAL DEFINITION                                      54100003
+//*******************************************************************   54150003
+//SYSPRINT  DD  SYSOUT=A                                                57000003
+//MSVCJRNL  DD  DSN=MSVCCAT.MSVCJRNL,UNIT=3330,                         60000003
+//   VOL=SER=VS2WTS,DISP=(NEW,KEEP),SPACE=(CYL,(4)),                    63000003
+//   DCB=(RECFM=FS,LRECL=1024,BLKSIZE=1024)                             63050003
+//SYSIN  DD  *                                                          66000003
+ DEFINE -                                                               69000003
+   NONVSAM(NAME (MSVCCAT.MSVCJRNL) -                                    72000003
+   DEVICETYPES (3330) -                                                 75000003
+   VOLUMES (VS2WTS))                                                    78000003
+//ENABLE JOB MSGLEVEL=1                                                 81000003
+//*******************************************************************   81050003
+//* ENABLE MSVC   NOTE: TO ENABLE, MSS MUST BE ONLINE                   81100003
+//*******************************************************************   81150003
+//STEP3  EXEC  PGM=ICBVDR00,PARM=ENABLE                                 84000003

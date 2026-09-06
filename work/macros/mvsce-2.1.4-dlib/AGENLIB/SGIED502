@@ -1,0 +1,103 @@
+         MACRO                                                          01000006
+         SGIED502                                                       02000006
+.*A-000000-999999                                              @Y02X6G0 03200008
+.*A241000,242000,243000                                        @Z30X8GP 03400008
+.*C245000,650000,660000                                        @Z30X8GP 03600008
+.*A540000                                                      @X50X9MM 03660009
+.*C040000                                                      @X50X9MM 03720009
+.*A350000                                                      @XA09783 03720109
+.*C240000,540000,545000,640000                                 @G36XRGG 03730100
+.*D241000                                                      @G36XRGG 03740100
+.*C242000,243000,510000                                        @G36XRGG 03750100
+.*A660000                                                      @G36XRYP 03770100
+.*C695000                                                      @OY18039 03770282
+.*C390000                                                      @OY19405 03770382
+.*C080000,545000                                               @OZ32531 03770482
+.*D110000,130000                                               @OZ32531 03770582
+.*A160000                                                      @OZ32531 03770682
+.*C640000                                                      @G36XRF9 03780610
+.*                                                                      03800008
+.*             VERSION DATED 09/19/75                          @X50X9MM 04000009
+.*                                                                      05000006
+         COPY  SGGBLPAK                                                 06000006
+.*                                                                      07000006
+         AIF   (NOT &SGDMGTB(4)).TCAM                          @OZ32531 08000082
+.*                                                                      09000006
+         PUNCH ' COPY OUTDD=TELCMLIB,INDD=AOS20'                        10000006
+.*                                                                      12000006
+.*                                                                      14000006
+.*             BTAM TELCMLIB MODULES                                    15000006
+.*                                                                      16000006
+         PUNCH ' SELECT MEMBER=(IECTEDIT)'                     @OZ32531 16050082
+         PUNCH ' SELECT MEMBER=(IECTCHGN)'                              17000006
+         PUNCH ' SELECT MEMBER=(IECTLERP,IECTLOPN,IECTONLT)'            18000006
+         PUNCH ' SELECT MEMBER=(IECTSCAN,IECTTRNS)'                     19000006
+.*                                                                      21000006
+.*             TCAM TELCMLIB MODULES                                    22000006
+.TCAM    AIF   (NOT &SGDMGTB(5)).END                                    23000006
+         PUNCH ' COPY OUTDD=TELCMLIB,INDD=AOS21'                        24000006
+         PUNCH ' SELECT MEMBER=(IEDQGA,IEDQRS)'                @G36XRGG 24060000
+         PUNCH ' SELECT MEMBER=(IEDIAH,IEDIAM)'                @G36XRGG 24200000
+         PUNCH ' SELECT MEMBER=((IEDIAP,IEDIAP01,R))'          @ZM46720 24300000
+         PUNCH ' SELECT MEMBER=(IEDIAQ,IEDIAR)'                @G36XRGG 24400000
+         PUNCH ' SELECT MEMBER=(IEDIAS,IEDIAU,IEDNSL,IEDN25)'  @Z40X9GH 24600009
+         PUNCH ' SELECT MEMBER=(IEDQAA,IEDQAB,IEDQAC,IEDQAD)'           25000006
+         PUNCH ' SELECT MEMBER=(IEDQAE,IEDQAF,IEDQAG,IEDQAH)'           26000006
+         PUNCH ' SELECT MEMBER=(IEDQAI,IEDQAJ,IEDQAK,IEDQAL)'           27000006
+         PUNCH ' SELECT MEMBER=(IEDQAM,IEDQAN,IEDQAO,IEDQAP)'           28000006
+         PUNCH ' SELECT MEMBER=(IEDQAQ,IEDQAR,IEDQAS,IEDQAT)'           29000006
+         PUNCH ' SELECT MEMBER=(IEDQAU,IEDQAV,IEDQAW,IEDQAX)'           30000006
+         PUNCH ' SELECT MEMBER=(IEDQAY,IEDQAZ,IEDQA0,IEDQA1)'           31000006
+         PUNCH ' SELECT MEMBER=(IEDQA2,IEDQA3,IEDQA4,IEDQA5)'           32000006
+         PUNCH ' SELECT MEMBER=(IEDQA6,IEDQA7,IEDQA8,IEDQA9)'           33000006
+         PUNCH ' SELECT MEMBER=(IEDQBA,IEDQBB,IEDQBC,IEDQBD)'           34000006
+         PUNCH ' SELECT MEMBER=(IEDQBE,IEDQBF,IEDQBG,IEDQBH)'           35000006
+         PUNCH ' SELECT MEMBER=(IEDQBI,IEDQBJ)'                @XA09783 35500009
+         PUNCH ' SELECT MEMBER=(IEDQBL,IEDQBM,IEDQBN,IEDQBO)'           36000006
+         PUNCH ' SELECT MEMBER=(IEDQBP,IEDQBQ,IEDQBR,IEDQBT)'           37000006
+         PUNCH ' SELECT MEMBER=(IEDQBU,IEDQBV,IEDQBX,IEDQBY)'           38000006
+         PUNCH ' SELECT MEMBER=(IEDQBZ,IEDQBUFF)'              @OY19405 39000082
+         PUNCH ' SELECT MEMBER=(IEDQB1,IEDQB2,IEDQB3,IEDQB4)'           40000006
+         PUNCH ' SELECT MEMBER=(IEDQB7,IEDQEU)'                         41000006
+         PUNCH ' SELECT MEMBER=(IEDQFA,IEDQFA1,IEDQFA2,IEDQFE)'         42000006
+         PUNCH ' SELECT MEMBER=(IEDQGH,IEDQGP,IEDQGR)'                  43000006
+         PUNCH ' SELECT MEMBER=(IEDQGT)'                                43500006
+         PUNCH ' SELECT MEMBER=(IEDQHG,IEDQHK,IEDQHM,IEDQHM1)'          44000006
+         PUNCH ' SELECT MEMBER=(IEDQHM2)'                               45000006
+         PUNCH ' SELECT MEMBER=(IEDQKA,IEDQKB,IEDQKC,IEDQKD)'           46000006
+         PUNCH ' SELECT MEMBER=(IEDQKE)'                                47000006
+         PUNCH ' SELECT MEMBER=(IEDQNA)'                                48000006
+         PUNCH ' SELECT MEMBER=(IEDQUI)'                                49000006
+         PUNCH ' SELECT MEMBER=(IEDQ10,IEDQ11,IEDQ12,IEDQ13)'           50000006
+         PUNCH ' SELECT MEMBER=(IEDQ14,IEDQ16,IEDQ17)'         @G36XRGG 51000000
+         PUNCH ' SELECT MEMBER=(IEDQ18,IEDQ19,IEDQ20,IEDQ21)'           52000006
+         PUNCH ' SELECT MEMBER=(IEDQ22,IEDQ23,IEDQ24,IEDQ25)'           53000006
+         PUNCH ' SELECT MEMBER=(IEDQ26,IEDQ27,IEDQ28)'                  54000006
+         PUNCH ' SELECT MEMBER=(IEDSAC,IEDSAI,IEDSAO,IEDSARI)' @G36XRGG 54200000
+         PUNCH ' SELECT MEMBER=(IEDSNS,IEDTEDIT)'              @OZ32531 54500082
+         PUNCH ' SELECT MEMBER=(IEDBITN,IEDCMIN,IEDCMOUT)'     @G36XRGG 54530000
+         PUNCH ' SELECT MEMBER=((IEDCSA,IEDIAP03,R))'          @G36XRGG 54560000
+         PUNCH ' SELECT MEMBER=(IEDCSCIN,IEDDFOUT,IEDDVAS)'    @G36XRGG 54590000
+         PUNCH ' SELECT MEMBER=(IEDFSSTB,IEDLUS,IEDMVBFR)'     @G36XRGG 54620000
+         PUNCH ' SELECT MEMBER=(IEDNCU,IEDNCU2,IEDNGD,IEDNID)' @G36XRGG 54650000
+         PUNCH ' SELECT MEMBER=(IEDNKA,IEDOPTN)'               @G36XRGG 54680000
+         PUNCH ' SELECT MEMBER=(IEDPCIN,IEDPCOUT)'             @G36XRGG 54710000
+         PUNCH ' SELECT MEMBER=(IEDQBS,IEDQFM,IEDQIN)'         @G36XRGG 54740000
+         PUNCH ' SELECT MEMBER=(IEDQSBT,IEDQTL,IEDRQIN)'       @G36XRGG 54770000
+         PUNCH ' SELECT MEMBER=(IEDRSPIN,IEDSCLU,IEDSCPDS)'    @G36XRGG 54800000
+         PUNCH ' SELECT MEMBER=(IEDSCPRP,IEDSCPRQ,IEDSCPSS)'   @G36XRGG 54830000
+         PUNCH ' SELECT MEMBER=(IEDUNBND,IEDUSSTB,IEDXFMI)'    @G36XRGG 54860000
+         PUNCH ' SELECT MEMBER=(IEDXFMO,IEDXTREQ)'             @G36XRGG 54890000
+.*                                                                      55000006
+.*             TSO TELCMLIB MODULES                                     56000006
+.*                                                                      59000006
+         PUNCH ' SELECT MEMBER=(IEDAYA,IEDAYC,IEDAYD)'         @G36XRF9 64000010
+         PUNCH ' SELECT MEMBER=(IEDAYAB,IEDAYBX,IEDAYJ)'       @G36XRGG 64500000
+         PUNCH ' SELECT MEMBER=(IEDAYE,IEDAYF)'                @ZM46701 65000000
+         PUNCH ' SELECT MEMBER=(IEDAYH,IEDAYI,IEDAYL)'         @Z30X8GP 66000008
+         PUNCH ' SELECT MEMBER=(IEDAYN,IEDAYQ)'                @G36XRYP 66050000
+         PUNCH ' SELECT MEMBER=(IEDAYM,IEDAYO)'                @ZM46708 67000000
+         PUNCH ' SELECT MEMBER=(IEDAYP,IEDAYS)'                @ZM46785 68000000
+         PUNCH ' SELECT MEMBER=(IEDAYT,IEDAYX,IEDAYY,IEDAYZ)'           69000006
+         PUNCH ' SELECT MEMBER=(IEDAYV,IEDAYW,IEDQFSC)'        @OY18039 69500082
+.END     MEND                                                           70000006

@@ -1,0 +1,197 @@
+* /* START OF SPECIFICATIONS ****                                       00060001
+*02* PROCESSOR = ASSEMBLER                                              00070001
+**** END OF SPECIFICATIONS ***/                                         00080001
+              MACRO                                                     00090001
+             SGIDC401                                                   00100002
+.* AMS SYSGEN MACRO FOR VS2-3 ICR WITH IDCRILT SPLIT PTF       @ZA07563 00150003
+             COPY   SGGBLPAK           DEFINE SYSTEM GLOBALS            00200001
+&SGCTRLC(7)  SETC   '&SGCTRLC(32)'     SET LINKLIB VOLUME SERIAL        00250001
+&SGCTRLC(8)  SETC   '&SGCTRLC(31)'     SET LINKLIB UNIT                 00300001
+&SGCTRLC(9)  SETC   'LINKLIB'          SET LINKLIB NAME                 00350001
+&SGCTRLC(10) SETC   ',RENT'                                    @Y30SSJK 00450003
+&SGCTRLC(11) SETC   ',LET'                                     @Y30SSJK 00500003
+             COPY   SGLEDPK1           COPY LINKAGE EDITOR JCL          00600001
+   PUNCH '//AOSU0 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSU0'       00650001
+   PUNCH '//AOSA0 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSA0'       00660003
+             COPY   SGLEDPK2           COPY LINKAGE EDITOR JCL          00700001
+             PUNCH  ' INCLUDE AOSA0(IGG0CLA0) '                @ZM40058 00702003
+             PUNCH  ' ENTRY IGG0CLA0 '                         @ZM40058 00704003
+             PUNCH  ' NAME IGG0CLA0(R) '                       @ZM40058 00706003
+             PUNCH  ' SETCODE AC(1)'   SET APF AUTHORIZATION   @YM02828 00710002
+             PUNCH  ' INCLUDE AOSU0(IDCEX01,IDCTP01,IDCSA01,IDCSA02)'   00750001
+             PUNCH  ' INCLUDE AOSU0(IDCSA03,IDCIO01,IDCIO02,IDCIO03)'   00800002
+             PUNCH  ' INCLUDE AOSU0(IDCTP04,IDCTP05,IDCEX02,IDCEX03)'   00810002
+             PUNCH  ' INCLUDE AOSU0(IDCSA05,IDCTP06)'          @Y30SSJK 00820003
+             PUNCH  ' INCLUDE AOSU0(IDCSA06,IDCSA07,IDCSA08)'  @Y30LSBE 00830003
+             PUNCH  ' INCLUDE AOSU0(IDCSA09,IDCSA10,IDCIO05)'  @Y30LSBE 00840003
+             PUNCH  ' ENTRY IDCSA01'                                    00850001
+             PUNCH  ' ALIAS IDCSATO'                           @VS07320 00860002
+             PUNCH  ' NAME IDCAMS(R)'                                   00900001
+             PUNCH  ' INCLUDE AOSU0(IDCRI01,IDCRI02,IDCRI03)'  @YL026UC 00950002
+             PUNCH  ' ENTRY IDCRI01'                           @YL026UC 00960002
+             PUNCH  ' NAME IDCRI01(R)'                                  01000002
+             PUNCH  ' INCLUDE AOSU0(IDCIO04)'                  @YL026UC 01146002
+             PUNCH  ' NAME IDCIO04(R)'                         @YL026UC 01148002
+             PUNCH  ' INCLUDE AOSU0(IDCRI04)'                  @YL026UC 01201901
+             PUNCH  ' NAME IDCRI04(R)'                         @YL026UC 01203901
+             PUNCH  ' INCLUDE AOSU0(IDCRIKT)'                           01205902
+             PUNCH  ' NAME IDCRIKT(R)'                                  01208302
+             PUNCH  ' INCLUDE AOSU0(IDCDB01)'                           01209901
+             PUNCH  ' NAME IDCDB01(R)'                                  01219901
+             PUNCH  ' INCLUDE AOSU0(IDCDB02)'                           01229901
+             PUNCH  ' NAME IDCDB02(R)'                                  01239901
+             PUNCH  ' INCLUDE AOSU0(IDCAL01)'                           01241901
+             PUNCH  ' NAME IDCAL01(R)'                                  01243901
+             PUNCH  ' INCLUDE AOSU0(IDCRP01)'                           01248701
+             PUNCH  ' NAME IDCRP01(R)'                                  01249101
+             PUNCH  ' INCLUDE AOSU0(IDCDE01,IDCDE02,IDCDE03)'  @Z40WSJH 01249537
+             PUNCH  ' ENTRY IDCDE01'                           @Y30SSJK 01259503
+             PUNCH  ' NAME IDCDE01(R)'                                  01269803
+             PUNCH  ' INCLUDE AOSU0(IDCDL01)'                           01279803
+             PUNCH  ' NAME IDCDL01(R)'                                  01289803
+             PUNCH  ' INCLUDE AOSU0(IDCLC01,IDCLC02)'          @ZA05939 01299803
+             PUNCH  ' ENTRY IDCLC01'                           @ZA05939 01301803
+             PUNCH  ' NAME IDCLC01(R)'                                  01309801
+             PUNCH  ' INCLUDE AOSU0(IDCMP01)'                           01319801
+             PUNCH  ' NAME IDCMP01(R)'                                  01329801
+             PUNCH  ' INCLUDE AOSU0(IDCPM01)'                           01339801
+             PUNCH  ' NAME IDCPM01(R)'                                  01341801
+             PUNCH  ' INCLUDE AOSU0(IDCPR01)'                           01343801
+             PUNCH  ' NAME IDCPR01(R)'                                  01345801
+             PUNCH  ' INCLUDE AOSU0(IDCXP01)'                           01347801
+             PUNCH  ' NAME IDCXP01(R)'                                  01348201
+             PUNCH  ' INCLUDE AOSU0(IDCVY01)'                           01348601
+             PUNCH  ' NAME IDCVY01(R)'                                  01349001
+             PUNCH  ' INCLUDE AOSU0(IDCCC01)'                  @YL026UC 01349101
+             PUNCH  ' NAME IDCCC01(R)'                         @YL026UC 01349201
+             PUNCH  ' INCLUDE AOSU0(IDACAT21)'                 @YL026UC 01371901
+             PUNCH  ' NAME IDACAT21(R)'                        @YL026UC 01373901
+             PUNCH  ' INCLUDE AOSU0(IDCCDAL)'                           01374501
+             PUNCH  ' NAME IDCCDAL(R)'                                  01387101
+             PUNCH  ' INCLUDE AOSU0(IDCCDRP)'                           01399701
+             PUNCH  ' NAME IDCCDRP(R)'                                  01409701
+             PUNCH  ' INCLUDE AOSU0(IDCCDDE)'                           01419701
+             PUNCH  ' NAME IDCCDDE(R)'                                  01429701
+             PUNCH  ' INCLUDE AOSU0(IDCCDDL)'                           01439701
+             PUNCH  ' NAME IDCCDDL(R)'                                  01441701
+             PUNCH  ' INCLUDE AOSU0(IDCCDLC)'                           01443701
+             PUNCH  ' NAME IDCCDLC(R)'                                  01445701
+             PUNCH  ' INCLUDE AOSU0(IDCCDMP)'                           01447701
+             PUNCH  ' NAME IDCCDMP(R)'                                  01448101
+             PUNCH  ' INCLUDE AOSU0(IDCCDPM)'                           01448501
+             PUNCH  ' NAME IDCCDPM(R)'                                  01448901
+             PUNCH  ' INCLUDE AOSU0(IDCCDPR)'                           01449301
+             PUNCH  ' NAME IDCCDPR(R)'                                  01449401
+             PUNCH  ' INCLUDE AOSU0(IDCCDXP)'                           01449501
+             PUNCH  ' NAME IDCCDXP(R)'                                  01449601
+             PUNCH  ' INCLUDE AOSU0(IDCCDVY)'                           01499601
+             PUNCH  ' NAME IDCCDVY(R)'                                  01509601
+             PUNCH  ' INCLUDE AOSU0(IDCCDCC)'                  @YL026UC 01511601
+             PUNCH  ' NAME IDCCDCC(R)'                         @YL026UC 01513601
+             PUNCH  ' INCLUDE AOSU0(IDCRILT)'                           01519601
+             AIF    (NOT &SGDCLSB(28)).RIFF                    @ZA07563 01520603
+.* INCLUDE IDCRIMT ONLY IF MSS IS PRESENT                      @ZA07563 01521403
+             PUNCH  ' INCLUDE AOSU0(IDCRIMT)'                  @ZA07563 01522203
+.RIFF        ANOP                                              @ZA07563 01523003
+             PUNCH  ' INCLUDE AOSU0(IDCRIFF)'                  @ZA07563 01523803
+             AIF    (NOT &SGDCLSB(28)).NOTMSS                           01524603
+             PUNCH  ' ORDER IDCRILT,IDCRIMT,IDCRIFF'           @OZ14815 01525337
+             AGO    .ISMSS                                              01526137
+.NOTMSS      ANOP                                                       01526937
+             PUNCH  ' ORDER IDCRILT,IDCRIFF'                   @OZ14815 01527737
+.ISMSS       ANOP                                                       01528537
+             PUNCH  ' NAME IDCRILT(R)'                                  01529601
+             PUNCH  ' INCLUDE AOSU0(IDCTSAL0)'                          01543601
+             PUNCH  ' NAME IDCTSAL0(R)'                                 01545601
+             PUNCH  ' INCLUDE AOSU0(IDCTSDE0)'                          01549201
+             PUNCH  ' NAME IDCTSDE0(R)'                                 01549301
+             PUNCH  ' INCLUDE AOSU0(IDCTSDL0)'                          01599301
+             PUNCH  ' NAME IDCTSDL0(R)'                                 01609301
+             PUNCH  ' INCLUDE AOSU0(IDCTSEX0)'                          01609501
+             PUNCH  ' NAME IDCTSEX0(R)'                                 01619501
+             PUNCH  ' INCLUDE AOSU0(IDCTSIO0)'                          01629501
+             PUNCH  ' NAME IDCTSIO0(R)'                                 01639501
+             PUNCH  ' INCLUDE AOSU0(IDCTSLC0)'                          01641501
+             PUNCH  ' NAME IDCTSLC0(R)'                                 01643501
+             PUNCH  ' INCLUDE AOSU0(IDCTSLC1)'                          01645501
+             PUNCH  ' NAME IDCTSLC1(R)'                                 01647501
+             PUNCH  ' INCLUDE AOSU0(IDCTSMP0)'                          01647901
+             PUNCH  ' NAME IDCTSMP0(R)'                                 01648301
+             PUNCH  ' INCLUDE AOSU0(IDCTSPR0)'                          01648701
+             PUNCH  ' NAME IDCTSPR0(R)'                                 01649101
+             PUNCH  ' INCLUDE AOSU0(IDCTSRI0)'                          01649201
+             PUNCH  ' NAME IDCTSRI0(R)'                                 01649301
+             PUNCH  ' INCLUDE AOSU0(IDCTSRI1)'                 @YL026UL 01666002
+             PUNCH  ' NAME IDCTSRI1(R)'                        @YL026UL 01676002
+             PUNCH  ' INCLUDE AOSU0(IDCTSSA0)'                 @ZA07563 01678003
+             PUNCH  ' NAME IDCTSSA0(R)'                        @ZA07563 01680003
+             PUNCH  ' INCLUDE AOSU0(IDCTSTP0)'                          01682702
+             PUNCH  ' NAME IDCTSTP0(R)'                                 01699401
+             PUNCH  ' INCLUDE AOSU0(IDCTSTP1)'                          01719401
+             PUNCH  ' NAME IDCTSTP1(R)'                                 01729401
+             PUNCH  ' INCLUDE AOSU0(IDCTSTP6)'                 @Y30SSJK 01731403
+             PUNCH  ' NAME IDCTSTP6(R)'                        @Y30SSJK 01733403
+             PUNCH  ' INCLUDE AOSU0(IDCTSUV0)'                          01739401
+             PUNCH  ' NAME IDCTSUV0(R)'                                 01741401
+             PUNCH  ' INCLUDE AOSU0(IDCTSXP0)'                          01743401
+             PUNCH  ' NAME IDCTSXP0(R)'                                 01745401
+             PUNCH  ' INCLUDE AOSU0(IDCTSCC0)'                 @YL026UC 01795401
+             PUNCH  ' NAME IDCTSCC0(R)'                        @YL026UC 01845401
+.* ONLY INCLUDE FOLLOWING MACRO IF MSS IS PRESENT              @ZA07563 01845503
+             AIF    (&SGDCLSB(28)).MSS                         @Y30LSBE 01855503
+             AGO    .NOMSS                                     @Y30LSBE 01865503
+.MSS         ANOP                                              @Y30LSBE 01875503
+             SGIDC402                                          @ZA05932 01896203
+.NOMSS       ANOP                                              @Y30LSBE 02455903
+             PUNCH  ' INCLUDE AOSU0(IDCCDCK)'                  @Y30LSBE 02457503
+             PUNCH  ' NAME IDCCDCK(R)'                         @Y30LSBE 02457903
+             PUNCH  ' INCLUDE AOSU0(IDCCK01)'                  @Y30LSBE 02458003
+             PUNCH  ' NAME IDCCK01(R)'                         @Y30LSBE 02458103
+             PUNCH  ' INCLUDE AOSU0(IDCTSCK0)'                 @Y30LSBE 02463703
+             PUNCH  ' NAME IDCTSCK0(R)'                        @Y30LSBE 02465703
+             PUNCH  ' INCLUDE AOSU0(IDCCDBI)'                  @Y30SSBE 02467703
+             PUNCH  ' NAME IDCCDBI(R)'                         @Y30SSBE 02468103
+             PUNCH  ' INCLUDE AOSU0(IDCBI01)'                  @Y30SSBE 02468503
+             PUNCH  ' NAME IDCBI01(R)'                         @Y30SSBE 02468903
+             PUNCH  ' INCLUDE AOSU0(IDCTSBI0)'                 @Y30SSBE 02469003
+             PUNCH  ' NAME IDCTSBI0(R)'                        @Y30SSBE 02469103
+             PUNCH  ' INCLUDE AOSU0(IDCCDLR)'                  @Y30SSBE 02469203
+             PUNCH  ' NAME IDCCDLR(R)'                         @Y30SSBE 02519203
+             PUNCH  ' INCLUDE AOSU0(IDCLR01)'                  @Y30SSBE 02529203
+             PUNCH  ' INCLUDE AOSU0(IDCLR02)'                  @Y30SSBE 02539203
+             PUNCH  ' INCLUDE AOSU0(IDCRC04)'                  @Y30SSBE 02549203
+             PUNCH  ' ENTRY IDCLR01'                           @Y30SSJK 02551203
+             PUNCH  ' NAME IDCLR01(R)'                         @Y30SSBE 02559203
+             PUNCH  ' INCLUDE AOSU0(IDCTSLR0)'                 @Y30SSBE 02561203
+             PUNCH  ' NAME IDCTSLR0(R)'                        @Y30SSBE 02563203
+             PUNCH  ' INCLUDE AOSU0(IDCTSLR1)'                 @Y30SSBE 02565203
+             PUNCH  ' NAME IDCTSLR1(R)'                        @Y30SSBE 02567203
+             PUNCH  ' INCLUDE AOSU0(IDCCDRC)'                  @Y30SSBE 02567603
+             PUNCH  ' NAME IDCCDRC(R)'                         @Y30SSBE 02568003
+             PUNCH  ' INCLUDE AOSU0(IDCRC01)'                  @Y30SSBE 02568403
+             PUNCH  ' INCLUDE AOSU0(IDCRC02)'                  @Y30SSBE 02568803
+             PUNCH  ' INCLUDE AOSU0(IDCRC03)'                  @Y30SSBE 02568903
+             PUNCH  ' INCLUDE AOSU0(IDCRC04)'                  @Y30SSBE 02569003
+             PUNCH  ' ENTRY IDCRC01'                           @Y30SSJK 02574603
+             PUNCH  ' NAME IDCRC01(R)'                         @Y30SSBE 02580203
+             PUNCH  ' INCLUDE AOSU0(IDCTSRC0)'                 @Y30SSBE 02585803
+             PUNCH  ' NAME IDCTSRC0(R)'                        @Y30SSBE 02595803
+             PUNCH  ' INCLUDE AOSU0(IDCCDRM)'                  @Y30SSBE 02597803
+             PUNCH  ' NAME IDCCDRM(R)'                         @Y30SSBE 02599803
+             PUNCH  ' INCLUDE AOSU0(IDCRM01)'                  @Y30SSBE 02601803
+             PUNCH  ' NAME IDCRM01(R)'                         @Y30SSBE 02602203
+             PUNCH  ' INCLUDE AOSU0(IDCCDRS)'                  @Z30PSFY 02602337
+             PUNCH  ' NAME IDCCDRS(R)'                         @Z30PSFY 02602437
+             PUNCH  ' INCLUDE AOSU0(IDCRS01)'                  @Z30PSFY 02608037
+             PUNCH  ' INCLUDE AOSU0(IDCRS02)'                  @Z30PSFY 02608437
+             PUNCH  ' INCLUDE AOSU0(IDCRS03)'                  @Z30PSFY 02608837
+             PUNCH  ' INCLUDE AOSU0(IDCRS04)'                  @Z30PSFY 02609237
+             PUNCH  ' INCLUDE AOSU0(IDCRS05)'                  @Z30PSFY 02609637
+             PUNCH  ' INCLUDE AOSU0(IDCRS06)'                  @Z30PSFY 02609737
+             PUNCH  ' INCLUDE AOSU0(IDCRS07)'                  @Z30PSFY 02609837
+             PUNCH  ' ENTRY IDCRS01'                           @Z30PSFY 02610037
+             PUNCH  ' NAME IDCRS01(R)'                         @Z30PSFY 02612037
+             PUNCH  ' INCLUDE AOSU0(IDCTSRS0)'                 @Z30PSFY 02612437
+             PUNCH  ' NAME IDCTSRS0(R)'                        @Z30PSFY 02613237
+             PUNCH  '/*'                                                02613637
+             MEND                                                       02619203

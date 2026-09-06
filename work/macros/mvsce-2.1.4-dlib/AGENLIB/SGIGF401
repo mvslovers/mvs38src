@@ -1,0 +1,80 @@
+          MACRO                                                         00050002
+          SGIGF401                                                      00052002
+.********************************************************************** 00060002
+.*         THIS SYSGEN MACRO PERFORMS THE LINK EDIT TO CREATE LOAD      00100002
+.*         MODULES IGFDI0 AND IGC0008E ON LPALIB.                       00150064
+.*         THIS SYSGEN MACRO PERFORMS THE LINK EDIT TO CREATE  @ZA31032 00160064
+.*         LOAD MODULE IGFTMCHK FOR MIH ON LPALIB.             @ZA31032 00170064
+.*         MIH MODULE IGFINTVL DELETED FROM LPALIB.            @ZA31032 00180064
+.*         IGFDI0 HAS ENTRY PTS-                                        00200002
+.*                          IGFDI0                                      00250002
+.*                          IGFDS0                                      00300002
+.*                          IGF0660A                                    00350002
+.*         IGC0008E HAS ENTRY PTS-                                      00450002
+.*                          IGC0008E                                    00500002
+.*                          IGC0408E                                    00550002
+.*       CHANGE ACTIVITY -                                              00560002
+.*          C032000                                           @YM04097  00570002
+.*          A001501,A001502,A001503,C0017500,A030200          @ZA31032  00577064
+.*          A030400,A030600                                   @ZA31032  00584064
+.*          NO MACRO CHANGE REQUIRED FOR SU64                 @G64JPLE  00591064
+.*********************************************************************  00600002
+          COPY  SGGBLPAK                                                00700002
+          LCLC  &LEV                                                    00750002
+          LCLC  &REL                                                    00800002
+&LEV      SETC  '00'                                                    00850002
+&REL      SETC  '00'                                                    00900002
+          MNOTE *,'SGIGF401 IS LEVEL &LEV RELEASE &REL .'               00950002
+.*                                                                      01000002
+&SGCTRLC(7)  SETC '&SGCTRLC(20)'                                        01050002
+&SGCTRLC(8)  SETC '&SGCTRLC(19)'                                        01100002
+&SGCTRLC(9)  SETC 'LPALIB'                                              01150002
+&SGCTRLC(10) SETC ',LET'                                                01200002
+&SGCTRLC(11) SETC ',RENT'                                               01250002
+          COPY  SGLEDPK1                                                01300002
+          PUNCH '//AOSCE DD DISP=SHR,VOL=(,RETAIN),DSN=SYS1.AOSCE'      01350002
+          COPY  SGLEDPK2                                                01400002
+.* THE DDR MODULES WILL BE ORDERED TO MINIMIZE THE NUMBER OF   @YM00988 01450002
+.* PAGE FAULTS.                                                @YM00988 01500002
+          PUNCH ' ORDER IGFDI0(P),IGFDI1,IGFDE0,IGFDE1'                 01550002
+          PUNCH ' ORDER IGFDW0(P),IGFDD0,IGFDL1,IGFDM1'                 01600002
+          PUNCH ' ORDER IGFDD1(P),IGFDV0,IGFDV1'                        01650002
+          PUNCH ' ORDER IGFDS0(P),IGFDS1,IGE0660A'                      01700002
+          PUNCH ' ORDER IGFDT0(P),IGFDT1,IGFDT2'               @ZA31032 01750064
+          PUNCH ' ORDER IGFDU0(P),IGFDU1'                               01770064
+          PUNCH ' ORDER IGFDM0(P),IGFDMTXT,IGFDR0'                      01810002
+.*                                                                      01850002
+          PUNCH ' INCLUDE    AOSCE(IGFDT0) '                            01900002
+          PUNCH ' INCLUDE    AOSCE(IGFDT1) '                            01950002
+          PUNCH ' INCLUDE    AOSCE(IGFDT2) '                            02000002
+          PUNCH ' INCLUDE    AOSCE(IGFDD0) '                            02050002
+          PUNCH ' INCLUDE    AOSCE(IGFDD1) '                            02100002
+          PUNCH ' INCLUDE    AOSCE(IGFDM0) '                            02150002
+          PUNCH ' INCLUDE    AOSCE(IGFDM1) '                            02200002
+          PUNCH ' INCLUDE    AOSCE(IGFDU0) '                            02250002
+          PUNCH ' INCLUDE    AOSCE(IGFDU1) '                            02300002
+          PUNCH ' INCLUDE    AOSCE(IGFDV0) '                            02350002
+          PUNCH ' INCLUDE    AOSCE(IGFDV1) '                            02400002
+          PUNCH ' INCLUDE    AOSCE(IGFDMTXT) '                          02450002
+          PUNCH ' INCLUDE    AOSCE(IGFDI0) '                            02500002
+          PUNCH ' ENTRY      IGFDI0'                                    02550002
+          PUNCH ' INCLUDE    AOSCE(IGFDI1) '                            02600002
+          PUNCH ' INCLUDE    AOSCE(IGFDR0) '                            02650002
+          PUNCH ' INCLUDE    AOSCE(IGFDW0) '                            02700002
+          PUNCH ' INCLUDE    AOSCE(IGFDS0) '                            02750002
+          PUNCH ' ALIAS      IGFDS0'                                    02760002
+          PUNCH ' INCLUDE    AOSCE(IGFDS1) '                            02800002
+          PUNCH ' INCLUDE    AOSCE(IGFDE0) '                            02850002
+          PUNCH ' INCLUDE    AOSCE(IGFDE1) '                            02860002
+          PUNCH ' INCLUDE    AOSCE(IGFDL1) '                            02900002
+          PUNCH ' INCLUDE    AOSCE(IGE0660A) '                          02950002
+          PUNCH ' ALIAS      IGE0660A'                                  02960002
+          PUNCH ' NAME       IGFDI0(R)'                                 03000064
+          PUNCH ' INCLUDE    AOSCE(IGFTMCHK) '                 @ZA31032 03020064
+          PUNCH ' NAME       IGFTMCHK(R)'                      @ZA31032 03040064
+.* MODULE IGFINTVL DELETED FROM IGFDI0 AND LPALIB              @ZA31032 03060064
+          PUNCH ' INCLUDE    AOSCE(IGC0008E) '                          03100002
+          PUNCH ' ALIAS      IGC0408E'                                  03150002
+          PUNCH ' NAME       IGC0008E(R)'                               03200002
+.*                                                                      03210002
+          MEND                                                          03250002

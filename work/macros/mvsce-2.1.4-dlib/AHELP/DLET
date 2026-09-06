@@ -1,0 +1,102 @@
+)F FUNCTION -                                                           01000002
+  THE DELETE COMMAND IS USED TO DELETE EITHER VSAM OBJECTS OR NONVSAM   02000002
+  DATA SETS FROM A VSAM CATALOG AND TO FREE SPACE OCCUPIED BY THE       03000002
+  OBJECTS OR DATA SETS.  ALSO THE FREE SPACE OF VSAM DATA COMPONENTS    04000002
+  CAN BE OVERWRITTEN WITH ZEROS.   THE DELETE COMMAND ALSO DELETES      05000003
+  GDG BASES AND VSAM USERCATALOGS.                                      05050003
+)X SYNTAX -                                                             06000002
+         DELETE    ('ENTRYNAME/PASSWORD' ...)                           07000002
+                   CATALOG('CATNAME/PASSWORD')                          08000003
+                   FILE('DNAME')                                        09000002
+                   PURGE | NOPURGE                                      10000002
+                   ERASE | NOERASE                                      11000002
+                   SCRATCH | NOSCRATCH                                  12000002
+                   FORCE | NOFORCE                                      12050003
+                   CLUSTER | SPACE | USERCATALOG |                      13000003
+                       ALIAS | GENERATIONDATAGROUP | PAGESPACE |        14000002
+                       NONVSAM | PATH | ALTERNATEINDEX                  15000003
+  REQUIRED - 'ENTRYNAME'                                                16000002
+             SPACE (IF APPLICABLE)                                      17000002
+             USERCATALOG (IF APPLICABLE)                                18000002
+  DEFAULTS - NOPURGE                                                    20000002
+             SCRATCH                                                    21000002
+             NOFORCE                                                    21010003
+  ABBREVIATIONS -                                                       21050002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 21100002
+             DELETE               DEL                                   21200002
+             PURGE                PRG                                   21300002
+             FORCE                FRC                                   21310003
+             NOFORCE              NFRC                                  21320003
+             NOPURGE              NPRG                                  21350002
+             NOERASE              NERAS                                 21450002
+             NOSCRATCH            NSCR                                  21550002
+             SPACE                SPC                                   21650002
+             USERCATALOG          UCAT                                  21700002
+             GENERATIONDATAGROUP  GDG                                   21800002
+             PAGESPACE            PGSPC                                 21850002
+             NONVSAM              NVSAM                                 21900002
+             ALTERNATEINDEX       AIX                                   21950003
+)O OPERANDS -                                                           22000002
+  'ENTRYNAME/PASSWORD'                                                  23000002
+           - SPECIFIES THE NAME OF ENTRY TO BE DELETED.                 24000002
+  'ENTRYNAME'                                                           25000002
+           - NAME OF ENTRY TO BE DELETED.                               26000002
+  'PASSWORD'                                                            27000002
+           - PASSWORD FOR PASSWORD-PROTECTED CLUSTER, PAGE SPACE,       28000003
+             CATALOG, ALTERNATE INDEX, OR PATH.                         29000003
+  REQUIRED - 'ENTRYNAME'                                                30000002
+))CATALOG('CATNAME/PASSWORD')                                           31000003
+           - SPECIFIES THE NAME OF CATALOG CONTAINING THE ENTRIES TO BE 32000002
+             DELETED.                                                   32500002
+  'CATNAME'                                                             33000002
+           - NAME OF CATALOG CONTAINING THE ENTRIES TO BE DELETED.      34000002
+  'PASSWORD'                                                            35000002
+           - MASTER LEVEL PASSWORD OF THE CATALOG.                      36000002
+  REQUIRED - 'CATNAME'                                                  40000002
+))FILE('DNAME')                                                         41000002
+           - SPECIFIES THE LOCATION OF THE OBJECT TO BE DELETED.        42000002
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES EITHER THE VOLUME 43000002
+             CONTAINING THE OBJECT TO BE DELETED OR THE DATA SET TO BE  44000002
+             DELETED.                                                   45000002
+))FORCE    - THE OBJECT IS TO BE DELETED EVEN THOUGH NOT EMPTY.         45050003
+             THIS APPLIES ONLY TO OBJECTS THAT NORMALLY MUST BE         45100003
+             EMPTY TO BE DELETED.                                       45150003
+))NOFORCE  - THE OBJECT IS NOT TO BE DELETED IF IT IS NOT               45200003
+             EMPTY.                                                     45250003
+))PURGE    - THE OBJECT IS TO BE DELETED REGARDLESS OF EXPIRATION DATE. 46000002
+))NOPURGE  - THE OBJECT IS NOT TO BE DELETED BEFORE EXPIRATION DATE.    47000002
+))ERASE    - THE DATA COMPONENT OF THE CLUSTER IS TO BE OVERWRITTEN     48000002
+             WITH BINARY ZEROS.                                         49000002
+))NOERASE  - THE DATA COMPONENT OF THE CLUSTER IS NOT BE TO OVERWRITTEN 50000002
+             WITH BINARY ZEROS.                                         51000002
+))SCRATCH  - THE NONVSAM DATA SET BEING DELETED FROM THE CATALOG IS TO  52000002
+             BE REMOVED FROM THE VTOC OF THE VOLUME ON WHICH IT         53000002
+             RESIDES.   WHEN SCRATCH IS SPECIFIED FOR A CLUSTER,        54000003
+             ALTERNATEINDEX, PAGESPACE, OR DATA SPACE, THE VTOCS        54050003
+             OF THE VOLUMES INVOLVED ARE UPDATED TO REFLECT THE         54100003
+             DELETION OF THE OBJECT.                                    54150003
+))NOSCRATCH                                                             55000002
+           - THE NONVSAM DATA SET BEING DELETED FROM THE CATALOG IS TO  56000002
+             REMAIN IN THE VTOC OF THE VOLUME ON WHICH IT RESIDES       57000003
+             OR IT HAS ALREADY BEEN SCRATCHED FROM THE VTOC.            57010003
+             WHEN NOSCRATCH IS SPECIFIED FOR A CLUSTER, PAGESPACE,      57050003
+             ALTERNATEINDEX, OR DATA SPACE, THE VTOCS OF THE            57100003
+             VOLUMES INVOLVED ARE NOT UPDATED.                          57150003
+))CLUSTER  - THE ENTRY TO BE DELETED IS THE ENTRY FOR A CLUSTER.        58000002
+))SPACE    - THE ENTRY TO BE DELETED IS THE ENTRY FOR A DATA SPACE.     59000002
+             REQUIRED IF APPLICABLE.                                    60000002
+))USERCATALOG                                                           61000002
+           - THE ENTRY TO BE DELETED IS THE ENTRY FOR A USER CATALOG.   62000002
+             REQUIRED IF APPLICABLE.                                    63000002
+))ALIAS    - THE ENTRY TO BE DELETED IS THE ENTRY FOR AN ALIAS.         67000002
+))GENERATIONDATAGROUP                                                   68000002
+           - THE ENTRY TO BE DELETED IS THE ENTRY FOR A GENERATION DATA 69000002
+             GROUP.                                                     70000002
+))PAGESPACE                                                             71000002
+           - THE ENTRY TO BE DELETED IS THE ENTRY FOR A PAGE SPACE.     72000002
+))NONVSAM  - THE ENTRY TO BE DELETED IS THE ENTRY FOR A NONVSAM DATA    73000002
+             SET.                                                       74000002
+))PATH     - THE ENTRY TO BE DELETED IS THE ENTRY FOR A PATH.           74050003
+))ALTERNATEINDEX -                                                      74100003
+             THE ENTRY TO BE DELETED IS THE ENTRY FOR AN                74150003
+             ALTERNATE INDEX.                                           74200003

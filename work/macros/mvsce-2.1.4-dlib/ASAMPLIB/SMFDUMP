@@ -1,0 +1,5 @@
+//IFASMFDP PROC MAN='SYS1.MANX'                                         00050040
+//SMFDMP EXEC PGM=IFASMFDP                                              00100040
+//DUMPIN DD DSN=&MAN,DISP=OLD                                           00150040
+//DUMPOUT DD UNIT=TAPE,DSN=SMFDATA,DISP=(MOD,KEEP)                      00200040
+//SYSPRINT DD SYSOUT=A                                                  00250040

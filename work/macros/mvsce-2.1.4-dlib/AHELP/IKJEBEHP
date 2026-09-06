@@ -1,0 +1,1066 @@
+)S SUBCOMMANDS -                                                        00100020
+  ALLOCATE,BOTTOM,CHANGE,COPY,DELETE,DOWN,END,EXEC,FIND,FORMAT,HELP,    00150000
+  INPUT,INSERT,LIST,MERGE,MOVE,PROFILE,RENUM,RUN,SAVE,SCAN,SEND,        00200000
+  SUBMIT,TABSET,TOP,UNNUM,UP,VERIFY. (TO OBTAIN EXPLANATION OF LINE     00250000
+  INSERT/REPLACE/DELETE FUNCTION, ENTER HELP LINEDIT).                  00300000
+)F FUNCTION -                                                           00600020
+  THE EDIT COMMAND IS USED TO CREATE OR MODIFY SEQUENTIAL DATA SETS OR  00700020
+  MEMBERS OF PARTITIONED DATA SETS.                                     00800020
+)X SYNTAX -                                                             00900020
+         EDIT   'DSNAME'  NEW/OLD  SCAN/NOSCAN                          01000020
+                PLIF('N1','N2',CHAR60/CHAR48)/FORTE/FORTG/FORTGI/       01080020
+                FORTH/COBOL/ASM/TEXT/DATA/CLIST/CNTL/VSBASIC/           01160000
+                GOFORT(FREE/FIXED)/                                     01210000
+                PLI('N1','N2',CHAR60/CHAR48)                            01320020
+                NUM('N3','N4')/NONUM  BLOCK('N5')  LINE('N6')           01400020
+                CAPS/ASIS                                               01500020
+  REQUIRED - 'DSNAME'                                                   01600020
+  DEFAULTS - NUM,NOSCAN                                                 01700020
+  ALIAS    - E                                                          01800020
+  NOTE     - IF THE FULLY QUALIFIED DATA SET NAME IS SPECIFIED, IT MUST 01900020
+             BE ENCLOSED IN SINGLE QUOTES. IF THE DATA SET NAME IS NOT  02000020
+             ENTERED WITHIN QUOTES, THE USERID IS ALWAYS APPENDED TO    02100020
+             THE LEFT OF THE NAME. THE RIGHTMOST QUALIFIER OF THE       02150020
+             NAME ENTERED MAY BE A DESCRIPTIVE QUALIFIER FOR A          02200020
+             PARTICULAR DATA SET TYPE.                                  02250020
+  NOTE     - DATA SET TYPE IS ALWAYS REQUIRED IF THE DATA SET NAME IS   02400020
+             ENTERED WITHIN QUOTES. OTHERWISE, IT IS REQUIRED ONLY IF   02500020
+             THE RIGHTMOST  QUALIFIER OF THE DATA SET NAME IS NOT A     02550020
+             DESCRIPTIVE QUALIFIER. DATA SET TYPES ARE PLIF,FORTE,      02600020
+             FORTG,FORTH,FORTGI,ASM,COBOL,TEXT,DATA,CLIST,CNTL,         02700000
+             VSBASIC,PLI,AND GOFORT. DESCRIPTIVE QUALIFIERS ARE         02720000
+             IDENTICAL TO DATA SET TYPES EXCEPT 'FORT' (USED FOR ALL    02780002
+             FORTRAN TYPES,DEFAULT GOFORT) AND 'PLI' (USED FOR PLIF     02810002
+             AND PLI, DEFAULT PLI).                                     02840002
+           - THE OPERAND 'BLOCK' MAY ALSO BE SPECIFIED AS 'BLKSIZE'.    02860003
+             THE OPERAND 'LINE' MAY ALSO BE SPECIFIED AS 'LRECL'.       02880003
+)O OPERANDS -                                                           02900020
+  'DSNAME' - NAME OF THE DATA SET TO BE CREATED OR EDITED.              03000020
+))NEW      - DATA SET NAMED DID NOT EXIST BEFORE COMMAND WAS ISSUED.    03100020
+))OLD      - DATA SET ALREADY EXISTED WHEN THE EDIT COMMAND WAS ISSUED. 03200020
+))SCAN     - FOR DATA SET TYPE FORTE,FORTG,FORTGI,FORTH,PLIF,PLI,       03300000
+             OR GOFORT, EACH LINE IS TO BE CHECKED FOR SYNTAX.          03350000
+))NOSCAN   - NO SYNTAX CHECKING IS TO BE PERFORMED.                     03600020
+))PLIF('N1','N2',CHAR60/CHAR48)                                         03700020
+           - INPUT DATA CONSISTS OF PLI SOURCE STATEMENTS. PARAMETERS   03750020
+             ARE OPTIONAL AND ARE USED FOR SYNTAX CHECKING ONLY.        03800020
+    'N1'   - LEFT SOURCE MARGIN, DEFAULTS TO 2.                         04000020
+    'N2'   - RIGHT SOURCE MARGIN, DEFAULTS TO 72.                       04100020
+    CHAR60 - SOURCE STATEMENTS USE THE 60 CHARACTER SET, THE DEFAULT.   04200020
+    CHAR48 - SOURCE STATEMENTS USE THE 48 CHARACTER SET.                04300020
+))FORTE    - INPUT IS LEVEL E FORTRAN.                                  04500020
+))FORTG    - INPUT IS LEVEL G FORTRAN.                                  04600020
+))FORTGI   - INPUT IS LEVEL GI FORTRAN, THE ONLY LEVEL VALID FOR USE    04700020
+             WITH THE RUN SUBCOMMAND.                                   04800020
+))FORTH    - INPUT IS LEVEL H FORTRAN.                                  04900020
+))COBOL    - DATA CONSISTS OF COBOL SOURCE STATEMENTS.                  05000020
+))ASM      - DATA CONSISTS OF ASSEMBLER SOURCE STATEMENTS.              05100020
+))TEXT     - DATA IS PROSE. CHARACTER CONVERSION DEFAULT IS ASIS.       05200020
+))DATA     - DATA IS TO BE INPUT TO A PROGRAM.                          05300020
+))CLIST    - DATA IS INPUT TO AN EXEC COMMAND.                          05400020
+))CNTL     - DATA IS CONTROL DATA FOR A SUBMIT COMMAND.                 05500020
+))VSBASIC  - DATA CONSISTS OF SOURCE STATEMENTS IN THE VSBASIC LANGUAGE 05650002
+))GOFORT(FREE/FIXED)                                                    05800020
+           - DATA CONSISTS OF SOURCE STATEMENTS IN CODE AND GO FORTRAN. 05900020
+             PARAMETERS ARE OPTIONAL, USED FOR SYNTAX CHECKING ONLY.    06000020
+    FREE   - SOURCE STATEMENTS ARE FREE FORMAT. FREE IS THE DEFAULT.    06100020
+    FIXED  - SOURCE STATEMENTS CONFORM TO STANDARD FORTRAN FORMAT.      06200020
+))PLI('N1','N2',CHAR60/CHAR48)                                          06300020
+           - INPUT DATA CONSISTS OF PLI SOURCE STATEMENTS. PARAMETERS   06400020
+             HAVE THE SAME MEANING AS FOR PLIF.                         06500020
+))NUM('N3','N4')                                                        06600020
+           - IF THE DATA SET IS NEW, RECORDS WILL CONTAIN LINE NUMBERS. 06700020
+             IF OLD, THE RECORDS DO CONTAIN LINE NUMBERS. PARAMETERS    06800020
+             ARE OPTIONAL AND MAY BE SPECIFIED FOR ASM DATA SETS ONLY.  06900020
+    'N3'   - THE STARTING COLUMN OF THE LINE NUMBER. 'N3' MAY NOT BE    07000020
+             LESS THAN 73.                                              07060020
+    'N4'   - THE LENGTH OF THE LINE NUMBER. IF 'N4' IS SPECIFIED, N3+N4 07100020
+             CANNOT EXCEED 81 .                                         07200020
+))NONUM    - RECORDS WILL NOT CONTAIN LINE NUMBERS. CANNOT BE SPECIFIED 07300020
+             FOR GOFORT DATA SETS.                                      07400000
+))BLOCK('N5') OR                                                        07500003
+  BLKSIZE('N5')                                                         07550003
+           - BLOCKSIZE, FOR NEW DATA SETS ONLY.                         07600020
+    'N5'   - THE MAXIMUM BLOCK LENGTH IN BYTES.                         07700020
+))LINE('N6') OR                                                         07800003
+  LRECL('N6')                                                           07850003
+           - LOGICAL RECORD LENGTH, FOR NEW DATA SETS ONLY.             07900020
+    'N6'   - LENGTH IN BYTES.                                           08000020
+))CAPS     - DATA LOWER CASE LETTERS ARE TO BE CONVERTED TO CAPITAL     08100020
+             LETTERS, THE DEFAULT FOR ALL DATA SET TYPES EXCEPT TEXT.   08200020
+))ASIS     - INPUT LOWER CASE LETTERS ARE NOT TO BE CONVERTED TO UPPER  08300020
+             CASE. THIS IS THE DEFAULT FOR TEXT TYPE DATA SETS.         08400020
+=ALLOCATE=ALLOC                                                         08450001
+)F FUNCTION -                                                           08460001
+  THE ALLOCATE SUBCOMMAND DYNAMICALLY DEFINES AND ALLOCATES A DATA SET  08470001
+  WITH OR WITHOUT AN ATTRIBUTE LIST OF DCB PARAMETERS, OR               08480002
+  CONCATENATES A LIST OF DATA SETS.                                     08486002
+)X SYNTAX -                                                             08492001
+         ALLOCATE   DATASET('DSNAME'/'DSNAME LIST'/*)                   08494002
+                       OR                                               08496001
+                    DUMMY                                               08498001
+                    FILE('DDNAME') DEST('USERID')                       08498402
+                    NEW/OLD/MOD/SHR/SYSOUT('CLASS')                     08498802
+                    VOLUME('SERIAL'/SERIAL LIST)/MSVGP('IDENTIFIER')    08499203
+                    SPACE('QUANTITY','INCREMENT') DIR('INTEGER')        08499601
+                    BLOCK('VALUE')/AVBLOCK('VALUE')/TRACKS/CYLINDERS    08499702
+                    USING('ATTR-LIST-NAME')  HOLD/NOHOLD                08508702
+                    UNIT('UNIT-TYPE') UCOUNT('COUNT')/PARALLEL          08517702
+                    LABEL('LABEL-TYPE') POSITION('SEQUENCE-NUMBER')     08526702
+                    MAXVOL('VOL-COUNT')   PRIVATE   RELEASE             08535702
+                    VSEQ('VOL-SEQ-NUMBER')   ROUND                      08544702
+                    KEEP/DELETE/CATALOG/UNCATALOG                       08553702
+  REQUIRED - NONE                                                       08565201
+  DEFAULT  - NONE                                                       08565602
+  ALIAS    - ALLOC                                                      08566001
+  NOTE     - DATA SETS ALLOCATED REMAIN ALLOCATED UNTIL LOGOFF OR       08566401
+             UNTIL FREED BY FREE COMMAND. NO PERMANENT CONNECTION       08566501
+             EXISTS BETWEEN THE ATTRIBUTE LIST AND THE DATA SET.        08566601
+           - THE OPERAND 'DATASET' MAY ALSO BE SPECIFIED AS 'DSNAME'.   08568603
+             THE OPERAND 'FILE' MAY ALSO BE SPECIFIED AS 'DDNAME'.      08570603
+             THE OPERAND 'BLOCK' MAY ALSO BE SPECIFIED AS 'BLKSIZE'.    08572603
+)O OPERANDS -                                                           08577701
+))DATASET('DSNAME(S)'/*) OR                                             08587703
+  DSNAME('DSNAME(S)'/*) - DSNAME IS NAME OF DATASET TO BE ALLOCATED.    08587803
+                  LIST OF DSNAMES INDICATES DATA SETS ARE TO            08589603
+                  BE CONCATENATED.                                      08592503
+                  * INDICATES TERMINAL TO BE ALLOCATED.                 08593503
+))DSNAME('DSNAME(S)'/*) OR                                              08593700
+  DATASET('DSNAME(S)'/*) - DSNAME IS NAME OF DATASET TO BE ALLOCATED.   08593900
+                  LIST OF DSNAMES INDICATES DATA SETS ARE TO            08594100
+                  BE CONCATENATED.                                      08594300
+                  * INDICATES TERMINAL TO BE ALLOCATED.                 08594500
+))DUMMY               - DUMMY DATA SET TO BE ALLOCATED.                 08594903
+))FILE('DDNAME') OR                                                     08595303
+  DDNAME('DDNAME') - DDNAME TO BE ASSOCIATED WITH DATA SET.             08596303
+))DDNAME('DDNAME') OR                                                   08596600
+  FILE('DDNAME') - DDNAME TO BE ASSOCIATED WITH DATA SET.               08596900
+))DEST('USERID') - REMOTE USER TO WHICH SYSOUT DATA SETS ARE TO         08597303
+                   BE ROUTED.                                           08598303
+))OLD      -       DATA SET EXISTS AND EXCLUSIVE CONTROL IS REQUIRED.   08599303
+))SHR      -       DATA SET EXISTS, EXCLUSIVE CONTROL NOT REQUIRED.     08600303
+))MOD      -       ADDITIONS ARE TO BE MADE TO THE DATA SET.            08601303
+))NEW      -       DATA SET IS TO BE CREATED.                           08602303
+))SYSOUT('CLASS')   - DATA SET IS TO BE SYSTEM OUTPUT DATA SET.         08603303
+))VOLUME('SERIAL(S)') - VOLUME(S) ON WHICH DATA SET RESIDES OR          08605702
+                   IS TO RESIDE.                                        08622101
+))MSVGP('IDENTIFIER') - IDENTIFIER OF THE MASS STORAGE GROUP ON WHICH   08625103
+                        THE DATA SET IS TO RESIDE.                      08628103
+))BLOCK('VALUE') OR                                                     08632103
+  BLKSIZE('VALUE') - BLOCK SIZE AND AVERAGE RECORD LENGTH.              08635103
+))AVBLOCK('VALUE')  - AVERAGE RECORD LENGTH                             08638102
+))TRACKS            - SPACE IS TO BE ALLOCATED BY TRACKS.               08644101
+))CYLINDERS         - SPACE IS TO BE ALLOCATED BY CYLINDERS.            08646101
+))SPACE('QUANTITY','INCREMENT') - THE NUMBER OF RECORDS AND INCREMENT.  08648101
+))DIR('INTEGER')    - INTEGER IS NUMBER OF DIRECTORY BLOCKS REQUIRED.   08656701
+))USING('ATTR-LIST-NAME') - ATTR-LIST-NAME IS NAME OF ATTRIBUTE         08658701
+                      LIST OF DCB PARAMETERS TO BE MERGED WITH A        08660701
+                      DATA SET AT DYNAMIC ALLOCATION TIME.              08662701
+))HOLD              - DATA SET IS TO BE PLACED ON A HOLD QUEUE UPON     08669702
+                      UNALLOCATION.                                     08676702
+))NOHOLD            - DATA SET IS NOT TO BE PLACED ON A HOLD QUEUE      08683702
+                      UPON UNALLOCATION.                                08690702
+))UNIT('UNIT-TYPE') - DEVICE TYPE TO WHICH A FILE OR DATA SET IS        08697702
+                      TO BE ALLOCATED.                                  08704702
+))UCOUNT('COUNT')   - MAXIMUM NUMBER OF DEVICES TO WHICH A FILE OR      08711702
+                      DATA SET MAY BE ALLOCATED.                        08718702
+))PARALLEL          - ONE DEVICE MOUNTED FOR EACH VOLUME SPECIFIED ON   08728102
+                      THE VOLUME PARAMETER.                             08730102
+))LABEL('LABEL-TYPE') - LABEL PROCESSING TO BE DONE FOR TAPE VOLUMES.   08732102
+))POSITION('SEQUENCE-NUMBER') - RELATIVE POSITION OF THE DATA SET ON    08734102
+                      A MULTI-DATA SET TAPE.                            08736102
+))MAXVOL('VOL-COUNT') - MAXIMUM NUMBER OF VOLUMES A DATA SET MAY USE.   08738102
+))PRIVATE           - A VOLUME WHICH IS NOT PERMANENTLY RESIDENT OR     08745402
+                      RESERVED IS TO BE ASSIGNED THE PRIVATE VOLUME USE 08746402
+                      ATTRIBUTE.                                        08747402
+))RELEASE           - UNUSED SPACE IS TO BE DELETED WHEN THE DATA SET   08748402
+                      IS CLOSED.                                        08753202
+))VSEQ('VOL-SEQ'NUM') - WHICH VOLUME OF A MULTI-VOLUME DATA SET TO      08755202
+                      BEGIN PROCESSING WITH.                            08757202
+))ROUND             - ALLOCATED SPACE SHOULD BE EQUAL TO ONE OR MORE    08759202
+                      CYLINDERS.                                        08761202
+))KEEP              - DATA SET IS TO BE KEPT WHEN FREED.                08763202
+))DELETE            - DATA SET IS TO BE DELETED WHEN FREED.             08765202
+))CATALOG           - DATA SET IS TO BE CATALOGED.                      08767202
+))UNCATALOG         - DATA SET IS TO BE UNCATALOGED.                    08769202
+=BOTTOM=B                                                               08776602
+)F FUNCTION -                                                           08783602
+  THE BOTTOM SUBCOMMAND REPOSITIONS THE CURRENT LINE INDICATOR TO THE   08790602
+  LAST LINE OF THE DATA SET BEING EDITED.                               08800020
+)X SYNTAX -                                                             08900020
+           BOTTOM                                                       09000020
+  REQUIRED - NONE                                                       09100020
+  DEFAULTS - NONE                                                       09200020
+  ALIAS    - B                                                          09300020
+)O OPERANDS -                                                           09400020
+  NONE                                                                  09500020
+=CHANGE=C                                                               09600020
+)F FUNCTION -                                                           09700020
+  THE CHANGE SUBCOMMAND IS USED TO MODIFY A CHARACTER-STRING IN A LINE  09800020
+  OR RANGE OF LINES.                                                    09900020
+)X SYNTAX -                                                             10000020
+         CHANGE   'LINE-SPEC'  'COUNT2'/'CHAR-STRING'/=TEXT1=TEXT2=ALL  10100020
+  REQUIRED - 'COUNT2'/'CHAR-STRING'/=TEXT1=TEXT2                        10200020
+  DEFAULTS - 'LINE-SPEC' DEFAULTS TO * .                                10300020
+  ALIAS    - C                                                          10400020
+)O OPERANDS -                                                           10500020
+  'LINE-SPEC'                                                           10600020
+           - * FOR THE CURRENT LINE. * 'COUNT1' OR 'LINENUM1,LINENUM2'  10700020
+             FOR A RANGE OF LINES. 'LINENUM' FOR A PARTICULAR LINE.     10800020
+  'COUNT2' - THE SPECIFIED NUMBER OF CHARACTERS IS PRINTED FROM THE     10900020
+             BEGINNING OF EACH LINE SPECIFIED. THE USER RESPONDS BY     11000020
+             COMPLETING THE LINE(S).                                    11100020
+  'CHAR-STRING'                                                         11200020
+           - A SEARCH FOR THE SPECIFIED CHARACTER STRING IS MADE IN THE 11300020
+             LINE(S) SPECIFIED. THE FIRST LINE IN WHICH IT IS FOUND IS  11400020
+             PRINTED UP TO THE STRING, AND THE USER COMPLETES THE LINE. 11500020
+  '=TEXT1=TEXT2='ALL                                                    11600020
+           - = MAY BE ANY NON-NUMERIC CHARACTER EXCEPT BLANK, COMMA,    11700020
+             TAB,PARENTHESIS,ASTERISK,APOSTROPHE,OR SEMICOLON. IT       11800002
+             DELIMITS THE STRING AND CANNOT APPEAR WITHIN THE CHARACTER 11900002
+             STRINGS TEXT1 AND TEXT2. THE LINE OR RANGE OF LINES IS     12000020
+             SEARCHED FOR TEXT1, WHICH, IF FOUND, IS REPLACED BY TEXT2. 12100020
+             THE KEYWORD 'ALL' IS OPTIONAL AND CAUSES EVERY OCCURRENCE  12200020
+             OF TEXT1 TO BE REPLACED IN THE LINE(S). EXAMPLES -         12300020
+             ==TEXT2=  TEXT2 WILL BE INSERTED IN FRONT OF THE LINE(S).  12400020
+             =TEXT1==  TEXT1 WILL BE DELETED FROM THE LINE(S).          12500002
+=COPY=CO                                                                12505003
+)F FUNCTION -                                                           12510003
+  COPY A LINE OR A GROUP OF LINES FROM ONE PLACE TO ANOTHER IN THE DATA 12515003
+  SET BEING EDITED.                                                     12520003
+)X SYNTAX -                                                             12525003
+         COPY  LINE1 LINE2 LINE3/*  INCR(N)  OR                         12530003
+               'STRING'/* COUNT LINE4/* INCR(N)                         12535003
+   REQUIRED - NONE                                                      12540003
+   DEFAULTS -                                                           12545003
+            - IF */'STRING', COUNT DEFAULTS TO 1.                       12550003
+            - IF LINE1 ONLY, LINE2 DEFAULTS TO LINE1.                   12555003
+            - * IF LINE3/LINE4 NOT SPECIFIED                            12560003
+   ALIAS - CO                                                           12565003
+)O OPERANDS -                                                           12570003
+   *          - IS THE VALUE OF THE CURRENT LINE POINTER                12575003
+                                                                        12580003
+   LINE1      - SPECIFIES THE FIRST LINE IN THE RANGE TO BE             12600003
+                COPIED. IF THERE IS NO LINE IN THE                      12604003
+                DATA SET WITH THIS LINE NUMBER, THEN THE RANGE          12608003
+                BEGINS WITH THE NEXT HIGHEST NUMBER FOR WHICH           12612003
+                A LINE EXISTS IN THE DATA SET.                          12616003
+                                                                        12620003
+   LINE2      - SPECIFIES THE LAST LINE IN THE RANGE TO BE              12624003
+                COPIED. IF THERE IS NO LINE IN THE                      12628003
+                DATA SET WITH THIS NUMBER, THE RANGE ENDS WITH          12632003
+                THE LINE HAVING THE LARGEST NUMBER LESS THAN            12636003
+                THE NUMBER SPECIFIED.                                   12640003
+                                                                        12644003
+   LINE3      - SPECIFIES THE LINE AT WHICH THE COPY WILL BE            12648003
+                PLACED. IF THIS NUMBER SPECIFIES A LINE IN              12652003
+                THE DATA SET, THEN THE FIRST LINE OF THE COPY           12656003
+                WILL HAVE THE LINE NUMBER, LINE3+INCR.                  12660003
+                (FOLLOWING LINES IN THE DATA SET WILL                   12664003
+                AUTOMATICALLY HAVE THEIR NUMBERS CHANGED AS             12668003
+                NEEDED TO ACCOMMODATE THE NEW LINES.) IF THERE          12672003
+                IS NO LINE IN THE DATA SET WITH THIS LINE               12676003
+                NUMBER, THEN THE FIRST LINE OF THE COPY WILL            12680003
+                HAVE THIS LINE NUMBER.                                  12684003
+                                                                        12688003
+   STRING     - SPECIFIES A SEQUENCE OF CHARACTERS WHICH CAN            12692003
+                BE USED TO FIND THE FIRST LINE OF THE RANGE.            12700003
+                THE SEARCH FOR THE SEQUENCE OF CHARACTERS IS            12704003
+                STARTED AT THE CURRENT LINE POINTER.                    12708003
+                                                                        12712003
+   COUNT      - SPECIFIES THE TOTAL NUMBER OF LINES IN THE              12716003
+                RANGE TO BE MOVED OR COPIED.                            12720003
+                                                                        12724003
+   LINE4      - FOR NUM DATA SETS, SAME AS LINE 3.                      12728003
+                FOR NONUM DATA SETS SPECIFIES THE RELATIVE              12732003
+                LINE NUMBER FROM THE BEGINNING OF THE DATASET           12736003
+                AFTER WHICH THE INSERT IS TO BE PLACED.                 12740003
+                                                                        12744003
+   INCR(N)    - SPECIFIES THE INCREMENT TO BE USED WHEN                 12748003
+                INSERTING THE COPIED LINES. IF SOME LINES IN THE        12752003
+                TARGET POSITION OF THE DATA SET NEED TO BE              12764003
+                RENUMBERED  SO THAT THE RANGE CAN BE COPIED IN,         12768003
+                ONLY THE MINIMUM NUMBER OF LINES WILL BE                12776003
+                RENUMBERED. THE DEFAULT INCREMENT FOR THE COPIED        12778003
+                LINES IS THE CURRENT INCREMENT. THE INCREMENT FOR       12782003
+                ANY RENUMBERED LINES IS ONE (1).                        12782503
+=DELETE=DEL                                                             12784003
+)F FUNCTION -                                                           12788003
+  DELETE REMOVES RECORDS FROM THE DATA SET. THE CURRENT LINE INDICATOR  12800020
+  * IS REPOSITIONED PRIOR TO THE DELETED LINES.                         12900020
+)X SYNTAX -                                                             13000020
+         DELETE   'LINE-SPEC'                                           13100020
+  REQUIRED - NONE                                                       13200020
+  DEFAULTS - *                                                          13300020
+  ALIAS    - DEL                                                        13400001
+)O OPERANDS -                                                           13500020
+  'LINE-SPEC'                                                           13600020
+           - * FOR CURRENT LINE. * 'COUNT' OR 'LINENUM1,LINENUM2' FOR A 13700020
+             RANGE OF LINES. 'LINENUM' FOR A PARTICULAR LINE.           13800020
+=DOWN                                                                   13900020
+)F FUNCTION -                                                           14000020
+  DOWN MOVES THE CURRENT LINE POINTER * TOWARD THE END OF THE DATA SET. 14100020
+)X SYNTAX -                                                             14200020
+         DOWN   'COUNT'                                                 14300020
+  REQUIRED - NONE                                                       14400020
+  DEFAULTS - 'COUNT' DEFAULTS TO 1 .                                    14500020
+)O OPERANDS -                                                           14600020
+  'COUNT'  - SPECIFIES THE NUMBER OF LINES * IS TO BE MOVED.            14700020
+=END                                                                    14800020
+)F FUNCTION -                                                           14900020
+  END REQUESTS THAT THE EDIT COMMAND BE TERMINATED AND CONTROL          15000020
+  RETURNED TO THE INVOKING PROGRAM LEVEL THAT ACCEPTS SYSTEM COMMANDS.  15100020
+)X SYNTAX -                                                             15200020
+         END SAVE/NOSAVE                                                15300003
+  REQUIRED - NONE                                                       15400020
+  DEFAULTS - NONE                                                       15500020
+  NOTE     - IF NEITHER SAVE NOR NOSAVE IS ENTERED AND THE DATA SET     15520003
+             HAS NOT BEEN SAVED SINCE IT WAS LAST MODIFIED THEN YOU     15540003
+             WILL BE PROMPTED FOR 'END' OR 'SAVE'.                      15560003
+)O OPERANDS -                                                           15600020
+))SAVE     - SPECIFIES THAT THE USER WANTS TO RETAIN THE DATA SET       15650003
+             BEING EDITED.                                              15700003
+))NOSAVE   - SPECIFIES THAT THE USER DOES NOT WANT TO RETAIN THE        15701003
+             DATA SET BEING EDITED.                                     15702003
+=EXEC=EX                                                                15705003
+)F FUNCTION -                                                           15710003
+  THE EXEC SUBCOMMAND INITIATES EXECUTION OF A COMMAND PROCEDURE.       15715003
+)X SYNTAX -                                                             15720003
+         EXEC   'DSNAME' ''PARAMETER LIST'' LIST/NOLIST PROMPT/NOPROMPT 15725003
+                                                                        15730003
+  REQUIRED - DSNAME                                                     15735003
+  DEFAULTS - NOLIST,NOPROMPT                                            15740003
+  ALIAS    - EX                                                         15745003
+  NOTE     - THE PARAMETER LIST MUST BE ENCLOSED IN APOSTROPHIES WHEN   15750003
+             IT IS INCLUDED ON THE INVOCATION STATEMENT.                15755003
+             MEMBERS OF THE PARAMETER LIST MUST BE SEPARATED BY THE     15760003
+             STANDARD TSO DELIMITERS.                                   15765003
+             IF DSNAME IS NOT FULLY QUALIFIED, IT IS PREFIXED BY THE    15770003
+             USERID AND SUFFIXED BY 'CLIST'.                            15775003
+)O OPERANDS -                                                           15780003
+  'DSNAME' - THE NAME OF THE DATA SET WHICH CONTAINS THE COMMAND        15800003
+             PROCEDURE TO BE EXECUTED.                                  15804003
+  ''PARAMETER LIST''                                                    15808003
+           - THE LIST OF VALUES WHICH ARE TO BE SUBSTITUTED FOR THE     15812003
+             SYMBOLIC PARAMETERS DEFINED WHEN THE COMMAND PROCEDURE WAS 15816003
+             CREATED.                                                   15820003
+))LIST     - THE SUBCOMMANDS IN THE COMMAND PROCEDURE ARE               15824003
+             TO BE LISTED AT THE TERMINAL AS THEY ARE EXECUTED.         15828003
+))NOLIST   - THE SUBCOMMANDS IN THE COMMAND PROCEDURE ARE               15832003
+             NOT TO BE LISTED AT THE TERMINAL.                          15836003
+))PROMPT   - PROMPTING TO THE TERMINAL FOR INPUT IS TO BE ALLOWED       15840003
+             DURING THE EXECUTION OF THE COMMAND PROCEDURE.  ALL        15844003
+             SUBCOMMANDS IN THE COMMAND PROCEDURE WILL                  15848003
+             BE LISTED AT THE TERMINAL AS THEY ARE EXECUTED, UNLESS     15852003
+             THE NOLIST OPTION IS EXPLICITLY SPECIFIED.                 15856003
+))NOPROMPT - PROMPTING TO THE TERMINAL FOR INPUT IS NOT TO BE ALLOWED   15860003
+             DURING THE EXECUTION OF THE COMMAND PROCEDURE.             15864003
+             SUBCOMMANDS IN THE COMMAND PROCEDURE WILL                  15868003
+             BE LISTED AT THE TERMINAL AS THEY ARE EXECUTED, UNLESS     15872003
+             THE NOLIST OPTION IS EXPLICITLY SPECIFIED.                 15876003
+=FIND=F                                                                 15888003
+)F FUNCTION -                                                           15900020
+  FIND SEARCHES FOR A SPECIFIED CHARACTER STRING BEGINNING WITH THE     16000020
+  CURRENT LINE, PROVIDED OPERANDS ARE SPECIFIED (SEE SYNTAX). THE       16100020
+  CURRENT LINE POINTER * IS MOVED TO THE FIRST LINE FOUND TO CONTAIN    16150020
+  THE STRING. THE SEARCH IS MADE AT A SPECIFIED OFFSET OR AT EVERY      16200020
+  POSITION WITHIN EACH LINE.                                            16300020
+)X SYNTAX -                                                             16400020
+         FIND   '=CHAR-STRING='   'POSITION'                            16500020
+  REQUIRED - NONE                                                       16600020
+  DEFAULTS - IF NO OPERANDS ARE SPECIFIED, THOSE SPECIFIED ON THE LAST  16700020
+             PREVIOUS ISSUE OF THE FIND SUBCOMMAND ARE ASSUMED. THE     16800020
+             SEARCH BEGINS AT THE LINE FOLLOWING THE CURRENT LINE.      16850020
+  ALIAS    - F                                                          16900020
+)O OPERANDS -                                                           17000020
+  '=CHAR-STRING='                                                       17100020
+           - = CAN BE CHOSEN TO BE ANY NON-NUMERIC CHARACTER, EXCEPT    17200020
+             BLANK, COMMA, TAB, PARENTHESIS, ASTERISK, APOSTROPHE, OR   17300002
+             SEMICOLON, WHICH DOES NOT APPEAR WITHIN THE SPECIFIED      17400020
+             CHARACTER STRING. THE SECOND OCCURRENCE CAN BE REPLACED BY 17500020
+             CARRIAGE RETURN IF 'POSITION' IS NOT SPECIFIED.            17600020
+  'POSITION' -                                                          17650020
+             SPECIFIES THE COLUMN WITHIN EACH LINE AT WHICH THE         17700020
+             COMPARISON IS TO BE MADE. VALID ONLY IF CHARACTER          17750020
+             STRING IS SPECIFIED ALSO. IF CHARACTER STRING IS           17800020
+             SPECIFIED AND THIS OPERAND IS OMITTED, THE COMPARISON      17850020
+             IS MADE AT EVERY COLUMN WITHIN EACH LINE.                  17860020
+=FORMAT=FORM                                                            17900020
+)F FUNCTION -                                                           18000020
+  FORMAT CAUSES ALL OR PART OF DATA SET BEING EDITED TO BE FORMATTED    18100020
+  AND PRINTED AT THE TERMINAL OR SAVED AS A USER SPECIFIED DATA SET.    18200020
+)X SYNTAX -                                                             18300020
+         FORMAT   'LINE-SPEC'/PAGE('N1','N2')   NUM/SNUM/NONUM          18400020
+                  PAUSE/NOPAUSE/PAUSE1   PRINT('DSNAME',T/PC/PS)        18500020
+  REQUIRED - NONE                                                       18600020
+  DEFAULTS - SNUM, NOPAUSE                                              18700020
+  ALIAS    - FORM                                                       18800020
+  NOTE     - FORMATTING IS ACCOMPLISHED BY MEANS OF CONTROL WORDS       18900020
+             EMBEDDED IN THE DATA SET. CONSULT USER'S REFERENCE MANUAL. 19000020
+  NOTE     - IF BOTH 'LINE-SPEC' AND PAGE('N1') ARE OMITTED, THE ENTIRE 19100020
+             DATA SET IS PROCESSED.                                     19200020
+)O OPERANDS -                                                           19300020
+  'LINE-SPEC'                                                           19400020
+           - * OR 'LINENUM' CAUSE PROCESSING FROM THE INDICATED LINE TO 19500020
+             END OF DATA. * 'COUNT' OR 'LINENUM1,LINENUM2' CAUSE        19600020
+             PROCESSING OF THE RANGE OF LINES THUS SPECIFIED.           19700020
+))PAGE('N1','N2')                                                       19800020
+           - ONLY THE SPECIFIED PAGES ARE TO BE PROCESSED.              19900020
+  'N1'     - BEGINNING PAGE NUMBER.                                     20000020
+  'N2'     - NUMBER OF THE LAST PAGE TO BE PROCESSED. IF OMMITTED, ONLY 20100020
+             THE FIRST PAGE IS PROCESSED.                               20200020
+))NUM      - THE LINE NUMBERS ARE TO BE PRINTED.                        20300020
+))SNUM     - THE LINE NUMBERS ARE NOT TO BE PRINTED.                    20400020
+))NONUM    - THE DATA SET IS NOT LINE NUMBERED.                         20500020
+))PAUSE    - FORMAT WILL WAIT FOR A CARRIAGE RETURN BEFORE PRINTING     20600020
+             EACH PAGE OF OUTPUT.                                       20700020
+))NOPAUSE  - THERE ARE TO BE NO PAUSES DURING PRINTING.                 20800020
+))PAUSE1   - FORMAT WILL WAIT FOR A CARRIAGE RETURN BEFORE PRINTING THE 20900020
+             FIRST PAGE.                                                21000020
+))PRINT('DSNAME',T/PC/PS)                                               21100020
+           - OUTPUT DATA IS TO BE PLACED IN THE SPECIFIED DATA SET.     21200020
+    'DSNAME'                                                            21300020
+           - EITHER THE NAME TO BE GIVEN TO THE OUTPUT DATA SET OR THE  21400020
+             NAME OF AN EXISTING DATA SET IN WHICH THE OUTPUT DATA IS   21500020
+             TO BE PLACED.                                              21600020
+  T        - USER WILL WANT THE OUTPUT DATA PRINTED AT THE TERMINAL     21700020
+             LATER. T IS THE DEFAULT.                                   21800020
+  PC       - THE DATA SET IS TO BE WRITTEN EVENTUALLY ON THE PRINTER.   21900020
+             LOWER CASE LETTERS WILL BE CONVERTED TO UPPER CASE.        22000020
+  PS       - SAME AS PC, EXCEPT THAT CONVERSION TO UPPER CASE LETTERS   22100020
+             WILL NOT TAKE PLACE.                                       22200020
+=INPUT=I                                                                22300020
+)F FUNCTION -                                                           22400020
+  INPUT CAUSES A SWITCH TO INPUT MODE SO THAT LINES MAY BE ADDED OR     22500020
+  REPLACED.                                                             22600020
+)X SYNTAX -                                                             22700020
+         INPUT   'LINENUM'  'INCREM'  R/I  PROMPT/NOPROMPT              22800020
+                   OR                                                   22900020
+                 *  R/I  PROMPT/NOPROMPT                                23000020
+  REQUIRED - NONE                                                       23100020
+  DEFAULTS - I                                                          23200020
+  ALIAS    - I                                                          23300020
+)O OPERANDS -                                                           23400020
+  'LINENUM'                                                             23500020
+           - THE FIRST LINE INSERTED WILL HAVE THIS NUMBER, OR THIS     23600020
+             NUMBER PLUS THE INCREMENT IF THE SPECIFIED LINE NUMBER     23700020
+             ALREADY EXISTS.                                            23800020
+  'INCREM' - SPECIFIES THE INCREMENT FOR NUMBERING INSERTED LINES. THE  23900020
+             DEFAULT IS THE PREVIOUSLY SPECIFIED INCREMENT OR 10 IF NO  24000020
+             INCREMENT HAS BEEN SPECIFIED.                              24100020
+  *        - FOR LINE NUMBERED DATA SETS, LINES ARE TO BE INSERTED AT   24200020
+             THE POSITION DETERMINED BY THE CURRENT LINE POSITION PLUS  24300020
+             THE DEFAULT INCREMENT. FOR NON-NUMBERED DATA SETS, LINES   24400020
+             ARE TO BE INSERTED FOLLOWING THE CURRENT LINE POSITION.    24500020
+))R        - THIS OPERAND CAN BE USED TO REPLACE LINES. CONSULT THE     24600020
+             USER'S REFERENCE MANUAL FOR DETAILS.                       24700020
+))I        - LINES ARE TO BE INSERTED INTO THE DATA SET WITH NO CHANGES 24800020
+             TO EXISTING LINES.                                         24900020
+))PROMPT   - FOR LINE NUMBERED DATA SETS, EACH NEW LINE NUMBER IS       25000020
+             PRINTED AT THE TERMINAL. FOR NON-NUMBERED DATA SETS, A     25100020
+             PROMPT CHARACTER IS PRINTED BEFORE EACH NEW INPUT LINE.    25200020
+))NOPROMPT - NEITHER LINE NUMBERS NOR A PROMPT CHARACTER ARE TO BE      25300020
+             PRINTED BEFORE NEW INPUT LINES.                            25400020
+=INSERT=IN                                                              25500020
+)F FUNCTION -                                                           25600020
+  THE INSERT SUBCOMMAND CAN BE USED TO PLACE RECORDS AFTER THE CURRENT  25700020
+  LINE POSITION * .                                                     25800020
+)X SYNTAX -                                                             25900020
+         INSERT 'CHAR-STRING'                                           26000020
+  REQUIRED - NONE                                                       26100020
+  DEFAULTS - NONE                                                       26200020
+  ALIAS    - IN                                                         26300020
+)O OPERANDS -                                                           26400020
+  'CHAR-STRING'                                                         26500020
+           - THE CHARACTER STRING WILL BE INSERTED AS A RECORD IN THE   26600020
+             POSITION FOLLOWING THE CURRENT LINE POSITION, AND IN THE   26800020
+             CASE OF A LINE NUMBERED DATA SET, WITH A LINE NUMBER ONE   26900020
+             GREATER THAN THAT OF THE CURRENT LINE. IF THIS OPERAND IS  27000020
+             OMITTED, INPUT MODE IS ENTERED WITH EACH NEW INPUT RECORD  27100020
+             INSERTED FOLLOWING THE CURRENT LINE POSITION, AND LINE     27200020
+             NUMBERED USING AN INCREMENT OF ONE.                        27300020
+=LINEDIT                                                                27700020
+)F FUNCTION -                                                           27800020
+  THE LINE INSERT/REPLACE/DELETE FUNCTION ALLOWS A SINGLE LINE TO BE    27900020
+  ADDED, REPLACED, OR DELETED FROM THE DATA SET BEING EDITED.           28000020
+)X SYNTAX -                                                             28100020
+         'LINENUM'/*   'CHAR-STRING'                                    28200020
+  REQUIRED - 'LINENUM' OR *                                             28300020
+  DEFAULTS - NONE                                                       28400020
+  NOTE     - IF SPECIFIED, 'CHAR-STRING' MUST BE SEPARATED FROM * OR    28500020
+             'LINENUM' BY A SINGLE BLANK OR TAB.                        28700020
+)O OPERANDS -                                                           28900020
+  'LINENUM'                                                             29000020
+           - VALID FOR A LINE NUMBERED DATA SET ONLY. 'LINENUM' WITH AN 29100020
+             IMMEDIATE CARRIAGE RETURN CAUSES THE DELETION OF THE LINE  29200020
+             HAVING THE SPECIFIED NUMBER, OR NO OPERATION IF SUCH A     29300020
+             LINE DOES NOT EXIST. 'LINENUM' FOLLOWED BY A CHARACTER     29400020
+             STRING ADDS THE STRING TO THE DATA SET. IF A LINE HAVING   29500020
+             THE SPECIFIED NUMBER ALREADY EXISTS, IT IS REPLACED.       29600020
+  *        - IF FOLLOWED BY AN IMMEDIATE CARRIAGE RETURN, THE CURRENT   29700020
+             LINE IS DELETED. IF FOLLOWED BY A CHARACTER STRING, THE    29800020
+             CURRENT LINE IS REPLACED.                                  29900020
+  'CHAR-STRING'                                                         30000020
+           - SPECIFIES THE TEXT OF THE LINE TO BE ADDED.                30100020
+=LIST=L                                                                 30200020
+)F FUNCTION -                                                           30300020
+  LIST DISPLAYS AT THE TERMINAL LINES OF THE DATA SET BEING EDITED.     30400020
+)X SYNTAX -                                                             30500020
+         LIST   'LINE-SPEC'  NUM/SNUM                                   30600020
+  REQUIRED - NONE                                                       30700020
+  DEFAULTS - NUM                                                        30800020
+  ALIAS    - L                                                          30900020
+)O OPERANDS -                                                           31000020
+  'LINE-SPEC'                                                           31100020
+           - * OR 'LINENUM' TO INDICATE A SINGLE LINE TO BE LISTED.     31200020
+             * 'COUNT' OR 'LINENUM1,LINENUM2' TO DISPLAY A RANGE OF     31300020
+             LINES. THE ENTIRE DATA SET WILL BE DISPLAYED IF THIS       31400020
+             OPERAND IS OMITTED.                                        31500020
+))NUM      - THE LINE NUMBERS ARE TO BE DISPLAYED.                      31600020
+))SNUM     - THE LINE NUMBERS ARE NOT TO BE DISPLAYED.                  31700020
+=MERGE=M                                                                31800020
+)F FUNCTION -                                                           31900020
+  MERGE CAUSES ALL OR PART OF A SPECIFIED DATA SET TO BE MERGED WITH    32000020
+  THE DATA SET BEING EDITED. ONLY THE DATA SET BEING EDITED IS ALTERED. 32100020
+)X SYNTAX -                                                             32200020
+         MERGE   'DSNAME'/*  'LINENUM1,LINENUM2' 'LINENUM3'/*           32300020
+                 RENUM('LINENUM','INCREM')                              32400020
+                 NUM('POSITION','LENGTH')/NONUM                         32450000
+  REQUIRED - EITHER 'DSNAME' OR * .                                     32500020
+  DEFAULTS - * IF 'LINENUM3' IS NOT SPECIFIED. RENUM(10,10) IF THE DATA 32600020
+             SET BEING EDITED IS LINE NUMBERED.                         32700002
+  ALIAS    - M                                                          32800020
+)O OPERANDS -                                                           32900020
+  'DSNAME' - THE DATA SET TO BE MERGED WITH THE DATA SET BEING EDITED.  33000020
+  *        - AS THE FIRST OPERAND, * SPECIFIES THAT THE DATA SET BEING  33100020
+             EDITED IS TO BE MERGED WITH ITSELF. IN THIS CASE THE MERGE 33200020
+             TAKES PLACE AS IF THE LINES TO BE MERGED WERE COPIED AND   33300020
+             INSERTED. NO RECURSIVE MERGE WILL RESULT.                  33400020
+  'LINENUM1,LINENUM2'                                                   33500020
+           - SPECIFIES A RANGE OF LINES IN THE DATA SET TO BE MERGED    33600020
+             WITH THE DATA SET BEING EDITED. IF THIS OPERAND IS OMITTED 33700020
+             THE ENTIRE DATA SET IS MERGED INTO THE DATA SET BEING      33800020
+             EDITED.  IF THE NONUM KEYWORD OF THIS SUBCOMMAND IS        33840000
+             ENTERED OR DEFAULTED, 'LINENUM1,LINENUM2' IS A             33880000
+             RELATIVE RECORD NUMBER SPECIFICATION, E. G. 1 - THE        33920000
+             FIRST RECORD, 10 - THE TENTH RECORD.                       33960000
+  'LINENUM3'                                                            34000020
+           - SPECIFIES A LINE NUMBER IN THE DATA SET BEING EDITED.      34100020
+             MERGED RECORDS WILL BE INSERTED FOLLOWING THIS LINE.  A    34150000
+             RELATIVE RECORD NUMBER IS SPECIFIED WHEN THE EDIT          34200000
+             DATA SET IS NOT LINE NUMBERED.                             34250000
+  *        - FOLLOWING ONE OR TWO OTHER POSITIONAL OPERANDS, * CAUSES   34300020
+             THE MERGED RECORDS TO BE INSERTED FOLLOWING THE CURRENT    34400020
+             LINE POSITION IN THE DATA SET BEING EDITED.                34500020
+))RENUM('LINENUM','INCREM')                                             34600020
+           - IF THE DATA SET BEING EDITED IS LINE NUMBERED, IT WILL     34700020
+             ALWAYS BE RENUMBERED AFTER THE LINES HAVE BEEN MERGED.     34800020
+             THIS OPERAND SPECIFIES THE BEGINNING LINE NUMBER AND THE   34900020
+             INCREMENT TO BE USED IN RENUMBERING. IF THIS OPERAND IS    35000020
+             OMITTED OR IF ONLY RENUM IS SPECIFIED, THE DEFAULT VALUES  35100020
+             ARE USED. RENUM IS IGNORED IF THE DATA SET BEING EDITED IS 35200020
+             NOT LINE NUMBERED.                                         35300020
+    'LINENUM'                                                           35400020
+           - THE BEGINNING LINE NUMBER TO BE USED IN RENUMBERING.       35500020
+    'INCREM'                                                            35600020
+           - THE INCREMENT BETWEEN LINE NUMBERS TO BE USED.             35700020
+))NUM('POSITION','LENGTH')                                              35703000
+           - SPECIFIES THAT THE DATA SET TO BE MERGED INTO THE EDIT     35706000
+             DATA SET IS LINE-NUMBERED.  THIS KEYWORD IS DEFAULTED      35709000
+             WHEN 'NUM' IS ENTERED(OR DEFAULTED) ON THE EDIT COMMAND.   35712000
+             IT NEED ONLY BE SPECIFIED WHEN THE EDIT DATA SET IS        35715000
+             NOT LINE NUMBERED, OR WHEN THE LINE NUMBER POSITION AND    35718000
+             LENGTH DIFFER FROM SYSTEM DEFAULTS.  (IF THE DATA SET      35721000
+             NAME FOLLOWS TSO DATA SET NAMING CONVENTIONS, LINE         35724000
+             NUMBER DEFAULTS ARE BASED ON THE DESCRIPTIVE QUALIFIER.    35727000
+             OTHERWISE, THE DEFAULT POSITION IS THE FIRST EIGHT         35730000
+             CHARACTER POSITIONS FOR VARIABLE RECORDS, OR THE LAST      35733000
+             EIGHT CHARACTER POSITIONS FOR FIXED RECORDS.)              35736000
+   'POSITION'                                                           35739000
+           - THE STARTING POSITION OF A LINE NUMBER FIELD IN            35742000
+             A RECORD WITHIN THE DATA SET.  IF NOT SPECIFIED            35745000
+             THE SYSTEM DEFAULT IS USED.  THIS OPERAND SHOULD           35748000
+             ALWAYS BE SPECIFIED WHEN THE STARTING POSITION OF THE      35751000
+             LINE NUMBER DOES NOT CONFORM TO THE SYSTEM DEFAULTS.       35754000
+   'LENGTH'                                                             35757000
+           - THE LENGTH OF LINE NUMBERS IN THE DATA SET TO BE MERGED    35760000
+             THIS OPERAND NEED ONLY BE SPECIFIED WHEN THE LINE NUMBER   35763000
+             LENGTH DIFFERS FROM THE SYSTEM DEFAULT.                    35766000
+))NONUM                                                                 35769000
+           - SPECIFIES THAT THE DATA SET TO BE MERGED INTO THE EDIT     35772000
+             DATA SET IS NOT LINE-NUMBERED.  THIS KEYWORD IS A          35775000
+             DEFAULT WHEN 'NONUM' IS ENTERED ON THE EDIT COMMAND        35778002
+             AND THE MERGE SUBCOMMAND HAS AN '*' FOR 'DSNAME'.          35779002
+             THE USER MUST SPECIFY THIS KEYWORD (FOR DATA SETS          35781000
+             NOT LINE-NUMBERED) WHEN THE EDIT DATA SET IS LINE-NUMBERED.35784000
+=MOVE=MO                                                                35784503
+)F FUNCTION -                                                           35785003
+  MOVE A LINE OR A GROUP OF LINES FROM ONE PLACE TO ANOTHER IN THE DATA 35786003
+  SET BEING EDITED.                                                     35787003
+)X SYNTAX -                                                             35788003
+         MOVE LINE1 LINE2 LINE3/*  INCR(N)  OR                          35789003
+               'STRING'/* COUNT LINE4/* INCR(N)                         35790003
+   REQUIRED - NONE                                                      35791003
+   DEFAULTS -                                                           35792003
+            - IF */'STRING', COUNT DEFAULTS TO 1.                       35793003
+            - IF LINE1 ONLY, LINE2 DEFAULTS TO LINE1.                   35794003
+            - * IF LINE3/LINE4 NOT SPECIFIED                            35800003
+   ALIAS - MO                                                           35802003
+)O OPERANDS -                                                           35804003
+   *          - IS THE VALUE OF THE CURRENT LINE POINTER                35806003
+                                                                        35807003
+   LINE1      - SPECIFIES THE FIRST LINE IN THE RANGE TO BE             35808003
+                MOVED IF THERE IS NO LINE IN THE                        35808503
+                DATA SET WITH THIS LINE NUMBER, THEN THE RANGE          35809003
+                BEGINS WITH THE NEXT HIGHEST NUMBER FOR WHICH           35809203
+                A LINE EXISTS IN THE DATA SET.                          35809403
+                                                                        35809603
+   LINE2      - SPECIFIES THE LAST LINE IN THE RANGE TO BE              35810003
+                MOVED. IF THERE IS NO LINE IN THE                       35810203
+                DATA SET WITH THIS NUMBER, THE RANGE ENDS WITH          35810403
+                THE LINE HAVING THE LARGEST NUMBER LESS THAN            35810603
+                THE NUMBER SPECIFIED.                                   35811003
+                                                                        35811203
+   LINE3      - SPECIFIES THE LINE AT WHICH THE MOVED LINE(S) WILL      35811403
+                BE PLACED. IF THIS NUMBER SPECIFIES A LINE IN           35811603
+                THE DATA SET, THEN THE FIRST LINE OF THE COPY           35811803
+                WILL HAVE THE LINE NUMBER, LINE3+INCR.                  35812003
+                (FOLLOWING LINES IN THE DATA SET WILL                   35812203
+                AUTOMATICALLY HAVE THEIR NUMBERS CHANGED AS             35812403
+                NEEDED TO ACCOMMODATE THE NEW LINES.) IF THERE          35812503
+                IS NO LINE IN THE DATA SET WITH THIS LINE               35812603
+                NUMBER, THEN THE FIRST LINE OF THE MOVED LINE WILL      35812703
+                HAVE THIS LINE NUMBER.                                  35813003
+                                                                        35813303
+   STRING     - SPECIFIES A SEQUENCE OF CHARACTERS WHICH CAN            35813603
+                BE USED TO FIND THE FIRST LINE OF THE RANGE.            35814003
+                THE SEARCH FOR THE SEQUENCE OF CHARACTERS IS            35814503
+                STARTED AT THE CURRENT LINE POINTER.                    35815003
+                                                                        35815503
+   COUNT      - SPECIFIES THE TOTAL NUMBER OF LINES IN THE              35816003
+                RANGE TO BE MOVED OR COPIED.                            35816103
+                                                                        35816203
+   LINE4      - FOR NUM DATA SETS, SAME AS LINE3.                       35816303
+                FOR NONUM DATA SETS SPECIFIES THE RELATIVE              35816403
+                LINE NUMBER FROM THE BEGINNING OF THE DATASET           35816503
+                AFTER WHICH THE INSERT IS TO BE PLACED.                 35816603
+                                                                        35816703
+   INCR(N)    - SPECIFIES THE INCREMENT TO BE USED WHEN                 35816803
+                INSERTING THE MOVED LINES. THIS                         35817003
+                VALUE WILL REPLACE THE PREVIOUS DEFAULT VALUE           35817203
+                SPECIFIED ON AN INPUT, RENUMBER, MOVE OR COPY           35817403
+                SUBCOMMAND. IF SOME LINES IN THE TARGET                 35817603
+                POSITION OF THE DATA SET NEED TO BE RENUMBERED          35818003
+                SO THAT THE RANGE CAN BE MOVED IN, ONLY THE             35818303
+                MINIMUM NUMBER OF LINES WILL BE RENUMBERED.             35818503
+                THE DEFAULT INCREMENT FOR MOVED LINES IS THE            35818703
+                CURRENT INCREMENT. THE INCREMENT FOR ANY                35818903
+                RENUMBERED LINES WILL BE ONE (1).                       35819103
+=PROFILE=PROF                                                           35820003
+)F FUNCTION -                                                           35820503
+  THE PROFILE COMMAND IS USED EITHER TO SPECIFY TO THE SYSTEM CERTAIN   35821003
+  USER CHARACTERISTICS WHICH ARE TO BE USED TO CONTROL THE FLOW OF      35821303
+  INFORMATION TO AND FROM THE TERMINAL OR TO LIST THE USER PROFILE.     35821603
+  THE USER PROFILE IS RETAINED THROUGHOUT EACH TERMINAL SESSION         35822003
+  UNLESS THE USER WISHES TO CHANGE IT BY ISSUING THE PROFILE COMMAND    35822303
+  AGAIN AND SPECIFYING THE APPROPRIATE OPERANDS.                        35822603
+)X SYNTAX  -                                                            35823003
+         PROFILE   LINE('CHARACTER')/LINE(ATTN)/LINE(CTLX)/NOLINE       35823503
+                   CHAR('CHARACTER')/CHAR(BS)/NOCHAR                    35824003
+                   PROMPT/NOPROMPT  INTERCOM/NOINTERCOM                 35826003
+                   PAUSE/NOPAUSE  MSGID/NOMSGID  LIST                   35827003
+                   MODE/NOMODE  WTPMSG/NOWTPMSG                         35829003
+                   PREFIX('PREFIX')/NOPREFIX                            35831003
+  REQUIRED - NONE                                                       35832003
+  DEFAULTS - FOR PREFIX THE DEFAULT IS THE LOGON USERID                 35834003
+  ALIAS    - PROF                                                       35835003
+  NOTE     - IF THE COMMAND IS ENTERED WITH NO OPERANDS, THE COMMAND    35838003
+             IS IGNORED.                                                35839003
+)O OPERANDS-                                                            35840003
+))LINE('CHARACTER')                                                     35842003
+           - SPECIFIES THE CHARACTER WHICH IS TO BE USED FOR            35843003
+             DELETING A LINE.                                           35846003
+    'CHARACTER'                                                         35847003
+           - IS ANY VALID CHARACTER.                                    35848003
+))LINE(ATTN)                                                            35850003
+           - SPECIFIES THAT ATTENTION IS TO BE USED TO DELETE A LINE.   35851003
+             THIS IS THE SYSTEM DEFAULT DELETE CHARACTER FOR THE        35854003
+             KEYBOARD TYPE TERMINAL.                                    35855003
+))LINE(CTLX)                                                            35856003
+           - SPECIFIES THAT CTLX IS TO BE USED TO DELETE A LINE         35858003
+             FOR THE TELETYPE TERMINAL. THIS IS THE SYSTEM DEFAULT      35859003
+             DELETE CHARACTER FOR THE TELETYPE TERMINAL.                35860003
+))NOLINE   - SPECIFIES THAT THERE IS TO BE NO LINE DELETING CHARACTER.  35861003
+))CHAR('CHARACTER')                                                     35862003
+           - SPECIFIES THE CHARACTER TO BE USED TO DELETE A CHARACTER.  35863003
+    'CHARACTER'                                                         35864003
+           - IS ANY VALID CHARACTER.                                    35865003
+))CHAR(BS) - SPECIFIES THAT BACKSPACE IS TO BE USED TO DELETE A         35866003
+             CHARACTER. THIS IS THE SYSTEM DEFAULT VALUE.               35867003
+))NOCHAR   - SPECIFIES THAT THERE IS NO CHARACTER DELETE CHARACTER.     35868003
+))PROMPT   - SPECIFIES THAT THE USER IS TO BE PROMPTED FOR NECESSARY    35869003
+             INFORMATION.                                               35870003
+))NOPROMPT - SPECIFIES THAT THE USER IS NOT TO BE PROMPTED FOR          35871003
+             INFORMATION.                                               35872003
+))INTERCOM - SPECIFIES THAT THE USER WILL ACCEPT MESSAGES FROM OTHER    35873003
+             TERMINAL USERS.                                            35874003
+))NOINTERCOM                                                            35875003
+           - SPECIFIES THAT THE USER WILL NOT ACCEPT MESSAGES FROM      35876003
+             OTHER TERMINAL USERS.                                      35877003
+))PAUSE    - SPECIFIES THAT SECOND LEVEL MESSAGES WILL BE AVAILABLE     35878003
+             TO THE USER WHILE OPERATING IN A COMMAND PROCEDURE.        35879003
+             IF SPECIFIED, THE SYSTEM WILL PROMPT THE USER TO           35880003
+             ENTER A QUESTION MARK OR A NULL LINE AFTER A COMMAND THAT  35881003
+             HAS ISSUED A MESSAGE WITH MULTIPLE LEVELS OF OUTPUT.       35882003
+))NOPAUSE  - SPECIFIES THAT SECOND LEVEL MESSAGES WILL NOT BE AVAILABLE 35883003
+             TO THE USER WHILE OPERATING IN A COMMAND PROCEDURE.        35884003
+))MSGID    - SPECIFIES THAT TERMINAL MESSAGES WILL INCLUDE MESSAGE      35885003
+             IDENTIFIERS.                                               35886003
+))NOMSGID  - SPECIFIES THAT TERMINAL MESSAGES WILL NOT INCLUDE          35887003
+             MESSAGE IDENTIFIERS.                                       35888003
+))LIST     - SPECIFIES THAT THE USER PROFILE IS TO BE LISTED.           35889003
+))MODE     - SPECIFIES THAT THE USER WISHES TO RECEIVE MODE MESSAGES    35910001
+             WHILE UNDER A COMMAND.                                     35940001
+))NOMODE   - SPECIFIES THAT THE USER DOES NOT WISH TO RECEIVE MODE      35960001
+             MESSAGES WHILE UNDER A COMMAND.                            36010001
+))PREFIX('PREFIX')                                                      36110002
+           - SPECIFIES A PREFIX WHICH WILL BE APPENDED TO ALL           36210002
+             NON-FULLY QUALIFIED DSNAMES.                               36310002
+  'PREFIX'                                                              36410002
+           - IS ANY VALID DSNAME QUALIFIER OF 1-7 ALPHAMERIC            36510002
+             CHARACTERS THAT BEGINS WITH AN ALPHABETIC OR               36610002
+             NATIONAL CHARACTER                                         36710002
+))NOPREFIX                                                              36810002
+          - SPECIFIES NO PREFIXING OF DSNAMES BY ANY QUALIFIER          36910002
+            WILL BE PERFORMED                                           37010002
+))WTPMSG                                                                37110002
+          - SPECIFIES  THE USER WISHES TO RECEIVE ALL WRITE-TO          37210002
+            PROGRAMMER MESSAGES AT HIS TERMINAL                         37310002
+))NOWTPMSG                                                              37410002
+          - SPECIFIES THE USER DOES NOT WISH TO RECEIVE ALL             37510002
+            WRITE-TO-PROGRAMMER MESSAGES AT HIS TERMINAL                37610002
+=RENUM=REN                                                              39000020
+)F FUNCTION -                                                           39100020
+  RENUM RENUMBERS ALL OR PART OF A LINE NUMBERED DATA SET OR ASSIGNS    39200002
+  LINE  NUMBERS TO EACH LINE OF A NON-NUMBERED DATA SET.                39300002
+)X SYNTAX -                                                             39400020
+         RENUM   'NEW-LINENUM'  'INCREM'  'OLD-LINENUM'  'END-LINENUM'  39500002
+  REQUIRED - NONE                                                       39600020
+  DEFAULTS - BOTH 'NEW-LINENUM' AND 'INCREM' DEFAULT TO 10 .            39700020
+             'OLD-LINENUM' DEFAULTS TO THE FIRST LINE IN THE DATA SET.  39730002
+             'END-LINENUM' DEFAULTS TO THE LAST LINE IN THE DATA SET.   39760002
+  ALIAS    - REN                                                        39800020
+  NOTE     - 'NEW-LINENUM' IS REQUIRED IF 'INCREM' IS SPECIFIED.        39900020
+             BOTH ARE REQUIRED IF 'OLD-LINENUM' IS SPECIFIED.           40000020
+             SPECIFICATION OF 'END-LINENUM' REQUIRES ALL OTHER OPERANDS 40030002
+             TO BE SPECIFIED.                                           40060002
+)O OPERANDS -                                                           40100020
+  'NEW-LINENUM'                                                         40200020
+           - THE NUMBER TO BE ASSIGNED TO THE FIRST LINE PROCESSED.     40300020
+  'INCREM' - SPECIFIES THE INCREMENT TO BE USED IN RENUMBERING.         40400020
+  'OLD-LINENUM'                                                         40500020
+           - SPECIFIES A LINE NUMBER IN THE DATA SET. NEW LINE NUMBERS  40600020
+             ARE TO BE ASSIGNED BEGINNING WITH THIS LINE. THIS OPERAND  40700020
+             IS VALID ONLY WITH LINE NUMBERED DATA SETS. IF THIS        40800020
+             OPERAND IS OMITTED, THE ENTIRE DATA SET IS RENUMBERED.     40900020
+  'END-LINENUM'                                                         40910002
+           - SPECIFIES A LINE NUMBER IN THE DATA SET. THIS OPERAND IS   40920002
+             VALID ONLY WITH LINE-NUMBERED DATA SETS. NEW LINE NUMBERS  40930002
+             ARE TO BE ASSIGNED BEGINNING AT 'OLD-LINENUM' AND          40940002
+             ENDING AT 'END-LINENUM'. IF THIS OPERAND IS OMITTED,       40950002
+             RENUMBERING APPLIES FROM 'OLD-LINENUM' THROUGH THE END     40960002
+             OF THE DATA SET.                                           40970002
+=RUN=R                                                                  41000020
+)F FUNCTION -                                                           41100020
+  RUN CAN BE USED TO COMPILE, LOAD, AND EXECUTE THE SOURCE DATA SET     41200020
+  BEING EDITED. VALID ONLY WITH DATA SET TYPES ASM,                     41300000
+  VSBASIC, COBOL, PLI, FORTGI, AND GOFORT.                              41400002
+)X SYNTAX -                                                             41500020
+         RUN   'PARM'  TEST/NOTEST  LMSG/SMSG  LPREC/SPREC  CHECK/OPT   41600020
+               LIB('DSLIST') GO/NOGO  STORE/NOSTORE  PAUSE/NOPAUSE      41650002
+               SIZE('N1')                                               41670002
+  REQUIRED - NONE                                                       41700020
+  DEFAULTS - NOTEST,SMSG,SPREC,OPT,GO,NOSTORE,NOPAUSE                   41800002
+  ALIAS    - R                                                          41900020
+)O OPERANDS -                                                           42000020
+  'PARM'   - A PARAMETER STRING OF UP TO 100 CHARACTERS ENCLOSED IN     42100020
+             SINGLE QUOTES TO BE PASSED TO THE PROGRAM BEING EXECUTED,  42200020
+             AS DESCRIBED UNDER THE TOPIC 'PROGRAM MANAGEMENT' IN       42250020
+             SECTION I OF 'SUPERVISOR AND DATA MANAGEMENT SERVICES'     42300020
+             MANUAL.                                                    42350020
+))TEST     - SPECIFIES THAT TESTING WILL BE PERFORMED DURING THE        42400020
+             EXECUTION PHASE. THIS OPERAND IS VALID FOR VSBASIC         42500000
+             TYPE DATA SETS ONLY.                                       42550000
+))NOTEST   - TESTING WILL NOT TAKE PLACE DURING THE EXECUTION PHASE.    42700020
+))LMSG     - SPECIFIES THAT LONG FORM DIAGNOSTIC MESSAGES ARE REQUESTED 42800020
+             BY THE USER. LMSG IS VALID FOR GOFORT                      42900000
+             TYPE DATA SETS ONLY.                                       43000002
+))SMSG     - SHORT FORM DIAGNOSTIC MESSAGES ARE REQUESTED.              43100020
+))LPREC    - SPECIFIES THAT LONG PRECISION ARITHMETIC CALCULATIONS ARE  43200020
+             TO BE USED. LPREC IS VALID FOR VSBASIC TYPE DATA           43300000
+             SETS ONLY.                                                 43350002
+))SPREC    - SHORT PRECISION ARITHMETIC CALCULATIONS ARE TO BE USED IN  43400020
+             EXECUTING A VSBASIC LANGUAGE PROGRAM.                      43500000
+))CHECK    - SPECIFIES THAT PLI CHECKOUT COMPILER TO BE USED. CHECK IS  43600020
+             VALID FOR PLI TYPE DATA SETS ONLY.                         43700020
+))OPT      - SPECIFIES THAT PLI OPTIMIZING COMPILER TO BE USED. OPT IS  43800020
+             VALID FOR PLI TYPE DATA SETS ONLY.                         43900020
+))LIB      - SPECIFIES THAT EXTERNAL ROUTINES REQUIRED FOR EXECUTING    43950001
+             THE PROGRAM BEING EDITED ARE LOCATED IN A LIBRARY(S)       43960001
+             OTHER THAN THE LIBRARY(S) ESTABLISHED BY SYSTEM DEFAULT.   43970001
+             THIS KEYWORD IS APPLICABLE FOR ASM, COBOL, FORTGI AND      43980001
+             PLI (WHEN 'OPT' KEYWORD IS ALSO SPECIFIED OR DEFAULTED).   43992001
+  'DSLIST' - SPECIFIES A LIST OF LIBRARY DATA SET NAMES, TO BE USED     43994001
+             IN LOCATING ROUTINES REQUIRED FOR EXECUTION OF THE         43996001
+             PROGRAM BEING EDITED.  THE SYSTEM WILL SEARCH THE          43998001
+             LIBRARY(S) SPECIFIED IN THE ORDER THEY ARE SPECIFIED.      43998401
+))GO       - SPECIFIES THAT COMPILED PROGRAM IS TO BE EXECUTED. GO IS   43998602
+             VALID FOR VSBASIC DATA SETS ONLY.                          43998802
+))NOGO     - SPECIFIES THAT COMPILED PROGRAM IS NOT TO BE EXECUTED.     43999002
+             NOGO IS VALID FOR VSBASIC DATA SETS ONLY.                  43999202
+))STORE    - SPECIFIES THAT OBJ DATA SET IS TO BE CREATED. STORE IS     43999402
+             VALID FOR VSBASIC DATA SETS ONLY.                          43999602
+))NOSTORE  - SPECIFIES THAT OBJ DATA SET IS NOT TO BE CREATED.          43999802
+             NOSTORE IS VALID FOR VSBASIC DATA SETS ONLY.               44000002
+))PAUSE    - SPECIFIES THAT THE USER IS TO BE GIVEN THE CHANCE TO       44010002
+             ADD OR CHANGE CERTAIN COMPILER OPTIONS BEFORE GOING TO THE 44020002
+             NEXT CHAIN. PAUSE IS VALID FOR VSBASIC DATA SETS ONLY.     44030002
+))NOPAUSE  - SPECIFIES THAT THE USER IS NOT TO BE GIVEN THE CHANCE      44040002
+             TO ADD OR CHANGE COMPILER OPTIONS. NOPAUSE IS VALID FOR    44050002
+             VSBASIC DATA SETS ONLY.                                    44060002
+))SIZE     - SPECIFIES THE SIZE OF THE USER AREA FOR VSBASIC.           44070002
+  'N1'     - SIZE OF USER AREA                                          44080002
+=SAVE=S                                                                 44090002
+)F FUNCTION -                                                           44100020
+  SAVE IS USED TO RETAIN THE DATA SET BEING EDITED.                     44200020
+)X SYNTAX -                                                             44300020
+         SAVE   'DSNAME'/*                                              44400003
+                RENUM/REN('NEW-LINE' 'INCREM' 'OLD-LINE' 'END-LINE')    44420003
+                    OR                                                  44440003
+                UNNUM/UNN                                               44460003
+  REQUIRED - NONE                                                       44500020
+  DEFAULTS - 'DSNAME' DEFAULTS TO THE DATA SET NAME SPECIFIED WITH THE  44600020
+             EDIT COMMAND.                                              44700020
+           - BOTH 'NEW-LINE' AND 'INCREM' DEFAULT TO 10 .               44710003
+             'OLD-LINE' DEFAULTS TO THE FIRST LINE IN THE DATA SET.     44720003
+             'END-LINE' DEFAULTS TO THE LAST LINE IN THE DATA SET.      44730003
+  ALIAS    - S                                                          44740003
+  NOTE     - 'NEW-LINE' IS REQUIRED IF 'INCREM' IS SPECIFIED.           44750003
+             BOTH ARE REQUIRED IF 'OLD-LINE' IS SPECIFIED.              44760003
+             SPECIFICATION OF 'END-LINE' REQUIRES ALL OTHER OPERANDS    44770003
+             TO BE SPECIFIED.                                           44780003
+  NOTE     - 'DSNAME'/* IS REQUIRED IF EITHER RENUM OR UNNUM IS         44800003
+             SPECIFIED.                                                 44850003
+  NOTE     - SAVE MUST BE ISSUED IF THE USER WANTS TO RETAIN A NEW DATA 44900020
+             SET CREATED BY THE EDIT COMMAND, OR TO INCORPORATE INTO AN 45000020
+             OLD DATA SET CHANGES MADE UNDER EDIT.                      45100020
+)O OPERANDS -                                                           45200020
+  'DSNAME' - NAME TO BE ASSIGNED THE RETAINED COPY. IF 'DSNAME'         45300020
+           + SPECIFIES AN EXISTING PARTITIONED DATA SET (PDS), WITHOUT  45400002
+             SPECIFYING MEMBER NAME, MEMBER NAME 'TEMPNAME' IS USED.    45500020
+             A NEW MEMBER IS CREATED IF NAMED MEMBER DOES NOT EXIST.    45600020
+           + SPECIFIES AN EXISTING SEQUENTIAL DATA SET OR PDS MEMBER    45700020
+             DIFFERENT FROM THAT SPECIFIED WITH THE EDIT COMMAND, THE   45800020
+             USER WILL BE NOTIFIED. ANOTHER DATA SET NAME OR A CARRIAGE 45900020
+             RETURN CAN BE ENTERED. A CARRIAGE RETURN WILL CAUSE THE    46000020
+             SPECIFIED DATA SET OR PDS MEMBER TO BE REPLACED.           46100020
+           + SPECIFIES A DATA SET WHICH DOES NOT ALREADY EXIST, A NEW   46200020
+             SEQUENTIAL DATA SET, OR PDS IF A MEMBER NAME IS STATED,    46300020
+             WILL BE ALLOCATED.                                         46400020
+  'RENUM'  - SPECIFIES THE RENUMBERING OF ALL OR PART OF THE EDIT       46404003
+             DATA SET OR THE ASSIGNING OF A NUMBER TO EACH LINE OF      46408003
+             AN UNNUMBERED DATA SET                                     46412003
+  'UNNUM'  - SPECIFIES THE REMOVAL OF LINE NUMBERS FROM LINES OF THE    46416003
+             EDIT DATA SET                                              46420003
+  'NEW-LINE'                                                            46424003
+           - THE NUMBER TO BE ASSIGNED TO THE FIRST LINE PROCESSED.     46428003
+  'INCREM' - SPECIFIES THE INCREMENT TO BE USED IN RENUMBERING.         46432003
+  'OLD-LINE'                                                            46436003
+           - SPECIFIES A LINE NUMBER IN THE DATA SET. NEW LINE NUMBERS  46440003
+             ARE TO BE ASSIGNED BEGINNING WITH THIS LINE. THIS OPERAND  46444003
+             IS VALID ONLY WITH LINE NUMBERED DATA SETS. IF THIS        46448003
+             OPERAND IS OMITTED, THE ENTIRE DATA SET IS RENUMBERED.     46452003
+  'END-LINE'                                                            46456003
+           - SPECIFIES A LINE NUMBER IN THE DATA SET. THIS OPERAND IS   46460003
+             VALID ONLY WITH LINE-NUMBERED DATA SETS. NEW LINE NUMBERS  46464003
+             ARE TO BE ASSIGNED BEGINNING AT 'OLD-LINE' AND             46468003
+             ENDING AT 'END-LINE'. IF THIS OPERAND IS OMITTED,          46472003
+             RENUMBERING APPLIES FROM 'OLD-LINE' THROUGH THE END        46476003
+             OF THE DATA SET.                                           46480003
+=SCAN=SC                                                                46500020
+)F FUNCTION -                                                           46600020
+  SCAN IS USED TO SYNTAX CHECK A LINE OR RANGE OF LINES, OR TO CONTROL  46700020
+  WHETHER ALL SUBSEQUENT LINES ENTERED DURING INPUT MODE ARE TO BE      46800020
+  SYNTAX CHECKED. VALID ONLY FOR FORTE,FORTG,FORTGI,FORTH,GOFORT,PLIF,  46900020
+  AND PLI TYPE DATA SETS.                                               47000001
+)X SYNTAX -                                                             47100020
+         SCAN   'LINE-SPEC'/ON/OFF                                      47200020
+  REQUIRED - NONE                                                       47300020
+  DEFAULTS - NONE                                                       47400020
+  ALIAS    - SC                                                         47500020
+  NOTE     - IF NO OPERAND IS SPECIFIED, EVERY LINE OF THE DATA SET     47600020
+             BEING EDITED WILL BE SYNTAX CHECKED.                       47700020
+)O OPERANDS -                                                           47800020
+  'LINE-SPEC'                                                           47900020
+           - SPECIFIES THE LINE(S) TO BE SYNTAX CHECKED. * FOR CURRENT  48000020
+             LINE, 'LINENUM' FOR A PARTICULAR LINE, * 'COUNT' OR        48100020
+             'LINENUM1,LINENUM2' FOR A RANGE OF LINES.                  48200020
+))ON       - SUCCEEDING INPUT LINES ARE TO BE SYNTAX CHECKED.           48300020
+))OFF      - SUCCEEDING INPUT LINES ARE NOT TO BE SYNTAX CHECKED.       48400020
+=SEND=SE                                                                48412401
+)F FUNCTION -                                                           48412701
+  COMMUNICATION BETWEEN USER TERMINALS, OR BETWEEN USER TERMINAL AND    48413001
+  OPERATOR CONSOLE.                                                     48415001
+)X SYNTAX -                                                             48417501
+    SEND   ''TEXT''  USER('USERID LIST')  NOW/LOGON/SAVE  WAIT/NOWAIT   48420002
+                     OR                                                 48421002
+                     OPERATOR('ROUTING CODE')                           48422002
+                     OR                                                 48423002
+                     CN('CONSOLE IDENTIFIER')                           48424002
+  REQUIRED - ''TEXT''                                                   48427501
+  DEFAULTS - NOW, OPERATOR(2), NOWAIT,NOW                               48430002
+  ALIAS    - SE                                                         48432501
+  NOTE     - DEFAULT OF OPERATOR(2) IS FOR MASTER CONSOLE.              48435001
+)O OPERANDS -                                                           48437501
+  ''TEXT'' - MESSAGE TO BE SENT IN QUOTES.  IF AN APOSTROPHE IS TO BE   48440001
+             PART OF THE MESSAGE, IT MUST BE ENTERED AS 2 APOSTROPHES.  48442501
+))USER('USERID LIST')                                                   48445001
+           - SPECIFIES THAT THE MESSAGE IS TO BE SENT TO THE INDICATED  48447501
+             USER(S) ONLY.                                              48450001
+    'USERID LIST'                                                       48452501
+           - LIST OF USERIDS TO WHOM MESSAGE IS TO BE ROUTED.           48455001
+             IF '*' IS SPECIFIED INSTEAD OF A USERID, THE               48457501
+             USERID OF THE SENDER WILL BE SUBSTITUTED.                  48460001
+))NOW      - SPECIFIES THAT THE MESSAGE IS TO BE SENT NOW.              48462501
+))LOGON    - SPECIFIES THAT THE MESSAGE IS TO BE SENT NOW (IF USER IS   48465001
+             CURRENTLY LOGGED ON) OR SAVED IN THE BROADCAST DATA SET    48467501
+             UNTIL THE SPECIFIED USER LOGS ON.                          48470001
+))WAIT     - SPECIFIES THAT THE SENDER IS WILLING TO WAIT FOR ALL       48472501
+             INDICATED LOGGED ON USERS TO RECEIVE THE MESSAGE.          48475001
+))NOWAIT   - SPECIFIES THAT THE SENDER SHOULD NOT BE KEPT               48477501
+             WAITING IF ANY LOGGED ON USER CANNOT RECEIVE               48480001
+             THE MESSAGE IMMEDIATELY.                                   48482501
+))SAVE     - SPECIFIES THAT THE MESSAGE IS TO BE SAVED IN THE           48483302
+             BROADCAST DATASET AND NOT SENT NOW.                        48484102
+))OPERATOR('ROUTING CODE')                                              48485001
+           - SPECIFIES THE MESSAGE IS TO BE ROUTED TO THE OPERATOR.     48487501
+    'ROUTING CODE'                                                      48490001
+           - INTEGER SPECIFYING THE FUNCTIONAL CONSOLE TO WHICH MESSAGE 48492501
+             IS TO BE ROUTED USING THE INTEGER AS A ROUTING CODE.       48495001
+))CN('CONSOLE IDENTIFIER')                                              48495802
+           - SPECIFIES THE MESSAGE IS TO BE SENT TO AN OPERATOR         48496602
+             CONSOLE.                                                   48497502
+    'CONSOLE IDENTIFIER'                                                48501502
+           - INTEGER SPECIFYING THE CONSOLE NUMBER. THIS NUMBER IS      48505502
+             APPENDED TO ANY MESSAGE SENT FROM AN OPERATOR CONSOLE.     48509502
+                                                                        48513502
+=SUBMIT=SUB                                                             48517502
+)F FUNCTION -                                                           48521502
+  THE SUBMIT SUBCOMMAND IS USED TO ENTER JOB(S)                         48525502
+  INTO THE BACKGROUND FROM A TERMINAL.                                  48533201
+  SUBMIT WILL ISSUE A JOB SUBMITTED MESSAGE                             48535202
+  FOR EACH JOB IN THE DATA SET LIST.                                    48537203
+)X SYNTAX  -                                                            48543201
+         SUBMIT   (DSLIST) NOTIFY/NONOTIFY                              48553203
+  REQUIRED - NONE. BUT IF OPERANDS ARE ENTERED, THE DSLIST POSITIONAL   48557203
+             PARAMETER IS REQUIRED.                                     48561203
+  DEFAULTS - NOTIFY IF JOB CARDS ARE GENERATED AND *, FOR THE EDIT      48565203
+             DATASET IF NO OPERANDS ARE ENTERED.                        48565403
+  ALIAS    - SUB                                                        48565601
+)O OPERANDS                                                             48566001
+  (DSLIST) - LIST OF DATA SET(S) CONTAINING JOB(S) TO BE                48569003
+             SUBMITTED, WITH DATA SETS SEPARATED BY                     48572003
+             BLANKS OR COMMAS. AN '*' IS USED TO REPRESENT THE          48575003
+             NAME OF THE DATASET CURRENTLY BEING EDITED.                48578003
+           - THE PARENTHESES AREN'T NEEDED WHEN ONE DATA SET            48581003
+             IS SPECIFIED.                                              48584003
+           - SUBMIT WILL ISSUE A JOBNAME(JOBID) SUBMITTED MESSAGE       48588703
+             FOR EACH JOB. JOBID IS THE UNIQUE JOB IDENTIFIER           48593703
+             ASSIGNED BY THE JOB ENTRY SUBSYSTEM.                       48600003
+))NOTIFY   - GENERATED JOB CARDS TO INCLUDE NOTIFY=USERID KEYWORD.      48608003
+             WHEN THE NOTIFY KEYWORD IS PLACED ON THE JOB CARD          48616003
+             THE USER, IF HE IS IN INTERCOM MODE, WILL RECEIVE A        48624003
+             MESSAGE WHEN HIS JOB HAS COMPLETED RUNNING IN THE          48632003
+             BACKGROUND.  IF THE USER IS IN NO INTERCOM MODE THE        48640003
+             MESSAGE WILL BE PLACED IN THE BROADCAST DATA SET.          48648003
+             TO GET THE MESSAGE THE USER MUST ISSUE THE COMMAND         48656003
+             LISTBC.                                                    48664003
+))NONOTIFY - GENERATED JOB CARDS NOT TO INCLUDE NOTIFY KEYWORD.         48672003
+=TABSET=TAB                                                             48680003
+)F FUNCTION -                                                           48688003
+  TABSET CAN BE USED TO RE-ESTABLISH TAB VALUES OR TO NULLIFY EXISTING  48700020
+  TAB VALUES.                                                           48800020
+)X SYNTAX -                                                             48900020
+         TABSET   ON('INTEGER-LIST')/OFF/IMAGE                          49000020
+  REQUIRED - NONE                                                       49100020
+  DEFAULTS - ON                                                         49200020
+  ALIAS    - TAB                                                        49300020
+)O OPERANDS -                                                           49400020
+))ON('INTEGER-LIST')                                                    49500020
+           - SPECIFIES THAT THE TAB CHARACTER IS TO BE TRANSLATED INTO  49600020
+             BLANKS CORRESPONDING TO THE CARD IMAGE FIELD.              49700020
+    'INTEGER-LIST'                                                      49800020
+           - SPECIFIES THE RELATIVE COLUMN POSITIONS IN EACH LINE TO    49900020
+             WHICH TAB VALUES ARE TO BE SET. THIS OPERAND IS OPTIONAL.  50000020
+             IF OMITTED, TAB VALUES DEFAULT TO THE PREVIOUS VALUES. UP  50100020
+             TO TEN TAB VALUES CAN BE SET.                              50200020
+))OFF      - TAB CHARACTERS ARE TO BE TRANSLATED INTO SINGLE BLANKS.    50300020
+))IMAGE    - SPECIFIES THAT THE USER WILL FOLLOW THE SUBCOMMAND WITH A  50400020
+             NEW INPUT LINE DEFINING TAB VALUES TO BE SET. THIS LINE    50500020
+             CONSISTS OF THE UPPER OR LOWER CASE LETTER T IN THOSE      50600020
+             COLUMN POSITIONS FOR WHICH TAB VALUES ARE TO BE SET. UP TO 50700020
+             TEN TAB VALUES CAN BE SET. THE OTHER POSITIONS OF THIS     50800020
+             INPUT LINE MAY BE BLANK OR ANY OTHER CHARACTER EXCEPT T .  50900020
+=TOP                                                                    51000020
+)F FUNCTION -                                                           51100020
+  TOP CAUSES THE CURRENT LINE POSITION INDICATOR * TO BE POSITIONED     51200020
+  BEFORE THE FIRST LINE OF THE DATA SET, OR AT LINE ZERO IF IT EXISTS.  51300020
+)X SYNTAX -                                                             51400020
+         TOP                                                            51500020
+  REQUIRED - NONE                                                       51600020
+  DEFAULTS - NONE                                                       51700020
+)O OPERANDS -                                                           51800020
+  NONE                                                                  51900020
+=UNNUM=UNN                                                              51908003
+)F FUNCTION -                                                           51916003
+  THE UNNUM SUBCOMMAND IS USED TO REMOVE LINE NUMBERS FROM              51924003
+  RECORDS IN A DATA SET.                                                51932003
+)X SYNTAX -                                                             51940003
+         UNNUM                                                          51948003
+  REQUIRED - NONE                                                       51956003
+  DEFAULTS - NONE                                                       51964003
+  ALIAS    - UNN                                                        51972003
+)O OPERANDS -                                                           51980003
+  NONE                                                                  51988003
+=UP                                                                     52000020
+)F FUNCTION -                                                           52100020
+  UP MOVES THE CURRENT LINE POINTER * TOWARD THE BEGINNING OF THE DATA  52200020
+  SET.                                                                  52300020
+)X SYNTAX -                                                             52400020
+         UP   'COUNT'                                                   52500020
+  REQUIRED - NONE                                                       52600020
+  DEFAULTS - 'COUNT' DEFAULTS TO 1 .                                    52700020
+)O OPERANDS -                                                           52800020
+  'COUNT'  - SPECIFIES THE NUMBER OF LINES THAT THE CURRENT LINE        52900020
+             POINTER * IS TO BE MOVED.                                  53000020
+=VERIFY=V                                                               53100020
+)F FUNCTION -                                                           53200020
+  THE VERIFY SUBCOMMAND CONTROLS WHETHER OR NOT CHANGES IN THE SETTING  53300020
+  OF THE CURRENT LINE POINTER * OR MODIFICATIONS MADE UNDER THE CHANGE  53400020
+  SUBCOMMAND WILL BE VERIFIED.                                          53500020
+)X SYNTAX -                                                             53600020
+         VERIFY   ON/OFF                                                53700020
+  REQUIRED - NONE                                                       53800020
+  DEFAULTS - ON                                                         53900020
+  ALIAS    - V                                                          54000020
+)O OPERANDS -                                                           54100020
+))ON       - SPECIFIES THAT EACH TIME THE POSITION OF THE CURRENT LINE  54200020
+             POINTER * CHANGES, THE LINE TO WHICH IT MOVES SHOULD BE    54300020
+             PRINTED, EXCEPT IN THOSE CASES WHEN THAT LINE IS ALREADY   54400020
+             PRINTED IMMEDIATELY PRIOR TO THE CHANGE. IN ADDITION,      54500020
+             MODIFICATIONS MADE IN FIELDS OF RECORDS USING THE          54600020
+             'CHARACTER-STRING' OR 'TEXT' FORMS OF THE CHANGE           54700020
+             SUBCOMMAND ARE VERIFIED.                                   54800020
+))OFF      - CHANGES OF THE POSITION OF THE CURRENT LINE POINTER *, AND 54900020
+             OF FIELDS OF RECORDS BY MEANS OF THE CHANGE SUBCOMMAND,    55000020
+             ARE NOT TO BE VERIFIED.                                    55100020

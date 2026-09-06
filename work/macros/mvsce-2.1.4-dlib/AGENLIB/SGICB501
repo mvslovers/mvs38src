@@ -1,0 +1,35 @@
+         MACRO                                                          00050003
+         SGICB501                                                       00100003
+.* /* START OF SPECIFICATIONS ****                            @Y30LB27  00150003
+.*                                                            @Y30LB27  00200003
+.*01  MODULE-NAME = SGICB501                                  @Y30LB27  00250003
+.*                                                            @Y30LB27  00300003
+.*01  DESCRIPTIVE-NAME = MSVC VS/2 SYSGEN LINKLIB COPY MACRO  @Y30LB27  00350003
+.*                                                            @Y30LB27  00400003
+.*01  STATUS = OS/VS2 RELEASE 3, 07/08/74, LEVEL 0            @Y30LB27  00450003
+.*                                                            @Y30LB27  00500003
+.*01  FUNCTION = SGICB501 COPIES THE MSSC MODULES ICBINIT               00550003
+.*               INTO THE TARGET SYS1.LINKLIB FROM THE SYSGEN           00600003
+.*               DISTRIBUTION LIBRARY SYS1.AOSD0.             @Y30LB25  00650003
+.*                                                            @Y30LB27  00700003
+.*01  OPERATION = VIA THE ASSEMBLER PUNCH COMMAND, IEBCOPY              00750003
+.*                SELECT STATEMENTS ARE GENERATED FOR THE MODULE.       00800003
+.*                                                            @Y30LB27  00850003
+.*01  MODULE-TYPE = MACRO                                     @Y30LB27  00900003
+.*02    PROCESSOR = ASSEMBLER XF                              @Y30LB27  00950003
+.*02    MACRO-SIZE = 6 STATEMENTS                             @Y30LB27  01000003
+.*                                                            @Y30LB27  01050003
+.*01  OUTPUT = IEBCOPY JCL AND CONTROL STATEMENTS             @Y30LB27  01100003
+.*                                                            @Y30LB27  01150003
+.*01  INNER-MACRO = SGGBLPAK - DEFINE SYSTEM GLOBALS          @Y30LB27  01200003
+.*                                                            @Y30LB27  01250003
+.*01  MESSAGES = NONE                                         @Y30LB27  01300003
+.*                                                            @Y30LB27  01350003
+.*01  CHANGE-ACTIVITY                                         @Z40LB25  01360003
+.*       CHANGE 01 10/1/75             DISPLAY 3850           @Z40LB25  01370003
+.*                                                            @Z40LB25  01380003
+.**** END OF SPECIFICATIONS ***/                              @Y30LB27  01400003
+         COPY  SGGBLPAK                DEFINE SYSTEM GLOBAL VARIABLES   01450003
+ PUNCH ' COPY  OUTDD=LINKLIB,INDD=AOSD0'                      @Y30LB27  01500003
+ PUNCH ' SELECT MEMBER=(ICBINIT)'                             @Z40LB25  01550003
+         MEND                                                           01600003

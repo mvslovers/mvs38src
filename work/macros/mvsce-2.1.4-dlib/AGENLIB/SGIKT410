@@ -1,0 +1,92 @@
+         MACRO                                                          00050000
+         SGIKT410                                                       00100000
+         AGO  .START                                                    00150000
+.* /* START OF SPECIFICATIONS ****                                      00200000
+.*                                                                      00250000
+.*01*  MODULE-NAME = SGIKT410                                           00300000
+.*                                                                      00350000
+.*01*  DESCRIPTIVE-NAME = SYSGEN MACRO FOR TSO/VTAM                     00400000
+.*                                                                      00450000
+.*                                                                      00500000
+.*01*  COPYRIGHT = NONE                                                 00550000
+.*                                                                      00600000
+.*01*  STATUS = OS/VS2  SU 58 TSO/VTAM LEVEL 2.0               @G58AK3A 00650000
+.*                                                                      00700000
+.*01*  FUNCTION = THIS MARCO IS CALLED BY SGIKJ4EC.  IT WILL            00750000
+.*                INCLUDE ALL CSECTS FOR I/O MANAGERS PERTAINING TO     00800000
+.*                TSO/VTAM.                                             00850000
+.*                                                                      00900000
+.*01*  NOTES = NONE                                                     00950000
+.*                                                                      01000000
+.*02*    CHARACTER-CODE-DEPENDENCIES = NONE                             01050000
+.*                                                                      01100000
+.*02*    DEPENDENCIES = MVS SYSTEM ONLY                                 01150000
+.*                                                                      01200000
+.*02*    RESTRICTIONS = NONE                                            01250000
+.*                                                                      01300000
+.*01*  MODULE-TYPE = MACRO                                              01350000
+.*                                                                      01400000
+.*02*    PROCESSOR = ASSEMBLER                                          01450000
+.*                                                                      01500000
+.*02*    MACRO-SIZE =        35         STATEMENTS                      01550000
+.*                                                                      01600000
+.*02*    PARAMETER-RECEIVED = NONE                                      01650000
+.*                                                                      01700000
+.*01*  EXTERNAL-REFERENCES = NONE                                       01750000
+.*                                                                      01800000
+.*01*  TABLES = NONE                                                    01850000
+.*                                                                      01900000
+.*01*  INNER-MACROS = NONE                                              01950000
+.*                                                                      02000000
+.*01*  SYSTEM-MACROS = NONE                                             02050000
+.*                                                                      02100000
+.*01*  CHANGE-ACTIVITY = SEPT 1977 TIOC/VTIOC SPLIT            @ZA25677 02150000
+.*                                                                      02190000
+.**** END OF SPECIFICATIONS ***/                                        02230000
+.START   ANOP                                                           02270000
+         GBLC  &CI555                                          @ZA25677 02310000
+ PUNCH ' INCLUDE &CI555.(IKTQMIN)'                              Z40DSVN 02400000
+ PUNCH ' ENTRY IKTQMIN,IKTQMOUT'                                Z40DSVN 02450000
+ PUNCH ' ALIAS IKTQMOUT'                                        Z40DSVN 02500000
+ PUNCH ' NAME  IKTQMIN(R)'                                      Z40DSVN 02550000
+.*                                                                      02600000
+ PUNCH ' INCLUDE &CI555.(IKTEXIT,IKTIOFRR,IKTIST00)'           @ZM20856 02650000
+ PUNCH ' ENTRY IKTEXIT,IKTIOFRR'                               @G58AK3A 02700000
+ PUNCH ' ALIAS IKTEXIT,IKTIOFRR,IKTIST00'                      @ZM20856 02750000
+ PUNCH ' NAME IKTIOM00(R)'                                     @G58AK3A 02800000
+.*                                                                      02850000
+ PUNCH ' INCLUDE &CI555.(IKTTIMRT,IKTTOMRT)'                    Z40DSVN 02900000
+ PUNCH ' ENTRY IKTTIMRT,IKTTOMRT'                               Z40DSVN 02950000
+ PUNCH ' ALIAS IKTTIMRT,IKTTOMRT'                               Z40DSVN 03000000
+ PUNCH ' NAME  IKTIOM01(R)'                                     Z40DSVN 03050000
+.*                                                                      03100000
+ PUNCH ' INCLUDE &CI555.(IKTIMIDS,IKTOMIDS)'                    Z40DSVN 03150000
+ PUNCH ' INCLUDE &CI555.(IKTATTN,IKT3270I,IKT3270O)'           @G58AK3A 03200000
+ PUNCH ' ENTRY IKTIMIDS,IKTOMIDS'                               Z40DSVN 03240000
+ PUNCH ' ALIAS IKTIMIDS,IKTOMIDS'                               Z40DSVN 03280000
+ PUNCH ' ALIAS IKTATTN,IKT3270I,IKT3270O'                      @G58AK3A 03320000
+ PUNCH ' NAME  IKTIOM02(R)'                                     Z40DSVN 03360000
+.*                                                                      03400000
+ PUNCH ' INCLUDE &CI555.(IKTIMLU2,IKTOMLU2)'                   @G58AK3A 03440000
+ PUNCH ' ENTRY IKTIMLU2,IKTOMLU2'                              @G58AK3A 03480000
+ PUNCH ' ALIAS IKTIMLU2,IKTOMLU2'                              @G58AK3A 03520000
+ PUNCH ' NAME  IKTIOM03(R)'                                    @G58AK3A 03560000
+.*                                                                      03700000
+ PUNCH ' INCLUDE &CI555.(IKTTOMJR)'                             Z40DSVN 03750000
+ PUNCH ' ENTRY IKTTOMJR'                                        Z40DSVN 03800000
+ PUNCH ' NAME  IKTTOMJR(R)'                                     Z40DSVN 03850000
+.*                                                                      03900000
+ PUNCH ' INCLUDE &CI555.(IKTASCII)'                             Z40DSVN 03950000
+ PUNCH ' ENTRY IKTASCII'                                        Z40DSVN 04000000
+ PUNCH ' NAME  IKTASCII(R)'                                     Z40DSVN 04050000
+.*                                                                      04100000
+ PUNCH ' INCLUDE &CI555.(IKTLTERM)'                             Z40DSVN 04150000
+ PUNCH ' ENTRY IKTLTERM'                                        Z40DSVN 04200000
+ PUNCH ' ALIAS IKTTPEND'                                       @ZM21019 04220000
+ PUNCH ' NAME  IKTLTERM(R)'                                     Z40DSVN 04250000
+.*                                                                      04300000
+ PUNCH ' INCLUDE &CI555.(IKTMSGS)'                              Z40DSVN 04350000
+ PUNCH ' ENTRY IKTMSGS'                                         Z40DSVN 04400000
+ PUNCH ' NAME  IKTMSGS(R)'                                      Z40DSVN 04450000
+.*                                                                      04500000
+         MEND                                                   Z40DSVN 04550000

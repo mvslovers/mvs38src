@@ -1,0 +1,125 @@
+         MACRO                                                          00050002
+         SGIEC500                                                       00100002
+         COPY  SGGBLPAK            COPY THE GLOBAL PACK                 00150064
+         LCLA  &I,&W                                                    00200064
+         LCLC  &C,&T                                                    00250064
+.***** START OF SPECIFICATIONS **************************************   00300064
+.*                                                                      00350064
+.* MODULE NAME - SGIEC500                                               00400064
+.*                                                                      00450064
+.* DESCRIPTIVE NAME - INCLUDE ERP/LPA MODULES FOR SYSGENED DEVICES      00500064
+.*                                                                      00550064
+.* COPYRIGHT - NONE                                                     00600064
+.*                                                                      00650064
+.* STATUS - CHANGE LEVEL 00                                             00700064
+.*                                                                      00750064
+.* FUNCTION -                                                           00800064
+.*   THIS MACRO SCANS THE DIT. FOR EVERY ENTRY WHICH HAS BEEN           00850064
+.*   GENERATED, THE ERP AND LPA MODULES SPECIFIED IN THE ENTRY ARE      00900064
+.*   INCLUDED INTO THE SYSTEM BY PUNCHING IEBCOPY CONTROL STATEMENTS.   00950064
+.*                                                                      01000064
+.*   THIS MACRO IS INVOKED BY GENERATE.                                 01050064
+.*                                                                      01100064
+.* NOTES - N/A                                                          01150064
+.*                                                                      01200064
+.* MODULE TYPE - MACRO                                                  01250064
+.*                                                                      01300064
+.* ENTRY POINT - N/A                                                    01350064
+.*                                                                      01400064
+.* INPUT -                                                              01450064
+.*         NO PARAMETERS ARE PASSED DIRECTLY.                           01500064
+.*                                                                      01550064
+.*         THE FOLLOWING GLOBALS ARE USED-                              01600064
+.*           &SGCPRGB(8)    - VS2 SYSTEM BEING GENERATED                01650064
+.*           &SGDITDA       - NUMBER OF DIT ENTRIES TO BE SEARCHED      01700064
+.*           &SGGENDB(1-X)  - DEVICE OF THIS GENERIC HAS BEEN GENNED    01750064
+.*           &SGERPDC(1-X)  - DLIB NAME FOR ERP MODULES                 01800064
+.*           &SGERPMC(1-X)  - ERP MODULE NAMES TO BE INCLUDED           01850064
+.*           &SGLPADC(1-X)  - DLIB NAME FOR LPA MODULES                 01900064
+.*           &SGLPAMC(1-X)  - LPA MODULE NAMES TO BE INCLUDED           01950064
+.*                 (WHERE X IS THE VALUE OF &SGDITDA)                   02000064
+.*                                                                      02050064
+.* OUTPUT -                                                             02100064
+.*       THE FOLLOWING GLOBALS ARE SET -                                02150064
+.*           &SGQUITB         - QUIT SWITCH IF AN INVALID NAME          02200064
+.*                              LIST IS FOUND                           02250064
+.*                                                                      02300064
+.*                                                                      02350064
+.*       LOCALS USED ARE -                                              02400064
+.*          &I - USED AS LOOP VARIABLE THROUGH DIT. POINTS TO           02450064
+.*               ENTRY BEING PROCESSED.                                 02500064
+.*          &W - WORK VARIABLE. USED TO VALIDITY CHECK LENGTH           02550064
+.*               OF LPA/ERP NAMES. ALSO USED TO LOOP THROUGH            02600064
+.*               LPA/ERP CHARACTER STRINGS.                             02650064
+.*          &C - CHARACTER WORK VARIABLE. USED TO CONTAIN CURRENT       02700064
+.*               LPA/ERP NAME TO BE PUNCHED.                            02750064
+.*          &T - CHARACTER WORK VARIABLE. USED TO CONTAIN CURRENT       02800064
+.*               ITEM (LPA OR ERP) BEING PROCESSED. PLACED IN           02850064
+.*               MNOTE IF AN ERROR OCCURS.                              02900064
+.*                                                                      02950064
+.*                                                                      03000064
+.*                                                                      03050064
+.* EXIT, NORMAL - N/A                                                   03100064
+.*                                                                      03150064
+.* EXIT, ERROR - N/A                                                    03200064
+.*                                                                      03250064
+.* EXTERNAL REFERENCES - N/A                                            03300064
+.*                                                                      03350064
+.* TABLES - DEVICE INFORMATION TABLE (DIT)                              03400064
+.*                                                                      03450064
+.* MACROS - N/A                                                         03500064
+.*                                                                      03550064
+.* CHANGE ACTIVITY - N/A                                                03600064
+.*                                                                      03650064
+.*A-000000-999999                                              @G64HPLP 03700064
+.***** END OF SPECIFICATIONS ****************************************** 03710064
+.LP      ANOP                                                           03750064
+&I       SETA  &I+1                INCREMENT LOOP VARIABLE              03800064
+         AIF   (&I GT &SGDITDA).MEND EXIT IF DONE WITH DIT              03850064
+.* IF THE DEVICE HAS NOT BEEN SYSGENED GO TO THE NEXT ENTRY.            03900064
+.* IF THE DEVICE IS DUMMY (&I=76) THEN &SGGENDB WILL NOT                03905064
+.* BE ON AND THE ENTRY SHOULD BE PROCESSED TO GET DUMMY SUPPORT         03910064
+.* INTO THE SYSTEM. THE &SGGENDB CANNOT BE SET FOR DUMMY                03915064
+.* BECAUSE ALLOCATION REQUIRES IT. DUMMY DEVICES ARE PROCESSED          03920064
+.* FOR ALLOCATION IN A DIFFERENT WAY. SEE ALLOCATION MACROS FOR         03925064
+.* SUPPORT.                                                             03930064
+         AIF   (&I EQ 76).LP1           DUMMY ENTRY IS 76.     @ZM49050 03935064
+         AIF   (NOT &SGGENDB(&I)).LP                           @ZM49050 03938064
+.LP1     ANOP                                                  @ZM49050 03941064
+.*             SKIP ERPS IF MODULE NAME LIST OR DLIB IS NULL            03950064
+         AIF   (K'&SGERPMC(&I) EQ 0 OR K'&SGERPDC(&I) EQ 0).TLPA        04000064
+&T       SETC  'ERP'               INDICATE ERP LIST BEING PROCESSED    04050064
+&W       SETA  1+K'&SGERPMC(&I)    1+NUMBER OF CHARS SPECIFIED          04100064
+         AIF   (&W-&W/9*9 NE 0).ERROR ERROR IF LENGTH NOT MULT OF 9     04150064
+&W       SETA  1                                                        04200064
+         PUNCH '      COPY OUTDD=&SGCTRLC(36),INDD=&SGERPDC(&I)        *04250064
+               DEVICE=&SGGNRIC(&I)'                            @ZM49120 04260064
+.ERPLP   ANOP                                                           04300064
+&C       SETC  '&SGERPMC(&I)'(&W,8)                                     04350064
+         PUNCH '         SELECT MEMBER=&C'                              04400064
+&W       SETA  &W+9                INCREMENT TO NEXT NAME IN LIST       04450064
+         AIF   (&W LT K'&SGERPMC(&I)).ERPLP CONTINUE IF ANY MORE        04500064
+.TLPA    ANOP                                                           04550064
+.*             SKIP TEST FOR LPA IF NOT A VS2 SYSTEM                    04600064
+         AIF   (NOT &SGCPRGB(8)).LP                                     04650064
+.*             SKIP LPA MODULES IF MODULE NAME LIST OR DLIB IS NULL     04700064
+         AIF   (K'&SGLPAMC(&I) EQ 0 OR K'&SGLPADC(&I) EQ 0).LP          04750064
+&T       SETC  'LPA'               INDICATE LPA LIST BEING PROCESSED    04800064
+&W       SETA  1+K'&SGLPAMC(&I)    1+NUMBER OF CHARS SPECIFIED          04850064
+         AIF   (&W-&W/9*9 NE 0).ERROR ERROR IF LENGTH NOT MULT OF 9     04900064
+&W       SETA  1                                                        04950064
+         PUNCH '  COPY OUTDD=&SGCTRLC(36),INDD=&SGLPADC(&I)            *05000064
+               DEVICE=&SGGNRIC(&I)'                            @ZM49120 05010064
+.LPALP   ANOP                                                           05050064
+&C       SETC  '&SGLPAMC(&I)'(&W,8)                                     05100064
+         PUNCH '         SELECT MEMBER=&C'                              05150064
+&W       SETA  &W+9                INCREMENT TO NEXT NAME IN LIST       05200064
+         AIF   (&W LT K'&SGLPAMC(&I)).LPALP CONTINUE IF ANY MORE        05250064
+         AGO   .LP                 PROCESS NEXT DIT ENTRY               05300064
+.*      ERROR IN NAME LIST--INCORRECT FORMAT                            05350064
+.ERROR   ANOP                                                           05400064
+         MNOTE 5,'SGIEC500--&T NAME LIST INVALID FOR DIT ENTRY &I, GENEX05450064
+               RIC=&SGGNRIC(&I)'                                        05500064
+&SGQUITB SETB  1                                                        05550064
+         AGO   .LP                 PROCESS NEXT DIT ENTRY               05600064
+.MEND    MEND                                                           05650064

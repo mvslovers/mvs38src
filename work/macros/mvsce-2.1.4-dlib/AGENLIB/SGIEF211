@@ -1,0 +1,960 @@
+         MACRO                                                          00020000
+         SGIEF211                                                       00040000
+.************************************************************* @G64IPSJ 00044064
+.*                                                             @G64IPSJ 00045064
+.* MACRO  -  SGIEF211                                          @G64IPSJ 00046064
+.*                                                             @G64IPSJ 00047064
+.* CHANGE LEVEL = 09/11/74                                     @ZM30431 00051464
+.*              = 07/24/74                                     @Z30ANSF 00053003
+.*              = 11/14/74                                     @ZA02137 00054003
+.*              = 10/16/75                                     @Z40MPSR 00054204
+.*              = 10/16/75                                     @Z40KPSR 00054404
+.*              = 10/16/75                                     @Z30RSSR 00054604
+.*              = 01/14/76                                     @ZA08476 00054751
+.*              = 04/02/76                                     @ZA08476 00055151
+.*              = 06/16/76                                     @G29ANSJ 00056451
+.*              = 09/14/76                                     @G30HNSM 00056851
+.*              = 11/18/76 - VS2 SU 16 - IN THIS MACRO         @G16APPK 00057251
+.*                           SUPPORTS MOHAWK (SU 30 - G30HNSM) @G16APPK 00057651
+.*                           AND VPSS SUPPORT (SU 29 -         @G16APPK 00058051
+.*                                                 G29ANSJ)    @G16APPK 00058151
+.*              = 01/24/77                                     @ZA15722 00058251
+.*                          OZ20637, OZ20985, OZ27513, OZ27515 @ZA27515 00058364
+.*                          OZ28566, OZ28953, OZ28977, OZ29777 @ZA29777 00058464
+.*              = 03/01/77   VS2 SYSTEM CONTROL PROGRAM 2      @G64IPSJ 00058664
+.*              = 10/04/79 - PUNCH STMTS FOR SGIEF013 MODIFIED @ZA40929 00058846
+.*                           TO ALLOW 3 DIGIT PARAMETERS       @ZA40929 00059046
+.*C018784                                                      @ZA02137 00059364
+.*A016617                                                      @Y30OPSF 00059651
+.*A016618-016620                                               @Y30LPSF 00060003
+.*                                                             @YM07827 00068003
+.*                                                             @YM04968 00076003
+.*                                                             @YM04743 00082003
+.*                                                             @YM04744 00085003
+.*                                                             @YM02527 00088003
+.*                                                               Y02667 00094003
+.*A013841,013849                                                 Y01122 00100003
+.*A01562000,01878421                                             Y01948 00106003
+.* FUNCTION - THIS MACRO BUILDS THE DEVICE NAME AND MASK       @G64IPSJ 00107064
+.*            TABLES AND THE DEVICE POINTER TABLE.  IT ALSO    @G64IPSJ 00127064
+.*            CALCULATES THE UCB LOOK UP TABLE OFFSETS WHICH   @G64IPSJ 00147064
+.*            IS USED BY THE EDT BUILD ROUTINE SGIEF213.       @G64IPSJ 00167064
+.*                                                             @G64IPSJ 00187064
+.* OPERATION -                                                 @G64IPSJ 00207064
+.*  MAIN SEQUENCE OF EVENTS IN THIS MACRO                               00227064
+.*       COPY SGASMPAK FOR ASSEMBLY OF DEVICE NAME TABLE.               00247064
+.*       PUNCH    DEVNAMET CSECT                                        00267064
+.*       CALL SGIEF212                                         @G64IPSJ 00287064
+.*       MAKE SGDFXXB SWITCHES REPRESENT SGDAPXB SWITCHES FOR EACH DEV. 00307064
+.*       SET APCHAN(X) TO NUMBER OF OPTIONAL PATHS ON CHANNEL X.        00327064
+.*       CALCULATE UCBLOOKUP VALUE FOR EACH DEVICE AND PLACE THE VALUE  00347064
+.*          IN THE CORRESPONDING &SGDAUPA ARRAY ELEMENT.       @G64IPSJ 00367064
+.*                                                                      00540000
+.*       ENTRIES=NO. OF SUPPORTED DEVICES SYSGENED +             Y02667 00560002
+.*               NO. OF SUPPORTED TYPES GENERATED (TAPES) +      Y02667 00570002
+.*               NO. OF UNITNAMES.                               Y02667 00580002
+.*       PUNCH             DC   F'ENTRIES'                              00600000
+.*       PUNCH SGIEF011 TYPE,0,ADDRESS FOR EACH SUPPORTED DEVICE.       00620000
+.*       PUNCH SGIEF011 TYPE,TYPE FOR EACH SUPPORTED TYPE IN SYSTEM.    00640000
+.*       PUNCH SGIEF013 N,TYPE1,TYPE2,...,TYPEN  FOR EACH UNITNAME      00660000
+.*       PUNCH SGIEF011 0,0,UNITNAME             FOR EACH UNITNAME      00680000
+.*       PUNCH      END  AND   /*  CARDS.                               00700000
+.*       COPY SGASMPAK FOR ASSEMBLY OF DEVICE MASK TABLE.               00720000
+.*       PUNCH    DEVMASKT CSECT                                        00740000
+.*       PUNCH    DC H'ENTRIES'  AND   DC  H'ENTRIES+1'                 00760000
+.*       CALL SGIEF212 FOR EACH SUPPORTED DEVICE TYPE.                  00780000
+.*       RETURN=2                                                       00840000
+.*       PUNCH SGIEF012 TYPE,NUMBER,MASK FOR EACH SUPPORTED DEVICE TYPE 00860000
+.*       RETURN=3                                                       00880000
+.*       PUNCH SGIEF013 N,TYPE1,TYPE2,...,TYPEN FOR EACH UNITNAME.      00900000
+.*       PUNCH SGIEF012 0,NUMBER,MASK           FOR EACH UNITNAME.      00920000
+.*       RETURN=4                                                       00940000
+.*       PUNCH SGIEF013 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0               00960000
+.*       PUNCH SGIEF012 0,NUMBER,MASK   MASK OF ALL DIRECT ACCESS DEVCS 00980000
+.*                                                             @G64IPSJ 00980664
+.* ENTRY POINT - SGIEF211 FROM SGIEF213                        @G64IPSJ 00981164
+.*                                                             @G64IPSJ 00981664
+.* EXIT - TO CALLER                                            @G64IPSJ 00982164
+.*                                                             @G64IPSJ 00982664
+.* EXTERNAL REFERENCES - SGGBLPAK  -  GLOBAL DATA AREA         @G64IPSJ 00983164
+.*                       CONVERT   -  HEX TO EBCDIC CONVERT RTN@G64IPSJ 00983664
+.*                                                             @G64IPSJ 00984164
+.* MNOTE - * * * IEIGEN052 ADDRESS VALUE &EBCDIC SPECIFIED     @G64IPSJ 00984664
+.*         * * *       WITH UNIT NAME &SGUNNMC(&ESNINDX) NOT   @G64IPSJ 00985164
+.*         * * *       DEFINED ON IODEVICE STATEMENT           @G64IPSJ 00985664
+.*                                                             @G64IPSJ 00986164
+.************************************************************* @G64IPSJ 00986664
+         COPY  SGGBLPAK                                                 00987164
+         LCLA  &A,&B,&C,&X,&NXF,&NUA,&NCU,&OUA,&OCU            @G64IPSJ 00987664
+         LCLA  &INTALPH,&VALUE,&V,&ENTRIES,&ESNINDX,&COUNTER,&TEST1,&XX 00989664
+         LCLA  &TEST4,&G(16),&RETURN,&U,&W,&DUPLI1,&DUPLI2,&UCBLSTV,&D  00990264
+         LCLA  &ALTLIST(1917),&AINDX,&ACOUNT,&I,&J,&KK,&MM,&T  @ZA15722 00990864
+         LCLA  &CUINDX,&OCHAN,&NCHAN                               I237 00991464
+         LCLB  &EOALTS,&IRSW,&ALTSW,&LSTDEV                        I237 00992064
+         LCLB  &FH                                             @G64IPSJ 00992664
+         LCLC  &K(2),&L(128)                                   @ZA15722 00993064
+         LCLC  &CONT,&COMPATC,&TEMPVAL                         @G64IPSJ 00993464
+ LCLC  &CONTI,&CONTI1,&CON2,&CON3,&CON4                            000G 00994464
+ LCLC  &CON5,&CON6,&CON7,&CON8                                 @Z30ANSF 00995064
+ LCLC  &CON9,&CONA,&CONB,&CONC,&COND,&CONE,&CONF,&CONG,&CONH   @ZA15722 00995664
+         LCLA  &COUNT                                                   00996264
+         LCLB  &TBP                                               19022 00996864
+         LCLA  &EXTRA,&SVEXTRA,&NUMBENT                        @G64IPSJ 00997464
+         ACTR  1700000                                         @ZA15722 00998064
+&SGCTRLC(6)    SETC 'IEFWMAS1'                                          01000000
+         COPY  SGASMPAK                                                 01020000
+         PUNCH 'DEVNAMET CSECT'                                         01040000
+         SGIEF212                       CALL TO PROCESS ADDR BOXES      01065064
+.*                                                             @G64IPSJ 01070064
+ PUNCH '               LAST'                                            01880000
+.*                                                                      01910018
+.*   THE FOLLOWING ROUTINE WILL TEST TO SEE IF DEVICE IS SUPPORTED      01920018
+.*   BY TESTING BIT 31 OF ITS SGDADRA BOX.  IF BIT 31 IS ON TURN IT     01930018
+.*   OFF.  IF BIT 31 IS OFF, CLEAR BITS 23-30 AS WELL.  BITS 23-30      01940018
+.*   OF SUPPORTED DEVICES HAVE BEEN SET TO THE UNIQUE DEVICE TYPE       01950018
+.*   VOLUE IN SGIEF212.                                                 01960018
+.*                                                                      01970018
+&AINDX   SETA  1                        INITIALIZE ALTERNATE INDEX I237 01980018
+&A       SETA  1                        INITIALIZE DEVICE POINTER  I237 01990018
+.ALTLOP  ANOP                                                      I237 02000018
+         AIF   (&SGDADRA(&A) GE (X'40000'*4096)).BITON         @G64IPSJ 02005064
+&SGDADRA(&A) SETA &SGDADRA(&A)-&SGDADRA(&A)/X'1000'*X'1000'    @ZA15722 02015051
+.BITON   ANOP                                                      I237 02040018
+.*                                                                      02050018
+.*   THE FOLLOWING ROUTINE IS USED TO DETERMINE THE NUMBER OF    Y01029 02060001
+.*   D.A. DEVICES IN THIS CONFIGURATION.                         Y01029 02070001
+.*                                                               Y01029 02080001
+&NXF     SETA  &SGDASPA(&A)                                    @ZA15722 02085051
+         AIF   (NOT &SGDT03B(&NXF)).ALTLOPA  TEST FOR DA           I237 02100018
+&SGDASWB(&A)   SETB  1                  SET DA INDICATOR           I237 02110018
+.ALTLOPA ANOP                                                      I237 02150018
+.*                                                                      02160018
+.*   THE FOLLOWING ROUTINE WILL BUILD 'A' BOXES FOR ALL ALTERNATE       02170018
+.*   PATHS IN THE SYSTEM.                                               02180018
+.*                                                                      02190018
+&B       SETA  &SGDADRA(&A)-&SGDADRA(&A)/4096*4096     GET         I237 02200018
+&B       SETA  &B-4096*(&B/4096)        CHANNEL                    I237 02210018
+&B       SETA  &B/256                   ADDRESS                    I237 02220018
+         AIF   (NOT &SGCHANB(&B*15+4)).NOSSALT    TEST FOR HSMPX  20062 02230020
+         AIF   (NOT &SGDAP2B(&NXF)).HSAP3    TEST FOR 'D' ALT      I237 02240018
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/16*16)+&B*256+208 I237 02250018
+&AINDX   SETA  &AINDX+1                 UPDATE ALTERNATE INDEX     I237 02260018
+.HSAP3   AIF   (NOT &SGDAP3B(&NXF)).HSAP4    TEST FOR 'E' ALT      I237 02270018
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/16*16)+&B*256+224 I237 02280018
+&AINDX   SETA  &AINDX+1                 UPDATE ALTERNATE INDEX     I237 02290018
+.HSAP4   AIF   (NOT &SGDAP4B(&NXF)).LSTALT   TEST FOR 'F' ALT      I237 02300018
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/16*16)+&B*256+240 I237 02310018
+&AINDX   SETA  &AINDX+1                 UPDATE ALTERNATE INDEX     I237 02320018
+         AGO   .LSTALT                  BRANCH AROUND              I237 02330018
+.NOSSALT ANOP                                                      I237 02340018
+         AIF   (NOT &SGDAP1B(&NXF)).EXAMAP2  CHAN 1 TEST           I237 02350018
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'100'   I237 02360018
+&AINDX   SETA  &AINDX+1                 UPDATE ALTERNATE INDEX     I237 02370018
+.EXAMAP2 AIF   (NOT &SGDAP2B(&NXF)).EXAMAP3  CHANNEL 2 TEST        I237 02380018
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'200'   I237 02390018
+&AINDX   SETA  &AINDX+1                 UPDATE ALTERNATE INDEX     I237 02400018
+.EXAMAP3 AIF   (NOT &SGDAP3B(&NXF)).EXAMAP4  CHANNEL 3 TEST        I237 02410018
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'300'   I237 02420018
+&AINDX   SETA  &AINDX+1                 UPDATE ALTERNATE INDEX     I237 02430018
+.EXAMAP4 AIF   (NOT &SGDAP4B(&NXF)).EXAMAP5  CHANNEL 4 TEST        I237 02440018
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'400'   I237 02450018
+&AINDX   SETA  &AINDX+1                 UPDATE ALTERNATE INDEX     I237 02460018
+.EXAMAP5 AIF   (NOT &SGDAP5B(&NXF)).EXAMAP6  CHANNEL 5 TEST        I237 02470018
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'500'   I237 02480018
+&AINDX   SETA  &AINDX+1                 UPDATE ALTERNATE INDEX     I237 02490018
+.EXAMAP6 AIF   (NOT &SGDAP6B(&NXF)).EXAMAP7  CHANNEL 6 TEST       20063 02500020
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'600'   I237 02510018
+&AINDX   SETA  &AINDX+1                UPDATE ALTERNATE INDEX     20063 02510320
+.EXAMAP7 AIF   (NOT &SGDAP7B(&NXF)).EXAMAP8  CHANNEL 7 TEST       20063 02510620
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'700'  20063 02510920
+&AINDX   SETA  &AINDX+1                UPDATE ALTERNATE INDEX     20063 02511220
+.EXAMAP8 AIF   (NOT &SGDAP8B(&NXF)).EXAMAP9  CHANNEL 8 TEST       20063 02511520
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'800'  20063 02511820
+&AINDX   SETA  &AINDX+1                UPDATE ALTERNATE INDEX     20063 02512120
+.EXAMAP9 AIF   (NOT &SGDAP9B(&NXF)).EXAMAPA  CHANNEL 9 TEST       20063 02512420
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'900'  20063 02512720
+&AINDX   SETA  &AINDX+1                UPDATE ALTERNATE INDEX     20063 02513020
+.EXAMAPA AIF   (NOT &SGDAPAB(&NXF)).EXAMAPB  CHANNEL A TEST       20063 02513320
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'A00'  20063 02513620
+&AINDX   SETA  &AINDX+1                UPDATE ALTERNATE INDEX     20063 02513920
+.EXAMAPB AIF   (NOT &SGDAPBB(&NXF)).EXAMAPC  CHANNEL B TEST       20063 02514220
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'B00'  20063 02514520
+&AINDX   SETA  &AINDX+1                UPDATE ALTERNATE INDEX     20063 02514820
+.EXAMAPC AIF   (NOT &SGDAPCB(&NXF)).EXAMAPD  CHANNEL C TEST       20063 02515120
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'C00'  20063 02515420
+&AINDX   SETA  &AINDX+1                UPDATE ALTERNATE INDEX     20063 02515720
+.EXAMAPD AIF   (NOT &SGDAPDB(&NXF)).EXAMAPE  CHANNEL D TEST       20063 02516020
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'D00'  20063 02516320
+&AINDX   SETA  &AINDX+1                UPDATE ALTERNATE INDEX     20063 02516620
+.EXAMAPE AIF   (NOT &SGDAPEB(&NXF)).EXAMAPF  CHANNEL F TEST       20063 02516920
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'E00'  20063 02517220
+&AINDX   SETA  &AINDX+1                UPDATE ALTERNATE INDEX     20063 02517520
+.EXAMAPF AIF   (NOT &SGDAPFB(&NXF)).LSTALT   CHANNEL F TEST       20063 02517820
+&ALTLIST(&AINDX) SETA (&SGDADRA(&A)-&SGDADRA(&A)/256*256)+X'F00'  20063 02518120
+&AINDX   SETA  &AINDX+1                 UPDATE ALTERNATE INDEX     I237 02520018
+.LSTALT  ANOP                                                      I237 02530018
+&A       SETA  &A+1                     UPDATE DEVICE INDEX        I237 02540018
+         AIF   (&A LE &SGCNTRA(3)).ALTLOP    TEST FOR LAST DEVICE  I237 02550018
+&EOALTS  SETB  (&AINDX EQ 1)            TEST FOR NO ALTERNATES     I237 02560018
+&ACOUNT  SETA  &AINDX-1                 SET ALTERNATE COUNT        I237 02570018
+         AIF   (&ACOUNT LT 2).INITIAL   TEST FOR ALTERNATES        I237 02580018
+.*                                                                      02590018
+.*   THE FOLLOWING SECTION WILL SORT THE ALTERNATES BY ADDRESS          02600018
+.*                                                                      02610018
+&MM      SETA  &ACOUNT                  GET NUMBER OF ALTERNATES   I237 02620018
+.L2      AIF   (&MM/2 LE 0).INITIAL     ALL ALTS SORTED?           I237 02630018
+&MM      SETA  &MM/2                    SET INDEX                  I237 02640018
+&KK      SETA  &ACOUNT-&MM              SET FOR END PASS CHECK     I237 02650018
+&J       SETA  1                        SET INDEX VALUE FOR FIRST  I237 02660018
+.L3      ANOP                                                      I237 02670018
+&I       SETA  &J                       SET INDEX TO FIRST ADDRESS I237 02680018
+.L4      AIF   (&ALTLIST(&I) LT &ALTLIST(&I+&MM)).L5    COMPARE    I237 02690018
+&T       SETA  &ALTLIST(&I)             SAVE ADDRESS OUT OF ORDER  I237 02700018
+&ALTLIST(&I) SETA &ALTLIST(&I+&MM)      PUT SECOND IN FIRST        I237 02710018
+&ALTLIST(&I+&MM) SETA  &T               MOVE FIRST TO SECOND       I237 02720018
+&I       SETA  &I-&MM                   TEST INDEX                 I237 02730018
+         AIF   (&I GE 1).L4                                        I237 02740018
+.L5      AIF   (&J+1 GT &KK).L2         TEST FOR END OF LOOP       I237 02750018
+&J       SETA  &J+1                     UPDATE POINTER             I237 02760018
+         AGO   .L3                      RETURN                     I237 02770018
+.*                                                                      02780018
+.*   THE FOLLOWING ROUTINE CALCULATES UCBLOOKUP VALUES FOR EACH         02790018
+.*   DEVICE AND PLACES THE VALUE IN &SGDAUPA ARRAY ELEMENT.    @G64IPSJ 02795064
+.*                                                                      02810018
+.INITIAL ANOP                                                      I237 02820018
+&AINDX   SETA  1                        INITIALIZE ALTERNATE INDEX I237 02830018
+&A       SETA  1                        INITIALIZE DEVICE NUMBER   I237 02840018
+.DEVLOOP ANOP                                                      I237 02850018
+         AIF   (&EOALTS).SKIPCHK        BRANCH IF NO ALTERNATES    I237 02860018
+         AIF   (&SGDADRA(&A)-&SGDADRA(&A)/4096*4096 GT &ALTLIST(&AINDX)X02870018
+               -&ALTLIST(&AINDX)/4096*4096).ALTA  TEST FOR HIGH AD I237 02880018
+.SKIPCHK ANOP                                                      I237 02890018
+&INTALPH SETA  &SGDADRA(&A)-&SGDADRA(&A)/4096*4096 SAVE ACTUAL ADD I237 02900018
+&ALTSW   SETB  0                        CLEAR ALTERNATE SWITCH     I237 02910018
+         AIF   (&SGDADRA(&A) LT X'80000'*X'800').NOBIT DEV SUPPORT I237 02920018
+&SGDADRA(&A) SETA &SGDADRA(&A)-X'80000'*X'800'                     I237 02930018
+         AGO   .BITSET                  BRANCH AROUND              I237 02940018
+.NOBIT   ANOP                                                      I237 02950018
+&SGDADRA(&A) SETA &SGDADRA(&A)-&SGDADRA(&A)/X'400000'*X'400000'    I237 02960018
+.BITSET  ANOP                                                      I237 02970018
+         AGO   .COMPUTE                 BRANCH AROUND              I237 02980018
+.ALTA    ANOP                                                      I237 02990018
+&INTALPH SETA  &ALTLIST(&AINDX)-&ALTLIST(&AINDX)/4096*4096 ALT ADD I237 03000018
+&ALTSW   SETB  1                        SET ALTERNATE SWITCH       I237 03010018
+&EOALTS  SETB  (&AINDX EQ &ACOUNT)      TEST FOR LAST ALTERNATE    I237 03020018
+&AINDX   SETA  &AINDX+1                 UPDATE ALTERNATE INDEX     I237 03030018
+.COMPUTE ANOP                                                      I237 03040018
+&NUA     SETA  &INTALPH-&INTALPH/16*16  GET UNIT ADDRESS           I237 03050018
+&NCU     SETA  &INTALPH/16-&INTALPH/256*16   GET CU ADDRESS        I237 03060018
+&NCHAN   SETA  &INTALPH/256             GET CHANNEL ADDRESS        I237 03070018
+         AIF   (&IRSW EQ 1).NCHTST      TEST FOR FIRST PASS        I237 03080018
+&OCHAN   SETA  &NCHAN                   GET NEW CHAN IN OLD        I237 03090018
+         AGO   .SETCU                   BRANCH AROUND              I237 03100018
+.NCHTST  ANOP                                                      I237 03110018
+         AIF   (&NCHAN EQ &OCHAN).NCUTST     TEST FOR NEW CHANNEL  I237 03120018
+&OCHAN   SETA  &NCHAN                   GET NEW CHAN IN OLD        I237 03130018
+         AGO   .SETCU                   BRANCH AROUND ON NEW CHAN  I237 03140018
+.NCUTST  AIF   (&OCU EQ &NCU).SETVAL    TEST FOR NEW CU            I237 03150018
+.SETCU   ANOP                                                      I237 03160018
+&OCU     SETA  &NCU                     GET NEW CU TO OLD CU       I237 03170018
+&CUINDX  SETA  &CUINDX+2*&OUA+2-2*&NUA  COMPUTE INDEX FOR NEW CU   I237 03180018
+         AIF   (&IRSW EQ 1).NOTFP       TEST FOR FIRST PASS        I237 03190018
+         AGO   .FPAS                    YES - BRANCH AROUND        I237 03200018
+.NOTFP   ANOP                           NOT FIRST PASS             I237 03210018
+         AIF   (&CUINDX GE 0).SETVAL    TEST FOR NEGATIVE CUINDX   I237 03220018
+.FPAS    ANOP                           FIRST PASS                 I237 03230018
+&CUINDX  SETA  0                        YES - SET TO ZERO          I237 03240018
+.SETVAL  ANOP                                                      I237 03250018
+&VALUE   SETA  (&CUINDX+2*&NUA)/2+1     COMPUTE VALUE FOR THIS DEV I237 03260018
+         AIF   (&VALUE GE 1).NOTNEG     TEST FOR VALUE             I237 03270018
+&VALUE   SETA  1                        NO VALUE-SET TO 1          I237 03280018
+.NOTNEG  ANOP                                                      I237 03290018
+&IRSW    SETB  1                        SET INITIALIZATION SW      I237 03300018
+&OUA     SETA  &NUA                     GET NEW UA TO OLD          I237 03310018
+         AIF   (&LSTDEV AND &EOALTS).AAA0096 TEST FOR ALL DONE     I237 03320018
+         AIF   (&LSTDEV).ALTA           TEST FOR NO MORE ACTUALS   I237 03330018
+         AIF   (&ALTSW).DEVLOOP         TEST FOR ALTERNATE ADDRESS I237 03340018
+.*                                                                      03350018
+.*   NOW SAVE THE UCBLOOKUP VALUE                              @Z30ANSF 03360003
+.*                                                                      03370018
+&SGDAUPA(&A) SETA &VALUE                                       @Z30ANSF 03380003
+&A       SETA  &A+1                     UPDATE DEVICE INDEX        I237 03400018
+         AIF   (&A LE &SGCNTRA(3)).DEVLOOP   TEST FOR NO MORE ACTS.I237 03410018
+&LSTDEV  SETB  1                        SET LAST ACTUAL INDICATOR  I237 03420018
+         AIF   (NOT &EOALTS).ALTA       RETURN IF MORE ALTERNATES  I237 03430018
+.AAA0096 ANOP                                                      7863 04660000
+.********************************************************************** 04680000
+.*                                                                      04700000
+.*                                                                      04743019
+&RETURN  SETA  5                   RETURN FOR TOTAL BIT PATTERN   19022 04749019
+&TBP     SETB  1                                                        04752001
+&A       SETA  &VALUE                                             19022 04758019
+&V       SETA  (&A+31)/32+1        SIZE OF BIT PATTERN IN WORDS  Y01029 04770001
+          AGO  .DDDB10             INITIALIZE CBOXES              19022 04773019
+.FFF010  ANOP                                                     19022 04776019
+&A       SETA  &VALUE                                                   05060000
+&V       SETA  (&A+31)/32+1        SIZE OF THE BIT PATTERN IN WORDS     05160000
+&ENTRIES SETA  &SGCNTRA(8)+&SGCNTRA(4)                             000G 05170018
+.****************************************************************Y02667 05220002
+.*   THIS SECTION DETERMINES WHICH GENERIC NAMES MUST BE         Y02667 05270002
+.*   GENERATED, GENERATES THEM, AND ADJUSTS THE NUMBER OF        Y02667 05320002
+.*   ENTRIES TO INCLUDE THEM.  A NAME MUST BE GENERATED          Y02667 05370002
+.*   FOR EACH DEVICE, NOT SYSGENED, FOR WHICH A REQUEST          Y02667 05420002
+.*   MAY BE SATISFIED BY ANOTHER SYSGENED DEVICE.                Y02667 05430002
+.*                                                             @G64IPSJ 05435064
+.*   THE DEVICE INFORMATION TABLE(DIT) IS SCANNED FOR          @G64IPSJ 05439064
+.*   NON-GENERATED DEVICE TYPES. IF THESE TYPES ARE UPWARD     @G64IPSJ 05443064
+.*   COMPATIBLE WITH DEVICES ALREADY GENERATED, THIS DEVICE    @G64IPSJ 05447064
+.*   TYPE IS ALSO GENERATED.                                   @G64IPSJ 05451064
+.*      &EXTRA - CONTAINS NUMBER OF GENERATED ENTRIES          @G64IPSJ 05455064
+.*      &ALTLIST - CONTAINS GENERATED DEVICE DIT INDICES       @G64IPSJ 05459064
+.*                                                             @G64IPSJ 05463064
+.************************************************************* @G64IPSJ 05467064
+&A       SETA 0                        INITIALIZE INDICES      @G64IPSJ 05471064
+&EXTRA   SETA 0                          * * *     * * *       @G64IPSJ 05475064
+.CNTGENR ANOP                          GENERIC COUNT AND       @G64IPSJ 05479064
+.*                                     SAVE ID LOOP            @G64IPSJ 05483064
+&A       SETA  &A+1                    INCREMENT DIT INDEX     @G64IPSJ 05487064
+         AIF   (&A GT &SGDITDA).ENDDIT TEST FOR END OF         @G64IPSJ 05491064
+.*                                     ENTRIES                 @G64IPSJ 05495064
+         AIF  (&SGGENDB(&A)).CNTGENR   IF ALREADY GENED, GET   @G64IPSJ 05499064
+.*                                     NEXT ENTRY              @G64IPSJ 05503064
+         AIF  (K'&SGGCTXC(&A) LE 0).CNTGENR IF NO UPWARD       @G64IPSJ 05507064
+.*                                     COMPATIBLE TYPES ARE    @G64IPSJ 05511064
+.*                                     ELIGIBLE, GET NEXT ENT  @G64IPSJ 05515064
+&NUMBENT SETA  K'&SGGCTXC(&A)/3        SET NUMBER OF ENTRIES   @G64IPSJ 05519064
+.*                                     EACH ENT IS 3 DIGITS    @G64IPSJ 05523064
+&B       SETA  0                       INITIALIZE SCAN INDEX   @G64IPSJ 05527064
+&COMPATC SETC  '&SGGCTXC(&A)'          MOVE ID TO WORK AREA    @G64IPSJ 05531064
+.CHKGENR ANOP                          ID SCAN LOOP            @G64IPSJ 05535064
+&B       SETA  &B+1                    INCREMENT SCAN INDEX    @G64IPSJ 05539064
+         AIF   (&B GT &NUMBENT).CNTGENR TEST FOR ANOTHER       @G64IPSJ 05543064
+.*                                      ENTRY AND CONTINUE     @G64IPSJ 05547064
+&TEMPVAL SETC  '&COMPATC'(&B*3-2,3)    OBTAIN COMPAT ID        @G64IPSJ 05551064
+&I       SETA  &TEMPVAL                CONVERT ID TO HEX       @G64IPSJ 05555064
+         AIF   (NOT &SGGENDB(&I)).CHKGENR  IF NOT GENED, TRY   @G64IPSJ 05559064
+.*                                         NEXT ENTRY          @G64IPSJ 05563064
+&EXTRA   SETA  &EXTRA+1                UPDATE GENERATED COUNT  @G64IPSJ 05567064
+&ALTLIST(&EXTRA) SETA &A               SAVE GENERATED ID       @G64IPSJ 05571064
+         AGO   .CNTGENR                PROCESS NEXT GENERIC    @G64IPSJ 05575064
+.*                                     ENTRY IN DIT            @G64IPSJ 05579064
+.ENDDIT  ANOP                          EXIT FOR DIT SCAN       @G64IPSJ 05583064
+.* EXIT -  &EXTRA = # ENTRIES TO GENERATE                      @G64IPSJ 05587064
+.*         &LSTLIST = DIT INDIES FOR GENERATED GENERICS        @G64IPSJ 05591064
+&ENTRIES SETA  &ENTRIES+&EXTRA         INCREMENT BY GENERATED GENERICS  05699202
+.*                                                               Y02667 05709202
+         PUNCH '         DC    F''&ENTRIES'''                    Y02667 05739202
+.*   PUNCH ONE SGIEF011 CARD FOR EACH SUPPORTED DEVICE THPE IN SYSTEM.  05744264
+&A       SETA  0                       INITIALIZE DIT INDEX    @G64IPSJ 05749264
+.GENERID ANOP                          GENERIC ID LOOP         @G64IPSJ 05754264
+&A       SETA  &A+1                    INCREMENT DIT INDEX     @G64IPSJ 05759264
+         AIF   (&A GT &SGDITDA).PCHEND IF NO MORE ENTRIES,     @G64IPSJ 05764264
+.*                                       EXIT                  @G64IPSJ 05769264
+         AIF   (NOT &SGGENDB(&A)).GENERID IF NOT GENED, TRY    @G64IPSJ 05774264
+.*                                        NEXT GENERIC         @G64IPSJ 05779264
+         PUNCH ' SGIEF011 &A,&A '      PUNCH HEADER CALL       @G64IPSJ 05784264
+         AGO   .GENERID                PROCESS NEXT DIT ENTRY  @G64IPSJ 05789264
+.PCHEND  ANOP                          EXIT FOR PCH LOOP       @G64IPSJ 05794264
+.*                                                             @G64IPSJ 05799264
+.*    PUNCH OUT ENTRIES THAT ARE GENERATED GENERICS            @G64IPSJ 05804264
+.*                                                             @G64IPSJ 05809264
+&A       SETA  0                       INITIALIZE INDEX        @G64IPSJ 05814264
+.GENID   ANOP                                                  @G64IPSJ 05819264
+&A       SETA  &A+1                    INCREMENT INDEX         @G64IPSJ 05824264
+         AIF   (&A GT &EXTRA).GENDONE  TEST FOR END ENTRY      @G64IPSJ 05829264
+         PUNCH '         DC    CL8''&SGGNRIC(&ALTLIST(&A))'''  @G64IPSJ 05834264
+.*                                     PUNCH GENERIC NAME      @G64IPSJ 05839264
+         PUNCH '         DC    XL4''&SGDTYPC(&ALTLIST(&A))'''  @G64IPSJ 05844264
+.*                                     PUNCH DEVICE TYPE       @G64IPSJ 05849264
+         AGO   .GENID                  TRY NEXT ENTRY          @G64IPSJ 05854264
+.GENDONE ANOP                          END GENERATED GENERICS  @G64IPSJ 05859264
+.*                                                             @G64IPSJ 05864264
+.************************************************************* @G64IPSJ 05869264
+.AAA110  AIF   (&SGCNTRA(4) EQ 0).BBB030                         Y02667 06086602
+&ESNINDX SETA  0                                                 Y02667 06093302
+&FH      SETB  0                                                        06100000
+&COUNTER SETA  1                                                        06120000
+.AAA112  AIF   (&ESNINDX EQ &SGCNTRA(4)).BBB030                         06140000
+.*   WHEN RETURN EQ 0 PUNCH SGIEF013 CARDS AS NEEDED AND A SGIEF011     06160000
+.*       CARD FOR EACH UNITNAME SPECIFIED IN THE SYSTEM.                06180000
+.*   WHEN RETURN EQ 3 PUNCH SGIEF013 CARDS AS NEEDED AND A SGIEF012     06200000
+.*       CARD FOR EACH UNITNAME SPECIFIED IN THE SYSTEM.                06220000
+&ESNINDX SETA  &ESNINDX+1                                               06240000
+&B       SETA  0                                                        06260000
+&A       SETA  0                                                        06280000
+         AIF   (&RETURN EQ 3).DDDB10                                    06300000
+.AAA125  AIF   (&FH).AAA126                                             06320000
+&TEST1   SETA  &SGUNNMA(&COUNTER)/X'1000'                               06340000
+         AGO   .AAA129                                                  06360000
+.AAA126  ANOP                                                           06380000
+&TEST1   SETA  &SGUNNMA(&COUNTER)-&SGUNNMA(&COUNTER)/X'1000'*X'1000'    06400000
+.AAA129  AIF   (&TEST1 EQ X'FFF').AAA225                                06420000
+.AAA200  AIF   (&A EQ &SGCNTRA(3)).E2                                   06440000
+&A       SETA  &A+1      SEARCH FOR DEVICE THIS ADDRESS                 06460000
+ AIF (&SGDADRA(&A)-&SGDADRA(&A)/X'1000'*X'1000' NE &TEST1).AAA200       06480000
+&TEST4  SETA  &SGDADRA(&A)/X'400000'  GET BITS 23-30                    06500018
+         AIF   (&RETURN EQ 3).DDDB20                                    06520000
+.AAA210  AIF   (&B NE 0 AND &TEST4 EQ 0).AAA220                         06540000
+&B       SETA  &B+1                                                     06560000
+&C       SETA  &B-(&B-1)/16*16                                          06580000
+&G(&C)   SETA  &TEST4              G(1-16)                              06600000
+         AIF   (&C NE 16).AAA220                                        06620000
+ PUNCH ' SGIEF013 &B,&G(1),&G(2),&G(3),                                X06640046
+                            XXXXXXXXX'                         @ZA40929 06644446
+ PUNCH '               &G(4),&G(5),&G(6),&G(7),                        X06648846
+                               XXXXXXXXX'                      @ZA40929 06653246
+ PUNCH '               &G(8),&G(9),&G(10),&G(11),                      X06657646
+                                 XXXXXXXXX'                    @ZA40929 06662046
+ PUNCH '               &G(12),&G(13),&G(14),&G(15),                    X06666446
+                                   XXXXXXXXX'                  @ZA40929 06670846
+ PUNCH '               &G(16)'                                 @ZA40929 06675246
+.AAA220  ANOP                                                           06680000
+&COUNTER SETA  &COUNTER+&FH                                             06700000
+&FH      SETB  (NOT &FH)                                                06720000
+         AGO   .AAA125                                                  06740000
+.E2      ANOP                                                           06760000
+         CONVERT TO=EBCDIC,VALUE=&TEST1,DIGITS=3                        06780000
+    MNOTE 5,'* * * IEIGEN052 ADDRESS VALUE &EBCDIC SPECIFIED'           06800000
+    MNOTE 5,'* * *       WITH UNIT NAME &SGUNNMC(&ESNINDX) NOT'         06820000
+    MNOTE 5,'* * *       DEFINED ON IODEVICE STATEMENT'                 06840000
+&SGQUITB SETB  1                                                        06860000
+         MEXIT                                                          06880000
+.AAA225  AIF   (&B-&B/16*16 EQ 0).BBB010     A MULTIPLE OF 16 OR 0      06900000
+ PUNCH ' SGIEF013 &B,&G(1),&G(2),&G(3),                                X06920046
+                            XXXXXXXXX'                         @ZA40929 06924446
+ PUNCH '               &G(4),&G(5),&G(6),&G(7),                        X06928846
+                               XXXXXXXXX'                      @ZA40929 06933246
+ PUNCH '               &G(8),&G(9),&G(10),&G(11),                      X06937646
+                                 XXXXXXXXX'                    @ZA40929 06942046
+ PUNCH '               &G(12),&G(13),&G(14),&G(15),                    X06946446
+                                   XXXXXXXXX'                  @ZA40929 06950846
+ PUNCH '               &G(16)'                                 @ZA40929 06955246
+.BBB010  ANOP                                                           06960000
+&COUNTER SETA  &COUNTER+&FH                                             06980000
+&FH      SETB  (NOT &FH)                                                07000000
+         AIF   (&RETURN EQ 3).EEE040                                    07020000
+ PUNCH ' SGIEF011 0,0,&SGUNNMC(&ESNINDX)'                               07040000
+         AGO   .AAA112                                                  07060000
+.BBB030  AIF   (&RETURN EQ 3).EEE050                                    07080000
+ PUNCH ' END'                                                           07100000
+ PUNCH '/*'                                                             07120000
+&SGCTRLC(6)  SETC  'IEFDEVPT'                                     19022 07121019
+         COPY  SGASMPAK                                           19022 07121519
+ PUNCH 'IEFDEVPT CSECT'                                           19022 07122019
+&COUNT   SETA  0                                                  19022 07122519
+         AGO   .CCC005                                            19022 07123019
+.FFF025  ANOP                                                     19022 07123519
+&TBP     SETB  0                                                  19022 07124019
+.FFF0251 ANOP                                                     19022 07124519
+&A       SETA  &A+1                                               19022 07125019
+          AIF   (&A GT &SGCNTRA(3)).FFF030                        19022 07125519
+         AGO   .DDDB201                                           19022 07126019
+.FFF030  ANOP                                                     19022 07126519
+&A       SETA  &V-1                                               19022 07127019
+ PUNCH 'DVPTLEN  DC    H''&A'''                                   19022 07127519
+ PUNCH 'DVPTSIZE DC    H''&VALUE'''                               19022 07128019
+ PUNCH 'DVPTDEV  DC    H''&U'''                                   19022 07128519
+ PUNCH 'DVPT2321 DC    H''0''' 2321 N/S -KEPT IN FOR COMPATABIL. Y01029 07129001
+ PUNCH 'DVPT     DC    F''0'''                                    19022 07129519
+ PUNCH '     DC  X''&L(1)&L(2)&L(3)&L(4)&L(5)&L(6)&L(7)'''        19022 07130019
+         AIF   ('&CONTI' NE 'X').FFF035                           19022 07130519
+ PUNCH '     DC  X''&L(8)&L(9)&L(10)&L(11)&L(12)&L(13)&L(14)'''   19022 07131019
+         AIF   ('&CONTI1' NE 'X').FFF035                          19022 07131519
+ PUNCH '     DC  X''&L(15)&L(16)&L(17)&L(18)&L(19)&L(20)&L(21)''' 19022 07132019
+         AIF   ('&CON2' NE 'X').FFF035                            19022 07132519
+ PUNCH '     DC  X''&L(22)&L(23)&L(24)&L(25)&L(26)&L(27)&L(28)''' 19022 07133019
+         AIF   ('&CON3' NE 'X').FFF035                            19022 07133519
+ PUNCH '     DC  X''&L(29)&L(30)&L(31)&L(32)&L(33)&L(34)&L(35)''' 19022 07134019
+         AIF   ('&CON4' NE 'X').FFF035                            19022 07134519
+ PUNCH '     DC  X''&L(36)&L(37)&L(38)&L(39)&L(40)&L(41)&L(42)''' 19022 07135019
+         AIF   ('&CON5' NE 'X').FFF035                         @Z30ANSF 07135203
+ PUNCH '     DC  X''&L(43)&L(44)&L(45)&L(46)&L(47)&L(48)&L(49)'''       07135503
+         AIF   ('&CON6' NE 'X').FFF035                         @Z30ANSF 07140003
+ PUNCH '     DC  X''&L(50)&L(51)&L(52)&L(53)&L(54)&L(55)&L(56)'''       07142003
+         AIF   ('&CON7' NE 'X').FFF035                         @Z30ANSF 07144003
+ PUNCH '     DC  X''&L(57)&L(58)&L(59)&L(60)&L(61)&L(62)&L(63)'''       07146003
+         AIF   ('&CON8' NE 'X').FFF035                         @Z30ANSF 07148003
+ PUNCH '     DC  X''&L(64)&L(65)&L(66)&L(67)&L(68)&L(69)&L(70)'''       07148551
+         AIF   ('&CON9' NE 'X').FFF035                         @ZA15722 07149051
+ PUNCH '     DC  X''&L(71)&L(72)&L(73)&L(74)&L(75)&L(76)&L(77)'''       07149551
+         AIF   ('&CONA' NE 'X').FFF035                         @ZA15722 07150051
+ PUNCH '     DC  X''&L(78)&L(79)&L(80)&L(81)&L(82)&L(83)&L(84)'''       07150151
+         AIF   ('&CONB' NE 'X').FFF035                         @ZA15722 07150251
+ PUNCH '     DC  X''&L(85)&L(86)&L(87)&L(88)&L(89)&L(90)&L(91)'''       07150351
+         AIF   ('&CONC' NE 'X').FFF035                         @ZA15722 07150451
+ PUNCH '     DC  X''&L(92)&L(93)&L(94)&L(95)&L(96)&L(97)&L(98)'''       07150551
+         AIF   ('&COND' NE 'X').FFF035                         @ZA15722 07150651
+ PUNCH '     DC  X''&L(99)&L(100)&L(101)&L(102)&L(103)&L(104)&L(105)''' 07150751
+         AIF   ('&CONE' NE 'X').FFF035                         @ZA15722 07150851
+ PUNCH '     DC  X''&L(106)&L(107)&L(108)&L(109)&L(110)&L(111)&L(112)''X07150951
+               '                                               @ZA15722 07151051
+         AIF   ('&CONF' NE 'X').FFF035                         @ZA15722 07152051
+ PUNCH '     DC  X''&L(113)&L(114)&L(115)&L(116)&L(117)&L(118)&L(119)''X07152251
+               '                                               @ZA15722 07152451
+         AIF   ('&CONG' NE 'X').FFF035                         @ZA15722 07152651
+ PUNCH '     DC  X''&L(120)&L(121)&L(122)&L(123)&L(124)&L(125)&L(126)''X07152851
+               '                                               @ZA15722 07153051
+         AIF   ('&CONH' NE 'X').FFF035                         @ZA15722 07153251
+ PUNCH '     DC  X''&L(127)&L(128)'''                          @ZA15722 07153451
+.FFF035  ANOP                                                     19022 07153651
+ PUNCH '     END '                                                19022 07154003
+ PUNCH '/*'                                                       19022 07160003
+&SGCTRLC(6)  SETC  'IEFWMSKA'                                           07166003
+         COPY  SGASMPAK                                                 07172003
+ PUNCH 'DEVMASKT CSECT'                                                 07180000
+ PUNCH '          DC    H''&ENTRIES'''                                  07200000
+&ENTRIES SETA  &ENTRIES+1                                               07220000
+ PUNCH '         DC    H''&ENTRIES'''                                   07240000
+         SGIEF212                       CALL TO PROCESS ADDR BOXES      07250064
+.*                                                             @G64IPSJ 07260064
+ PUNCH '               LAST'                                            07270064
+.CCC005  ANOP                                                           07360000
+&CONTI   SETC  ' '                                                      07368018
+&CONTI1  SETC  ' '                                                 000G 07376018
+&CON2    SETC  ' '                                                 000G 07384018
+&CON3    SETC  ' '                                                 000G 07392018
+&CON4    SETC  ' '                                                 000G 07400018
+&CON5    SETC  ' '                                             @Z30ANSF 07401003
+&CON6    SETC  ' '                                             @Z30ANSF 07402003
+&CON7    SETC  ' '                                             @Z30ANSF 07403003
+&CON8    SETC  ' '                                             @Z30ANSF 07404003
+&CON9    SETC  ' '                                             @ZA15722 07404451
+&CONA    SETC  ' '                                             @ZA15722 07404851
+&CONB    SETC  ' '                                             @ZA15722 07405251
+&CONC    SETC  ' '                                             @ZA15722 07405651
+&COND    SETC  ' '                                             @ZA15722 07406051
+&CONE    SETC  ' '                                             @ZA15722 07406451
+&CONF    SETC  ' '                                             @ZA15722 07406851
+&CONG    SETC  ' '                                             @ZA15722 07407251
+&CONH    SETC  ' '                                             @ZA15722 07407651
+         AIF   (&V LE 8).EEE015                                         07408018
+&CONTI   SETC  'X'                                                      07416018
+         AIF (&V LE 15).EEE015                                     000G 07424018
+&CONTI1 SETC 'X'                                                   000G 07432018
+         AIF   (&V LE 22).EEE015                                   000G 07440018
+&CON2    SETC  'X'                                                 000G 07448018
+         AIF   (&V LE 29).EEE015                                   000G 07456018
+&CON3    SETC  'X'                                                 000G 07464018
+         AIF   (&V LE 36).EEE015                                   000G 07472018
+&CON4    SETC  'X'                                                 000G 07480018
+         AIF    (&V LE 43).EEE015                              @Z30ANSF 07480803
+&CON5    SETC   'X'                                            @Z30ANSF 07481203
+         AIF    (&V LE 50).EEE015                              @Z30ANSF 07481703
+&CON6    SETC   'X'                                            @Z30ANSF 07482603
+         AIF    (&V LE 57).EEE015                              @Z30ANSF 07483503
+&CON7    SETC   'X'                                            @Z30ANSF 07484403
+         AIF   (&V LE 64).EEE015                               @Z30ANSF 07484651
+&CON8    SETC  'X'                                             @Z30ANSF 07484851
+         AIF   (&V LE 71).EEE015                               @ZA15722 07485051
+&CON9    SETC  'X'                                             @ZA15722 07485351
+         AIF   (&V LE 78).EEE015                               @ZA15722 07486251
+&CONA    SETC  'X'                                             @ZA15722 07486351
+         AIF   (&V LE 85).EEE015                               @ZA15722 07486451
+&CONB    SETC  'X'                                             @ZA15722 07486551
+         AIF   (&V LE 92).EEE015                               @ZA15722 07486651
+&CONC    SETC  'X'                                             @ZA15722 07486751
+         AIF   (&V LE 99).EEE015                               @ZA15722 07486851
+&COND    SETC  'X'                                             @ZA15722 07486951
+         AIF   (&V LE 106).EEE015                              @ZA15722 07487051
+&CONE    SETC  'X'                                             @ZA15722 07487151
+         AIF   (&V LE 113).EEE015                              @ZA15722 07487251
+&CONF    SETC  'X'                                             @ZA15722 07488051
+         AIF   (&V LE 120).EEE015                              @ZA15722 07489051
+&CONG    SETC  'X'                                             @ZA15722 07490051
+         AIF   (&V LE 127).EEE015                              @ZA15722 07491051
+&CONH    SETC  'X'                                             @ZA15722 07492051
+         AGO   .EEE015                                                  07493051
+.DDDB10  ANOP                                                           07500000
+&U SETA 0  INITIALIZATION REQUIED BEFORE DERIVING EACH MASK.            07520000
+.*   L(1-7) ARE GIVEN THE HEX.VALUES WHICH PRODUCE THE MASKS.           07540000
+&X       SETA  1                                                        07560000
+.DDDB14  ANOP                                                           07580000
+&L(&X)   SETC  '00000000'                                               07600000
+&X       SETA   &X+1                                                    07620000
+         AIF   (&X LT &V).DDDB14  V=1+ NO. OF NECESSARY CBOXES.         07640000
+         AIF   (&RETURN EQ 3).AAA125                                    07720064
+         AIF   (&RETURN EQ 4).EEE054                                    07740000
+         AIF   (&RETURN EQ 5).FFF010                              IORMS 07760019
+         AIF   (&RETURN EQ 6).EEEA350                            S21048 07770001
+.*              =2 PUNCH ONE SGIEF012 CARD PER SUPPORTED DEVICE TYPE.   07780000
+.*              =3 PUNCH SGIEF013 AS NEEDED AND ONE SGIEF012 CARD       07800000
+.*       FOR EACH UNITNAME SPECIFIED IN THE SYSTEM.                     07820000
+.*   AFTER ALL UNITNAMES PROCESSED PUNCH SGIEF013 1,0,0,0,0... CALD     07840000
+.*   WHEN RETURN=4 PUNCH A SGIEF012 CARD WITH MASK OF ALL DIRECT ACCESS 07860000
+.*       DEVICES.                                                       07880000
+&DUPLI1 SETA &SGDADRA(&A)/X'400000'  GET BITS 23-30(DEV TYPE)           07900018
+.DDDB20  ANOP                                                           07920000
+         AIF   (&RETURN NE 2).DDDB201                                   07924015
+&W       SETA  0                                                        07928015
+.*                                                             @G64IPSJ 07928164
+.* THIS SECTION OF CODE CONSTRUCTS A LIST OF COMPATIBLE DEVICE @G64IPSJ 07928364
+.* TYPES THAT ARE TO BE INCLUDED IN THE CURRENT GENERIC (ID IN @G64IPSJ 07928564
+.* &DUPLI1).  THE COMPATIBLE IDS ARE STORED AT THE END OF      @G64IPSJ 07928764
+.* &ALTLIST AFTER THE GENERICS TO BE GENERATED.                @G64IPSJ 07928964
+.*                                                             @G64IPSJ 07929164
+&NUMBENT SETA  0                                                        07929364
+         AIF   (K'&SGGCTXC(&DUPLI1) LT 3).NOMORE  IF NO COMPAT @G64IPSJ 07929564
+.*                                                GENERICS  BR @G64IPSJ 07929764
+&NUMBENT SETA  K'&SGGCTXC(&DUPLI1)/3   SAVE NUMBER OF ENTRIES  @G64IPSJ 07929964
+&B       SETA  0                       INITIALIZE INDEX        @G64IPSJ 07930164
+&COMPATC SETC  '&SGGCTXC(&DUPLI1)'     MOVE TO WORK AREA       @G64IPSJ 07930364
+.TSTNXT  ANOP                          LOOP FOR COMPAT LIST    @G64IPSJ 07930564
+&B       SETA  &B+1                    INCREMENT INDEX         @G64IPSJ 07930764
+         AIF   (&B GT &NUMBENT).NOMORE TEST FOR MORE ENTRIES   @G64IPSJ 07930964
+&TEMPVAL SETC  '&COMPATC'(&B*3-2,3)    OBTAIN COMPAT ID        @G64IPSJ 07931164
+&I       SETA  &TEMPVAL                CONVERT ID TO HEX       @G64IPSJ 07931364
+&ALTLIST(&EXTRA+&B) SETA &I            SAVE COMPATIBLE ID IN   @G64IPSJ 07931564
+.*                                     TEMP WORK AREA END      @G64IPSJ 07931764
+.*                                     OF GENERATED GENERIC    @G64IPSJ 07931964
+.*                                     ID LIST                 @G64IPSJ 07932164
+         AGO   .TSTNXT                 TEST NEXT ENTRY         @G64IPSJ 07932364
+.NOMORE  ANOP                          EXIT LIST BUILD         @G64IPSJ 07932564
+         AGO   .EEE020                                                  07934464
+.DDDB201 ANOP                                                           07936015
+&W       SETA  &A                                                       07940000
+.DDDB21  ANOP  OBTAIN UCB LOOKUP VALUE                         @Z30ANSF 07960003
+&UCBLSTV SETA &SGDAUPA(&W)                                     @Z30ANSF 07980003
+&U       SETA  &U+1      COUNT OF DEVICES IN CURRENT MASK               08020000
+.*   GET VALUE OF 1,2,3 OR 4 TO USE IN SUBLIST TO OBTAIN HEX.CHARACTER. 08040000
+&X SETA &UCBLSTV+1-&UCBLSTV/4*4 1,5,9=2 2,6,10=3 3,7,11=4 4,8,12=1      08060000
+&K(1)    SETC  '1842'(&X,1)  HEX CHARACTER FOR UCBLOOKUP MASK.          08080000
+&XX      SETA  (&UCBLSTV+31)/32  GIVES CBOX FOR THIS CHARACTER          08100000
+&D SETA (&UCBLSTV-1-(&UCBLSTV-1)/32*32+4)/4 POSITION IN CBOX FOR CHAR.  08120000
+&K(2)    SETC  '&L(&XX)'(&D,1)   GET CHARACTER ALREADY THERE            08140000
+         AIF   ('&K(2)' LT '0').DDDD IF CHARACTER A-E MUST CONVERT      08160000
+&HEX     SETA  &K(2)                                                    08180000
+         AGO   .DDDD10                                                  08200000
+.DDDD    ANOP                                                           08220000
+         CONVERT DIGITS=1,VALUE=&K(2),TO=HEX                            08240000
+.DDDD10  ANOP                                                           08260000
+&X       SETA  &HEX+&K(1)  WHAT WAS THERE PLUS 1,2,4,8.                 08280000
+&K(1)    SETC  '123456789ABCDEF'(&X,1)                                  08300000
+.*  SET HEX.CHARACTER K(1) IN POSITION D OF L(XX). OTHER POSITIONS      08320000
+.*       REMAIN UNCHANGED.                                              08340000
+         AIF   (&D EQ 1).DDDE10                                         08360000
+         AIF   (&D EQ 8).DDDE15                                         08380000
+&L(&XX)  SETC  '&L(&XX)'(1,&D-1).'&K(1)'.'&L(&XX)'(&D+1,8-&D)           08400000
+         AGO   .DDDE18                                                  08420000
+.DDDE10  ANOP                                                           08440000
+&L(&XX)  SETC  '&K(1)'.'&L(&XX)'(2,7)                                   08460000
+         AGO   .DDDE18                                                  08480000
+.DDDE15  ANOP                                                           08500000
+&L(&XX)  SETC  '&L(&XX)'(1,7).'&K(1)'                                   08520000
+.DDDE18  ANOP                                                      000G 08550018
+         AIF   (&RETURN EQ 6).EEEA350                            S21048 09100001
+         AIF   (&RETURN EQ 5).FFF0251                             19022 09870019
+         AIF   (&RETURN EQ 2).EEE020                                    09880000
+         AIF   (&RETURN EQ 3).AAA210                                    09900000
+         AGO   .EEE055                                                  09920000
+.********************************************************************** 09940000
+.EEE015  ANOP                                                           10100000
+&COUNT   SETA  0                                                        10106018
+&CONT    SETC  '&CONTI'                                                 10112018
+&A       SETA  0                                                        10120000
+         AIF   (&TBP).FFF025                                      19022 10130019
+&RETURN  SETA  2                                                        10140000
+.EEE017  AIF   (&A EQ &SGCNTRA(3)).EEE035                               10160000
+.*  SEARCH EVERY DEVICE PUNCHING ONE SGIEF012 PER UNIQUE DEVICE TYPE.   10180000
+&A       SETA  &A+1                                                     10200000
+         AIF  (&SGDADRA(&A) LT X'400000').EEE017 NOT SUPPORTED          10220018
+         AIF   (&SGDADRA(&A) LT X'10000'*X'4000').DDDB10 SAME AS PREV.  10240000
+&SGDADRA(&A) SETA &SGDADRA(&A)-X'10000'*X'4000'  TYPE, FALL THROUGH     10260000
+  AGO .EEE017                                AND SET BIT 31 OFF.        10280000
+.EEE020  AIF   (&SGCNTRA(3) EQ &W).EEE030                               10300000
+.* RETURN=2 SEARCH REST OF DEVICES FOR ANY OF SAME TYPE (BITS 23-30)    10320018
+.*       THEY WILL GO IN SAME MASK AND HAVE BIT 31 TURNED ON.           10340000
+&W       SETA  &W+1                                                     10360000
+         AIF (&SGDADRA(&W) LT X'400000').EEE020                         10367018
+&DUPLI2  SETA  &SGDADRA(&W)/X'400000'                                   10367564
+.*                                                             @G64IPSJ 10367664
+.* THIS SECTION OF CODE SCANS THE LIST OF ELIGIBLE DEVICE      @G64IPSJ 10371664
+.* TYPES AT THE END OF &ALTLIST.  IF ELIGIBLE IT IS ADDED TO   @G64IPSJ 10375664
+.* THE DEVICE MASK AS WELL AS THE NATIVE GENERIC TYPES FOUND.  @G64IPSJ 10379664
+.*                                                             @G64IPSJ 10383664
+&B       SETA  0                       INITIALIZE INDEX        @G64IPSJ 10387664
+.EEENXT  ANOP                          LOOP FOR COMPATIBLE     @G64IPSJ 10391664
+.*                                     ENTRIES                 @G64IPSJ 10395664
+&B       SETA  &B+1                    INCREMENT INDEX         @G64IPSJ 10399664
+         AIF   (&B GT &NUMBENT).NOGEN  TEST FOR MORE ENTRIES   @G64IPSJ 10403664
+         AIF   (&DUPLI2 EQ &ALTLIST(&EXTRA+&B)).DDDB21         @G64IPSJ 10407664
+.*                                     TEST FOR COMPATIBILITY  @G64IPSJ 10411664
+.*                                     AND ADD IF COMPATIBLE   @G64IPSJ 10415664
+         AGO   .EEENXT                 TRY NEXT ENTRY          @G64IPSJ 10419664
+.NOGEN   ANOP                          END OF COMPAT TEST      @G64IPSJ 10423664
+         AIF   (&DUPLI1 NE &DUPLI2).EEE020                       Y02667 10427664
+&SGDADRA(&W) SETA &SGDADRA(&W)+X'10000'*X'4000'           BIT 31 ON     10431664
+ AGO .DDDB21   GO SET THIS DEVICE UCBLOOKUP IN CURRENT MASK.            10435664
+.*             AND RETURN TO .EEE020                           @G64IPSJ 10439664
+.EEE030 ANOP   RETURN=2  COME HERE ONCE PER DEVICE TYPE.                10460000
+&SGDADRA(&A)  SETA  &SGDADRA(&A)-X'10000'*X'4000'    SET BIT 31 OFF     10470015
+ PUNCH ' SGIEF012 &DUPLI1,&U,                                          X10480000
+                       XXXXXXXX'                                        10500000
+ PUNCH '               &L(1)&L(2)&L(3)&L(4)&L(5)&L(6)&L(7)&CONTI'       10520000
+ AIF ('&CONTI' NE 'X').EEE017                                           10540000
+ PUNCH '               &L(8)&L(9)&L(10)&L(11)&L(12)&L(13)&L(14)&CONTI1' 10543018
+ AIF ('&CONTI1' NE 'X').EEE017                                     000G 10546018
+ PUNCH '               &L(15)&L(16)&L(17)&L(18)&L(19)&L(20)&L(21)&CON2' 10549018
+         AIF   ('&CON2' NE 'X').EEE017                             000G 10552018
+    PUNCH      '               ,                                       X10555018
+                               X'                                       10558018
+ PUNCH '               &L(22)&L(23)&L(24)&L(25)&L(26)&L(27)&L(28)&CON3' 10561018
+         AIF   ('&CON3' NE 'X').EEE017                             000G 10564018
+ PUNCH '               &L(29)&L(30)&L(31)&L(32)&L(33)&L(34)&L(35)&CON4' 10567018
+         AIF   ('&CON4' NE 'X').EEE017                             000G 10570018
+ PUNCH '               &L(36)&L(37)&L(38)&L(39)&L(40)&L(41)&L(42)&CON5' 10573003
+         AIF   ('&CON5' NE 'X').EEE017                         @ZM30431 10574003
+ PUNCH '               &L(43)&L(44)&L(45)&L(46)&L(47)&L(48)&L(49)&CON6' 10575003
+         AIF   ('&CON6' NE 'X').EEE017                         @Z30ANSF 10576003
+    PUNCH      '               ,                                       X10576303
+                               X'                              @Z30ANSF 10576603
+ PUNCH '               &L(50)&L(51)&L(52)&L(53)&L(54)&L(55)&L(56)&CON7' 10577003
+         AIF   ('&CON7' NE 'X').EEE017                         @Z30ANSF 10578003
+ PUNCH '               &L(57)&L(58)&L(59)&L(60)&L(61)&L(62)&L(63)&CON8' 10579003
+         AIF   ('&CON8' NE 'X').EEE017                         @Z30ANSF 10580003
+ PUNCH '               &L(64)&L(65)&L(66)&L(67)&L(68)&L(69)&L(70)&CON9' 10581051
+         AIF   ('&CON9' NE 'X').EEE017                         @ZA15722 10582051
+ PUNCH '               &L(71)&L(72)&L(73)&L(74)&L(75)&L(76)&L(77)&CONA' 10583051
+         AIF   ('&CONA' NE 'X').EEE017                         @ZA15722 10586051
+    PUNCH      '               ,                                       X10586351
+                               X'                              @ZA15722 10586651
+ PUNCH '               &L(78)&L(79)&L(80)&L(81)&L(82)&L(83)&L(84)&CONB' 10586951
+         AIF   ('&CONB' NE 'X').EEE017                         @ZA15722 10587251
+ PUNCH '               &L(85)&L(86)&L(87)&L(88)&L(89)&L(90)&L(91)&CONC' 10587551
+         AIF   ('&CONC' NE 'X').EEE017                         @ZA15722 10587851
+ PUNCH '               &L(92)&L(93)&L(94)&L(95)&L(96)&L(97)&L(98)&COND' 10588151
+         AIF   ('&COND' NE 'X').EEE017                         @ZA15722 10588451
+ PUNCH '               &L(99)&L(100)&L(101)&L(102)&L(103)&L(104)&L(105)X10588751
+               &CONE'                                          @ZA15722 10589051
+         AIF   ('&CONE' NE 'X').EEE017                         @ZA15722 10589351
+   PUNCH       '               ,                                       X10589651
+                               X'                              @ZA15722 10589951
+ PUNCH '               &L(106)&L(107)&L(108)&L(109)&L(110)&L(111)&L(112X10590251
+               )&CONF'                                         @ZA15722 10592051
+         AIF   ('&CONF' NE 'X').EEE017                         @ZA15722 10592751
+ PUNCH '               &L(113)&L(114)&L(115)&L(116)&L(117)&L(118)&L(119X10593451
+               )&CONG'                                         @ZA15722 10594151
+         AIF   ('&CONG' NE 'X').EEE017                         @ZA15722 10594851
+ PUNCH '               &L(120)&L(121)&L(122)&L(123)&L(124)&L(125)&L(126X10595551
+               )&CONH'                                         @ZA15722 10596251
+         AIF   ('&CONH' NE 'X').EEE017                         @ZA15722 10596951
+ PUNCH '               &L(127)&L(128)'                         @ZA15722 10597651
+         AGO   .EEE017                                                  10598351
+.************************************************************* @G64IPSJ 10598464
+.*                                                             @G64IPSJ 10598564
+.* THIS SECTION OF CODE BUILDS THE MASK DEVICE MASK ENTRIES    @G64IPSJ 10598664
+.* FOR ALL GENERATED GENERICS.  THE &ALTLIST CONTAINS A LIST   @G64IPSJ 10598764
+.* OF IDS TO BE GENERATED (SAVED DURING DEVICE NAME TABLE      @G64IPSJ 10598864
+.* PROCESSING).  A LIST OF COMPATIBLE GENERICS IS APPENDED TO  @G64IPSJ 10598964
+.* THE &ALTLIST AND A MASK FOR THIS GENERIC IS CONSTRUCTED.    @G64IPSJ 10599064
+.* THE NEXT ID IS FOUND AND THE PROCESS IS REPEATED UNTIL      @G64IPSJ 10599164
+.* ALLTHE GENERICS IN THE &ALTLIST ARE GENERATED.              @G64IPSJ 10599264
+.*                                                             @G64IPSJ 10599364
+.************************************************************* @G64IPSJ 10599464
+.EEE035  ANOP            SET RETURN=6 TO INDICATE GENERATED      S21048 10599564
+&RETURN  SETA  6    GENERIC NAME BIT PATTERNS ARE BEING BUILT    S21048 10599664
+&SVEXTRA SETA  &EXTRA                  SAVE EXTRA VALUE        @G64IPSJ 10599764
+&C       SETA  0                       INITIALIZE INDEX        @G64IPSJ 10599864
+.EEE0351 ANOP                        EXTRA=0 WHEN ALL FINISHED   S21048 10599964
+         AIF   (&EXTRA EQ 0).EEE0356  WITH GENERATED GENERICS    S21048 10600064
+&C       SETA  &C+1                    INCREMENT FOR NEXT      @G64IPSJ 10600164
+.*                                     GENERATED GENERIC       @G64IPSJ 10600264
+&NUMBENT SETA  K'&SGGCTXC(&ALTLIST(&C))/3 SAVE NUMBER OF ENTS  @G64IPSJ 10600364
+&B       SETA  1                       INITIALIZE INDEX        @G64IPSJ 10600464
+&COMPATC SETC  '&SGGCTXC(&ALTLIST(&C))' MOVE TO WORK AREA      @G64IPSJ 10600564
+.EEEJ350 ANOP                          LOOP FOR COMPAT LIST    @G64IPSJ 10600664
+         AIF   (&B GT &NUMBENT).EEEB350 TEST FOR MORE ENTRIES  @G64IPSJ 10600764
+&TEMPVAL SETC  '&COMPATC'(&B*3-2,3)    OBTAIN COMPAT ID        @G64IPSJ 10600864
+&I       SETA  &TEMPVAL                CONVERT ID TO HEX       @G64IPSJ 10600964
+&ALTLIST(&SVEXTRA+&B) SETA &I          SAVE COMPATIBLE ID IN   @G64IPSJ 10601064
+.*                                     TEMP WORK AREA AT END   @G64IPSJ 10601164
+.*                                     OF GENERATED GENERIC    @G64IPSJ 10601264
+.*                                     ID LIST                 @G64IPSJ 10601364
+&B       SETA  &B+1                    INCREMENT INDEX         @G64IPSJ 10601464
+         AGO   .EEEJ350                TEST NEXT ENTRY         @G64IPSJ 10601564
+.EEEB350 ANOP                          EXIT LIST BUILD         @G64IPSJ 10601664
+&W       SETA  0                                                 S21048 10604164
+         AGO   .DDDB10                                           S21048 10604264
+.EEEA350 ANOP                                                    S21048 10604364
+         AIF   (&SGCNTRA(3) EQ &W).EEEA352                       S21048 10604564
+&W       SETA  &W+1                                              S21048 10604664
+         AIF   (&SGDADRA(&W) LT X'400000').EEEA350 NOT SUPPORTED S21048 10604764
+&DUPLI2  SETA  &SGDADRA(&W)/X'400000'  DUPLI2=DEVICE TYPE        S21048 10604864
+&B       SETA  1                       INITIALIZE INDEX        @G64IPSJ 10604964
+.EEEK350 ANOP                          LOOP FOR ID COMPAT TEST @G64IPSJ 10605964
+         AIF   (&B GT &NUMBENT).EEEA350 IF NO MORE ENTRIES,    @G64IPSJ 10606964
+.*                                     GET NEXT ADDR BOX       @G64IPSJ 10607964
+         AIF   (&DUPLI2 EQ &ALTLIST(&SVEXTRA+&B)).DDDB21       @G64IPSJ 10608964
+.*                                     IF ID MATCHES, ADD TO   @G64IPSJ 10609964
+.*                                     MASK AND RETURN TO      @G64IPSJ 10610964
+.*                                     .EEEA350 FOR NEXT ENTRY @G64IPSJ 10611964
+&B       SETA  &B+1                    INCREMENT INDEX         @G64IPSJ 10612964
+         AGO   .EEEK350                TRY NEXT ID             @G64IPSJ 10613964
+.EEEA352 ANOP                           COME HERE WHEN BIT       S21048 10614964
+ PUNCH  '        DC        F''&U'''                              S21048 10615964
+         PUNCH '        DC        XL4''&SGDTYPC(&ALTLIST(&C))'''        10616964
+.*                                     PUNCH DEVICE TYPE       @G64IPSJ 10617964
+.*   PUNCH MASK FOR GENERIC                                      S21048 10622664
+ PUNCH  '   DC  X''&L(1)&L(2)&L(3)&L(4)&L(5)&L(6)&L(7)'''        S21048 10646401
+         AIF   ('&CONT' NE 'X').EEE0354                          S21048 10647201
+ PUNCH  '   DC  X''&L(8)&L(9)&L(10)&L(11)&L(12)&L(13)&L(14)'''   S21048 10648001
+         AIF   ('&CONTI1' NE 'X').EEE0354                        S21048 10648801
+ PUNCH  '   DC  X''&L(15)&L(16)&L(17)&L(18)&L(19)&L(20)&L(21)''' S21048 10649601
+         AIF   ('&CON2' NE 'X').EEE0354                          S21048 10650401
+ PUNCH  '   DC  X''&L(22)&L(23)&L(24)&L(25)&L(26)&L(27)&L(28)''' S21048 10651201
+         AIF   ('&CON3' NE 'X').EEE0354                          S21048 10652001
+ PUNCH  '   DC  X''&L(29)&L(30)&L(31)&L(32)&L(33)&L(34)&L(35)''' S21048 10652801
+         AIF   ('&CON4' NE 'X').EEE0354                          S21048 10653601
+ PUNCH  '   DC  X''&L(36)&L(37)&L(38)&L(39)&L(40)&L(41)&L(42)''' S21048 10654401
+         AIF   ('&CON5' NE 'X').EEE0354                        @Z30ANSF 10654503
+ PUNCH '     DC  X''&L(43)&L(44)&L(45)&L(46)&L(47)&L(48)&L(49)'''       10654603
+         AIF   ('&CON6' NE 'X').EEE0354                        @Z30ANSF 10654703
+ PUNCH '     DC  X''&L(50)&L(51)&L(52)&L(53)&L(54)&L(55)&L(56)'''       10654803
+         AIF   ('&CON7' NE 'X').EEE0354                        @Z30ANSF 10664003
+ PUNCH '     DC  X''&L(57)&L(58)&L(59)&L(60)&L(61)&L(62)&L(63)'''       10666064
+         AIF   ('&CON8' NE 'X').EEE0354                        @ZA20637 10667064
+ PUNCH '     DC  X''&L(64)&L(65)&L(66)&L(67)&L(68)&L(69)&L(70)'''       10668064
+         AIF   ('&CON9' NE 'X').EEE0354                        @ZA28977 10669064
+ PUNCH '     DC  X''&L(71)&L(72)&L(73)&L(74)&L(75)&L(76)&L(77)'''       10671551
+         AIF   ('&CONA' NE 'X').EEE0354                        @ZA15722 10672051
+ PUNCH '     DC  X''&L(78)&L(79)&L(80)&L(81)&L(82)&L(83)&L(84)'''       10672251
+         AIF   ('&CONB' NE 'X').EEE0354                        @ZA15722 10672451
+ PUNCH '     DC  X''&L(85)&L(86)&L(87)&L(88)&L(89)&L(90)&L(91)'''       10672651
+         AIF   ('&CONC' NE 'X').EEE0354                        @ZA15722 10672851
+ PUNCH '     DC  X''&L(92)&L(93)&L(94)&L(95)&L(96)&L(97)&L(98)'''       10673051
+         AIF   ('&COND' NE 'X').EEE0354                        @ZA15722 10673251
+ PUNCH '     DC  X''&L(99)&L(100)&L(101)&L(102)&L(103)&L(104)&L(105)''' 10673451
+         AIF   ('&CONE' NE 'X').EEE0354                        @ZA15722 10673651
+ PUNCH '     DC  X''&L(106)&L(107)&L(108)&L(109)&L(110)&L(111)&L(112)''X10673851
+               '                                               @ZA15722 10674051
+         AIF   ('&CONF' NE 'X').EEE0354                        @ZA15722 10674251
+ PUNCH '     DC  X''&L(113)&L(114)&L(115)&L(116)&L(117)&L(118)&L(119)''X10674451
+               '                                               @ZA15722 10675251
+         AIF   ('&CONG' NE 'X').EEE0354                        @ZA15722 10676051
+ PUNCH '     DC  X''&L(120)&L(121)&L(122)&L(123)&L(124)&L(125)&L(126)''X10676251
+               '                                               @ZA15722 10676451
+         AIF   ('&CONH' NE 'X').EEE0354                        @ZA15722 10676651
+ PUNCH '     DC  X''&L(127)&L(128)'''                          @ZA15722 10676851
+.EEE0354 ANOP                                                    S21048 10677051
+&EXTRA   SETA  &EXTRA-1       DECREMENT COUNT OF GENERATE GENERICS21048 10678003
+         AGO   .EEE0351                                          S21048 10680003
+.EEE0356 ANOP                                                           10683003
+&RETURN  SETA  3                                                        10686003
+         AGO   .AAA110                                                  10689003
+.EEE040  ANOP  RETURN=3  COME HERE ONCE PER UNITNAME.                   10692003
+ PUNCH ' SGIEF012 0,&U,                                                X10695003
+                     XXXX'                                              10700000
+ PUNCH '               &L(1)&L(2)&L(3)&L(4)&L(5)&L(6)&L(7)&CONTI'       10720000
+ AIF ('&CONTI' NE 'X').AAA112                                           10740000
+ PUNCH '               &L(8)&L(9)&L(10)&L(11)&L(12)&L(13)&L(14)&CONTI1' 10743018
+ AIF ('&CONTI1' NE 'X').AAA112                                     000G 10746018
+ PUNCH '               &L(15)&L(16)&L(17)&L(18)&L(19)&L(20)&L(21)&CON2' 10749018
+         AIF   ('&CON2' NE 'X').AAA112                             000G 10752018
+    PUNCH      '               ,                                       X10755018
+                               X'                                       10758018
+ PUNCH '               &L(22)&L(23)&L(24)&L(25)&L(26)&L(27)&L(28)&CON3' 10761018
+         AIF   ('&CON3' NE 'X').AAA112                             000G 10764018
+ PUNCH '               &L(29)&L(30)&L(31)&L(32)&L(33)&L(34)&L(35)&CON4' 10767018
+         AIF   ('&CON4' NE 'X').AAA112                             000G 10770018
+ PUNCH '               &L(36)&L(37)&L(38)&L(39)&L(40)&L(41)&L(42)&CON5' 10773003
+         AIF   ('&CON5' NE 'X').AAA112                         @Z30ANSF 10774003
+ PUNCH '               &L(43)&L(44)&L(45)&L(46)&L(47)&L(48)&L(49)&CON6' 10775003
+         AIF   ('&CON6' NE 'X').AAA112                         @Z30ANSF 10776003
+    PUNCH      '               ,                                       X10776303
+                               X'                              @Z30ANSF 10776603
+ PUNCH '               &L(50)&L(51)&L(52)&L(53)&L(54)&L(55)&L(56)&CON7' 10777003
+         AIF   ('&CON7' NE 'X').AAA112                         @Z30ANSF 10778003
+ PUNCH '               &L(57)&L(58)&L(59)&L(60)&L(61)&L(62)&L(63)&CON8' 10779003
+         AIF   ('&CON8' NE 'X').AAA112                         @Z30ANSF 10780003
+ PUNCH '               &L(64)&L(65)&L(66)&L(67)&L(68)&L(69)&L(70)&CON9' 10781051
+         AIF   ('&CON9' NE 'X').AAA112                         @ZA15722 10782051
+ PUNCH '               &L(71)&L(72)&L(73)&L(74)&L(75)&L(76)&L(77)&CONA' 10783051
+         AIF   ('&CONA' NE 'X').AAA112                         @ZA15722 10786051
+    PUNCH      '              ,                                        X10786351
+                              X'                               @ZA15722 10786651
+ PUNCH '               &L(78)&L(79)&L(80)&L(81)&L(82)&L(83)&L(84)&CONB' 10786951
+         AIF   ('&CONB' NE 'X').AAA112                         @ZA15722 10787251
+ PUNCH '               &L(85)&L(86)&L(87)&L(88)&L(89)&L(90)&L(91)&CONC' 10787551
+         AIF   ('&CONC' NE 'X').AAA112                         @ZA15722 10787851
+ PUNCH '               &L(92)&L(93)&L(94)&L(95)&L(96)&L(97)&L(98)&COND' 10788151
+         AIF   ('&COND' NE 'X').AAA112                         @ZA15722 10788451
+ PUNCH '               &L(99)&L(100)&L(101)&L(102)&L(103)&L(104)&L(105)X10788751
+               &CONE'                                          @ZA15722 10789051
+         AIF   ('&CONE' NE 'X').AAA112                         @ZA15722 10789351
+    PUNCH      '               ,                                       X10789651
+                               X'                              @ZA15722 10789951
+ PUNCH '               &L(106)&L(107)&L(108)&L(109)&L(110)&L(111)&L(112X10790251
+               )&CONF'                                         @ZA15722 10792051
+         AIF   ('&CONF' NE 'X').AAA112                         @ZA15722 10792751
+ PUNCH '               &L(113)&L(114)&L(115)&L(116)&L(117)&L(118)&L(119X10793451
+               )&CONG'                                         @ZA15722 10794151
+         AIF   ('&CONG' NE 'X').AAA112                         @ZA15722 10794851
+ PUNCH '               &L(120)&L(121)&L(122)&L(123)&L(124)&L(125)&L(126X10795551
+               )&CONH'                                         @ZA15722 10796251
+         AIF   ('&CONH' NE 'X').AAA112                         @ZA15722 10796951
+ PUNCH '               &L(127)&L(128)'                         @ZA15722 10797651
+         AGO   .AAA112                                                  10798351
+.EEE050  ANOP                                                           10800000
+ PUNCH ' SGIEF013 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0'                    10820000
+&RETURN  SETA  4                                                        10840000
+         AGO   .DDDB10                                                  10860000
+.EEE054  ANOP  RETURN=4                                                 10880000
+&A       SETA  0                                                        10900000
+.EEE055  AIF   (&A EQ &SGCNTRA(3)).EEE060                               10920000
+&A       SETA  &A+1                                                     10940000
+         AIF   (NOT &SGDASWB(&A)).EEE055                                10960018
+         AGO   .DDDB20                                                  10980000
+.EEE060  ANOP  PUNCH OUT MASK FOR ALL DIRECT ACCESS DEVICES.            11000000
+ PUNCH ' SGIEF012 0,&U,                                                X11020000
+                     XXXX'                                              11040000
+ PUNCH '               &L(1)&L(2)&L(3)&L(4)&L(5)&L(6)&L(7)&CONTI'       11060000
+ AIF ('&CONTI' NE 'X').AA1234                                           11080000
+ PUNCH '               &L(8)&L(9)&L(10)&L(11)&L(12)&L(13)&L(14)&CONTI1' 11083018
+ AIF ('&CONTI1' NE 'X').AA1234                                     000G 11086018
+ PUNCH '               &L(15)&L(16)&L(17)&L(18)&L(19)&L(20)&L(21)&CON2' 11089018
+         AIF   ('&CON2' NE 'X').AA1234                             000G 11092018
+    PUNCH      '               ,                                       X11095018
+                               X'                                       11098018
+ PUNCH '               &L(22)&L(23)&L(24)&L(25)&L(26)&L(27)&L(28)&CON3' 11101018
+         AIF   ('&CON3' NE 'X').AA1234                             000G 11104018
+ PUNCH '               &L(29)&L(30)&L(31)&L(32)&L(33)&L(34)&L(35)&CON4' 11107018
+         AIF   ('&CON4' NE 'X').AA1234                             000G 11110018
+ PUNCH '               &L(36)&L(37)&L(38)&L(39)&L(40)&L(41)&L(42)&CON5' 11113003
+         AIF   ('&CON5' NE 'X').AA1234                         @Z30ANSF 11114003
+ PUNCH '               &L(43)&L(44)&L(45)&L(46)&L(47)&L(48)&L(49)&CON6' 11115003
+         AIF   ('&CON6' NE 'X').AA1234                         @Z30ANSF 11116003
+    PUNCH      '               ,                                       X11116303
+                               X'                              @Z30ANSF 11116603
+ PUNCH '               &L(50)&L(51)&L(52)&L(53)&L(54)&L(55)&L(56)&CON7' 11117003
+         AIF   ('&CON7' NE 'X').AA1234                         @Z30ANSF 11118003
+ PUNCH '               &L(57)&L(58)&L(59)&L(60)&L(61)&L(62)&L(63)&CON8' 11119003
+         AIF   ('&CON8' NE 'X').AA1234                         @Z30ANSF 11120003
+ PUNCH '               &L(64)&L(65)&L(66)&L(67)&L(68)&L(69)&L(70)&CON9' 11121051
+         AIF   ('&CON9' NE 'X').AA1234                         @ZA15722 11122051
+ PUNCH '               &L(71)&L(72)&L(73)&L(74)&L(75)&L(76)&L(77)&CONA' 11122664
+         AIF   ('&CONA' NE 'X').AA1234                         @ZA15722 11126051
+    PUNCH      '               ,                                       X11126351
+                               X'                              @ZA15722 11126651
+ PUNCH '               &L(78)&L(79)&L(80)&L(81)&L(82)&L(83)&L(84)&CONB' 11126951
+         AIF   ('&CONB' NE 'X').AA1234                         @ZA15722 11127251
+ PUNCH '               &L(85)&L(86)&L(87)&L(88)&L(89)&L(90)&L(91)&CONC' 11127551
+         AIF   ('&CONC' NE 'X').AA1234                         @ZA15722 11127851
+ PUNCH '               &L(92)&L(93)&L(94)&L(95)&L(96)&L(97)&L(98)&COND' 11128151
+         AIF   ('&COND' NE 'X').AA1234                         @ZA15722 11128451
+ PUNCH '               &L(99)&L(100)&L(101)&L(102)&L(103)&L(104)&L(105)X11128751
+               &CONE'                                          @ZA15722 11129051
+         AIF   ('&CONE' NE 'X').AA1234                         @ZA15722 11129351
+    PUNCH      '               ,                                       X11129651
+                               X'                              @ZA15722 11129951
+ PUNCH '               &L(106)&L(107)&L(108)&L(109)&L(110)&L(111)&L(112X11130251
+               )&CONF'                                         @ZA15722 11132051
+         AIF   ('&CONF' NE 'X').AA1234                         @ZA15722 11132751
+ PUNCH '               &L(113)&L(114)&L(115)&L(116)&L(117)&L(118)&L(119X11133451
+               )&CONG'                                         @ZA15722 11134151
+         AIF   ('&CONG' NE 'X').AA1234                         @ZA15722 11134851
+ PUNCH '               &L(120)&L(121)&L(122)&L(123)&L(124)&L(125)&L(126X11135551
+               )&CONH'                                         @ZA15722 11136251
+        AIF    ('&CONH' NE 'X').AA1234                         @ZA15722 11136951
+ PUNCH '               &L(127)&L(128)'                         @ZA15722 11137651
+.AA1234 PUNCH '          END '                                          11138351
+ PUNCH '/*'                                                             11140000
+         MEND                                                           11160000

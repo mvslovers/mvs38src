@@ -1,0 +1,26 @@
+                MACRO                                                   03000000
+                SGHEW210                                                06000000
+                COPY SGGBLPAK                                           09000000
+         GBLA &DFVAL1,&DFVAL2                                           12000000
+.*                                                                      15000000
+&SGCTRLC(6)     SETC 'HEWLF064'         SET L.E. NAME                   18000000
+                AIF (&SGMENTB(9)).EDIT  WAS EDITOR MACRO SPECIFIED      21000000
+&DFVAL1         SETA (192*1024)         NO. USE DEFAULT SIZE            24000000
+&DFVAL2         SETA (64*1024)            VALUES.                       27000000
+                AGO .PNCH                                               30000000
+.*                                                                      33000000
+.EDIT           ANOP                    YES. USE USER-SPECIFIED         36000000
+&DFVAL1         SETA (&SGLNKA(1))         SIZE VALUES                   39000000
+&DFVAL2         SETA (&SGLNKA(2))                                       42000000
+.*                                                                      45000000
+.PNCH           ANOP                    PUNCH ASSEMBLER                 48000000
+                COPY SGASMPAK           JCL FOR LINK-EDITOR DEFAULT     51000000
+.*                                        CSECT HEWLFDEF                54000000
+                PUNCH '  TITLE  ''HEWLFDEF    EDITOR DEFAULT SIZE PARAMX57000000
+               ETERS'''                                                 60000000
+                PUNCH '  SGHEW011 VAL1=&DFVAL1,VAL2=&DFVAL2 '           63000000
+                PUNCH '  IHBRELNO  '                             S21016 64000000
+                PUNCH '  END '                                          66000000
+                PUNCH '/* '                                             69000000
+.*                                                                      72000000
+                MEND                                                    75000000

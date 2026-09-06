@@ -1,0 +1,52 @@
+         MACRO                                                          00010000
+         SGIEF241                                                       00020000
+         COPY  SGGBLPAK                                                 00030000
+         LCLB  &B(56)                                                   00040000
+         LCLA  &A                                                       00050000
+  LCLC  &C1,&X1,&X2                                                     00060000
+  LCLA  &X                                                              00070000
+.A0      AIF   (&A EQ 50).A1                                            00080000
+&A       SETA  &A+1                                                     00090000
+&B(&A)  SETB  (&SGCKPB(&A))                                             00100000
+         AGO   .A0                                                      00110000
+.A1      ANOP                                                           00120000
+ AIF (&SGCKPA(1) EQ 0).A2                                               00130000
+&C1  SETC  ','                                                          00140000
+.A2  ANOP                                                               00150000
+&SGCTRLC(6)  SETC  'IEFYRCDS'                                           00160000
+         COPY  SGASMPAK                                                 00170000
+ PUNCH ' SGIEF060 NE=(&B(1)&B(2)&B(3)&B(4)&B(6)&B(7)&B(8)&B(9)&B(10)&B(X00180000
+               11)&B(12)&B(13)&B(15)&B(16)&B(17)&B(18)&B(19)&B(20)&B(21X00190000
+               ),                                     X'                00200000
+ PUNCH '               &B(22)&B(23)&B(24)&B(25)&B(26)&B(27)&B(28)&B(29)X00210000
+               &B(30)&B(31)&B(32)&B(33)&B(34)&B(35)&B(36)&B(37)&B(38)&BX00220000
+               (39),                             XXXXXXXXXXXXXXXX'      00230000
+ PUNCH '               &B(40)&B(41)&B(42)&B(43)&B(44)&B(45)&B(46)&B(47)X00240000
+               &B(48)&B(49)&B(50))&C1                                  X00250000
+                        X '                                             00260000
+ AIF (&SGCKPA(1) EQ 0).END                                              00270000
+&A  SETA  0                                                             00280000
+&X1  SETC  'UA='                                                        00290000
+  AIF (&SGCKPA(1) EQ 1).A3                                              00300000
+&X1  SETC  'UA=('                                                       00310000
+.A3  AIF (&SGCKPA(1) EQ &A).END                                         00320000
+&A  SETA  &A+1                                                          00330000
+&X SETA &SGCKPA(((&A+1)/2+1))-&SGCKPA(((&A+1)/2+1))/X'1000'*X'1000'     00340000
+ AIF (&A/2*2 EQ &A).A4                                                  00350000
+&X SETA &SGCKPA(((&A+1)/2+1))/X'1000'                                   00360000
+.A4  ANOP                                                               00370000
+&X2  SETC ' '                                                           00380000
+&C1  SETC  ''                                                           00390000
+  AIF (&SGCKPA(1) EQ 1).A7                                              00400000
+&X2  SETC  ','                                                          00410000
+&C1  SETC  'XXXXXXXX'                                                   00420000
+ AIF (&SGCKPA(1) NE &A).A7                                              00430000
+&X2  SETC  ')'                                                          00440000
+&C1  SETC  ''                                                           00450000
+.A7 PUNCH '               &X1&X&X2                                     X00460000
+                         &C1'                                           00470000
+&X1 SETC ''                                                             00480000
+  AGO  .A3                                                              00490000
+.END  PUNCH  '    END  '                                                00500000
+  PUNCH  '/*'                                                           00510000
+         MEND                                                           00520000

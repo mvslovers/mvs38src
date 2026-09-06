@@ -1,0 +1,189 @@
+IFOSAMP  TITLE ' - SAMPLE PROGRAM'                                      00010000
+         PRINT DATA                                                     00020000
+*                                                                       00030000
+*        THIS IS THE MACRO DEFINITION                                   00040000
+*                                                                       00050000
+         MACRO                                                          00060000
+         MOVE  &TO,&FROM                                                00070000
+.*                                                                      00080000
+.*       DEFINE SETC SYMBOL                                             00090000
+.*                                                                      00100000
+         LCLC  &TYPE                                                    00110000
+.*                                                                      00120000
+.*       CHECK NUMBER OF OPERANDS                                       00130000
+.*                                                                      00140000
+         AIF   (N'&SYSLIST NE 2).ERROR1                                 00150000
+.*                                                                      00160000
+.*       CHECK TYPE ATTRIBUTES OF OPERANDS                              00170000
+.*                                                                      00180000
+         AIF   (T'&TO NE T'&FROM).ERROR2                                00190000
+         AIF   (T'&TO EQ 'C' OR T'&TO EQ 'G' OR T'&TO EQ 'K').TYPECGK   00200000
+         AIF   (T'&TO EQ 'D' OR T'&TO EQ 'E' OR T'&TO EQ 'H').TYPEDEH   00210000
+         AIF   (T'&TO EQ 'F').MOVE                                      00220000
+         AGO   .ERROR3                                                  00230000
+.TYPEDEH ANOP                                                           00240000
+.*                                                                      00250000
+.*       ASSIGN TYPE ATTRIBUTE TO SETC SYMBOL                           00260000
+.*                                                                      00270000
+&TYPE    SETC  T'&TO                                                    00280000
+.MOVE    ANOP                                                           00290000
+*        NEXT TWO STATEMENTS GENERATED FOR MOVE MACRO                   00300000
+         L&TYPE   2,&FROM                                               00310000
+         ST&TYPE  2,&TO                                                 00320000
+         MEXIT                                                          00330000
+.*                                                                      00340000
+.*       CHECK LENGTH ATTRIBUTES OF OPERANDS                            00350000
+.*                                                                      00360000
+.TYPECGK AIF   (L'&TO NE L'&FROM OR L'&TO GT 256).ERROR4                00370000
+*        NEXT STATEMENT GENERATED FOR MOVE MACRO                        00380000
+         MVC   &TO,&FROM                                                00390000
+         MEXIT                                                          00400000
+.*                                                                      00410000
+.*       ERROR MESSAGES FOR INVALID MOVE MACRO INSTRUCTIONS             00420000
+.*                                                                      00430000
+.ERROR1  MNOTE 1,'IMPROPER NUMBER OF OPERANDS, NO STATEMENTS GENERATED' 00440000
+         MEXIT                                                          00450000
+.ERROR2  MNOTE 1,'OPERAND TYPES DIFFERENT, NO STATEMENTS GENERATED'     00460000
+         MEXIT                                                          00470000
+.ERROR3  MNOTE 1,'IMPROPER OPERAND TYPES, NO STATEMENTS GENERATED'      00480000
+         MEXIT                                                          00490000
+.ERROR4  MNOTE 1,'IMPROPER OPERAND LENGTHS, NO STATEMENTS GENERATED'    00500000
+         MEND                                                           00510000
+*                                                                       00520000
+*        MAIN ROUTINE                                                   00530000
+*                                                                       00540000
+SAMPLR   CSECT                                                          00550000
+BEGIN    SAVE  (14,12),,*                                               00560000
+         BALR  R12,0         ESTABLISH ADDRESSABILITY OF PROGRAM        00570000
+         USING *,R12         AND TELL THE ASSEMBLER WHAT BASE TO USE    00580000
+         ST    13,SAVE13                                                00590000
+         LM    R5,R7,=A(LISTAREA,16,LISTEND)  LOAD LIST AREA PARAMETERS 00600000
+         USING LIST,R5      REGISTER 5 POINTS TO THE LIST               00610000
+MORE     BAL   R14,SEARCH   FIND LIST ENTRY IN TABLE                    00620000
+         TM    SWITCH,NONE  CHECK TO SEE IF NAME WAS FOUND              00630000
+         BO    NOTTHERE     BRANCH IF NOT                               00640000
+         USING TABLE,R1     REGISTER 1 NOW POINTS TO TABLE ENTRY        00650000
+         MOVE  TSWITCH,LSWITCH          MOVE FUNCTIONS                  00660000
+         MOVE  TNUMBER,LNUMBER               FROM LIST ENTRY            00670000
+         MOVE  TADDRESS,LADDRESS                  TO TABLE ENTRY        00680000
+LISTLOOP BXLE  R5,R6,MORE   LOOP THROUGH THE LIST                       00690000
+         CLC   TESTTABL(240),TABLAREA                                   00700000
+         BNE   NOTRIGHT                                                 00710000
+         CLC   TESTLIST(96),LISTAREA                                    00720000
+         BNE   NOTRIGHT                                                 00730000
+         WTO   'SAMPLE PROGRAM IFOSAMP SUCCESSFUL',ROUTCDE=(2,11)       00740000
+EXIT     L     R13,SAVE13                                               00750000
+         RETURN (14,12),RC=0                                            00760000
+*                                                                       00770000
+NOTRIGHT WTO   'SAMPLE PROGRAM IFOSAMP UNSUCCESSFUL',ROUTCDE=(2,11)     00780000
+         B     EXIT                                                     00790000
+NOTTHERE OI    LSWITCH,NONE TURN ON SWITCH IN LIST ENTRY                00800000
+         B     LISTLOOP     GO BACK AND LOOP                            00810000
+SAVE13   DC    F'0'                                                     00820000
+SWITCH   DC    X'00'                                                    00830000
+NONE     EQU   X'80'                                                    00840000
+*                                                                       00850000
+*        BINARY SEARCH ROUTINE                                          00860000
+*                                                                       00870000
+SEARCH   NI    SWITCH,255-NONE TURN OFF NOT FOUND SWITCH                00880000
+         LM    R1,R3,=F'128,4,128' LOAD TABLE PARAMETERS                00890000
+         LA    R1,TABLAREA-16(R1)  GET ADDRESS OF MIDDLE ENTRY          00900000
+LOOP     SRL   R3,1                DIVIDE INCREMENT BY 2                00910000
+         CLC   LNAME,TNAME         COMPARE LIST ENTRY WITH TABLE ENTRY  00920000
+         BH    HIGHER              BRANCH IF SHOULD BE HIGHER IN TABLE  00930000
+         BCR   8,R14               EXIT IF FOUND                        00940000
+         SR    R1,R3               OTHERWISE IT IS LOWER IN THE TABLE  X00950000
+                                     SO SUBTRACT INCREMENT              00960000
+         BCT   R2,LOOP             LOOP 4 TIMES                         00970000
+         B     NOTFOUND            ARGUMENT IS NOT IN THE TABLE         00980000
+HIGHER   AR    R1,R3               ADD INCREMENT                        00990000
+         BCT   R2,LOOP             LOOP 4 TIMES                         01000000
+NOTFOUND OI    SWITCH,NONE         TURN ON NOT FOUND SWITCH             01010000
+         BR    R14                 EXIT                                 01020000
+*                                                                       01030000
+*        THIS IS THE TABLE                                              01040000
+*                                                                       01050000
+         DS    0D                                                       01060000
+TABLAREA DC    XL8'0',CL8'ALPHA'                                        01070000
+         DC    XL8'0',CL8'BETA'                                         01080000
+         DC    XL8'0',CL8'DELTA'                                        01090000
+         DC    XL8'0',CL8'EPSILON'                                      01100000
+         DC    XL8'0',CL8'ETA'                                          01110000
+         DC    XL8'0',CL8'GAMMA'                                        01120000
+         DC    XL8'0',CL8'IOTA'                                         01130000
+         DC    XL8'0',CL8'KAPPA'                                        01140000
+         DC    XL8'0',CL8'LAMBDA'                                       01150000
+         DC    XL8'0',CL8'MU'                                           01160000
+         DC    XL8'0',CL8'NU'                                           01170000
+         DC    XL8'0',CL8'OMICRON'                                      01180000
+         DC    XL8'0',CL8'PHI'                                          01190000
+         DC    XL8'0',CL8'SIGMA'                                        01200000
+         DC    XL8'0',CL8'ZETA'                                         01210000
+*                                                                       01220000
+*        THIS IS THE LIST                                               01230000
+*                                                                       01240000
+LISTAREA DC    CL8'LAMBDA',X'0A',FL3'29',A(BEGIN)                       01250000
+         DC    CL8'ZETA',X'05',FL3'5',A(LOOP)                           01260000
+         DC    CL8'THETA',X'02',FL3'45',A(BEGIN)                        01270000
+         DC    CL8'TAU',X'00',FL3'0',A(1)                               01280000
+         DC    CL8'LIST',X'1F',FL3'465',A(0)                            01290000
+LISTEND  DC    CL8'ALPHA',X'00',FL3'1',A(123)                           01300000
+*                                                                       01310000
+*        THIS IS THE CONTROL TABLE                                      01320000
+*                                                                       01330000
+         DS    0D                                                       01340000
+TESTTABL DC    FL3'1',X'00',A(123),CL8'ALPHA'                           01350000
+         DC    XL8'0',CL8'BETA'                                         01360000
+         DC    XL8'0',CL8'DELTA'                                        01370000
+         DC    XL8'0',CL8'EPSILON'                                      01380000
+         DC    XL8'0',CL8'ETA'                                          01390000
+         DC    XL8'0',CL8'GAMMA'                                        01400000
+         DC    XL8'0',CL8'IOTA'                                         01410000
+         DC    XL8'0',CL8'KAPPA'                                        01420000
+         DC    FL3'29',X'0A',A(BEGIN),CL8'LAMBDA'                       01430000
+         DC    XL8'0',CL8'MU'                                           01440000
+         DC    XL8'0',CL8'NU'                                           01450000
+         DC    XL8'0',CL8'OMICRON'                                      01460000
+         DC    XL8'0',CL8'PHI'                                          01470000
+         DC    XL8'0',CL8'SIGMA'                                        01480000
+         DC    FL3'5',X'05',A(LOOP),CL8'ZETA'                           01490000
+*                                                                       01500000
+*        THIS IS THE CONTROL LIST                                       01510000
+*                                                                       01520000
+TESTLIST DC    CL8'LAMBDA',X'0A',FL3'29',A(BEGIN)                       01530000
+         DC    CL8'ZETA',X'05',FL3'5',A(LOOP)                           01540000
+         DC    CL8'THETA',X'82',FL3'45',A(BEGIN)                        01550000
+         DC    CL8'TAU',X'80',FL3'0',A(1)                               01560000
+         DC    CL8'LIST',X'9F',FL3'465',A(0)                            01570000
+         DC    CL8'ALPHA',X'00',FL3'1',A(123)                           01580000
+*                                                                       01590000
+*        THESE ARE THE SYMBOLIC REGISTERS                               01600000
+*                                                                       01610000
+R0       EQU   0                                                        01620000
+R1       EQU   1                                                        01630000
+R2       EQU   2                                                        01640000
+R3       EQU   3                                                        01650000
+R5       EQU   5                                                        01660000
+R6       EQU   6                                                        01670000
+R7       EQU   7                                                        01680000
+R12      EQU   12                                                       01690000
+R13      EQU   13                                                       01700000
+R14      EQU   14                                                       01710000
+R15      EQU   15                                                       01720000
+*                                                                       01730000
+*        THIS IS THE FORMAT DEFINITION OF LIST ENTRYS                   01740000
+*                                                                       01750000
+LIST     DSECT                                                          01760000
+LNAME    DS    CL8                                                      01770000
+LSWITCH  DS    C                                                        01780000
+LNUMBER  DS    FL3                                                      01790000
+LADDRESS DS    F                                                        01800000
+*                                                                       01810000
+*        THIS IS THE FORMAT DEFINITION OF TABLE ENTRYS                  01820000
+*                                                                       01830000
+TABLE    DSECT                                                          01840000
+TNUMBER  DS    FL3                                                      01850000
+TSWITCH  DS    C                                                        01860000
+TADDRESS DS    F                                                        01870000
+TNAME    DS    CL8                                                      01880000
+         END   BEGIN                                                    01890000

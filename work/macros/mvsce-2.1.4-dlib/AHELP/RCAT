@@ -1,0 +1,73 @@
+)F FUNCTION -                                                           00050004
+   THE RCAT COMMAND IS USED TO RECOVER CATALOG ENTRIES.                 00100004
+)X SYNTAX -                                                             00150004
+         RCAT CATALOG('CATNAME'/'PASSWORD' 'DNAME')                     00200004
+                  CRAVOLUMES(('VOLSER' 'DEVTYPE')...) |                 00250004
+                     CRAFILES(('DNAME' ALL | NONE)...)                  00300004
+                  WORKFILE('DNAME'/'PASSWORD')                          00350004
+                  WORKCAT('CATNAME'/'PASSWORD')                         00400004
+                  MASTERPW('PASSWORD')                                  00450004
+                  IGNORE | NOIGNORE                                     00500004
+  REQUIRED -                                                            00550004
+            CATALOG                                                     00600004
+            CRAVOLUMES | CRAFILES                                       00650004
+   DEFAULTS -                                                           00700004
+            NOIGNORE                                                    00850004
+  ABBREVIATIONS -                                                       00900004
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 00950004
+            RCAT             RCAT                                       01000004
+            CRAVOLUMES       CRAVOLS                                    01100004
+            WORKFILE         WFILE                                      01200004
+            WORKCAT          WCAT                                       01250004
+            MASTERPW         MRPW                                       01300004
+            NOIGNORE         NIGN                                       01350004
+)O OPERANDS -                                                           01450004
+))CATALOG('CATNAME'/'PASSWORD' 'DNAME')                                 01500004
+           - IDENTIFIES THE CATALOG TO BE RESET.                        01550004
+  'CATNAME'- NAME OF THE CATALOG TO BE RESET.                           01600004
+  'PASSWORD'                                                            01610004
+           -MASTER PASSWORD OF THE CATALOG TO BE RESET.                 01650004
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE CATALOG       01700004
+             TO BE RESET.                                               01750004
+))CRAVOLUMES(('VOLSER' 'DEVTYPE')...)                                   01800004
+           - SPECIFIES THE VOLUME SERIAL NUMBERS AND CORRESPONDING      01850004
+             DEVICE TYPES OF THE VOLUMES TO BE USED IN RESETTING THE    01900004
+             CATALOG.                                                   01950004
+  'VOLSER' - VOLUME SERIAL NUMBER OF THE VOLUME TO BE USED IN RESETTING 02000004
+             THE CATALOG.                                               02050004
+  'DEVTYPE'- DEVICE TYPE OF THE VOLUME TO BE USED IN RESETTING THE      02100004
+             CATALOG.                                                   02150004
+))CRAFILES(('DNAME' ALL | NONE)...)                                     02200004
+           - SPECIFIES A LIST OF DD STATEMENTS WHICH IDENTIFY THE       02250004
+             VOLUMES AND DEVICES TO BE USED TO RESET THE CATALOG.       02300004
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE VOLUME        02350004
+             TO BE USED TO RESET THE CATALOG.                           02400004
+  ALL      - SPECIFIES THAT THE CATALOG RECORDS IN THE CRAS ON THE      02450004
+             VOLUME SPECIFIED BY THE DNAME ARE TO BE RESET(IN THE       02500004
+             CATALOG).                                                  02550004
+  NONE     - SPECIFIES THE VOLUME(IDENTIFIED BY DNAME) OF A MULTIVOLUME 02600004
+             DATA SET NEEDED DURING A RESET OPERATION.                  02650004
+))WORKFILE('DNAME'/'PASSWORD')                                          02700004
+           - SPECIFIES THE NAME OF A DD STATEMENT THAT IDENTIFIES A     02750004
+             VSAM DATA SET NAME AND LIST OF VOLUME SERIAL NUMBERS AND   02800004
+             UNITS TO BE USED FOR A WORKFILE.                           02850004
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE WORKFILE.     02900004
+  'PASSWORD'                                                            02910004
+           -SPECIFIES PASSWORD TO BECOME THE WORKFILE'S MASTER          02950004
+             PASSWORD.                                                  02960004
+))WORKCAT('CATNAME'/'PASSWORD')                                         03000004
+           - SPECIFIES THE NAME OF THE CATALOG IN WHICH TO DEFINE THE   03050004
+             WORKFILE.                                                  03100004
+  'CATNAME'- NAME OF THE CATALOG TO CONTAIN THE WORKFILE.               03150004
+  'PASSWORD'                                                            03160004
+           -UPDATE OR HIGHER LEVEL PASSWORD OF CATALOG TO CONTAIN       03200004
+             THE WORKFILE.                                              03250004
+))MASTERPW('PASSWORD')                                                  03300004
+           - SPECIFIES THE MASTER CATALOG'S MASTER PASSWORD.            03350004
+  'PASSWORD'                                                            03360004
+           -MASTER PASSWORD OF THE MASTER CATALOG.                      03400004
+))IGNORE                                                                03450004
+           - SPECIFIES TO CONTINUE ON CERTAIN ERRORS AND FORCE THE      03500004
+             RESET OF THE IDENTIFIED CATALOG.                           03550004
+))NOIGNORE                                                              03600004
+           - SPECIFIES THAT CERTAIN ERRORS RESULT IN TERMINATION.       03650004

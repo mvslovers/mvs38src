@@ -1,0 +1,90 @@
+         MACRO                                                          00050003
+         SGIGG502                                                       00100003
+.****************************************************************       00100903
+.*                                                                      00101302
+.* MODULE-NAME=SGIGG502(OS/VS2)MACRO                           @YM00638 00101702
+.*                                                                      00103502
+.* DESCRIPTIVE-NAME=MIC/OCR SYSGEN MACRO                       @YM00638 00105502
+.*                                                                      00105902
+.* COPYRIGHT=NONE                                              @YM00638 00106302
+.*                                                                      00106402
+.*VS1 RELEASE 3 ADDITIONS/CHANGES/DELETIONS                             00108202
+.*                                                               XM4256 00110002
+.*A001010 - 001360                                               XM4256 00111802
+.*A013550 - 013640                                               XM4256 00113602
+.*A013670 - 013940                                               XM4256 00115402
+.*                                                                      00117202
+.*                                                                      00119002
+.*VS2 RELEASE 2 ADDITIONS/CHANGES/DELETIONS                             00120802
+.*                                                                      00122602
+.*C002500                                                        Y02870 00124402
+.*C011000,013000                                                 Y02898 00126202
+.*D005000,006000 - 010000                                        Y02870 00128002
+.*D013550 - 013950                                               XM4256 00129802
+.*                                                                      00131602
+.*PURPOSE                                                        XM4256 00133402
+.*                                                               XM4256 00135202
+.*       THE PURPOSE OF THIS MACRO IS TO LOAD DEVICE SUPPORTED   XM4256 00137002
+.*       ROCHESTER OWNED MODULES FROM THE DISTRIBUTION LIBRARY   XM4256 00138802
+.*       ' SYS1.AOSD0 ' TO THE SYSTEM LIBRARY ' SYS1.LPALIB '    XM4256 00140602
+.*       AT SYSGEN TIME.                                         XM4256 00142402
+.*                                                               XM4256 00144202
+.*                                                               XM4256 00146002
+.*DISCRIPTION                                                    XM4256 00147802
+.*                                                               XM4256 00149602
+.*                                                               XM4256 00151402
+.*       THIS MACRO WILL CHECK THE GLOBALS PASSED BY THE         XM4256 00153202
+.*       GENERATE MACRO. EACH GLOBAL CORRESPONDS TO A DEVICE     XM4256 00155002
+.*       BEING SYSGEN'D. THE GLOBALS AND CORRESPONDING           XM4256 00156802
+.*       DEVICES ARE:                                            XM4256 00158602
+.*                                                               XM4256 00160402
+.*         GLOBAL      DEVICE      RELEASE DEVEPOLED             XM4256 00162202
+.*                                                               XM4256 00164002
+.*       &SGDCLSB(13)  2495         OS REL 19                    XM4256 00165802
+.*       &SGDCLSB(58)  1287         OS REL 19                    XM4256 00167602
+.*       &SGDCLSB(59)  1288         OS REL 19                    XM4256 00169402
+.*       &SGDCLSB(78)  3505         OS REL 21                    XM4256 00171202
+.*       &SGDCLSB(79)  3525         OS REL 21                    XM4256 00173002
+.*       &SGDCLSB(86)  3890        VS1 REL 3                     XM4256 00174802
+.*       &SGDCLSB(87)  3886        VS1 REL 3                     XM4256 00176602
+.*                                                               XM4256 00178402
+.*       IF THE GLOBAL WAS SET BY GENERATE FOR ANY DEVICE        XM4256 00180202
+.*       IN THE MACRO; A CORRESPONDING 'COPY' AND 'SELECT'       XM4256 00182002
+.*       STATEMENT IS CREATED BY USE OF THE PUNCH COMMAND.       XM4256 00183802
+.*       THE MODULES SO SELECTED ARE LATER COPIED INTO           XM4256 00185602
+.*       ' SYS1.LPALIB '                                         XM4256 00187402
+.*                                                               XM4256 00189202
+.*HISTORY                                                        XM4256 00191002
+.*       THIS MACRO WAS CREATED AS A RESULT OF A SPLIT TO        XM4256 00192802
+.*       SGIGG501 IN THE VS1 RELEASE 2 SYSTEM                    XM4256 00194602
+.*                                                               XM4256 00196402
+         COPY  SGGBLPAK                                                 00198202
+         AIF   (NOT (&SGDCLSB(13) OR &SGDCLSB(58) OR &SGDCLSB(59))).NX1 00200003
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOSD0 '                  Y02870 00250003
+         PUNCH ' SELECT MEMBER=(IGG019VA,IGG019VB,IGG019VC,IGG019VD) '  00300003
+         PUNCH ' SELECT MEMBER=(IGG019VE,IGG019VF,IGG019VG,IGG019VH) '  00350003
+         PUNCH ' SELECT MEMBER=(IGG019VI,IGG019VJ,IGG019VK,IGG0197A) '  00400003
+         PUNCH ' SELECT MEMBER=(IGG0197B) '                             00450003
+.NX1     ANOP                                                           00550003
+         AIF   (NOT (&SGDCLSB(78) OR &SGDCLSB(79))).NX5                 01050003
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOSD0 '                  Y02898 01100003
+         PUNCH ' SELECT MEMBER=(IGG0197L,IGG0197M,IGG0197N) '           01150003
+         PUNCH ' SELECT MEMBER=(IGG0197P,IGG0197Q,IGG019FK) '           01200003
+         PUNCH ' SELECT MEMBER=(IGG019FQ,IGG019FU,IGG019FA) '           01250003
+         PUNCH ' SELECT MEMBER=(IGG0201P,IGG0201R) '             Y02898 01300003
+.NX5     ANOP                                                           01350003
+         AIF (NOT(&SGDCLSB(86))).NX6                             XM4256 01355003
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOSD0 '                  XM4256 01358003
+         PUNCH ' SELECT MEMBER=(IGG019UM,IGG019UN,IGG019UO) '    XM4256 01361003
+         PUNCH ' SELECT MEMBER=(IGG0197V) '                      XM4256 01364003
+.NX6     ANOP                                                    XM4256 01367003
+         AIF (NOT(&SGDCLSB(87))).NX7                             XM4256 01370003
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOSD0 '                  XM4256 01373003
+         PUNCH ' SELECT MEMBER=(IGG019LS,IGG019LT,IGG019LU) '    XM4256 01376003
+         PUNCH ' SELECT MEMBER=(IGG0196R) '                      XM4256 01379003
+.NX7     ANOP                                                    XM4256 01382003
+         AIF (NOT(&SGDCLSB(86) OR &SGDCLSB(87))).NX8             XM4256 01385003
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOSD0 '                  XM4256 01388003
+         PUNCH ' SELECT MEMBER=(IGG08108) '                      XM4256 01391003
+.NX8     ANOP                                                    XM4256 01394003
+         MEND                                                           01400003

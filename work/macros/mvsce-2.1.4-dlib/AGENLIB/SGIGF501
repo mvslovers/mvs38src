@@ -1,0 +1,23 @@
+          MACRO                                                         00050002
+          SGIGF501                                                      00052002
+.********************************************************************   00060002
+.*          THIS SYSGEN MACRO PERFORMS A COPY OF THE CCH CHANNEL     *  00100002
+.*          DEPENDENT MODULES TO SYS1.LINKLIB AND THE MCH MESSAGE    *  00150002
+.*          WRITING MODULE TO SYS1.LINKLIB.                          *  00200002
+.********************************************************************   00250002
+          COPY  SGGBLPAK                                                00350002
+          LCLC  &LEV                                                    00400002
+          LCLC  &REL                                                    00450002
+&LEV      SETC  '00'                                                    00500002
+&REL      SETC  '00'                                                    00550002
+          MNOTE *,'SGIGF501 IS LEVEL &LEV RELEASE &REL.'                00600002
+.*                                                                      00650002
+          PUNCH ' COPY OUTDD=LINKLIB,INDD=AOSCE '                       00700002
+          PUNCH ' SELECT MEMBER=IGFC60 '                                00750002
+          PUNCH ' SELECT MEMBER=IGFC70 '                                00800002
+          PUNCH ' SELECT MEMBER=IGFC80 '                                00850002
+          PUNCH ' SELECT MEMBER=IGFCIC '                                00900002
+.*                                                                      00950002
+.*   COPY FOR THE ROUTINE IGFPWMSG WAS REMOVED.                @YM00967 00960002
+.*                                                                      01100002
+          MEND                                                          01150002

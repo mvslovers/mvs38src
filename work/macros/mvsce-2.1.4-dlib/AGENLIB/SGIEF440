@@ -1,0 +1,145 @@
+         MACRO                                                          00060002
+         SGIEF440                                                       00070002
+.*                                                                      00070141
+.* STATUS - OS/VS2 SYSTEM CONTROL PROGRAM 2 PTF                @ZA48720 00071146
+.*                                                                      00073164
+.* CHANGE = YM05804,YM04049,YM02527,Y02953,OZ05195,G29ANSJ,    @G64MP2D 00075164
+.*          G3800SJ,G64MP2D,G64UPSJ,VS49594,OZ48720            @ZA48720 00077146
+.*                                                                      00078164
+.*  ADD SETCODE AC(1) TO IFASMFDP FOR APF AUTHORIZATION        @ZA48720 00078646
+.*  MOVE IEEMB811 BACK TO LPALIB                               @VS49594 00079164
+.*  MOVE IEEMB878 AND IEECB806 TO RENT                         @VS49594 00080164
+.*                                                                      00082141
+         COPY  SGGBLPAK                                                 00116002
+&SGCTRLC(6)  SETC  ''                  SET 'MOD' PARM NULL     @YM05804 00124002
+&SGCTRLC(7)  SETC  '&SGCTRLC(32)'      SET VOLUME FOR LINKLIB           00132002
+&SGCTRLC(8)  SETC  '&SGCTRLC(31)'      SET UNIT NAME FOR LINKLIB        00140002
+&SGCTRLC(9)  SETC  'LINKLIB'           SET DSNAME TO LINKLIB            00150002
+&SGCTRLC(10) SETC  ',LET'                                               00200002
+&SGCTRLC(11) SETC  ''                                                   00250002
+         COPY  SGLEDPK1                 PUNCH L.E. JCL DECK             00300002
+  PUNCH '//AOSB3 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSB3'        00350002
+  PUNCH '//AOS00 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS00'        00400002
+ PUNCH '//AOSCE DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSCE' @Y02167 00420002
+         COPY  SGLEDPK2                                                 00450002
+         AIF   (&GETB(3)).IOGEN1                               @G3800SJ 00500064
+.********************************************************************** 00550002
+.*                                                                      00600002
+.*                        SMF                                           00650002
+.*                                                                      00700002
+.********************************************************************** 00750002
+          PUNCH ' INCLUDE AOS00(IEEMB820) '                             00800002
+          PUNCH ' INCLUDE AOS00(IEEMB821) '                             00810002
+          PUNCH ' INCLUDE AOS00(IEEMB822) '                             00820002
+          PUNCH ' INCLUDE AOS00(IEEMB823) '                             00830002
+          PUNCH ' INCLUDE AOS00(IEEMB824) '                             00840002
+          PUNCH ' INCLUDE AOS00(IEEMB825) '                             00842002
+          PUNCH ' INCLUDE AOS00(IEEMB826) '                             00844002
+          PUNCH ' INCLUDE AOS00(IEEMB827) '                             00846002
+    PUNCH ' ENTRY IEEMB820 '                                            00850002
+    PUNCH ' NAME  IEEMB820(R) '                                         00900002
+.********************************************************************** 01450002
+.*                                                                      01500002
+.*                    LOG TASK                                          01550002
+.*                                                                      01600002
+.********************************************************************** 01650002
+    PUNCH '      INCLUDE AOSB3(IEEMB803) '                              01650202
+    PUNCH '      INCLUDE AOSB3(IEEMB807) '                              01652302
+    PUNCH '      INCLUDE AOSB3(IEEMB806) '                              01654302
+    PUNCH '      INCLUDE AOSB3(IEEMB805)'                      @ZA05195 01654541
+    PUNCH ' ENTRY IEEMB803    '                                         01654802
+    PUNCH ' NAME  IEEMB803(R)  '                                        01656902
+.********************************************************************** 01659002
+.*                                                                      01661102
+.*                    MASTER SCHEDULER                                  01663202
+.*                                                                      01665302
+.********************************************************************** 01667402
+.IOGEN1  ANOP                                                  @G3800SJ 01669564
+    PUNCH '      INCLUDE SYSPUNCH(MSTRJCL) '                            01679564
+    PUNCH ' NAME  MSTRJCL(R) '                                          01689564
+    PUNCH '      INCLUDE SYSPUNCH(IEEMB850) '                           01699564
+    PUNCH '      INCLUDE SYSPUNCH(IEFJESNM) '                  @G3800SJ 01709564
+         AIF   (&GETB(3)).IOGEN2                               @G3800SJ 01719564
+    PUNCH '      INCLUDE AOSB3(IEEVIPL)'                                01725564
+    PUNCH '      INCLUDE AOSB3(IEFJSINT)'                               01739564
+         AGO    .IOGEN3                                        @G3800SJ 01749564
+.IOGEN2  ANOP                                                  @G3800SJ 01759564
+    PUNCH '       INCLUDE SYSLMOD(IEEVIPL) '                   @G3800SJ 01769564
+.IOGEN3  ANOP                                                  @G3800SJ 01779564
+    PUNCH ' ENTRY IEEVIPL'                                              01789564
+    PUNCH ' NAME  IEEVIPL(R)'                                           01799564
+         AIF    (&GETB(3)).IOGEN4                              @G3800SJ 01809564
+.********************************************************************** 01960002
+.*                                                              @Y02167 02020002
+.*                    INITIALIZATION                            @Y02167 02080002
+.*                                                              @Y02167 02140002
+.********************************************************************** 02200002
+    PUNCH '      INCLUDE AOSB3(IEEMB860)'                       @Y02167 02260002
+         AIF (NOT &SGCPRGB(13)).NOSDR  IF NO SDR INCLUDE DUMMY  @Y02167 02320002
+    PUNCH '      INCLUDE AOSCE(ICFBIF00)'                       @Y02167 02380002
+         AGO    .SDR                                            @Y02167 02440002
+.NOSDR   ANOP                                                   @Y02167 02500002
+    PUNCH '      INCLUDE AOSCE(ICFBIX00)'       DUMMY SDR       @Y02167 02560002
+.SDR     ANOP                                                   @Y02167 02620002
+    PUNCH ' ENTRY  IEEMB860'                                    @Y02167 02680002
+    PUNCH ' NAME  IEEMB860(R)'                                  @Y02167 02740002
+.IOGEN4  ANOP                                                  @G3800SJ 02800064
+         PUNCH '/*'                                                     02820064
+         AIF   (&GETB(3)).IOGEN5                               @G3800SJ 02840064
+&SGCTRLC(7)  SETC  '&SGCTRLC(32)'       SET VOLUME FOR LINKLIB          02900002
+&SGCTRLC(8)  SETC  '&SGCTRLC(31)'       SET UNIT FOR LINKLIB            02950002
+&SGCTRLC(9)  SETC  'LINKLIB'            SET DSNAME                      03000002
+&SGCTRLC(10) SETC  ',LET'                                               03050002
+&SGCTRLC(11) SETC  ',RENT'                                              03100002
+         COPY  SGLEDPK1                                                 03250002
+ PUNCH '//AOSB3 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSB3'         03300002
+ PUNCH '//AOS00 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS00'         03310002
+         COPY  SGLEDPK2                                                 03350002
+.********************************************************************** 03360002
+.*                                                                      03370002
+.*                    SMF                                               03380002
+.*                                                                      03390002
+.********************************************************************** 03392002
+    PUNCH '      INCLUDE AOS00(IFASMFDP)'                               03394002
+    PUNCH ' SETCODE AC(1)'                                     @ZA48720 03395046
+    PUNCH ' NAME  IFASMFDP(R)'                                          03396002
+.********************************************************************** 03406002
+.*                                                                      03416002
+.*                    INITIALIZATION                                    03426002
+.*                                                                      03436002
+.********************************************************************** 03438002
+    PUNCH '      INCLUDE AOSB3(IEESB601)'                               03546002
+    PUNCH '      INCLUDE AOSB3(IEFAB4FC)'                               03556002
+    PUNCH '      INCLUDE AOSB3(IEFAB4F6)'                      @YM04049 03566002
+    PUNCH '      ENTRY IEESB601'                                        03576002
+    PUNCH ' NAME  IEESB601(R)'                                          03596002
+    PUNCH '      INCLUDE AOSB3(IEFJSSNT)'                      @G29ANSJ 03646041
+    PUNCH ' NAME  IEFJSSNT(R)'                                 @G29ANSJ 03696041
+    PUNCH '      INCLUDE AOSB3(IEFEB400)'                      @G64QPSJ 03746064
+    PUNCH '      INCLUDE AOSB3(IEFEB4M1)'                      @G64QPSJ 03756064
+    PUNCH ' ENTRY IEFEB400 '                                   @G64QPSJ 03766064
+    PUNCH ' NAME  IEFEB400(R)'                                 @G64QPSJ 03796064
+.**************************************************************@G64MP2D 03806064
+.*                                                             @G64MP2D 03816064
+.*          COMMAND PROCESSORS                                 @G64MP2D 03826064
+.*                                                             @G64MP2D 03836064
+.**************************************************************@G64MP2D 03846064
+.*                                                             @G64MP2D 03856064
+.*          IEECB806 - TRACE COMMAND PROCESSOR                 @G64MP2D 03866064
+.*                                                             @G64MP2D 03876064
+    PUNCH '      INCLUDE AOSB3(IEECB806) '                     @G64MP2D 03886064
+    PUNCH ' ENTRY IEECB806'                                    @G64MP2D 03896064
+    PUNCH ' NAME  IEECB806(R)'                                 @G64MP2D 03906064
+.*                                                             @G64UPSJ 03916064
+.*          IEEMB878 - PARMLIB PROCESSOR                       @G64UPSJ 03926064
+.*                                                             @G64UPSJ 03936064
+    PUNCH '       INCLUDE AOSB3(IEEMB878) '                    @G64UPSJ 03946064
+    PUNCH '       INCLUDE AOSB3(IEEMB814) '                    @G64UPSJ 03956064
+    PUNCH '       INCLUDE AOSB3(IEEMB877) '                    @G64UPSJ 03966064
+    PUNCH ' ENTRY IEEMB878 '                                   @G64UPSJ 03976064
+    PUNCH ' ALIAS IEEMB814 '                                   @G64UPSJ 03986064
+    PUNCH ' NAME  IEEMB878(R) '                                @G64UPSJ 03996064
+    PUNCH '/* '                                                         04200002
+         SGIKJ440                                                       04202002
+.IOGEN5  ANOP                                                  @G3800SJ 04250064
+         MEND                                                           04300064

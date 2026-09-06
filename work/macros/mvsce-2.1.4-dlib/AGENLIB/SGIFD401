@@ -1,0 +1,123 @@
+         MACRO                                                          00050001
+         SGIFD401                                                       00100001
+         COPY  SGGBLPAK                                                 00150001
+         AIF   (NOT &SGSUPRB(26)).END                                   00200001
+         AIF   (NOT &GETB(3)).NOTIO1                             A47725 00210002
+         AIF   (NOT &SGDCLSB(72)).END                            A47725 00220002
+.NOTIO1  ANOP                                                     M2566 00230002
+&SGCTRLC(7)    SETC '&SGCTRLC(32)'                                      00250001
+&SGCTRLC(8)    SETC '&SGCTRLC(31)'                                      00300001
+&SGCTRLC(9)    SETC 'LINKLIB'                                           00350001
+&SGCTRLC(6)    SETC 'IFDOLT'                                            00400001
+&SGCTRLC(10)   SETC ',REUS'                                             00450001
+&SGCTRLC(11)   SETC ',AC=1'                                      YM5402 00470002
+         COPY  SGLEDPK1                                                 00500001
+ PUNCH  '//AOS06 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS06'        00550001
+         COPY  SGLEDPK2                                                 00650001
+ PUNCH ' INCLUDE AOS06(IFDOLT00,IFDOLT12,IFDOLT18,IFDOLT23,IFDOLT30)'   00750002
+ PUNCH ' INCLUDE AOS06(IFDOLT39,IFDOLT51,IFDOLT52,IFDOLT48,IFDMSG00)'   00800002
+ PUNCH ' INCLUDE AOS06(IFDOLT05,IFDOLT06,IFDMSG06,IFDOLT08)'            00810002
+ PUNCH ' INCLUDE AOS06(IFDMSG08,IFDOLT09,IFDOLT10,IFDOLT11,IFDOLT13)'   00820002
+ PUNCH ' INCLUDE AOS06(IFDMSG13,IFDOLT16,IFDOLT21,IFDOLT22,IFDMSG22)'   00830002
+ PUNCH ' INCLUDE AOS06(IFDOLT24,IFDOLT26,IFDOLT28,IFDOLT35,IFDOLT36)'   00840002
+ PUNCH ' INCLUDE AOS06(IFDOLT37,IFDMSG37,IFDOLT41,IFDOLT42,IFDOLT43)'   00842002
+ PUNCH ' INCLUDE AOS06(IFDOLT44,IFDOLT46,IFDOLTAA,IFDOLTAB,IFDOLTAJ)'   00844002
+ PUNCH ' INCLUDE AOS06(IFDMSGAJ)'                                       00846002
+         AIF   (NOT &SGDCLSB(72)).NORAC                          S20203 00850001
+ PUNCH ' INCLUDE AOS06(IFDOLT55)'                                       00900001
+         AGO   .DUM1                                                    00950001
+.NORAC   ANOP                                                    S20203 01000001
+ PUNCH ' INCLUDE AOS06(IFDOLT59)'                                       01050001
+.DUM1    ANOP                                                           01100001
+ PUNCH ' ENTRY IFDOLT00'                                                01150001
+ PUNCH ' ALIAS IFDOLT00'                                                01200001
+ PUNCH ' NAME IFDOLT(R)'                                                01250001
+&SGCTRLC(7)    SETC '&SGCTRLC(32)'                              ZA35886 01251000
+&SGCTRLC(8)    SETC '&SGCTRLC(31)'                              ZA35886 01252000
+&SGCTRLC(9)    SETC 'LINKLIB'                                   ZA35886 01253000
+&SGCTRLC(6)    SETC 'IFDOLT'                                   @ZA39288 01254000
+         COPY  SGLEDPK1                                         ZA35886 01255000
+ PUNCH  '//AOS06  DD  DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS06'      01256000
+         COPY  SGLEDPK2                                         ZA35886 01257000
+         AIF   (&GETB(3)).IOGEN1                                 A47725 01260002
+ PUNCH ' INCLUDE AOS06(IFDOLT03,IFDMSG03)'                              01550001
+ PUNCH ' ENTRY IFDOLT03'                                                01600001
+ PUNCH ' NAME  IFDOLT03(R)'                                             01650001
+ PUNCH ' INCLUDE AOS06(IFDOLT04,IFDMSG04)'                              01700001
+ PUNCH ' ENTRY IFDOLT04'                                                01750001
+ PUNCH ' NAME  IFDOLT04(R)'                                             02050002
+ PUNCH ' INCLUDE AOS06(IFDOLT07,IFDMSG07)'                              02100001
+ PUNCH ' ENTRY IFDOLT07'                                                02150001
+ PUNCH ' NAME  IFDOLT07(R)'                                             02200001
+ PUNCH ' INCLUDE AOS06(IFDOLT14)'                                       02850001
+ PUNCH ' NAME  IFDOLT14(R)'                                             02900001
+ PUNCH ' INCLUDE AOS06(IFDOLT15)'                                       02950001
+ PUNCH ' NAME  IFDOLT15(R)'                                             03000001
+ PUNCH ' INCLUDE AOS06(IFDOLT17)'                                       03150001
+ PUNCH ' NAME  IFDOLT17(R)'                                             03200001
+ PUNCH ' INCLUDE AOS06(IFDOLT31,IFDMSG31)'                              04000001
+ PUNCH ' ENTRY IFDOLT31'                                                04050001
+ PUNCH ' NAME  IFDOLT31(R)'                                             04100001
+ PUNCH ' INCLUDE AOS06(IFDOLT32,IFDMSG32)'                              04150001
+ PUNCH ' ENTRY IFDOLT32'                                                04200001
+ PUNCH ' NAME  IFDOLT32(R)'                                             04250001
+ PUNCH ' INCLUDE AOS06(IFDOLT33,IFDMSG33)'                              04300001
+ PUNCH ' ENTRY IFDOLT33'                                                04350001
+ PUNCH ' NAME  IFDOLT33(R)'                                             04400001
+ PUNCH ' INCLUDE AOS06(IFDOLT38,IFDMSG38)'                              05000001
+ PUNCH ' ENTRY IFDOLT38'                                                05050001
+ PUNCH ' NAME  IFDOLT38(R)'                                             05100001
+ PUNCH ' INCLUDE AOS06(IFDOLT50,IFDMSG50)'                              05450001
+ PUNCH ' ENTRY IFDOLT50'                                                05500001
+ PUNCH ' NAME  IFDOLT50(R)'                                             05550001
+ PUNCH ' INCLUDE AOS06(IFDOLT53,IFDMSG53)'                              05600001
+ PUNCH ' ENTRY IFDOLT53'                                                05650001
+ PUNCH ' NAME  IFDOLT53(R)'                                             05700001
+         AIF   (NOT &SGDCLSB(72)).NORAC1                                05750001
+.IOGEN1  ANOP                                                    A47725 05770001
+ PUNCH ' INCLUDE AOS06(IFDOLT54,IFDMSG54)'                              05800001
+ PUNCH ' ENTRY IFDOLT54'                                                05850001
+ PUNCH ' NAME  IFDOLT54(R)'                                             05900001
+ PUNCH ' INCLUDE AOS06(IFDOLT56,IFDMSG56)'                              05950001
+ PUNCH ' ENTRY IFDOLT56'                                                06000001
+ PUNCH ' NAME  IFDOLT56(R)'                                             06050001
+         AIF   (&GETB(3)).ENDA                                   A47725 06060002
+.NORAC1  ANOP                                                           06100001
+ PUNCH ' INCLUDE AOS06(IFDOLT49)'                                       06110002
+ PUNCH ' NAME  IFDOLT49(R)'                                             06130002
+ PUNCH ' INCLUDE AOS06(IFDOLT57)'                                       06140002
+ PUNCH ' NAME  IFDOLT57(R)'                                             06142002
+ PUNCH ' INCLUDE AOS06(IFDOLT61,IFDMSG61)'                              06150001
+ PUNCH ' ENTRY IFDOLT61'                                                06200001
+ PUNCH ' NAME  IFDOLT61(R)'                                             06250001
+ PUNCH ' INCLUDE AOS06(IFDOLT62)'                                       06260002
+ PUNCH ' NAME  IFDOLT62(R)'                                             06270002
+ PUNCH ' INCLUDE AOS06(IFDOLT67)'                              @Y30LIJR 06277003
+ PUNCH ' ENTRY IFDOLT67'                                       @Y30LIJR 06284003
+ PUNCH ' NAME IFDOLT67(R)'                                     @Y30LIJR 06291003
+ PUNCH ' INCLUDE AOS06(IFDOLT73,IFDMSG73)'                              06300001
+ PUNCH ' ENTRY IFDOLT73'                                                06350001
+ PUNCH ' NAME  IFDOLT73(R)'                                             06400001
+ PUNCH ' INCLUDE AOS06(IFDOLT74,IFDMSG74)'                              06450002
+ PUNCH ' ENTRY IFDOLT74'                                                06500002
+ PUNCH ' NAME  IFDOLT74(R)'                                             06550001
+ PUNCH ' INCLUDE AOS06(IFDOLT98)'                                       06560002
+ PUNCH ' NAME  IFDOLT98(R)'                                             06570002
+ PUNCH ' INCLUDE AOS06(IFDOLT99)'                                       06580002
+ PUNCH ' NAME  IFDOLT99(R)'                                             06590002
+.ENDA    ANOP                                                           06592002
+ PUNCH '/*'                                                             06600001
+         AIF   (&GETB(3)).END                                    A47725 06602002
+&SGCTRLC(7)    SETC '&SGCTRLC(32)'                                      06610002
+&SGCTRLC(8)    SETC '&SGCTRLC(31)'                                      06620002
+&SGCTRLC(9)    SETC 'LINKLIB'                                           06630002
+&SGCTRLC(6)    SETC 'IFDOLT'                                            06640002
+&SGCTRLC(10)   SETC ',RENT'                                             06642002
+         COPY  SGLEDPK1                                                 06646002
+ PUNCH  '//AOS06 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS06'        06648002
+         COPY  SGLEDPK2                                                 06648402
+ PUNCH ' INCLUDE AOS06(IFDOLT58)'                                       06648802
+ PUNCH ' NAME  IFDOLT58(R)'                                             06649202
+ PUNCH '/*'                                                             06649602
+.END     MEND                                                           06650001
+./  ENDUP                                                               00540001

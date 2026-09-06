@@ -1,0 +1,138 @@
+)F FUNCTION -                                                           00900002
+  THE IMPORT COMMAND IS USED TO MOVE A CLUSTER, ALTERNATE INDEX,        01800003
+  OR USER CATALOG ENTRY INTO THE SYSTEM IN WHICH THIS                   02700003
+  COMMAND IS EXECUTED.  ONE MAY ALSO IMPORT INTO AN EMPTY DATA          02750003
+  SET, WHICH HAS BEEN PRE-DEFINED FOR THIS PURPOSE.                     02800003
+)X SYNTAX -                                                             03600002
+         IMPORT    CONNECT |                                            04500002
+                       INFILE('DNAME') | INDATASET('ENTRYNAME')         05400002
+                       OUTFILE('DNAME/PASSWORD') |                      06300003
+                       OUTDATASET('ENTRYNAME/PASSWORD')                 06350003
+                       SAVRAC | NOSAVRAC                                06351004
+                       INTOEMPTY                                        06352004
+                   ERASE | NOERASE                                      06400003
+                   PURGE | NOPURGE                                      06450003
+                   CATALOG('CATNAME/PASSWORD')                          07200002
+                   OBJECTS(('PARMLIST') ...)                            08100002
+                     'PARMLIST' - 'NAME'                                09000002
+                                  NEWNAME('NEWNAME')                    09900002
+                                  VOLUMES('VOLSER' ...)                 10800002
+                                  FILE('DNAME')                         11700002
+                                  KEYRANGES(('LOWKEY' 'HIGHKEY') ...)   12600002
+                                  ORDERED | UNORDERED                   13500002
+                                  DEVICETYPE('DEVTYPE')                 14400002
+  REQUIRED - CONNECT OR (INFILE|INDATASET AND OUTFILE|OUTDATASET)       15300002
+             OBJECTS (IF CONNECT SPECIFIED)                             16200002
+             'NAME', VOLUMES AND DEVICETYPES (IF OBJECTS AND CONNECT    17100003
+             SPECIFIED)                                                 17150003
+  DEFAULTS - UNORDERED (IF OBJECTS SPECIFIED)                           18000002
+  ABBREVIATIONS -                                                       18900002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 19800002
+             IMPORT               IMP                                   20700002
+             INFILE               IFILE                                 22500002
+             INDATASET            IDS                                   23400002
+             OUTFILE              OFILE                                 24300002
+             OUTDATASET           ODS                                   25200002
+             NEWNAME              NEWNM                                 27000002
+             KEYRANGES            KRNG                                  28800002
+             DEVICETYPE           DEVT                                  31500002
+             INTOEMPTY            IEMPTY                                31501004
+)O OPERANDS -                                                           32400002
+))CONNECT  - SPECIFIES THAT THE ENTRY TO BE IMPORTED IS A USER CATALOG. 33300002
+))INFILE('DNAME')                                                       34200002
+           - SPECIFIES THE NAME OF A DD STATEMENT THAT IDENTIFIES THE   35100002
+             COPY OF THE CLUSTER OR ALTERNATE INDEX TO BE IMPORTED.     36000003
+  'DNAME'  - NAME OF A DD STATEMENT THAT IDENTIFIES THE COPY OF THE     36900002
+             CLUSTER OR ALTERNATE INDEX TO BE IMPORTED.                 37800003
+))INDATASET('ENTRYNAME')                                                38700002
+           - SPECIFIES THE NAME OF THE ENTRY TO BE IMPORTED.            39600002
+  'ENTRYNAME'                                                           40500002
+           - NAME OF THE ENTRY TO BE IMPORTED.                          41400002
+))OUTFILE('DNAME')                                                      42300002
+           - SPECIFIES THE NAME OF A DD STATEMENT THAT IDENTIFIES THE   43200002
+             VOLUME THAT IS TO RECEIVE THE CLUSTER OR ALTERNATE INDEX   44100003
+             THAT IS TO BE IMPORTED.                                    45000003
+  'DNAME'  - NAME OF A DD STATEMENT THAT IDENTIFIES THE VOLUME THAT IS  45900002
+             TO RECEIVE THE CLUSTER OR ALTERNATE INDEX THAT IS TO       46800003
+             BE IMPORTED.                                               46810003
+  'PASSWORD' -                                                          46850003
+             PASSWORD OF THE DATA SET BEING IMPORTED INTO IF IT IS A    46900003
+             PRE-DEFINED EMPTY DATA SET.                                46950003
+))OUTDATASET('ENTRYNAME')                                               47700002
+           - SPECIFIES THE NAME OF THE ENTRY THAT IS TO RECEIVE THE     48600002
+             DATA THAT IS TO BE IMPORTED.                               49500002
+  'ENTRYNAME'                                                           50400002
+           - NAME OF THE ENTRY THAT IS TO RECEIVE THE DATA THAT IS TO   51300002
+             BE IMPORTED.                                               52200003
+  'PASSWORD' -                                                          52350003
+             PASSWORD OF THE DATA SET BEING IMPORTED INTO IF IT IS A    52400003
+             PRE-DEFINED EMPTY DATA SET.                                52450003
+))SAVRAC                                                                52451004
+           - ASSOCIATES EXISTING PROFILES WITH DATA SET BEING IMPORTED  52452004
+))NOSAVRAC                                                              52453004
+           - DEFAULT.  INDICATES DATASET BEING IMPORTED IS NOT TO BE    52454004
+             ASSOCIATED WITH CURRENT PROFILES FOR THE DATASET.          52455004
+))INTOEMPTY                                                             52456004
+           - ONE MUST SPECIFY THIS PARAMETER IF IMPORTING INTO AN       52457004
+             EMPTY DATASET. OTHERWISE, THE IMPORT WILL FAIL.            52458004
+))ERASE    - A TEMPORARY DATA SET TO BE DELETED BY IMPORT IS ALSO TO    52500003
+             BE OVERWRITTEN WITH BINARY ZEROS.                          52550003
+))NOERASE  - A TEMPORARY DATA SET TO BE DELETED BY IMPORT IS NOT        52600003
+             TO BE OVERWRITTEN WITH BINARY ZEROS.                       52650003
+))PURGE    - A TEMPORARY DATA SET IS TO BE DELETED BY IMPORT EVEN       52700003
+             THOUGH ITS EXPIRATION DATE HAS NOT BEEN REACHED.           52750003
+))NOPURGE  - A TEMPORARY DATA SET IS NOT TO BE DELETED BY IMPORT        52800003
+             IF ITS EXPIRATION DATE HAS NOT BEEN REACHED.               52850003
+))CATALOG('CATNAME/PASSWORD')                                           53100002
+           - SPECIFIES THE NAME OF THE CATALOG IN WHICH THE IMPORTED    54000002
+             ENTRY IS TO BE DEFINED.                                    54900002
+  'CATNAME'                                                             55800002
+           - NAME OF THE CATALOG IN WHICH THE ENTRY TO BE IMPORTED IS   56700002
+             TO BE DEFINED.                                             57600002
+  'PASSWORD'                                                            58500002
+           - THE UPDATE OR HIGHER LEVEL PASSWORD OF THE CATALOG IN      59400002
+             WHICH THE IMPORTED ENTRY IS TO BE DEFINED.                 60300002
+  REQUIRED - 'CATNAME'                                                  61200002
+))OBJECTS(('PARMLIST') ...)                                             62100002
+           - SPECIFIES THE ATTRIBUTES FOR THE ALTERNATE INDEX, PATH,    63000003
+             CLUSTER OR USER CATALOG TO BE IMPORTED.                    63900003
+  'PARMLIST' IS DEFINED UNDER SYNTAX.                                   64800002
+  'NAME'   - 'PARMLIST' REQUIRED VALUE WHICH SPECIFIES THE NAME OF THE  65700002
+             DATA COMPONENT, INDEX COMPONENT, ALTERNATE INDEX, PATH,    66600003
+             CLUSTER OR USER CATALOG WHOSE ATTRIBUTES                   67500003
+             ARE BEING SPECIFIED.                                       67550003
+))NEWNAME('NEWNAME')                                                    68400002
+           - SPECIFIES THE NEW NAME FOR ENTRY TO BE IMPORTED.           69300002
+  'NEWNAME'                                                             70200002
+           - NEW NAME FOR ENTRY TO BE IMPORTED.                         71100002
+))VOLUMES('VOLSER' ...)                                                 72000002
+           - SPECIFIES THE VOLUMES ON WHICH THE ALTERNATE INDEX,        72900003
+             CLUSTER OR USER CATALOG IS TO RESIDE.                      73800003
+  'VOLSER' - VOLUME ON WHICH THE ALTERNATE INDEX, CLUSTER OR USER       74700003
+             CATALOG IS TO RESIDE.                                      74750003
+))FILE('DNAME')                                                         75600002
+           - SPECIFIES THE NAME OF A DD STATEMENT THAT IDENTIFIES THE   76500002
+             VOLUMES ALLOCATED TO THE DATA AND INDEX COMPONENTS OF A    77400002
+             KEY-SEQUENCED CLUSTER OR AN ALTERNATE INDEX,               78300003
+             OR IDENTIFIES THE PRIME CRA VOLUME FOR A PATH.             78350003
+  'DNAME'  - NAME OF A DD STATEMENT THAT IDENTIFIES THE VOLUMES         79200002
+             ALLOCATED TO THE DATA AND INDEX COMPONENTS OF A KEY-       80100002
+             SEQUENCED CLUSTER OR AN ALTERNATE INDEX,                   81000003
+             OR IDENTIFIES THE PRIME CRA VOLUME FOR A PATH.             81050003
+))KEYRANGES(('LOWKEY' 'HIGHKEY') ...)                                   81900002
+           - SPECIFIES PORTIONS OF KEY-SEQUENCED DATA TO BE PLACED ON   82800002
+             SEPARATE VOLUMES.                                          83700002
+  'LOWKEY' - THE LOW KEY OF THE KEY RANGE.                              84600002
+  'HIGHKEY'                                                             85500002
+           - THE HIGH KEY OF THE KEY RANGE.                             86400002
+))ORDERED  - THE VOLUMES ARE TO BE USED IN THE ORDER IN WHICH THEY WERE 87300002
+             LISTED IN THE VOLUMES PARAMETER.                           88200002
+))UNORDERED                                                             89100002
+           - THE VOLUMES DO NOT HAVE TO BE USED IN THE ORDER IN WHICH   90000002
+             THEY WERE LISTED IN THE VOLUMES PARAMETER.                 90900002
+))DEVICETYPE('DEVTYPE')                                                 91800002
+           - SPECIFIES THE DEVICE TYPE OF THE VOLUME THAT CONTAINS A    92700002
+             USER CATALOG THAT IS TO BE IMPORTED.                       93600002
+  'DEVTYPE'                                                             94500002
+           - DEVICE TYPE OF THE VOLUME THAT CONTAINS A USER CATALOG     95400002
+             THAT IS TO BE IMPORTED.                                    96300002

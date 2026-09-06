@@ -1,0 +1,91 @@
+)F FUNCTION -                                                           01000002
+   THE EXPORT COMMAND IS USED TO MOVE CLUSTERS, ALTERNATE INDEXES,      02000003
+   OR USER CATALOGS FROM THE SYSTEM IN WHICH THE COMMAND IS EXECUTED.   03000003
+)X SYNTAX -                                                             04000002
+         EXPORT    'ENTRYNAME/PASSWORD'                                 05000002
+                   DISCONNECT |                                         06000002
+                       INFILE('DNAME')                                  07000002
+                       OUTFILE('DNAME') | OUTDATASET('ENTRYNAME')       08000002
+                   TEMPORARY | PERMANENT                                09000002
+                   INHIBITSOURCE | NOINHIBITSOURCE                      10000002
+                   INHIBITTARGET | NOINHIBITTARGET                      11000002
+                   ERASE | NOERASE                                      12000002
+                   PURGE | NOPURGE                                      13000002
+  REQUIRED - 'ENTRYNAME'                                                14000002
+             DISCONNECT OR (OUTFILE | OUTDATASET)                       15000003
+  DEFAULTS - PERMANENT                                                  16000002
+             NOINHIBITSOURCE                                            17000002
+             NOINHIBITTARGET                                            18000002
+             NOPURGE                                                    19000002
+  ABBREVIATIONS -                                                       20000002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 21000002
+             EXPORT               EXP                                   22000002
+             DISCONNECT           DCON                                  23000002
+             INFILE               IFILE                                 24000002
+             OUTFILE              OFILE                                 25000002
+             OUTDATASET           ODS                                   26000002
+             INHIBITSOURCE        INHS                                  29000002
+             NOINHIBITSOURCE      NINHS                                 30000002
+             INHIBITTARGET        INHT                                  31000002
+             NOINHIBITTARGET      NINHT                                 32000002
+             NOERASE              NERAS                                 34000002
+             PURGE                PRG                                   35000002
+             NOPURGE              NPRG                                  36000002
+)O OPERANDS -                                                           37000002
+  'ENTRYNAME/PASSWORD'                                                  38000002
+           - SPECIFIES THE NAME OF THE CLUSTER, ALTERNATE INDEX, OR     39000003
+             USER CATALOG TO BE EXPORTED.                               39500003
+  'ENTRYNAME'                                                           40000002
+           - NAME OF THE OBJECT TO BE EXPORTED.                         41000003
+  'PASSWORD'                                                            42000002
+           - MASTER PASSWORD OF THE MASTER CATALOG IF A USER CATALOG IS 43000002
+             BEING EXPORTED, OR MASTER PASSWORD OF THE CLUSTER OR       44000003
+             ALTERNATE INDEX.                                           44050003
+))DISCONNECT                                                            45000002
+           - SPECIFIES THAT A USER CATALOG IS TO BE EXPORTED.           46000002
+))INFILE('DNAME')                                                       47000002
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES     48000002
+             THE CLUSTER OR ALTERNATE INDEX TO BE EXPORTED.             49000003
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE OBJECT TO     50000003
+             BE EXPORTED.                                               51000002
+))OUTFILE('DNAME')                                                      52000002
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES     53000002
+             THE OUTPUT DATA SET TO BE CREATED AS A RESULT OF THE       54000002
+             EXPORT COMMAND.                                            55000002
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE OUTPUT DATA   56000003
+             SET.                                                       57000002
+))OUTDATASET('ENTRYNAME')                                               58000002
+           - SPECIFIES THE NAME OF THE ENTRY THAT IS TO RECEIVE         59000002
+             THE DATA BEING EXPORTED.                                   60000002
+  'ENTRYNAME'                                                           61000002
+           - NAME OF THE ENTRY THAT IS TO RECEIVE THE DATA BEING        62000002
+             EXPORTED.                                                  63000002
+))TEMPORARY                                                             64000002
+           - THE CLUSTER OR ALTERNATE INDEX IS NOT TO BE DELETED FROM   65000003
+             THE ORIGINAL SYSTEM.                                       65050003
+))PERMANENT                                                             66000002
+           - THE CLUSTER OR ALTERNATE INDEX IS TO BE DELETED            67000003
+             FROM THE ORIGINAL SYSTEM.                                  67050003
+))INHIBITSOURCE                                                         68000002
+           - THE ORIGINAL CLUSTER OR ALTERNATE INDEX CANNOT BE ACCESSED 69000003
+             FOR ANY OPERATION OTHER THAN RETRIEVAL.                    70000003
+))NOINHIBITSOURCE                                                       71000002
+           - THE ORIGINAL CLUSTER OR ALTERNATE INDEX CAN BE ACCESSED    72000003
+             FOR ANY KIND OF OPERATION.                                 73000003
+))INHIBITTARGET                                                         74000002
+           - THE EXPORTED COPY CANNOT BE ACCESSED FOR ANY OPERATION     75000002
+             OTHER THAN RETRIEVAL AFTER IT HAS BEEN IMPORTED TO         76000002
+             ANOTHER SYSTEM.                                            77000002
+))NOINHIBITTARGET                                                       78000002
+           - THE EXPORTED COPY CAN BE ACCESSED FOR ANY TYPE OF          79000002
+             OPERATION AFTER IT HAS BEEN IMPORTED TO ANOTHER SYSTEM.    80000002
+))ERASE    - THE ORIGINAL CLUSTER OR ALTERNATE INDEX IS TO BE           81000003
+             OVERWRITTEN WITH BINARY ZEROS.                             82000003
+))NOERASE  - THE ORIGINAL CLUSTER OR ALTERNATE INDEX IS NOT TO BE       83000003
+             OVERWRITTEN WITH BINARY ZEROS.                             84000003
+))PURGE    - THE CLUSTER OR ALTERNATE INDEX IS TO BE DELETED            85000003
+             FROM THE ORIGINAL SYSTEM EVEN IF THE RETENTION             86000003
+             PERIOD HAS NOT EXPIRED.                                    86050003
+))NOPURGE  - THE CLUSTER OR ALTERNATE INDEX IS NOT TO BE DELETED        87000003
+             FROM THE ORIGINAL SYSTEM IF THE RETENTION                  88000003
+             PERIOD HAS NOT EXPIRED.                                    88050003

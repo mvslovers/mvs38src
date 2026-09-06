@@ -1,0 +1,7 @@
+         MACRO                                                          00020001
+&NAME    GMVD  &ADDR,&GROUP,&BDATA=0    MOVE IMMEDIATE DATA 2AEC        00040001
+         GBLA  &IHBBLC,&IHBBLIM                                         00060001
+&IHBBLC  SETA  &IHBBLC+2                                                00080001
+&NAME    IHBGAM1 10988,&ADDR,&GROUP                                     00100001
+         DC    XL2'&BDATA'                                              00120001
+         MEND                                                           00140001

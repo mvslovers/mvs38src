@@ -1,0 +1,198 @@
+         MACRO                                                          00007000
+         SGIKJ441                                                       00014000
+.* CHANGE DATE  = 11/18/74                                     @Z30DNSM 00021000
+.*              = 12/20/74                                     @Z300497 00028000
+.*              = 01/09/75                                     @Z304505 00035000
+.*              = 03/24/75                                     @Z40NQSM 00042000
+.*              = 04/22/75                                     @ZA03546 00050000
+.*              = 06/24/75                                     @ZM40122 00058000
+.*              = 09/17/75                                     @Z40DQSM 00066000
+.*              = 03/15/84                                     @ZA78305 00068000
+.*                                                                      00070000
+.* CHANGES = Y30NQSL,Y30PQTH,Y02953,Z300497,ZA03546                     00078000
+.* ADD ALIAS IKJEFT0E, ADD MOD IKJEFT09 (INTEG)                @ZA40795 00082000
+.* CHANGES = OZ72050 = @ZA3800JD                               @ZA72050 00084000
+.* A002162,D003000 MOVE INCLUDE SYSPUNCH(IKJEFLP0)             @ZA78305 00085000
+.* CHANGES = OZ74883 TMP INTEGRITY ADDED IKJEFTSC TO LOAD               00085200
+.* MODULE IKJEFT01                                             @ZA74883 00085400
+.* CHANGES = OZ52962 FIB INTEGRITY ADDED IKJEFF76,IKJEFF77     @ZA52962 00085600
+.* CHANGES = OZ83390 ADD AN ENTRY POINT IKJEFF76               @ZA83390 00085800
+.* CHANGES = OZ72434 ADD TSO RESOURCE MANAGER IKJTTRM0         @ZA72434 00085900
+.*                                                                      00086000
+         COPY   SGGBLPAK                                                00108000
+&SGCTRLC(7)    SETC      '&SGCTRLC(20)'                                 00118000
+&SGCTRLC(8)    SETC      '&SGCTRLC(19)'                                 00121000
+&SGCTRLC(9)    SETC      'LPALIB'                                       00128000
+&SGCTRLC(10)   SETC      ',LET'                                         00135000
+&SGCTRLC(11)   SETC      ',REUS'                                        00142000
+&SGCTRLC(12)   SETC      ',RENT'                                        00149000
+         COPY  SGLEDPK1                                                 00156000
+  PUNCH '//AOST4 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOST4'        00163000
+  PUNCH '//*WARNING MSG IEW0461 EXPECTED FOR USER EXIT MODULE IKJEFLD'  00170000
+.*                                                             @ZA03546 00177000
+ PUNCH '//ACMDLIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.ACMDLIB'     00200000
+ PUNCH '//* MSG IEW0461 EXPECTED FOR IKJEGSCD AND IKJEGSCU'             00205000
+         COPY  SGLEDPK2                                                 00210000
+.*    LOGON                                                             00215000
+          PUNCH ' INCLUDE SYSPUNCH(IKJEFLP0)'                  @ZA78305 00216200
+          AIF  (&GETB(3)).CSRFLA                               @ZA72050 00217500
+          PUNCH ' INCLUDE AOST4(IKJEFLA,IKJEFLB,IKTLOGFF)'     @Z40DQSM 00220000
+          PUNCH ' INCLUDE AOST4(IKTIIOM,IKTXINIT,IKJEFLC)'     @Z40DQSM 00225000
+          PUNCH ' INCLUDE AOST4(IKJEFLCM,IKJEFLE,IKJEFLEA)'    @Z30DNSM 00230000
+          PUNCH ' INCLUDE AOST4(IKTXLOG,IKTLOGR,IKTRPLXT)'     @Z40DQSM 00235000
+          PUNCH ' INCLUDE AOST4(IKJEFLG,IKJEFLGB,IKJEFLGH)'    @Z30DNSM 00250000
+          PUNCH ' INCLUDE AOST4(IKJEFLH,IKJEFLI,IKJEFLJ)'      @Z30DNSM 00258000
+          PUNCH ' INCLUDE AOST4(IKJEFLK,IKJEFLL,IKJEFLLM)'     @Z300497 00266000
+          PUNCH ' INCLUDE AOST4(IKJEFLGN,IKJEFLPA)'            @Z300645 00274000
+          PUNCH ' INCLUDE AOST4(IKJEFLS,IKJEFLGM)'             @Z300497 00282000
+          AGO  .CTLFLA                                         @ZA72050 00285600
+.CSRFLA   ANOP                                                 @ZA72050 00289200
+          PUNCH ' INCLUDE SYSLMOD(IKJEFLA)'                    @ZA72050 00292800
+.CTLFLA   ANOP                                                 @ZA72050 00296400
+          PUNCH ' ORDER   IKJEFLA(P),IKJEFLB,IKTLOGFF,IKTIIOM' @Z40DQSM 00305000
+          PUNCH ' ORDER   IKTXINIT,IKTRPLXT,IKJEFLEA'          @Z40DQSM 00310000
+          PUNCH ' ORDER   IKTXLOG,IKTLOGR'                     @Z40DQSM 00315000
+          PUNCH ' ORDER   IKJEFLC,IKJEFLCM'                    @Z40DQSM 00320000
+          PUNCH ' ORDER   IKJEFLE,IKJEFLG,IKJEFLGB'            @Z30DNSM 00325000
+          PUNCH ' ORDER   IKJEFLGH,IKJEFLGN,IKJEFLH,IKJEFLI'   @Z30DNSM 00330000
+          PUNCH ' ORDER   IKJEFLJ,IKJEFLK,IKJEFLL,IKJEFLLM'    @Z300497 00335000
+          PUNCH ' ORDER   IKJEFLPA,IKJEFLS,IKJEFLP0'           @Z300645 00350000
+          PUNCH ' ORDER   IKJEFLGM'                            @Z300497 00357000
+          PUNCH ' ENTRY   IKJEFLA'                             @Z30DNSM 00364000
+          PUNCH ' ALIAS   IKJEFLC,IKJLB1,IKJLJ1,IKJLM1,IKJLK1' @Z304505 00371000
+          PUNCH ' ALIAS   IKJEFLES'                            @Z40NQSM 00378000
+          PUNCH ' NAME    IKJEFLA(R)'                          @Z30DNSM 00385000
+          AIF  (&GETB(3)).END                                  @ZA72050 00392500
+.********************************************************************** 00400000
+.*                                                                      00407000
+.*    SYSTEM INITIATED CANCEL                                           00414000
+.*                                                                      00421000
+.********************************************************************** 00428000
+         PUNCH '    INCLUDE AOST4(IKJEFLF) '                            00435000
+         PUNCH '    INCLUDE AOST4(IKJL4T00) '                           00450000
+         PUNCH ' ENTRY IKJEFLF '                                        00460000
+         PUNCH ' NAME  IKJEFLF(R) '                                     00470000
+.********************************************************************** 00480000
+.*                                                                      00490000
+.*    TSO  PARSE                                                        00500000
+.*                                                                      00510000
+.********************************************************************** 00520000
+         PUNCH '    INCLUDE AOST4(IKJEFP00,IKJEFP10,IKJEFP20)'          00530000
+         PUNCH '    INCLUDE AOST4(IKJEFP03)'                   @Y30NQSL 00550000
+         PUNCH '    ENTRY IKJPARS'                                      00558000
+         PUNCH ' NAME IKJPARS(R)'                                       00566000
+         PUNCH '    INCLUDE AOST4(IKJEFP60) '                           00574000
+         PUNCH '    ENTRY IKJPARS2 '                                    00582000
+         PUNCH ' NAME IKJPARS2(R) '                                     00600000
+.********************************************************************** 00610000
+.*                                                                      00618000
+.*    TSO  COMMAND SCAN                                                 00626000
+.*                                                                      00634000
+.********************************************************************** 00650000
+         PUNCH '    INCLUDE AOST4(IKJEFP30,IKJEFP40)'                   00653000
+         PUNCH '    ENTRY IKJSCAN'                                      00660000
+         PUNCH ' NAME IKJSCAN(R)'                                       00680000
+.********************************************************************** 00683000
+.*                                                                      00690000
+.*    I/O SERVICE RTNS                                                  00710000
+.*                                                                      00717000
+.********************************************************************** 00724000
+         PUNCH '    ORDER IKJEFT30,IKJEFT35,IKJEFT40,IKJEFT45' @Y30PQTH 00740000
+         PUNCH '    ORDER IKJEFT52,IKJEFT53,IKJEFT54,IKJEFT55' @Y30PQTH 00747000
+         PUNCH '    ORDER IKJEFT56,IKJRBBMC,IKJCT433,IKJCT434' @Y30PQTH 00754000
+         PUNCH '    ORDER IKJCT436 '                           @Y30PQTH 00770000
+         PUNCH '    INCLUDE AOST4(IKJEFT30,IKJEFT35,IKJEFT40)'          00777000
+         PUNCH '    INCLUDE AOST4(IKJEFT45,IKJEFT52,IKJEFT53)'          00784000
+         PUNCH '    INCLUDE AOST4(IKJEFT54,IKJEFT55,IKJEFT56)'          00800000
+         PUNCH '    INCLUDE AOST4(IKJRBBMC)'                            00807000
+         PUNCH '    INCLUDE AOST4(IKJCT433,IKJCT434,IKJCT436)' @Y30PQTH 00814000
+         PUNCH '    ALIAS IKJGETL,IKJPUTL,IKJSTCK'                      00830000
+         PUNCH '    ENTRY IKJPTGT'                                      00837000
+         PUNCH ' NAME IKJPTGT(R)'                                       00844000
+.*    DAIR                                                              00860000
+         PUNCH '    INCLUDE AOST4(IEFDB4D0)'                            00864000
+         PUNCH '    ALIAS IKJDAIR,IKJEFD00'                             00868000
+         PUNCH '    ENTRY IEFDB4D0'                                     00876000
+         PUNCH ' NAME IEFDB4D0(R)'                                      00881000
+.*    TMP                                                               00886000
+         PUNCH '    INCLUDE AOST4(IKJEFT02,IKJEFT03,IKJEFT06)'          00891000
+         PUNCH '    INCLUDE AOST4(IKJEFTNS,IKJEFT08)'          @Z40NQSM 00896000
+         PUNCH '    INCLUDE AOST4(IKJEFTE2,IKJEFTE8)'          @Z40NQKG 00901000
+         PUNCH '    ORDER IKJEFT02(P) '                                 00906000
+         PUNCH '    ORDER IKJEFTNS'                            @Z40NQSM 00911000
+         PUNCH '    ORDER IKJEFTE2'                            @Z40NQKG 00916000
+         PUNCH '    ORDER IKJEFT03 '                                    00921000
+         PUNCH '    ORDER IKJEFT06 '                                    00926000
+         PUNCH '    ORDER IKJEFT08 '                           @Z40NQSM 00931000
+         PUNCH '    ORDER IKJEFTE8 '                           @Z40NQKG 00936000
+         PUNCH '    ENTRY IKJEFT02'                                     00941000
+         PUNCH '    ALIAS IKJEFT03'                                     00946000
+         PUNCH '    ALIAS IKJEFT0B'                                     00980000
+         PUNCH '    NAME IKJEFT02(R)'                                   00987000
+         PUNCH '    INCLUDE AOST4(IKJEFT01,IKJEFT06)'                   00994000
+         PUNCH '    INCLUDE AOST4(IKJEFTSC)'                   @ZA74883 01002000
+         PUNCH '    ORDER IKJEFT01(P) '                                 01010000
+         PUNCH '    ORDER IKJEFT06 '                                    01017000
+         PUNCH '    ALIAS IKJEFT0A'                                     01024000
+         PUNCH '    ENTRY IKJEFT01'                                     01040000
+         PUNCH '    SETCODE AC(1)'                             @ZM40122 01046000
+         PUNCH ' NAME IKJEFT01(R)'                                      01052000
+         PUNCH '    INCLUDE AOST4(IKJEFT04)'                            01058000
+         PUNCH '    INCLUDE AOST4(IKJEFT05,IKJEFT06)'                   01070000
+         PUNCH '    ORDER IKJEFT04(P) '                                 01073000
+         PUNCH '    ORDER IKJEFT05 '                                    01080000
+         PUNCH '    ORDER IKJEFT06 '                                    01090000
+         PUNCH '    ENTRY IKJEFT04'                                     01100100
+         PUNCH '    ALIAS IKJEFT05'                                     01104100
+         PUNCH '    ALIAS IKJEFT0D'                                     01108100
+         PUNCH '    ALIAS IKJEFT0E'                                     01110100
+         PUNCH '    NAME IKJEFT04(R)'                                   01112100
+         PUNCH '    INCLUDE AOST4(IKJEFT06,IKJEFT07)'                   01116100
+         PUNCH '    ORDER IKJEFT07(P) '                                 01120100
+         PUNCH '    ORDER IKJEFT06 '                                    01124100
+         PUNCH '    ENTRY IKJEFT07'                                     01168000
+         PUNCH '    NAME IKJEFT07(R)'                                   01177000
+         PUNCH '    INCLUDE AOST4(IKJEFT09)'                            01179200
+         PUNCH '    ENTRY IKJEFT09'                                     01181400
+         PUNCH '    NAME IKJEFT09(R)'                                   01183600
+.*    SVC 100                                                           01186000
+         PUNCH '    INCLUDE AOST4(IKJEFF00) '                           01192000
+         PUNCH '    INCLUDE AOST4(IKJEFF77) '                  @ZA52962 01210500
+         PUNCH '    ENTRY IKJEFF00'                                     01214000
+         PUNCH ' NAME IGC0010{(R)'                                      01234300
+.*                                                                      01234500
+         PUNCH '    INCLUDE AOST4(IKJEFF76) '                  @ZA52962 01234700
+         PUNCH '    INCLUDE AOST4(IKJEFF20) '                  @ZA52962 01234800
+         PUNCH '    ENTRY IKJEFF76          '                  @ZA83390 01234900
+         PUNCH '    SETCODE AC(1) '                            @ZA52962 01235000
+         PUNCH ' NAME IKJEFF76(R)'                             @ZA52962 01235100
+.*   ALLOCATE SERVICE ROUTINE                                           01235300
+         PUNCH '    INCLUDE AOST4(IKJCB831) '                           01241300
+         PUNCH '    ALIAS GENTRANS'                                     01251300
+         PUNCH ' NAME IKJCB831(R)'                                      01256300
+         PUNCH ' INCLUDE ACMDLIB(IGC0006A)'                    @ZA04126 01273300
+         PUNCH ' INCLUDE ACMDLIB(IKJEGSTA)'                    @ZA04126 01282700
+         PUNCH ' INCLUDE ACMDLIB(IGC0009G)'                    @ZA04126 01332000
+         PUNCH ' INCLUDE ACMDLIB(IKJEGMSG)'                    @ZA04126 01382000
+         PUNCH ' INCLUDE ACMDLIB(IKJEGIO)'                     @ZA04126 01392000
+         PUNCH ' ORDER IGC0006A(P)'                            @ZA40126 01500000
+         PUNCH ' ENTRY IGC0006A'                               @ZA04126 01550000
+         PUNCH ' ALIAS IGC0009G'                               @ZA04126 01600000
+          PUNCH ' NAME IGC0006A(R)'                            @ZA04126 01650000
+         PUNCH ' INCLUDE AOST4(IGX00026)'                    @ZA48928   01657100
+         PUNCH ' ENTRY IGX00026 '                              @ZA48928 01664200
+         PUNCH ' NAME IGX00026(R) '                            @ZA48928 01671300
+         PUNCH ' INCLUDE AOST4(IGX00027)'                    @ZA48928   01678400
+         PUNCH ' ENTRY IGX00027 '                              @ZA48928 01685500
+         PUNCH ' NAME IGX00027(R) '                            @ZA48928 01692600
+.********************************************************************** 01693000
+.*                                                                      01693400
+.*   TSO TASK TERMINATION RESOURCE MANAGER                              01693800
+.*                                                                      01694200
+.********************************************************************** 01694600
+         PUNCH ' INCLUDE AOST4(IKJTTRM0) '                     @ZA72434 01695000
+         PUNCH ' ENTRY IKJTTRM0 '                              @ZA72434 01695400
+         PUNCH ' NAME IKJTTRM0(R) '                            @ZA72434 01695800
+.END     ANOP                                                  @ZA72050 01696300
+         PUNCH '/*'                                                     01700000
+         MEND                                                           01732000

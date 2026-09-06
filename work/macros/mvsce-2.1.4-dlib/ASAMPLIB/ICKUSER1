@@ -1,0 +1,268 @@
+  TITLE '********* ICKUSER1 - DSF SECURITY USER EXIT MODULE *********'  00050000
+ICKUSER1 CSECT                                                          00100000
+*/********************************************************************/ 00150000
+*/*                                                                  */ 00200000
+*/*  MODULE NAME - ICKUSER1 (DEVICE SUPPORT FACILITIES)              */ 00250000
+*/*                                                                  */ 00300000
+*/*  DESCRIPTIVE NAME - DSF SECURITY AUTHORIZATION USER EXIT MODULE  */ 00350000
+*/*                                                                  */ 00400000
+*/*  COPYRIGHT - NONE                                                */ 00450000
+*/*                                                                  */ 00500000
+*/*  STATUS - RELEASE-6 VERSION-0                                    */ 00550000
+*/*                                                                  */ 00600000
+*/*  FUNCTION - THIS MODULE RECEIVES REQUESTS TO PERFORM VOLUME AND  */ 00650000
+*/*             DATASET SECURITY AUTHORIZATION BY THE DSF VOLUME     */ 00700000
+*/*             AUTHORIZATION MODULE ICKSA04.                        */ 00750000
+*/*                                                                  */ 00800000
+*/*  NOTES -                                                         */ 00850000
+*/*                                                                  */ 00900000
+*/*     DEPENDENCIES - STANDARD SUBROUTINE LINKAGE                   */ 00950000
+*/*                                                                  */ 01000000
+*/*     RESTRICTIONS - NONE                                          */ 01050000
+*/*                                                                  */ 01100000
+*/*     REGISTER CONVENTIONS - STANDARD LINKAGE CONVENTIONS WITH     */ 01150000
+*/*                            OTHER REGISTERS USED AS NEEDED.       */ 01200000
+*/*                                                                  */ 01250000
+*/*     PATCH LABEL - 'FIXAREA'                                      */ 01300000
+*/*                                                                  */ 01350000
+*/*  MODULE TYPE - PROCEDURE                                         */ 01400000
+*/*                                                                  */ 01450000
+*/*     PROCESSOR - ASSEMBLER                                        */ 01500000
+*/*                                                                  */ 01550000
+*/*     ATTRIBUTES - REENTRANT AND REUSABLE                          */ 01600000
+*/*                                                                  */ 01650000
+*/*  ENTRY POINT - ICKUSER1                                          */ 01700000
+*/*                                                                  */ 01750000
+*/*   PURPOSE - THIS ENTRY POINT IS ENTERED WHENEVER A               */ 01800000
+*/*             MODULE WITHIN DSF REQUESTS THAT A RESOURCE           */ 01850000
+*/*             ACCESS CONTROL FACILITY(RACF) VOLUME LEVEL OR        */ 01900000
+*/*             DATASET AUTHORIZATION CHECK BE PERFORMED.            */ 01950000
+*/*             THIS ROUTINE CONTROLS THE LEVEL OF SECURITY          */ 02000000
+*/*             CHECKING THAT IS TO BE DONE BY DSF.                  */ 02050000
+*/*                                                                  */ 02100000
+*/*             THIS MODULE PROVIDES DEFAULT PROCESSING OPTIONS      */ 02150000
+*/*             FOR DSF SECURITY AUTHORIZATION CHECKING. IT MAY      */ 02200000
+*/*             BE REPLACED BY A USER WRITTEN MODULE.                */ 02250000
+*/*                                                                  */ 02300000
+*/*                                                                  */ 02350000
+*/*   LINKAGE - CALL ICKUSER1 (PARM-LIST)                            */ 02400000
+*/*                                                                  */ 02450000
+*/*   INPUT   - PARAMETER LIST CONTAINING -                          */ 02500000
+*/*                 1. POINTER TO FORMAT1 DSCB                       */ 02550000
+*/*                 2. POINTER A SIX CHARACTER VOLUME SERIAL         */ 02600000
+*/*                 3. POINTER TO A 2 CHARACTER FIELD CONTAINING -   */ 02650000
+*/*                         A. A ONE BYTE DATASET TYPE CODE          */ 02700000
+*/*                         B. A ONE BYTE DSF COMMAND CODE           */ 02750000
+*/*                                                                  */ 02800000
+*/*                 DATASET TYPE CODES ARE :                         */ 02810000
+*/*                      1 = VSAM DATASET                            */ 02820000
+*/*                      2 = PASSWORD PROTECTED DATASET              */ 02830000
+*/*                      3 = UNEXPIRED DATASET                       */ 02840000
+*/*                                                                  */ 02850000
+*/*                 DSF COMMAND CODES ARE :                          */ 02900000
+*/*                      1 = COMMAND IS BUILDX                       */ 02950000
+*/*                      2 = COMMAND IS INIT                         */ 03000000
+*/*                      3 = COMMAND IS INSPECT                      */ 03050000
+*/*                      4 = COMMAND IS REFORMAT                     */ 03100000
+*/*                                                                  */ 03850000
+*/*   OUTPUT  - NONE                                                 */ 03900000
+*/*                                                                  */ 03950000
+*/*   EXIT NORMAL - A RETURN TO THE CALLER WITH ONE OF THE           */ 04000000
+*/*                 FOLLOWING RETURN CODES:                          */ 04050000
+*/*                                                                  */ 04100000
+*/*           DEC HEX                                                */ 04150000
+*/*           --- ---                                                */ 04200000
+*/*            00 (00) BYAPSS CHECKING FOR THIS VOLUME ,             */ 04250000
+*/*                    DO NOT RETURN TO ICKUSER1 FOR THIS VOLUME     */ 04300000
+*/*                                                                  */ 04350000
+*/*            04 (04) BYPASS CHECKING FOR THIS DATASET ,            */ 04400000
+*/*                    BUT RETURN TO ICKUSER1 FOR NEXT DATASET       */ 04450000
+*/*                                                                  */ 04500000
+*/*            08 (08) DO NORMAL CHECKING FOR THIS DATASET ,         */ 04501500
+*/*                    BUT RETURN TO ICKUSER1 FOR NEXT DATASET       */ 04503000
+*/*                                                                  */ 04504500
+*/*            12 (0C) DO NORMAL CHECKING FOR THIS VOLUME ,          */ 04506000
+*/*                    DO NOT RETURN TO ICKUSER1 FOR THIS VOLUME     */ 04507500
+*/*                                                                  */ 04509000
+*/*            16 (10) REJECT THIS DATASET ,                         */ 04510500
+*/*                    BUT RETURN TO ICKUSER1 FOR NEXT DATASET       */ 04512000
+*/*                                                                  */ 04513500
+*/*            20 (14) TERMINATE THIS COMMAND                        */ 04515000
+*/*                                                                  */ 04516500
+*/*  =======>  NOTE 1.   FOR VSAM DATSETS AND UNEXPIRED DATASETS     */ 04518000
+*/*            THE ONLY ALLOWABLE RETURN CODES ARE 0, 12 AND 20.     */ 04519500
+*/*            (I.E. ALLOW DSF USER TO PROCESS VOLUME FOR GIVEN      */ 04521000
+*/*             DATASET TYPE, DO NOT ALLOW DSF USER TO PROCESS       */ 04522500
+*/*             VOLUME FOR GIVEN DATASET TYPE OR TERMINATE THE       */ 04524000
+*/*             COMMAND - RESPECTIVELY)                              */ 04525500
+*/*                                                                  */ 04527000
+*/*  =======>  NOTE 2.   THAT THE DEFAULT RETURN CODES CAN BE        */ 04528500
+*/*            SUPERZAPPED EASILY. THE DEFAULT RETURN CODES ARE      */ 04530000
+*/*            ARRANGED IN A TABLE BY COMMAND AND BY DATASET         */ 04531500
+*/*            TYPES. THIS TABLE STARTS AT OFFSET 4 FROM THE         */ 04533000
+*/*            ENTRY POINT FOR THIS MODULE.                          */ 04534500
+*/*                                                                  */ 04536000
+*/*  =======>  NOTE 3.   THAT THIS MODULE DOES NOT HAVE A SAVE       */ 04537500
+*/*            AREA OF ITS OWN AND THAT NO SAVE AREA CHAINING CODE   */ 04539000
+*/*            IS PRESENT BECAUSE THIS MODULE CALLS NO OTHERS.       */ 04540500
+*/*            IF USER WANTS TO BUILD ON THIS HE MUST PROVIDE        */ 04542000
+*/*            A SAVE AREA AND CHAINING CODE AS NEEDED.              */ 04543500
+*/*                                                                  */ 04545000
+*/*   EXIT ERROR - NONE                                              */ 04546500
+*/*                                                                  */ 04548000
+*/*  EXTERNAL REFERENCES - NONE                                      */ 04550000
+*/*                                                                  */ 04600000
+*/*     DATA AREAS -                                                 */ 04700000
+*/*                                                                  */ 04750000
+*/*                                                                  */ 04800000
+*/*     CONTROL BLOCKS -                                             */ 04850000
+*/*                                                                  */ 04900000
+*/*                                                                  */ 04950000
+*/*  TABLES - NONE                                                   */ 05000000
+*/*                                                                  */ 05050000
+*/*  MACROS -                                                        */ 05100000
+*/*                                                                  */ 05150000
+*/*  CHANGE ACTIVITY -                                               */ 05200000
+*/*                                                                  */ 05250000
+*/********************************************************************/ 05300000
+         EJECT                                                          05350000
+         USING *,15                TEMPORARY CODE ADDRESSABILITY        05350900
+         B     USR1MAIN            BRANCH AROUND CONSTANTS              05351800
+*                                                                       05352700
+*        START OF DEFAULT RETURN CODES TABLE                            05353600
+*        REQUESTS NORMAL DSF PROCESSING FOR ALL CASES                   05354500
+*                                                                       05355400
+RCTABLE  DS    0F                  DEFAULT RETURN CODES TABLE           05356300
+BLDXVSAM DC    F'12'               BUILDX COMMAND , VSAM DATASET        05357200
+BLDXPWDS DC    F'12'               BUILDX COMMAND , PW PROT DATASET     05358100
+BLDXUEXP DC    F'12'               BUILDX COMMAND , UNEXPIRED DATASET   05359000
+INITVSAM DC    F'12'               INIT COMMAND , VSAM DATASET          05359900
+INITPWDS DC    F'12'               INIT COMMAND , PW PROT DATASET       05360800
+INITUEXP DC    F'12'               INIT COMMAND , UNEXPIRED DATASET     05361700
+INSPVSAM DC    F'12'               INSP COMMAND , VSAM DATASET          05362600
+INSPPWDS DC    F'12'               INSP COMMAND , PW PROT DATASET       05363500
+INSPUEXP DC    F'12'               INSP COMMAND , UNEXPIRED DATASET     05364400
+RFMTVSAM DC    F'12'               RFMT COMMAND , VSAM DATASET          05365300
+RFMTPWDS DC    F'12'               RFMT COMMAND , PW PROT DATASET       05366200
+RFMTUEXP DC    F'12'               RFMT COMMAND , UNEXPIRED DATASET     05367100
+*                                                                       05368000
+*        END OF DEFAULT RETURN CODES TABLE                              05368900
+*                                                                       05369800
+         DC    AL1(16)                                                  05370700
+         DC    C'ICKUSER1 DSF 6.0'                                      05371600
+*                                                                       05372500
+*        MAINLINE PROGRAM                                               05373400
+*                                                                       05374300
+         DS    0H                                                       05375200
+USR1MAIN EQU   *                                                        05376100
+         STM   RE,RC,12(RD)       SAVE CALLERS REGS                     05377000
+         BALR  RC,0                BASE REG                             05377900
+@PSTART  EQU   *                                                        05378800
+         USING @PSTART,RC                                               05379700
+         LR    RA,R1               PARMLIST ADDRESS                     05380600
+         USING EXITPRMS,RA         ADDRESS PARMLIST                     05381500
+         LA    R9,RCTABLE          RETURN CODE TABLE ADDRESS(BASE=RF)   05382400
+         L     R8,XITCODSP         ADDRESS EXIT CODES                   05383300
+         SLR   R7,R7                                                    05384200
+         USING XITCODES,R8                                              05385100
+         IC    R7,XITCMD           GET COMMAND CODE                     05386000
+         BCTR  R7,0                REDUCE BY 1                          05386900
+         MH    R7,CRCTLEN          TIMES LENGTH OF RCT FOR ONE COMMAND  05387800
+         AR    R9,R7               ADDR OF RCT FOR COMMAND              05388700
+         SLR   R7,R7                                                    05389600
+         IC    R7,XITDSTYP         GET DS TYPE                          05390500
+         BCTR  R7,0                REDUCE BY 1                          05391400
+         MH    R7,RCTELEN          LENGTH OF EACH RCT ENTRY             05392300
+         AR    R9,R7               ADDR OF ENTRY BY COMMAND AND DSTYPE  05393200
+         L     RF,0(,R9)           RETURN CODE FOR COMMAND AND DSTYPE   05394100
+         L     RE,12(,RD)          RESTORE REGS                         05395000
+         LM    R0,RC,20(RD)                                             05395900
+         BR    RE                                                       05396800
+*/********************************************************************/ 05400000
+*/*                                                                  */ 05450000
+*/*         PATCH AREA FOR PROGRAM MAINTENANCE.                      */ 05500000
+*/*                                                                  */ 05550000
+*/********************************************************************/ 05600000
+PATCH    DC    10C'PATCH'                                               05650000
+         EJECT                                                          05700000
+*/********************************************************************/ 05702600
+*/*      CONSTANTS USED                                              */ 05705200
+*/********************************************************************/ 05707800
+CRCTLEN  DC    AL2(INITVSAM-BLDXVSAM)                                   05710400
+RCTELEN  DC    H'4'                                                     05713000
+*/********************************************************************/ 05715600
+*/*      STRUCTURE FOR PARAMETER LIST                                */ 05718200
+*/********************************************************************/ 05720800
+EXITPRMS DSECT                                                          05723400
+XITDSCBP DS    F                   POINTER TO DSCB FORMAT 1             05726000
+XITVSERP DS    F                   POINTER TO VOLUME SERIAL             05728600
+XITCODSP DS    F                   POINTER TO CODES                     05731200
+*/********************************************************************/ 05733800
+*/*      STRUCTURE FOR INPUT CODES                                   */ 05736400
+*/********************************************************************/ 05739000
+XITCODES DSECT                                                          05741600
+XITDSTYP DS    C                   DATASET TYPE CODE                    05744200
+XITCMD   DS    C                   COMMAND CODE                         05746800
+*/* **************************************************************** */ 05750000
+*/*                                                                  */ 05800000
+*/*              ASSEMBLY LANGUAGE VERSION OF IECSDSL1               */ 05850000
+*/*                                                                  */ 05900000
+*/*      ******************************************************      */ 05950000
+*/*                                                                  */ 06000000
+*/*                                                                  */ 06050000
+IECSDSF1 DSECT                     FORMAT1 DSCB                         06100000
+DS1DSNAM DS    CL44                DATA SET NAME                        06150000
+DS1FMTID DS    CL1                 FORMAT IDENTIFIER                    06200000
+DS1DSSN  DS    CL6                 DATA SET SERIAL NUMBER               06250000
+DS1VOLSQ DS    XL2                 VOLUME SEQUENCE NUMBER               06300000
+DS1CREDT DS    XL3                 CREATION DATE                        06350000
+DS1EXPDT DS    XL3                 EXPIRATION DATE                      06400000
+DS1NOEPV DS    XL1                 NUMBER OF EXTENTS ON VOLUME          06450000
+DS1NOBDB DS    XL1                 NUMBER OF BYTES USED IN LAST         06500000
+*                                     DIRECTORY BLOCK                   06550000
+         DS    XL1                 RESERVED                             06600000
+DS1SYSCD DS    CL13                SYSTEM CODE                          06650000
+         DS    XL7                 RESERVED                             06700000
+DS1DSORG DS    XL2                 DATA SET ORGANIZATION                06750000
+DS1RECFM DS    XL1                 RECORD FORMAT                        06800000
+DS1OPTCD DS    XL1                 OPTION CODE                          06850000
+DS1BLKL  DS    XL2                 BLOCK LENGTH                         06900000
+DS1LRECL DS    XL2                 RECORD LENGTH                        06950000
+DS1KEYL  DS    XL1                 KEY LENGTH                           07000000
+DS1RKP   DS    XL2                 RELATIVE KEY POSITION                07050000
+DS1DSIND DS    XL1                 DATA SET INDICATORS                  07100000
+DS1SCALO DS    XL4                 SECONDARY ALLOCATION                 07150000
+DS1LSTAR DS    XL3                 LAST USED TRACK AND BLOCK ON TRACK   07200000
+DS1TRBAL DS    XL2                 BYTES REMAINING ON LAST TRACK USED   07250000
+         DS    XL2                 RESERVED                             07300000
+DS1EXT1  DS    XL10                FIRST EXTENT DESCRIPTION             07350000
+*        FIRST BYTE                EXTENT TYPE INDICATOR                07400000
+*        SECOND BYTE               EXTENT SEQUENCE NUMBER               07450000
+*        THIRD - SIXTH BYTES       LOWER LIMIT                          07500000
+*        SEVENTH - TENTH BYTES     UPPER LIMIT                          07550000
+DS1EXT2  DS    XL10                SECOND EXTENT DESCRIPTION            07600000
+DS1EXT3  DS    XL10                THIRD EXTENT DESCRIPTION             07650000
+DS1PTRDS DS    XL5                 POSSIBLE PTR TO A FORMAT 2 OR 3 DSCB 07700000
+DS1END   EQU   *                                                        07750000
+         EJECT                                                          07752200
+ICKUSER1 CSECT ,                                                        07754400
+*/********************************************************************/ 07756600
+*/*      REGISTER EQUATES                                            */ 07758800
+*/********************************************************************/ 07761000
+R0       EQU   0                                                        07763200
+R1       EQU   1                                                        07765400
+R2       EQU   2                                                        07767600
+R3       EQU   3                                                        07769800
+R4       EQU   4                                                        07772000
+R5       EQU   5                                                        07774200
+R6       EQU   6                                                        07776400
+R7       EQU   7                                                        07778600
+R8       EQU   8                                                        07780800
+R9       EQU   9                                                        07783000
+RA       EQU   10                                                       07785200
+RB       EQU   11                                                       07787400
+RC       EQU   12                                                       07789600
+RD       EQU   13                                                       07791800
+RE       EQU   14                                                       07794000
+RF       EQU   15                                                       07796200
+         END   ICKUSER1                                                 07800000

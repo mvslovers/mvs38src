@@ -176,3 +176,94 @@ elements are missing the same way. `IHANVT`, `UCBDADVC` and `IECDCST` have no
 - `tools/pdsunload.py` also opens `MVSSRC.BLD.UTILITY.ASM` (64 members,
   Dave Kreiss' utilities, `COMPLMD` among them) and `MVSSRC.BLD.SMP.JCL` (274
   members). Both were blocked behind cc370#113.
+
+---
+
+## Addendum, 2026-09-06: the corpus was at the wrong level
+
+Mike asked whether usermods have not already run against `SYS1.MACLIB`, and
+whether it would not be worth looking at the macros the sysgen itself provides.
+Both questions land, and the second one has a shorter answer than expected —
+**MVS/CE is a finished Jay Moseley sysgen**, so its distribution libraries *are*
+that sysgen's macro output. Nothing has to be fetched; it only has to be read
+from the right volume.
+
+The corpus measured above was a mix of levels, which nobody had noticed:
+
+| Library | Volume | What it is |
+|---|---|---|
+| `SYS1.MACLIB` (742) | `mvsres` | **target** — this is what usermods update |
+| `SYS1.AMODGEN` (288) | `smp000` | distribution |
+| `SYS1.APVTMACS` (242) | `mvs000` | neither — a target-side library |
+
+SMP `APPLY` updates target libraries, `ACCEPT` updates distribution libraries.
+Comparing recovered source against DLIB object decks while assembling it with
+**target** macros mixes the two levels in the one place where the whole method
+depends on keeping them apart.
+
+### What the DLIB volume actually holds
+
+`smp000.3350` carries every distribution library the inventory names:
+
+| | Members | `++MAC` elements in the inventory |
+|---|---:|---:|
+| `SYS1.AMACLIB` | 566 | 554 |
+| `SYS1.AMODGEN` | 288 | 285 |
+| `SYS1.AGENLIB` | 243 | 245 |
+| `SYS1.ATSOMAC` | 100 | 71 |
+| `SYS1.ATCAMMAC` | 139 | — |
+| `SYS1.AHELP` | 100 | 58 |
+| `SYS1.ASAMPLIB` | 37 | 52 |
+| **`SYS1.UMODMAC`** | **0** | — |
+
+`SYS1.AHELP` and `SYS1.ASAMPLIB` are TSO help text and samples, not macros. They
+are extracted for completeness and **kept out of the assembler's search path** —
+14 of their member names collide with real macro names (`TIME`, `CALL`, `LINK`,
+`LOAD`, `DELETE`, …).
+
+**`SYS1.UMODMAC` is empty.** That is the direct answer to the usermod question:
+the library exists, so the sysgen made a place for usermod-supplied macros, and
+nothing was ever put in it. On the macro side, MVS/CE has no usermod layer. What
+remains open is whether usermods were **ACCEPTed** into the DLIBs themselves —
+that is recorded in the SMP CDS on `smp000` and is still to be looked up.
+
+### Measured
+
+Same 150 modules, same as370, per module:
+
+| Macro set | Macros | Assembled |
+|---|---:|---:|
+| target mix, alone | 1,268 | 73 |
+| **DLIB set, alone** | **1,460** | **74** |
+| target mix + tape + mirror | 1,702 | 110 |
+| **DLIB set + tape + mirror** | **1,893** | **111** |
+
+**No regressions, one module gained.** The point is not the extra module — it is
+that the corpus is now at one level, and that level is the one being compared
+against.
+
+The `AMACLIB` gap closed too: of the 554 `DISTLIB(AMACLIB)` elements the
+inventory names, the target `SYS1.MACLIB` held 475 and the distribution
+`SYS1.AMACLIB` holds **540**. 14 are still missing rather than 79.
+
+### And a finding that closes a route
+
+**The private macros are not in the distribution libraries.** Of the 623
+`DISTLIB(APVTMAC)` elements, the whole DLIB set contains **three**. Of the 319
+macros taken from web mirrors, **not one** can be replaced from MVS/CE.
+
+That is not a gap in our extraction. `PVTMAC`/`APVTMAC` are libraries Dave Kreiss
+created; IBM shipped these macros inside the RELFILEs of the function SYSMODs and
+nowhere else. So the provenance question about those 319 macros **cannot be
+settled from any MVS/CE, TK4- or TK5 system** — only from his built `APVTMAC` or
+from the IBM RELFILEs. The request in the mail of 2026-09-06 is not a
+convenience; it is the only route.
+
+### A methodological note
+
+The first run of this measurement produced 42 and 68 and looked like a serious
+regression. It was a test error: **zsh does not word-split an unquoted parameter
+expansion**, so a `-I` list built up in a shell variable arrived as a single
+argument and as370 assembled with no macro path at all. The give-away was a
+control case — the same six directories written out by hand assembled the same
+module cleanly. Build the list as an array and pass `"${arr[@]}"`.

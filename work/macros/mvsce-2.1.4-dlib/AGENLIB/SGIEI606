@@ -1,0 +1,15 @@
+         MACRO                                                          03000032
+         SGIEI606                                                       06000032
+.* THIS IS ONE OF A SERIES OF MACROS ADDED IN SU32. THEY ARE CALLED     09000032
+.* IN JOB 6 OF GENERATE, AFTER ALL THE WORK IS DONE; ONLY THE LISTPDS   12000032
+.* AND LISTVTOC STEPS REMAIN.  COMPONENTS WHICH NORMALLY DO NOT HAVE    15000032
+.* SYSGEN SUPPORT CAN REPLACE ONE OF THESE DUMMYS WITH AN INNER TO      18000032
+.* INCLUDE THEIR MATERIAL INTO THE NEW SYSTEM. CONTACT SC1S1 OWNER.     21000032
+.*                                                                      24000032
+.* THESE MACROS ARE CALLED ON A COMPLETE GENERATION (GENTYPE=ALL) ONLY. 27000032
+.* SEE DUMMY VERSION OF SGIEI610 FOR SAMPLE CODE AND SOME RULES.        30000032
+.*                                                                      33000032
+.* CHANGES -- G32DSVN (CREATION)                                        36000032
+.*                                                                      39000032
+         MNOTE *,'DUMMY VERSION OF SGIEI606 EXECUTED.'                  42000032
+         MEND                                                           45000032

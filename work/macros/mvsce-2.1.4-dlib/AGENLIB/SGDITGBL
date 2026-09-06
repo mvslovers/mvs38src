@@ -1,0 +1,110 @@
+         MACRO                                                          00050064
+         SGDITGBL &GENERIC=,&UCBTYPE=,&DDTMOD=,&NUCMOD=,&NUCDLB=,      X00100064
+               &ERPMOD=,&ERPDLB=,&LPAMOD=,&LPADLB=,&STATBL=,           X00150064
+               &GCTNDX=,&SENSE=,&NEWDEV=YES,&PREFTBL=99999              00200064
+.*                                                             @ZA42023 00224964
+         COPY  SGGBLPAK                                                 00250064
+         LCLA  &I,&C                                                    00300064
+.***START OF SPECIFICATIONS******************************************** 00350064
+.*                                                                    * 00400064
+.* MODULE NAME - SGDITGBL                                             * 00450064
+.*                                                                    * 00500064
+.* DESCRIPTIVE NAME - SET THE SPECIFIED DIT GLOBALS                   * 00550064
+.*                                                                    * 00600064
+.* COPYRIGHT - NONE                                                   * 00650064
+.*                                                                    * 00700064
+.* STATUS - CHANGE LEVEL 00                                           * 00750064
+.*                                                                    * 00800064
+.* FUNCTION -                                                         * 00850064
+.*    THE FUNCTION OF THIS MACRO IS TO SET THE DIT GLOBALS THAT ARE   * 00900064
+.* SPECIFIED BY A SGIDSPXX MACRO. THIS MACRO PRESENTS A MORE          * 00950064
+.* UNIFORM METHOD BY WHICH A DIT ENTRY IS BUILT FOR A NEW DEVICE.     * 01000064
+.*                                                                    * 01050064
+.* NOTES - N/A                                                        * 01100064
+.*                                                                    * 01150064
+.* MODULE TYPE - MACRO                                                * 01200064
+.*                                                                    * 01250064
+.* ENTRY POINT - N/A                                                  * 01300064
+.*                                                                    * 01350064
+.* INPUT/OUTPUT TO SET THE DIT GLOBALS-                               * 01400064
+.*                                                                    * 01450064
+.*  INPUT     GLOBAL                                                  * 01500064
+.* GENERIC    &SGGNRIC - GENERIC NAME USED FOR THIS DEVICE            * 01550064
+.*                                                                    * 01600064
+.* UCBTYPE    &SGDTYPC - DEVICE TYPE CODE (SAME AS UCB WITHOUT        * 01650064
+.*                       FEATURES)                                    * 01700064
+.*                                                                    * 01750064
+.* DDTMOD     &SGDDTMC - DDT CSECT NAME                               * 01800064
+.*                                                                    * 01850064
+.* NUCMOD     &SGNUCMC - NAMES OF MODULES TO BE INCLUDED INTO THE     * 01900064
+.*                       NUCLEUS                                      * 01950064
+.*                                                                    * 02000064
+.* NUCDLB     &SGNUCDC - DDNAME FOR DLIB CONTAINING THE NUCLEUS       * 02050064
+.*                       MODULES                                      * 02100064
+.*                                                                    * 02150064
+.* ERPMOD     &SGERPMC - NAMES OF ERP MODULES TO BE INCLUDED          * 02200064
+.*                                                                    * 02250064
+.* ERPDLB     &SGERPDC - DDNAME FOR DLIB CONTAINING THE ERP MODULES   * 02300064
+.*                                                                    * 02350064
+.* LPAMOD     &SGLPAMC - NAMES OF MODULES TO BE INCLUDED INTO LPALIB  * 02400064
+.*                                                                    * 02450064
+.* LPADLB     &SGLPADC - DDNAME FOR DLIB CONTAINING THE LPALIB        * 02500064
+.*                       MODULES TO BE INCLUDED                       * 02550064
+.*                                                                    * 02600064
+.* GCTNDX     &SGGCTXC - LIST OF INDICES FOR GENERIC COMPATIBILITY    * 02650064
+.*                                                                    * 02700064
+.* NEWDEV     &SGINTFB - INDICATES IF NEW DEVICE INTERFACE IS BEING   * 02750064
+.*                       SPECIFIED(1= POST MVS RESTRUCTURE)           * 02800064
+.*                                                                    * 02850064
+.* STATBL     &SGUNSTA - NUMBER OF STATISTIC TABLE ENTRIES            * 02900064
+.*                                                                    * 02950064
+.* SENSE      &SGUSNSA - NUMBER OF SENSE BYTES TO BE READ             * 03000064
+.*                                                                    * 03050064
+.* PREFTBL    &SGPREFA - DEFAULT DEVICE PREFERENCE ORDER NUMDER       * 03053064
+.*                                                            @ZA42023* 03056064
+.* OTHER OUTPUT-                                                      * 03100064
+.*                                                                    * 03150064
+.*            &SGGENDB - INDICATES IF ANY OF THIS DEVICE GENERIC      * 03200064
+.*                       HAS BEEN SPECIFIED                           * 03250064
+.*                                                                    * 03300064
+.* LOCAL SYMBOLS USED:                                                * 03350064
+.*                                                                    * 03400064
+.*       &I -           DEVICE POINTER                                * 03450064
+.*                                                                    * 03500064
+.* EXIT, NORMAL - N/A                                                 * 03550064
+.*                                                                    * 03600064
+.* EXIT, ERROR - N/A                                                  * 03650064
+.*                                                                    * 03700064
+.* EXTERNAL REFERENCES - NONE                                         * 03750064
+.*                                                                    * 03800064
+.* MACROS - DSP MACROS(SGIDSP01 - SGIDSP10)                           * 03850064
+.*                                                                    * 03886064
+.* CHANGE ACTIVITY -   @ZA38595,@ZA42023                              * 03922064
+.*                                                                    * 03958064
+.********************************************************************** 03994064
+.*     GET DEVICE POINTER                                               04030064
+&I       SETA &SGDITXA(&SGCNTRA(3))   GET DEVICE POINTER       @ZA38595 04110164
+&SGGNRIC(&I)   SETC '&GENERIC'                                          04200064
+&SGDTYPC(&I)   SETC '&UCBTYPE'                                          04250064
+&SGDDTMC(&I)   SETC '&DDTMOD'                                           04300064
+&SGNUCMC(&I)   SETC '&NUCMOD'                                           04350064
+&SGNUCDC(&I)   SETC '&NUCDLB'                                           04400064
+&SGERPMC(&I)   SETC '&ERPMOD'                                           04450064
+&SGERPDC(&I)   SETC '&ERPDLB'                                           04500064
+&SGLPAMC(&I)   SETC '&LPAMOD'                                           04550064
+&SGLPADC(&I)   SETC '&LPADLB'                                           04600064
+&SGGCTXC(&I)   SETC '&GCTNDX'                                           04650064
+&SGGENDB(&I)   SETB 1                                                   04700064
+&SGUNSTA(&I)   SETA &STATBL                                             04750064
+&SGUSNSA(&I)   SETA &SENSE                                              04800064
+&SGINTFB(&I)   SETB ('&NEWDEV' EQ 'YES')                                04850064
+&SGPREFA(&I)   SETA &PREFTBL                                   @ZA42023 04860064
+       MNOTE *,'THE DIT ENTRY &SGDITXA(&I)'                             04900064
+       MNOTE *,' GENERIC= &SGGNRIC(&I)'                                 04950064
+       MNOTE *,' UCBTYPE= &SGDTYPC(&I)'                                 05000064
+       MNOTE *,' DDTMOD = &SGDDTMC(&I)'                                 05050064
+       MNOTE *,' NUCMOD = &SGNUCMC(&I)'                                 05100064
+       MNOTE *,' ERPMOD = &SGERPMC(&I)'                                 05150064
+       MNOTE *,' LPAMOD = &SGLPAMC(&I)'                                 05200064
+       MNOTE *,' NEWDEV = &SGINTFB(&I)'                                 05220064
+.MEND    MEND                                                           05240064

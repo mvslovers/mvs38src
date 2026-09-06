@@ -1,0 +1,14 @@
+         MACRO                                                          00200002
+         SGIDA300                                                       00250002
+.** SYSGEN MACRO TO LINKEDIT I/O MANAGER (BLOCK PROCESSOR) MODULES      00300002
+.*  INTO THE NUCLEUS */                                                 00310002
+.*                                                                      00320002
+         PUNCH  ' INCLUDE  AOSC5(IGC121)  '                             00350002
+         PUNCH  ' INCLUDE  AOSC5(IDA121A2) '                            00450002
+         PUNCH  ' INCLUDE  AOSC5(IDA019SB) '                   @Y30SSMR 00500000
+         PUNCH  ' INCLUDE  AOSC5(IDA121A3) '                            00550002
+         PUNCH  ' INCLUDE  AOSC5(IDA121A4) '                            00650002
+         PUNCH  ' INCLUDE  AOSC5(IDA019S4) '                   @Y30SSMR 00660000
+         PUNCH  ' INCLUDE  AOSC5(IDA121A6) '                            00700002
+         PUNCH  ' INCLUDE  AOSC5(IDA121CV)  '                           00750002
+         MEND                                                           00800002

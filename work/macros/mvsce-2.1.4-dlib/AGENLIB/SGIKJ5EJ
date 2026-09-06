@@ -1,0 +1,15 @@
+          MACRO                                                         00050000
+          SGIKJ5EJ                                                      00100000
+         COPY SGGBLPAK                                                  00250000
+.*******************************************************************    00300000
+.***  THIS MACRO WILL PRODUCE THE COPY STATEMENTS TO COPY THE           00350000
+.***  SYSTEM UTILITY COMMANDS   THE DEFAULT                             00400000
+.***  NAMING ROUTINE AND THE CATALOG INFORMATION ROUTINE                00450000
+.***  FOR A TSO SYSTEM SYSGEN.                                          00500000
+.*********************************************************************  00550000
+.********  CREATE CONTROL CARDS FOR DEFAULT.*******                     00600000
+ PUNCH '   SELECT MEMBER=(IKJEHDEF,IKJDFLT)'                            00650000
+.********** CREATE CONTROL CARDS FOR CATALOG INFORMATION   ROUTINE ***  00900000
+ PUNCH  '  SELECT MEMBER=(IKJEHCIR)'                                    00950000
+.END      ANOP                                                          01000000
+          MEND                                                          01050000

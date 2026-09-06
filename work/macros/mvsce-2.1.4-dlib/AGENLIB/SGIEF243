@@ -1,0 +1,49 @@
+         MACRO                                                          02000002
+         SGIEF243                                                       04000002
+.*A000000-999999                                               @YM02527 06000002
+.*********************************************************************  08000002
+.*                                                                      10000002
+.* MACRO NAME - SGIEF243                                                12000002
+.*                                                                      14000002
+.* FUNCTION  - GENERATES THE ASSEMBLY JCL AND GROUP 0 MACRO CALL TO     16000002
+.*             SGIEE0VR TO GENERATE CSECT IEE3203D                      18000002
+.*                                                                      20000002
+.* OPERATION - IF ACSMETH=TCAM WAS SPECIFIED ON THE DATASET             20400002
+.*             MACRO, SGIEE0VR WILL BE CALLED WITH THE PARAMETER        20800002
+.*             '1'. IF ACSMETH=TCAM WAS NOT SPECIFIED, SGIEE0VR         21200002
+.*             WILL BE CALLED WITH THE PARAMETER '0'.                   21600002
+.*                                                                      28000002
+.* EXECUTION STAGE - STAGE I                                            30000002
+.*                                                                      32000002
+.* ENTRY - SGIEF243 FROM GENERATE                                       34000002
+.*                                                                      36000002
+.* INPUT - GLOBAL &SGDMGTB(5) - TCAM OPTION                             38000002
+.*                                                                      40000002
+.* INTERNAL CALLS - SGGBLPAK - FOR GLOBAL INPUT REFERENCE               42000002
+.*                  SGASMPAK - FOR ASSEMBLY JCL                         44000002
+.*                                                                      46000002
+.* OUTPUT - ASSEMBLY JCL FOR STAGE II FOR IEE3203D                      48000002
+.*                                                                      50000002
+.* EXIT - MEND TO GENERATE                                              52000002
+.*                                                                      54000002
+.* CHANGE ACTIVITY -                                                    54500002
+.*     PTM 02527                                                        55000002
+.*                                                                      55500002
+.* MESSAGES - NONE                                                      56000002
+.*                                                                      58000002
+.* DISTRIBUTION LIBRARY - SYS1.AGENLIB                                  60000002
+.*                                                                      62000002
+.*********************************************************************  64000002
+         COPY  SGGBLPAK                                                 66000002
+.*                                                                      68000002
+.* LOCAL VARIABLES                                                      70000002
+.*                                                                      72000002
+         LCLB  &TCAM                                                    74000002
+.*                                                                      76000002
+&TCAM    SETB  (&SGDMGTB(5))      TCAM OPTION                           78000002
+&SGCTRLC(6)  SETC  'IEE3203D'     SET ASSEMBLY MODULE NAME              80000002
+         COPY  SGASMPAK                                                 82000002
+         PUNCH ' SGIEE0VR &TCAM'                                        84000002
+         PUNCH ' END'                                                   86000002
+         PUNCH '/*'                                                     88000002
+         MEND                                                           90000002

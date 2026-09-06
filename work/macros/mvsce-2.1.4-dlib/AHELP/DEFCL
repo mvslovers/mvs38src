@@ -1,0 +1,343 @@
+)F FUNCTION -                                                           00300002
+  THE DEFINE COMMAND CAN BE USED TO DEFINE A CATALOG ENTRY FOR AN       00600002
+  INDEXED, NONINDEXED, OR NUMBERED (RELATIVE RECORD) CLUSTER.           00900003
+)X SYNTAX -                                                             01200002
+         DEFINE    CLUSTER                                              01500002
+                   (  NAME('ENTRYNAME')                                 01800002
+                      FILE('DNAME')                                     02100002
+                      VOLUMES('VOLSER' ...)                             02400002
+                      TRACKS('PRIMARY' 'SECONDARY') |                   02700002
+                         CYLINDERS('PRIMARY' 'SECONDARY') |             03000002
+                         RECORDS('PRIMARY' 'SECONDARY')                 03300002
+                      RECORDSIZE('AVERAGE' 'MAXIMUM')                   03600002
+                      FREESPACE('CIPERCENT' 'CAPERCENT')                03900002
+                      UNIQUE | SUBALLOCATION                            04200002
+                      SPANNED | NONSPANNED                              04250003
+                      KEYRANGES(('LOWKEY' 'HIGHKEY') ...)               04500002
+                      ORDERED | UNORDERED                               04800002
+                      BUFFERSPACE('SIZE')                               05100002
+                      CONTROLINTERVALSIZE('SIZE')                       05400002
+                      STAGE | BIND | CYLINDERFAULT                      05450003
+                      MASTERPW('PASSWORD')                              05700002
+                      CONTROLPW('PASSWORD')                             06000002
+                      UPDATEPW('PASSWORD')                              06300002
+                      READPW('PASSWORD')                                06600002
+                      CODE('CODE')                                      06900002
+                      ATTEMPTS('NUMBER')                                07200002
+                      AUTHORIZATION('ENTRYPOINT' 'STRING')              07500002
+                      OWNER('OWNERID')                                  07800002
+                      TO('DATE') | FOR('DAYS')                          08100002
+                      SHAREOPTIONS('CROSSREGION' 'CROSSSYSTEM')         08400002
+                      ERASE | NOERASE                                   08700002
+                      EXCEPTIONEXIT('MNAME')                            08750003
+                      SPEED | RECOVERY                                  09000002
+                      WRITECHECK | NOWRITECHECK                         09300002
+                      DESTAGEWAIT | NODESTAGEWAIT                       09350003
+                      INDEXED | NONINDEXED | NUMBERED                   09600003
+                      KEYS('LENGTH' 'OFFSET')                           09900002
+                      REPLICATE | NOREPLICATE                           10200002
+                      IMBED | NOIMBED                                   10500002
+                      REUSE | NOREUSE                                   10550003
+                      MODEL('ENTRYNAME/PASSWORD' 'CATNAME/PASSWORD'))   10800003
+                   DATA('OPTIONS')                                      11400002
+                   INDEX('OPTIONS')                                     11700002
+                   CATALOG('CATNAME/PASSWORD')                          12000003
+  REQUIRED - CLUSTER, NAME, TRACKS|CYLINDERS|RECORDS,                   12300003
+             VOLUMES                                                    12400002
+  DEFAULTS - SUBALLOCATION, NONSPANNED, UNORDERED, NOERASE, RECOVERY,   12600003
+             NOWRITECHECK, INDEXED, NOREPLICATE, NOIMBED, NOREUSE,      12650003
+             STAGE, NODESTAGEWAIT                                       12900003
+           - RECORDSIZE(4089 4089) IF NONSPANNED,                       12950003
+             RECORDSIZE(4086 32600) IF SPANNED.                         13000003
+           - KEYS(64 0)                                                 13050003
+  ABBREVIATIONS -                                                       13200002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 13500002
+             TRACKS               TRK                                   13800002
+             RECORDSIZE           RECSZ                                 14100002
+             FREESPACE            FSPC                                  14400002
+             UNIQUE               UNQ                                   14700002
+             SPANNED              SPND                                  14750003
+             NONSPANNED           NSPND                                 14800003
+             KEYRANGES            KRNG                                  15000002
+             BUFFERSPACE          BUFSPC OR BUFSP                       15300002
+             CONTROLINTERVALSIZE  CNVSZ OR CISZ                         15600002
+             CYLINDERFAULT        CYLF                                  15650003
+             MASTERPW             MRPW                                  15900002
+             CONTROLPW            CTLPW                                 16200002
+             UPDATEPW             UPDPW                                 16500002
+             READPW               RDPW                                  16800002
+             SHAREOPTIONS         SHR                                   17100002
+             NOERASE              NERAS                                 17400002
+             EXCEPTIONEXIT        EEXT                                  17450003
+             RECOVERY             RECY                                  17700002
+             WRITECHECK           WCK                                   18000002
+             NOWRITECHECK         NWCK                                  18300002
+             DESTAGEWAIT          DSTGW                                 18350003
+             NODESTAGEWAIT        NDSTGW                                18400003
+             INDEXED              IXD                                   18600002
+             NONINDEXED           NIXD                                  18900002
+             NUMBERED             NUMD                                  18950003
+             NOREPLICATE          NREPL                                 19200002
+             IMBED                IMBD                                  19500002
+             NOIMBED              NIMBD                                 19800002
+             REUSE                RUS                                   19850003
+             NOREUSE              NRUS                                  19900003
+             INDEX                IX                                    20100002
+)O OPERANDS -                                                           20400002
+))CLUSTER  - SPECIFIES THAT A CLUSTER IS TO BE DEFINED.                 20700002
+))NAME('ENTRYNAME')                                                     21000002
+           - SPECIFIES THE NAME OF THE ENTRY (CLUSTER OR COMPONENT)     21300002
+             BEING DEFINED.                                             21600002
+  'ENTRYNAME'                                                           21900002
+           - NAME OF THE ENTRY BEING DEFINED.                           22200002
+))FILE('DNAME')                                                         22500002
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES THE 22800002
+             DEVICES AND VOLUMES TO BE USED FOR SPACE ALLOCATION OF     23100002
+             UNIQUE COMPONENTS OR THAT IDENTIFIES THE PRIME             23200003
+             CATALOG RECOVERY VOLUME FOR THE CLUSTER.                   23250003
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE DEVICES AND   23400002
+             VOLUMES TO BE USED FOR SPACE ALLOCATION OF UNIQUE          23700002
+             COMPONENTS OR THAT IDENTIFIES THE PRIME                    23800003
+             CATALOG RECOVERY VOLUME FOR THE CLUSTER.                   23850003
+))VOLUMES('VOLSER' ...)                                                 24000002
+           - SPECIFIES THE VOLUMES TO CONTAIN THE CLUSTER OR COMPONENT. 24300002
+  'VOLSER' - VOLUME SERIAL NUMBER OF THE VOLUME TO CONTAIN THE CLUSTER  24600002
+             OR COMPONENT.                                              24900002
+))TRACKS('PRIMARY' 'SECONDARY')                                         25200002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  25500002
+             TRACKS.                                                    25800002
+  'PRIMARY'                                                             26100002
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                26400002
+  'SECONDARY'                                                           26700002
+           - SIZE OF A SECONDARY EXTENT TO BE ALLOCATED.                27000002
+  REQUIRED - 'PRIMARY'                                                  27300002
+))CYLINDERS('PRIMARY' 'SECONDARY')                                      27600002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  27900002
+             CYLINDERS.                                                 28200002
+  'PRIMARY'                                                             28500002
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                28800002
+  'SECONDARY'                                                           29100002
+           - SIZE OF A SECONDARY EXTENT TO BE ALLOCATED.                29400002
+  REQUIRED - 'PRIMARY'                                                  29700002
+))RECORDS('PRIMARY' 'SECONDARY')                                        30000002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  30300002
+             RECORDS.                                                   30600002
+  'PRIMARY'                                                             30900002
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                31200002
+  'SECONDARY'                                                           31500002
+           - SIZE OF A SECONDARY EXTENT TO BE ALLOCATED.                31800002
+  REQUIRED - 'PRIMARY'                                                  32100002
+))RECORDSIZE('AVERAGE' 'MAXIMUM')                                       32400002
+           - SPECIFIES THE AVERAGE AND MAXIMUM LENGTHS, IN BYTES, OF    32700002
+             THE RECORDS IN THE DATA COMPONENT.                         33000002
+  'AVERAGE'                                                             33300002
+           - AVERAGE LENGTH OF THE RECORDS IN THE DATA COMPONENT.       33600002
+  'MAXIMUM'                                                             33900002
+           - MAXIMUM LENGTH OF THE RECORDS IN THE DATA COMPONENT.       34200002
+  REQUIRED - 'AVERAGE' AND 'MAXIMUM'                                    34500002
+  DEFAULTS - RECORDSIZE(4089 4089) IF NONSPANNED,                       34550003
+             RECORDSIZE(4086 32600) IF SPANNED.                         34600003
+))FREESPACE('CIPERCENT' 'CAPERCENT')                                    34800002
+           - SPECIFIES THE AMOUNT OF SPACE THAT IS TO BE LEFT FREE      35100002
+             AFTER ANY ALLOCATION AND AFTER ANY SPLIT OF CONTROL        35400002
+             INTERVALS (CIPERCENT) AND CONTROL AREAS (CAPERCENT).       35700002
+  'CIPERCENT'                                                           36000002
+           - PERCENTAGE OF SPACE THAT IS TO BE LEFT FREE IN EACH        36300002
+             CONTROL INTERVAL.                                          36600002
+  'CAPERCENT'                                                           36900002
+           - PERCENTAGE OF SPACE THAT IS TO BE LEFT FREE IN EACH        37200002
+             CONTROL AREA.                                              37500002
+  REQUIRED - 'CIPERCENT'                                                37800002
+))UNIQUE   - THIS CLUSTER OR COMPONENT IS ALLOCATED SPACE OF ITS OWN.   38100002
+))SUBALLOCATION                                                         38400002
+           - A PORTION OF A PREVIOUSLY DEFINED VSAM DATA SPACE IS TO BE 38700002
+             USED FOR THIS CLUSTER OR COMPONENT.                        39000002
+))SPANNED  - SPECIFIES THAT THE MAXIMUM LENGTH OF A LOGICAL RECORD      39050003
+             MAY BE GREATER THAN THE CONTROL INTERVAL SIZE.             39100003
+))NONSPANNED                                                            39150003
+           - SPECIFIES THAT THE MAXIMUM LENGTH OF A LOGICAL RECORD      39200003
+             IS NOT TO EXCEED THE CONTROL INTERVAL SIZE.                39250003
+  DEFAULT  - NONSPANNED                                                 39260003
+))KEYRANGES(('LOWKEY' 'HIGHKEY') ...)                                   39300002
+           - SPECIFIES THAT PORTIONS OF KEY-SEQUENCED DATA ARE TO BE    39600002
+             PLACED ON DIFFERENT VOLUMES.                               39900002
+  'LOWKEY' - LOW KEY OF THE KEY RANGE.                                  40200002
+  'HIGHKEY'                                                             40500002
+           - HIGH KEY OF THE KEY RANGE.                                 40800002
+  REQUIRED - 'LOWKEY' AND 'HIGHKEY'                                     41100002
+))ORDERED  - VOLUMES ARE TO BE USED IN THE ORDER IN WHICH THEY WERE     41400002
+             LISTED IN THE VOLUMES PARAMETER.                           41700002
+))UNORDERED                                                             42000002
+           - VOLUMES DO NOT HAVE TO BE USED IN THE ORDER IN WHICH THEY  42300002
+             WERE LISTED IN THE VOLUMES PARAMETER.                      42600002
+  DEFAULT  - UNORDERED                                                  42650003
+))BUFFERSPACE('SIZE')                                                   42900002
+           - SPECIFIES THE MINIMUM SPACE TO BE PROVIDED FOR BUFFERS.    43200002
+  'SIZE'   - AMOUNT OF SPACE TO BE PROVIDED FOR BUFFERS.                43500002
+))CONTROLINTERVALSIZE('SIZE')                                           43800002
+           - SPECIFIES THE SIZE OF THE CONTROL INTERVAL FOR THE CLUSTER 44100002
+             OR COMPONENT.                                              44400002
+  'SIZE'   - SIZE OF THE CONTROL INTERVAL FOR THE CLUSTER OR COMPONENT. 44700002
+))STAGE    - INDICATES THAT THE CLUSTER OR COMPONENT IS TO BE STAGED    44750003
+             FROM MASS STORAGE TO A DIRECT ACCESS STORAGE STAGING       44800003
+             DRIVE WHEN THE CLUSTER OR COMPONENT IS OPENED.             44850003
+))BIND     - INDICATES THAT THE CLUSTER OR COMPONENT IS NOT ONLY TO BE  44900003
+             STAGED, BUT ALSO TO BE BOUND, THAT IS, RETAINED ON THE     44950003
+             DIRECT ACCESS STORAGE STAGING DRIVE WHEN THE CLUSTER OR    44960003
+             COMPONENT IS OPENED.                                       44970003
+))CYLINDERFAULT                                                         44980003
+           - INDICATES THAT THE CLUSTER OR COMPONENT IS NOT TO BE       44990003
+             STAGED WHEN IT IS OPENED, BUT THAT DATA FROM IT IS TO      44992003
+             BE STAGED AS A PROCESSING PROGRAM NEEDS IT.                44994003
+))MASTERPW('PASSWORD')                                                  45000002
+           - SPECIFIES A MASTER LEVEL PASSWORD FOR THE ENTRY BEING      45300002
+             DEFINED.                                                   45600002
+  'PASSWORD'                                                            45900002
+           - MASTER LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.         46200002
+))CONTROLPW('PASSWORD')                                                 46500002
+           - SPECIFIES A CONTROL LEVEL PASSWORD FOR THE ENTRY BEING     46800002
+             DEFINED.                                                   47100002
+  'PASSWORD'                                                            47400002
+           - CONTROL LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.        47700002
+))UPDATEPW('PASSWORD')                                                  48000002
+           - SPECIFIES AN UPDATE LEVEL PASSWORD FOR THE ENTRY BEING     48300002
+             DEFINED.                                                   48600002
+  'PASSWORD'                                                            48900002
+           - UPDATE LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.         49200002
+))READPW('PASSWORD')                                                    49500002
+           - SPECIFIES A READ LEVEL PASSWORD FOR THE ENTRY BEING        49800002
+             DEFINED.                                                   50100002
+  'PASSWORD'                                                            50400002
+           - READ LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.           50700002
+))CODE('CODE')                                                          51000002
+           - SPECIFIES A PASSWORD-PROMPTING CODE NAME FOR THE ENTRY     51300002
+             BEING DEFINED.                                             51400002
+  'CODE'   - PASSWORD-PROMPTING CODE NAME FOR THE ENTRY BEING DEFINED.  51600002
+))ATTEMPTS('NUMBER')                                                    51900002
+           - SPECIFIES THE MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY 52200002
+             TO ENTER A CORRECT PASSWORD IN RESPONSE TO A PROMPTING     52500002
+             MESSAGE.                                                   52800002
+  'NUMBER' - MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY TO ENTER A    53100002
+             CORRECT PASSWORD IN RESPONSE TO A PROMPTING MESSAGE.       53400002
+  DEFAULTS - ATTEMPTS(2)                                                53700002
+))AUTHORIZATION('ENTRYPOINT' 'STRING')                                  54000002
+           - SPECIFIES THE USER-SECURITY-VERIFICATION ROUTINE (USVR)    54300002
+             THAT EXISTS FOR ADDITIONAL SECURITY VERIFICATION.          54600002
+  'ENTRYPOINT'                                                          54900002
+           - ENTRY POINT OF THE USVR.                                   55200002
+  'STRING' - SPECIFIES INFORMATION TO BE PASSED TO THE USVR WHEN IT     55500002
+             RECEIVES CONTROL TO VERIFY AUTHORIZATION.                  55800002
+  REQUIRED - 'ENTRYPOINT'                                               55900002
+))OWNER('OWNERID')                                                      56100002
+           - SPECIFIES THE IDENTIFICATION OF THE OWNER OF THE ENTRY     56400002
+             BEING DEFINED.                                             56700002
+  'OWNERID'                                                             57000002
+           - IDENTIFICATION OF THE OWNER OF THE ENTRY BEING DEFINED.    57300002
+))TO('DATE')                                                            57600002
+           - SPECIFIES THE RETENTION PERIOD FOR THE CLUSTER BEING       57900002
+             DEFINED.                                                   58200002
+  'DATE'   - DATE (YYDDD) THROUGH WHICH THE CLUSTER BEING DEFINED IS TO 58500002
+             BE KEPT.                                                   58800002
+))FOR('DAYS')                                                           59100002
+           - SPECIFIES THE RETENTION PERIOD FOR THE CLUSTER BEING       59400002
+             DEFINED.                                                   59700002
+  'DAYS'   - NUMBER OF DAYS FOR WHICH THE CLUSTER BEING DEFINED IS TO   60000002
+             BE KEPT.                                                   60300002
+))SHAREOPTIONS('CROSSREGION' 'CROSSSYSTEM')                             60600002
+           - SPECIFIES HOW A COMPONENT OR CLUSTER CAN BE SHARED.        60900002
+  'CROSSREGION'                                                         61200002
+           - SPECIFIES THE AMOUNT OF SHARING ALLOWED AMONG REGIONS.     61500002
+  'CROSSSYSTEM'                                                         61800002
+           - SPECIFIES THE AMOUNT OF SHARING ALLOWED AMONG SYSTEMS.     62100002
+  REQUIRED - 'CROSSREGION'                                              62200002
+))ERASE    - THE DATA COMPONENT IS OVERWRITTEN WITH BINARY ZEROS WHEN   62400002
+             ITS CATALOG ENTRY IS DELETED.                              62700002
+))NOERASE  - THE DATA COMPONENT IS NOT OVERWRITTEN WITH BINARY ZEROS    63000002
+             WHEN ITS CATALOG ENTRY IS DELETED.                         63300002
+))EXCEPTIONEXIT('MNAME')                                                63350003
+           - SPECIFIES THE NAME OF THE USER MODULE TO BE GIVEN          63400003
+             CONTROL WHEN AN EXCEPTION OCCURS DURING PROCESSING.        63450003
+  'MNAME'  - NAME OF USER MODULE.                                       63500003
+))SPEED    - STORAGE ALLOCATED TO THE DATA COMPONENT IS NOT TO BE       63600002
+             PREFORMATTED BEFORE RECORDS ARE INSERTED.                  63900002
+))RECOVERY - STORAGE ALLOCATED TO THE DATA COMPONENT IS TO BE           64200002
+             PREFORMATTED BEFORE RECORDS ARE INSERTED.                  64500002
+))WRITECHECK                                                            64800002
+           - THE DATA OR INDEX COMPONENT IS TO BE CHECKED BY A MACHINE  65100002
+             ACTION CALLED 'WRITE-CHECK' WHEN A RECORD IS WRITTEN INTO  65400002
+             IT.                                                        65700002
+))NOWRITECHECK                                                          66000002
+           - THE DATA OR INDEX COMPONENT IS NOT TO BE CHECKED BY A      66300002
+             MACHINE ACTION CALLED 'WRITE-CHECK' WHEN A RECORD IS       66600002
+             WRITTEN INTO IT.                                           66900002
+))DESTAGEWAIT                                                           66950003
+           - INDICATES THAT DESTAGING IS TO BE COMPLETED BEFORE         67000003
+             CONTROL IS RETURNED FROM VSAM TO THE PROGRAM THAT ISSUES   67050003
+             THE CLOSE MACRO.                                           67100003
+))NODESTAGEWAIT                                                         67150003
+           - INDICATES THAT NOTIFICATION OF UNSUCCESSFUL DESTAGING IS   67160003
+             TO BE MADE ONLY BY A MESSAGE TO THE OPERATOR AND TO        67170003
+             THE MESSAGES (SYSPRINT) DATA SET.                          67180003
+))INDEXED  - SPECIFIES THAT THE CLUSTER BEING DEFINED IS FOR            67200002
+             KEY-SEQUENCED DATA.                                        67500002
+))NONINDEXED                                                            67800002
+           - SPECIFIES THAT THE CLUSTER BEING DEFINED IS FOR            68100002
+             ENTRY-SEQUENCED DATA.                                      68400002
+))NUMBERED - SPECIFIES THAT THE CLUSTER BEING DEFINED IS FOR            68450003
+             RELATIVE RECORD DATA.                                      68500003
+))KEYS('LENGTH' 'OFFSET')                                               68700002
+           - SPECIFIES THAT INFORMATION ABOUT THE KEY FIELD FOR         69000002
+             KEY-SEQUENCED DATA FOLLOWS.                                69300002
+  'LENGTH' - LENGTH OF THE KEY.                                         69600002
+  'OFFSET' - OFFSET OF THE KEY.                                         69900002
+  REQUIRED - 'LENGTH' AND 'OFFSET'                                      70200002
+  DEFAULTS - KEYS(64 0)                                                 70250003
+))REPLICATE                                                             70500002
+           - EACH INDEX RECORD IS TO BE WRITTEN ON A TRACK AS MANY      70800002
+             TIMES AS IT WILL FIT TO REDUCE ROTATIONAL DELAY AND        71100002
+             IMPROVE PERFORMANCE.                                       71400002
+))NOREPLICATE                                                           71700002
+           - COPIES OF INDEX RECORDS ARE NOT WRITTEN ON A TRACK.        72000002
+))IMBED    - THE SEQUENCE SET IS TO BE PLACED WITH THE DATA COMPONENT.  72600002
+))NOIMBED  - THE SEQUENCE SET IS NOT TO BE PLACED WITH THE DATA         72900002
+             COMPONENT.                                                 73200002
+))REUSE    - SPECIFIES THAT THE CLUSTER IS REPETITIVELY OPENABLE        73250003
+             AS A NEW DATA SET.                                         73300003
+))NOREUSE  - SPECIFIES THAT THE CLUSTER IS NOT REPETITIVELY OPENABLE    73350003
+             AS A NEW DATA SET.                                         73400003
+))MODEL('ENTRYNAME/PASSWORD' 'CATNAME/PASSWORD')                        73500003
+           - SPECIFIES THAT AN EXISTING ENTRY IS TO BE USED AS A MODEL  73800002
+             FOR THE ENTRY BEING DEFINED.                               74100002
+  'ENTRYNAME'                                                           74400002
+           - NAME OF THE ENTRY TO BE USED AS A MODEL.                   74700002
+  'PASSWORD'                                                            75000002
+           - PASSWORD OF THE ENTRY TO BE USED AS A MODEL.               75300002
+  'CATNAME'                                                             75600002
+           - NAME OF THE CATALOG IN WHICH THE ENTRY TO BE USED AS A     75900002
+             MODEL IS DEFINED.                                          76200002
+  'PASSWORD'                                                            76500002
+           - PASSWORD OF THE CATALOG.                                   76800002
+  REQUIRED - 'ENTRYNAME'                                                77700002
+))DATA('OPTIONS')                                                       78000002
+           - SPECIFIES ATTRIBUTES OF THE DATA COMPONENT OF THE CLUSTER. 78300002
+  'OPTIONS'                                                             78600002
+           - ANY PARAMETER CAN BE SPECIFIED EXCEPT TO, FOR, INDEXED,    78900002
+             NONINDEXED, NUMBERED, REPLICATE, NOREPLICATE, IMBED,       79200003
+             NOIMBED AND ENTRY-TYPE PARAMETERS.                         79500003
+))INDEX('OPTIONS')                                                      79800002
+           - SPECIFIES ATTRIBUTES OF THE INDEX COMPONENT OF THE         80100002
+             CLUSTER.                                                   80400002
+  'OPTIONS'                                                             80700002
+           - ANY PARAMETER CAN BE SPECIFIED EXCEPT RECORDSIZE,          81000002
+             FREESPACE, KEYRANGES, SPEED, RECOVERY, BUFFERSPACE, TO,    81300002
+             FOR, INDEXED, NONINDEXED, NUMBERED, ERASE, NOERASE,        81600003
+             SPANNED, NONSPANNED, KEYS AND ENTRY-TYPE PARAMETERS.       81900003
+))CATALOG('CATNAME/PASSWORD')                                           82200003
+           - IDENTIFIES THE CATALOG IN WHICH THE CLUSTER IS TO BE       82500002
+             DEFINED.                                                   82800002
+  'CATNAME'                                                             83100002
+           - NAME OF THE CATALOG IN WHICH THE ENTRY IS TO BE DEFINED.   83400002
+  'PASSWORD'                                                            83700002
+           - PASSWORD OF THE CATALOG IN WHICH THE ENTRY IS TO BE        84000002
+             DEFINED.                                                   84300002
+  REQUIRED - 'CATNAME'                                                  85500002

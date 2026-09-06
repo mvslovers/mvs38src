@@ -1,0 +1,10 @@
+         MACRO                                                          00050002
+         SGIKJ541                                                       00100002
+.* CHANGE LEVEL = 09/12/74                                     @ZM30972 00105003
+.*              = 11/04/74                                     @Z30DNSM 00107003
+.*A000000-999999                                                 Y02953 00110002
+.*   TARGET = LPALIB                                                    00150002
+         PUNCH '    COPY OUTDD=LPALIB,INDD=AOST4'                       00200002
+.* F.I.B.                                                      @ZM30972 00203003
+         PUNCH '    SELECT MEMBER=(IKJEFF02)'                  @ZM30972 00206003
+         MEND                                                           00950002

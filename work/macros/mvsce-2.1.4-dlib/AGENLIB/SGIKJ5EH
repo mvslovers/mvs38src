@@ -1,0 +1,22 @@
+          MACRO                                                         02000020
+          SGIKJ5EH                                                      04000020
+.*C 150000,400000,440000                                       @YL026YB 04010002
+.*D 320000-380000                                                YM2101 04050001
+         COPY SGGBLPAK                                                  06000020
+.*******************************************************************    08000020
+.***  THIS MACRO WILL PRODUCE THE COPY STATEMENTS TO COPY THE           10000020
+.***  SYSTEM UTILITY COMMANDS  LISTDS, LISTALC, THE STAE       @YL026YB 15000002
+.***   INTERFACE ROUTINE                                                15050002
+.***  FOR A TSO SYSTEM SYSGEN.                                          20000000
+.*********************************************************************  25000000
+.********* CREATE CONTROL CARDS FOR CIR AND MEM. ******        @YL026YB 40000002
+ PUNCH  '  COPY  OUTDD=CMDLIB,INDD=ACMDLIB'                             42000001
+ PUNCH  '  SELECT MEMBER=(IKJEHMEM)'                           @YL026YB 44000002
+.********** CREATE CONTROL CARDS FOR LISTDS.**********                  50000020
+ PUNCH  '  SELECT MEMBER=(IKJEHDS1,LISTDS,LISTD)'                       52000020
+.********** CREATE CONTROL CARDS FOR LISTALC.**********                 54000020
+ PUNCH  '  SELECT MEMBER=(IKJEHAL1,LISTALC,LISTA)'                      60000020
+.********** CREATE CONTROL CARDS FOR STAE INTERFACE ROUTINE **********  60050020
+ PUNCH  '  SELECT MEMBER=(IKJEHSIR)'                                    60100020
+.END      ANOP                                                          66000020
+          MEND                                                          68000020

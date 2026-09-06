@@ -1,0 +1,108 @@
+* /* START OF SPECIFICATIONS ****                                       00010003
+*                                                                       00020003
+*01*  MODULE-NAME = SGIST513                                            00030003
+*                                                                       00040003
+*01*  DESCRIPTIVE-NAME = SYSGEN MACRO FOR VS2                           00050003
+*                                                                       00060003
+*01*  COPYRIGHT = XXXX-XXX COPYRIGHT IBM CORP 1973                      00070003
+*                                                                       00080003
+*01*  FUNCTION = THIS MACRO IS CALLED TO BUILD SYS1.MACLIB.  IT WILL    00090003
+*     EXCLUDE THE VTAM API MACROS FROM  SYS1.MACLIB IF THE USER DID     00100003
+*     NOT SPECIFY ACSMETH=(VTAM).                                       00110003
+*                                                                       00120003
+*01*  NOTES = NONE                                                      00130003
+*                                                                       00140003
+*02*    CHARACTER-CODE-DEPENDENCIES = NONE                              00150003
+*                                                                       00160003
+*02*    DEPENDENCIES = VS2 SYSTEM ONLY                                  00170003
+*                                                                       00180003
+*02*    RESTRICTIONS = NONE                                             00190003
+*                                                                       00200003
+*02*    REGISTER-CONVENTIONS = NONE                                     00210003
+*                                                                       00220003
+*02*    PATCH-LABEL = NONE                                              00230003
+*                                                                       00240003
+*01*  MODULE-TYPE = MACRO                                               00250003
+*                                                                       00260003
+*02*    PROCESSOR = ASSEMBLER                                           00270003
+*                                                                       00280003
+*02*    MACRO-SIZE = NUMBER OF STATEMENTS;                              00290003
+*                                                                       00300003
+*02*    ATTRIBUTES = LIST                                               00310003
+*                                                                       00320003
+*01*  ENTRY-POINT = NA                                                  00330003
+*                                                                       00340003
+*01*  EXIT-NORMAL = NA                                                  00350003
+*                                                                       00360003
+*01*  EXIT-ERROR = NA                                                   00370003
+*                                                                       00380003
+*01*  EXTERNAL-REFERENCES = NONE                                        00390003
+*                                                                       00400003
+*02*    DATA-AREA = NONE                                                00410003
+*                                                                       00420003
+*02*    CONTROL-BLOCKS-SYSTEM = NONE                                    00430003
+*                                                                       00440003
+*02*    CONTROL-BLOCKS-VTAM = NONE                                      00450003
+*                                                                       00460003
+*01*  TABLES = NONE                                                     00470003
+*                                                                       00480003
+*01*  INNER-MACROS = NONE                                               00490003
+*                                                                       00500003
+*01*  SYSTEM-MACROS = NONE                                              00510003
+*                                                                       00520003
+*01*  CHANGE-ACTIVITY = SNA2 DELTA                                      00530000
+*                                                                       00540003
+*     APAR OZ17011                                           @ZA17011   00545000
+**** END OF SPECIFICATIONS ***/                                         00550003
+         MACRO                                                          00560003
+         SGIST513                                                       00570003
+ PUNCH ' EXCLUDE MEMBER=(CHANGE)'                                       00580003
+ PUNCH ' EXCLUDE MEMBER=(CLSDST)'                                       00590003
+ PUNCH ' EXCLUDE MEMBER=(DO)'                                           00600003
+ PUNCH ' EXCLUDE MEMBER=(DVT)'                               @ZA17011   00602000
+ PUNCH ' EXCLUDE MEMBER=(ENDINTAB)'                          @ZA17011   00604000
+ PUNCH ' EXCLUDE MEMBER=(ENDMODE)'                           @ZA17011   00606000
+ PUNCH ' EXCLUDE MEMBER=(FUNCT)'                             @ZA17011   00608000
+ PUNCH ' EXCLUDE MEMBER=(INQUIRE)'                                      00610003
+ PUNCH ' EXCLUDE MEMBER=(INTAB)'                             @ZA17011   00615000
+ PUNCH ' EXCLUDE MEMBER=(INTRPRET)'                                     00620003
+ PUNCH ' EXCLUDE MEMBER=(ISTDBIND)'                          @ZA17011   00621000
+ PUNCH ' EXCLUDE MEMBER=(ISTDNIB)'                           @ZA17011   00622000
+ PUNCH ' EXCLUDE MEMBER=(ISTDPOHD)'                          @ZA17011   00623000
+ PUNCH ' EXCLUDE MEMBER=(ISTDPROC)'                          @ZA17011   00624000
+ PUNCH ' EXCLUDE MEMBER=(ISTDVCHR)'                          @ZA17011   00625000
+ PUNCH ' EXCLUDE MEMBER=(ISTRDWRA)'                          @ZA17011   00626000
+*PUNCH ' EXCLUDE MEMBER=(ISTUSFBC)'                          @ZA17011   00627000
+ PUNCH ' EXCLUDE MEMBER=(LDO)'                                          00630003
+ PUNCH ' EXCLUDE MEMBER=(LOGCHAR)'                           @ZA17011   00631000
+ PUNCH ' EXCLUDE MEMBER=(MODEEND)'                           @ZA17011   00632000
+ PUNCH ' EXCLUDE MEMBER=(MODEENT)'                           @ZA17011   00633000
+ PUNCH ' EXCLUDE MEMBER=(MODETAB)'                           @ZA17011   00634000
+ PUNCH ' EXCLUDE MEMBER=(NETSOL)'                            @ZA17011   00635000
+ PUNCH ' EXCLUDE MEMBER=(NIB)'                                          00640003
+ PUNCH ' EXCLUDE MEMBER=(NSDUMP)'                            @ZA17011   00641000
+ PUNCH ' EXCLUDE MEMBER=(NSMAINE)'                           @ZA17011   00642000
+ PUNCH ' EXCLUDE MEMBER=(NSMAINP)'                           @ZA17011   00643000
+ PUNCH ' EXCLUDE MEMBER=(NSOLICIT)'                          @ZA17011   00644000
+ PUNCH ' EXCLUDE MEMBER=(NSWAIT)'                            @ZA17011   00645000
+ PUNCH ' EXCLUDE MEMBER=(NSYSCODE)'                          @ZA17011   00646000
+ PUNCH ' EXCLUDE MEMBER=(OPNDST)'                                       00650003
+ PUNCH ' EXCLUDE MEMBER=(RESET)'                                        00660003
+ PUNCH ' EXCLUDE MEMBER=(SETLOGON)'                                     00670003
+ PUNCH ' EXCLUDE MEMBER=(SIMLOGON)'                                     00680003
+ PUNCH ' EXCLUDE MEMBER=(SOLICIT)'                                      00690003
+ PUNCH ' EXCLUDE MEMBER=(STRTMODE)'                          @ZA17011   00690100
+ PUNCH ' EXCLUDE MEMBER=(USSCMD)'                            @ZA17011   00690200
+ PUNCH ' EXCLUDE MEMBER=(USSEND)'                            @ZA17011   00690300
+ PUNCH ' EXCLUDE MEMBER=(USSMSG)'                            @ZA17011   00690400
+ PUNCH ' EXCLUDE MEMBER=(USSPARM)'                           @ZA17011   00690500
+ PUNCH ' EXCLUDE MEMBER=(USSTAB)'                            @ZA17011   00690600
+ PUNCH ' EXCLUDE MEMBER=(RESETSR)'                                      00691003
+ PUNCH ' EXCLUDE MEMBER=(SESSIONC)'                                     00692003
+ PUNCH ' EXCLUDE MEMBER=(SEND)'                                         00693003
+ PUNCH ' EXCLUDE MEMBER=(RECEIVE)'                                      00694003
+ PUNCH ' EXCLUDE MEMBER=(EXECRPL)'                                      00695003
+ PUNCH ' EXCLUDE MEMBER=(IHBRDWRA)'                                     00696003
+ PUNCH ' EXCLUDE MEMBER=(RCVCMD)'                              @Z40GKE7 00698000
+ PUNCH ' EXCLUDE MEMBER=(SENDCMD)'                             @Z40GKE7 00698400
+         MEND                                                           00700003

@@ -1,0 +1,87 @@
+         MACRO                                                          00050002
+&NAME    TSO   &LOGTIME=300,&LOGLINE=10,&CMDS=YES                       00100002
+         COPY  SGGBLPAK                                                 00150002
+.***** START OF SPECIFICATIONS **************************************   00200002
+.*                                                                      00250002
+.* MODULE NAME - TSO                                                    00300002
+.*                                                                      00350002
+.* DESCRIPTIVE NAME - TSO SYSTEM GENERATION                             00400002
+.*                                                                      00450002
+.* COPYRIGHT - NONE                                                     00500002
+.*                                                                      00550002
+.* STATUS - CHANGE LEVEL 02                                             00600002
+.*                                                                      00650002
+.* FUNCTION -                                                           00700002
+.*       THIS MACRO IS USED TO SPECIFY THE TSO SYSTEM.                  00750002
+.*                                                                      00800002
+.* NOTES - N/A                                                          00850002
+.*                                                                      00900002
+.* MODULE TYPE - MACRO                                                  00950002
+.*                                                                      01000002
+.* ENTRY POINT - N/A                                                    01050002
+.*                                                                      01100002
+.* INPUT - THE FOLLOWING PARAMETERS ARE ALLOWED ON TSO                  01150002
+.*             &LOGTIME - SPECIFIES THE NUMBER OF SECONDS YOU MAY       01200002
+.*                        WAIT WITHOUT A TERMINAL RESPONSE DURING A     01250002
+.*                        LOGON. NUMBER BETWEEN 1 AND 16,777,215.       01300002
+.*             &LOGLINE - THE NUMBER OF LINES THAT MAY BE ENTERED       01350002
+.*                        BEFORE AN ATTEMPT TO LOGON IS AUTOMATICALLY   01400002
+.*                        CANCELED.                                     01450002
+.*             &CMDS    - SPECIFIES THE TSO COMMAND SYSTEM WILL BE      01500002
+.*                        INCLUDED.                                     01550002
+.*                                                                      01600002
+.* OUTPUT -                                                             01650002
+.*       GLOBALS USED ARE -                                             01700002
+.*             &SGMENTB(63) - TSO IN THE SYSTEM                         01750002
+.*             &SGSCHDB(44) - TSO SCHEDULER                             01800002
+.*             &SGDMGTB(5)  - TCAM IN THE SYSTEM WHEN TSO INCLUDED      01850002
+.*             &SGCMDSC(1)  -                                           01900002
+.*             &SGQUITB     - ERROR SWITCH                              01950002
+.*             &SGTSOPA(2)  - LOG ON TIME AVAILABLE TO LOG ON SYSTEM    02000002
+.*             &SGTSOPA(3)  - LOG ON LINES ALLOWED FOR LOG ON ATTEMPT   02050002
+.*                                                                      02100002
+.*       LOCALS USED ARE -    NONE                                      02150002
+.*                                                                      02200002
+.* EXIT, NORMAL - N/A                                                   02250002
+.*                                                                      02300002
+.* EXIT, ERROR - N/A                                                    02350002
+.*                                                                      02400002
+.* EXTERNAL REFERENCES - N/A                                            02450002
+.*                                                                      02500002
+.* TABLES - N/A                                                         02550002
+.*                                                                      02600002
+.* MACROS - NONE                                                        02650002
+.*                                                                      02700002
+.* CHANGE ACTIVITY - MODIFIED FOR V02036,VS01199                        02750002
+.*                                                                      02800002
+.***** END OF SPECIFICATIONS ************************************       02850002
+         AIF   (&SGMENTB(63)).ER1       PREVIOUSLY DEFINED              02900002
+&SGMENTB(63) SETB 1                     TSO MACRO CALLED                02950002
+&SGSCHDB(44) SETB 1                     TSO SCHEDULER                   03000002
+         AIF   ('&CMDS' NE 'YES').T1    VALID PARM -TSO IN SYSTEM       03050002
+&SGTSOB  SETB  1                        TSO INCLUDED IN SYSTEM          03100002
+         AGO  .T0                                                       03150002
+.T1      AIF   ('&CMDS' EQ 'NO').T0     VALID PARM -LIMITED TSO         03200002
+    MNOTE 5,'* * *IEITSO101 CMDS VALUE &CMDS INVALID MUST BE YES OR NO' 03250002
+&SGQUITB SETB  1                                                        03300002
+.T0      ANOP                                                           03350002
+&SGCMDSC(1)    SETC  '&CMDS'                                            03400002
+         AIF   (T'&LOGTIME NE 'N').T3   INVALID CHARS                   03450002
+         AIF   (&LOGTIME GE 1 AND &LOGTIME LE 16777215).T5  VALID       03500002
+.T3 MNOTE 5,'* * * IEITSO107 LOGTIME VALUE &LOGTIME INVALID'            03550002
+&SGQUITB SETB  1                                                        03600002
+         AGO   .L1                      CHECK LOGLINE PARM              03650002
+.T5      ANOP                                                           03700002
+&SGTSOPA(2) SETA &LOGTIME                                               03750002
+    MNOTE *,'    LOGON MESSAGE EVERY &SGTSOPA(2) SECONDS'               03800002
+.L1      AIF   (T'&LOGLINE NE 'N').L3   INVALID CHARS                   03850002
+         AIF   (&LOGLINE GE 1 AND &LOGLINE LE 16777215).L5  VALID       03900002
+.L3 MNOTE 5,'* * * IEITSO108 LOGLINE VALUE &LOGLINE INVALID'            03950002
+&SGQUITB SETB  1                                                        04000002
+     MEXIT                                                              04050002
+.L5 MNOTE *,'    LOGON AUTOMATICALLY CANCELED AFTER &LOGLINE LINES'     04100002
+&SGTSOPA(3) SETA &LOGLINE                                               04150002
+         MEXIT                                                          04200002
+.ER1 MNOTE 5,'* * * IEITSO112 TSO MACRO PREVIOUSLY DEFINED'             04250002
+&SGQUITB SETB 1                                                         04300002
+         MEND                                                           04350002

@@ -1,0 +1,77 @@
+          MACRO                                                         00050001
+          SGIEA200                                                      00052001
+.*  LAST UPDATE = 12/3/75                                      @ZA07781 00052103
+.* C009020,009040,009044,009060,009080                          YM04018 00052403
+.* C009888, A009988,010088                                       M03590 00052502
+.* C009688, A009788,009888                                       R21170 00052602
+.* C009436,009688                                                R20690 00052802
+.* A000800,000900,009081-009416                                  R20690 00053402
+          COPY  SGGBLPAK                                                00054001
+          LCLA  &HOURS,&MINUTES,&FLAG,&CTLFLGS                          00060001
+          LCLC  &RPS,&M(2)                                       Y02952 00070002
+          LCLB  &MPCODE                                          R20690 00080002
+          LCLC  &ACR                                             R20690 00090002
+.*                                                                      00120002
+.*****    GENERATE THE SVC TABLE *****                                  00350001
+.*                                                                      00360002
+          SGIEA201                                                      00400001
+.*                                                                      00410002
+.***** GENERATE THE SYSTEM CONTROL BLOCKS *****                         00450001
+.*                                                                      00460002
+          AIF   (&SGTIMEA(1) GE 0).M2        EAST OF GMT-HOURS          00470002
+&M(1)     SETC  '-'                          WEST OF GMT-HOURS          00480002
+.M2       AIF   (&SGTIMEA(2) GE 0).NOM       EAST OF GMT-MINUTES        00490002
+&M(2)     SETC  '-'                          WEST OF GMT-MINUTES        00492002
+.NOM      AIF   (&SGTIMEA(1) EQ 0).MINUTES                              00494001
+&HOURS    SETA  &SGTIMEA(1)*343320           CONVERT TO TIMER UNITS     00500002
+.MINUTES  ANOP                                                          00550001
+          AIF  (&SGTIMEA(2) EQ 0).FLAG                                  00600001
+&MINUTES  SETA  &SGTIMEA(2)*5722             CONVERT TO TIMER UNITS     00650002
+.FLAG     ANOP                                                          00700001
+&FLAG     SETA  128+64*&SGSUPRB(35)+32+16+2*&SGSUPRB(41)  APR AND ASCII 00750002
+&RPS      SETC  'YES'                                           YM04018 00902002
+          AIF   (&SGDCLSB(69) OR &SGDCLSB(85) OR &SGDCLSB(75) OR &SGDCL*00903002
+               SB(76) OR &SGDCLSB(88) OR &SGDCLSB(22)).YESRPS  @ZA07781 00904003
+&RPS      SETC  'NO'                                            YM04018 00905002
+.YESRPS   ANOP                                                  YM04018 00906002
+.*                                                               R20690 00908102
+.* IF ACR AND MP CODE IS NOT TO BE INCLUDED IN THE SYSTEM        R20690 00908202
+.* AS INDICATED BY THE KEYWORD ACRCODE=NO ON THE CTRLPROG MACRO, R20690 00909902
+.* GLOBAL &SGCPRGB(9) WILL BE 0 ON ENTRY TO THIS MACRO.          R20690 00911902
+.* BIT 5 IN BYTE CVTCTLFG OF THE CVT WILL BE TURNED ON AS AN     R20690 00914002
+.* INDICATOR TO NIP THAT THE MP AND ACR CODE IS NOT IN THE       R20690 00916002
+.* SYSTEM.  A RESERVED AREA OF 8 BYTES WILL BE OBTAINED INSTEAD  R20690 00916402
+.* OF THE ACR GLOBAL SAVE AREA REQUIRED WHEN MP AND ACR CODE     R20690 00916502
+.* IS PRESENT.                                                   R20690 00920702
+.*                                                               R20690 00921702
+&MPCODE   SETB   0                           INDICATOR TO NIP    R20690 00922802
+.*                                           OF MP CODE          R20690 00924902
+&ACR      SETC   'YES'                       GET ACR             R20690 00927002
+.*                                           GLOBAL SAVE AREA    R20690 00929102
+          AIF    (&SGCPRGB(9) EQ 1).YESMP    ACRCODE =YES?       R20690 00931202
+&MPCODE   SETB  1                            INDICATOR TO NIP    R20690 00933302
+.*                                           OF NO MP CODE       R20690 00935402
+&ACR      SETC   'NO'                        GET 8-BYTE          R20690 00937502
+.*                                           RESERVED AREA       R20690 00939602
+.YESMP    ANOP                                                   R20690 00941602
+&CTLFLGS  SETA  16*&SGMENTB(87)+4*&MPCODE    SMART NIP & ACRCODE R20690 00943602
+&SGCTRLC(6)    SETC 'IEAVBK00'                                   Y02952 00945602
+          COPY  SGASMPAK                                                00950001
+         PUNCH ' IEAVBK HOURS=&M(1)&HOURS,                             *00960001
+                                  XXXXXXXX'                             00962001
+         PUNCH '               MINUTES=&M(2)&MINUTES,                  *00964001
+                                     XXXXXXXX'                          00966001
+         PUNCH '               FLAG=&FLAG,CTLFLGS=&CTLFLGS,            *00968002
+                                 XXXXXXXX'                R20712,Y02952 00968402
+         PUNCH '               RPS=&RPS,ACR=&ACR,                      *00968802
+                                 XXX'                     R21170,R20690 00978802
+         PUNCH '               WARN=&SGCPRGA(2),                       *00988802
+                                  XXXXXXXX'                      M03590 00998802
+         PUNCH '               STORAGE=&SGCSTOA(1)'              M03590 01008802
+         PUNCH '        END'                                            01020001
+         PUNCH '/*'                                                     01030001
+.*                                                                      01040002
+.*        GENERATE THE UNIT CONTROL MODULE AND ENTRIES                  01050001
+.*                                                                      01060002
+         SGIEA202                                                       01100001
+          MEND                                                          01150001

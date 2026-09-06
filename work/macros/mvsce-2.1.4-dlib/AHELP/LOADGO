@@ -1,0 +1,54 @@
+)F FUNCTION -                                                           01000000
+  THE LOADGO COMMAND IS USED TO INVOKE THE O.S. LOADER WHICH LOADS A    02000000
+  PROGRAM, RESOLVES EXTERNAL REFERENCES, AND EXECUTES THE PROGRAM.      03000000
+)X SYNTAX -                                                             04000000
+         LOADGO   'DSLIST'  ''PARMS''  PRINT('DSNAME')/NOPRINT          05000000
+                  LIB('KWDSLIST')  COBLIB  PLILIB  FORTLIB  PLIBASE     06000000
+                  PLICMIX  RES/NORES  MAP/NOMAP  CALL/NOCALL  TERM/     07000000
+                  NOTERM  LET/NOLET  SIZE('INTEGER')  EP('ENTRYNAME')   08000000
+                  NAME('PROGNAME')                                      09000000
+  REQUIRED - 'DSLIST'                                                   10000000
+  DEFAULTS - NOPRINT  RES  NOMAP  CALL  TERM  NOLET                     11000000
+  ALIAS    - LOAD                                                       12000000
+)O OPERANDS -                                                           13000000
+  'DSLIST' - LIST OF INPUT DATA SET NAMES.                              14000000
+  ''PARMS''- PARAMETER STRING (ENCLOSED IN QUOTES) TO BE PASSED TO THE  15000000
+             USER'S PROGRAM.                                            16000000
+))PRINT('DSNAME')                                                       17000000
+           - LOADER LISTINGS WILL BE PRODUCED.                          18000000
+     'DSNAME'                                                           19000000
+           - OPTIONAL PARAMETER TO SPECIFY A DATA SET TO BE USED FOR    20000000
+             THE LISTINGS. TO DISPLAY LISTINGS AT THE TERMINAL, CODE    21000000
+             '*' FOR 'DSNAME'.                                          22000000
+))NOPRINT  - NO LOADER LISTINGS WILL BE PRODUCED.                       23000000
+))LIB('KWDSLIST')                                                       24000000
+           - LIBRARIES WILL BE USED TO RESOLVE EXTERNAL REFERENCES.     25000000
+     'KWDSLIST'                                                         26000000
+           - LIST OF THE LIBRARY NAMES TO BE USED.                      27000000
+))COBLIB   - SYS1.COBLIB WILL BE USED TO RESOLVE EXTERNAL REFERENCES.   28000000
+))PLILIB   - SYS1.PL1LIB WILL BE USED TO RESOLVE EXTERNAL REFERENCES.   29000000
+))FORTLIB  - SYS1.FORTLIB WILL BE USED TO RESOLVE EXTERNAL REFERENCES.  30000000
+))PLIBASE  - SYS1.PLIBASE WILL BE USED TO RESOLVE EXTERNAL REFERENCES.  31000000
+))PLICMIX  - SYS1.PLICMIX WILL BE USED TO RESOLVE EXTERNAL REFERENCES.  32000000
+))RES      - LINK PACK AREA TO BE USED TO RESOLVE EXTERNAL REFERENCES.  33000000
+))NORES    - LINK PACK AREA NOT USED TO RESOLVE EXTERNAL REFERENCES.    34000000
+))MAP      - A LIST OF EXTERNAL NAMES AND THEIR LOCATIONS WILL BE       35000000
+             WRITTEN ON PRINT DATA SET.                                 36000000
+))NOMAP    - A LIST OF EXTERNAL NAMES WILL NOT BE PRODUCED.             37000000
+))CALL     - THE LOADER WILL TRY TO RESOLVE ANY UNRESOLVED EXTERNAL     38000000
+             REFERENCES.                                                39000000
+))NOCALL   - THE LOADER WILL NOT RESOLVE ANY UNRESOLVED EXTERNAL        40000000
+             REFERENCES.                                                41000000
+))TERM     - LOADER ERROR MESSAGES WILL BE DISPLAYED AT THE TERMINAL.   42000000
+))NOTERM   - LOADER ERROR MESSAGES WILL NOT BE DISPLAYED ON TERMINAL.   43000000
+))LET      - EXECUTION OF USER PROGRAM WILL BE ATTEMPTED EVEN IF        44000000
+             SEVERITY 2 ERROR OCCURRED.                                 45000000
+))NOLET    - EXECUTION OF USER PROGRAM WILL NOT BE ATTEMPTED IF         46000000
+             SEVERITY 2 ERROR OCCURRED.                                 47000000
+))SIZE('INTEGER')                                                       48000000
+           - SPECIFIES NUMBER OF BYTES OF STORAGE TO BE USED FOR LOADER 49000000
+             PROCESSING.                                                50000000
+))EP('ENTRYNAME')                                                       51000000
+           - SPECIFIES THE ENTRY POINT OF USER PROGRAM.                 52000000
+))NAME('PROGNAME')                                                      53000000
+           - SPECIFIES NAME TO BE USED FOR USER PROGRAM.                54000000

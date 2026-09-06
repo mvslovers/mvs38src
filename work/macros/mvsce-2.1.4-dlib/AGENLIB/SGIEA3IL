@@ -1,0 +1,17 @@
+         MACRO                                                          00050002
+         SGIEA3IL                                                       00100002
+         COPY  SGGBLPAK                                                 00150002
+.*  TEST FOR 3270 AND BTAM                                              00160002
+         AIF  (&SGDCLSB(80) AND &SGDMGTB(4)).INCLDIL                    00200002
+.*  ESR CODES FOR 3270 SUPPORT NOT VALID                                00250002
+         PUNCH '          CHANGE IECTRDIL(IGXERR1)'                     00300002
+         PUNCH '          CHANGE IECTATRL(IGXERR1)'                     00350002
+         PUNCH '          CHANGE IECTCHSL(IGXERR1)'                     00400002
+         PUNCH '          CHANGE IECTCHAL(IGXERR1)'                     00450002
+         PUNCH '          CHANGE IECTRSTL(IGXERR1)'                     00500002
+         AGO    .INCLES1        INCLUDE ESR                             00550002
+.INCLDIL PUNCH '         INCLUDE AOS20(IECTSVC)'                        00600002
+.INCLES1 PUNCH '         INCLUDE AOSC5(IGC116)'                         01050002
+         PUNCH '         INCLUDE AOSC5(IGC109)'                         01100002
+         PUNCH '         INCLUDE AOSC5(IGC122)'                         01150002
+         MEND                                                           01450002

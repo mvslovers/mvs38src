@@ -1,0 +1,30 @@
+         MACRO                                                          00050004
+         SGICH400                                                       00100004
+.*                                                                      00200004
+.* $MAC(SGICH400) COMP(SC1BN) PROD(RACF):                               00250003
+.*                                                                      00300004
+.* DESCRIPTIVE NAME = SYSGEN MACRO FOR RACF SVCS                        00305503
+.*                                                                      00311003
+.* STATUS = OS/VS2 EBB1102                                              00316503
+.*                                                                      00322003
+.* CHANGE ACTIVITY = 0                                                  00327503
+.*                                                                      00333003
+.*                                                                      00338503
+.*                                                                      00344003
+         COPY  SGGBLPAK            DEFINE GLOBAL SYMBOLS                00350004
+&SGCTRLC(6)  SETC ''               SET NULL PROG NAME                   00400004
+&SGCTRLC(7)  SETC '&SGCTRLC(20)'   SET VOLUME FOR LPALIB                00450004
+&SGCTRLC(8)  SETC '&SGCTRLC(19)'   SET UNIT NAME FOR LPALIB             00500004
+&SGCTRLC(9)  SETC 'LPALIB'         DSNAME FOR LPALIB DATA SET           00550004
+&SGCTRLC(10) SETC ',LET'           SET LINKEDIT OPTIONS XREF            00600004
+&SGCTRLC(11) SETC ',RENT'          AND LIST ARE SET BY GENERATE         00650004
+         COPY  SGLEDPK1            LINKEDIT JCL DECK1                   00700004
+  PUNCH '//AOSBN DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSBN'        00750004
+         COPY  SGLEDPK2            LINKEDIT DECK2                       00800004
+.*       SVC 130 THRU SVC 133                                           00850004
+         PUNCH ' INCLUDE AOSBN(ICHRIN00)'                               00900004
+         PUNCH ' ALIAS IGC0013A,IGC0013B,IGC0013C'                      00950004
+         PUNCH ' ENTRY ICHRIN00'                                        01000004
+         PUNCH ' NAME IGC0013{(R)'                                      01050004
+         PUNCH '/* '                                                    01100004
+         MEND                                                           01150004

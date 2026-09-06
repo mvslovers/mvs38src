@@ -1,0 +1,44 @@
+         MACRO                                                          00020002
+         SGIDA400                                                       00022002
+         COPY SGGBLPAK                                                  00030002
+.* /* START OF SPECIFICATIONS ****                                      00050002
+.*                                                                      00100002
+.*01  MODULE-NAME = SGIDA400                                            00150002
+.*                                                                      00200002
+.*01  DESCRIPTIVE-NAME = VIO SYSGEN MACRO                               00250002
+.*                                                                      00300002
+.*01  COPYRIGHT = NONE                                                  00350002
+.*                                                                      00400002
+.*01  STATUS = VS2 RELEASE 4.1                                 @Z40WSSR 00450004
+.*                                                                      00500002
+.*01  FUNCTION = CREATES VIO LOAD MODULE IDDWI AND COPIES    @VS03199   00550002
+.*    IT TO LPALIB                                           @VS03199   00600002
+.*                                                                      00650002
+.*01  CHANGE-ACTIVITY = VS2 RELEASE 4.1 CHANGES                @Z40WSSR 00700004
+.* A4500,7000,108500,110000,110020,110100                      @Z40WSSR 00710004
+.* D107600                                                     @Z40WSSR 00720004
+.*                                                                      00750002
+.**** END OF SPECIFICATIONS ***/                                        00800002
+.*   DEFINE OUTPUT DATA SET - LPALIB *********                          10100002
+&SGCTRLC(7) SETC   '&SGCTRLC(20)'                                       10150002
+&SGCTRLC(8) SETC   '&SGCTRLC(19)'                                       10200002
+&SGCTRLC(9) SETC   'LPALIB'                                             10250002
+.*   SET UP ADDITIONAL LINKEDIT CHARACTERISTICS *********    @YM01429   10300002
+&SGCTRLC(10) SETC  ',RENT'                                   @YM01429   10350002
+&SGCTRLC(11) SETC  ',LET'                                               10400002
+.*   CREATE JCL TO CREATE LARGE LOAD MODULE IDDWI ON LPALIB  @VS01111   10450002
+         COPY  SGLEDPK1                                                 10550002
+         PUNCH '//AOSA0 DD DISP=SHR,VOL=(,RETAIN),DSN=SYS1.AOSA0'       10600002
+         COPY  SGLEDPK2                                                 10650002
+         PUNCH ' INCLUDE AOSA0(IDDWICPI,IDDWIAPP,IDDWITRM)           '  10750002
+         PUNCH ' INCLUDE AOSA0(IDAVBPP1,IDDWICLS,IDAVBPO1)           '  10800002
+         PUNCH ' INCLUDE AOSA0(IDAVBPR2,IDAVBPC1)                    '  10850004
+         PUNCH ' INCLUDE AOSA0(IDDWIJRN,IDAVBPS1,IDDWIFRR)           '  10900002
+         PUNCH ' INCLUDE AOSA0(IDAVBPR1)                             '  10950004
+         PUNCH ' ORDER IDDWIAPP,IDDWITRM,IDAVBPP1,IDDWICPI,IDAVBPO1  '  11000004
+         PUNCH ' ORDER IDAVBPR2,IDDWICLS,IDAVBPC1,IDDWIJRN           '  11002004
+         PUNCH ' ORDER IDAVBPS1,IDDWIFRR,IDAVBPR1                    '  11004004
+         PUNCH ' ALIAS  IDAVBPP1                                     '  11010004
+         PUNCH '         ENTRY IDDWIAPP                              '  11050002
+         PUNCH '         NAME  IDDWI(R)                              '  11100002
+         MEND                                                           11750002

@@ -1,0 +1,758 @@
+*%GOTO IFABGN1;  /*                                                     00030004
+         MACRO                                                          00060004
+&NAME    IFASMFR &RECTYPE                                            */ 00106404
+*%IFABGN1: ;                                                            00146404
+* /*                                                                 */ 00186404
+* /* MACMEAN IFASMFR MEANS SYSTEM MANAGEMENT FACILITY RECORD MAPPING */ 00226404
+* /* MACCOMP Y-2 SC102/BL27P                                         */ 00266404
+* /* MACSTAT Y-2 73298/42020                                         */ 00306404
+* /* METHOD OF ACCESS                                                */ 00346404
+* /*  PL/S - USER DEFINES MACRO VARIABLE IFARXX WHERE XX=RECORD NUM  */ 00386404
+* /*         DECLARE SMFXXPTR PTR(31) OR RESPECIFY FOR BASE          */ 00426404
+* /*         INCLUDE MACRO FROM LIBRARY                              */ 00466404
+* /*          EXAMPLE %IFAR08 = 'YES',           NOTE. THE COMMA REP-*/ 00506404
+* /*                  DCL SMF08PTR PTR(31),      RESENTS A SEMI-COLON*/ 00546404
+* /*                  %INCLUDE SYSLIB(IFASMFR),  BUT ISN'T TO AVIOD  */ 00586404
+* /*                                             A DIAGNOSTIC.       */ 00626404
+* /*                                                                 */ 00666404
+* /*                                                                 */ 00706404
+* /*         THIS MACRO PROCESSES RECORDS IN THE RANGE 00-06. IT     */ 00746404
+* /*         ACTS AS A ROUTER TO OTHER MACROS TO PROCESS OTHER       */ 00786404
+* /*         RECORDS AS FOLLOWS:                                     */ 00826404
+* /*                                                                 */ 00866404
+* /*             MACRO        RECORDS                                */ 00906404
+* /*            ********      *******                                */ 00946404
+* /*            IFASMFR1      07-19                                  */ 00986404
+* /*            IFASMFR2      20-27                                  */ 01026404
+* /*            IFASMFR3      28-36                                  */ 01300004
+* /*            IFASMFR4      37-46                                  */ 01340004
+* /*            IFASMFR5      47-54                                  */ 01380004
+* /*            IFASMFR6      55-69                                  */ 01420004
+* /*            IFASMFR7      70-73                                  */ 01460004
+* /*            IFASMFR8      74-79                                  */ 01500004
+* /*            IFASMFR9      80-93                                  */ 01540004
+* /*            IFASMFRA      94-103                                 */ 01640004
+* /*            IFASMFRB      104-113                                */ 01680004
+* /*            IFAMSFRC      114-123                                */ 01720004
+* /*            IFASMFRD      124-127                                */ 01760004
+* /* C - UP LEVEL SU10                                       @ZA38804*/ 01800041
+*%GOTO IFABGN2;   /*                                                    01830041
+.* CHANGE LEVEL= Z40MPTH, ZA05171, Z40FPTH, ZA10800, ZA27193, ZA38804   01860041
+*  THIS IS AN SMF MACRO WHICH CONTROLS THE BUILDING OF SMF RECORDS. THE 01930004
+*  REQUIRED FORMAT IS                                                   02000004
+*                                                                       02050004
+*        IFASMFR  &RECTYPE                                              02100004
+*  NOTE: VALUES FOR &RECTYPE MUST BE ENCLOSED IN PARENS(UNLESS ONLY 1). 02150004
+*                                                                       02200004
+         LCLA  &NUM,&B                                                  02250004
+.* &NUM IS SET TO THE NUMBER OF SUBSTRING ITEMS IN THE FIRST PARAMETER  02300004
+.* AND &B IS USED TO POINT AT EACH SUBSTRING ITEM.                      02400004
+         AIF   ('&RECTYPE' EQ '').E1                                    02410004
+&NUM     SETA  N'&RECTYPE                                               02450004
+         AGO   .CONTC                                                   02500004
+.CONTB   ANOP                                                           02550004
+&NUM     SETA  &NUM-1                                                   02600004
+.CONTC   ANOP                                                           02650004
+         AIF   (&NUM LE 0).OUT                                          02690004
+&B       SETA  &B+1                                                     02730004
+.RTYCHK  AIF   ('&RECTYPE(&B)' EQ '').E3                                02770004
+         AIF   (&RECTYPE(&B) GT 127 OR &RECTYPE(&B) LT 0).E5   @Z40FPTH 02810004
+         AGO   .CONTA                                                   02900004
+.E1      ANOP                                                           02950004
+         SPACE 3                                                        03000004
+         MNOTE 8,'PARAMETERS OMITTED, PROCESSING TERMINATED'            03050004
+         MEXIT                                                          03090004
+.E3      ANOP                                                           03130004
+         SPACE 3                                                        03170004
+         MNOTE 4,'NULL RECORD TYPE PASSED'                              03210004
+         AGO   .CONTB                                                   03300004
+.E5      ANOP                                                           03350004
+         SPACE 3                                                        03400004
+         MNOTE 4,'&RECTYPE(&B) INVALID RECORD TYPE SPECIFIED'           03450004
+         AGO   .CONTB                                                   03500004
+.CONTA   AIF   (&RECTYPE(&B) GE 0 AND &RECTYPE(&B) LE 6).G0             03550004
+         AIF   (&RECTYPE(&B) GE 7 AND &RECTYPE(&B) LE 19).G1            03600004
+         AIF   (&RECTYPE(&B) GE 20 AND &RECTYPE(&B) LE 27).G2           03650004
+         AIF   (&RECTYPE(&B) GE 28 AND &RECTYPE(&B) LE 36).G3           03700004
+         AIF   (&RECTYPE(&B) GE 37 AND &RECTYPE(&B) LE 46).G4           03750004
+         AIF   (&RECTYPE(&B) GE 47 AND &RECTYPE(&B) LE 54).G5           03800004
+         AIF   (&RECTYPE(&B) GE 55 AND &RECTYPE(&B) LE 69).G6           03850004
+         AIF   (&RECTYPE(&B) GE 70 AND &RECTYPE(&B) LE 73).G7           03890004
+         AIF   (&RECTYPE(&B) GE 74 AND &RECTYPE(&B) LE 79).G8           03930004
+         AIF   (&RECTYPE(&B) GE 80 AND &RECTYPE(&B) LE 93).G9           03970004
+         AIF   (&RECTYPE(&B) GE 94 AND &RECTYPE(&B) LE 103).GA          04050004
+         AIF   (&RECTYPE(&B) GE 104 AND &RECTYPE(&B) LE 113).GB         04100004
+         AIF   (&RECTYPE(&B) GE 114 AND &RECTYPE(&B) LE 123).GC         04150004
+         AIF   (&RECTYPE(&B) GE 124 AND &RECTYPE(&B) LE 127).GD         04200004
+         AGO   .E5                                                      04250004
+.G0      ANOP                                                           04300004
+         AIF   (&RECTYPE(&B) EQ 0).IFAS000                              04350004
+         AIF   (&RECTYPE(&B) EQ 2).IFAS002                              04400004
+         AIF   (&RECTYPE(&B) EQ 3).IFAS003                              04450004
+         AIF   (&RECTYPE(&B) EQ 4).IFAS004                              04500004
+         AIF   (&RECTYPE(&B) EQ 5).IFAS005                              04550004
+         AIF   (&RECTYPE(&B) EQ 6).IFAS006                              04600004
+         AGO   .E5                                                      04650004
+.G1      ANOP                                                           04700004
+         IFASMFR1 &RECTYPE(&B)                                          04750004
+         AGO   .CONTB                                                   04800004
+.G2      ANOP                                                           04850004
+         IFASMFR2 &RECTYPE(&B)                                          04900004
+         AGO   .CONTB                                                   04950004
+.G3      ANOP                                                           05000004
+         IFASMFR3 &RECTYPE(&B)                                          05050004
+         AGO   .CONTB                                                   05100004
+.G4      ANOP                                                           05150004
+         IFASMFR4 &RECTYPE(&B)                                          05200004
+         AGO   .CONTB                                                   05250004
+.G5      ANOP                                                           05300004
+         IFASMFR5 &RECTYPE(&B)                                          05350004
+         AGO   .CONTB                                                   05400004
+.G6      ANOP                                                           05450004
+         IFASMFR6 &RECTYPE(&B)                                          05500004
+         AGO   .CONTB                                                   05550004
+.G7      ANOP                                                           05600004
+         IFASMFR7 &RECTYPE(&B)                                          05650004
+         AGO   .CONTB                                                   05700004
+.G8      ANOP                                                           05750004
+         IFASMFR8 &RECTYPE(&B)                                          05850004
+         AGO   .CONTB                                                   05900004
+.G9      ANOP                                                           05950004
+         IFASMFR9 &RECTYPE(&B)                                          05960004
+         AGO   .CONTB                                                   05990004
+.GA      ANOP                                                           06100004
+         IFASMFRA &RECTYPE(&B)                                          06130004
+         AGO   .CONTB                                                   06160004
+.GB      ANOP                                                           06190004
+         IFASMFRB &RECTYPE(&B)                                          06250004
+         AGO   .CONTB                                                   06280004
+.GC      ANOP                                                           06350004
+         IFASMFRC &RECTYPE(&B)                                          06400004
+         AGO   .CONTB                                                   06450004
+.GD      ANOP                                                           06500004
+         IFASMFRD &RECTYPE(&B)                                          06540004
+         AGO   .CONTB                                                   06580004
+.OUT     MEXIT                                                          06620004
+.IFAS000 ANOP                                                           06700004
+         EJECT                                                          06770004
+*  THIS DSECT DEFINES THE FORMAT FOR RECORD TYPE 0 (IPL RECORD)         06850004
+*  RECORD LENGTH IS 31 BYTES                                            06860004
+*                                                                       06950004
+         DS    0F        ALIGN TO FULL WORD BOUNDARY                    06970004
+SMFRCD0  EQU   *         HEADER SEGMENT                                 07010004
+SMF0LEN  DS    BL2'0'    RECORD LENGTH                                  07070004
+SMF0SEG  DS    BL2'0'    SEGMENT DESCRIPTOR                             07150004
+SMF0FLG  DC    BL1'0'    HEADER FLAG BYTE                               07160004
+SMF0RTY  DC    BL1'0'    RECORD TYPE 0                                  07250004
+SMF0TME  DC    BL4'0'    TOD, USING FORMAT FROM TIME MACRO W/BIN. INTVL 07270004
+SMF0DTE  DC    PL4'0000'      DATE IN PACKED DECIMAL FORM: 00YYDDDF     07310004
+SMF0SID  DC    CL4' '    SYSTEM IDENTIFICATION                   Y02901 07370004
+SMF0JWT  DC    BL4'0'    JOB WAIT TIME DEFAULT VALUE IN MINUTES(BINARY) 07410004
+SMF0BUF  DC    BL4'0'    SMF BUFFER SIZE IN BYTES(BINARY)               07450004
+SMF0VST  DC    BL4'0'    VIRTUAL STORAGE SIZE IN K BLOCKS(BINARY)XM4432 07490004
+SMF0OPT  DC    BL1'0'    OPTIONS BYTE:                                  07530004
+*                        BIT0 - SYSTEM & JOB DATA TO BE COLLECTED       07570004
+*                        BIT1 - STEP DATA TO BE COLLECTED               07610004
+*                        BIT2 - EXITS REQUESTED                         07650004
+*                        BIT3 - DATA SET ACCOUNTING                     07690004
+*                        BIT4 - VOLUME ACCOUNTING                       07730004
+*                        BIT5 - RESERVED(WAS ESV IN 14 AND 15)          07770004
+*                        BIT6 - TEMPORARY-DATA-SET SCRATCH RECORDS      07810004
+*                        BIT7 - =0 BACKGROUND JOB; =1 FOREGROUND JOB    07850004
+SMF0RST  DC    BL4'0'    REAL STORAGE SIZE IN K BLOCKS(BINARY)   XM4432 07890004
+         AGO   .CONTB                                                   07930004
+.IFAS002 ANOP                                                           07970004
+         EJECT                                                          08010004
+* THIS RECORD IS WRITTEN BY THE SMF DUMP UTILITY PROGRAM AT THE         08050004
+* BEGINNING OF A DUMP DATA SET. RECORD LENGTH IS 14 BYTES               08090004
+*                                                                       08130004
+         DS    0F        ALIGN TO FULL WORD BOUNDARY                    08170004
+SMFRCD2  EQU   *         HEADER SEGMENT                                 08210004
+SMF2LEN  DS    BL2'0'    RECORD LENGTH                                  08250004
+SMF2SEG  DS    BL2'0'    SEGMENT DESCRIPTOR                             08545004
+SMF2FLG  DC    BL1'0'    HEADER FLAG BYTE                               08550004
+SMF2RTY  DC    BL1'0'    RECORD TYPE 2                                  08600004
+SMF2TME  DC    BL4'0'    TOD, USING FORMAT FROM TIME MACRO W/BIN. INTVL 08650004
+SMF2DTE  DC    PL4'0000'      DATE IN PACKED DECIMAL FORM: 00YYDDDF     08700004
+SMF2SID  DC    CL4' '    SYSTEM IDENTIFICATION                   Y02901 08750004
+         AGO   .CONTB                                                   08800004
+.IFAS003 ANOP                                                           08850004
+         EJECT                                                          08900004
+* THIS RECORD IS WRITTEN BY THE SMF DUMP UTILITY PROGRAM AT THE END     08950004
+* OF A DUMP DATA SET. RECORD LENGTH IS 14 BYTES.                        09000004
+*                                                                       09050004
+         DS    0F        ALIGN TO FULL WORD BOUNDARY                    09100004
+SMFRCD3  EQU   *         HEADER SEGMENT                                 09150004
+SMF3LEN  DS    BL2'0'    RECORD LENGTH                                  09180004
+SMF3SEG  DS    BL2'0'    SEGMENT DESCRIPTOR                             09250004
+SMF3FLG  DC    BL1'0'    HEADER FLAG BYTE                               09280004
+SMF3RTY  DC    BL1'0'    RECORD TYPE 3                                  09400004
+SMF3TME  DC    BL4'0'    TOD, USING FORMAT FROM TIME MACRO W/BIN. INTVL 09410004
+SMF3DTE  DC    PL4'0000'      DATE IN PACKED DECIMAL FORM: 00YYDDDF     09450004
+SMF3SID  DC    CL4' '    SYSTEM IDENTIFICATION                   Y02901 09500004
+         AGO   .CONTB                                                   09550004
+.IFAS004 ANOP                                                           09600004
+         EJECT                                                          09650004
+* THIS RECORD IS WRITTEN AT NORMAL OR ABNORMAL TERMINATION OF A STEP.   09700004
+* RECORD LENGTH IS VARIABLE. MINIMUM OF 137.                            09750004
+*                                                                       09800004
+         DS    0F        ALIGN TO FULL WORD BOUNDARY                    09850004
+SMFRCD4  EQU   *         HEADER SEGMENT                                 09900004
+SMF4LEN  DS    BL2'0'    RECORD LENGTH                                  09950004
+SMF4SEG  DS    BL2'0'    SEGMENT DESCRIPTOR                             10000004
+SMF4FLG  DC    BL1'0'    HEADER FLAG BYTE                               10040004
+SMF4RTY  DC    BL1'0'    RECORD TYPE 4                                  10080004
+SMF4TME  DC    BL4'0'    TOD USING FORMAT FROM TIME MACRO W/BIN. INTVL. 10120004
+SMF4DTE  DC    PL4'0000' DATE IN PACKED DECIMAL FORM: OOYYDDDF          10160004
+SMF4SID  DC    CL4' '    SYSTEM IDENTIFICATION                   Y02901 10200004
+SMF4JBN  DC    CL8' '    JOB NAME                                       10240004
+SMF4RST  DC    BL4'0'    READER START TIME (IN 100THS SECONDS)          10280004
+SMF4RSD  DC    PL4'0000' READER START DATE                              10320004
+SMF4UIF  DC    CL8' '    USER IDENTIFICATION FIELD                      10360004
+SMF4STN  DC    BL1'0'    STEP NUMBER                                    10400004
+SMF4SIT  DC    BL4'0'    STEP INITIATION TIME (IN 100THS SECONDS)       10440004
+SMF4STID DC    PL4'0000' STEP INITIATION DATE (PACKED DECIMAL FORMAT)   10480004
+SMF4NCI  DC    BL4'0'    NUMBER OF CARD IMAGES IN DD DATA OR DD *       10520004
+*                        DATA SETS                                      10560004
+SMF4SCC  DC    BL2'0'    STEP COMPLETION CODE                  @ZA11851 10600041
+SMF4PRTY DC    BL1'0'    PRIORITY AT WHICH STEP WAS DISPATCHED :        10640004
+*                        ACTUAL PRIORITY=251-(15-USER PRIORITY)*16      10680004
+SMF4PGMN DC    CL8' '    PROGRAM NAME                                   10720004
+SMF4STMN DC    CL8' '    STEP NAME                                      10760004
+SMF4RSH0 DC    BL2'0'    REGION SIZE REQ(PRIVATE AREA 1K UNIT)   Y02901 10800004
+SMF4PRV  EQU   SMF4RSH0                                          Y02901 10840004
+SMF4SYST DC    BL2'0'    SYSTEM AREA USED(TOP OF PROVATE AREA)   Y02901 10880004
+SMF4H0ST DC    BL2'0'    STORAGE USED(VIRT OR REAL-SEE SMF4RIN)         10920004
+SMF4STU  EQU   SMF4H0ST  (LOW OF PRIVATE AREA)                   Y02901 10960004
+SMF4RV1  DC    BL6'0'    RESERVED                                       11000004
+SMF4SPK  DC    1BL1'0'   STORAGE PROTECT KEY                     A40791 11040004
+SMF4STI  DC    1BL1'0'   STEP TERMINATION INDICATOR                     11080004
+*                        BIT0 - RESERVED                                11120004
+*                        BIT1 - CANCELLED AT EXIT IEFUJV                11160004
+*                        BIT2 - CANCELLED AT EXIT IEFUJI                11200004
+*                        BIT3 - CANCELLED AT EXIT IEFUSI                11240004
+*                        BIT4 - CANCELLED AT EXIT IEFACTRT              11600004
+*                        BIT5 - STEP IS TO BE RESTARTED        @YL026WA 11650004
+*                        BIT6 - 0=NORMAL COMPLETION                     11700004
+*                               1=ABEND                                 11750004
+*                        BIT7 - 1=STEP FLUSHED                          11800004
+SMF4RV2  DC    BL2'0'    RESERVED                                A40791 11850004
+SMF4AST  DC    BL4'0'    DEVICE ALLOC START TIME                 A40791 11900004
+SMF4PPST DC    BL4'0'    PROBLEM PROGRAM START TIME              A40791 11950004
+SMF4RV3  DC    BL1'0'    RESERVED                              @YL026WA 12000004
+SMF4SRBT DC    BL3'0'    STEP CPU TIME UNDER SRB(.01 SEC)      @YL026WA 12050004
+SMF4RIN  DC    BL2'0'    RECORD INDICATORS                              12100004
+*                        BIT0-5 RESERVED                       @YM02618 12150004
+*                         6 =1 POSSIBLE ERROR IN DEV ENTRY     @YM02618 12200004
+*                         7 =0 STOR IS VIRTUAL, =1 STOR IS REAL@YM02618 12230004
+*                         8-15 RESERVED                        @YM02618 12300004
+SMF4RLCT DC    BL2'0'    OFFSET TO RELOCATE SECTION                     12330004
+SMF4LENN DC    BL2'0'    LENGTH OF EXCP PORTION OF RECORD               12400004
+*        FOR EACH DEVICE ASSIGNED TO EACH DATA SET THERE IS AN 8 BYTE   12450004
+*        ENTRY HAVING THE FOLLOWING FORMAT:                             12500004
+*                                                                       12550004
+SMF4DEVC DC    BL1'0'    DEVICE CLASS                                   12600004
+SMF4UTYP DC    BL1'0'    UNIT TYPE                                      12650004
+SMF4CUAD DC    BL2'0'    CHANNEL AND UNIT ADDRESS                       12700004
+SMF4VDV  EQU   X'80'      VIRTUAL INDICATOR                    @Y30AQPF 12750004
+SMF4EXCP DC    BL4'0'    COUNT OF EXCP'S ISSUED FOR THE DEVICE AND      12800004
+*                        DATA SET                                       12850004
+         ORG   SMF4DEVC                                                 12900004
+SMF4LNTH DC    BL1'0'    TOTAL LENGTH OF CPU AND ACCT. SECTION          12950004
+SMF4SETM DC    BL3'0'    STEP CPU TIME UNDER TCB(.01SEC)       @YL026WA 13000004
+SMF4NAF  DC    BL1'0'    NUMBER OF ACCOUNTING FIELDS                    13050004
+SMF4ACTF DS    0C        EXEC STATEMENT ACCOUNTING FIELDS(VARIABLE)     13100004
+*                                                                       13130004
+*        EACH ENTRY FOR AN ACCOUNTING FIELD CONTAINS THE LENGTH OF THE  13200004
+*        FIELD (1 BYTE,BINARY), FOLLOWED BY THE FIELD(EBCDIC).AN        13250004
+*        OMITTED FIELD IS REPRESENTED BY A LENGTH INDICATOR OF 0.       13300004
+*                                                                       13350004
+*        RELOCATE SECTION                                               13400004
+SMF4PGIN DS    BL4'0'    NUMBER OF PAGE-INS                             13450004
+SMF4PGOT DS    BL4'0'    NUMBER OF PAGE-OUTS                            13500004
+SMF4NSW  DS    BL4'0'    NUM OF SWAPS                            Y02901 13550004
+SMF4RGNS EQU   SMF4NSW                                           Y02901 13600004
+SMF4PSI  DS    BL4'0'    PAGES SWAPPED IN                        Y02901 13650004
+SMF4SIN  EQU   SMF4PSI                                           Y02901 13700004
+SMF4PSO  DS    BL4'0'    PAGES SWAPPED OUT                       Y02901 13750004
+SMF4SOUT EQU   SMF4PSO                                           Y02901 13800004
+SMF4VPI  DS    BL4'0'    VAM PAGE INS                            Y02132 13850004
+SMF4VPO  DS    BL4'0'    VAM PAGE OUTS                           Y02132 13900004
+*        PERFORMANCE SECTION                                            13930004
+SMF4SST  DS    BL4'0'              STEP SERVICE TIME           @YM07459 14000004
+SMF4ACT  DS    BL4'0'              STEP ACTIVE TIME            @YM07459 14050004
+SMF4PGNO DS    BL2'0'              PERFORMANCE NUMBER          @YM07459 14100004
+SMF4TRAN DS    BL4'0'      STEP TRANSACTION RESIDENCY TIME     @Z40FPPF 14150004
+SMF4RECL DS    BL4'0'      NUMBER OF RECLAIMS                  @Z40FPPF 14200004
+SMF4RCLM DS    BL4'0'      NUMBER OF VIO RECLAIMS              @Z40FPPF 14250004
+SMF4CPGN DS    BL4'0'      NUMBER OF COMMON PAGE-INS           @Z40FPPF 14300004
+SMF4CRCL DS    BL4'0'      NUMBER OF COMMON RECLAIMS           @Z40FPPF 14350004
+SMF4PGST DS    BL4'0'      NUMBER OF PAGES STOLEN FROM         @Z40FPPF 14400004
+*                          THIS MEMORY                         @Z40FPPF 14450004
+SMF4PSEC DS    CL8         COUNT OF PAGE SECONDS               @Z40FPPF 14500004
+         AGO   .CONTB                                                   14550004
+.IFAS005 ANOP                                                           14600004
+         EJECT                                                          14650004
+* THIS RECORD IS WRITTEN AT  NORMAL OR ABNORMAL TERMINATION OF A JOB.   14700004
+* RECORD LENGTH IS VARIABLE. MINIMUM OF 117.                            14750004
+*                                                                       14800004
+         DS    0F        ALIGN TO FULL WORD BOUNDARY                    14850004
+SMFRCD5  EQU   *         HEADER SEGMENT                                 14900004
+SMF5LEN  DS    BL2'0'    RECORD LENGTH                                  14950004
+SMF5SEG  DS    BL2'0'    SEGMENT DESCRIPTOR                             15000004
+SMF5FLG  DC    BL1'0'    HEADER FLAG BYTE                               15050004
+SMF5RTY  DC    BL1'0'    RECORD TYPE 5                                  15100004
+SMF5TME  DC    BL4'0'    TOD USING FORMAT FROM TIME MACRO W/BIN. INTVL. 15150004
+SMF5DTE  DC    PL4'0000' DATE, PACKED DEC. FORM : OOYYDDDF(F IS A SIGN) 15200004
+SMF5SID  DC    CL4' '    SYSTEM IDENTIFICATION                   Y02901 15250004
+SMF5JBN  DC    CL8' '    JOB NAME                                       15300004
+SMF5RST  DC    BL4'0'    READER START TIME FOR JOB (IN 100THS/SECONDS)  15350004
+SMF5RSD  DC    PL4'0000' READER START DATE,PACKED DECIMAL FORMAT        15400004
+SMF5UIF  DC    CL8' '    USER IDENTIFICATION FIELD                      15450004
+SMF5NST  DC    BL1'0'    NUMBER OF STEPS IN THE JOB                     15500004
+SMF5JIT  DC    BL4'0'    JOB INITIATION TIME (IN 100THS/SECONDS)        15550004
+SMF5JID  DC    PL4'0000' JOB INITIATION DATE, PACKED DECIMAL FORMAT     15600004
+SMF5NCI  DC    BL4'0'    NUMBER OF CARD-IMAGE RECORDS IN DD DATA OR DD* 15650004
+*                        DATA SETS                                      15700004
+SMF5JCC  DC    BL2'0'    JOB COMPLETION CODE                            15750004
+SMF5JPTY DC    BL1'0'    JOB PRIORITY                                   15800004
+SMF5RSTT DC    BL4'0'    READER STOP TIME FOR JOB (IN 100THS/SECONDS)   15850004
+SMF5RSTD DC    PL4'0000' READER STOP DATE FOR JOB (IN PACKED DEC.FORM)  15900004
+SMF5JBTI DC    BL1'0'    JOB TERMINATION INDICATOR                      15950004
+*                        BIT0-RESERVED                                  16000004
+*                           1-CANCELLED AT EXIT IEFUJV                  16050004
+*                           2-CANCELLED AT EXIT IEFUJI                  16100004
+*                           3-CANCELLED AT EXIT IEFUSI                  16150004
+*                           4-CANCELLED AT EXIT IEFACTRT                16200004
+*                           5-RESERVED                                  16250004
+*                           6-O=NORMAL COMPLETION                       16300004
+*                             1=ABEND                                   16350004
+*                           7-RESERVED                                  16400004
+SMF5SMCI DC    BL1'0'    RESV-FORMERLY SYSOUT CLASSES INDICATOR  Y02120 16450004
+SMF5TRAN DC    BL4'0'    TOTAL TRANSACTION RESIDENCY TIME      @ZM01380 16460004
+SMF5CKRE DC    BL1'0'    RESV                                           16500004
+SMF5RDCL DC    BL1'0'    READER DEVICE CLASS                            16550004
+SMF5RUTY DC    BL1'0'    READER UNIT TYPE                               16600004
+SMF5JICL DC    CL1' '    JOB INPUT CLASS                                16650004
+SMF5SPK  DC    BL1'0'    STORAGE PROTECT KEY                     A40791 16700004
+SMF5SRBT DC    BL3'0'    JOB CPU TIME UNDER SRB(.01 SEC)       @YL026WA 16750004
+SMF5TJS  DS    BL4'0'    TOTAL JOB SERVICE(SERVICE UNITS)        Y02133 16800004
+SMF5TTAT DS    BL4'0'    TOTAL TRANSACTION ACTIVE TIME FOR JOB   Y02133 16850004
+SMF5RV2  DS    BL4'0'    RESERVED                              @YL026WA 16900004
+SMF5PGNO DC    BL2'0'    PERFORMANCE GROUP #                   @YL026WA 16954604
+SMF5RV3  DC    CL2' '    RESERVED                              @YL026WA 16974604
+SMF5TLEN DC    BL1'0'    TOTAL LENGTH OF REST OF RECORD                 17050004
+SMF5PRGN DC    CL20' '   PROGRAMMER'S NAME                              17100004
+SMF5JCPU DC    BL3'0'    JOB CPU TIME UNDER TCB(.01 SEC)       @YL026WA 17150004
+SMF5ACTF DC    BL1'0'    NUMBER OF ACCOUNTING FIELDS                    17200004
+SMF5JSAF DS    0C        JOB STATEMENT ACCOUNTING FIELDS(VARIABLE)      17250004
+*                                                                       17300004
+*        EACH ENTRY FOR AN ACCOUNTING FIELD CONTAINS THE LENGTH OF THE  17350004
+*        FIELD(1 BYTE,BINARY),FOLLOWED BY THE FIELD (EBCDIC).AN OMITTED 17400004
+*        FIELD IS REPRESENTED BY A LENGTH INDICATOR OF 0.               17450004
+         AGO   .CONTB                                                   17500004
+.IFAS006 ANOP                                                           17550004
+         EJECT                                                          17600004
+* IN JES2, THIS RECORD IS WRITTEN FOR EACH JOB OUTPUT ELEMENT, @YL02120 17650004
+* WHICH REPRESENTS A GROUP OF DS DIFFERENTIATED BY PUNCH OR    @YL02120 17680004
+* PRINTER SETUP & TYPE OF OUTPUT(EG HELD VS NON-HELD).         @YL02120 17750004
+* FOR JES3, WRITTEN FOR EACH DS(ONCE FOR ALL                   @ZA05171 17800004
+* COPIES PROCESSED ON A GIVEN OUTPUT DEVICE WITH A GIVEN       @YL02120 17850004
+* FORM NAME).                                                  @ZA05171 17900004
+         DS    0F        ALIGN TO FULL WORD BOUNDARY                    18000004
+SMFRCD6  EQU   *         HEADER SEGMENT                                 18050004
+SMF6LEN  DS    BL2'0'    RECORD LENGTH                                  18100004
+SMF6SEG  DS    BL2'0'    SEGMENT DESCRIPTOR                             18150004
+SMF6FLG  DC    BL1'0'    HEADER FLAG BYTE                               18200004
+SMF6RTY  DC    BL1'0'    RECORD TYPE 6                                  18250004
+SMF6TME  DC    BL4'0'    TOD, USING FORMAT FROM TIME MACRO W/BIN. INTVL 18300004
+SMF6DTE  DC    PL4'0000'      DATE IN PACKED DECIMAL FORM: 00YYDDDF     18350004
+SMF6SID  DC    CL4' '    SYSTEM IDENTIFICATION                   Y02901 18400004
+SMF6JBN  DC    CL8' '   JOB NAME                                        18450004
+SMF6RST  DC    BL4'0'   RDR START TIME, TIME JOB CARD 1ST READ @YL02120 18500004
+SMF6RSD  DC    PL4'0000' READER START DATE  00YYDDDF                    18550004
+SMF6UIF  DC    CL8' '   USER ID FIELD                                   18600004
+SMF6OWC  DC    CL1' '   OUTPUT WTR CLASS, BLANK FOR NON-SYSOUT @YL02120 18650004
+SMF6WST  DC    BL4'0'   WRITER START TIME                               18700004
+SMF6WSD  DC    PL4'0000' WRITER START DATE                              18750004
+SMF6NLR  DC    BL4'0'   # OF LOGICAL RECORDS HANDLED BY WRITER @YL02120 18800004
+*                       PER FORM # PER CLASS, INCLUDES REPEATS @YL02120 18850004
+*                       AND RESTARTS.                          @YL02120 18900004
+SMF6IOE  DC    BL1'0'   IO ERROR INDICATOR:                             18950004
+*                       BITS 0-4 RESERVED                        Y02120 18990004
+SMF6DIE  EQU   X'04'    5 - DATA INPUT ERROR                   @ZA05171 19030004
+*                       6 - RESV                                 Y02120 19070004
+SMFCBIE  EQU   X'01'    7 - CONTROL BLOCK INPUT ERROR          @ZA05171 19110004
+SMF6NDS  DC    BL1'0'   # OF DATA SETS PROCESSED BY THE OUTPUT   Y02120 19150004
+*                       WRITER AND INCLUDED IN THIS RECORD.      Y02120 19190004
+*                       (COUNT FOR EACH TIME A DS IS PRINTED)    Y02120 19230004
+*                       DOES NOT INCLUDE RESTARTS.             @YL02120 19350004
+SMF6FMN  DC    CL4' '   FORM NUMBER                                     19400004
+SMF6PAD1 DC    BL1'0'   STATUS INDICATORS                      @YL02120 19450041
+*                       BIT   MEANING                          @ZA10800 19458041
+*                        0 -  0 - NO FIRST EXTENSION           @ZA10800 19466041
+SMF6FEXT EQU   X'80'     0 -  1 - FIRST EXTENSION PRESENT      @ZA10800 19474041
+*                       1-7   RESERVED                         @ZA10800 19482041
+SMF6SBS  DS    BL2      SUBSYSTEM GENERATING ID                @YL02120 19500004
+*                       JES2=2, JES3=5, EXT-WTR=0              @YL04806 19550004
+SMF6LN1  DS    BL2      LENGTH OF SECTION INCLUDING SELF       @YL02120 19600004
+SMF6DCI  DS    BL2      DS CONTROL INDICATORS FOR DATA GROUP   @YL02120 19650004
+*                       BIT 0 RESV                             @YL02120 19700004
+SMF6SDS  EQU   X'40'    1 - SPUN OFF DS                        @ZA05171 19750004
+SMF6OCN  EQU   X'20'    2 - TERMINATED BY OPERATOR             @ZA05171 19800004
+SMF6ORD  EQU   X'10'    3 - INTERRUPTED BY OPERATOR (JES2)     @ZA05171 19850004
+*                           OPERATOR RESTARTED DATA SET        @ZA05171 19900004
+*                           WITH DESTINATION (JES3)            @ZA05171 19950004
+SMF6OR   EQU   X'08'    4 - RESTARTED BY OPERATOR              @ZA05171 20000004
+SMF6ROR  EQU   X'04'    5 - CONT OF INTERRUPTED GROUP (JES2)   @ZA05171 20050004
+*                           RECEIVED OP RESTARTED DS(JES3)     @ZA05171 20100004
+SMF6OSS  EQU   X'02'    6 - CARRIAGE OVERRIDEN BY OPER(JES2)   @ZA05171 20150004
+*                           OPERATOR STARTED WITH              @ZA05171 20200004
+*                           SINGLE SPACE(JES3)                 @ZA05171 20250004
+SMF6INT  EQU   X'01'    7 - PUNCH WAS INTERPRETED              @ZA05171 20310004
+*                       8-15 RESV                              @YL02120 20350004
+SMF6JNM  DS    CL4      JES ASSIGNED JOB NUMBER                @YL02120 20400004
+SMF6OUT  DS    CL8      LOGICAL OUTPUT DEVICE NAME             @YL02120 20450004
+SMF6FCB  DS    CL4      FCB ID                                   Y02120 20500004
+SMF6UCS  DS    CL4      UCS ID                                   Y02120 20550004
+*                       END OF RECORD FOR EXTERNAL WTR         @YM04806 20600004
+SMF6PGE  DS    BL4      APPROX PAGE COUNT(SKIP TO CHANNEL 1)   @YL02120 20650004
+*                                                              @YL02120 20700004
+SMF6J2S  EQU   *        BEGIN JES2 ONLY SECTION                @YL02120 20750004
+SMF6RTE  DS    BL2      OUTPUT ROUTE CODE                        Y02120 20780004
+*                                                              @YL02120 20850004
+         ORG   SMF6J2S                                         @YL02120 20880004
+SMF6J3S  EQU   *        BEGIN JES3 ONLY SECTION                @YL02120 20950004
+SMF6DFE  DS    BL2      DATA FORMAT ERROR INDICATORS           @YL02120 21000004
+*                       BITS 0-5 RESV                          @YL02120 21050004
+SMF6CCE  EQU   X'02'    6 - SOME 1ST CHAR CONTROL DATA BAD,    @ZA05171 21100004
+*                           DEFAULT USED                       @YL02120 21150004
+SMF6RBE  EQU   X'01'    7 - BAD RECORD LENGTH(TRUNCATE OR PAD) @ZA05171 21200004
+*                       8-15 RESV                              @YL02120 21250004
+SMF6OPR  DS    BL2      OUTPUT PRIORITY                        @YL02120 21300004
+SMF6GRP  DS    CL8      LOGICAL OUTPUT DEVICE GROUP NAME       @YL02120 21350004
+SMF6RSVJ DS    CL8      RESERVED FOR JES3                      @ZA05171 21400004
+SMF6RSVU DS    CL4      RESERVED FOR USER                      @ZA05171 21450004
+SMF6END  DS    0X       END OF JES3 BASE RECORD                @ZA05171 21550041
+SMF6SIZ  DS    0XL(SMF6END-SMFRCD6) SIZE OF JES3 SMF6 BASE RECORD       21556041
+*                                                              @ZA05171 21562041
+*       FIRST EXTENSION                                                 21568041
+        ORG    SMF6LN1                                         @ZA27193 21574041
+SMF6LN2  DS    BL2           LENGTH FIRST EXTENSION            @ZA10800 21580041
+SMF6CPS  DS    8CL1     COPIES DISTRIBUTION                    @ZA10800 21586041
+SMF6CHR  DS    4CL4     TRANSLATE TABLE NAMES FROM CHARS PARM  @ZA10800 21592041
+SMF6MID  DS    CL4      COPY MODIFICATION MODULE NAME          @ZA10800 21598041
+SMF6FLI  DS    CL4      FLASH OVERLAY NAME                     @ZA10800 21604041
+SMF6FLC  DS    BL1      NUMBER OF COPIES FLASHED               @ZA10800 21610041
+SMF6BID  DS    BL1      FLAG BYTE                              @ZA10800 21616041
+SMF6BTS  EQU   X'80'    THE BTSS WAS USED FOR OUTPUT           @ZA10800 21622041
+SMF6OPJ  EQU   X'40'    OPTCD=J WAS USED FOR OUTPUT            @ZA10800 21628041
+         AGO   .CONTB                                                   21650004
+         MEND                */                                         21660004
+ %IFABGN2:;                                                             21700004
+ %IFAL00: IF IFAR00='' %THEN %GOTO IFAL01;                              21750004
+    DCL 1 SMFRCD00 BASED(SMF00PTR) BDY(WORD),                           21800004
+ /* RECORD TYPE 0 - IPL                                              */ 21857604
+ /* FIRST RECORD WRITTEN DURING IPL - OPTIONS IN EFFECT              */ 21907604
+         3 SMF0LEN FIXED(15),     /* RDW RECORD LENGTH               */ 21957604
+         3 SMF0SEG FIXED(15),     /* RDW SEGMENT DESCRIPTOR          */ 22007604
+         3 SMF0FLG BIT(8),        /* OPERATING ENVIRONMENT           */ 22057604
+         3 SMF0RTY FIXED(8),      /* RECORD TYPE 0                   */ 22107604
+         3 SMF0TME FIXED(31) BDY(BYTE), /* TOD RECORD WRITTEN        */ 22157604
+         3 SMF0DTE CHAR(4),       /* DATE RECORD WRITTEN             */ 22207604
+         3 SMF0SID CHAR(4),       /* SYSTEM ID FROM INSTALLATION     */ 22257604
+         3 SMF0JWT FIXED(31) BDY(BYTE),                                 22307604
+                                  /* CONTINUOUS WAIT TIME LIMIT(MIN) */ 22357604
+         3 SMF0BUF FIXED(31) BDY(BYTE), /* VALUE OF BUF KEYWORD      */ 22407604
+         3 SMF0VST FIXED(31) BDY(BYTE), /* VIRTUAL MEMORY SIZE(1K)   */ 22457604
+         3 SMF0OPT BIT(8),        /* SMF OPTIONS BYTE                   22507604
+                                     0-SYSTEM AND JOB                   22557604
+                                     1-STEP                             22607604
+                                     2-EXITS TAKEN                      22657604
+                                     3-DATA SET                         22707604
+                                     4-DASD VOLUMES                     22757604
+                                     5-RESERVED                         22807604
+                                     6-SCRATCH FOR TEMPORARIES          22857604
+                                     7-=0 FOR BKGD, =1 FOR FRGD      */ 22907604
+         3 SMF0RST FIXED(31) BDY(BYTE); /* REAL STORAGE SIZE(1K)     */ 22957604
+ %IFAL01:;                                                              23007604
+ %IFAL02: IF IFAR02='' %THEN %GOTO IFAL03;                              23057604
+    DCL 1 SMFRCD02 BASED(SMF02PTR) BDY(WORD),                           23107604
+ /* RECORD TYPE 2 - DUMP HEADER                                      */ 23157604
+ /* WRITTEN AT BEGINNING OF SMF DUMP FILE                            */ 23207604
+         3 SMF2LEN FIXED(15),     /* RDW RECORD LENGTH               */ 23257604
+         3 SMF2SEG FIXED(15),     /* RDW SEGMENT DESCRIPTOR          */ 23307604
+         3 SMF2FLG BIT(8),        /* OPERATING ENVIRONMENT           */ 23357604
+         3 SMF2RTY FIXED(8),      /* RECORD TYPE 2                   */ 23407604
+         3 SMF2TME FIXED(31) BDY(BYTE), /* TOD RECORD WRITTEN        */ 23457604
+         3 SMF2DTE CHAR(4),       /* DATE RECORD WRITTEN             */ 23507604
+         3 SMF2SID CHAR(4);       /* SYSTEM ID FROM INSTALLATION     */ 23557604
+ %IFAL03: IF IFAR03='' %THEN %GOTO IFAL04;                              23607604
+    DCL 1 SMFRCD03 BASED(SMF03PTR) BDY(WORD),                           23657604
+ /* RECORD TYPE 3 - DUMP TRAILER                                     */ 23707604
+ /* WRITTEN AT END OF SMF DUMP FILE                                  */ 23757604
+         3 SMF3LEN FIXED(15),     /* RDW RECORD LENGTH               */ 23807604
+         3 SMF3SEG FIXED(15),     /* RDW SEGMENT DESCRIPTOR          */ 23857604
+         3 SMF3FLG BIT(8),        /* OPERATING ENVIRONMENT           */ 23907604
+         3 SMF3RTY FIXED(8),      /* RECORD TYPE 3                   */ 23957604
+         3 SMF3TME FIXED(31) BDY(BYTE), /* TOD RECORD WRITTEN        */ 24007604
+         3 SMF3DTE CHAR(4),       /* DATE RECORD WRITTEN             */ 24057604
+         3 SMF3SID CHAR(4);       /* SYSTEM ID FROM INSTALLATION     */ 24107604
+ %IFAL04: IF IFAR04='' %THEN %GOTO IFAL05;                              24157604
+    DCL 1 SMFRCD04 BASED(SMF04PTR) BDY(WORD),                           24207604
+ /* RECORD TYPE 4 - STEP TERMINATE                                   */ 24257604
+ /* WRITTEN AT NORMAL OR ABNORMAL TERMINATION OF A BGD JOB STEP      */ 24307604
+         3 SMF4LEN FIXED(15),     /* RDW RECORD LENGTH               */ 24357604
+         3 SMF4SEG FIXED(15),     /* RDW SEGMENT DESCRIPTOR          */ 24407604
+         3 SMF4FLG BIT(8),        /* OPERATING ENVIRONMENT           */ 24457604
+         3 SMF4RTY FIXED(8),      /* RECORD TYPE 4                   */ 24507604
+         3 SMF4TME FIXED(31) BDY(BYTE), /* TOD RECORD WRITTEN        */ 24557604
+         3 SMF4DTE CHAR(4),       /* DATE RECORD WRITTEN             */ 24607604
+         3 SMF4SID CHAR(4),       /* SYSTEM ID FROM INSTALLATION     */ 24657604
+         3 SMF4JBN CHAR(8),       /* JOB NAME                        */ 24707604
+         3 SMF4RST FIXED(31) BDY(BYTE), /* READER START TIME(.01 SEC)*/ 24757604
+         3 SMF4RSD CHAR(4),       /* READER START DATE               */ 24807604
+         3 SMF4UIF CHAR(8),       /* USER IDENTIFICATION FIELD       */ 24857604
+         3 SMF4STN FIXED(8),      /* STEP NUMBER                     */ 24907604
+         3 SMF4SIT FIXED(31) BDY(BYTE), /* STEP INITIATION TIME      */ 24957604
+         3 SMF4STID CHAR(4),      /* STEP INITATION DATE             */ 25007604
+         3 SMF4NCI FIXED(31) BDY(BYTE), /* SPOOL IN COUNT            */ 25057604
+         3 SMF4SCC FIXED(16) BDY(BYTE), /* STEP COMPLETION CODE      */ 25107604
+         3 SMF4PRTY FIXED(8),     /* DISPATCHING PRIORITY            */ 25157604
+         3 SMF4PGMN CHAR(8),      /* PROGRAM NAME                    */ 25207604
+         3 SMF4STMN CHAR(8),      /* STEP NAME                       */ 25257604
+         3 SMF4PRV FIXED(16),     /* REG REQ IN PRIVATE AREA(1K)     */ 25307604
+          5 SMF4RSH0 FIXED(16),                                         25357604
+         3 SMF4SYST FIXED(16),    /* SYS AREA USED-TOP OF PRIVATE(1K)*/ 25407604
+         3 SMF4STU FIXED(16),     /* STOR USED-LOW OF PRIVATE(1K)    */ 25457604
+          5 SMF4H0ST FIXED(16),                                         25507604
+         3 SMF4RV1 CHAR(6),       /* RESV                            */ 25557604
+         3 SMF4SPK FIXED(8),      /* STORAGE PROTECT KEY             */ 25607604
+         3 SMF4STI BIT(8),        /* STEP TERMINATION INDICATOR         25657604
+                                     0-RESV                             25707604
+                                     1-CANCELLED AT EXIT IEFUJV         25757604
+                                     2-CANCELLED AT EXIT IEFUJI         25807604
+                                     3-CANCELLED AT EXIT IEFUSI         25857604
+                                     4-CANCELLED AT EXIT IEFACTRT       25907604
+                                     5-STEP TO BE RESTARTED  @YL026WA   25957604
+                                     6-ABEND                            26007604
+                                     7-STEP FLUSHED                  */ 26057604
+         3 SMF4RV2 CHAR(2),       /* RESV                            */ 26107604
+         3 SMF4AST FIXED(31) BDY(BYTE), /* DEVICE ALLOC START TIME   */ 26157604
+         3 SMF4PPST FIXED(31) BDY(BYTE), /* PROB PROG START TIME     */ 26207604
+         3 SMF4RV3 CHAR(1),       /* RESV                    @YL026WA*/ 26257604
+         3 SMF4SRBT PTR(24) BDY(BYTE), /* STEP CPU UNDER SRB @YL026WA*/ 26307604
+         3 SMF4RIN BIT(16),       /* RECORD INDICATORS               */ 26357604
+          5 * BIT(6),             /* 0-5 RESV                @YM02618*/ 26407604
+          5 SMF4IEX BIT(1),       /* 6 POSSIBLE ERROR IN DEV ENTRY   */ 26457604
+          5 * BIT(9),             /* 7 =0 VIRT, =1 REAL STORAGE         26507604
+                                     8-15 RESV                       */ 26557604
+         3 SMF4RLCT FIXED(15),    /* OFFSET TO RELOCATE SECTION      */ 26607604
+         3 SMF4LENN FIXED(15);    /* LGTH OF EXCP SECTION + THESE 2  */ 26657604
+    DCL 1 SMF4EXPS BASED BDY(WORD), /* EXCP SECTION, ENTRY FOR EACH     26707604
+                                     DEVICE OF EACH NON-SPOOLED DS   */ 26757604
+         3 SMF4CUT CHAR(2),       /* DEVICE CLASS AND UNIT TYPE      */ 26807604
+          5 SMF4DEVC CHAR(1),     /* DEVICE CLASS                    */ 26857604
+          5 SMF4UTYP CHAR(1),     /* UNIT TYPE                       */ 26907604
+         3 SMF4CUAD CHAR(2),      /* CHANNEL AND UNIT ADDRESS        */ 26957604
+          4 SMF4VDV BIT(1),       /* VIRTUAL DEVICE          @Y30AQPF*/ 27007604
+         3 SMF4EXCP FIXED(31);    /* EXCP COUNT FOR DEVICE OF DS     */ 27057604
+    DCL 1 SMF4CPUA BASED BDY(WORD), /* CPU TIME AND ACCT SECTION HDR */ 27107604
+         3 SMF4LNTH FIXED(8),     /* LGTH OF CPU AND ACCT SECTIONS   */ 27157604
+         3 SMF4SETM PTR(24),      /*STEP CPU UNDER TCB(.01 S)@YL026WA*/ 27207604
+         3 SMF4NAF PTR(8);        /* NUM OF ACCT FIELDS IN ACCT SECT */ 27257604
+    DCL 1 SMF4ACTF BASED BDY(BYTE), /* ACCT SECTION                  */ 27307604
+         3 SMF4ANC PTR(8),        /* # CHAR IN THIS ACCT FIELD       */ 27357604
+         3 SMF4BCD CHAR(*);       /* ACCT FIELD CHARACTERS           */ 27407604
+    DCL 1 SMF4RELS BASED BDY(BYTE), /* RELOCATE SECTION              */ 27457604
+         3 SMF4PGIN FIXED(31) BDY(BYTE), /* # OF PAGE-INS            */ 27507604
+         3 SMF4PGOT FIXED(31) BDY(BYTE), /* # OF PAGE-OUTS           */ 27557604
+         3 SMF4NSW  FIXED(31) BDY(BYTE), /* # OF SWAPS               */ 27607604
+          5 SMF4RGNS FIXED(31) BDY(BYTE),                               27657604
+         3 SMF4PSI  FIXED(31) BDY(BYTE), /* # OF PAGES SWAPPED IN    */ 27707604
+          5 SMF4SIN  FIXED(31) BDY(BYTE),                               27757604
+         3 SMF4PSO  FIXED(31) BDY(BYTE), /* # OF PAGES SWAPPED OUT   */ 27807604
+          5 SMF4SOUT FIXED(31) BDY(BYTE),                               27857604
+         3 SMF4VPI  FIXED(31) BDY(BYTE), /* # OF VIO PAGE-INS        */ 27907604
+         3 SMF4VPO  FIXED(31) BDY(BYTE), /* # OF VIO PAGE-OUTS          27957604
+                                                             @Z40FPPF*/ 28007604
+         3 SMF4SST FIXED(31) BDY(BYTE), /* STEP SERVICE TIME @YM07459*/ 28057604
+         3 SMF4TAT FIXED(31) BDY(BYTE), /* STEP TRANSACTION ACTIVE      28107604
+                                          TIME               @YM07459*/ 28157604
+         3 SMF4PGNO FIXED(16),         /* PERFORMANCE GROUP NUMBER      28207604
+                                                             @YM07459*/ 28257604
+         3 SMF4TRAN FIXED(31) BDY(BYTE), /* STEP TRANSACTION RESIDENCY  28307604
+                                            TIME             @Z40FPPF*/ 28357604
+         3 SMF4RECL FIXED(31) BDY(BYTE), /* NUMBER OF RECLAIMS          28407604
+                                                             @Z40FPPF*/ 28457604
+         3 SMF4RCLM FIXED(31) BDY(BYTE), /* NUMBER OF VIO RECLAIMS      28507604
+                                                             @Z40FPPF*/ 28557604
+         3 SMF4CPGN FIXED(31) BDY(BYTE), /* NUMBER OF COMMON PAGE-INS   28607604
+                                                             @Z40FPPF*/ 28657604
+         3 SMF4CRCL FIXED(31) BDY(BYTE), /* NUMBER OF COMMON RECLAIMS   28707604
+                                                             @Z40FPPF*/ 28757604
+         3 SMF4PGST FIXED(31) BDY(BYTE), /* NUMBER OF PAGES STOLEN      28807604
+                                            FROM THIS MEMORY @Z40FPPF*/ 28857604
+         3 SMF4PSEC CHAR(8);             /* COUNT OF PAGE SECONDS       28907604
+                                                             @Z40FPPF*/ 28957604
+ %IFAL05: IF IFAR05='' %THEN %GOTO IFAL06;                              29007604
+    DCL 1 SMFRCD05 BASED(SMF05PTR) BDY(WORD),                           29057604
+ /* RECORD TYPE 5 - JOB TERMINATION                                  */ 29107604
+ /* WRITTEN AT NORMAL OR ABNORMAL TERMINATION OF A JOB               */ 29157604
+         3 SMF5LEN FIXED(15),     /* RDW RECORD LENGTH               */ 29207604
+         3 SMF5SEG FIXED(15),     /* RDW SEGMENT DESCRIPTOR          */ 29257604
+         3 SMF5FLG BIT(8),        /* OPERATING ENVIRONMENT           */ 29307604
+         3 SMF5RTY FIXED(8),      /* RECORD TYPE 5                   */ 29357604
+         3 SMF5TME FIXED(31) BDY(BYTE), /* TOD RECORD WRITTEN        */ 29407604
+         3 SMF5DTE CHAR(4),       /* DATE RECORD WRITTEN             */ 29457604
+         3 SMF5SID CHAR(4),       /* SYSTEM ID FROM INSTALLATION     */ 29507604
+         3 SMF5JBN CHAR(8),       /* JOB NAME                        */ 29557604
+         3 SMF5RST FIXED(31) BDY(BYTE), /*READER START TIME (.01 SEC)*/ 29607604
+         3 SMF5RSD CHAR(4),       /* READER START DATE               */ 29657604
+         3 SMF5UIF CHAR(8),       /* USER IDENTIFICATION FIELD       */ 29707604
+         3 SMF5NST FIXED(8),      /* # OF STEPS IN JOB               */ 29757604
+         3 SMF5JIT FIXED(31) BDY(BYTE), /* JOB INITIATION TIME       */ 29807604
+         3 SMF5JID CHAR(4),       /* JOB INITATION DATE              */ 29857604
+         3 SMF5NCI FIXED(31) BDY(BYTE), /* SPOOL-IN COUNT FOR JOB    */ 29907604
+         3 SMF5JCC FIXED(16) BDY(BYTE), /* JOB COMPLETION CODE       */ 29957604
+         3 SMF5JPTY FIXED(8),     /* JOB PRIORITY                    */ 30007604
+         3 SMF5RSTT FIXED(31) BDY(BYTE), /* READER STOP TIME(.01 SEC)*/ 30057604
+         3 SMF5RSTD CHAR(4),      /* READER STOP DATE                */ 30107604
+         3 SMF5JBTI BIT(8),       /* JOB TERMINATION INDICATORS         30157604
+                                     0-RESV                             30207604
+                                     1-CANCELLED AT EXIT IEFUJV         30257604
+                                     2-CANCELLED AT EXIT IEFUJI         30307604
+                                     3-CANCELLED AT EXIT IEFUSI         30357604
+                                     4-CANCELLED AT EXIT IEFACTRT       30407604
+                                     5-RESV                             30457604
+                                     6-ABEND                            30507604
+                                     7-RESV                          */ 30557604
+         3 SMF5SMCI CHAR(1),      /* RESV-FORMERLY SYSOUT CLASS IND  */ 30607604
+         3 SMF5TRAN FIXED(31) BDY(BYTE),  /* TOTAL TRANSACTION          30617604
+                                            RESIDENCY TIME   @ZM01380*/ 30627604
+         3 SMF5CKRE CHAR(1),      /* RESV                            */ 30657604
+         3 SMF5RDCL CHAR(1),      /* READER DEVICE CLASS             */ 30707604
+         3 SMF5RUTY CHAR(1),      /* READER UNIT TYPE                */ 30757604
+         3 SMF5JICL CHAR(1),      /* JOB INPUT CLASS                 */ 30807604
+         3 SMF5SPK FIXED(8),      /* STORAGE PROTECT KEY             */ 30857604
+         3 SMF5SRBT PTR(24),      /* JOB CPU UNDER SRB(.01 S)@YL026WA*/ 30907604
+         3 SMF5TJS FIXED(31) BDY(BYTE), /* TOTAL JOB SERV(SERV UNITS)*/ 30957604
+         3 SMF5TTAT FIXED(31) BDY(BYTE), /* TOTAL TRANSACTION ACTIVE    31007604
+                                            TIME FOR JOB             */ 31057604
+         3 SMF5RV2 CHAR(4),       /* RESV                    @YL026WA*/ 31107604
+         3 SMF5PGNO FIXED(16),    /* PERFORMANCE GROUP #     @YL026WA*/ 31157604
+         3 SMF5RV3  CHAR(2),      /* RESERVED                @YL026WA*/ 31177604
+         3 SMF5TLEN FIXED(8),     /* LGTH OF REMAINDER OF RECORD     */ 31307604
+         3 SMF5PRGN CHAR(20),     /* PROGRAMMER'S NAME               */ 31357604
+         3 SMF5JCPU FIXED(24) BDY(BYTE), /*JOB CPU TCB(.01 S)@YL026WA*/ 31407604
+         3 SMF5ACTF FIXED(8);     /* # OF ACCT FIELDS IN ACCT SECTION*/ 31457604
+    DCL 1 SMF5JSAF BASED BDY(BYTE), /* ACCT SECTION                  */ 31507604
+         3 SMF5ANC PTR(8),        /* # CHAR IN THIS ACCT FIELD       */ 31557604
+         3 SMF5BCD CHAR(*);       /* ACCT FIELD CHARACTERS           */ 31607604
+ %IFAL06: IF IFAR06='' %THEN %GOTO IFALR1;                              31657604
+    DCL 1 SMFRCD06 BASED(SMF06PTR) BDY(WORD),                           31707604
+ /* RECORD TYPE 6 - SYSOUT WRITER                            @ZA10800*/ 31757641
+ /* IN JES2, WRITTEN FOR EACH JOB OUTPUT ELEMENT, WHICH      @YL02120   31807604
+     REPRESENTS A GROUP OF DS DIFFERENTIATED BY PUNCH OR     @YL02120   31857604
+     PRINTER SETUP & TYPE OF OUTPUT(EG HELD VS NON-HELD).    @YL02120   31907604
+    IN JES3, WRITTEN FOR EACH DS(ONCE FOR                    @ZA05171   31957604
+     ALL COPIES PROCESSED ON A GIVEN OUTPUT DEVICE WITH      @YL02120   32007604
+     A GIVEN FORM NAME).                                     @YL02120*/ 32057604
+         3 SMF6LEN FIXED(15),     /* RDW RECORD LENGTH               */ 32107604
+         3 SMF6SEG FIXED(15),     /* RDW SEGMENT DESCRIPTOR          */ 32157604
+         3 SMF6FLG BIT(8),        /* OPERATING ENVIRONMENT           */ 32207604
+         3 SMF6RTY FIXED(8),      /* RECORD TYPE 6                   */ 32257604
+         3 SMF6TME FIXED(31) BDY(BYTE), /* TOD RECORD WRITTEN        */ 32307604
+         3 SMF6DTE CHAR(4),       /* DATE RECORD WRITTEN             */ 32357604
+         3 SMF6SID CHAR(4),       /* SYSTEM ID FROM INSTALLATION     */ 32407604
+         3 SMF6JBN CHAR(8),       /* JOB NAME FROM JMR               */ 32457604
+         3 SMF6RST FIXED(31) BDY(BYTE), /*READER START TIME (.01 SEC)*/ 32507604
+         3 SMF6RSD CHAR(4),       /* READER START DATE               */ 32557604
+         3 SMF6UIF CHAR(8),       /* USER IDENTIFICATION FIELD       */ 32607604
+         3 SMF6OWC CHAR(1),       /* OUTPUT WRITER CLASS-               32657604
+                                     BLANK FOR NON SYSOUT    @YL02120*/ 32707604
+         3 SMF6WST FIXED(31) BDY(BYTE), /* TOD WRITER START          */ 32757604
+         3 SMF6WSD CHAR(4),       /* WRITER START DATE               */ 32807604
+         3 SMF6NLR FIXED(31) BDY(BYTE), /* # LOGICAL RECORDS WRITTEN */ 32857604
+         3 SMF6IOE BIT(8),        /* IO ERROR INDICATOR              */ 32907604
+           5 *        BIT(5),     /* RESERVED                @ZA05171*/ 32957604
+           5 SMF6DIE  BIT(1),     /* DATA INPUT ERROR        @ZA05171*/ 33007604
+           5 *        BIT(1),     /* RESERVED                @ZA05171*/ 33057604
+           5 SMF6CBIE BIT(1),     /*CONTROL BLOCK INPUT ERROR@ZA05171*/ 33107604
+         3 SMF6NDS FIXED(8),      /* # DS PROCESSED BY WRITER        */ 33157604
+         3 SMF6FMN CHAR(4),       /* FORM NUMBER                     */ 33207604
+         3 SMF6PAD1 BIT(8),       /* INDICATORS              @ZA10800*/ 33257641
+           5 SMF6FEXT BIT(1),     /* FIRST EXTENSION PRESENT @ZA10800*/ 33267641
+           5 * BIT(7),            /* RESERVED                @ZA10800*/ 33277641
+         3 SMF6SBS FIXED(15),     /* SUBSYSTEM GENERATING ID            33307604
+                                   JES2-2, JES3-5, EXT-WTR=0 @YM04806*/ 33357604
+         3 SMF6LN1 FIXED(15),     /* LGTH OF SECTION INCLUDING SELF  */ 33407604
+         3 SMF6DCI BIT(16),       /* DATA SET CONTROL INDICATORS     */ 33457604
+           5 *         BIT(1),    /* RESERVED                @ZA05171*/ 33507604
+           5 SMF6SDS   BIT(1),    /* SPUN OFF DATA SET       @ZA05171*/ 33557604
+           5 SMF6OCN   BIT(1),    /* TERMINATED BY OPERATOR  @ZA05171*/ 33607604
+           5 SMF6ORD   BIT(1),    /* INTERRUPTED BY OPERATOR(JES2)      33657604
+                                     OPERATOR RESTARTED DATA SET WITH   33707604
+                                     DESTINATION(JES3)       @ZA05171*/ 33757604
+           5 SMF6OR    BIT(1),    /* RESTARTED BY OPERATOR   @ZA05171*/ 33807604
+           5 SMF6ROR   BIT(1),    /* CONTINUATION OF INTERRUPTED        33857604
+                                     GROUP(JES2)                        33907604
+                                     RECEIVED OP RESTARTED DS(JES3)     33957604
+                                                             @ZA05171*/ 34007604
+           5 SMF6OSS   BIT(1),    /* CARRIAGE OVERRIDEN BY              34057604
+                                     OPERATOR(JES2)                     34107604
+                                     OPERATOR STARTED WITH SINGLE       34157604
+                                     SPACE(JES3)             @ZA05171*/ 34207604
+           5 SMF6INT   BIT(1),     /* PUNCH WAS INTERRUPTED  @ZA05171*/ 34257604
+           5 *         BIT(8),     /* RESERVED               @ZA05171*/ 34307604
+         3 SMF6JNM CHAR(4),       /* JES ASSIGNED JOB NUMBER @YL02120*/ 34357604
+         3 SMF6OUT CHAR(8),       /* LOGICAL OUTPUT DEV NAME @YL02120*/ 34407604
+         3 SMF6FCB CHAR(4),       /* FCB ID                          */ 34457604
+         3 SMF6UCS CHAR(4),       /* UCS ID,  END OF REC FOR EXT WTR */ 34507604
+         3 SMF6PGE FIXED(31) BDY(BYTE), /* APPROX PAGE COUNT @YL026WA*/ 34557604
+         3 * CHAR(24),            /*                         @YL02120*/ 34607604
+           5 SMF6J2S CHAR(0),     /* SPECIAL JES2 SECTION    @YL02120*/ 34657604
+             7 SMF6RTE FIXED(15) BDY(BYTE), /* OUTPUT RT CODE@YL02120*/ 34707604
+           5 SMF6J3S CHAR(24),    /* SPECIAL JES3 SECTION    @YL02120*/ 34757604
+             7 SMF6DFE BIT(16),   /* DATA FORMAT ERROR INDICATORS    */ 34807604
+               9 *     BIT(6),    /* 0-5 RESERVED            @ZA05171*/ 34857604
+               9 SMF6CCE BIT(1),  /* 6-ONE OR MORE RECORDS CONTAINED    34907604
+                                       INVALID 1ST CHAR CONTROL DATA,   34957604
+                                       DEFAULT SUBSTITUTED   @ZA05171*/ 35007604
+               9 SMF6RBE BIT(1),  /* 7-INVALID LGTH REC IN DATA,        35057604
+                                       TRUNCATED OR PADDED   @ZA05171*/ 35107604
+               9 *       BIT(8),   /* 8-15 RESERVED          @ZA05171*/ 35157604
+             7 SMF6OPR FIXED(16) BDY(BYTE), /*OUTPUT PRIORITY@YL02120*/ 35207604
+             7 SMF6GRP CHAR(8),   /*LOG OUTPUT DEV GROUP NAME        */ 35257604
+             7 SMF6RSVJ CHAR(8),  /*RESERVED FOR JES3        @ZA05171*/ 35307604
+             7 SMF6RSVU CHAR(4);  /*RESERVED FOR USER        @ZA05171*/ 35357641
+   DCL 1 SMF6END CHAR(0);         /* END OF JES3 BASE RECORD @ZA05171*/ 35362641
+   DCL 1 SMF6EXT1 BASED(ADDR(SMF6LN1)+SMF6LN1),  /* FIRST EXTENSION  */ 35367641
+      3 SMF6LN2 FIXED(15),       /* LENGTH OF FIRST EXTENSION           35372641
+                                                             @ZA10800*/ 35377641
+       3 SMF6CPS(8) CHAR(1),      /* COPIES DISTRIBUTION     @ZA10800*/ 35382641
+       3 SMF6CHR CHAR(16),        /* TRANSLATE TABLE NAMES   @ZA10800   35387641
+                                     FROM CHARS PARAMETER    @ZA10800*/ 35392641
+       3 SMF6MID CHAR(4),         /* COPY MODIFICATION       @ZA10800   35397641
+                                     MODULE NAME             @ZA10800*/ 35402641
+       3 SMF6FLI CHAR(4),         /* FLASH OVERLAY NAME      @ZA10800*/ 35407641
+       3 SMF6FLC BIT(8),          /* NUMBER OF COPIES FLASHED@ZA10800*/ 35412641
+       3 SMF6BID BIT(8),          /* FLAG BYTE               @ZA10800*/ 35417641
+         4 SMF6BTS BIT(1),        /* THE BTSS WAS USED FOR   @ZA10800   35422641
+                                     OUTPUT                  @ZA10800*/ 35427641
+         4 SMF6OPJ BIT(1);        /* OPTCD=J WAS USED FOR    @ZA10800   35432641
+                                     OUTPUT                  @ZA10800*/ 35437641
+ %IFALR1: ;                                                             35457604
+ %INCLUDE SYSLIB(IFASMFR1) NOSEG;                                       35507604
+ %INCLUDE SYSLIB(IFASMFR2) NOSEG;                                       35557604
+ %INCLUDE SYSLIB(IFASMFR3) NOSEG;                                       35607604
+ %INCLUDE SYSLIB(IFASMFR4) NOSEG;                                       35657604
+ %INCLUDE SYSLIB(IFASMFR5) NOSEG;                                       35707604
+ %INCLUDE SYSLIB(IFASMFR6) NOSEG;                                       35757604
+ %INCLUDE SYSLIB(IFASMFR7) NOSEG;                                       35807604
+ %INCLUDE SYSLIB(IFASMFR8) NOSEG;                                       35857604
+ %INCLUDE SYSLIB(IFASMFR9) NOSEG;                                       35907604
+ %INCLUDE SYSLIB(IFASMFRA) NOSEG;                                       35957604
+ %INCLUDE SYSLIB(IFASMFRB) NOSEG;                                       36007604
+ %INCLUDE SYSLIB(IFASMFRC) NOSEG;                                       36057604
+ %INCLUDE SYSLIB(IFASMFRD) NOSEG;                                       36107604

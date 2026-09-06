@@ -1,0 +1,202 @@
+         MACRO                                                          00900002
+         SVCTABLE                                                       01800002
+         COPY  SGGBLPAK                                                 02700002
+         LCLA  &B,&I,&J,&K,&L,&N,&P,&R,&S,&T,&CT,&U             Z40FSVN 03600004
+         LCLB  &X                                                       04500002
+         LCLC  &A,&C,&D,&H                                              05400002
+.***** BEGINNING OF SPECIFICATIONS **********************************   05400402
+.*                                                                      05400802
+.* MODULE NAME - SVCTABLE                                               05402002
+.*                                                                      05404002
+.* DESCRIPTIVE NAME - SVCTABLE BUILDER                                  05406002
+.*                                                                      05408002
+.* COPYRIGHT - NONE                                                     05408402
+.*                                                                      05408802
+.* STATUS - CHANGE LEVEL 04  9/10/75                            Z40FSVN 05409204
+.*                                                                      05410002
+.* FUNCTION -                                                           05420002
+.*       THE SVCTABLE MACRO IS USED TO SPECIFY THE NUMBER, TYPE,        05450002
+.*       AND ENTRY STATUS OF USER WRITTEN SVC ROUTINES THAT ARE         05500002
+.*       ADDED TO THE SYSTEM.                                           05550002
+.*                                                                      05600002
+.* NOTES - N/A                                                          05610002
+.*                                                                      05620002
+.* MODULE TYPE - MACRO                                                  05630002
+.*                                                                      05640002
+.* ENTRY POINT - N/A                                                    05642002
+.*                                                                      05644002
+.* INPUT - THE PARAMETER DESCRIBED HERE IS USED ON THE CALL TO          05646002
+.*         SVCTABLE                                                     05648002
+.*             SVC-NNN-TN-(LN,LN...)-FCNN-NP                            05650004
+.*                 NNN - SVC NUMBER                                     05700002
+.*                     TN - TYPE                                        05750004
+.*                         LN - LOCKS ETC., 1 THRU 5                    05800004
+.*                                   FCNN - FUNCTION CODE OF 00 OR 01   05850004
+.*                                        NP - NON PREEMPTIBLE          05851004
+.*                                                                      05852002
+.* OUTPUT -                                                             05860002
+.*       THE GLOBALS SET ARE -                                          05900002
+.*             &SGSVCFA(1-255) - SVC FUNCTION CODE                      06050002
+.*             &SGQUITB - QUIT SWITCH                                   06100002
+.*             &SGSVCAB - SVC TYPE DESIGNATOR -                         06150002
+.*             &SGSVCBB - SVC TYPE DESIGNATOR -                         06200002
+.*             &SGSVCCB - SVC TYPE DESIGNATOR -                         06250002
+.*             &SGSVC1B - LOCK DESIGNATOR -                             06260002
+.*             &SGSVC2B - LOCK DESIGNATOR -                             06262002
+.*             &SGSVC3B - LOCK DESIGNATOR -                             06270002
+.*             &SGSVC4B - LOCK DESIGNATOR -                             06280002
+.*             &SGSVC5B - LOCK DESIGNATOR -                             06290002
+.*             &SGSVNPB - NON PREEMPIBLE DESIGNATOR -                   06291004
+.*                                                                      06292002
+.*       THE LOCALS USED ARE -                                          06294002
+.*             &I  - INDEX TO OPERAND                                   06298002
+.*             &J  - INDEX TO CHARACTER OF OPERAND                      06298402
+.*             &K  - BOX FOR SVC NUMBER                                 06298802
+.*             &L  - NUMERIC FOR TYPE                                   06299204
+.*             &N  - POINTER TO FIRST SVC CHARACTER                     06299602
+.*             &P  - POINTER TO FIRST TYPE CHARACTER                    06299702
+.*             &T  - BOX FOR TYPE NUMBER                                06299802
+.*             &CT - COUNT OF CHARACTERS                                06299904
+.*             &U  - &J+1                                               06349902
+.*             &A  - CHARACTER FOR TYPE                                 06359904
+.*             &C  - SVC NUMBER                                         06369902
+.*             &D  - VALUE FOR ERROR MESSAGE                            06379902
+.*                                                                      06389902
+.* EXIT, NORMAL - N/A                                                   06391902
+.*                                                                      06393902
+.* EXIT, ERROR - N/A                                                    06395902
+.*                                                                      06397902
+.* EXTERNAL REFERENCES - N/A                                            06398302
+.*                                                                      06398702
+.* TABLES - N/A                                                         06399102
+.*                                                                      06399502
+.* MACROS - NONE                                                        06399602
+.*                                                                      06399702
+.* CHANGE ACTIVITY -                                                    06399802
+.*    SD CODES Y02036,Z40FSVN                                           06449804
+.*                                                                      06459802
+.**** END OF SPECIFICATIONS *****************************************   06469802
+.L1      AIF   (N'&SYSLIST EQ 0).M1     ERROR EXIT FOR NO OPERANDS.     06499804
+&I       SETA  &I+1                     SET INDEX TO OPERAND.           07200004
+&J       SETA  0                        INDEX TO CHAR OF OPERAND.       09000004
+&CT      SETA  K'&SYSLIST(&I)           COUNT OF CHARACTERS             09050004
+.L2      AIF   (&J+1 GT &CT).M2         ERROR END OF OPERAND.           09900004
+&J       SETA  &J+1                     BUMP CHARACTER INDEX.           10800004
+         AIF   ('&SYSLIST(&I)'(&J,1) NE '-').L2  LOOK FOR MINUS.        11700002
+&N       SETA  &J+1                     SET PTR TO 1ST SVC CHAR.        12600004
+.L3      AIF   (&J+1 GT &CT).M2         ERROR END OF OPERAND.           13500004
+&J       SETA  &J+1                     BUMP CHARACTER INDEX.           14400004
+         AIF   ('&SYSLIST(&I)'(&J,1) GE '0' AND '&SYSLIST(&I)'(&J,1) LE115300002
+                '9').L3                 GO BACK IF CHAR IN RANGE.       16200004
+         AIF   ('&SYSLIST(&I)'(&J,1) NE '-').M2  ERROR INVALID CHAR.    17100002
+         AIF   (&J-&N GT 3).M2                                          18000002
+&C       SETC  '&SYSLIST(&I)'(&N,&J-&N) SET SVC NO. IN "C" BOX.         18900004
+&K       SETA  &C                       PUT SVC NUMBER IN "A" BOX.      19800004
+         AIF   (&K LT 1 OR &K GT 255).M3  SVC OUT OF RANGE              20700004
+.R4      ANOP                                                           21600002
+&P       SETA  &J+2                     POINT TO 1ST TYPE CHARACTER.    22500004
+&J       SETA  &J+1                     BUMP CHARACTER INDEX.           23400004
+.L4      AIF   (&J+1 GT &P).L5                                          24300002
+&J       SETA  &J+1                     BUMP CHARACTER INDEX.           25200004
+         AIF   ('&SYSLIST(&I)'(&J,1) GE '0' AND '&SYSLIST(&I)'(&J,1) LE126100002
+                '6').L4                 GO BACK IF CHAR OK      Z40FSVN 27000004
+.L5      ANOP                                                           27900002
+&U       SETA  &J+1                                                     28800002
+         AIF   (&P NE &U).N4                                            29700002
+&D       SETC  '&SYSLIST(&I)'(&P,1)     SET VALUE FOR ERROR MSG         30600004
+         AGO   .M4                                                      31500002
+.N4      ANOP                                                           32400002
+         AIF   (&U-&P GT 1).M2                                          33300002
+&D       SETC  '&SYSLIST(&I)'(&P,&U-&P)   SET TYPE NO. IN "C" BOX.      34200004
+&T       SETA  &D                       PUT TYPE IN "A" BOX.            35100004
+         AIF   (&CT EQ &J).R6           CHECK FOR LAST CHARACTER        35150004
+&J       SETA  &J+1                     BUMP COUNT                      35200002
+.R5      ANOP                                                           36000002
+         AIF   ('&SYSLIST(&I)'(&J,2) EQ '-L').LC                        36900002
+         AIF   ('&SYSLIST(&I)'(&J,3) NE '-(L').R6                       37800002
+&J       SETA  &J+1                     UPDATE J FOR THE '('            38700004
+.LC      AIF   (&T EQ 6).ME             NO LOCKS ON TYPE 6      Z40FSVN 39600004
+.R51     ANOP                                                   Z40FSVN 39610004
+&J       SETA  &J+2                                                     39650002
+&A       SETC  '&SYSLIST(&I)'(&J,1)     EXTRACT LOCK NUMBER             40500004
+&L       SETA  &A                       PUT INTO "A" BOX                41400004
+         AIF   ((&L NE 1) AND (&L NE 2) AND (&L NE 3) AND (&L NE 4)    *42300002
+               AND (&L NE 5)).M9                                        42350002
+.R55     AIF   (((&T EQ 3) OR (&T EQ 4)) AND (&L EQ 4)).MA              43200002
+&SGSVC1B(&K) SETB (&L EQ 1 OR &SGSVC1B(&K))        SET LOCK ONE BIT.    44100002
+&SGSVC2B(&K) SETB (&L EQ 2 OR &SGSVC2B(&K))        SET LOCK TWO BIT.    44150002
+&SGSVC3B(&K) SETB (&L EQ 3 OR &SGSVC3B(&K))        SET LOCK THREE BIT.  45000002
+&SGSVC4B(&K) SETB (&L EQ 4 OR &SGSVC4B(&K))        SET LOCK FOUR BIT.   45900002
+&SGSVC5B(&K) SETB (&L EQ 5 OR &SGSVC5B(&K))        SET LOCK FIVE BIT.   46800002
+.R555    AIF   (&CT EQ &J).R7           CHECK FOR LAST CHARACTER        46850004
+&J       SETA  &J+1                                                     47700002
+         AIF   ('&SYSLIST(&I)'(&J,2) EQ ',L').LC                        48600002
+         AIF   ('&SYSLIST(&I)'(&J,1) NE ')').R7                         49500002
+&J       SETA  &J+1                     UPDATE J FOR THE ')'            50400004
+         AGO   .R7                                                      51300002
+.R6      AIF   (&T NE 1).R7                                             52200002
+&SGSVC1B(&K) SETB   1                   DEFAULT LOCAL LOCK FOR T1       53100004
+.R7      AIF   (&J+1 GT &CT).MB         CHECK FOR END OF STRING         53150004
+         AIF   (&CT-&J LT 4).MB         CHECK FOR 5 CHAR. MIN.  Z40FSVN 53200004
+         AIF   ('&SYSLIST(&I)'(&J,3) NE '-FC').MB               Z40FSVN 54000004
+         AIF   ('&SYSLIST(&I)'(&J+3,2) EQ '01').R8                      54900002
+         AIF   ('&SYSLIST(&I)'(&J+3,2) NE '00').M8                      55800002
+.R8      ANOP                                                           56700002
+&C       SETC  '&SYSLIST(&I)'(&J+3,2)   SET FC IN "C" BOX               57600004
+&SGSVCFA(&K) SETA &C                    PUT FC IN GLOBAL        Z40FSVN 58500004
+&J       SETA  &J+5                     STEP OVER FC OPERAND    Z40FSVN 58501004
+.R82     AIF   (&J+1 GT &CT).R9         CHECK FOR END OF STRING Z40FSVN 58502004
+         AIF   (&CT-&J NE 2).MC         ENOUGH LEFT FOR NP?     Z40FSVN 58503004
+         AIF   ('&SYSLIST(&I)'(&J,3) NE '-NP').MC   NP?         Z40FSVN 58504004
+&SGSVNPB(&K) SETB 1                     TURN ON NP GLOBAL       Z40FSVN 58505004
+.R9      ANOP                                                           59400002
+         AIF   (&N NE 5).M2             NOT ENOUGH CHAR. BEFORE SVC NO. 60300004
+         AIF   ('&SYSLIST(&I)'(1,3) NE 'SVC').M6  NOT "SVC"             61200004
+         AIF   (&K LT 1 OR &K GT 255).L8  DO NEXT               Z40FSVN 62100004
+         AIF   (&SGSVCAB(&K) OR &SGSVCBB(&K) OR &SGSVCCB(&K)).MD MULT   63000002
+&SGSVCAB(&K) SETB ((&T EQ 6) OR (&T EQ 5) OR (&T EQ 4))  4-BIT  Z40FSVN 63900004
+&SGSVCBB(&K) SETB ((&T EQ 6) OR (&T EQ 3) OR (&T EQ 2))  2-BIT  Z40FSVN 64800004
+&SGSVCCB(&K) SETB ((&T EQ 5) OR (&T EQ 3) OR (&T EQ 1))  1-BIT          65700004
+.L8      AIF   (&I+1 LE N'&SYSLIST).L1  GO BACK FOR NEXT OPERAND.       67500002
+         MEXIT                                                          68400002
+.M1 MNOTE 5,'* * * IEISVC101 NO SVC SPECIFIED'                          69300002
+&SGQUITB SETB  1                                                        70200002
+         MEXIT                                                          71100002
+.M2 MNOTE 5,'* * * IEISVC102 OPERAND &I-SYNTAX &SYSLIST(&I) INVALID'    72000002
+&SGQUITB SETB  1                                                        72900002
+         AGO  .L8                                                       73800002
+.M3 MNOTE 5,'* * * IEISVC103 OPERAND &I-SVC VALUE &C INVALID'           74700002
+&SGQUITB SETB  1                                                        75600002
+         AGO  .R4                                                       76500002
+.M4 MNOTE 5,'* * * IEISVC104 OPERAND &I-TYPE VALUE &D INVALID'          77400002
+&SGQUITB SETB  1                                                        78300002
+         AGO  .R5                                                       79200002
+.M6 MNOTE 5,'* * * IEISVC106 OPERAND &I-SVC NOT SPECIFIED'              80100002
+&SGQUITB SETB  1                                                        81000002
+         AGO  .L8                                                       81900002
+.M8 MNOTE 5,'* * * IEISVC108 OPERAND &I-SVC &K FUNCTION CODE NOT 0 OR 1*82800002
+               '                                                        82850002
+&SGQUITB SETB  1                                                        83700002
+         AGO   .R8                      GO TRY IT               Z40FSVN 84600004
+.M9 MNOTE 5,'* * * IEISVC109 OPERAND &I-SVC &K LOCK INDICATOR CODE NOT *85500002
+               VALID '                                                  85550002
+&SGQUITB SETB  1                                                        86400002
+         AGO   .R55                                                     87300002
+.MA MNOTE 5,'* * * IEISVC110 OPERAND &I-SVC &K A TYPE 3 OR TYPE 4 SVC  *88200002
+               MAY NOT HOLD THE SALLOC'                                 89100002
+&SGQUITB SETB  1                                                        90000002
+         AGO   .R555                                                    90900002
+.MB MNOTE 0,'* * * IEISVC111 FOR SVC &K A FUNCTION CODE OF 00 WAS DEFAU*91800002
+               LTED'                                                    91850002
+         AGO   .R82                     GO DO NP                Z40FSVN 92700004
+.MC MNOTE 5,'* * * IEISVC112 OPERAND &I - FUNCTION CODE, LOCK, OR NP HA*92750004
+               S BEEN IMPROPERLY SPECIFIED'                     Z40FSVN 92760004
+         AGO  .R9                                                       92800004
+.MD MNOTE 5,'* * * IEISVC113 OPERAND &I-SVC &K REPEATED'                93600002
+&SGQUITB  SETB  1                                                       94500002
+         AGO  .L8                                                       95400002
+.ME MNOTE 5,'* * * IEISVC114 OPERAND &I-SVC &K-TYPE 6 MAY NOT SPECIFY L*95401004
+               OCKS'                                            Z40FSVN 95402004
+&SGQUITB  SETB  1                                               Z40FSVN 95403004
+         AGO   .R51                                             Z40FSVN 95404004
+         MEND                                                   Z40FSVN 99900004

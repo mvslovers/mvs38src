@@ -1,0 +1,123 @@
+         MACRO                                                          00050000
+      SGIEI1SU                                                          00100000
+         COPY  SGGBLPAK                                                 00150000
+.*                                                                      00260002
+.*       SGIEI1SU IS AN INTERNAL MACRO TO GENERATE. IT IS USED TO       00270002
+.*       VALIDATE SUPERVISOR AND SCHEDULER FUNCTIONS AND TO SET         00280002
+.*       INTER-MACRO DEFAULTS.                                          00290002
+.*                                                                      00292002
+.*       THE GLOBALS USED ARE -                                         00294002
+.*             &GETB(1)    - UNITNAME REQUIRED                          00298437
+.*             &GETB(3)    - I/O SYSGEN                                 00298637
+.*             &SGMENTB(5) - CTRLPROG DEFAULTED                         00298802
+.*             &SGMENTB(6) - SCHEDULR DEFAULTED                         00298902
+.*             &SGMENTB(36)- UNITNAME REQUIRED                          00299037
+.*             &SGMENTB(61)- EDIT MACRO                                 00299137
+.*             &SGMENTB(63)- TSO DEFAULTED                              00299437
+.*             &SGCTRLC(29)- RESVOL DEVICE TYPE                         00299537
+.*             &SGDCLSB(41)- 2314                                       00299602
+.*             &SGDCLSB(69)- 3330                                       00299737
+.*             &SGDCLSB(75)- 2305-1                                     00299837
+.*             &SGDCLSB(76)- 2305-2                                     00299937
+.*             &SGDCLSB(84)- 3340                                       00316602
+.*             &SGDCLSB(22)- 3350                              @ZM41663 00318637
+.*             &SGDMGTB(4) - BTAM                                       00326602
+.*             &SGDMGTB(5) - TCAM                                       00333002
+.*             &SGDMGTB(6) - VTAM; DEFAULTED                    ZM33355 00333203
+.*             &SGSSS2B    - INDUSTRY SUPPORT                   ZM33355 00333303
+.*             &SGDSDFB(13)- VTAMLIB DEFINED                    ZM33355 00333403
+.*             &SGSCHDA(13)- BLCMT                                      00333503
+.*             &SGSCHDB(8) - CRJE                                       00333737
+.*             &SGQUITB    - QUIT SWITCH                                00338802
+.*                                                                      00339237
+.*                                                                      00340037
+.*                                                                      00340802
+.*                                                                      00342003
+.* CHANGE ACTIVITIES -- Z30RSTA,OZ03665,ZM33355                         00342237
+.*                      ZM41663                                         00342837
+.*                      Z40DSVN                                         00342904
+.*                                                                      00344303
+.***********************************************.                       00344402
+.***     CHECK FOR MINIMUM MACRO SPECS       ***.                       00350000
+.***********************************************.                       00400000
+*                                                                       00730002
+          AIF   (&SGMENTB(36) OR &GETB(1)).D00  UNITNAME CHECK          00750002
+    MNOTE 5,'* * * IEIGEN400 UNITNAME MACRO REQUIRED'                   00800000
+&SGQUITB SETB  1                                                        00850000
+.***********************************************.                       00900000
+.***     DEFAULT IF SOME MACROS NOT SPEC'D   ***.                       00950000
+.***********************************************.                       01000000
+.D00     AIF   (&SGMENTB(5)).A36          CTRLPROG SPECIFIED            01050002
+*                                                                       01100000
+    MNOTE 0,'* * * IEIGEN940 CTRLPROG MACRO DEFAULTED  '                01150000
+    MNOTE *,'       CTRLPROG    '                                       01200000
+         CTRLPROG                                                       01250000
+.A36     AIF   (&SGMENTB(6)).GEN          SCHEDULR SPECIFIED            01260002
+*                                                                       01270002
+    MNOTE 0,'* * * IEIGEN944 SCHEDULR MACRO DEFAULTED'          Z40DSVN 01280004
+    MNOTE *,'       SCHEDULR    '                                       01290002
+         SCHEDULR                                                       01292002
+*                                                                       01300002
+.GEN     AIF   (&SGMENTB(63)).ALLDEF       TSO SPECIFIED                01360002
+*                                                                       01370002
+    MNOTE 0,'* * * IEIGEN941 TSO MACRO DEFAULTED'               Z40DSVN 01380004
+    MNOTE *,'       TSO    '                                            01390002
+         TSO                                                            01392002
+*                                                                       01394002
+.ALLDEF     ANOP                                                        01396002
+.***********************************************.                       01400002
+.***     CHECK GENERATE COMPATIBILITY        ***.                       01450002
+.***********************************************.                       01500002
+         AIF   ('&SGCTRLC(29)'EQ'2314'   AND &SGDCLSB(41)).SCH          01550004
+         AIF   ('&SGCTRLC(29)'EQ'2305-1' AND &SGDCLSB(75)).SCH          01600002
+         AIF   ('&SGCTRLC(29)'EQ'2305-2' AND &SGDCLSB(76)).SCH          01650002
+         AIF   ('&SGCTRLC(29)'EQ'3330'   AND &SGDCLSB(69)).SCH          01700004
+         AIF   ('&SGCTRLC(29)'EQ'3340'   AND &SGDCLSB(84)).SCH          01750004
+         AIF   ('&SGCTRLC(29)'EQ'3330-1' AND &SGDCLSB(85)).SCH          01760002
+         AIF   ('&SGCTRLC(29)'EQ'3350'   AND &SGDCLSB(22)).SCH @ZM41663 01770004
+         AIF   ('&SGCTRLC(29)' EQ '3380' AND &SGGENDB(103)).SCH  MVS38J 01770006
+         AIF   ('&SGCTRLC(29)' EQ '3390' AND &SGGENDB(104)).SCH  MVS38J 01770008
+         AIF   ('&SGCTRLC(29)' EQ '3375' AND &SGGENDB(105)).SCH  MVS38J 01770010
+    MNOTE 5,'* * * IEIGEN401 INVALID DEVICE TYPE FOR RESVOL SPECIFIED I*01800002
+               N GENERATE MACRO - DEVICE SPECIFIED NOT IN SYSTEM'       01850002
+&SGQUITB SETB  1                                                        01900002
+*                                                                       02550000
+.SCH     ANOP                                                           03150002
+.***********************************************.                       04300000
+.***     CHECK SCHEDULER COMPATIBILITY       ***.                       04350000
+.***********************************************.                       04400000
+         AIF   (&SGDMGTB(4) OR NOT &SGSCHDB(8)).SCEND  CRJE OR BTAM     04450002
+&SGDMGTB(4) SETB 1                      ACSMETH=BTAM DEFAULTED          04500000
+    MNOTE 0,'* * * IEIGEN942 ACSMETH=BTAM DEFAULTED TO SUPPORT CRJE' ** 04550000
+.SCEND   ANOP                                                   OZ03665 05700037
+.***********************************************.               ZM33355 06420003
+.***     INDUSTRY COMPATIBILITY              ***.               ZM33355 06430003
+.***********************************************.               ZM33355 06440003
+         AIF (&SGDMGTB(6) OR NOT &SGSSS2B).INO  VTAM; IND=NO    Z40DSVN 06450004
+&SGDMGTB(6) SETB 1                      SET VTAM ON             ZM33355 06460003
+ MNOTE 0,'* * * ACSMETH=VTAM DEFAULTED TO SUPPORT IND=YES'      ZM33355 06470003
+         AIF   (&SGDSDFB(13)).INO       VTAMLIB DEFINED         ZM33355 06480003
+ MNOTE 0,'VTAMLIB NOT SPECIFIED.  ASSUMED PREALLOCATED ON RESVOL'      *06490003
+                                                                ZM33355 06500003
+.INO     ANOP                                                   ZM33355 06600004
+.***********************************************.                       06700004
+.***     TSO COMPATIBILITY                   ***.                       06800004
+.***********************************************.                       06900004
+         AIF   ('&SGCMDSC(1)' NE 'YES').TSN TSO NOT SPECIFIED?  Z40DSVN 07000004
+         AIF   (&SGDMGTB(5) OR &SGDMGTB(6)).TSA    TCAM OR VTAM Z40DSVN 07100004
+&SGQUITB SETB 1                NEITHER, QUIT                    Z40DSVN 07200004
+ MNOTE 5,'* * * IEIGEN952 NO ACCRESS METHOD SPECIFIED FOR TSO'  Z40DSVN 07300004
+.TSA     AIF   (&SGSCHDA(13) NE 0).TSC                          Z40DSVN 07400004
+&SGSCHDA(13) SETA 100        DEFAULT BCLMT                      Z40DSVN 07500004
+ MNOTE *,'    SYS1.BRODCAST WILL DEFAULT ROOM FOR &SGSCHDA(13)  NOTICE X07600004
+               MESSAGES'                                        Z40DSVN 07700004
+.TSC     AIF   (&SGMENTB(61)).TSY       BIF EDIT SPECIFIED      Z40DSVN 07800004
+    MNOTE *,'* * * IEIGEN943 EDIT DEFAULTED FOR TSO'            Z40DSVN 07900004
+         EDIT                                                           08000004
+         AGO   .TSY                     CONTINUE                Z40DSVN 08100004
+.TSN     ANOP                                                   Z40DSVN 08200004
+         AIF   (NOT &SGMENTB(61)).TSY   EDIT SPECIFIED?         Z40DSVN 08300004
+    MNOTE 5,'* * * IEIGEN951 EDIT SPECIFIED WITHOUT TSO'        Z40DSVN 08400004
+&SGQUITB SETB 1                         SET QUIT BIT            Z40DSVN 08500004
+.TSY     ANOP                                                   Z40DSVN 08600004
+         MEND                                                   Z40DSVN 99000004

@@ -1,0 +1,189 @@
+* /*                                                                 */ 00002002
+* /* MACOMP Y-2 SC1DE/SJD61                                          */ 00004002
+* /* MACSTAT Y-2 73222/Y02020                                        */ 00006002
+* /*                                                                 */ 00008002
+         MACRO                                                          00010002
+         SGIGG500                                                       00020002
+         COPY  SGGBLPAK                                                 00030002
+.* /* START OF SPECIFICATIONS ****                                      00050002
+.*                                                                      00100002
+.*01  MODULE-NAME = SGIGG500                                            00150002
+.*                                                                      00250002
+.*01  DESCRIPTIVE-NAME = MASTER CATALOG DISCONNECT                      00300002
+.*                                                                      00350002
+.*01  COPYRIGHT = NONE                                                  00400002
+.*                                                                      00450002
+.*01  STATUS = NEW                                                      00500002
+.*                                                                      00550002
+.*01  FUNCTION = THIS MACRO CAUSES THE TARGET SYSTEM MASTER CATALOG TO  00600002
+.*    BE DICONNECTED(EXPORTED) FROM THE STARTER SYSTEM AT THE END OF    00610002
+.*    STAGE II. IT ALS CAUSES A MEMBER (SYSCATLG) TO BE CREATED IN THE  00620002
+.*    TARGET SYSTEMS SYS1.NUCEUS DATA SET(THIS MEMBER ALLOWS THE MASTER 00630002
+.*    CATALOG TO BE FOUND AT IPL TIME.).                                00640002
+.*                                                                      00650002
+.*01  NOTES = NONE                                                      00700002
+.*                                                                      00750002
+.*02    CHARACTER-CODE-DEPENDENCIES = NONE                              00800002
+.*                                                                      00850002
+.*02    DEPENDENCIES = NONE                                             00900002
+.*                                                                      00950002
+.*02    RESTRICTIONS = NONE                                             01000002
+.*                                                                      01050002
+.*02    REGISTER-CONVENTIONS = N/A                                      01100002
+.*                                                                      01150002
+.*02    PATCH-LABEL = N/A                                               01200002
+.*                                                                      01250002
+.*01  MODULE-TYPE = MACRO                                               01300002
+.*                                                                      01310002
+.*02    PROCESSOR = ASSEM-370R                                          01320002
+.*                                                                      01342002
+.*02    MACRO-SIZE = 50 STATEMENTS                                      01344002
+.*                                                                      01346002
+.*02    PARAMETER-RECEIVED = COPY OF SCGBLPAK                           01348002
+.*                                                                      01348802
+.*02    EXTERNAL-REFERENCES = N/A                                       01349202
+.*                                                                      01349602
+.*02    ROUTINES = N/A                                                  01349702
+.*                                                                      01349902
+.*02    DATA-SETS = N/A                                                 01366602
+.*                                                                      01378602
+.*02    DATA-AREA = N/A                                                 01380602
+.*                                                                      01383002
+.*01  TABLES = SCGBLPAK                                                 01383102
+.*                                                                      01388802
+.*01  INNER-MACROS = NONE                                               01390802
+.*                                                                      01393202
+.*01  SYSTEM-MACROS = NONE                                              01393602
+.*                                                                      01394402
+.*01  CHANGE-ACTIVITY = @Z30RSTA                               @Z30RSTA 01400030
+.*                                                                      01450002
+.*02    A = NONE                                                        01500002
+.*                                                                      01600002
+.*02    D = NONE                                                        01650002
+.*                                                                      01750002
+.*02    C = NONE                                                        01800002
+.*                                                                      01900002
+.**** END OF SPECIFICATIONS ***/                                        01950002
+         LCLC  &UNIT,&VOL,&LINE,&UNITNUC                                10050002
+         LCLA  &BLKSIZ                                                  10060002
+.* DETERMINE UNIT AND VOLUME FOR MASTER CATALOGUE IF NOT SPECIFIED GOES 10100002
+.* ON SYSRES                                                            10150002
+&UNIT    SETC  '&SGDSUNC(15)'                                           10200002
+&UNITNUC SETC  '&SGDSUNC(17)'                                           10230002
+&VOL     SETC  '&SGDSVLC(15)'                                           10250002
+         AIF   ('&UNIT' NE '').UNITOK   CHECK IF UNIT SPECIFIED         10300002
+&UNIT    SETC  '&SGCTRLC(29)'           USE SYSTEM UNIT                 10350002
+.UNITOK  ANOP                                                           10400002
+         AIF   ('&VOL' NE '').VOLOK     CHECK IF VOLUME SPECIFIED       10450002
+&VOL     SETC  '&SGCTRLC(30)'           USE SYSTEM VOLUME               10500002
+.VOLOK   ANOP                                                           10550002
+.D1      AIF   ('&UNITNUC' NE '2314').D2                                10560002
+&BLKSIZ  SETA  7294                                                     10570002
+         AGO   .D6                                                      10580002
+.D2 AIF ('&UNITNUC' NE '3330' AND '&UNITNUC' NE '3330-1').D3            10590002
+&BLKSIZ  SETA  13030                                                    10592002
+         AGO   .D6                                                      10594002
+.D3      AIF   ('&UNITNUC' NE '2305-1').D4                              10596002
+&BLKSIZ  SETA  14136                                                    10598002
+         AGO   .D6                                                      10598402
+.D4      AIF   ('&UNITNUC' NE '2305-2').D5                              10598802
+&BLKSIZ  SETA  14660                                                    10599202
+         AGO   .D6                                                      10599602
+.D5      ANOP                                                    MVS38J 10599650
+         AIF ('&UNITNUC' NE '3380').D3390 +3380 ??               MVS38J 10599660
+&BLKSIZ  SETA 19069                       +SET MAX BLKSIZE       MVS38J 10599670
+         AGO  .D6                         +  GET OUT             MVS38J 10599680
+.D3390   AIF  ('&UNITNUC' NE '3390').D3340                       MVS38J 10599690
+&BLKSIZE SETA 32760                       +SET MAX BLKSIZE       MVS38J 10599700
+         AGO  .D6                                                MVS38J 10599702
+.D3340   ANOP                                                    MVS38J 10599820
+         AIF   ('&UNITNUC' NE '3340').D3375                      MVS38J 10599830
+&BLKSIZ  SETA  8368                                                     10611030
+         AGO   .D6                                                      10613030
+.D3375   AIF   ('&UNITNUC' NE '3375').D59                        MVS38J 10614000
+&BLKSIZE SETA  32760                       +SET MAX BLKSIZE      MVS38J 10614100
+         AGO   .D6                                               MVS38J 10614200
+.D59     AIF   ('&UNITNUC' NE '3350').UNDEV                    @Z30RSTA 10615030
+&BLKSIZ  SETA  19069                                           @ZM40406 10615430
+         AGO   .D6                                             @Z30RSTA 10615830
+.D6      ANOP                                                           10616602
+         PUNCH '//STEPY EXEC PGM=IDCAMS,REGION=512K'                    10633302
+         PUNCH '//SYSPRINT DD SYSOUT=&SGCTRLC(41)'                      10650002
+         PUNCH '//CATLG DD DSNAME=&SGVSNMC.,'                           10700002
+         PUNCH '// UNIT=&UNIT.,VOL=SER=&VOL.,DISP=OLD'                  10750002
+         PUNCH '//SYSIN DD *'                                           10800002
+         PUNCH '         EXPORT -'                                      10850002
+         PUNCH '         &SGVSNMC. -'                                   10900002
+         PUNCH '         DISCONNECT;'                                   11000002
+         PUNCH '//STEPZ1 EXEC PGM=IEHPROGM'                             11010002
+         PUNCH '//DD2 DD DISP=OLD,'                                     11020002
+         PUNCH '// VOL=SER=&SGDSVLC(17).,UNIT=&SGDSUNC(17).'            11030002
+         PUNCH '//SYSPRINT DD SYSOUT=&SGCTRLC(41)'                      11040002
+         PUNCH '//SYSIN DD *'                                           11042002
+         PUNCH '         SCRATCH DSNAME=SYS1.NUCLEUS,VOL=&SGDSUNC(17).=*11044002
+               &SGDSVLC(17).,MEMBER=SYSCATLG'                           11046002
+         PUNCH '/*'                                                     11048002
+         PUNCH '//STEPZ2 EXEC PGM=IEBGENER'                             11050002
+         PUNCH '//SYSIN DD DUMMY'                                       11060002
+         PUNCH '//SYSUT2 DD DSN=SYS1.NUCLEUS(SYSCATLG),'                11100002
+         PUNCH '// DISP=(MOD,KEEP),DCB=(BLKSIZE=&BLKSIZ),'              11120002
+         PUNCH '// VOL=SER=&SGDSVLC(17).,UNIT=&SGDSUNC(17).'            11150002
+         PUNCH '//SYSPRINT DD SYSOUT=&SGCTRLC(41)'                      11200002
+         PUNCH '//SYSUT1 DD *'                                          11250002
+&LINE    SETC  '&VOL'.'      '                                          11350002
+&LINE    SETC  '&LINE'(1,6).' '                                         11400002
+         AIF   ('&UNIT' NE '2314').N2314                                11450002
+&LINE    SETC  '&LINE'.'ó'                                              11500002
+         AGO   .END                                                     11550002
+.N2314   ANOP                                                           11600002
+         AIF   ('&UNIT' NE '3330').N3330                                11650002
+&LINE    SETC  '&LINE'.'ç'                                              11700002
+         AGO   .END                                                     11750002
+.N3330   ANOP                                                           11800002
+         AIF   ('&UNIT' NE '2305-1').N23051                             11850002
+&LINE    SETC  '&LINE'.'Ü'                                              11900002
+         AGO   .END                                                     11950002
+.N23051  ANOP                                                           12000002
+         AIF   ('&UNIT' NE '2305-2').N23052                             12050002
+&LINE    SETC  '&LINE'.''                                              12100002
+         AGO   .END                                                     12150002
+.N23052  ANOP                                                           12200002
+         AIF   ('&UNIT' NE '3330-1').N33301                             12250002
+&LINE    SETC  '&LINE'.''                                              12300002
+         AGO   .END                                                     12350002
+.N33301  ANOP                                                           12400002
+         AIF ('&UNIT' NE '3380').N3380    +3380 ??               MVS38J 12420000
+         MNOTE *,'SGIGG500 - 3380 untested - MVS38J'             MVS38J 12421000
+         CONVERT TO=EBCDIC,DIGITS=1,VALUE=0E                     MVS38J 12422000
+&LINE    SETC '&LINE'.'&EBCDIC'           +  YES - APPEND X'0E'  MVS38J 12423000
+         AGO  .END                        +         AND LEAVE    MVS38J 12424000
+.N3380   ANOP                             +  NO - CHECK NEXT     MVS38J 12425000
+         AIF ('&UNIT' NE '3390').N3390    3390?                  MVS38J 12430000
+         MNOTE *,'SGIGG500 - 3390 untested - MVS38J'             MVS38J 12431000
+         CONVERT TO=EBCDIC,DIGITS=1,VALUE=0F                     MVS38J 12432000
+&LINE    SETC '&LINE'.'&EBCDIC'           yes, append x'0F'      MVS38J 12433000
+         AGO  .END                                               MVS38J 12434000
+.N3390   ANOP                                                    MVS38J 12435000
+         AIF ('&UNIT' NE '3375').N3375    +3375 ??               MVS38J 12440000
+         MNOTE *,'SGIGG500 - 3375 sysres untested - MVS38J'      MVS38J 12441000
+         CONVERT TO=EBCDIC,DIGITS=1,VALUE=0C                     MVS38J 12442000
+&LINE    SETC '&LINE'.'&EBCDIC'           +  YES - APPEND X'0C'  MVS38J 12443000
+         AGO  .END                        +         AND LEAVE    MVS38J 12444000
+.N3375   ANOP                             +  NO - CHECK NEXT     MVS38J 12445000
+         AIF   ('&UNIT' NE '3340').N3340                                12450002
+&LINE    SETC  '&LINE'.'é'                                              12500002
+         AGO   .END                                                     12550002
+.N3340   ANOP                                                  @Z30RSTA 12560030
+         AIF   ('&UNIT' NE '3350').UNDEV                       @Z30RSTA 12570030
+.*       HEX '0B' LAST DIGIT OF DEVICE CODE(12-3-8-9 PUNCH)    @Z30RSTA 12572030
+&LINE    SETC  '&LINE'.''                                     @Z30RSTA 12582030
+         AGO   .END                                            @Z30RSTA 12622030
+.*                                                             @Z30RSTA 12624030
+.UNDEV   MNOTE 12,'UNKNOWN DEVICE SPECIFIED FOR SYSRES OR CATALOGUE'    12632030
+.END     ANOP                                                           12650002
+&LINE    SETC  '&LINE'.'  '.'&SGVSNMC'.'                               *12700002
+                           '                                            12710002
+&LINE    SETC  '&LINE'(1,54).'                          '               12750002
+         PUNCH '&LINE'                                                  12800002
+         PUNCH '/*'                                                     12900002
+         MEND                                                           12950002

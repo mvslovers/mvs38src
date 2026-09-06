@@ -1,0 +1,17 @@
+         MACRO                                                          03000002
+         SGIKJ5EG                                                       06000002
+.********************************************************************   09000002
+.********** THIS MACRO PRODUCES THE CONTROL CARDS NECESSARY TO ******   12000002
+.********** COPY MODULES NEEDED FOR THE TEST COMMAND IN TSO    ******   15000002
+.********** DURING SYSGEN.                                     ******   18000002
+.********************************************************************   33000002
+ PUNCH  '  COPY OUTDD=CMDLIB,INDD=ACMDLIB'                              69000002
+ PUNCH  '   SELECT MEMBER=(IKJEGLDR,IKJEGQFY,IKJEGSYM,IKJEGAT)'         72000002
+ PUNCH  '   SELECT MEMBER=(IKJEGLST,IKJEGLSA)'                          75000002
+ PUNCH  '   SELECT MEMBER=(IKJEGMAP,IKJEGWHR,IKJEGOFF,IKJEGTCB)'        78000002
+ PUNCH  '   SELECT MEMBER=(IKJEGDEB,IKJEGPSW,IKJEGDCB,IKJEGEQU)'        81000002
+ PUNCH  '   SELECT MEMBER=(IKJEGGO,IKJEGRUN,IKJEGCAL,IKJEGDRP)'         84000002
+ PUNCH  '   SELECT MEMBER=(IKJEGLDF,IKJEGLOD,IKJEGDEL,IKJEGATD)'        87000002
+ PUNCH  '   SELECT MEMBER=(IKJEGGET,IKJEGFRE,IKJEGCPY)'                 90000002
+ PUNCH  '   SELECT MEMBER=(IKJEGEND,IKJEGCIV)'                          93000002
+         MEND                                                           99000002

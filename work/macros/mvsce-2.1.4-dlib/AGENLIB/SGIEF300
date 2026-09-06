@@ -1,0 +1,12 @@
+         MACRO                                                          00450001
+         SGIEF300                                                       00500001
+.*  STATUS - OS/VS2 SYSTEM CONTROL PROGRAM 2                   @G64QPSJ 00500564
+.*                                                             @YM00792 00509564
+.*                                                             @YM02447 00518564
+ PUNCH ' INCLUDE AOSB3(IEFAQTOP) '                             @G64QPSJ 00527564
+ PUNCH ' INCLUDE AOSB3(IEEBASEC,IEFDPOST)'                       Y02953 00550002
+ PUNCH ' INCLUDE AOSB3(IEFATECB)'                                Y02953 00600002
+ PUNCH ' INCLUDE AOSB3(IEFJESDM)'                              @YM00792 00650002
+ PUNCH ' INCLUDE AOSB3(IEFAB438)'                                Y02953 00660002
+ PUNCH ' INCLUDE AOSB3(IGC111)'                                @YM02447 00680002
+.MACEND  MEND                                                           00700001

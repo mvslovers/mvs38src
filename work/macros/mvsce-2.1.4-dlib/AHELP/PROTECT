@@ -1,0 +1,53 @@
+)F FUNCTION -                                                           01000020
+  THE PROTECT COMMAND IS USED TO CREATE, MODIFY, OR REMOVE THE          02000020
+  PROTECTION ATTRIBUTES OF NEW AND OLD DATA SETS.                       03000020
+)X SYNTAX -                                                             04000020
+         PROTECT   'DSNAME'  ADD('PASSWORD2')/                          05000020
+                             REPLACE('PASSWORD1','PASSWORD2')/          06000020
+                             DELETE('PASSWORD1')/                       07000020
+                             LIST('PASSWORD1')                          08000020
+                             PWREAD/NOPWREAD  PWWRITE/NOWRITE           09000020
+                             DATA(''STRING'')                           10000020
+  REQUIRED - 'DSNAME'                                                   11000020
+  DEFAULTS - ADD                                                        12000020
+)O OPERANDS -                                                           13000020
+  'DSNAME' - NAME OF DATA SET TO BE PROTECTED.                          14000020
+))ADD('PASSWORD2')                                                      15000020
+           - SPECIFIES THAT AN ENTRY FOR THE DATA SET IS TO BE ADDED TO 16000020
+             THE PASSWORD DATA SET.                                     17000020
+    'PASSWORD2'                                                         18000020
+           - IS THE NEW PASSWORD FOR THIS PASSWORD DATA SET ENTRY       19000020
+))REPLACE('PASSWORD1','PASSWORD2')                                      20000020
+           - SPECIFIES THAT AN ENTRY FOR THE DATA SET IS TO BE CHANGED  21000020
+             IN THE PASSWORD DATA SET.                                  22000020
+    'PASSWORD1'                                                         23000020
+           - IS THE OLD OR CURRENT PASSWORD FOR THIS PASSWORD DATA SET  24000020
+             ENTRY                                                      25000020
+    'PASSWORD2'                                                         26000020
+           - IS THE NEW PASSWORD FOR THIS PASSWORD DATA SET ENTRY       27000020
+))DELETE('PASSWORD1')                                                   28000020
+           - SPECIFIES THAT AN ENTRY FOR THE DATA SET IS TO BE REMOVED  29000020
+             FROM THE PASSWORD DATA SET.                                30000020
+    'PASSWORD1'                                                         31000020
+           - IS THE OLD OR CURRENT PASSWORD FOR THIS PASSWORD DATA SET  32000020
+             ENTRY                                                      33000020
+))LIST('PASSWORD1')                                                     34000020
+           - SPECIFIES THAT THE SECURITY COUNTER, ACCESS TYPE, AND THE  35000020
+             USER DATA FOR THIS ENTRY ARE TO BE LISTED.                 36000020
+    'PASSWORD1'                                                         37000020
+           - IS THE OLD OR CURRENT PASSWORD FOR THIS PASSWORD DATA SET  38000020
+             ENTRY.                                                     39000020
+))PWREAD   - INDICATES THAT THE DATA SET CAN BE READ ONLY WHEN THE      40000020
+             PASSWORD IS SUPPLIED.                                      41000020
+))NOPWREAD - INDICATES THAT THE DATA SET CAN BE READ WITHOUT A          42000020
+             PASSWORD.                                                  43000020
+))PWWRITE  - INDICATES THAT THE DATA SET CAN BE WRITTEN ONLY WHEN THE   44000020
+             PASSWORD IS SUPPLIED.                                      45000020
+))NOWRITE  - INDICATES THAT THE DATA SET CAN NOT BE WRITTEN             46000020
+))DATA(''STRING'')                                                      47000020
+           - INDICATES THAT THE INFORMATION ''STRING'' IS TO BE ADDED   48000020
+             TO THE PASSWORD DATA SET ENTRY.                            49000020
+    ''STRING''                                                          50000020
+           - SPECIFIES UP TO 77 BYTES OF CHARACTER INFORMATION ENCLOSED 51000020
+             IN SINGLE QUOTES WHICH IS TO BE ADDED TO THE PASSWORD DATA 52000020
+             SET ENTRY.                                                 53000020

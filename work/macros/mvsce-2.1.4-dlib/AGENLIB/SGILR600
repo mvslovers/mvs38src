@@ -1,0 +1,190 @@
+          MACRO                                                         01000000
+          SGILR600                                                      02000000
+.*                                                                      02050040
+.*A-000000-999999                                              @Z40WPWN 03000040
+.* /* START OF SPECIFICATIONS ****                                      04000000
+.*                                                                      05000000
+.*01  MODULE-NAME = SGILR600                                            06000000
+.*                                                                      07000000
+.*01  DESCRIPTIVE-NAME = ASM DATA SET SYSGEN MACRO                      08000000
+.*                                                                      09000000
+.*01  STATUS = OS/VS2 RELEASE 4.1                                       10000040
+.*                                                                      11000000
+.*01  FUNCTION = SGILR600 CAUSES SYS1.STGINDEX,PAGE,SWAP,AND DUPLEX     12000040
+.*               DATASETS TO BE ALLOCATED AND CATALOGED IN THE VSAM     13000000
+.*               MASTER CATALOG.                                        14000000
+.*                                                                      15000000
+.*01  OPERATION = VIA THE ASSEMBLER PUNCH COMMAND, A JOB STEP IS        16000000
+.*               STGINDEX DATA SET:                                     16050040
+.*                GENERATED INVOKING THE AMS UTILITY.  A DEFINE COMMAND 17000000
+.*                AND ASSOCIATED PARAMETERS IS GENERATED FOR EACH       18000000
+.*                DATA SET TO BE CREATED.  MACRO OUTPUT IS GOVERNED BY  19000000
+.*                THE USER VIA THE 'DATASET' INSTALLATION MACRO.        20000000
+.*                                                                      21000000
+.*01  MODULE-TYPE = MACRO                                               22000000
+.*02    PROCESSOR = ASSEMBLER XF                                        23000000
+.*02    MACRO-SIZE = 85 STATEMENTS                                      24000040
+.*                                                                      25000000
+.*01  INPUT = GLOBAL SYMBOLS DEFINED BY THE SGGBLPAK MODULE             26000000
+.*                                                                      26030040
+.*            GLOBAL ASSIGMENTS:                                        26060040
+.*              STGINDEX DATA SET:                                      26090040
+.*               &SGCTRLC(40)     VALUE OF INDEX PARAMETER  INDEX=      26120040
+.*               &SGDSPSA(14)     PRIMARY SPACE TO BE ALLOCATED         26150040
+.*               &SGDSVLC(14)     VOLUME SERIAL OF DEVICE               26210040
+.*               &SGDSUNC(14)     DEVICE TYPE                           26240040
+.*              PAGE DATA SET:                                          26270040
+.*                X RUNS FROM 1 TO 25                                   26300040
+.*               &SGPAGDC(X)      NAME OF PAGE DATA SET                 26330040
+.*               &SGPGSPA(X)      PRIMARY SPACE TO BE ALLOCATED         26360040
+.*               &SGPGVLC(X)      VOLUME SERIAL OF DEVICE               26390040
+.*               &SGPGUNC(X)      DEVICE TYPE                           26420040
+.*              SWAP DATA SET:                                          26450040
+.*                 X RUNS FROM 1 TO 10                                  26480040
+.*               &SGSWPDC(X)      NAME OF A SWAP DATA SET               26510040
+.*               &SGSWSPA(X)      PRIMARY SPACE TO BE ALLOCATED         26540040
+.*               &SGSWVLC(X)      VOLUME SERIAL OF DEVICE               26570040
+.*               &SGSWUNC(X)      DEVICE TYPE                           26600040
+.*              DUPLEX DATA SET:                                        26630040
+.*               &SGDUPXC         NAME OF DUPLEX DATA SET               26660040
+.*               &SGDSPSA(22)     PRIMARY SPACE TO BE ALLOCATED         26690040
+.*               &SGDSVLC(22)     VOLUME SERIAL OF DEVICE               26720040
+.*               &SGDSUNC(22)     DEVICE TYPE                           26750040
+.*                                                                      27000000
+.*01  OUTPUT = IF THE USER SPECIFIED THE 'DATASET' MACRO FOR STGINDEX   28000000
+.*             AND/OR ANY PAGING DATA SET WITH THE SPACE= PARAMETER,    29000000
+.*             THEN THE JOB STEP IS OUTPUT TO ALLOCATE AND CATALOG THE  30000000
+.*             SPECIFIED DATA SETS, OTHERWISE NO OUTPUT IS GENERATED.   31000000
+.*                                                                      32000000
+.*01  INNER-MACRO = SGGBLPAK - DEFINE SYSTEM GLOBALS                    33000000
+.*                                                                      34000000
+.*01  MESSAGES = NONE                                                   35000000
+.*                                                                      36000000
+.**** END OF SPECIFICATIONS ***/                                        37000000
+         COPY  SGGBLPAK           DEFINE SYSTEM GLOBAL VARIABLES        38000000
+.********************************************************************** 38050040
+.*                                                                      38100040
+.*       UP TO 25 PAGE DATA SETS AND UP TO 10 SWAP DATA SETS            38150040
+.*       CAN BE DEFINED DURING SYSGEN. ADDITIONAL PAGE/SWAP             38200040
+.*       DATA SETS MAY BE DEFINED AFTER SYSGEN.                         38250040
+.*                                                                      38300040
+.********************************************************************** 38350040
+         LCLA  &J                 PAGE INDEX 1 - 25                     39000000
+         LCLA  &K                 SWAP INDEX 1 - 10                     39050040
+         LCLA  &L                 PRIMARY SPACE FOR STGINDEX SPACE      39100040
+&L       SETA   &SGDSPSA(14)+1                                          39150040
+&J       SETA   1                 ININIALIZE PAGE INDEX                 40000040
+&K       SETA  1                  INITIALIZE SWAP INDEX                 41000040
+         AIF  (&SGDSPSA(14) NE 0).DDGEN                                 41050040
+.PAGECK  AIF  (&SGPGSPA(&J) NE 0).DDGEN                                 41100040
+&J       SETA  &J+1                                                     41150040
+         AIF  (&J LE 25).PAGECK                                         41200040
+.SWAPCK  AIF  (&SGSWSPA(&K) NE 0).DDGEN                                 41250040
+&K       SETA  &K+1                                                     41300040
+         AIF  (&K LE 10).SWAPCK                                         41350040
+         AIF  (&SGDSPSA(22) NE 0).DDGEN                                 41370040
+         AGO  .END                                                      41400040
+.DDGEN   ANOP                                                           41450000
+.********************************************************************** 41500040
+.*                                                                      41550040
+.*      GENERATE JCL FOR DEFINE DATA SET                                41600040
+.*                                                                      41650040
+.********************************************************************** 41700040
+&SGCTRLA(1) SETA &SGCTRLA(1)+1                                          42000000
+ PUNCH '//SG&SGCTRLA(1) EXEC PGM=IDCAMS,REGION=512K'                    42050040
+ PUNCH '//STEPCAT  DD  DSNAME=&SGVSNMC,DISP=SHR'                        44000000
+ PUNCH '//SYSPRINT DD  SYSOUT=&SGCTRLC(41)'                             45000000
+         AIF   (&SGDSPSA(14) EQ 0).CKPGDD   IF NO STG INDEX             46000040
+ PUNCH '//STGINDEX DD  VOL=SER=&SGDSVLC(14),UNIT=&SGDSUNC(14),DISP=OLD' 47000000
+.CKPGDD  ANOP                                                           47020040
+&J       SETA  1        INIT PAGE INDEX                                 47050040
+.PAGEDD  AIF   (&SGPGSPA(&J) EQ 0).DDPNEXT    TEST LT 25 PAGES          48000040
+ PUNCH '//PAGE&J   DD  VOL=SER=&SGPGVLC(&J),UNIT=&SGPGUNC(&J),DISP=OLD' 49000000
+.DDPNEXT ANOP                                                           49050040
+&J       SETA  &J+1               INDEX TO NEXT PAGE                    50000000
+         AIF   (&J LE 25).PAGEDD  MAX OF 25 PAGES                       51000000
+&K       SETA  1                  INIT SWAP INDEX                       51050040
+.SWAPDD  AIF  (&SGSWSPA(&K) EQ 0).DDSNEXT                               51100040
+ PUNCH '//SWAP&K  DD  VOL=SER=&SGSWVLC(&K),UNIT=&SGSWUNC(&K),DISP=OLD'  51150040
+.DDSNEXT ANOP                                                           51200040
+&K       SETA  &K+1                                                     51250040
+         AIF  (&K LE 10).SWAPDD                                         51300040
+         AIF  (&SGDSPSA(22) EQ 0).DDEND                                 51350040
+ PUNCH '//DUPLEX  DD  VOL=SER=&SGDSVLC(22),UNIT=&SGDSUNC(22),DISP=OLD'  51400040
+.DDEND   ANOP                                                           52000000
+ PUNCH '//SYSIN    DD  *'                                               53000000
+         AIF   (&SGDSPSA(14) EQ 0).PAGESP   IF NO STG INDEX             54000000
+.********************************************************************** 54005040
+.*                                                                      54010040
+.*        DEFINE SPACE FOR STG INDEX                                    54015040
+.*                                                                      54020040
+.********************************************************************** 54025040
+ PUNCH '   DEFINE SPACE -'                                              54030040
+ PUNCH '       (VOLUME(&SGDSVLC(14)) -'                                 54032040
+ PUNCH '       FILE(STGINDEX) -'                                        54035040
+ PUNCH '       CYLINDERS(&L))'                                          54040040
+.********************************************************************** 54050040
+.*                                                                      54100040
+.*      DEFINE STG INDEX                                                54150040
+.*                                                                      54200040
+.********************************************************************** 54250040
+ PUNCH '  DEFINE CLUSTER -'                                             55000000
+ PUNCH '              (NAME(&SGCTRLC(40)..STGINDEX) -'                  56000000
+ PUNCH '               FILE(STGINDEX) -'                                57000000
+ PUNCH '               KEYS(12,8) -'                                    58000000
+ PUNCH '               CYLINDERS(&SGDSPSA(14)) -'                       59000040
+ PUNCH '               BUFFERSPACE(5120) -'                    @ZA11818 59050000
+ PUNCH '               RECORDSIZE(2041,2041) -'                         60000000
+ PUNCH '               VOLUME(&SGDSVLC(14)) -'                          61000040
+ PUNCH '               REUSE) -'                                        61100040
+ PUNCH '         DATA (CONTROLINTERVALSIZE(2048)) -'                    63000000
+ PUNCH '         INDEX (CONTROLINTERVALSIZE(1024))'            @ZA11818 63050000
+.PAGESP  ANOP                                                           64000000
+&J       SETA  1                  INITIALIZE PAGE INDEX                 65000000
+.DEFPAGE AIF   (&SGPGSPA(&J) EQ 0).DEFNPG   TEST LT 25 PAGES            66000040
+.********************************************************************** 66050040
+.*                                                                      66100040
+.*     DEFINE PAGE DATA SET                                             66150040
+.*                                                                      66200040
+.********************************************************************** 66250040
+ PUNCH '  DEFINE PAGESPACE -'                                           67000000
+ PUNCH '              (NAME(&SGPAGDC(&J)) -'                            68000000
+ PUNCH '               FILE(PAGE&J) -'                                  69000000
+ PUNCH '               CYLINDERS(&SGPGSPA(&J)) -'                       70000000
+ PUNCH '               VOLUME(&SGPGVLC(&J)) -'                          71000040
+ PUNCH '               UNIQUE)'                                         72000000
+.DEFNPG ANOP                                                            72050040
+&J       SETA  &J+1               INDEX TO NEXT PAGE                    73000000
+         AIF (&J LE 25).DEFPAGE   TEST MAX OF 25 PAGES                  74000000
+&K      SETA  1                                                         74050040
+.DEFSWAP AIF  (&SGSWSPA(&K) EQ 0).DEFNSW                                74100040
+.********************************************************************** 74108040
+.*                                                                      74116040
+.*     DEFINE SWAP DATA SET                                             74124040
+.*                                                                      74132040
+.********************************************************************** 74140040
+ PUNCH '  DEFINE PAGESPACE -'                                           74150040
+ PUNCH '              (NAME(&SGSWPDC(&K)) -'                            74200040
+ PUNCH '              FILE(SWAP&K) -'                                   74250040
+ PUNCH '              CYLINDERS(&SGSWSPA(&K)) -'                        74300040
+ PUNCH '              VOLUME(&SGSWVLC(&K)) -'                           74350040
+ PUNCH '              UNIQUE -'                                         74400040
+ PUNCH '              SWAP)'                                            74450040
+.DEFNSW ANOP                                                            74500040
+&K        SETA  &K+1      INDEX TO NEXT SWAP                            74550040
+          AIF   (&K LE 10).DEFSWAP    TEST MAX OF 10 SWAP               74600040
+          AIF  (&SGDSPSA(22) EQ 0).DEFEND                               74650040
+.********************************************************************** 74658040
+.*                                                                      74666040
+.*      DEFINE DUPLEX DATA SET                                          74674040
+.*                                                                      74682040
+.********************************************************************** 74690040
+ PUNCH '  DEFINE PAGESPACE -'                                           74700040
+ PUNCH '              (NAME(&SGDUPXC) -'                                74750040
+ PUNCH '              FILE(DUPLEX) -'                                   74800040
+ PUNCH '              CYLINDERS(&SGDSPSA(22)) -'                        74850040
+ PUNCH '              VOLUME(&SGDSVLC(22)) -'                           74900040
+ PUNCH '              UNIQUE)'                                          74950040
+.DEFEND ANOP                                                            75000000
+ PUNCH '/*'                                                             76000000
+.END     MEND                                                           77000000

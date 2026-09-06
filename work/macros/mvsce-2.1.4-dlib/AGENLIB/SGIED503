@@ -1,0 +1,62 @@
+         MACRO                                                          00900006
+         SGIED503                                                       01800006
+.*C090000                                                      @ZA03883 02100000
+.*A165000                                                      @ZA03883 02400000
+.*A-000000-999999                                              @Y02X6G0 02900008
+.*D857000,859000,861000                                        @Z30X8GP 03100008
+.*C189000                                                      @OZ06199 03200000
+.*A693000                                                      @G36XRGG 03250000
+.*A819000                                                      @OZ48660 03250182
+.*                                                                      03300008
+.*             VERSION DATED 08/02/74                          @Z30X8GP 03600008
+.*                                                                      04500006
+         COPY  SGGBLPAK                                                 05400006
+.*                                                                      06300006
+         AIF   (NOT &SGDMGTB(4)).RMTCON                        @ZA03883 09000000
+.*                                                                      09900006
+.*             BTAM MODULES                                             10800006
+.*                                                                      11700006
+         PUNCH ' COPY OUTDD=SVCLIB,INDD=AOS20'                          12600006
+         PUNCH ' SELECT MEMBER=(IGG019MA,IGG019MB,IGG019MC)'            13500006
+         PUNCH ' SELECT MEMBER=(IGG019MR,IGG019MS,IGG019PD)'            16500006
+         AGO   .TCAM                                           @ZA03883 17300000
+.RMTCON  ANOP                                                  @ZA03883 18100000
+         AIF   (NOT &SGSCHDB(13)).TCAM                         @OZ06199 18900000
+.*                                                             @ZA03883 19700000
+         PUNCH ' COPY OUTDD=SVCLIB,INDD=AOS20'                 @ZA03883 20500000
+         PUNCH ' SELECT MEMBER=(IGG019MA,IGG019MB,IGG019MR)'   @ZA03883 21300000
+.*                                                                      22500006
+.*                                                                      60300006
+.*             TCAM SVCLIB MODULES                                      61200006
+.*                                                                      62100006
+.*             TCAM GET/PUT AND READ/WRITE MODULES                      63000006
+.*                                                                      63900006
+.TCAM    ANOP                                                           64800006
+         AIF   (NOT &SGDMGTB(5)).END                                    65200006
+         PUNCH ' COPY OUTDD=SVCLIB,INDD=AOS21'                          65700006
+         PUNCH ' SELECT MEMBER=(IGG019EM)'                              66600006
+         PUNCH ' SELECT MEMBER=(IGG019QE)'                              67500006
+         PUNCH ' SELECT MEMBER=(IGG019RG,IGG019RI)'                     68400006
+         PUNCH ' SELECT MEMBER=(IGG019RL,IGG019RM)'                     69300006
+         PUNCH ' SELECT MEMBER=(IGG019TE,IGG019TH)'            @G36XRGG 69600000
+         PUNCH ' SELECT MEMBER=(IGG019TI,IGG019TM)'            @ZM46763 69900000
+.*                                                                      70200006
+.*             TCAM APPENDAGES, DISPATCHERS, AND SCHEDULERS             71100006
+.*                                                                      72000006
+         PUNCH ' SELECT MEMBER=(IGG019Q0,IGG019Q1,IGG019Q2)'            72900006
+         PUNCH ' SELECT MEMBER=(IGG019Q3,IGG019Q4,IGG019Q5)'            73800006
+         PUNCH ' SELECT MEMBER=(IGG019Q6,IGG019Q7,IGG019Q8)'            74700006
+         PUNCH ' SELECT MEMBER=(IGG019Q9)'                              75600006
+         PUNCH ' SELECT MEMBER=(IGG019RA,IGG019RC)'                     76500000
+         PUNCH ' SELECT MEMBER=(IGG019RD,IGG019RE,IGG019RF)'            77400006
+         PUNCH ' SELECT MEMBER=(IGG019RK)'                              78300006
+         PUNCH ' SELECT MEMBER=(IGG019RN,IGG019RO,IGG019RP)'            79200006
+         PUNCH ' SELECT MEMBER=(IGG019RQ,IGG019RR,IGG019RS)'            80100006
+         PUNCH ' SELECT MEMBER=(IGG019RT,IGG019RU,IGG019RV)'            81000006
+         PUNCH ' SELECT MEMBER=(IGG019RW,IGG019RX,IGG019RY)'            81900006
+         PUNCH ' SELECT MEMBER=(IGG019RZ)'                     @OZ48660 81950082
+         PUNCH ' SELECT MEMBER=(IGG019R0,IGG019R1,IGG019R2)'            82800006
+         PUNCH ' SELECT MEMBER=(IGG019R3,IGG019R4,IGG019R5)'            83700006
+         PUNCH ' SELECT MEMBER=(IGG019R6,IGG019R7,IGG019R8)'            84600006
+         PUNCH ' SELECT MEMBER=(IGG019R9)'                              85500006
+.END     MEND                                                           92700006

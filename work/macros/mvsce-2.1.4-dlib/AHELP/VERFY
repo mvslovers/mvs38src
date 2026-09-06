@@ -1,0 +1,28 @@
+)F FUNCTION -                                                           03000002
+  THE VERIFY COMMAND IS USED TO COMPARE THE END-OF-DATA-SET AND         06000002
+  END-OF-KEY-RANGE INFORMATION AS IT IS STORED IN A VSAM CATALOG WITH   09000002
+  THE TRUE END-OF-FILE AND END-OF-KEY-RANGE.                            12000002
+)X SYNTAX -                                                             15000002
+         VERIFY  FILE('DNAME/PASSWORD') | DATASET('ENTRYNAME/PASSWORD') 18000002
+  REQUIRED - FILE | DATASET                                             21000002
+  ABBREVIATIONS -                                                       27000002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 30000002
+             VERIFY               VFY                                   33000002
+             DATASET              DS                                    36000002
+)O OPERANDS -                                                           39000002
+))FILE('DNAME/PASSWORD')                                                42000002
+           - SPECIFIES THE NAME OF A DD STATEMENT THAT IDENTIFIES       45000002
+             THE CLUSTER OR COMPONENT TO BE VERIFIED.                   48000002
+  'DNAME'  - NAME OF A DD STATEMENT THAT IDENTIFIES THE CLUSTER OR      51000002
+             COMPONENT TO BE VERIFIED.                                  54000002
+  'PASSWORD'                                                            57000002
+           - PASSWORD OF THE CLUSTER OR COMPONENT TO BE VERIFIED.       60000002
+  REQUIRED - 'DNAME'                                                    63000002
+))DATASET('ENTRYNAME/PASSWORD')                                         66000002
+           - SPECIFIES THE NAME AND PASSWORD OF THE ENTRY TO            69000002
+             BE VERIFIED.                                               72000002
+  'ENTRYNAME'                                                           75000002
+           - NAME OF THE ENTRY TO BE VERIFIED.                          78000002
+  'PASSWORD'                                                            81000002
+           - PASSWORD OF THE ENTRY TO BE VERIFIED.                      84000002
+  REQUIRED - 'ENTRYNAME'                                                87000002

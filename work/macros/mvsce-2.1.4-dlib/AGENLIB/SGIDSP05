@@ -1,0 +1,35 @@
+         MACRO                                                   MVS38J 01000038
+         SGIDSP05 &ID=,&UNIT=                                    MVS38J 01100038
+.*                                                               MVS38J 01200038
+.* SGIDSP05 - Define 3375 DIT entry                              MVS38J 01300038
+.*                                                               MVS38J 01400038
+.* Written:  2002 April 22                                       MVS38J 01500038
+.* Author:   James M. Morrison                                   MVS38J 01600038
+.*           Based on Bertus Bekker's SGIDSP03 macro             MVS38J 01700038
+.* Replaces: Dummy SGIDSP05 macro                                MVS38J 01800038
+.* Level:    MVS 3.8j                                            MVS38J 01900038
+.* Target:   SYS1.AGENLIB                                        MVS38J 02000038
+.* Process:  MVS System Generation                               MVS38J 02100038
+.* Dependencies: SGGBLPAK - global sysgen variables              MVS38J 02200038
+.* Parameters:   UNIT   = unit specified on IODEVICE macro       MVS38J 02300038
+.*               ID     = diagnostic message id                  MVS38J 02400038
+.* Caller:   SGDSPDIT macro (called by IODEVICE macro)           MVS38J 02500038
+.* Calls:    SGDITGBL macro                                      MVS38J 02600038
+.*                                                               MVS38J 02700038
+.* Notes:    DIT = Device Index Table                            MVS38J 02800038
+.*                                                               MVS38J 02900038
+         LCLC  &NUCM                        NUCLEUS modules      MVS38J 03000038
+         COPY  SGGBLPAK                                          MVS38J 03100038
+         AIF   ('&UNIT' NE '3375').EXIT001  3375 devicetype?     MVS38J 03200038
+&SGDITXA(&SGCNTRA(3)) SETA 105              return DIT INDEX     MVS38J 03300038
+         AIF  (&SGGENDB(105)).EXIT001       only define once     MVS38J 03400038
+&SGGENDB(105) SETB 1                        show done            MVS38J 03500038
+         MNOTE *,'SGIDSP05 defining 3375 DIT - DITX=105'         MVS38J 03600038
+&NUCM    SETC 'USRDDT00,IECVXDAS,IECVXDAT,IECVXDAU,IECVOTBL'     MVS38J 03700038
+         SGDITGBL NUCDLB=AOSC5,SENSE=32,ERPMOD=IECLMSGD,         MVS38J+03800038
+               ERPDLB=AOSC5,                                     MVS38J+03900038
+               STATBL=0,PREFTBL=290,                             MVS38J+04000038
+               DDTMOD=UDDT3375,                                  MVS38J+04100038
+               NUCMOD=&NUCM,                                     MVS38J+04200038
+               UCBTYPE=3010200C,GENERIC=3375                     MVS38J 04300038
+.EXIT001 MEND                                                    MVS38J 04400038

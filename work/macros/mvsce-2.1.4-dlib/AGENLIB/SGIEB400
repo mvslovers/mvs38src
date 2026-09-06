@@ -1,0 +1,52 @@
+* /******START OF SPECIFICATIONS *************************** @Y30OE94   06050003
+*                                                              @Y30OE94 06060003
+*01*PROCESSOR = ASSEMXF-370R                                   @Y30OE94 06070003
+*                                                              @Y30OE94 06120003
+*01*MACRO-NAME = SGIEB400 (OS/VS2 - MACRO)                     @Y30OE94 06170003
+*                                                              @Y30OE94 06220003
+*01*DESCRIPTIVE-NAME = 3540 SUPPORT SYSGEN MACRO               @Y30OE94 06270003
+*                                                              @Y30OE94 06320003
+*01*COPYRIGHT = NONE                                           @Y30OE94 06370003
+*                                                              @Y30OE94 06420003
+*01*CHANGE-ACTIVITY =                                          @Y30OE94 06470003
+*   REMOVE AUTHORIZATION FOR IGG019VW                          @ZA48556 06495000
+*                                                              @Y30OE94 06520003
+*********END OF SPECIFICATIONS ***************************** @Y30OE94*/ 06550003
+         MACRO                                                 @Y30OE94 06600003
+         SGIEB400                                                       06650003
+         COPY  SGGBLPAK                DEFINE GLOBALS          @Y30OE94 09000003
+&SGCTRLC(7)  SETC  '&SGCTRLC(32)'      SET VOLUME FOR LNKLIB   @Y30OE94 12000003
+&SGCTRLC(8)  SETC  '&SGCTRLC(31)'      SET LINKLIB UNIT NAME   @Y30OE94 15000003
+&SGCTRLC(9)  SETC  'LINKLIB'           SET DSNAME              @Y30OE94 18000003
+&SGCTRLC(10) SETC  ',LET'                                      @Y30OE94 21000003
+         COPY  SGLEDPK1                                        @Y30OE94 27000003
+ PUNCH '//AOSD0 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSD0'         30000003
+         COPY  SGLEDPK2                                        @Y30OE94 33000003
+ PUNCH   ' INCLUDE AOSD0(IOEDKRDR) '                           @Y30OE94 36000003
+ PUNCH   ' INCLUDE AOSD0(IOEDKOPN) '                           @Y30OE94 39000003
+ PUNCH   ' INCLUDE AOSD0(IOEDKGET) '                           @Y30OE94 42000003
+ PUNCH   ' INCLUDE AOSD0(IOEDKCLS) '                           @Y30OE94 45000003
+ PUNCH   ' INCLUDE AOSD0(IOESDKTI) '                           @Y30OE94 48000003
+ PUNCH   ' INCLUDE AOSD0(IOEDKMSG) '                           @Y30OE94 51000003
+ PUNCH   ' INCLUDE AOSD0(IOEESTAE) '                           @Z30OEAD 51050003
+ PUNCH   ' ENTRY IOEDKRDR '                                    @Y30OE94 54000003
+ PUNCH   ' SETCODE AC(1) '                                     @ZA48556 54050000
+ PUNCH   ' NAME IEBDKRDR(R) '                                  @Y30OE94 57000003
+ PUNCH   ' INCLUDE AOSD0(IOEDKWTR) '                           @Y30OE94 60000003
+ PUNCH   ' INCLUDE AOSD0(IOEDKOPN) '                           @Y30OE94 63000003
+ PUNCH   ' INCLUDE AOSD0(IOEDKPUT) '                           @Y30OE94 66000003
+ PUNCH   ' INCLUDE AOSD0(IOEDKCLS) '                           @Y30OE94 69000003
+ PUNCH   ' INCLUDE AOSD0(IOESDKTO) '                           @Y30OE94 72000003
+ PUNCH   ' INCLUDE AOSD0(IOEDKMSG) '                           @Y30OE94 75000003
+ PUNCH   ' INCLUDE AOSD0(IOEESTAE) '                           @Z30OEAD 75050003
+ PUNCH   ' ENTRY IOEDKWTR '                                    @Y30OE94 78000003
+ PUNCH   ' SETCODE AC(1) '                                     @ZA48556 78050000
+ PUNCH   ' NAME IEBDKWTR(R) '                                  @Y30OE94 81000003
+ PUNCH   ' INCLUDE AOSD0(IEBDISKT) '                           @Y30OE94 84000003
+ PUNCH   ' INCLUDE AOSD0(IOEESTAE) '                           @Z30OEAD 84050003
+ PUNCH   ' ENTRY IEBDISKT '                                    @Z30OEAD 84100003
+ PUNCH   ' SETCODE AC(1) '                                     @ZA48556 84150000
+ PUNCH   ' NAME IEBDISKT(R) '                                  @Y30OE94 87000003
+ PUNCH   ' INCLUDE AOSD0(IGG019VW) '                           @Z30OE72 87050003
+ PUNCH   ' NAME IGG019VW(R) '                                  @Z30OE72 87100003
+         MEND                                                  @Y30OE94 90000003

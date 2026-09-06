@@ -1,0 +1,16 @@
+         MACRO                                                          00020000
+         SGIEC3FB                                                       00040000
+*    05/02/73          LEVEL=01                                         00050037
+.*A003100,004100       03/03/80                                @ZA45266 00060037
+         COPY  SGGBLPAK                                                 00110037
+.*  LINK EDIT BLDL AND DEVICE CHAR. TABLE INTO NUCLEUS.(REQUIRED)       00160037
+.*  LINK BLDL ONLY ON SYSGEN NOT IOGEN                         @ZA45266 00210037
+         PUNCH  ' INCLUDE  SYSPUNCH(IECZDTAB)'                   Y02072 00260037
+    AIF (&GETB(3)).CDEB                                        @ZA45266 00310037
+         PUNCH  ' INCLUDE  AOSD0(IGC018)     3380/3390 USER MOD' MVS38J 00360037
+         PUNCH  ' INCLUDE  AOSD0(UTRKCALC)   3380/3390 USER MOD' MVS38J 00370038
+         PUNCH  ' INCLUDE  AOSD0(UTRK3390)   3380/3390 USER MOD' MVS38j 00380038
+.CDEB    ANOP                                                  @ZA45266 00410037
+.*  LINK EDIT IFGDEBCK INTO NUCLEUS                                     00460037
+         PUNCH  ' INCLUDE  SYSPUNCH(IFGDEBCK)'                          00510037
+         MEND                                                           00560000

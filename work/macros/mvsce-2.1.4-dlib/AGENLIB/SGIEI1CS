@@ -1,0 +1,743 @@
+         MACRO                                                          00050000
+         SGIEI1CS                                                       00100000
+.********************************************************************** 00150000
+.*       SGIEI1CS MACRO VALIDATES THE CONSOLE CONFIGURATION OF THE      00200000
+.*       SYSTEM BEING GENERATED. DEPENDENCIES ARE RESOLVED.             00250000
+.*                                                                      00300000
+.*       THE GLOBALS USED ARE -                                         00350000
+.*             &SGMENTB(6)     - SCHEDULER MACRO                        00400000
+.*             &SGSCHDC(1)     - I/O ADDR OF CONSOLE                    00450000
+.*             &SGDADRA(1-1917)- DEVICE ADDRESSES                       00492800
+.*             &SGDASPA(1-1917)- SWITCH POINTER                         00535600
+.*             &SGDTXXB(1-1917)- DEVICE CLASSES                         00578400
+.*             &SGDUXXB(1-1917)- DEVICE NAMES                           00621200
+.*             &SGDMXXB(1-1917)- MODEL NUMBERS                          00664000
+.*             &SGDFXXB(1-1917)- FEATURES                               00706800
+.*             &SGQUITB        - QUIT SWITCH                            00750000
+.*             &SGSCHDA(16)    - NUMBER OF PFKS FOR MASTER CONSOLE      00800000
+.*             &SGSCHDC(16)    - IOC ADDRESS OF MASTER CONSOLE          00850000
+.*             &SGSCHAA(12)    - TOTAL DISPLAY LN - MASTER CONSOLE      00900000
+.*             &SGSCHDC(2)     - I/O ADDRESS OF ALTERNATE CONSOLE       00950000
+.*             &SGSCNYA(2)     - NUMBER OF SECONDARY CONSOLE CALLS      01000000
+.*             &SGSCNYA(3)     - NUMBER OF CONSOLE DEVICES              01050000
+.*             &SGSCHDC(14)    - I/O ADDRESS OF HARDCOPY LOG            01100000
+.*             &SGSCNCC(1-31)  - SECONDARY CONSOLE ADDRESS              01150000
+.*             &SGUNF1B(1-1917)- UNIT FEATURE SETTINGS                  01200000
+.*             &SGSCHDA(11)    - 2260 COUNT                             01250000
+.*             &SGGRPHB(1-1917)- GRAPHICS                               01300000
+.*             &SGDNBFA(1-1917)- NUMSECT                                01350000
+.*             &SGSCHDA(10)    - 2250 COUNT                             01400000
+.*             &SGSCHDA(17)    - 3277-1 COUNT                           01450000
+.*             &SGSCHDA(18)    - 3036,3158, 3277-2 COUNT        G51DSPD 01500000
+.*             &SGSCHDA(19)    - 3284/86-1 COUNT                        01550000
+.*             &SGSCHDA(20)    - 3284/86-2 COUNT                        01600000
+.*             &SGSCNAC(1-31)  - ALTERNATE CONSOLE ADDRESSES            01650000
+.*             &SGSCNPA(1-31)  - NO PGMED FUNCTION KEYS                 01700000
+.*             &SGSCSDB(1-31)  - LIM CAP CONSOLE - SDM                  01750000
+.*             &SGSCMSB(1-31)  - LIM CAP CONSOLE - CMS                  01800000
+.*             &SGAR12A(1-31)  - TOTAL LENGTH OF DISPLAY AREA           01850000
+.*             &SGARXXA(1-31)  - LENGTH OF XX CRT - XX=1-11             01900000
+.*                                                                      01950000
+.*         THE LOCALS USED ARE -                                        02000000
+.*             &Z              - FIRST HALF OF ALT CONSOLES             02050000
+.*             &C5             - FFF                                    02100000
+.*             &ADDRESI        - I/P PORTION OF COMPOSITE CONSOLE       02150000
+.*             &ADDRESO        - O/P PORTION OF COMPOSITE CONSOLE       02200000
+.*             &AC             - HARDCOPY CONSOLE                       02250000
+.*             &GR             - GRAPHICS                               02300000
+.*             &II             - SWITCH                                 02350000
+.*             &SS             - SWITCH                                 02400000
+.*             &C              - COUNTER FOR SECONDARY CONSOLES         02450000
+.*             &X              - DEVICE POINTER                         02500000
+.*             &TT             - COUNT OF SECONDARY CONSOLES            02550000
+.*             &XX             - SEC CONSOLE COUNT                      02570000
+.* CHANGE ACTIVITY OZ10499,@ZA30506,@ZA44996,@ZA53128,@ZA60599          02590000
+.*                 Z40ASVN,G51DSPD                                      02610000
+.*                                                                      02630000
+.********************************************************************** 02650000
+         COPY  SGGBLPAK                                                 02700000
+         LCLC  &Z,&C5,&ADDRESI,&ADDRESO,&IOC                            02750000
+         LCLB  &AC,&GR,&II,&SS                                          02800000
+         LCLA  &C,&X,&TT,&XX                                            02850000
+         ACTR  &SGACTR                                                  02900000
+.********************************************************************** 02950000
+.*             **** CHECK MASTER CONSOLE INPUT ADDRESS ****     G51DSPD 03000000
+.********************************************************************** 03050000
+         AIF   ('&SGSCHDC(1)' EQ '' AND &SGSCNYA(2) EQ 0).ER1           03100000
+         AIF   (&SGSCNYA(3) LE 99).TEST    LIMIT OF 99 CONSOLE DEVICES  03150000
+     MNOTE 5,'* * * IEIGEN334  &SGSCNYA(3) CONSOLE DEVICES SPECIFIED - X03200000
+               EXCEEDS LIMIT OF 99'                                     03250000
+&SGQUITB SETB 1                                                         03300000
+.TEST   ANOP                                                            03350000
+&ADDRESI SETC  '&SGSCHDC(1)'(1,3)                                       03400000
+&ADDRESO SETC  '&SGSCHDC(1)'(4,3)                                       03450000
+         CONVERT TO=HEX,DIGITS=3,VALUE=&ADDRESI                         03500000
+         IOCHECK LOOKFOR=&HEX                                           03550000
+         AIF   (&HEX EQ 0).A1                                           03600000
+&X       SETA  &SGDASPA(&HEX)           GET DEVICE POINTER      Z40ASVN 03650000
+         AIF   (&SGDT04B(&X) AND &SGDU01B(&X) AND &SGDM01B(&X)).SETCONI 03700000
+.*                                                          1052-7      03750000
+         AIF   (&SGDT04B(&X) AND &SGDU03B(&X)).SETCONI      3210        03800000
+         AIF   (&SGDT04B(&X) AND &SGDU04B(&X)).SETCONI      3215        03850000
+         AIF   (&SGDT07B(&X) AND &SGDU02B(&X) AND (&SGDM01B(&X) OR     *03900000
+               &SGDM02B(&X))).SETRDR                        2501-B1,B2  03950000
+         AIF   (&SGDT07B(&X) AND &SGDU03B(&X) AND &SGDM01B(&X)).SETRDR  04000000
+.*                                                          2520-B1     04050000
+         AIF   (&SGDT07B(&X) AND &SGDU04B(&X) AND &SGDM01B(&X)).SETRDR  04100000
+.*                                                          2540R       04150000
+         AIF   (&SGDT07B(&X) AND &SGDU08B(&X)).SETRDR       3505        04200000
+         AIF   (&SGDT07B(&X) AND &SGDU09B(&X)).SETRDR       3525        04250000
+         AIF   (&SGDT08B(&X) AND &SGDU08B(&X)).SETTPI       2740        04300000
+.********************************************************************** 04350000
+.*            CHECK GRAPHICS TO INSURE IT IS NOT THE INPUT HALF OF A  * 04400000
+.*            COMPOSITE CONSOLE.                                      * 04450000
+.********************************************************************** 04500000
+         AIF   ('&ADDRESI' NE '&ADDRESO').A15                           04550000
+         AIF   (&SGDT05B(&X) AND &SGDU01B(&X) AND (&SGDM01B(&X) OR     *04600000
+               &SGDM03B(&X))).SETGRI                        2250-1,3    04650000
+         AIF   (&SGDT05B(&X) AND &SGDU02B(&X) AND &SGDM01B(&X)).SETGRI  04700000
+.*                                                          2260-1      04750000
+         AIF   (&SGDT05B(&X) AND &SGDU06B(&X) AND &SGDF01B(&X)).SETGRI  04800000
+.*                                                          3066        04850000
+         AIF        (&SGDT05B(&X)  AND &SGDU10B(&X)).SETGRI     G51DSPD 04880000
+.*                                                          3158        04910000
+         AIF        (&SGDT05B(&X)  AND &SGDU13B(&X)).SETGRI     G51DSPD 04940000
+.*                                                          3036        04970000
+.A1A     AIF   (NOT (&SGDT05B(&X) AND &SGDU08B(&X) AND &SGDM02B(&X))).A*05000000
+               1                                            3277-2      05050000
+         AIF   (&SGDF10B(&X) OR &SGDF11B(&X) OR &SGDF12B(&X) OR        *05100000
+               &SGDF13B(&X)).SETGRI                         KEYBOARD    05150000
+    MNOTE 5,'* * * IEIGEN301 CONSOLE ADDRESS &ADDRESI,REQUIRES KEYBOARD*05200000
+                TO HAVE INPUT CAPABILITY'                               05250000
+&SGQUITB SETB  1                                                        05300000
+         AGO   .A2                                                      05350000
+.A1 MNOTE 5,'* * * IEIGEN302 CONSOLE MACRO, ADDRESS &ADDRESI INVALID FO*05400000
+               R CONSOLE INPUT'                                         05450000
+&SGQUITB SETB  1                                                        05500000
+         AGO   .A3                                                      05550000
+.A15     AIF   (NOT(&SGDT04B(&X))).A1                                   05600000
+     MNOTE 5,'* * * IEIGEN303 CONSOLE MACRO,GRAPHICS ADDRESS &ADDRESI I*05650000
+               NVALID FOR INPUT IN A COMPOSITE CONSOLE'                 05700000
+&SGQUITB SETB  1                                                        05750000
+         AGO   .B1                                                      05800000
+.********************************************************************** 05850000
+.*                           PFK CHECK (MASTER)                 G51DSPD 05900000
+.********************************************************************** 05950000
+.A2      AIF   (&SGSCHDA(16) EQ 0).A3                                   06000000
+         AIF   (NOT (&SGDT05B(&X) AND &SGDU01B(&X))).A2B    2250        06050000
+         AIF   (&SGDF02B(&X) OR &SGDF03B(&X)).A3  LIGHTPEN / PRGMKYBD   06100000
+    MNOTE 5,'* * * IEIGEN331 PFK SPECIFICATION FOR 2250, CONSOLE ADDRES*06150000
+               S &ADDRESI, REQUIRES PRGMKYBD OR LIGHTPEN FEATURE'       06200000
+&SGQUITB SETB  1                                                        06250000
+         AGO   .A3                                                      06300000
+.*                                 CHECK IF 3277, MODEL 2, OR 3158      06310000
+.A2B     AIF   (&SGDT05B(&X) AND &SGDU08B(&X) AND &SGDM02B(&X)).A3      06350000
+         AIF   (&SGDT05B(&X) AND &SGDU10B(&X)).A3          3158         06400000
+         AIF   (&SGDT05B(&X) AND &SGDU13B(&X)).A3          3036 G51DSPD 06450000
+     MNOTE 5,'* * * IEIGEN304 CONSOLE MACRO, CONSOLE ADDRESS &ADDRESI  *06700000
+               - PFK SPECIFICATION INVALID'                             06750000
+&SGQUITB SETB  1                                                        06800000
+.********************************************************************** 06850000
+.*             **** CHECK MASTER CONSOLE OUTPUT ADDRESS ****    G51DSPD 06900000
+.A3      ANOP  ******************************************************** 06950000
+&ADDRESO SETC  '&SGSCHDC(1)'(4,3)                                       07000000
+         AIF   ('&ADDRESI' EQ '&ADDRESO' AND &HEX EQ 0).C1              07050000
+         AIF   ('&ADDRESI' EQ '&ADDRESO').A5                            07100000
+         CONVERT TO=HEX,DIGITS=3,VALUE=&ADDRESO                         07150000
+         IOCHECK LOOKFOR=&HEX                                           07200000
+         AIF   (&HEX EQ 0).A4                                           07250000
+&X       SETA  &SGDASPA(&HEX)           GET DEVICE POINTER      Z40ASVN 07300000
+         AIF   (&SGDT04B(&X) AND &SGDU01B(&X) AND &SGDM01B(&X)).SETCONO 07350000
+.*                                                          1052-7      07400000
+         AIF   (&SGDT04B(&X) AND &SGDU03B(&X)).SETCONO      3210        07450000
+         AIF   (&SGDT04B(&X) AND &SGDU04B(&X)).SETCONO      3215        07500000
+         AIF   (&SGDT06B(&X) AND &SGDU01B(&X) AND (&SGDM01B(&X) OR     *07550000
+               &SGDM02B(&X) OR &SGDM04B(&X))).SETPTR        1403-N1,2,7 07600000
+         AIF   (&SGDT06B(&X) AND &SGDU03B(&X) AND &SGDM01B(&X)).SETPTR  07650000
+.*                                                          1443-N1     07700000
+         AIF   (&SGDT06B(&X) AND &SGDU06B(&X)).SETPTR       3211        07750000
+         AIF   (&SGDT06B(&X) AND &SGDU08B(&X)).SETCONO      3213        07800000
+         AIF   (&SGDT08B(&X) AND &SGDU08B(&X)).SETTPO       2740        07850000
+         AIF   (&SGDT05B(&X) AND &SGDU01B(&X) AND (&SGDM01B(&X) OR     *07900000
+               &SGDM03B(&X))).SETGRO                        2250-1,3    07950000
+         AIF   (&SGDT05B(&X) AND &SGDU02B(&X) AND &SGDM01B(&X)).SETGRO  08000000
+.*                                                          2260-1      08050000
+         AIF   (&SGDT05B(&X) AND &SGDU06B(&X) AND &SGDF01B(&X)).SETGRO  08100000
+.*                                                          3066        08150000
+         AIF   (&SGDT05B(&X) AND &SGDU10B(&X)).SETGRO       3158        08200000
+         AIF   (&SGDT05B(&X) AND &SGDU13B(&X)).SETGRO      3036 G51DSPD 08225000
+         AIF   (&SGDT05B(&X) AND &SGDU08B(&X) AND &SGDM02B(&X)).SETGRO  08250000
+.*                                                          3277-2      08300000
+         AIF   (&SGDT05B(&X) AND &SGDU09B(&X) AND (&SGDM01B(&X) OR     *08350000
+               &SGDM02B(&X))).SETOPT                        3284-1,2    08400000
+         AIF   (&SGDT05B(&X) AND &SGDU07B(&X) AND (&SGDM01B(&X) OR     *08450000
+               &SGDM02B(&X))).SETOPT                        3286-1,2    08500000
+.A4 MNOTE 5,'* * * IEIGEN305 CONSOLE MACRO, ADDRESS &ADDRESO INVALID FO*08550000
+               R CONSOLE OUTPUT'                                        08600000
+&SGQUITB SETB  1                                                        08650000
+         AGO   .C1                                                      08700000
+.********************************************************************** 08750000
+.**     INDICATE TYPE OF DEVICE  USED AS A CONSOLE FOR SGIEA401      ** 08800000
+.********************************************************************** 08850000
+.SETCONI ANOP                    SET CONSOLE INDICATOR                  08900000
+&SGSCHDB(1)    SETB 1            SET FOR A 1052/3210/3215               08950000
+         AGO   .A2               GO TO PFK CHECK                        09000000
+.SETCONO ANOP                    SET CONSOLE INDICATOR                  09050000
+&SGSCHDB(1)    SETB 1            SET FOR A 1052/3210/3215/3213          09100000
+         AGO   .A6               GO SET VALID HARDCOPY SWITCH           09150000
+.SETRDR  ANOP                    SET READER INDICATOR                   09200000
+&SGSCHDB(2)    SETB 1            SET FOR A 2501/2520/2540R/3505/3525    09250000
+         AIF   ('&ADDRESI' EQ '&ADDRESO').A4   INVALID OUTPUT DEVICE    09300000
+         AGO   .A2               GO TO PFK CHECK                        09350000
+.SETPTR  ANOP                    SET PRINTER INDICATOR                  09400000
+&SGSCHDB(3)    SETB 1            SET FOR A 1403/1443/3211               09450000
+         AGO   .A6               GO SET VALID HARDCOPY SWITCH           09500000
+.SETGRI  ANOP                    SET INPUT GRAPHICS INDICATOR           09550000
+&SGSCHDB(5)    SETB 1            SET FOR 2250/2260/3066/3158/3277/3036  09583300
+.*                                                              G51DSPD 09616600
+         AGO   .A2               GO TO PFK CHECK                        09650000
+.SETGRO  ANOP                    SET OUTPUT GRAPHICS INDICATOR          09700000
+&SGSCHDB(5)    SETB 1            SET FOR 2250/2260/3066/3158/3277/3036  09733300
+.*                                                              G51DSPD 09766600
+         AGO   .B1               GO TO IOC CHECK                        09800000
+.SETOPT  ANOP                    SET OCR/MICR INDICATOR                 09850000
+&SGSCHDB(5)    SETB 1            SET FOR A 2250/2260/3066/3158/3277     09900000
+         AGO   .A6               GO SET VALID HARDCOPY SWITCH           09950000
+.SETTPI  ANOP                    SET TP INPUT INDICATOR                 10000000
+&SGSCHDB(13)   SETB 1            SET FOR A 2740                         10050000
+         AGO   .A2               GO TO PFK CHECK                        10100000
+.SETTPO  ANOP                    SET TP OUTPUT INDICATOR                10150000
+&SGSCHDB(13)   SETB 1            SET FOR A 2740                         10200000
+         AGO   .A6               GO SET VALID HARDCOPY SWITCH           10250000
+.********************************************************************** 10300000
+.*                 VERIFY AND SET HARDCOPY INDICATOR                  * 10350000
+.********************************************************************** 10400000
+.A5      AIF   (NOT(&SGDT04B(&X) OR &SGDT08B(&X))).B1  1052-7/3210/3215 10450000
+.A6      ANOP                    * SWITCH FOR VALID *  2740/1403-N1,2,7 10500000
+&AC      SETB  1                 * HARDCOPY CONSOLE *  1443-N1/3211     10550000
+.*                               * CAPABILITY       *  3284/3286        10600000
+.********************************************************************   10650000
+.*****  INTEGRATED OPERATOR CONSOLE (MASTER)    ***********  G51DSPD*   10700000
+.********************************************************************   10750000
+.B1      ANOP                                                           10800000
+         AIF   ('&SGSCHDC(16)' EQ '').B1B                               10850000
+     MNOTE 0,'* * * IEIGEN333 INTEGRATED OPERATOR CONSOLE (IOC) NO LONG*10900000
+               ER SUPPORTED'                                   @ZA60599 10950000
+.********************************************************************** 11600000
+.*             **** AREA CHECK AND DEFAULT (MASTER) ****        G51DSPD 11650000
+.********************************************************************** 11700000
+.B1B     CONVERT TO=HEX,DIGITS=3,VALUE=&ADDRESO                         11750000
+         IOCHECK LOOKFOR=&HEX                                           11800000
+&X       SETA  &SGDASPA(&HEX)                                   Z40ASVN 11833300
+.*      THE FOLLOWING AIF EXCLUDE DEVICES WITHOUT DISPLAY AREAS.        11866600
+         AIF   (&SGSCHAA(12) NE 0 AND NOT (&SGDT05B(&X) AND (&SGDU01B(&*11900000
+               X) OR &SGDU02B(&X) OR &SGDU06B(&X) OR (&SGDU08B(&X) AND *11950000
+               &SGDM02B(&X)) OR &SGDU10B(&X) OR &SGDU13B(&X)))).B2      11975000
+.*                                                              G51DSPD 12000000
+.*  AREAS /2250/2260/3066/3277-2/3158/3036/                     G51DSPD 12025000
+.*                                                                      12050000
+.*   THE FOLOWING AIF EXCLUDE DEVICES NOT DEFAULTING TO 14 FOR AREA.    12075000
+         AIF   (NOT (&SGDT05B(&X) AND (&SGDU01B(&X) OR &SGDU06B(&X) OR *12100000
+               &SGDU08B(&X) OR &SGDU10B(&X) OR &SGDU13B(&X)))).B2       12125000
+.*                                                              G51DSPD 12150000
+.*  14 IS AREA DEFAULT.  2250/3066/3277/3158/3036               G51DSPD 12175000
+         AIF   (&SGDU01B(&X) AND &SGSCHAA(12) GT 47).B4     2250 ERR    12200000
+         AIF   (&SGDU06B(&X) AND &SGSCHAA(12) GT 30).B4     3066 ERR    12250000
+         AIF   (&SGDU08B(&X) AND &SGSCHAA(12) GT 19).B4     3277 ERR    12300000
+    AIF  ((&SGDU08B(&X) OR &SGDU10B(&X) OR &SGDU13B(&X))               *12337500
+               AND &SGSCHAA(12) GT 19).B4                       G51DSPD 12375000
+.*                                   3277 OR 3158 OR 3036 ERROR G51DSPD 12412500
+         AIF   (&SGSCHAA(12) NE 0).C1                                   12450000
+&SGSCHAA(1)    SETA 14                                      DEFAULT 14  12500000
+&SGSCHAA(12)   SETA 14                                                  12550000
+         AGO   .B3                                                      12600000
+.B2      AIF   (NOT (&SGDT05B(&X) AND &SGDU02B(&X))).C1     2260        12650000
+         AIF   (&SGSCHAA(12) GT 8).B4                       2260 ERR    12700000
+         AIF   (&SGSCHAA(12) NE 0).C1                                   12750000
+&SGSCHAA(1)    SETA 8                                       DEFAULT 8   12800000
+&SGSCHAA(12)   SETA 8                                                   12850000
+.B3 MNOTE 0,'* * * IEIGEN931 CONSOLE ADDRESS &ADDRESO, STATUS DISPLAY A*12900000
+               REA DEFAULTED TO LENGTH OF &SGSCHAA(1)'                  12950000
+         AGO   .C1                                                      13000000
+.B4 MNOTE 5,'* * * IEIGEN306 CONSOLE MACRO, DISPLAY AREA DEFINED INVALI*13050000
+               D FOR CONSOLE ADDRESS &ADDRESO'                          13100000
+&SGQUITB SETB  1                                                        13150000
+.********************************************************************** 13200000
+.*             **** MULTIPLE CONSOLE SUPPORT ****                     * 13250000
+.********************************************************************** 13300000
+.C1      AIF   ('&SGSCHDC(2)' EQ '&SGSCHDC(1)'                         *13350000
+               OR '&SGSCHDC(2)' EQ '').D1         ALTCONS   **SCS**     13400000
+         AIF   (&SGSCNYA(2) NE 0).D1                        **SCS**     13450000
+    MNOTE 5,'* * * IEIGEN307 CONSOLE MACRO SECONS REQUIRED FOR MCS'     13500000
+&SGQUITB SETB  1                                                        13550000
+.********************************************************************** 13600000
+.*             **** CK HARDCPY ADDR SPEC'D AS CONSOLE ADDR ****       * 13650000
+.********************************************************************** 13700000
+.D1      AIF   ('&SGSCHDC(14)' EQ '').F1                                13750000
+&ADDRESO SETC  '&SGSCHDC(1)'(4,3)                                       13800000
+         AIF   ('&SGSCHDC(14)' EQ '&ADDRESO').E1                        13850000
+&C       SETA  &SGSCNYA(1)                                              13900000
+.D2      AIF   (&C EQ 0).D3                                             13950000
+&ADDRESO SETC  '&SGSCNCC(&C)'(4,3)                                      14000000
+         AIF   ('&SGSCHDC(14)' EQ '&ADDRESO').E1                        14050000
+&C       SETA  &C-1                                                     14100000
+         AGO   .D2                                                      14150000
+.D3 MNOTE 5,'* * * IEIGEN308 HARDCPY ADDRESS &SGSCHDC(14) NOT SPECIFIED*14200000
+                IN CONSOLE MACRO AS A VALID OUTPUT CONSOLE'             14250000
+&SGQUITB SETB  1                                                        14300000
+.********************************************************************** 14350000
+.*             **** CK HARDCPY ADDR AS VALID HARDCPY DEVICE ****      * 14400000
+.E1      ANOP  ******************************************************** 14450000
+&Z       SETC  '&SGSCHDC(14)'(1,3)                                      14500000
+         CONVERT TO=HEX,DIGITS=3,VALUE=&Z                               14550000
+         IOCHECK LOOKFOR=&HEX                                           14600000
+         AIF   (&HEX EQ 0).E2                                           14650000
+&X       SETA  &SGDASPA(&HEX)                                   Z40ASVN 14700000
+         AIF   (&SGDT04B(&X) AND &SGDU01B(&X) AND &SGDM01B(&X)).F1      14750000
+.*                                                          1052-7      14800000
+         AIF   (&SGDT04B(&X) AND &SGDU03B(&X)).F1           3210        14850000
+         AIF   (&SGDT04B(&X) AND &SGDU04B(&X)).F1           3215        14900000
+         AIF   (&SGDT06B(&X) AND &SGDU01B(&X) AND (&SGDM01B(&X) OR     *14950000
+               &SGDM02B(&X) OR &SGDM04B(&X))).F1            1403-N1,2,7 15000000
+         AIF   (&SGDT06B(&X) AND &SGDU03B(&X) AND &SGDM01B(&X)).F1      15050000
+.*                                                          1443-N1     15100000
+         AIF   (&SGDT06B(&X) AND &SGDU06B(&X)).F1           3211        15150000
+         AIF   (&SGDT06B(&X) AND &SGDU08B(&X)).F1           3213        15200000
+         AIF   (&SGDT08B(&X) AND &SGDU08B(&X)).F1           2740        15250000
+         AIF   (&SGDT05B(&X) AND &SGDU09B(&X)).F1           3284-1,2    15300000
+         AIF   (&SGDT05B(&X) AND &SGDU07B(&X)).F1           3286-1,2    15350000
+.E2 MNOTE 5,'* * * IEIGEN309 CONSOLE MACRO, ADDRESS &Z INVALID FOR HARD*15400000
+               COPY'                                                    15450000
+&SGQUITB SETB  1                                                        15500000
+.********************************************************************** 15550000
+.*             **** CK SCH ALTCONS SPEC'D AS SEC CONSOLE ****         * 15600000
+.********************************************************************** 15650000
+.F1      AIF   (&SGSCNYA(1) EQ 0).H1             NO SECONSLE            15700000
+         AIF   ('&SGSCHDC(2)' EQ '&SGSCHDC(1)' OR '&SGSCHDC(2)' EQ 'FFF*15750000
+               FFF' OR '&SGSCHDC(2)' EQ '').G1   ALTCONS OMITTED        15800000
+&C       SETA  &SGSCNYA(1)                                              15850000
+.F2      AIF   (&C EQ 0).F3                                             15900000
+         AIF   ('&SGSCHDC(2)' EQ '&SGSCNCC(&C)').G1 ALT EQ SEC CONSOLE  15950000
+&C       SETA  &C-1                                                     16000000
+         AGO   .F2                                                      16050000
+.F3      ANOP                                                           16100000
+&Z       SETC  '&SGSCHDC(2)'                                            16150000
+         AIF   ('&SGSCHDC(2)'(1,3) NE '&SGSCHDC(2)'(4,3)).F4            16200000
+&Z       SETC  '&SGSCHDC(2)'(1,3)                                       16250000
+.F4 MNOTE 5,'* * * IEIGEN310 CONSOLE ALTCONS  &Z NOT SPECIFIED AS A SEC*16300000
+               CONDARY OR MASTER CONSOLE'                               16350000
+&SGQUITB SETB  1                                                        16400000
+.********************************************************************** 16450000
+.*             **** CK SCH CONSOLE DUPLICATED IN SEC CONSOLE ****     * 16500000
+.********************************************************************** 16550000
+.G1      AIF   ('&SGSCHDC(1)' EQ '').H1          SCH CONSOLE OMITTED    16600000
+&C       SETA  &SGSCNYA(1)                                              16650000
+.G2      AIF   (&C EQ 0).H1                                             16700000
+         AIF   ('&SGSCHDC(1)' EQ '&SGSCNCC(&C)').G3   DUPLICATED        16750000
+&C       SETA  &C-1                                                     16800000
+         AGO   .G2                                                      16850000
+.G3      ANOP                                                           16900000
+&Z       SETC  '&SGSCHDC(1)'                                            16950000
+         AIF   ('&SGSCHDC(1)'(1,3) NE '&SGSCHDC(1)'(4,3)).G4            17000000
+&Z       SETC  '&SGSCHDC(1)'(1,3)                                       17050000
+.G4 MNOTE 5,'* * * IEIGEN311 SCHEDULR CONSOLE &Z DUPLICATED IN SECONSLE*17100000
+                CONSOLE'                                                17150000
+&SGQUITB SETB  1                                                        17200000
+.********************************************************************** 17250000
+.*             **** CK CRT CONSOLE REQUIREMENTS      ****             * 17300000
+.*             **** CRT AND 3270 CONSOLE COUNT       ****             * 17350000
+.*             **** CK 2740 CONSOLE REQUIREMENTS     ****             * 17400000
+.*             **** CK SEC ALT SPEC'D AS PRIMARY CON ****             * 17450000
+.H1      ANOP  ******************************************************** 17500000
+&SS      SETB  1                                                        17550000
+         AIF   ('&SGSCHDC(1)' EQ '').HE                                 17600000
+&Z       SETC  '&SGSCHDC(1)'(1,3)                                       17650000
+         AGO   .H3                                                      17700000
+.H2      AIF   (&XX EQ &SGSCNYA(1)).J1   ALL SECONDARY CONSOLES CHECKED 17750000
+&XX      SETA  &XX+1                     INCREMENT SEC CONSOLE COUNT    17800000
+         AIF   ('&SGSCNCC(&XX)' EQ '').HH                               17850000
+&Z       SETC  '&SGSCNCC(&XX)'(1,3)                                     17900000
+         AIF   ('&Z' EQ 'JES').H2        NO CHECKS ON JES CONSOLE       17950000
+         AIF   ('&Z' EQ 'FFF').HG                                       18000000
+&II      SETB  1                                                        18050000
+.H3      CONVERT TO=HEX,DIGITS=3,VALUE=&Z                               18100000
+         IOCHECK LOOKFOR=&HEX                                           18150000
+         AIF   (&HEX EQ 0).HD                                           18200000
+&X       SETA  &SGDASPA(&HEX)                                   Z40ASVN 18250000
+         AIF   (NOT (&SGDT05B(&X) AND &SGDU02B(&X))).H5     2260        18300000
+         AIF   (NOT (&SGDM01B(&X))).H4                                  18350000
+         AIF   (&SGDF01B(&X) AND &SGUNF1B(&X)).H4                       18400000
+    MNOTE 5,'* * * IEIGEN312 2260 CONSOLE, ADDRESS &Z, REQUIRES ALPHAME*18450000
+               RIC KEYBOARD AND LINE ADDRESSING FEATURES'               18500000
+&SGQUITB SETB  1                                                        18550000
+.H4      ANOP                                                           18600000
+&SGSCHDA(11)   SETA &SGSCHDA(11)+1                          2260 COUNT  18650000
+         AGO   .HD                                                      18700000
+.H5      AIF   (NOT (&SGDT05B(&X) AND &SGDU01B(&X))).HA     2250        18750000
+         AIF   (NOT (&SGDM01B(&X))).H6                                  18800000
+         AIF   (&SGDF01B(&X) AND &SGDF07B(&X) AND (&SGDF05B(&X) OR     *18850000
+               &SGDF06B(&X))).H9                                        18900000
+    MNOTE 5,'* * * IEIGEN313 2250 CONSOLE, ADDRESS &Z, MODEL 1 REQUIRES*18950000
+                ALPHAMERIC KEYBOARD, CHARACTER GENERATOR, AND 4K OR 8K *19000000
+               BUFFER FEATURES'                                         19050000
+&SGQUITB SETB  1                                                        19100000
+.H6      AIF   (NOT (&SGDM03B(&X))).H9                                  19150000
+         AIF   (&SGDF01B(&X)).H7                                        19200000
+    MNOTE 5,'* * * IEIGEN314 2250 CONSOLE, ADDRESS &Z, MODEL 3 REQUIRES*19250000
+                ALPHAMERIC KEYBOARD FEATURE'                            19300000
+&SGQUITB SETB  1                                                        19350000
+.H7      AIF   (&SGMENTB(12)).H8      GRAPHICS                          19400000
+    MNOTE 5,'* * * IEIGEN317 ADDRESS &Z, 2250 MODEL 3 CONSOLE, INVALID *19450000
+               WITHOUT GAM'                                             19452000
+&SGQUITB SETB  1                                                        19460000
+.H8      AIF   (&SGDNBFA(&X) GE 16).H9             NUMSECT, 16 MINIMUM  19500000
+&SGDNBFA(&X)   SETA 16                                      16 DEFAULT  19550000
+    MNOTE 0,'* * * IEIGEN930 NUMSECT, IODEVICE, ADDRESS &Z, HAS BEEN DE*19600000
+               FAULTED TO MINIMAL ACCEPTABLE VALUE OF 16'               19650000
+.H9      ANOP                                                           19700000
+&SGSCHDA(10)   SETA &SGSCHDA(10)+1                          2250 COUNT  19750000
+         AGO   .HD                                                      19800000
+.HA      AIF   (NOT(&SGDT05B(&X) AND &SGDU06B(&X) AND &SGDF01B(&X))).HB 19850000
+.*                                                          3066        19900000
+&SG5450A SETA  &SG5450A+1                                   3066 COUNT  19950000
+.HB      AIF   (NOT (&SGDT08B(&X) AND &SGDU08B(&X))).HC     2740        20000000
+         AIF   (&SGDF06B(&X)).HD                                        20050000
+    MNOTE 5,'* * * IEIGEN315 2740 AS CONSOLE REQUIRES RECORD CHECKING F*20100000
+               EATURE'                                                  20150000
+&SGQUITB SETB  1                                                        20200000
+         AGO   .HD                                                      20250000
+.HC      AIF   (NOT (&SGDT05B(&X) AND &SGDU10B(&X))).HC1                20300000
+&SGSCHDA(18)   SETA &SGSCHDA(18)+1                          3158 COUNT  20350000
+         AGO   .HD                                                      20400000
+.HC1     AIF   (NOT (&SGDT05B(&X) AND &SGDU08B(&X) AND &SGDM01B(&X))).H*20450000
+               C2                                           3277-1      20500000
+&SGSCHDA(17)   SETA &SGSCHDA(17)+1                     3277-1 COUNT     20550000
+         AGO   .HD                                                      20600000
+.HC2     AIF   (NOT (&SGDT05B(&X) AND &SGDU08B(&X) AND &SGDM02B(&X))).H*20650000
+               C3                                           3277-2      20700000
+&SGSCHDA(18)   SETA &SGSCHDA(18)+1                     3277-2 COUNT     20750000
+         AGO   .HD                                                      20800000
+.HC3     AIF   (NOT (&SGDT05B(&X) AND (&SGDU09B(&X) OR &SGDU07B(&X))   *20850000
+               AND &SGDM01B(&X))).HC4                  3284-1 3286-1    20900000
+&SGSCHDA(19)   SETA &SGSCHDA(19)+1                     3284/86-1 COUNT  20950000
+         AGO   .HD                                                      21000000
+.HC4     AIF   (NOT (&SGDT05B(&X) AND (&SGDU09B(&X) OR &SGDU07B(&X))   *21050000
+               AND &SGDM02B(&X))).HC5            XOX   3284-2 3286-2    21100000
+&SGSCHDA(20)   SETA &SGSCHDA(20)+1                     3284/86-2 COUNT  21150000
+         AGO   .HD                                              G51DSPD 21162500
+.HC5     AIF   (NOT (&SGDT05B(&X) AND &SGDU13B(&X))).HD         G51DSPD 21175000
+&SGSCHDA(18)   SETA &SGSCHDA(18)+1                              G51DSPD 21187500
+.HD      AIF   (NOT (&SS)).HF                                           21200000
+         AIF   ('&Z' EQ '&SGSCHDC(1)'(4,3)).HE                          21250000
+&Z       SETC  '&SGSCHDC(1)'(4,3)                                       21300000
+         AGO   .H3                                                      21350000
+.HE      ANOP                                                           21400000
+&SS      SETB  0                                                        21450000
+         AGO   .H2                                                      21500000
+.HF      AIF   (NOT (&II)).HH                                           21550000
+         AIF   ('&SGSCNCC(&XX)'(1,3) EQ '&SGSCNCC(&XX)'(4,3)).HH        21600000
+.HG      ANOP                                                           21650000
+&II      SETB  0                                                        21700000
+&Z       SETC  '&SGSCNCC(&XX)'(4,3)                                     21750000
+         AGO   .H3                                                      21800000
+.***     CHECK IF ALTERNATE CONSOLE HAS BEEN SPECIFIED FOR A       ***  21810000
+.***                    SECONDARY CONSOLE                          ***  21820000
+.HH      AIF   ('&SGSCNAC(&XX)' EQ '').HM   ALTCONS OMITTED             21850000
+&TT      SETA  &SGSCNYA(1)                                              21900000
+.HJ      AIF   (&TT EQ 0).HK                                            21950000
+         AIF   (('&SGSCNAC(&XX)' EQ '&SGSCNCC(&TT)') OR ('&SGSCNAC(&XX)*22000000
+               ' EQ '&SGSCHDC(1)')).H2                                  22050000
+&TT      SETA  &TT-1                                                    22100000
+         AGO   .HJ                                                      22150000
+.HK MNOTE 5,'* * * IEIGEN316 CONSOLE ALTCONS, ADDRESS &SGSCNAC(&XX),  H*22200000
+               AS NOT BEEN SPECIFIED AS A MASTER OR SECONDARY CONSOLE, *22237500
+               OR IS SPECIFIED FOR OUTPUT CAPACITY SECONS ONLY'         22275000
+.*        MSGIEIGEN316 UPDATED FOR OZ53128                     @ZA53128 22312500
+&SGQUITB SETB  1                                                        22350000
+         AGO   .H2                                                      22400000
+.HM     ANOP             DEFAULT ALTCONS FOR SECONS TO MASTER CONSOLE   22450000
+&SGSCNAC(&XX) SETC   '&SGSCHDC(1)'      MCONS IS ALTERNATE              22500000
+  MNOTE 0,'* * * IEIGEN319 ALTCONS DEFAULTED TO MASTER CONSOLE FOR SECO*22510000
+               NDARY CONSOLE AT &SGSCNCC(&XX)'                          22520000
+         AGO   .H2                                                      22550000
+.********************************************************************** 22650000
+.*             **** VALIDATE O-ONLY CONSOLES ****                     * 22700000
+.J1      ANOP  ******************************************************** 22750000
+&C5      SETC  'FFF'                                                    22800000
+&C       SETA  &SGSCNYA(1)                                              22850000
+.J2      AIF   (&C EQ 0).K1                                             22900000
+&Z       SETC  '&SGSCNCC(&C)'(1,3)                                      22950000
+         AIF   ('&Z' NE '&C5').J4                                       23000000
+&Z       SETC  '&SGSCNCC(&C)'(4,3)                                      23050000
+         CONVERT TO=HEX,DIGITS=3,VALUE=&Z                               23100000
+         IOCHECK LOOKFOR=&HEX                                           23150000
+         AIF   (&HEX EQ 0).J3                                           23200000
+&X       SETA  &SGDASPA(&HEX)                                   Z40ASVN 23250000
+         AIF   (&SGDT06B(&X) AND &SGDU01B(&X)).J4           1403        23300000
+         AIF   (&SGDT06B(&X) AND &SGDU03B(&X)).J4           1443        23350000
+         AIF   (&SGDT06B(&X) AND &SGDU06B(&X)).J4           3211        23400000
+         AIF   (&SGDT06B(&X) AND &SGDU08B(&X)).J4           3213        23450000
+         AIF   (&SGDT05B(&X) AND &SGDU02B(&X)).JA3        2260 @ZA44996 23500000
+         AIF   (&SGDT05B(&X) AND &SGDU08B(&X)).JA3        3277 @ZA44996 23550000
+         AIF   (&SGDT05B(&X) AND &SGDU09B(&X)).J4           3284        23600000
+         AIF   (&SGDT05B(&X) AND &SGDU07B(&X)).J4           3286        23650000
+.J3 MNOTE 5,'* * * IEIGEN318 O-&Z CONSOLE MUST BE A 1403, 1443, 3211, 3*23700000
+               213, 2260, 3277, 3284, OR 3286'                          23750000
+&SGQUITB SETB  1                                                        23800000
+.J4      ANOP                                                           23850000
+&C       SETA  &C-1                                                     23900000
+         AGO   .J2                                                      23950000
+.JA3 AIF ((&SGDU02B(&X) OR (&SGDU08B(&X) AND &SGDM02B(&X))) AND (NOT (&*23957100
+               SGSCSDB(&C) OR &SGSCMSB(&C)))).J3B              @ZA44996 23964200
+         AGO   .J4                                             @ZA44996 23971300
+.J3B MNOTE 5,'* * * IEIGEN324 O-&Z CONSOLE REQUIRES USE PARM'  @ZA44996 23978400
+&SGQUITB SETB  1                                               @ZA44996 23985500
+         AGO   .J4                                             @ZA44996 23992600
+.********************************************************************** 24000000
+.*             **** CHECK SECONSLE CONSOLE INPUT ADDRESS ****         * 24050000
+.K1      ANOP  ******************************************************** 24100000
+&C       SETA  &SGSCNYA(1)                                              24150000
+&C5      SETC  'FFF'                                                    24200000
+.K2      AIF   (&C EQ 0).KA                                             24250000
+         AIF   ('&SGSCNCC(&C)' EQ 'JESJES').K9K  BYPASS CHECKS FOR JES  24300000
+&ADDRESI SETC  '&SGSCNCC(&C)'(1,3)                                      24350000
+&ADDRESO SETC  '&SGSCNCC(&C)'(4,3)                                      24400000
+         CONVERT TO=HEX,DIGITS=3,VALUE=&ADDRESI                         24450000
+         IOCHECK LOOKFOR=&HEX                                           24500000
+         AIF   ('&ADDRESI' EQ '&C5').K5                                 24550000
+         AIF   (&HEX EQ 0).K3                                           24600000
+&X       SETA  &SGDASPA(&HEX)           GET DEVICE POINTER      Z40ASVN 24650000
+         AIF   (&SGDT04B(&X) AND &SGDU01B(&X) AND &SGDM01B(&X)).SETCONA 24700000
+.*                                                          1052-7      24750000
+         AIF   (&SGDT04B(&X) AND &SGDU03B(&X)).SETCONA      3210        24800000
+         AIF   (&SGDT04B(&X) AND &SGDU04B(&X)).SETCONA      3215        24850000
+         AIF   (&SGDT07B(&X) AND &SGDU02B(&X) AND (&SGDM01B(&X) OR     *24900000
+               &SGDM02B(&X))).SETRDRA                       2501-B1,B2  24950000
+         AIF   (&SGDT07B(&X) AND &SGDU03B(&X) AND &SGDM01B(&X)).SETRDRA 25000000
+.*                                                          2520-B1     25050000
+         AIF   (&SGDT07B(&X) AND &SGDU04B(&X) AND &SGDM01B(&X)).SETRDRA 25100000
+.*                                                          2540R       25150000
+         AIF   (&SGDT07B(&X) AND &SGDU08B(&X)).SETRDRA      3505        25200000
+         AIF   (&SGDT07B(&X) AND &SGDU09B(&X)).SETRDRA      3525        25250000
+         AIF   (&SGDT08B(&X) AND &SGDU08B(&X)).SETTPIA      2740        25300000
+         AIF   (NOT(&SGDT05B(&X))).K3  ONLY GRAPHICS LEFT TO CHECK      25350000
+.********************************************************************** 25400000
+.*            CHECK GRAPHICS TO INSURE IT IS NOT THE INPUT HALF OF A  * 25450000
+.*            COMPOSITE CONSOLE.                                      * 25500000
+.********************************************************************** 25550000
+         AIF   ('&ADDRESI' NE '&ADDRESO').K35                           25600000
+         AIF   (&SGDT05B(&X) AND &SGDU01B(&X) AND (&SGDM01B(&X) OR     *25650000
+               &SGDM03B(&X))).SETGRIA                       2250-1,3    25700000
+         AIF   (&SGDT05B(&X) AND &SGDU02B(&X) AND &SGDM01B(&X)).SETGRIA 25750000
+.*                                                          2260-1      25800000
+         AIF   (&SGDT05B(&X) AND &SGDU06B(&X) AND &SGDF01B(&X)).SETGRIA 25850000
+.*                                                          3066        25950000
+         AIF   (&SGDT05B(&X) AND &SGDU10B(&X)).SETGRIA          G51DSPD 25960000
+.*                                                          3158        25970000
+         AIF   (&SGDT05B(&X) AND &SGDU13B(&X)).SETGRIA          G51DSPD 25980000
+.*                                                          3036        25990000
+         AIF   (NOT (&SGDT05B(&X) AND &SGDU08B(&X) AND &SGDM02B(&X))).K*26000000
+               3                                            3277-2      26050000
+         AIF   (&SGDF10B(&X) OR &SGDF11B(&X) OR &SGDF12B(&X) OR        *26100000
+               &SGDF13B(&X)).SETGRIA                        KEYBOARD    26150000
+    MNOTE 5,'* * * IEIGEN301   CONSOLE ADDRESS &ADDRESI,REQUIRES KEYBOA*26200000
+               RD TO HAVE INPUT CAPABILITY'                             26250000
+&SGQUITB SETB  1                                                        26300000
+         AGO   .K4                                                      26350000
+.K3 MNOTE 5,'* * * IEIGEN320  CONSOLE MACRO, ADDRESS &ADDRESI INVALID F*26400000
+               OR SECONDARY CONSOLE INPUT'                              26450000
+&SGQUITB SETB  1                                                        26500000
+         AGO   .K5                                                      26550000
+.K35 MNOTE 5,'* * * IEIGEN303 CONSOLE MACRO,GRAPHICS ADDRESS &ADDRESI I*26600000
+               NVALID FOR INPUT IN A COMPOSITE CONSOLE'                 26650000
+&SGQUITB SETB  1                                                        26700000
+         AGO   .K9                                                      26750000
+.********************************************************************** 26800000
+.*             **** PFK CHECK ****                                    * 26850000
+.********************************************************************** 26900000
+.K4      AIF   (&SGSCNPA(&C) EQ 0).K5                                   26950000
+         AIF   (NOT (&SGDT05B(&X) AND &SGDU01B(&X))).K4B    2250        27000000
+         AIF   (&SGDF02B(&X) OR &SGDF03B(&X)).K5  LIGHTPEN / PRGMKYBD   27050000
+    MNOTE 5,'* * * IEIGEN322  CONSOLE MACRO, PFK SPECIFICATION FOR 2250*27100000
+               , CONSOLE ADDRESS &ADDRESI, REQUIRES PRGMKYBD OR LIGHTPE*27150000
+               N FEATURE'                                               27200000
+&SGQUITB SETB  1                                                        27250000
+         AGO   .K5                                                      27300000
+.*                               CHECK IF 3277, MODEL 2, OR 3158        27310000
+.K4B     AIF   (&SGDT05B(&X) AND &SGDU08B(&X) AND &SGDM02B(&X)).K5      27350000
+         AIF   (&SGDT05B(&X) AND &SGDU10B(&X)).K5           3158        27400000
+         AIF   (&SGDT05B(&X) AND &SGDU13B(&X)).K5          3036 G51DSPD 27450000
+     MNOTE 5,'* * * IEIGEN304  CONSOLE MACRO, CONSOLE ADDRESS &ADDRESI *27750000
+               - PFK SPECIFICATION INVALID'                             27800000
+&SGQUITB SETB  1                                                        27850000
+.********************************************************************** 27900000
+.*             **** CHECK SECONSLE ALT CONSOLE OUTPUT ADDR ****       * 27950000
+.K5      ANOP  ******************************************************** 28000000
+&ADDRESO SETC  '&SGSCNCC(&C)'(4,3)                                      28050000
+         AIF   ('&ADDRESI' EQ '&ADDRESO' AND &HEX EQ 0).K9J             28100000
+         AIF   ('&ADDRESI' EQ '&ADDRESO').K7                            28150000
+         CONVERT TO=HEX,DIGITS=3,VALUE=&ADDRESO                         28200000
+         IOCHECK LOOKFOR=&HEX                                           28250000
+         AIF   (&HEX EQ 0).K6                                           28300000
+&X       SETA  &SGDASPA(&HEX)           GET DEVICE POINTER      Z40ASVN 28350000
+         AIF   (&SGDT04B(&X) AND &SGDU01B(&X) AND &SGDM01B(&X)).SETCONB 28400000
+.*                                                          1052-7      28450000
+         AIF   (&SGDT04B(&X) AND &SGDU03B(&X)).SETCONB      3210        28500000
+         AIF   (&SGDT04B(&X) AND &SGDU04B(&X)).SETCONB      3215        28550000
+         AIF   (&SGDT06B(&X) AND &SGDU01B(&X) AND (&SGDM01B(&X) OR     *28600000
+               &SGDM02B(&X) OR &SGDM04B(&X))).SETPTRA       1403-N1,2,7 28650000
+         AIF   (&SGDT06B(&X) AND &SGDU03B(&X) AND &SGDM01B(&X)).SETPTRA 28700000
+.*                                                          1443-N1     28750000
+         AIF   (&SGDT06B(&X) AND &SGDU06B(&X)).SETPTRA      3211        28800000
+         AIF   (&SGDT06B(&X) AND &SGDU08B(&X)).SETPTRA      3213        28850000
+         AIF   (&SGDT08B(&X) AND &SGDU08B(&X)).SETTPOA      2740        28900000
+         AIF   (&SGDT05B(&X) AND &SGDU01B(&X) AND (&SGDM01B(&X) OR     *28950000
+               &SGDM03B(&X))).SETGROA                       2250-1,3    29000000
+         AIF   (&SGDT05B(&X) AND &SGDU02B(&X) AND &SGDM01B(&X)).SETGROA 29050000
+.*                                                          2260-1      29100000
+         AIF   (&SGDT05B(&X) AND &SGDU06B(&X) AND &SGDF01B(&X)).SETGROA 29150000
+.*                                                          3066        29200000
+         AIF   (NOT (&SGDT05B(&X) AND &SGDU08B(&X) AND &SGDM01B(&X))).K*29250000
+               5A                                           3277-1      29300000
+         AIF   ('&ADDRESI' EQ 'FFF').K9                                 29350000
+    MNOTE 5,'* * * IEIGEN324  CONSOLE MACRO, ADDRESS &ADDRESO - 3277 MO*29400000
+               DEL 1 IS ONLY VALID AS AN O-ONLY CONSOLE'                29450000
+&SGQUITB SETB  1                                                        29500000
+         AGO   .K9                                                      29550000
+.K5A     AIF   (&SGDT05B(&X) AND &SGDU08B(&X) AND &SGDM02B(&X)).SETGROA 29600000
+.*                                                          3277-2      29650000
+         AIF   (&SGDT05B(&X) AND &SGDU09B(&X) AND (&SGDM01B(&X) OR     *29700000
+               &SGDM02B(&X))).SETOPTA                       3284-1,2    29750000
+         AIF   (&SGDT05B(&X) AND &SGDU07B(&X) AND (&SGDM01B(&X) OR     *29800000
+               &SGDM02B(&X))).SETOPTA                       3286-1,2    29850000
+.K6 MNOTE 5,'* * * IEIGEN325  CONSOLE MACRO, ADDRESS &ADDRESO INVALID F*29900000
+               OR SECONDARY CONSOLE OUTPUT'                             29950000
+&SGQUITB SETB  1                                                        30000000
+         AGO   .K9J                                                     30050000
+.********************************************************************** 30100000
+.**     INDICATE TYPE OF DEVICE  USED AS A CONSOLE FOR SGIEA401      ** 30150000
+.********************************************************************** 30200000
+.SETCONA ANOP                    SET INPUT CONSOLE INDICATOR            30250000
+&SGSCHDB(1)    SETB 1            SET FOR A 1052/3210/3215               30300000
+         AGO   .K4               GO TO PFK CHECK                        30350000
+.SETCONB ANOP                    SET OUTPUT CONSOLE INDICATOR           30400000
+&SGSCHDB(1)    SETB 1            SET FOR A 1052/3210/3215               30450000
+         AGO   .K8               GO SET VALID HARDCOPY SWITCH           30500000
+.SETRDRA ANOP                    SET READER INDICATOR                   30550000
+&SGSCHDB(2)    SETB 1            SET FOR A 2501/2520/2540R/3505/3525    30600000
+         AIF   ('&ADDRESI' EQ '&ADDRESO').K6   INVALID OUTPUT DEVICE    30650000
+         AGO   .K4               GO TO PFK CHECK                        30700000
+.SETPTRA ANOP                    SET PRINTER INDICATOR                  30750000
+&SGSCHDB(3)    SETB 1            SET FOR A 1403/1443/3211/3213          30800000
+         AGO   .K8               GO SET VALID HARDCOPY SWITCH           30850000
+.SETGRIA ANOP                    SET INPUT GRAPHICS INDICATOR           30900000
+&SGSCHDB(5)    SETB 1            SET FOR A 2250/2260/3066/3158/3277     30950000
+         AGO   .K4               GO TO PFK CHECK                        31000000
+.SETGROA ANOP                    SET OUTPUT GRAPHICS INDICATOR          31050000
+&SGSCHDB(5)    SETB 1            SET FOR A 2250/2260/3066/3158/3277     31100000
+         AGO   .K9               GO TO LIMITED CAPACITY CHECK           31150000
+.SETOPTA ANOP                    SET OCR/MICR INDICATOR                 31200000
+&SGSCHDB(5)    SETB 1            SET FOR A 2250/2260/3066/3158/3277     31250000
+         AGO   .K8               GO SET VALID HARDCOPY SWITCH           31300000
+.SETTPIA ANOP                    SET TP INPUT INDICATOR                 31350000
+&SGSCHDB(13)   SETB 1            SET FOR A 2740                         31400000
+         AGO   .K4               GO TO PFK CHECK                        31450000
+.SETTPOA ANOP                    SET TP OUTPUT INDICATOR                31500000
+&SGSCHDB(13)   SETB 1            SET FOR A 2740                         31550000
+         AGO   .K8               GO SET VALID HARDCOPY SWITCH           31600000
+.********************************************************************** 31650000
+.*                 VERIFY AND SET HARDCOPY INDICATOR                  * 31700000
+.********************************************************************** 31750000
+.K7      AIF   (NOT(&SGDT04B(&X) OR &SGDT08B(&X))).K9  1052-7/3210/3215 31800000
+.K8      ANOP                    * SWITCH FOR VALID *  2740/1403-N1,2,7 31850000
+&AC      SETB  1                 * HARDCOPY CONSOLE *  1443-N1/3211     31900000
+.*                               * CAPABILITY       *  3284/3286        31950000
+.********************************************************************** 32000000
+.*             **** CK LIMITED CAPACITY ****                          * 32050000
+.********************************************************************** 32100000
+.K9      AIF   (NOT (&SGSCSDB(&C) OR &SGSCMSB(&C))).K9A     SD / MS     32150000
+         AIF   (&SGDT05B(&X) AND (&SGDU02B(&X) OR  &SGDU08B(&X) OR     *32200000
+               &SGDU10B(&X) OR &SGDU13B(&X))).K9A                       32233300
+.*                                2260/3277/3158/3036          @ZA34348 32266600
+    MNOTE 5,'* * * IEIGEN326  CONSOLE MACRO, ADDRESS &ADDRESO INVALID A*32300000
+               S A LIMITED CAPACITY CONSOLE'                            32350000
+&SGQUITB SETB  1                                                        32400000
+.********************************************************************** 32450000
+.*             **** AREA CHECK AND DEFAULT ****                       * 32500000
+.********************************************************************** 32550000
+.K9A     AIF   (&SGAR12A(&C) NE 0 AND NOT (&SGDT05B(&X) AND (&SGDU01B(&*32600000
+               X) OR &SGDU02B(&X) OR &SGDU06B(&X) OR (&SGDU08B(&X) AND *32650000
+               &SGDM02B(&X)) OR &SGDU10B(&X) OR &SGDU13B(&X)))).K9H     32700000
+.*                       AREA 2250 2260 3066 3158 3277-2 3036           32750000
+         AIF   (NOT (&SGDT05B(&X) AND (&SGDU01B(&X) OR &SGDU06B(&X)    *32800000
+               OR &SGDU13B(&X)))).K9B          2250 3066 3036           32850000
+         AIF   (&SGDU01B(&X) AND &SGAR12A(&C) GT 47).K9H    2250 ERR    32900000
+         AIF   (&SGDU06B(&X) AND &SGAR12A(&C) GT 30).K9H    3066 ERR    32950000
+         AIF   (&SGAR12A(&C) NE 0).K9J                                  33000000
+&SGAR01A(&C)   SETA 14                                      DEFAULT 14  33050000
+&SGAR12A(&C)   SETA 14                                                  33100000
+         AGO   .K9D                                                     33150000
+.K9B     AIF   (NOT (&SGDT05B(&X) AND &SGDU02B(&X))).K9E    2260        33200000
+         AIF   (&SGSCMSB(&C) AND &SGAR12A(&C) NE 0).K9G     MS/AREA ERR 33250000
+         AIF   (&SGSCMSB(&C)).K9J                                       33300000
+         AIF   (NOT &SGSCSDB(&C)).K9C                       STATUS DIS  33350000
+         AIF   (&SGAR12A(&C) GT 11).K9H                     2260/SD ERR 33400000
+         AIF   (&SGAR12A(&C) NE 0).K9J                                  33450000
+&SGAR01A(&C)   SETA 11                                      DEFAULT 11  33500000
+&SGAR12A(&C)   SETA 11                                                  33550000
+         AGO   .K9D                                                     33600000
+.K9C     AIF   (&SGAR12A(&C) GT 8).K9H                      2260 ERR    33650000
+         AIF   (&SGAR12A(&C) NE 0).K9J                                  33700000
+&SGAR01A(&C)   SETA 8                                       DEFAULT 8   33750000
+&SGAR12A(&C)   SETA 8                                                   33800000
+.K9D MNOTE 0,'* * * IEIGEN931  CONSOLE MACRO, CONSOLE ADDRESS &ADDRESO,*33850000
+               DISPLAY AREA DEFAULTED TO LENGTH OF &SGAR01A(&C)'        33900000
+         AGO   .K9J                                                     33950000
+.K9E     AIF   (NOT (&SGDT05B(&X) AND (&SGDU08B(&X) AND &SGDM02B(&X))  *34000000
+               OR &SGDU10B(&X) OR &SGDU13B(&X))).K9J            G51DSPD 34033300
+.*                                         3066 3158 3277-2     G51DSPD 34066600
+         AIF   (&SGSCMSB(&C) AND &SGAR12A(&C) NE 0).K9G     MS/AREA ERR 34100000
+         AIF   (&SGSCMSB(&C)).K9J                                       34150000
+         AIF   (NOT &SGSCSDB(&C)).K9F                       STATUS DIS  34200000
+         AIF   (&SGAR12A(&C) GT 23).K9H              3158/3277-2/SD ERR 34250000
+         AIF   (&SGAR12A(&C) NE 0).K9J                                  34300000
+&SGAR01A(&C)   SETA 13                                      DEFAULT 13  34350000
+&SGAR02A(&C)   SETA 10                                      DEFAULT 10  34400000
+&SGAR12A(&C)   SETA 23                                                  34450000
+    MNOTE 0,'* * * IEIGEN933 CONSOLE MACRO, CONSOLE ADDRESS &ADDRESO,  *34500000
+               DISPLAY AREAS DEFAULTED TO LENGTHS OF 13,10'             34550000
+         AGO   .K9J                                                     34600000
+.K9F     AIF   (&SGAR12A(&C) GT 19).K9H                 3158/3277-2 ERR 34650000
+         AIF   (&SGAR12A(&C) NE 0).K9J                                  34700000
+&SGAR01A(&C)   SETA 14                                      DEFAULT 14  34750000
+&SGAR12A(&C)   SETA 14                                                  34800000
+         AGO   .K9D                                                     34850000
+.K9G MNOTE 5,'* * * IEIGEN327 CONSOLE MACRO, CONSOLE ADDRESS &ADDRESO, *34900000
+               DISPLAY AREA INVALID FOR CONSOLE IN MESSAGE STREAM MODE' 34950000
+&SGQUITB SETB  1                                                        35000000
+         AGO   .K9J                                                     35050000
+.K9H MNOTE 5,'* * * IEIGEN328  CONSOLE MACRO, DISPLAY AREA DEFINED INVA*35100000
+               LID FOR CONSOLE ADDRESS &ADDRESO'                        35150000
+&SGQUITB SETB  1                                                        35200000
+         AGO   .K9K                                                     35250000
+.********************************************************************** 35262500
+.*          **** INTEGRATED OPERATOR CONSOLE -- SECONDARY ****        * 35275000
+.********************************************************************** 35287500
+.K9J     AIF   ('&SGSIOCC(&C)' EQ '').K9K    SECONSLE IOC NULL          35300000
+     MNOTE 0,'* * * IEIGEN679 INTEGRATED OPERATOR CONSOLE (IOC) NO LONG*35350000
+               ER SUPPORTED'                                   @ZA60599 35400000
+.********************************************************************** 35962500
+.*                  **** CHECK HARDCOPY INDICATOR ****                * 35975000
+.********************************************************************** 35987500
+.K9K     ANOP                                                           36000000
+&C       SETA  &C-1                                                     36050000
+         AGO   .K2                                                      36100000
+.KA      AIF (&SGSCHDB(36)).MEND   HDCPY=SYSLOG                @AZ10499 36150000
+         AIF   (&AC).MEND                                      @AZ10499 36170000
+    MNOTE 5,'* * * IEIGEN329 AT LEAST ONE CONSOLE WITH HARDCOPY CAPABIL*36200000
+               ITY IS REQUIRED'                                         36250000
+&SGQUITB SETB  1                                                        36300000
+         AGO   .MEND                                                    36350000
+.ER1 MNOTE 5,'* * * IEIGEN330 AT LEAST TWO CONSOLE MACROS ARE REQUIRED' 36400000
+&SGQUITB SETB 1                                                         36450000
+.MEND    MEND                                                           36550000

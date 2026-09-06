@@ -1,0 +1,31 @@
+         MACRO                                                          00050000
+         SGIEC4DJ                                                       00100000
+.* FUNCTION - LINK EDIT SETPRT MODULES.                                 00150000
+.* LAST UPDATE - 07/03/80                                               00200000
+.* METHOD - THIS MACRO CONTINUES GENERATING LINK EDIT                   00241600
+.*      STATEMENTS FOR MODULES GOING TO SYS1.LPALIB.                    00283200
+.* CHANGE SUMMARY -                                                     00324800
+.*      NEW MACRO WITH 3800 ENHANCEMENTS (FDM1133).            @ZA44992 00366400
+.*A008500,009500-012500,013500                                 @ZA47527 00408000
+.*                                                                      00450000
+*** SGIEC4DJ *** SETPRT                                   *** SC1D0 *** 00500000
+         PUNCH ' INCLUDE AOSD0(IGC0008A,IGG08101,IGG08102)'             00550000
+         PUNCH ' INCLUDE AOSD0(IGG08103,IGG08104)'                      00600000
+         PUNCH ' INCLUDE AOSD0(IGG08110,IGG08111,IGG08112)'             00650000
+         PUNCH ' INCLUDE AOSD0(IGG08113,IGG08114,IGG08115)'             00700000
+         PUNCH ' INCLUDE AOSD0(IGG08116,IGG08117)'             @G38ESAP 00750000
+         PUNCH ' ORDER IGC0008A(P),IGG08101,IGG08102'                   00800000
+         PUNCH ' ALIAS IGG08101,IGG08102   '                   @ZA47527 00850000
+         PUNCH ' ORDER IGG08103,IGG08104'                               00900000
+         PUNCH ' ALIAS IGG08103,IGG08104   '                   @ZA47527 00950000
+         PUNCH ' ORDER IGG08110(P),IGG08111   '                @ZA47527 01000000
+         PUNCH ' ALIAS IGG08110,IGG08111   '                   @ZA47527 01050000
+         PUNCH ' ORDER IGG08112,IGG08113   '                   @ZA47527 01100000
+         PUNCH ' ALIAS IGG08112,IGG08113   '                   @ZA47527 01150000
+         PUNCH ' ORDER IGG08114,IGG08115   '                   @ZA47527 01200000
+         PUNCH ' ALIAS IGG08114,IGG08115   '                   @ZA47527 01250000
+         PUNCH ' ORDER IGG08116,IGG08117   '                   @G38ESAP 01300000
+         PUNCH ' ALIAS IGG08116,IGG08117   '                   @ZA47527 01350000
+         PUNCH ' ENTRY IGC0008A'                                        01400000
+         PUNCH ' NAME  IGC0008A(R)'                                     01450000
+         MEND                                                           01500000

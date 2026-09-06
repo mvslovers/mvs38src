@@ -1,0 +1,47 @@
+)F SEND FUNCTION -                                                      04000020
+  COMMUNICATION BETWEEN USER TERMINALS, OR BETWEEN USER TERMINAL AND    08000020
+  OPERATOR CONSOLE.                                                     12000020
+)X SYNTAX -                                                             16000020
+    SEND  ''TEXT''  USER('USERID LIST')  NOW/LOGON/SAVE  NOWAIT/WAIT    20000002
+                    OR                                                  21000002
+                    OPERATOR('ROUTING CODE')                            22000002
+                    OR                                                  23000002
+                    CN('CONSOLE IDENTIFIER')                            24000002
+  REQUIRED - ''TEXT''                                                   28000020
+  DEFAULTS - OPERATOR(2), NOW, NOWAIT                                   32000002
+  ALIAS    - SE                                                         36000020
+  NOTE     - DEFAULT OF OPERATOR(2) IS FOR MASTER CONSOLE.              40000020
+)O OPERANDS -                                                           44000020
+  ''TEXT'' - MESSAGE TO BE SENT IN QUOTES.  IF AN APOSTROPHE IS TO BE   48000020
+             PART OF THE MESSAGE, IT MUST BE ENTERED AS 2 APOSTROPHES.  52000020
+))USER('USERID LIST')                                                   56000020
+           - SPECIFIES THAT THE MESSAGE IS TO BE SENT TO THE INDICATED  60000020
+             USER(S) ONLY.                                              64000020
+    'USERID LIST'                                                       64050020
+           - LIST OF USERIDS TO WHOM MESSAGE IS TO BE ROUTED.           64100020
+             IF '*' IS SPECIFIED INSTEAD OF A USERID, THE USERID        65100002
+             OF THE SENDER WILL BE SUBSTITUTED.                         66100002
+))NOW      - SPECIFIES THAT THE MESSAGE IS TO BE SENT NOW.              68000020
+))LOGON    - SPECIFIES THAT THE MESSAGE IS TO BE SENT NOW (IF USER IS   72000020
+             CURRENTLY LOGGED ON) OR SAVED IN THE BROADCAST DATA SET    76000020
+             UNTIL THE SPECIFIED USER LOGS ON.                          80000020
+))SAVE     - SPECIFIES THAT THE MESSAGE IS TO BE SAVED IN THE           80500002
+             BROADCAST DATA SET AND NOT SENT NOW.                       81000002
+))NOWAIT   - SPECIFIES THAT THE SENDER SHOULD NOT BE KEPT               81500002
+             WAITING IF ANY INDICATED LOGGED-ON USER CANNOT             82000002
+             RECEIVE THE MESSAGE IMMEDIATELY.                           82500002
+))WAIT     - SPECIFIES THAT THE SENDER IS WILLING TO WAIT FOR ALL       83000002
+             INDICATED LOGGED-ON USERS TO RECEIVE THE MESSAGE.          83500002
+))OPERATOR('ROUTING CODE')                                              84000020
+           - SPECIFIES THE MESSAGE IS TO BE ROUTED TO THE OPERATOR.     88000020
+    'ROUTING CODE'                                                      92050020
+           - INTEGER SPECIFYING THE FUNCTIONAL CONSOLE TO WHICH MESSAGE 92100020
+             IS TO BE ROUTED USING THE INTEGER AS A ROUTING CODE.       92110020
+))CN('CONSOLE IDENTIFIER')                                              92115002
+           - SPECIFIES THE MESSAGE IS TO BE SENT TO AN OPERATOR         92120002
+             CONSOLE.                                                   92125002
+    'CONSOLE IDENTIFIER'                                                92130002
+           - INTEGER SPECIFYING THE CONSOLE NUMBER.  THIS NUMBER        92135002
+             IS APPENDED TO ANY MESSAGE SENT FROM AN OPERATOR           92140002
+             CONSOLE.                                                   92145002
+                                                                        92150020

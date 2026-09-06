@@ -1,0 +1,176 @@
+         MACRO                                                          00050001
+         SGIEA400                                                       00100001
+.*  LAST UPDATE = 05/11/73                                       Y02952 00110002
+.*              = 10/14/75 (MF/1)                              @Z40FPSM 00120004
+.*              = 01/04/77                                     @G33RPXG 00125043
+.*              = 08/30/78                                     @ZM49390 00127064
+.*              = 09/19/78                                     @ZM49435 00128064
+.*                                                                      00130004
+.*              = 06/25/79    REMOVE LINKEDIT FOR IFCERFMT AS           00133946
+.*                            OF SU33 BECAUSE OBR/EREP SYSGEN           00137846
+.*                            MACRO NOW PERFORMS THIS FUNCTION @ZA40045 00141746
+.*                                                                      00145646
+         COPY  SGGBLPAK                                          Y02952 00150002
+&SGCTRLC(6)    SETC  ''                                                 00999201
+&SGCTRLC(7)    SETC  '&SGCTRLC(32)'                              Y02952 01049202
+&SGCTRLC(8)    SETC  '&SGCTRLC(31)'                              Y02952 01099202
+&SGCTRLC(9)    SETC  'LINKLIB'                                   Y02952 01149202
+&SGCTRLC(12)   SETC  ',RENT'                                     Y02952 01199202
+&SGCTRLC(13)   SETC  ',REFR'                                     Y02952 01209202
+               COPY  SGLEDPK1                                    Y02952 01249202
+         PUNCH '//AOSC5 DD DISP=SHR,VOLUME=(,RETAIN),DSN=SYS1.AOSC5'    01251202
+               COPY  SGLEDPK2                                    Y02952 01253202
+.*                                                               Y02952 01259202
+.**** COMM TASK MODULE*******                                    Y02952 01269202
+.*                                                               Y02952 01279202
+         PUNCH ' INCLUDE AOSC5(IEAVMASV)'                        Y02952 01399202
+         PUNCH ' ALIAS IEAVTPUT'                                 Y02952 01449202
+         PUNCH ' NAME IEAVMASV(R)'                               Y02952 01469202
+.*                                                               Y02952 01479202
+         PUNCH ' INCLUDE AOSC5(IEAVMQR0)'                        Y02952 01489202
+         PUNCH ' NAME IEAVMQR0(R)'                               Y02952 01491202
+.*                                                               Y02952 01493202
+         PUNCH '/*'                                              Y02952 01499202
+.*                                                               Y02952 01509202
+&SGCTRLC(6)    SETC  ''                                          Y02952 01549202
+&SGCTRLC(7)    SETC  '&SGCTRLC(32)'                              Y02952 01599202
+&SGCTRLC(8)    SETC  '&SGCTRLC(31)'                              Y02952 01599602
+&SGCTRLC(9)    SETC  'LINKLIB'                                   Y02952 01599702
+&SGCTRLC(12)   SETC  ',RENT'                                     Y02952 01599802
+&SGCTRLC(13)   SETC  ',REFR'                                     Y02952 01599902
+&SGCTRLC(14)   SETC  ',LET'                                      Y02952 01610002
+               COPY  SGLEDPK1                                    Y02952 01649902
+         PUNCH '//AOSC5 DD DISP=SHR,VOLUME=(,RETAIN),DSN=SYS1.AOSC5'    01659902
+               COPY  SGLEDPK2                                    Y02952 01669902
+.*                                                               Y02952 01679902
+.**** MF/1 MODULES ****                                          Y02952 01729902
+.*                                                               Y02952 01779902
+         PUNCH ' INCLUDE AOSC5(IRBMFDCP)'                        Y02952 01829902
+         PUNCH ' NAME IRBMFDCP(R)'                               Y02952 01979902
+         PUNCH ' INCLUDE AOSC5(IRBMFDDP)'                        Y02952 02029902
+         PUNCH ' NAME IRBMFDDP(R)'                               Y02952 02179902
+         PUNCH ' INCLUDE AOSC5(IRBMFDHP)'                        Y02952 02279902
+         PUNCH ' NAME IRBMFDHP(R)'                               Y02952 02429902
+         PUNCH ' INCLUDE AOSC5(IRBMFDPP)'                        Y02952 02479902
+         PUNCH ' NAME IRBMFDPP(R)'                               Y02952 02629902
+         PUNCH ' INCLUDE AOSC5(IRBMFDWP)'                        Y02952 02679902
+         PUNCH ' NAME IRBMFDWP(R)'                               Y02952 02829902
+         PUNCH ' INCLUDE AOSC5(IRBMFICP)'                        Y02952 02929902
+         PUNCH ' NAME IRBMFICP(R)'                               Y02952 02979902
+         PUNCH ' INCLUDE AOSC5(IRBMFIHA)'                        Y02952 03079902
+         PUNCH ' NAME IRBMFIHA(R)'                               Y02952 03129902
+         PUNCH ' INCLUDE AOSC5(IRBMFIDV)'                        Y02952 03179902
+         PUNCH ' NAME IRBMFIDV(R)'                               Y02952 03229902
+         PUNCH ' INCLUDE AOSC5(IRBMFINP)'                        Y02952 03279902
+         PUNCH ' INCLUDE AOSC5(IRBMFANL,IRBMFTTB)'             @Z40FPSM 03284904
+         PUNCH ' ENTRY IRBMFINP'                                 Y02952 03299902
+         PUNCH ' NAME IRBMFINP(R)'                               Y02952 03329902
+         PUNCH ' INCLUDE AOSC5(IRBMFIPG)'                        Y02952 03379902
+         PUNCH ' NAME IRBMFIPG(R)'                               Y02952 03429902
+         PUNCH ' INCLUDE AOSC5(IRBMFIWK)'                        Y02952 03479902
+         PUNCH ' NAME IRBMFIWK(R)'                               Y02952 03529902
+         PUNCH ' INCLUDE AOSC5(IRBMFMFC)'                        Y02952 03579902
+         PUNCH ' INCLUDE AOSC5(IRBMFDEA)'                        Y02952 03589902
+         PUNCH ' INCLUDE AOSC5(IRBMFDTA)'                        Y02952 03599902
+         PUNCH ' INCLUDE AOSC5(IRBMFMLN)'                        Y02952 03609902
+         PUNCH ' SETCODE AC(1)'                                  Y02952 03611902
+         PUNCH ' ENTRY IRBMFMFC'                                 Y02952 03619902
+         PUNCH ' NAME IRBMFMFC(R)'                               Y02952 03629902
+         PUNCH ' INCLUDE AOSC5(IRBMFTRM)'                        Y02952 03879902
+         PUNCH ' NAME IRBMFTRM(R)'                               Y02952 03929902
+         PUNCH ' INCLUDE AOSC5(IRBMFRGM)'                        Y02952 03979902
+         PUNCH ' INCLUDE AOSC5(IRBMFSAR)'                        Y02952 03989902
+         PUNCH ' INCLUDE AOSC5(IRBMFLTV)'                        Y02952 03999902
+         PUNCH ' ENTRY IRBMFRGM'                                 Y02952 04009902
+         PUNCH ' NAME IRBMFRGM(R)'                               Y02952 04029902
+         PUNCH ' INCLUDE AOSC5(IRBMFALL)'                        Y02952 04079902
+         PUNCH ' NAME IRBMFALL(R)'                               Y02952 04129902
+         PUNCH ' INCLUDE AOSC5(IRBMFCNV)'                        Y02952 04179902
+         PUNCH ' NAME IRBMFCNV(R)'                               Y02952 04229902
+         PUNCH ' INCLUDE AOSC5(IRBMFRCR)'                        Y02952 04279902
+         PUNCH ' INCLUDE AOSC5(IRBMFLCV)'                        Y02952 04329902
+         PUNCH ' ENTRY IRBMFRCR'                                 Y02952 04339902
+         PUNCH ' NAME IRBMFRCR(R)'                               Y02952 04379902
+         PUNCH ' INCLUDE AOSC5(IRBMFRWR)'                        Y02952 04429902
+         PUNCH ' INCLUDE AOSC5(IRBMFLWV)'                        Y02952 04479902
+         PUNCH ' ENTRY IRBMFRWR'                                 Y02952 04529902
+         PUNCH ' NAME IRBMFRWR(R)'                               Y02952 04539902
+         PUNCH ' INCLUDE AOSC5(IRBMFRHR)'                        Y02952 04579902
+         PUNCH ' INCLUDE AOSC5(IRBMFLHV)'                        Y02952 04629902
+         PUNCH ' ENTRY IRBMFRHR'                                 Y02952 04639902
+         PUNCH ' NAME IRBMFRHR(R)'                               Y02952 04679902
+         PUNCH ' INCLUDE AOSC5(IRBMFRPR)'                        Y02952 04779902
+         PUNCH ' INCLUDE AOSC5(IRBMFLPV)'                        Y02952 04829902
+         PUNCH ' ENTRY IRBMFRPR'                                 Y02952 04839902
+         PUNCH ' NAME IRBMFRPR(R)'                               Y02952 04879902
+         PUNCH ' INCLUDE AOSC5(IRBMFRDR)'                        Y02952 04929902
+         PUNCH ' INCLUDE AOSC5(IRBMFLDV)'                        Y02952 04979902
+         PUNCH ' ENTRY IRBMFRDR'                                 Y02952 04989902
+         PUNCH ' NAME IRBMFRDR(R)'                               Y02952 05029902
+         PUNCH ' INCLUDE AOSC5(IRBMFMPR)'                        Y02952 05039902
+         PUNCH ' INCLUDE AOSC5(IRBMFLMV)'                        Y02952 05049902
+         PUNCH ' ENTRY IRBMFMPR'                                 Y02952 05059902
+         PUNCH ' NAME IRBMFMPR(R)'                               Y02952 05069902
+         PUNCH ' INCLUDE AOSC5(IRBMFDTP)'                      @Z40FPSM 05142904
+         PUNCH ' NAME IRBMFDTP(R)'                             @Z40FPSM 05143904
+         PUNCH ' INCLUDE AOSC5(IRBMFDSP)'                      @Z40FPSM 05144904
+         PUNCH ' NAME IRBMFDSP(R)'                             @Z40FPSM 05145904
+         PUNCH ' INCLUDE AOSC5(IRBMFRSR,IRBMFLSV)'             @Z40FPSM 05146904
+         PUNCH ' ENTRY IRBMFRSR'                               @Z40FPSM 05147904
+         PUNCH ' NAME IRBMFRSR(R)'                             @Z40FPSM 05148904
+         PUNCH ' INCLUDE AOSC5(IRBMFITR)'                      @Z40FPSM 05149904
+         PUNCH ' NAME IRBMFITR(R)'                             @Z40FPSM 05150904
+         PUNCH ' INCLUDE AOSC5(IRBMFRTR,IRBMFLAV)'             @Z40FPSM 05151904
+         PUNCH ' ENTRY IRBMFRTR'                               @Z40FPSM 05152904
+         PUNCH ' NAME IRBMFRTR(R)'                             @Z40FPSM 05153904
+         PUNCH ' INCLUDE AOSC5(IRBMFISP)'                      @Z40FPSM 05154904
+         PUNCH ' NAME IRBMFISP(R)'                             @Z40FPSM 05155904
+.*   SUMDUMP FORMATTER FOR AMDPRDMP SERVICE AID                @G33RPXG 05157943
+.*                                                             @G33RPXG 05159943
+         PUNCH ' INCLUDE AOSC5(IEAVTFSD)'                      @G33RPXG 05161943
+         PUNCH ' INCLUDE AOSC5(IEAVTFRD)'                      @G33RPXG 05163943
+         PUNCH ' INCLUDE AOSC5(IEAVTFHX)'                      @G33RPXG 05165943
+         PUNCH ' INCLUDE AOSC5(IEAVTFTM)'                      @G33RPXG 05167943
+         PUNCH ' ALIAS IEAVTFRD'                               @G33RPXG 05169943
+         PUNCH ' ENTRY IEAVTFSD'                               @G33RPXG 05171943
+         PUNCH ' NAME IEAVTFSD(R)'                             @G33RPXG 05173943
+.*                                                             @G33RPXG 05175943
+.*  RECOVERY DUMP TERMINATION DUMP FORMATTER                   @G33RPXG 05183943
+.*                                                             @G33RPXG 05184943
+         PUNCH ' INCLUDE AOSC5(IEAVTFMT,IEAFTEED,IEAFTIHS)'    @G33RPXG 05185943
+         PUNCH ' INCLUDE AOSC5(IEAFTRT2,IEAFTSCB)'             @G33RPXG 05186943
+         PUNCH ' ALIAS IEAFTEED,IEAFTESA,IEAFTFRR,IEAFTIHS'    @G33RPXG 05187943
+         PUNCH ' ALIAS IEAFTRTC,IEAFTRT2,IEAFTSCB,IEAFTSDW'    @G33RPXG 05188943
+         PUNCH ' ENTRY IEAVTFMT'                               @G33RPXG 05189943
+         PUNCH ' NAME IEAVTFMT(R)'                             @G33RPXG 05190943
+         PUNCH ' INCLUDE AOSC5(IEAVTFRT)'                      @G33RPXG 05191943
+         PUNCH ' NAME IEAVTFRT(R)'                             @G33RPXG 05192943
+.*                                                             @G33RPXG 05210943
+.* THE FOLLOWING FORMATTING MODULES ARE CURRENTLY OWNED IN POK @G33RPXG 05211243
+.*     SHOULD THEY BE TRANSFERRED OUT OF THE RTM COMPONENT,    @G33RPXG 05211543
+.*     THESE INCLUDES WILL BE REMOVED AND TRANSFERRED TO THE   @G33RPXG 05211843
+.*     SAME AREA.                                              @G33RPXG 05212143
+.*                                                             @G33RPXG 05212443
+.*  DATA MANAGEMENT CONTROL BLOCK FORMATTER MODULES            @G33RPXG 05213343
+.*                                                             @G33RPXG 05214043
+         PUNCH ' INCLUDE AOSC5(IECDAFMT,IECDAFT1)'             @G33RPXG 05214743
+         PUNCH ' ENTRY IECDAFMT'                               @G33RPXG 05215443
+         PUNCH ' NAME IECDAFMT(R)'                             @G33RPXG 05216143
+.*                                                             @G33RPXG 05216843
+.*  IOS INTERFACE CONTROL BLOCK FORMAT MODULES                 @G33RPXG 05217543
+.*                                                             @G33RPXG 05218243
+         PUNCH ' INCLUDE AOSC5(IECIOFMT,IECIOFT1)'             @G33RPXG 05218943
+         PUNCH ' ENTRY IECIOFMT'                               @G33RPXG 05219643
+         PUNCH ' NAME IECIOFMT(R)'                             @G33RPXG 05220343
+.*                                                             @G33RPXG 05221043
+.*  REMOVE LINKEDIT FOR IFCERFMT AS OF SU33 BECAUSE ORB/EREP            05221746
+.*  SYSGEN MACRO NOW PERFORMS THIS FUNCTION                    @ZA40045 05224346
+.*                                                             @ZM49390 05226964
+.**** DISPLAY DEVIATION MODULE ***                             @ZM49390 05276964
+.*  REMOVE MODULE IEEMPDM FROM LOAD MODULE IEEMPDEV            @ZM49435 05326964
+         PUNCH ' INCLUDE AOSC5(IEEMPDEV)'                      @ZM49390 05376964
+         PUNCH ' NAME IEEMPDEV(R)'                             @ZM49435 05426964
+.*                                                             @ZM49390 05526964
+         PUNCH '/*'                                            @Z40FPSM 05576964
+.*                                                               Y02952 05626964
+         MEND                                                           05676964

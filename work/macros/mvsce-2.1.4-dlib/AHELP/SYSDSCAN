@@ -1,0 +1,18 @@
+)S SYSDSCAN                                                             00000245
+)F FUNCTION -                                                           00001645
+   THE SYSDSCAN SUBCOMMAND IS USED TO ALLOCATE THE SYS1.DUMPNN          00001845
+   DATA SET(S) AND DISPLAY THE TITLE(S) OF THOSE DUMPS.                 00002045
+                                                                        00002245
+   SYSDSCAN CAN BE USED AS A TSO COMMAND OR AS AN IPCS SUBCOMMAND.      00002445
+                                                                        00002645
+)X SYNTAX -                                                             00002845
+   SYSDSCAN          'XX' OR 'XX:YY'                                    00003045
+                                                                        00003245
+)O OPERANDS -                                                           00003445
+  'XX' OR 'XX:YY'                                                       00003645
+   WHERE 'XX' OR 'XX:YY' SPECIFIES ONE OR A RANGE OF SYS1.DUMPNN        00003845
+   DATA SETS.  LEADING ZEROS ARE OPTIONAL AND WHEN 'YY' APPEARS IT      00004045
+   MUST BE GREATER THAN OR EQUAL TO 'XX'.                               00004245
+                                                                        00004445
+   REQUIRED - NO                                                        00004645
+   DEFAULT  - 00:09                                                     00004845

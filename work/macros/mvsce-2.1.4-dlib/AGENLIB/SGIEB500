@@ -1,0 +1,18 @@
+* /*** START OF SPECIFICATIONS ******************************* @Y30OE94 00050003
+*                                                              @Y30OE94 00100003
+*01* PROCESSOR = ASSEMXF-370R                                  @Y30OE94 00150003
+*                                                              @Y30OE94 00200003
+*01*MACRO-NAME = SGIEB500 (OS/VS2 - MACRO)                     @Y30OE94 00250003
+*                                                              @Y30OE94 00300003
+*01*DESCRIPTIVE-NAME = 3540 SUPPORT SYSGEN MACRO               @Y30OE94 00350003
+*                                                              @Y30OE94 00400003
+*01*COPYRIGHT = NONE                                           @Y30OE94 00450003
+*                                                              @Y30OE94 00500003
+*01*CHANGE-ACTIVITY =                                          @Y30OE94 00550003
+*                                                              @Y30OE94 00600003
+****** END OF SPECIFICATIONS ******************************* @Y30OE94*/ 00650003
+      MACRO                                                    @Y30OE94 00700003
+      SGIEB500                                                          00750003
+      PUNCH  ' COPY OUTDD=LPALIB,INDD=AOSD0' AOSD0 TO LPALIB   @Y30OE94 00800003
+      PUNCH   ' SELECT MEMBER=(IGG019VV)' FIRST MEMBER         @Y30OE94 00850003
+      MEND                                                     @Y30OE94 00950003

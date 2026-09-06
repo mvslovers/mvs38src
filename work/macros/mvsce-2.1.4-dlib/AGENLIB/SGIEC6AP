@@ -1,0 +1,426 @@
+         MACRO                                                          00100002
+         SGIEC6AP                                                       00200002
+.*                                                                      00300002
+.********************************************************************** 00400002
+.*                                                                      00500002
+.*       VS2 RELEASE 04 DELETIONS/CHANGES                               00550037
+.*0000129000,379000                                            @ZA05432 00552037
+.*                                                                      00560037
+.*       VS2 RELEASE 03 DELETIONS/CHANGES                               00600002
+.*                                                                      00700002
+.*0000000000-999999                                             ZA00701 00800002
+.*0000378000                                                   @ZA02160 00850002
+.*0000377000                                                   @ZA26457 00870037
+.*                                                                      00900002
+.* MODULE NAME = SGIEC6AP (VS2-2)                                       01000002
+.*                                                                      01100002
+.* DESCRIPTIVE NAME = SYSGEN EXCP APPENDAGE NAME PARMLIB UPDATE MACRO   01200002
+.*                                                                      01300002
+.* COPYRIGHT = NONE.                                                    01400002
+.*                                                                      01500002
+.* STATUS = CHANGE LEVEL 000                                            01600002
+.*                                                                      01700002
+.* FUNCTION = THIS MACRO CREATES JCL AND CONTROL CARDS AT SYSGEN        01800002
+.*            TO CREATE SYS1.PARMLIB MEMBER IEAAPP00 WITH MODULE        01900002
+.*            ID NAMES TO BE USED AS EXCP APPENDAGES. IEAAPP00 IS       02000002
+.*            INTERROGATED AT IPL BY IEAVNP16 AND A TABLE OF            02100002
+.*            AUTHORIZED EXCP APPENDAGE NAMES IS BUILT. WHENEVER        02200002
+.*            AN OPEN IS ISSUED WITH MACRF=E SPECIFIED ON THE DCB       02300002
+.*            MACRO INSTRUCTION, OPEN MODULE IFG0196W VERIFIES          02400002
+.*            THAT THE EXCP APPENDAGE NAMES SPECIFIED ON THE DCB        02500002
+.*            MACRO INSTRUCTION EOEA=, SIOA=, PCIA=, CENDA=, AND        02600002
+.*            XENDA= PARAMETERS IS ONE OF THE ID NAMES IN THE           02700002
+.*            EXCP APPENDAGE NAME TABLE BUILT BY IEAVNP16.              02800002
+.*            IF THE NAME DOES NOT APPEAR IN THE TABLE OR IF THE        02900002
+.*            CALLER OF OPEN HAD A KEY GREATER THAN 8 THE CALLER WILL   03000002
+.*            BE ABNORMALLY TERMINATED WITH A 913 ABEND.                03100002
+.*                                                                      03200002
+.* NOTES = THIS MACRO IS AN INTERGRAL PART OF VS2 DATA SET SECURITY.    03300002
+.*                                                                      03400002
+.*      DEPENDENCIES = THIS MACRO IS DESIGNED TO BE USED IN             03500002
+.*                     CONJUNCTION WITH THE SYSGEN DATASET MACRO.       03600002
+.*                     THIS MACRO IS DEPENDENT ON THE FORMAT AND        03700002
+.*                     DIMENSION OF THE SYSGEN GLOBAL INPUT ARRAYS      03800002
+.*                     &SGDEOEC,&SGDSIOC,&SGDPCIC,&SGDCHEC,&SGDABEC     03900002
+.*                     (SEE RESTRICTIONS BELOW).                        04000002
+.*                                                                      04020002
+.*                     ALSO &SGDSVLC(18) = SYS1.PARMLIB VOLUME SERIAL   04100002
+.*                     AND &SGDSUNC(18) = SYS1.PARMLIB UNIT TYPE.       04200002
+.*                     UNIT AND VOL ARE SPECIFIED BY MACRO CALL-        04220002
+.*                     DATASET PARMLIB,VOL=(VOLSER,UNIT)                04240002
+.*                                                                      04290002
+.*                     PARMLIB IS AN INDEXED DATASET NAME WHICH USUALLY 04292002
+.*                     IS SPECIFIED AS SYS1.PARMLIB. HOWEVER, THE       04294002
+.*                     DATASET MAY BE RENAMED TO SYS2.PARMLIB, ETC.     04298002
+.*                     IF THE DATASET IS RENAMED THE INDEX PARAMETER    04298402
+.*                     OF THE SYSGEN MACRO GENERATE MUST BE SPECIFIED.  04298802
+.*                     THIS VALUE IS RETREIVED FROM THE SYSGEN GLOBAL   04299202
+.*                     SYMBOL &SGCTRLC(40).                             04299602
+.*                                                                      04300002
+.*      RESTRICTIONS = ALL RESTRICTIONS THAT APPLY TO SYSGEN MACROS     04400002
+.*                     AND SYS1.PARMLIB DATA SET MEMBERS APPLY          04500002
+.*                     TO THIS MACRO ALSO.                              04600002
+.*                     THIS MACRO MUST BE ASSEMBLED WITH THE VS         04700002
+.*                     ASSEMBLER TO ALLOW LCLC VARIABLES TO HAVE        04800002
+.*                     A MAXIMUM OF 255 CHARACTERS IN A STRING.         04900002
+.*                     THE SYSGEN GLOBAL INPUT ARRAYS HAVE              05000002
+.*                     DIMENSION 21 AND EACH STRING CONTAINS 8          05100002
+.*                     CHARACTERS OF 4 TWO CHARACTER ID NAMES OR        05200002
+.*                     84 ID NAMES PER ARRAY WHEN PUT END TO END        05300002
+.*                     WITH COMMAS FORM 252 CHARACTER ARRAYS.           05400002
+.*                                                                      05500002
+.*      REGISTER CONVENTIONS = NOT APPLICABLE.                          05600002
+.*                                                                      05700002
+.* PATCH LABEL = NOT APPLICABLE.                                        05800002
+.*                                                                      05900002
+.* MODULE TYPE = MACRO                                                  06000002
+.*                                                                      06100002
+.*      PROCESSOR = ASSEMBLER LANGUAGE (VS ASSEMBLER)                   06200002
+.*                                                                      06300002
+.*      MODULE SIZE = NOT APPLICABLE.                                   06400002
+.*                                                                      06500002
+.*      ATTRIBUTES = NOT APPLICABLE.                                    06600002
+.*                                                                      06700002
+.* ENTRY POINT = SGIEC6AP                                               06800002
+.*                                                                      06900002
+.*      PURPOSE = THIS MACRO WILL PUNCH JCL AND CONTROL CARDS           07000002
+.*                FOR THE IEBUPDTE UTILITY TO CREATE MEMBER             07100002
+.*                IEAAPP00 IN SYS1.PARMLIB.                             07200002
+.*                                                                      07300002
+.*      LINKAGE = AS FOLLOWS -                                          07400002
+.*                                                                      07500002
+.*            DATASET LIB,PDS=PDSNAME,EOEAPP=(ID,...),                  07600002
+.*                 SIOAPP=(ID,...),CHEAPP=(ID,...),ABEAPP=(ID,...),     07700002
+.*                 PCIAPP=(ID,...)                                      07800002
+.*            SGIEC6AP                                                  07900002
+.*                                                                      08000002
+.*            ON THE DATASET MACRO LIB IS LPALIB OR SVCLIB,             08100002
+.*            PDSNAME IS THE PDS THAT CONTAINS THE EXCP APPENDAGE       08200002
+.*            MEMBERS. THE APPENDAGE ID NAMES ARE SUPPLIED VIA THE      08300002
+.*            EOEAPP, SIOAPP, CHEAPP, ABEAPP, PCIAPP PARAMETERS.        08400002
+.*            THE ID NAMES ARE TWO CHARACTER CONSTANTS IN THE RANGE     08500002
+.*            WA-Z9 THAT WILL BE APPENDED TO IGG019 TO FORM AN 8        08600002
+.*            CHARACTER MODULE NAME THAT EXISTS IN THE LIBRARY          08700002
+.*            SPECIFIED BY THE PDS PARAMETER.                           08800002
+.*                                                                      08900002
+.*      INPUT = THE DATASET MACRO FORMATS THE INPUT AS FOLLOWS -        09000002
+.*                                                                      09100002
+.*             &SGDEOEC IS A GLOBAL DEFINED CHARACTER ARRAY             09200002
+.*             OF 21 8 CHARACTER (OR LESS) SYMBOLS WHICH REPRESENT      09300002
+.*             4 2 CHARACTER ID NAMES AS SPECIFIED ON THE               09400002
+.*             EOEAPP PARAMETER OF THE DATA SET MACRO. THIS             09500002
+.*             ALLOWS A MAXIMUM OF 84 TWO CHARACTER ID NAMES.           09600002
+.*                                                                      09700002
+.*             &SGDSIOC IS A GLOBAL DEFINED CHARACTER ARRAY             09800002
+.*             OF 21 8 CHARACTER (OR LESS) SYMBOLS WHICH REPRESENT      09900002
+.*             4 2 CHARACTER ID NAMES AS SPECIFIED ON THE               10000002
+.*             SIOAPP PARAMETER OF THE DATA SET MACRO. THIS             10100002
+.*             ALLOWS A MAXIMUM OF 84 TWO CHARACTER ID NAMES.           10200002
+.*                                                                      10300002
+.*             &SGDCHEC IS A GLOBAL DEFINED CHARACTER ARRAY             10400002
+.*             OF 21 8 CHARACTER (OR LESS) SYMBOLS WHICH REPRESENT      10500002
+.*             4 2 CHARACTER ID NAMES AS SPECIFIED ON THE               10600002
+.*             CHEAPP PARAMETER OF THE DATA SET MACRO. THIS             10700002
+.*             ALLOWS A MAXIMUM OF 84 TWO CHARACTER ID NAMES.           10800002
+.*                                                                      10900002
+.*             &SGDABEC IS A GLOBAL DEFINED CHARACTER ARRAY             11000002
+.*             OF 21 8 CHARACTER (OR LESS) SYMBOLS WHICH REPRESENT      11100002
+.*             4 2 CHARACTER ID NAMES AS SPECIFIED ON THE               11200002
+.*             ABEAPP PARAMETER OF THE DATA SET MACRO. THIS             11300002
+.*             ALLOWS A MAXIMUM OF 84 TWO CHARACTER ID NAMES.           11400002
+.*                                                                      11500002
+.*             &SGDPCIC IS A GLOBAL DEFINED CHARACTER ARRAY             11600002
+.*             OF 21 8 CHARACTER (OR LESS) SYMBOLS WHICH REPRESENT      11700002
+.*             4 2 CHARACTER ID NAMES AS SPECIFIED ON THE               11800002
+.*             PCIAPP PARAMETER OF THE DATA SET MACRO. THIS             11900002
+.*             ALLOWS A MAXIMUM OF 84 TWO CHARACTER ID NAMES.           12000002
+.*                                                                      12100002
+.*             THE GLOBALS ARE COPIED FROM SGGBLPAK ON SYS1.AGENLIB.    12200002
+.*                                                                      12300002
+.*      OUTPUT = WILL BE PUNCHED AS FOLLOWS -                           12400002
+.*                                                                      12500002
+.*       //IEAAPP00 EXEC PGM=IEBUPDTE,PARM='NEW'                        12600002
+.*       //SYSPRINT  DD SYSOUT=A                                        12700002
+.*       //SYSUT2    DD DSN=SYS1.PARMLIB,DISP=OLD,                      12800002
+.*       //             UNIT=SYSDA,VOL=SER=XXXXXX                       12850002
+.*       //SYSIN     DD *                                      @ZA05432 12900037
+.*       ./         ADD NAME=IEAAPP00,LIST=ALL                          13000002
+.*       ./         NUMBER NEW1=1000,INCR=1000                          13100002
+.*       EOEAPP ID,ID,...,                                              13200002
+.*       SIOAPP ID,ID,...,                                              13300002
+.*       PCIAPP ID,ID,...,                                              13400002
+.*       CHEAPP ID,ID,...,                                              13500002
+.*       ABEAPP ID,ID,...                                               13600002
+.*       /*                                                             13700002
+.*                                                                      13800002
+.* EXIT NORMAL = MEND STATEMENT                                         13900002
+.*                                                                      14000002
+.* EXIT ERROR = NONE                                                    14100002
+.*                                                                      14200002
+.* EXTERNAL REFERENCES = SGGBLPAK                                       14300002
+.*                                                                      14400002
+.*      ROUTINES = NONE.                                                14500002
+.*                                                                      14600002
+.*      DATA AREAS = REFERENCE CONSTANTS SECTION BELOW.                 14700002
+.*                                                                      14800002
+.*      CONTROL BLOCKS = NONE.                                          14900002
+.*                                                                      15000002
+.* TABLES = REFERENCE CONSTANTS SECTION BELOW.                          15100002
+.*                                                                      15200002
+.* MACROS = NONE.                                                       15300002
+.*                                                                      15400002
+.* CHANGE ACTIVITY = SEE ABOVE.                                         15500002
+.*                                                                      15600002
+.********************************************************************** 15700002
+.*                                                                      15800002
+         COPY  SGGBLPAK                 GET SYSGEN GLOBALS              15900002
+.*       ARRAY INDEXES                                                  16000002
+         LCLA  &A                       INDEX FOR GLOBAL ARRAYS 1-21    16100002
+         LCLA  &B                       INDEX FOR &ID 1-5               16200002
+         LCLA  &FR                      START OF CARD PUNCH             16300002
+.*       LOCAL ARRAYS                                                   16400002
+         LCLC  &ID(5)                   ARRAY FOR GLOBAL ID NAMES       16500002
+         LCLC  &APP(5)                  ARRAY FOR APPENDAGE GROUP ID    16600002
+.*       LOCAL TEMPORAY STORAGE NAMES                                   16700002
+         LCLC  &NAME1,&NAME2,&NAME3,&NAME4 ID1,ID2,ID3,ID4              16800002
+.*                                                                      18400002
+.********************************************************************** 18500002
+.*                                                                      18600002
+.*       GROUP EOE APPENDAGE ID NAMES INTO 1 STRING                     18700002
+.*                                                                      18800002
+.********************************************************************** 18900002
+.*                                                                      19000002
+&NAME1   SETC  ''                       INITIALIZE TO NULL              19100002
+&NAME2   SETC  ''                       INITIALIZE TO NULL              19200002
+&NAME3   SETC  ''                       INITIALIZE TO NULL              19300002
+&NAME4   SETC  ''                       INITIALIZE TO NULL              19400002
+&A       SETA  1                        INITIALIZE                      19500002
+&ID(1)   SETC  ''                       INITIALIZE TO NULL              19600002
+.LOOPEOE AIF   (&A GE 22).SIOID         EXIT IF MORE THAN 21 GLOBALS    19700002
+         AIF   ('&SGDEOEC(&A)' EQ '').SIOID EXIT IF NEXT GLOBAL IS NULL 19800002
+         AIF   (K'&SGDEOEC(&A) NE 8).LASTEOE PROCESS LAST ONE           19900002
+.EOEID4  ANOP                           SETUP 4TH 2 CHARACTER SET       20000002
+&NAME4   SETC  '&SGDEOEC(&A)'(7,2).','  ID, - FOURTH                    20100002
+.EOEID3  ANOP                           SETUP 3RD 2 CHARACTER SET       20200002
+&NAME3   SETC  '&SGDEOEC(&A)'(5,2).','  ID, - THIRD                     20300002
+.EOEID2  ANOP                           SETUP 2ND 2 CHARACTER SET       20400002
+&NAME2   SETC  '&SGDEOEC(&A)'(3,2).','  ID, - SECOND                    20500002
+.EOEID1  ANOP                           SETUP 1ST 2 CHARACTER SET       20600002
+&NAME1   SETC  '&SGDEOEC(&A)'(1,2).','  ID, - FIRST                     20700002
+&ID(1)   SETC  '&ID(1)&NAME1&NAME2&NAME3&NAME4' MERGE TOGETHER          20800002
+.INITEOE ANOP                           SET GLOBAL TO NULL              20900002
+&SGDEOEC(&A) SETC ''                    INITIALIZE BACK TO NULL         21000002
+&A       SETA  &A+1                     INCREMENT TO NEXT FOUR          21100002
+         AGO   .LOOPEOE                 LOOP FOR NEXT FOUR              21200002
+.LASTEOE AIF   (K'&SGDEOEC(&A) GE 8).EOEID4 IGNORE MORE THAN 4 ID NAMES 21300002
+&NAME4   SETC  ''                       INITIALIZE TO NULL              21400002
+         AIF   (K'&SGDEOEC(&A) GE 6).EOEID3 3 OR LESS  - IGNORE 4TH     21500002
+&NAME3   SETC  ''                       INITIALIZE TO NULL              21600002
+         AIF   (K'&SGDEOEC(&A) GE 4).EOEID2 2 OR LESS  - IGNORE 3RD     21700002
+&NAME2   SETC  ''                       INITIALIZE TO NULL              21800002
+         AIF   (K'&SGDEOEC(&A) GE 2).EOEID1 1 ONLY  - IGNORE 2ND        21900002
+&NAME1   SETC  ''                       INITIALIZE TO NULL              22000002
+         AGO   .INITEOE                 GO SET NULL                     22100002
+.SIOID   ANOP                           PROCESS SIO APPENDAGE ID NAMES  22200002
+.*                                                                      22300002
+.********************************************************************** 22400002
+.*                                                                      22500002
+.*       GROUP SIO APPENDAGE ID NAMES INTO 1 STRING                     22600002
+.*                                                                      22700002
+.********************************************************************** 22800002
+.*                                                                      22900002
+&A       SETA  1                        INITIALIZE                      23000002
+&ID(2)   SETC  ''                       INITIALIZE TO NULL              23100002
+.LOOPSIO AIF   (&A GE 22).PCIID         EXIT IF MORE THAN 21 GLOBALS    23200002
+         AIF   ('&SGDSIOC(&A)' EQ '').PCIID EXIT IF NEXT GLOBAL IS NULL 23300002
+         AIF   (K'&SGDSIOC(&A) NE 8).LASTSIO PROCESS LAST ONE           23400002
+.SIOID4  ANOP                           SETUP 4TH 2 CHARACTER SET       23500002
+&NAME4   SETC  '&SGDSIOC(&A)'(7,2).','  ID, - FOURTH                    23600002
+.SIOID3  ANOP                           SETUP 3RD 2 CHARACTER SET       23700002
+&NAME3   SETC  '&SGDSIOC(&A)'(5,2).','  ID, - THIRD                     23800002
+.SIOID2  ANOP                           SETUP 2ND 2 CHARACTER SET       23900002
+&NAME2   SETC  '&SGDSIOC(&A)'(3,2).','  ID, - SECOND                    24000002
+.SIOID1  ANOP                           SETUP 1ST 2 CHARACTER SET       24100002
+&NAME1   SETC  '&SGDSIOC(&A)'(1,2).','  ID, - FIRST                     24200002
+&ID(2)   SETC  '&ID(2)&NAME1&NAME2&NAME3&NAME4' MERGE TOGETHER          24300002
+.INITSIO ANOP                           SET GLOBAL TO NULL              24400002
+&SGDSIOC(&A) SETC ''                    INITIALIZE BACK TO NULL         24500002
+&A       SETA  &A+1                     INCREMENT TO NEXT FOUR          24600002
+         AGO   .LOOPSIO                 LOOP FOR NEXT FOUR              24700002
+.LASTSIO AIF   (K'&SGDSIOC(&A) GE 8).SIOID4 IGNORE MORE THAN 4 ID NAMES 24800002
+&NAME4   SETC  ''                       INITIALIZE TO NULL              24900002
+         AIF   (K'&SGDSIOC(&A) GE 6).SIOID3 3 OR LESS  - IGNORE 4TH     25000002
+&NAME3   SETC  ''                       INITIALIZE TO NULL              25100002
+         AIF   (K'&SGDSIOC(&A) GE 4).SIOID2 2 OR LESS  - IGNORE 3RD     25200002
+&NAME2   SETC  ''                       INITIALIZE TO NULL              25300002
+         AIF   (K'&SGDSIOC(&A) GE 2).SIOID1 1 ONLY  - IGNORE 2ND        25400002
+&NAME1   SETC  ''                       INITIALIZE TO NULL              25500002
+         AGO   .INITSIO                 GO SET NULL                     25600002
+.PCIID   ANOP                           PROCESS PCI APPENDAGE ID NAMES  25700002
+.*                                                                      25800002
+.********************************************************************** 25900002
+.*                                                                      26000002
+.*       GROUP PCI APPENDAGE ID NAMES INTO 1 STRING                     26100002
+.*                                                                      26200002
+.********************************************************************** 26300002
+.*                                                                      26400002
+&A       SETA  1                        INITIALIZE                      26500002
+&ID(3)   SETC  ''                       INITIALIZE TO NULL              26600002
+.LOOPPCI AIF   (&A GE 22).CHEID         EXIT IF MORE THAN 21 GLOBALS    26700002
+         AIF   ('&SGDPCIC(&A)' EQ '').CHEID EXIT IF NEXT GLOBAL IS NULL 26800002
+         AIF   (K'&SGDPCIC(&A) NE 8).LASTPCI PROCESS LAST ONE           26900002
+.PCIID4  ANOP                           SETUP 4TH 2 CHARACTER SET       27000002
+&NAME4   SETC  '&SGDPCIC(&A)'(7,2).','  ID, - FOURTH                    27100002
+.PCIID3  ANOP                           SETUP 3RD 2 CHARACTER SET       27200002
+&NAME3   SETC  '&SGDPCIC(&A)'(5,2).','  ID, - THIRD                     27300002
+.PCIID2  ANOP                           SETUP 2ND 2 CHARACTER SET       27400002
+&NAME2   SETC  '&SGDPCIC(&A)'(3,2).','  ID, - SECOND                    27500002
+.PCIID1  ANOP                           SETUP 1ST 2 CHARACTER SET       27600002
+&NAME1   SETC  '&SGDPCIC(&A)'(1,2).','  ID, - FIRST                     27700002
+&ID(3)   SETC  '&ID(3)&NAME1&NAME2&NAME3&NAME4' MERGE TOGETHER          27800002
+.INITPCI ANOP                           SET GLOBAL TO NULL              27900002
+&SGDPCIC(&A) SETC ''                    INITIALIZE BACK TO NULL         28000002
+&A       SETA  &A+1                     INCREMENT TO NEXT FOUR          28100002
+         AGO   .LOOPPCI                 LOOP FOR NEXT FOUR              28200002
+.LASTPCI AIF   (K'&SGDPCIC(&A) GE 8).PCIID4 IGNORE MORE THAN 4 ID NAMES 28300002
+&NAME4   SETC  ''                       INITIALIZE TO NULL              28400002
+         AIF   (K'&SGDPCIC(&A) GE 6).PCIID3 3 OR LESS  - IGNORE 4TH     28500002
+&NAME3   SETC  ''                       INITIALIZE TO NULL              28600002
+         AIF   (K'&SGDPCIC(&A) GE 4).PCIID2 2 OR LESS  - IGNORE 3RD     28700002
+&NAME2   SETC  ''                       INITIALIZE TO NULL              28800002
+         AIF   (K'&SGDPCIC(&A) GE 2).PCIID1 1 ONLY  - IGNORE 2ND        28900002
+&NAME1   SETC  ''                       INITIALIZE TO NULL              29000002
+         AGO   .INITPCI                 GO SET NULL                     29100002
+.CHEID   ANOP                           PROCESS CHE APPENDAGE ID NAMES  29200002
+.*                                                                      29300002
+.********************************************************************** 29400002
+.*                                                                      29500002
+.*       GROUP CHE APPENDAGE ID NAMES INTO 1 STRING                     29600002
+.*                                                                      29700002
+.********************************************************************** 29800002
+.*                                                                      29900002
+&A       SETA  1                        INITIALIZE                      30000002
+&ID(4)   SETC  ''                       INITIALIZE TO NULL              30100002
+.LOOPCHE AIF   (&A GE 22).ABEID         EXIT IF MORE THAN 21 GLOBALS    30200002
+         AIF   ('&SGDCHEC(&A)' EQ '').ABEID EXIT IF NEXT GLOBAL IS NULL 30300002
+         AIF   (K'&SGDCHEC(&A) NE 8).LASTCHE PROCESS LAST ONE           30400002
+.CHEID4  ANOP                           SETUP 4TH 2 CHARACTER SET       30500002
+&NAME4   SETC  '&SGDCHEC(&A)'(7,2).','  ID, - FOURTH                    30600002
+.CHEID3  ANOP                           SETUP 3RD 2 CHARACTER SET       30700002
+&NAME3   SETC  '&SGDCHEC(&A)'(5,2).','  ID, - THIRD                     30800002
+.CHEID2  ANOP                           SETUP 2ND 2 CHARACTER SET       30900002
+&NAME2   SETC  '&SGDCHEC(&A)'(3,2).','  ID, - SECOND                    31000002
+.CHEID1  ANOP                           SETUP 1ST 2 CHARACTER SET       31100002
+&NAME1   SETC  '&SGDCHEC(&A)'(1,2).','  ID, - FIRST                     31200002
+&ID(4)   SETC  '&ID(4)&NAME1&NAME2&NAME3&NAME4' MERGE TOGETHER          31300002
+.INITCHE ANOP                           SET GLOBAL TO NULL              31400002
+&SGDCHEC(&A) SETC ''                    INITIALIZE BACK TO NULL         31500002
+&A       SETA  &A+1                     INCREMENT TO NEXT FOUR          31600002
+         AGO   .LOOPCHE                 LOOP FOR NEXT FOUR              31700002
+.LASTCHE AIF   (K'&SGDCHEC(&A) GE 8).CHEID4 IGNORE MORE THAN 4 ID NAMES 31800002
+&NAME4   SETC  ''                       INITIALIZE TO NULL              31900002
+         AIF   (K'&SGDCHEC(&A) GE 6).CHEID3 3 OR LESS  - IGNORE 4TH     32000002
+&NAME3   SETC  ''                       INITIALIZE TO NULL              32100002
+         AIF   (K'&SGDCHEC(&A) GE 4).CHEID2 2 OR LESS  - IGNORE 3RD     32200002
+&NAME2   SETC  ''                       INITIALIZE TO NULL              32300002
+         AIF   (K'&SGDCHEC(&A) GE 2).CHEID1 1 ONLY  - IGNORE 2ND        32400002
+&NAME1   SETC  ''                       INITIALIZE TO NULL              32500002
+         AGO   .INITCHE                 GO SET NULL                     32600002
+.ABEID   ANOP                           PROCESS ABE APPENDAGE ID NAMES  32700002
+.*                                                                      32800002
+.********************************************************************** 32900002
+.*                                                                      33000002
+.*       GROUP ABE APPENDAGE ID NAMES INTO 1 STRING                     33100002
+.*                                                                      33200002
+.********************************************************************** 33300002
+.*                                                                      33400002
+&A       SETA  1                        INITIALIZE                      33500002
+&ID(5)   SETC  ''                       INITIALIZE TO NULL              33600002
+.LOOPABE AIF   (&A GE 22).PUNCH         EXIT IF MORE THAN 21 GLOBALS    33700002
+         AIF   ('&SGDABEC(&A)' EQ '').PUNCH EXIT IF NEXT GLOBAL IS NULL 33800002
+         AIF   (K'&SGDABEC(&A) NE 8).LASTABE PROCESS LAST ONE           33900002
+.ABEID4  ANOP                           SETUP 4TH 2 CHARACTER SET       34000002
+&NAME4   SETC  '&SGDABEC(&A)'(7,2).','  ID, - FOURTH                    34100002
+.ABEID3  ANOP                           SETUP 3RD 2 CHARACTER SET       34200002
+&NAME3   SETC  '&SGDABEC(&A)'(5,2).','  ID, - THIRD                     34300002
+.ABEID2  ANOP                           SETUP 2ND 2 CHARACTER SET       34400002
+&NAME2   SETC  '&SGDABEC(&A)'(3,2).','  ID, - SECOND                    34500002
+.ABEID1  ANOP                           SETUP 1ST 2 CHARACTER SET       34600002
+&NAME1   SETC  '&SGDABEC(&A)'(1,2).','  ID, - FIRST                     34700002
+&ID(5)   SETC  '&ID(5)&NAME1&NAME2&NAME3&NAME4' MERGE TOGETHER          34800002
+.INITABE ANOP                           SET GLOBAL TO NULL              34900002
+&SGDABEC(&A) SETC ''                    INITIALIZE BACK TO NULL         35000002
+&A       SETA  &A+1                     INCREMENT TO NEXT FOUR          35100002
+         AGO   .LOOPABE                 LOOP FOR NEXT FOUR              35200002
+.LASTABE AIF   (K'&SGDABEC(&A) GE 8).ABEID4 IGNORE MORE THAN 4 ID NAMES 35300002
+&NAME4   SETC  ''                       INITIALIZE TO NULL              35400002
+         AIF   (K'&SGDABEC(&A) GE 6).ABEID3 3 OR LESS  - IGNORE 4TH     35500002
+&NAME3   SETC  ''                       INITIALIZE TO NULL              35600002
+         AIF   (K'&SGDABEC(&A) GE 4).ABEID2 2 OR LESS  - IGNORE 3RD     35700002
+&NAME2   SETC  ''                       INITIALIZE TO NULL              35800002
+         AIF   (K'&SGDABEC(&A) GE 2).ABEID1 1 ONLY  - IGNORE 2ND        35900002
+&NAME1   SETC  ''                       INITIALIZE TO NULL              36000002
+         AGO   .INITABE                 GO SET NULL                     36100002
+.PUNCH   ANOP                           PUNCH CARDS                     36200002
+.*                                                                      36220002
+.********************************************************************** 36240002
+.*                                                                      36260002
+.*       CHECK FOR ANYTHING TO PUNCH                                    36280002
+.*                                                                      36284002
+.********************************************************************** 36288002
+.*                                                                      36292002
+&B       SETA  6                        SET TO LAST PLUS 1              36300002
+.ENDCHK  ANOP                           LOOP TO FIND END OF LIST        36400002
+&B       SETA  &B-1                     DECREMENT TO FIND LAST ID       37200002
+         AIF   (&B EQ 0).EXIT           EXIT IF NONE TO PUNCH           37300002
+         AIF   ('&ID(&B)' EQ '').ENDCHK BACK UP                         37400002
+&ID(&B)  SETC  '&ID(&B)'(1,K'&ID(&B)-1) KNOCK OFF LAST COMMA            37500002
+         PUNCH '//IEAAPP00 EXEC PGM=IEBUPDTE,PARM=NEW'                  37600002
+         PUNCH '//SYSPRINT  DD SYSOUT=&SGCTRLC(41)'            @ZA26457 37700037
+         PUNCH '//SYSUT2    DD DSN=&SGCTRLC(40)..PARMLIB,DISP=OLD,'     37800002
+         PUNCH '//             UNIT=&SGDSUNC(18),VOL=SER=&SGDSVLC(18)'  37820002
+         PUNCH '//SYSIN     DD *'                              @ZA05432 37900037
+         PUNCH './         ADD NAME=IEAAPP00,LIST=ALL'                  38000002
+         PUNCH './         NUMBER NEW1=1000,INCR=1000'                  38100002
+&B       SETA  1                        INITIALIZE TO EOE NAMES         38200002
+&APP(1)  SETC  'EOEAPP '                NAME 1 IS EOE APPENDAGES        38300002
+&APP(2)  SETC  'SIOAPP '                NAME 2 IS SIO APPENDAGES        38400002
+&APP(3)  SETC  'PCIAPP '                NAME 3 IS PCI APPENDAGES        38500002
+&APP(4)  SETC  'CHEAPP '                NAME 4 IS CHE APPENDAGES        38600002
+&APP(5)  SETC  'ABEAPP '                NAME 5 IS ABE APPENDAGES        38700002
+.PCHAPP  AIF   (&B GT 5).PCHEND         PUNCH APPENDAGE ID NAMES        38800002
+         AIF   ('&ID(&B)' EQ '').NEXTID GET NEXT IF NULL                38900002
+.*                                                                      39000002
+.********************************************************************** 39100002
+.*                                                                      39200002
+.*       NOTE THE FOLLOWING MAXIMUM VALUES                              39300002
+.*       SYSGEN GLOBALS HAVE DIMENSION 21 LENGTH 8 CHARACTERS           39400002
+.*       THIS ALLOWS 4 TWO CHARACTER IDS PER GLOBAL OR                  39500002
+.*       84 ID NAMES PER APPENDAGE TYPE.                                39600002
+.*       THE FOLLOWING REDUCES 84 ID NAMES TO 4 PUNCHED CARDS           39700002
+.*       21 ON THE 1ST, 23 ON THE 2ND, 23 ON THE 3RD, AND 19 ON TH 4TH. 39800002
+.*                                                                      39900002
+.********************************************************************** 40000002
+.*                                                                      40100002
+&FR      SETA  1                        LAST CARD 1ST COLUMN POINTER    40200002
+         AIF   (K'&ID(&B) LE 3*21).LASTONE 21 ID NAMES ON 1ST CARD      40300002
+&NAME1   SETC  '&ID(&B)'(1,3*21)        CARD 1 ID NAMES                 40400002
+         PUNCH '&APP(&B)&NAME1'         PUNCH CARD 1                    40500002
+&APP(&B) SETC  ''                       SET TO NULL FOR LAST CARD       40600002
+&FR      SETA  &FR+3*21                 LAST CARD 1ST COLUMN POINTER    40700002
+         AIF   (K'&ID(&B) LE &FR+3*23-1).LASTONE 23 NAMES ON 2ND CARD   40800002
+&NAME2   SETC  '&ID(&B)'(&FR,3*23)      CARD 2 ID NAMES                 40900002
+         PUNCH '&NAME2'                 PUNCH CARD 2                    41000002
+&FR      SETA  &FR+3*23                 LAST CARD 1ST COLUMN POINTER    41100002
+         AIF   (K'&ID(&B) LE &FR+3*23-1).LASTONE 23 NAMES ON 2ND CARD   41200002
+&NAME3   SETC  '&ID(&B)'(&FR,3*23)      CARD 3 ID NAMES                 41300002
+         PUNCH '&NAME3'                 PUNCH CARD 3                    41400002
+&FR      SETA  &FR+3*23                 LAST CARD 1ST COLUMN POINTER    41500002
+.LASTONE ANOP                           LAST CARD OF GROUP (MAX=4)      41600002
+&NAME4   SETC  '&ID(&B)'(&FR,K'&ID(&B)+1-&FR) LAST CARD ID NAMES        41700002
+         PUNCH '&APP(&B)&NAME4'         PUNCH CARD 4                    41800002
+.NEXTID  ANOP                           INCREMENT TO NEXT ID            41900002
+&B       SETA  &B+1                     INCREMENT TO NEXT ID            42000002
+         AGO   .PCHAPP                  LOOP TO GET NEXT                42100002
+.PCHEND  PUNCH '/*'                                                     42200002
+.EXIT    MEND                                                           42300002

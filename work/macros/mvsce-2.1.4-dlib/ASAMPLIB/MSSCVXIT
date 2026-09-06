@@ -1,0 +1,162 @@
+         MACRO                                                          00050000
+         IEECODES &ROUTCDE=13,&DESC=                                    00100000
+         LCLC  &CD(4)                                                   00150000
+         LCLA  &I,&N                                                    00200000
+         LCLB  &B(32)                                                   00250000
+.*                                                                      00300000
+.* DESCRIPTOR CODES                                                     00350000
+.*                                                                      00400000
+&I       SETA  1                                                        00450000
+.DCHK    AIF   (T'&DESC EQ 'O').RCHK                                    00500000
+&N       SETA  &DESC(&I)                                                00550000
+&I       SETA  &I+1                                                     00600000
+         AIF   (&N GE 1 AND &N LE 16).ASSIGND                           00650000
+         MNOTE 8,'&DESC(&I) IS INVALID DESCRIPTOR - IGNORED'            00700000
+         AGO   .NXTD                                                    00750000
+.ASSIGND ANOP                                                           00800000
+&B(&N)   SETB  1                                                        00850000
+.NXTD    AIF  (&I LE N'&DESC).DCHK                                      00900000
+&I       SETA  1                                                        00950000
+.*                                                                      01000000
+.* ROUTE CODES                                                          01050000
+.*                                                                      01100000
+.RCHK    AIF   (T'&ROUTCDE EQ 'O').ASSIGNC                              01150000
+&N       SETA  &ROUTCDE(&I)                                             01200000
+&I       SETA  &I+1                                                     01250000
+         AIF   (&N GE 1 AND &N LE 16).ASSIGNR                           01300000
+         MNOTE 8,'ROUTCDE(&I) IS INVALID ROUTE - IGNORED'               01350000
+         AGO   .NXTR                                                    01400000
+.ASSIGNR ANOP                                                           01450000
+&B(&N+16) SETB  1                                                       01500000
+.NXTR    AIF   (&I LE N'&ROUTCDE).RCHK                                  01550000
+.ASSIGNC ANOP                                                           01600000
+&I       SETA  1                                                        01650000
+&CD(&I)   SETC  '&B(1)&B(2)&B(3)&B(4)&B(5)&B(6)&B(7)&B(8)'              01700000
+&CD(&I+1) SETC  '&B(9)&B(10)&B(11)&B(12)&B(13)&B(14)&B(15)&B(16)'       01750000
+&CD(&I+2) SETC  '&B(17)&B(18)&B(19)&B(20)&B(21)&B(22)&B(23)&B(24)'      01800000
+&CD(&I+3) SETC  '&B(25)&B(26)&B(27)&B(28)&B(29)&B(30)&B(31)&B(32)'      01850000
+IEEDESCD DC    BL2'&CD(1)&CD(2)'                                        01900000
+IEEROUTC DC    BL2'&CD(3)&CD(4)'                                        01950000
+         MEND                                                           02000000
+         EJECT                                                          02050000
+IEECVXIT CSECT                                                          02100000
+PARMPTR  EQU   1                       ADDRESS OF SUPPLIED PARAMETERS   02150000
+CUCMPTR  EQU   2                       ADDRESS OF EXIT PARAMETERS       02200000
+CVTPTR   EQU   3                       ADDRESS OF CVT                   02250000
+UCBLOKUP EQU   4                       ADDRESS OF UCB LOOKUP TABLE      02300000
+UCBPTR   EQU   5                       ADDRESS OF UCB                   02350000
+INDEX    EQU   7                       ADDRESS IN OPTIONAL MSG TABLE    02400000
+INCR     EQU   8                       INCREMENT FOR MSG TABLE          02450000
+LIMIT    EQU   9                       END ADDRESS OF MSG TABLE         02500000
+ENTRY    EQU   15                      ENTRY ADDRESS / BASE REG         02550000
+TWO      EQU   2                       SELF DEFINED                     02600000
+FOUR     EQU   4                       SELF DEFINED                     02650000
+EIGHT    EQU   8                       SELF DEFINED                     02700000
+CVTLOC   EQU   16                      LOCATION OF CVT                  02750000
+BLANK    EQU   C' '                    SELF DEFINED                     02800000
+         USING *,ENTRY                 EST. ADDRESSABILITY              02850000
+         B     PROLOG                  BYPASS PROLOGUE                  02900000
+         DC    AL1(18)                 PROLOGUE LENGTH                  02950000
+         DC    C'IEECVXIT &SYSDATE'    MODULE NAME AND COMPILE DATE     03000000
+         DS    0H                      ALLIGNMENT                       03050000
+PROLOG   SAVE  (14,12)                 SAVE CALLERS REGS                03100000
+         L     CUCMPTR,0(PARMPTR)      SET ADDR TO IEECUCM DSECT        03150000
+         USING IEECUCM,CUCMPTR         EST. ADDR TO IEECUCM DSECT       03200000
+         CLC   UCMMSTXT(L'CICB),CICB   ICB MSG                          03250000
+         BE    UPDROUT                 YES, UPDATE ROUTING CODE         03300000
+         CLC   UCMMSTXT(L'CBBICB),CBBICB MSSC ICB MSG                   03350000
+         BE    UPDROUT                 YES, UPDATE ROUTING CODE         03400000
+         CLC   UCMMSTXT(L'CIDC),CIDC   IDC MSG                          03450000
+         BE    UPDROUT                 YES, UPDATE ROUTING CODE         03500000
+         CLC   UCMMSTXT(L'CIEA),CIEA   IEA000I MSG                      03550000
+         BE    CHKSWAP                 YES, MSS IEA000I MSG             03600000
+         LA    INDEX,MSGTAB            SET INDEX TO OPTIONAL MSG TABLE  03650000
+         LA    INCR,L'MSGTAB           SET INCR VALUE                   03700000
+         LA    LIMIT,MSGEND-L'MSGTAB   SET END OF TABLE ADDR            03750000
+CHKMSG   CLI   0(INDEX),BLANK          OPTINAL MSG ID                   03800000
+         BE    RETURN                  NO, RETURN                       03850000
+         CLC   UCMMSTXT(L'MSGTAB),0(INDEX) OPTIONAL MSG                 03900000
+         BE    UPDROUT                 YES, UPDATE ROUTING CODE         03950000
+         BXLE  INDEX,INCR,CHKMSG       SCAN ENTIRE OPTIONAL MSG TAB     04000000
+RETURN   RETURN (14,12)                RETURN TO CALLER                 04050000
+UPDROUT  OC    UCMROUTC(L'IEEROUTC),IEEROUTC ADD ROUTING CODE           04100000
+         OC    UCMDESCD(L'IEEDESCD),IEEDESCD ADD DESCRIPTOR CODE        04150000
+         B     RETURN                  RETURN TO CALLER                 04200000
+         EJECT                                                          04250000
+CHKSWAP  CLC   UCMMSTXT(L'MSCSWAP),MSCSWAP MSS ERP MSC SWITCH           04300000
+         BE    UPDROUT                 YES, UPDATE ROUTING CODE         04350000
+         CLC   UCMMSTXT(L'SYSSWAP),SYSSWAP MSS ERP SYS SWITCH           04400000
+         BE    UPDROUT                 YES, UPDATE ROUTING CODE         04450000
+         LA    CVTPTR,CVTLOC           SET LOCATION OF CVT ADDR         04500000
+         L     CVTPTR,0(CVTPTR)        GET CVT ADDRESS                  04550000
+         USING CVT,CVTPTR              EST. ADDR TO CVT                 04600000
+         L     UCBLOKUP,CVTIK2         GET ADDRESS OF UCB LOOKUP TABLE  04650000
+         B     *+EIGHT                 BYPASS FIRST ADDR UPDATE         04700000
+CHKUCBAD LA    UCBLOKUP,TWO(UCBLOKUP)  SET NEXT UCB LOOKUP TAB ADDRESS  04750000
+         LH    UCBPTR,0(UCBLOKUP)      GET UCB ADDRESS                  04800000
+         N     UCBPTR,MASKFFFF         ALLOW FOR FULL 16-BIT ADDR       04850000
+         C     UCBPTR,MASKFFFF         END OF UCB LOOKUP TABLE          04900000
+         BE    RETURN                  YES, RETURN TO CALLER            04950000
+         LTR   UCBPTR,UCBPTR           POINTER TO UCB                   05000000
+         BZ    CHKUCBAD                NO, GET NEXT UCB LOOKUP TAB ADDR 05050000
+         USING UCB,UCBPTR              EST, ADDR OF CVT                 05100000
+         CLC   UCMMSTXT+EIGHT(L'UCBNAME),UCBNAME UNIT NAME AS IS MSG    05150000
+         BNE   CHKUCBAD                NO, CHECK NEXT UCB               05200000
+         TM    UCBTYP3,UCB3DACC        DASD UCB                         05250000
+         BNO   CHKMSC                  NO, CHECK MSC                    05300000
+         TM    UCBTYP2,UCBRVDEV        VUA                              05350000
+         BO    UPDROUT                 YES, UPDATE ROUTING CODE         05400000
+         B     RETURN                  NO, RETURN TO CALLER             05450000
+CHKMSC   TM    UCBTYP3,UCB3UREC        UNIT RECORD DEVICE               05500000
+         BNO   RETURN                  NO, RETURN TO CALLER             05550000
+         CLI   UCBTYP4,UCBMSC          MSC                              05600000
+         BE    UPDROUT                 YES, UPDATE ROUTING CODE         05650000
+         B     RETURN                  NO, RETURN TO CALLER             05700000
+         DS    0F                      ALLIGNMENT                       05750000
+IEEPATCH EQU   *                       PATCH AREA                       05800000
+PATCHA   NOP   *                       LET ASSEMBLER CALC DISP          05850000
+         DC    5F'0'                   SELF DEFINED                     05900000
+PATCHB   NOP   *                       LET ASSEMBLER CALC DISP          05950000
+         DC    5F'0'                   SELF DEFINED                     06000000
+         EJECT                                                          06050000
+         IEECODES                                                       06100000
+         EJECT                                                          06150000
+CICB     DC    C'ICB'                                                   06200000
+CBBICB   DC    C'  ICB'                                                 06250000
+CIDC     DC    C'IDC'                                                   06300000
+CIEA     DC    C'IEA000I'                                               06350000
+MSGTAB   DC    C'       '                                               06400000
+         DC    C'       '                                               06450000
+         DC    C'       '                                               06500000
+         DC    C'       '                                               06550000
+         DC    C'       '                                               06600000
+         DC    C'       '                                               06650000
+         DC    C'       '                                               06700000
+         DC    C'       '                                               06750000
+         DC    C'       '                                               06800000
+         DC    C'       '                                               06850000
+MSGEND   EQU   *                                                        06900000
+SYSSWAP  DC    C'IEA000I SYS SWITCH'                                    06950000
+MSCSWAP  DC    C'IEA000I MSC SWITCH'                                    07000000
+         DS    0F                                                       07050000
+MASKFFFF DC    XL4'0000FFFF'                                            07100000
+         EJECT                                                          07150000
+IEECUCM  DSECT                                                          07200000
+UCMMSTXT DS    CL128                                                    07250000
+UCMROUTC DS    CL4                                                      07300000
+UCMDESCD DS    CL4                                                      07350000
+CVT      DSECT                                                          07400000
+         DS    CL40                                                     07450000
+CVTIK2   DS    F                                                        07500000
+UCB      DSECT                                                          07550000
+         DS    CL13                                                     07600000
+UCBNAME  DS    CL3                                                      07650000
+UCBTYP1  DS    C                                                        07700000
+UCBTYP2  DS    C                                                        07750000
+UCBTYP3  DS    C                                                        07800000
+UCBTYP4  DS    C                                                        07850000
+UCBRVDEV EQU   X'08'                                                    07900000
+UCB3DACC EQU   X'20'                                                    07950000
+UCB3UREC EQU   X'08'                                                    08000000
+UCBMSC   EQU   X'42'                                                    08050000
+         END   IEECVXIT                                                 08100000

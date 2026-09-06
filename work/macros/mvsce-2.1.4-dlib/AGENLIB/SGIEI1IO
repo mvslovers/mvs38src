@@ -1,0 +1,528 @@
+         MACRO                                                          00100000
+         SGIEI1IO                                                       00200000
+         COPY SGGBLPAK                                                  00300000
+         LCLA  &A,&B,&D,&DD,&E,&I,&J,&K,&HIGH,&LOW,&MESSAGE,&OLDCH      00400000
+         LCLA  &C,&CH,&CHDEVAD,&CNTPTR,&COUNT,&COUNT2,&CT,&CTLPTR       00500000
+         LCLA  &CU,&EXPA,&M,&N                                          00600000
+         LCLB  &CHAN(16),&FH,&OPTCHB,&S,&S1,&S2,&XB                     00700000
+         LCLC  &ADDRESI,&ADDRESO,&ADDR,&NEWADDR                         00800000
+         ACTR  750000                                          @ZA42948 00900000
+.*                                                                      01000000
+.*       THE I/O CONFIGURATION PARAMETERS ARE VALIDATED IN THE MACRO    01100000
+.*       SGIEI1IO. CERTAIN DEVICE DEPENDENCIES ARE ALSO CHECKED HERE.   01200000
+.*                                                                      01300000
+.*       THE GLOBALS USED ARE -                                         01400000
+.*             &SGMENTB(2)     - CHANNEL MACRO                          01500000
+.*             &SGMENTB(34)    - DATAMGT ENTRY SWITCH                   01600000
+.*             &SGQUITB        - QUIT SWITCH                            01700000
+.*             &SGCNTRA(5)     - COUNT OF ADDRESSES FROM UNITNAME       01800000
+.*             &SGCNTRA(6)     - CONTROL IN UNITNAME                    01900000
+.*             &SGUNNMA(1-1028)- ADDRESSES ASSOC WITH NAMES             02000000
+.*             &SGCNTRA(4)     - NUMBER OF ESOTERIC UNITNAMES           02100000
+.*             &SGUNSGA        - TOTAL NUMBER OF UNITNAMES              02200000
+.*             &SGUNNMC(1-100) - ESOTERIC NAMES IN UNITNAME             02300000
+.*             &SGDT03B(1-1917)- DIRECT ACCESS                          02400000
+.*             &SGUNVB(1-100)  - VIO BIT FOR ESOTERIC NAMES             02500000
+.*             &SGUNVA         - TOTAL NUMBER OF VIO NAMES              02600000
+.*             &SGUNNVC(1-100) - VIRTUAL IO DEVICES                     02700000
+.*             &SGCHANB(1-240) - ADDRESS AND TYPE OF CHANNEL            02800000
+.*             &SGBRSTB(1-1917)- BURST DEVICE ON CHANNEL                02900000
+.*             &SGDADRA(1-1917)- DEVICE ADDRESS                         03000000
+.*             &SGDASPA(1-1917)- DEVICE POINTER                         03001000
+.*             &SGOPSUB(1-1917)- OPT CHANNEL ON SEL-SUBCHANNEL          03100000
+.*             &SGDAPXB(1-1917)- X=1 TO F OPTIONAL CHANNEL X            03200000
+.*             &SGDTXXB(1-1917)- X=01 TO 12 DEVICE TYPE                 03300000
+.*             &SGDUMMY(1-1917)- DUMMY DEVICE                           03400000
+.*             &SGPSUDO(1-1917)- HASP DEVICE                            03500000
+.*             &SGCTRLB(1)     - DUPLICATE ADR CHECK FOR OPCHAN         03600000
+.*             &SGCTRLA(2)     - INDEX FOR I/O CHECK                    03700000
+.*             &SGDU02B(1-1917)- 2260                                   03800000
+.*             &SGDU06B(1-1917)- 3066                                   03900000
+.*             &SGDM01B(1-1917)- MODEL NO 1                             04000000
+.*             &SGDM03B(1-1917)- MODEL NO 3                             04100000
+.*             &SGCUN1A(1-1917)- ???                                    04200000
+.*             &SGDU08B(1-1917)- 3505                                   04300000
+.*             &SGDU09B(1-1917)- 3525                                   04400000
+.*             &SGD3505A       - NO OF 3505'S                           04500000
+.*             &SG3525A        - NO OF 3525'S                           04600000
+.*             &SGSUPRB(35)    - APR                                    04700000
+.*                                                                      04800000
+.*       THE LOCALS USED ARE -                                          04900000
+.*             &A       - UNIT NAME COUNTER START HIGH                  05000000
+.*             &B       - ADDRESS BOX INDEX                             05100000
+.*             &D       - UNIT NAME COUNTER START LOW                   05200000
+.*             &DD      - CHANNEL PORTION OF ADDRESS                    05300000
+.*             &E       - HIGEST PCU NUMBER                    @ZA29084 05350000
+.*             &I       - INDEX TO ADDRESS BOX                          05400000
+.*             &J       - INDEX                                         05500000
+.*             &K       - REVERSE LIMIT FOR SIFT                        05600000
+.*             &HIGH    - HIGH ADDRESS                                  05700000
+.*             &LOW     - LOW ADDRESS                                   05800000
+.*             &MESSAGE - USED IN CONVERTING BETW HEX AND EBCDIC        05900000
+.*             &OLDCH   - CHANNEL ADDRESS                               06000000
+.*             &C       - HALF OF ADDRESS                               06100000
+.*             &CH      - CHANNEL ADDRESS                               06200000
+.*             &CHDEVAD - DEVICE PORTION OF ADDRESS                     06300000
+.*             &CNTPTR  - ???                                           06400000
+.*             &COUNT   - COUNT OF DEVICES                              06500000
+.*             &COUNT2  - DEVICE COUNT                                  06600000
+.*             &CT      - UNIT NAME COUNTER                             06700000
+.*             &CTLPTR  - CONTROL UNIT PTR                              06800000
+.*             &CU      - CONTROL UNIT COUNTER                          06900000
+.*             &EXPA    - EXBFR                                         07000000
+.*             &CHAN(16)- CHANNEL AVAILABLE SWITCH                      07100000
+.*             &FH      - FLIP FLOP SWITCH                              07200000
+.*             &OPTCHB  - OPTIONAL CHANNEL SWITCH                       07300000
+.*             &S       - FLIP FLOP SWITCH                              07400000
+.*             &S1      - FLIP FLOP SWITCH STATUS                       07500000
+.*             &S2      - SWITCH FOR DA                                 07600000
+.*             &XB      - ???                                           07700000
+.*             &ADDRESI - ???                                           07800000
+.*             &ADDRESO - ???                                           07900000
+.*                                                                      08000000
+.*  MODULE ACTIVITY: VS03045,Z40ASVN                                    08100000
+.*                   OZ11149,@ZA20770,@ZA29084,@ZA33305,@ZA36178,       08200000
+.*                   @ZA42948,@ZA61007                                  08250000
+         CUPOINT                                                        08300000
+         AIF   (&SGMENTB(2)).A02                                        08400000
+    MNOTE 5,'* * * IEIGEN100 CHANNEL MACRO REQUIRED'                    08500000
+&SGQUITB SETB  1                                                        08600000
+.A02     AIF   (&SGMENTB(4)).A03                                        08700000
+    MNOTE 5,'* * * IEIGEN101 IODEVICE MACRO REQUIRED'                   08800000
+&SGQUITB SETB  1                                                        08900000
+.********************************************************************** 09000000
+.*  THIS ROUTINE SORTS ADDRESSES ASSIGNED TO UNITNAMES    SIFT METHOD   09100000
+.********************************************************************** 09200000
+.A03     AIF   (&SGCNTRA(5) GT 0).A04                                   09300000
+&SGCNTRA(5)  SETA  1                                                    09400000
+.A04     AIF   (&SGCNTRA(6) EQ 2).FILLIN                                09500000
+&SGUNNMA(&SGCNTRA(5))  SETA  X'FFF'                                     09600000
+.FILLIN  ANOP    FFF MEANS END OF ONE NAMES ADDRESSES                   09700000
+&SGUNNMA(&SGCNTRA(5))  SETA  4096*&SGUNNMA(&SGCNTRA(5))+X'FFF'          09800000
+         AIF   (&SGCNTRA(4) EQ 0).T21       BYPASS ROUTINES IF NO NAMES 09900000
+&CT      SETA  &SGCNTRA(4)       GET NUMBER OF NAMES                    10000000
+&K       SETA  1                 SET REVERSE LIMIT FOR SIFT             10100000
+.SRT     ANOP                                                           10200000
+&I       SETA  &I+1              STEP INDEX                             10300000
+.SRT2    ANOP                                                           10400000
+&S       SETB  (NOT &S)          COMPLEMENT FLIP-FLOP SWITCH            10500000
+         AIF   (&S).SRT3         GO COMPARE X(I) LEFT AND X(I) RIGHT    10600000
+&LOW   SETA  &SGUNNMA(&I)-&SGUNNMA(&I)/4096*4096  COMPARE X(I) RIGHT    10700000
+&HIGH  SETA  &SGUNNMA(&I+1)/4096        WITH X(I+1) LEFT                10800000
+         AGO  .SRT4              GO MAKE ACTUAL COMPARE                 10900000
+.SRT3    ANOP                                                           11000000
+&LOW     SETA  &SGUNNMA(&I)/4096  COMPARE X(2) LEFT AND                 11100000
+&HIGH    SETA  &SGUNNMA(&I)-&SGUNNMA(&I)/4096*4096   X(I) RIGHT         11200000
+.SRT4    AIF   (&LOW EQ X'FFF').SRT12                                   11300000
+         AIF   (&HIGH EQ X'FFF').SRU1                                   11400000
+         AIF   (&LOW GT &HIGH).SRT7   THIS IS EXCHANGE CONDITION        11500000
+         AIF   (&LOW NE &HIGH).SRT5   NO EXCHANGE NEEDED                11600000
+   CONVERT  TO=EBCDIC,VALUE=&LOW,DIGITS=3  CONVERT ADDRESS TO EBCDIC    11700000
+    MNOTE 5,'* * * IEIGEN110 UNITNAME &SGUNNMC(&SGCNTRA(4)-&CT+1) HAS D*11800000
+               UPLICATE ADDRESS &EBCDIC'                                11900000
+&SGQUITB  SETB 1                                                        12000000
+.SRT5    AIF   (&J EQ 0).SRT6    BYPASS RESTORE INDEX ROUTINE           12100000
+.SRT5A   ANOP                                                           12200000
+&I       SETA  &J                RESTORE INDEX TO RESUME FORWARD SORT   12300000
+&S       SETB  (&S1)             RESTORE FLIP-FLOP SWITCH               12400000
+&J       SETA  0                 CLEAR INDEX STORAGE LOCATION           12500000
+.SRT6    AIF   (&S).SRT2         IF ZERO,BUMP INDEX                     12600000
+         AGO   .SRT                                                     12700000
+.SRT7    AIF   (NOT &S).SRT8     EXCHANGE ROUTINE                       12800000
+&SGUNNMA(&I)  SETA &SGUNNMA(&I)-&SGUNNMA(&I)/4096*4096+&HIGH*4096  EXCH 12900000
+&SGUNNMA(&I)  SETA &SGUNNMA(&I)/4096*4096+&LOW  X(I) LEFT AND X(I) RT.  13000000
+    AGO .SRT9                                                           13100000
+.SRT8    ANOP                    EXCHANGE ROUTINE                       13200000
+&SGUNNMA(&I+1)  SETA &SGUNNMA(&I+1)-&SGUNNMA(&I+1)/4096*4096+&LOW*4096  13300000
+&SGUNNMA(&I)  SETA &SGUNNMA(&I)/4096*4096+&HIGH  EXCH X(I+1) L+T,XCI) R 13400000
+.SRT9    AIF   (&J NE 0).SRT10   IS THIS A FORWARD SORT                 13500000
+&J       SETA  &I                YES,SAVE INDEX FOR FORWARD RESUMPTION  13600000
+&S1      SETB  (&S)              SAVE FLIP-FLOP SWITCH STATUS           13700000
+.SRT10   AIF   (&I GT &K).SRT11  IS I EQUAL TO REVERSE LIMIT            13800000
+         AIF   (&S).SRT5A        IF ZERO,BUMP INDEX DOWN                13900000
+    AGO .SRT2                                                           14000000
+.SRT11   AIF   (NOT &S).SRT2     IF ONE BUMP INDEX DOWN                 14100000
+&I       SETA  &I-1              BACK SORT IN PROGRESS                  14200000
+    AGO .SRT2                                                           14300000
+.SRT12   AIF   (&J NE 0).SRT5A                                          14400000
+&CT      SETA  &CT-1                                                    14500000
+         AIF   (&CT EQ 0).SRU2                                          14600000
+         AIF   (&I GE 1028).T21  MAX NUMBER OF UNITS           @ZA20770 14650000
+&S1      SETB  (NOT &S)                                                 14700000
+         AIF   (NOT &S).SRT                                             14800000
+         AGO   .SRT2                                                    14900000
+.SRU1    ANOP                                                           15000000
+&CT      SETA  &CT-1             DECREMENT NAME COUNTER                 15100000
+         AIF   (&CT EQ 0).SRU2   IF ZERO ALL DONE                       15200000
+         AIF   (&I GE 1028).T21  MAX NUMBER OF UNITS           @ZA20770 15250000
+&K       SETA  &I+1              SET NEW REVERSE LIMIT                  15300000
+&S       SETB  (NOT &S)          COMPLEMENT FLIP-FLOP SWITCH            15400000
+    AGO  .SRT                                                           15500000
+.SRU2    ANOP                    END OF UNITNAME ADDRESS SORT ROUTINE   15600000
+.********************************************************************** 15700000
+.* THE FOLLOWING ROUTINE CHECKS ADDRESSES OF UNITNAMES FOR DEVICES      15800000
+.********************************************************************** 15900000
+&A       SETA  &SGCNTRA(4)       GET TOTAL NUMBER OF UNITNAMES          16000000
+&D       SETA 1                  COUNT NAMES                            16100000
+.T11     AIF  (&FH).T13           CHECK RIGHT/ LEFT HALF OF ADDRESS BOX 16200000
+&B       SETA   &B+1              STEP ADDRESS BOX INDEX TO NEW BOX     16300000
+&C       SETA   &SGUNNMA(&B)/4096  SET LEFT ADDRESS IN BOX INTO C       16400000
+         AGO .T15                                                       16600000
+.T13     ANOP                                                           16700000
+&C  SETA  &SGUNNMA(&B)-&SGUNNMA(&B)/4096*4096  SET RIGHT HALF INTO C    16800000
+.T15     AIF  (&C EQ X'FFF').T19   EXIT ON ADDRESS DELIMITER            17000000
+         IOCHECK  LOOKFOR=&C       CALL FOR BINARY SEARCH               17100000
+         AIF  (&HEX NE 0).T17      IF NOT ZERO ITS FOUND                17300000
+         CONVERT  TO=EBCDIC,VALUE=&C,DIGITS=3  CONVERT C TO EBCDIC      17400000
+    MNOTE 5,'* * * IEIGEN120 UNITNAME ADDRESS &EBCDIC NOT A DEVICE'     17500000
+&SGQUITB SETB  1                                                        17600000
+         AGO  .T18                                                      17700000
+.T17     ANOP                                                           17710000
+&J       SETA  &SGDASPA(&HEX)             DEVICE NUMBER         Z40ASVN 17750000
+         AIF   (NOT(&SGDT03B(&J))).T18    NOT DIRECT ACCESS DEVICE      17800000
+&S2      SETB  1                          DASD REQUIRED FOR VIO         17900000
+.T18     ANOP                                                           18000000
+&FH      SETB  (NOT(&FH))        COMPLEMENT FLIP-FLOP SWITCH            18100000
+         AGO .T11                RETURN TO START OF ROUTINE             18200000
+.T19   ANOP                                                             18300000
+         AIF   (&SGUNVB(&D) AND (NOT(&S2))).T20   NEED DIRECT ACCESS    18400000
+&S2      SETB  0                  RESET SWITCH FOR D.A.                 18600000
+&D       SETA  &D+1               CHECK NEXT UNITNAME                   18700000
+&A       SETA  &A-1               DECREMENT UNITNAME COUNT              18800000
+&FH      SETB  (NOT(&FH))         COMPLEMENT FLIP-FLOP SWITCH           18900000
+         AIF   (&A NE 0).T11      RETURN TO START OF ROUTINE            19000000
+         AGO   .T21               END OF CHECK                          19100000
+.T20  MNOTE 5,'* * * IEIGEN121 AT LEAST ONE DEVICE NAMED &SGUNNMC(&D) MX19200000
+               UST BE A DIRECT ACCESS DEVICE IF VIO=YES IS SPECIFIED'   19300000
+&SGQUITB SETB 1                                                         19400000
+&D       SETA  &D+1               CHECK NEXT UNITNAME                   19500000
+&A       SETA  &A-1               DECREMENT UNITNAME COUNT              19600000
+&FH      SETB  (NOT(&FH))         COMPLEMENT FLIP-FLOP SWITCH           19700000
+         AIF   (&A NE 0).T11      RETURN TO START OF ROUTINE            19800000
+.T21     ANOP                     END OF UNITNAME ADDRESS CHECK         19900000
+.********************************************************************** 20000000
+.*  THIS ROUTINE CHECKS HARDWARE COMPATIBILITY                          20100000
+.********************************************************************** 20200000
+.* THIS ROUTINE SETS UP FOR TEST THAT ALL DEVICES HAVE A CHANNEL AND    20300000
+.* THAT ALL CHANNELS HAVE A DEVICE ON THEM                              20400000
+.********************************************************************** 20500000
+&D       SETA 0                                                         20600000
+&I       SETA   0                                                       20700000
+.M1      AIF   (&I EQ 16).MX1                                           20800000
+&CHAN(&I+1)  SETB  (&SGCHANB(&I*15+1))                                  20900000
+&I       SETA  &I+1                                                     21000000
+         AGO  .M1                                                       21100000
+.MX1     ANOP                                                           21200000
+&I       SETA 0                                                         21300000
+.MX2     AIF   (&I EQ 16).MX6                                           21400000
+         AIF   (&SGBRSTB(&I+1) AND &SGCHANB(&I*15+2)).MX3               21500000
+         AIF   (NOT(&SGBRSTB(&I+1) AND &SGCHANB(&I*15+4))).MX5          21600000
+         AIF (NOT &SGDISKB(&I+1)).NOTDISK                               21700000
+ MNOTE 5,'* * * DIRECT ACCESS DEVICES INVALID ON HSMPXR CHANNEL &I)'    21800000
+&SGQUITB SETB 1                                                         21900000
+.NOTDISK  AIF  (NOT &SGTAPEB(&I+1)).NOTAPE                              22000000
+ MNOTE 0,' TAPES VALID ONLY ON SELECTOR SUBCHANNELS C,D,E,F OF CHANNEL *22100000
+               &I'                                                      22200000
+.NOTAPE  AIF  (NOT &SG2250B(&I+1)).MX5                                  22300000
+ MNOTE 0,' 2250 VALID ONLY ON SELECTOR SUBCHANNELS C,D,E,F OF CHANNEL &*22400000
+               I'                                                       22500000
+         AGO  .MX5                                                      22600000
+ MNOTE 5,'* * * IEIGEN130 BURST DEVICES INVALID ON SUB- CHANNEL OF     *22700000
+               CHANNEL &I'                                              22800000
+&SGQUITB SETB 1                                                         22900000
+  MNOTE *,'    BURST DEVICES SUPPORTED ON HISPEEDMPXR INCLUDE          *23000000
+               2250-24XX-3410-3420'                                     23100000
+         AGO .MX5                                                       23200000
+.MX3 MNOTE 5,'* * * IEIGEN131 BURST DEVICES INVALID ON MULTIPLEXOR CHAN*23300000
+               NEL &I'                                                  23400000
+&SGQUITB SETB 1                                                         23500000
+         AGO  .MX5                                                      23600000
+.MX4     ANOP        TAPES ALLOWED ONLY ON SUB-SELECTOR CHANNELS        23700000
+         AIF  (&SGDCLSB(9)).MX5                                         23800000
+  MNOTE *,' TAPES ALLOWED ONLY ON SUB-SELECTOR CHANNELS C, D, E, AND F' 23900000
+.MX5     ANOP                                                           24000000
+&I       SETA &I+1                                                      24100000
+         AGO .MX2                                                       24200000
+.MX6     ANOP                                                           24300000
+&I       SETA  0                                                        24400000
+&E       SETA  0                                               @ZA29084 24450000
+.D01     ANOP                    TOP OF  CHECK  LOOP                    24500000
+&I       SETA  &I+1                                                     24600000
+         AIF   (&I GT &SGCNTRA(3)).D99   LAST DEVICE HAS BEEN CHECKED   24700000
+&CT      SETA  &SGDADRA(&I)-&SGDADRA(&I)/4096*4096  GET ADDRESS INTO CT 24800000
+&J       SETA &SGDASPA(&I)              GET DEVICE POINTER      Z40ASVN 24900000
+&K       SETA &SGDADRA(&I)/4096-&SGDADRA(&I)/1048576*256   GET CU PTR   25000000
+         AIF   (&J EQ 0).D01     J USED AS DIMENSION                    25100000
+.*           IS THE CHANNEL PRESENT                                     25200000
+.*    IF YES INDICATE USED                                              25300000
+         AIF   (NOT (&SGCHANB((&CT/256)*15+1))).M2                      25400000
+&CHAN(&CT/256+1)  SETB  0                                               25500000
+         CONVERT TO=EBCDIC,DIGITS=3,VALUE=&CT                           25600000
+         AIF   (&SGOPSUB(&J) AND NOT &SGCHANB((&CT/256)*15+4)).M10      25700000
+         AIF   (NOT &SGCHANB((&CT/256)*15+4)).D02   H.S.MPXR            25800000
+         AIF   (&SGDAP1B(&J) OR &SGDAP5B(&J) OR &SGDAP6B(&J) OR &SGDAP7*25900000
+               B(&J) OR &SGDAP8B(&J) OR &SGDAP9B(&J)).M11               26000000
+         AIF   (&SGDAPAB(&J) OR &SGDAPBB(&J) OR &SGDAPCB(&J) OR &SGDAPD*26100000
+               B(&J) OR &SGDAPEB(&J) OR &SGDAPFB(&J)).M11               26200000
+         AIF   ((&SGDAP2B(&J) OR &SGDAP3B(&J) OR &SGDAP4B(&J)) AND NOT *26300000
+               &SGOPSUB(&J)).M11                                        26400000
+.D02     AIF   (&SGDT01B(&J)).TSTCHN  DEVICE IS TAPE                    26500000
+         AIF   (&SGDT05B(&I) AND &SGDU01B(&I)).TSTCHN 2250     @ZA61007 26550000
+         AIF   (&SGDT05B(&J)).DG1   DEVICE IS  GRAPHIC                  26600000
+         AIF   (&SGDT07B(&I) AND &SGDU13B(&I)).TSTCHN 3851     @ZA61007 26650000
+         AIF   (&SGDT07B(&I)).DU1   DEVICE IS RDR-PCH                   26700000
+.********PTM 4300 REMOVED THE AGO .D01 STATEMENT PREVIOUSLY HERE******* 26800000
+.********************************************************************** 26900000
+.*             THIS ROUTINE CHECKS CHANNEL SWITCHING                  * 27000000
+.********************************************************************** 27100000
+.TSTCHN  ANOP                                                           27200000
+&DD      SETA &CT/X'100'            CHANNEL PORTION OF ADDRESS          27300000
+&CHDEVAD SETA &CT-&CT/X'10'*X'10'   DEVICE PORTION OF ADDRESS           27400000
+         AIF (&SGCHANB(&DD*15+4)).HSPX     H.S. MULTIPLEXOR             27500000
+&DD      SETA &CT-&CT/X'100'*X'100'    C.U. AND DEVICE PORTION          27600000
+         AGO .RET0                                                      27700000
+.HSPX    ANOP                                                           27800000
+&DD      SETA &CT/X'100'*X'100'   CHANNEL PORTION OF ADDR W/00 C.U.+DEV 27900000
+.RET0    AIF (&SGDAP1B(&J)).CHAN1                                       28000000
+.RET1    AIF  (&SGDAP2B(&J)).CHAN2    OPTIONAL CHANNEL 2                28100000
+.RET2    AIF  (&SGDAP3B(&J)).CHAN3    OPTIONAL CHANNEL 3                28200000
+.RET3    AIF  (&SGDAP4B(&J)).CHAN4    OPTIONAL CHANNEL 4                28300000
+.RET4    AIF  (&SGDAP5B(&J)).CHAN5    OPTIONAL CHANNEL 5                28400000
+.RET5    AIF  (&SGDAP6B(&J)).CHAN6    OPTIONAL CHANNEL 6                28500000
+.RET6    AIF   (&SGDAP7B(&J)).CHAN7    OPTIONAL CHANNEL 7               28600000
+.RET7    AIF   (&SGDAP8B(&J)).CHAN8    OPTIONAL CHANNEL 8               28700000
+.RET8    AIF   (&SGDAP9B(&J)).CHAN9    OPTIONAL CHANNEL 9               28800000
+.RET9    AIF   (&SGDAPAB(&J)).CHANA    OPTIONAL CHANNEL A               28900000
+.RETA    AIF   (&SGDAPBB(&J)).CHANB    OPTIONAL CHANNEL B               29000000
+.RETB    AIF   (&SGDAPCB(&J)).CHANC    OPTIONAL CHANNEL C               29100000
+.RETC    AIF   (&SGDAPDB(&J)).CHAND    OPTIONAL CHANNEL D               29200000
+.RETD    AIF   (&SGDAPEB(&J)).CHANE    OPTIONAL CHANNEL E               29300000
+.RETE    AIF   (&SGDAPFB(&J)).CHANF    OPTIONAL CHANNEL F               29400000
+&OPTCHB  SETB  0     RESET OPTIONAL CHANNEL SWITCH FOR CHKNBDV RTN      29500000
+         AGO  .D01                                                      29600000
+.CHAN1   AIF   (&SGCHANB(1*15+4)).M12   SEL. W/H.S.MPX. 1 FOR OPTCHAN   29700000
+&CHDEVAD SETA  X'100'+&DD        OPTIONAL DEVICE ADDR                   29800000
+         AGO  .LOOK                                                     29900000
+.CHAN2   AIF (NOT &SGOPSUB(&J)).CHAN2A   H.S. MULTIPLEXOR SUB           30000000
+&CHDEVAD SETA &DD+X'D0'+&CHDEVAD       SEL. SUB-CHANNEL OPTCHAN         30100000
+         AGO .LOOK                                                      30200000
+.CHAN2A  AIF   (&SGCHANB(2*15+4)).M12   SEL. W/H.S.MPX.  I FOR OPTCHAN  30300000
+&CHDEVAD SETA  X'200'+&DD        OPTIONAL DEVICE ADDR                   30400000
+         AGO  .LOOK                                                     30500000
+.CHAN3   AIF (NOT &SGOPSUB(&J)).CHAN3A   H.S. MULTIPLEXOR SUB           30600000
+&CHDEVAD SETA &DD+X'E0'+&CHDEVAD       SEL. SUB-CHANNEL OPTCHAN         30700000
+         AGO .LOOK                                                      30800000
+.CHAN3A  AIF   (&SGCHANB(3*15+4)).M12    SEL. W/H.S.MPX.  3 FOR OPTCHAN 30900000
+&CHDEVAD SETA  X'300'+&DD  OPTIONAL DEVICE ADDR                         31000000
+         AGO  .LOOK                                                     31100000
+.CHAN4   AIF (NOT &SGOPSUB(&J)).CHAN4A   H.S. MULTIPLEXOR SUB           31200000
+&CHDEVAD SETA &DD+X'F0'+&CHDEVAD       SEL. SUB-CHANNEL OPTCHAN         31300000
+         AGO  .LOOK                                                     31400000
+.CHAN4A  AIF   (&SGCHANB(4*15+4)).M12   SEL. W/H.S.MPX. 4 FOR OPTCHAN   31500000
+&CHDEVAD SETA  X'400'+&DD        OPTIONAL DEVICE ADDR                   31600000
+         AGO  .LOOK                                                     31700000
+.CHAN5   AIF   (&SGCHANB(5*15+4)).M12   SEL. W/H.S.MPX. 5 FOR OPTCHAN   31800000
+&CHDEVAD SETA  X'500'+&DD        OPTIONAL DEVICE ADDR                   31900000
+         AGO  .LOOK                                                     32000000
+.CHAN6   AIF   (&SGCHANB(6*15+4)).M12   SEL.  W/H.S.MPX.  6 FOR OPTCHAN 32100000
+&CHDEVAD SETA  X'600'+&DD        OPTIONAL DEVICE ADDR                   32200000
+         AGO  .LOOK                                                     32300000
+.CHAN7   AIF   (&SGCHANB(7*15+4)).M12   SEL.  W/H.S.MPX.  7 FOR OPTCHAN 32400000
+&CHDEVAD SETA  X'700'+&DD        OPTIONAL DEVICE ADDRESS                32500000
+         AGO   .LOOK                                                    32600000
+.CHAN8   AIF   (&SGCHANB(8*15+4)).M12   SEL.  W/H.S.MPX.  8 FOR OPTCHAN 32700000
+&CHDEVAD SETA  X'800'+&DD        OPTIONAL DEVICE ADDRESS                32800000
+         AGO   .LOOK                                                    32900000
+.CHAN9   AIF   (&SGCHANB(9*15+4)).M12   SEL.  W/H.S.MPX.  9 FOR OPTCHAN 33000000
+&CHDEVAD SETA  X'900'+&DD        OPTIONAL DEVICE ADDRESS                33100000
+         AGO   .LOOK                                                    33200000
+.CHANA   AIF   (&SGCHANB(10*15+4)).M12  SEL.  W/H.S.MPX. 10 FOR OPTCHAN 33300000
+&CHDEVAD SETA  X'A00'+&DD        OPTIONAL DEVICE ADDRESS                33400000
+         AGO   .LOOK                                                    33500000
+.CHANB   AIF   (&SGCHANB(11*15+4)).M12  SEL.  W/H.S.MPX. 11 FOR OPTCHAN 33600000
+&CHDEVAD SETA  X'B00'+&DD        OPTIONAL DEVICE ADDRESS                33700000
+         AGO   .LOOK                                                    33800000
+.CHANC   AIF   (&SGCHANB(12*15+4)).M12  SEL.  W/H.S.MPX. 12 FOR OPTCHAN 33900000
+&CHDEVAD SETA  X'C00'+&DD        OPTIONAL DEVICE ADDRESS                34000000
+         AGO   .LOOK                                                    34100000
+.CHAND   AIF   (&SGCHANB(13*15+4)).M12  SEL.  W/H.S.MPX. 13 FOR OPTCHAN 34200000
+&CHDEVAD SETA  X'D00'+&DD        OPTIONAL DEVICE ADDRESS                34300000
+         AGO   .LOOK                                                    34400000
+.CHANE   AIF   (&SGCHANB(14*15+4)).M12  SEL.  W/H.S.MPX. 14 FOR OPTCHAN 34500000
+&CHDEVAD SETA  X'E00'+&DD        OPTIONAL DEVICE ADDRESS                34600000
+         AGO   .LOOK                                                    34700000
+.CHANF   AIF   (&SGCHANB(15*15+4)).M12  SEL.  W/H.S.MPX. 15 FOR OPTCHAN 34800000
+&CHDEVAD SETA  X'F00'+&DD        OPTIONAL DEVICE ADDRESS                34900000
+.LOOK    AIF   (NOT (&SGCHANB(&CHDEVAD/X'100'*15+1))).CHER  IS CH EXIST 35000000
+.* REMOVED CODE TO RESET &CHAN BY OPTCHAN BY OZ30343          @ZA30343  35100000
+&SGCTRLB(1) SETB 1                                                      35200000
+&SGCTRLA(2) SETA &I              PASS INDEX TO IOCHECK                  35300000
+         IOCHECK LOOKFOR=&CHDEVAD  IS THERE A DEVICE WITH THIS ADDR     35400000
+&SGCTRLB(1) SETB 0                                                      35500000
+         AIF  (&HEX EQ 0).GOOD1  NO                                     35600000
+         CONVERT TO=EBCDIC,DIGITS=3,VALUE=&HEX                          35700000
+&ADDRESI SETC '&EBCDIC'                                                 35800000
+&MESSAGE SETA &CHDEVAD/X'100'                                           35900000
+         CONVERT TO=EBCDIC,DIGITS=1,VALUE=&MESSAGE                      36000000
+         AIF (NOT &SGOPSUB(&J)).MSGTYP1        NOT SUB-CHANNELS         36100000
+&MESSAGE SETA &CHDEVAD/X'10'           OPTCHAN AS SPECIFIED             36200000
+         CONVERT TO=EBCDIC,DIGITS=2,VALUE=&MESSAGE                      36300000
+.MSGTYP1 ANOP                                                           36400000
+&ADDRESO SETC '&EBCDIC'                                                 36500000
+         CONVERT TO=EBCDIC,DIGITS=3,VALUE=&CT                           36600000
+    MNOTE 5,'* * * IEIGEN131 ADDRESS &EBCDIC OPTCHAN &ADDRESO CONFLICT *36700000
+               AT DEVICE WITH ADDRESS &ADDRESI'                         36800000
+&SGQUITB SETB  1                 TEST TWO CHANNEL SWITCH FOR 2820-2841  36900000
+.GOOD1   AIF   (&SGOPSUB(&J)).GOOD2     H.S.MPX SUB-CHANNEL OPTCHAN     37000000
+         AIF  (&CHDEVAD/X'100' EQ 1).RET1  GET OTHER OPTCHANS           37100000
+         AIF  (&CHDEVAD/X'100' EQ 2).RET2                               37200000
+         AIF  (&CHDEVAD/X'100' EQ 3).RET3                               37300000
+         AIF  (&CHDEVAD/X'100' EQ 4).RET4                               37400000
+         AIF  (&CHDEVAD/X'100' EQ 5).RET5                               37500000
+         AIF  (&CHDEVAD/X'100' EQ 6).RET6                               37600000
+         AIF  (&CHDEVAD/X'100' EQ 7).RET7                               37700000
+         AIF  (&CHDEVAD/X'100' EQ 8).RET8                               37800000
+         AIF  (&CHDEVAD/X'100' EQ 9).RET9                               37900000
+         AIF  (&CHDEVAD/X'100' EQ 10).RETA                              38000000
+         AIF  (&CHDEVAD/X'100' EQ 11).RETB                              38100000
+         AIF  (&CHDEVAD/X'100' EQ 12).RETC                              38200000
+         AIF  (&CHDEVAD/X'100' EQ 13).RETD                              38300000
+         AIF  (&CHDEVAD/X'100' EQ 14).RETE                              38400000
+&OPTCHB  SETB  0        RESET OPTIONAL CHANNEL SWITCH FOR CHKNBDV RTN   38500000
+         AGO  .D01                                                      38600000
+.GOOD2   ANOP                                                           38700000
+&MESSAGE SETA &CHDEVAD/X'10'           SAVE CHDEVAD                     38800000
+&MESSAGE SETA &MESSAGE-&MESSAGE/X'10'*X'10' C.U. PORTION                38900000
+&CHDEVAD SETA &CT-&CT/X'10'*X'10'      DEVICE PORTION                   39000000
+&HEX     SETA X'D'                                                      39100000
+         AIF (&MESSAGE EQ &HEX).RET2                                    39200000
+&HEX     SETA X'E'                                                      39300000
+         AIF (&MESSAGE EQ &HEX).RET3                                    39400000
+&OPTCHB  SETB 0         RESET OPTIONAL CHANNEL SWITCH FOR CHKNBDV RTN   39500000
+         AGO .D01                                                       39600000
+.CHER    CONVERT TO=EBCDIC,DIGITS=3,VALUE=&CHDEVAD                      39700000
+&ADDRESI SETC  '&EBCDIC'(1,1)                                           39800000
+         CONVERT TO=EBCDIC,DIGITS=3,VALUE=&CT                           39900000
+     MNOTE 5,'* * * IEIGEN132 DEVICE ADDRESS &EBCDIC OPTCHAN &ADDRESI N*40000000
+               OT A DEFINED CHANNEL'                                    40100000
+&SGQUITB SETB 1                                                         40200000
+         AGO .GOOD1                CONTINUE OTHER CHECKS                40300000
+.M10 MNOTE 5,'* * * IEIGEN133 DEVICE ADDRESS &EBCDIC SPECIFIES OPTCHAN(*40400000
+               S) VALID FOR H.S.MPX. ONLY'                              40500000
+&SGQUITB SETB 1                                                         40600000
+         AGO .D01                                                       40700000
+.M11 MNOTE 5,'* * * IEIGEN134 DEVICE ADDRESS &EBCDIC SPECIFIES OPTCHAN(*40800000
+               S) INVALID FOR H.S.MPX.'                                 40900000
+&SGQUITB SETB 1                                                         41000000
+         AGO .D01                                                       41100000
+.M12 MNOTE 5,'* * * IEIGEN135 H.S.MPX. OPTCHAN AT DEVICE ADDRESS &EBCDI*41200000
+               C INVALID WITH SELECTOR OR MULTIPLEXOR'                  41300000
+&SGQUITB SETB 1                                                         41400000
+         AGO .D01                                                       41500000
+.*                               CHECK DISPLAY DEVICES                  41600000
+.DG1     AIF   (NOT &SGDU01B(&J)).D01   NOT A 2250                      41700000
+         AIF   (&SGDM01B(&J)).CHKCNT1   2250 MODEL 1                    41800000
+         AIF   (NOT &SGDM03B(&J)).D01   2250 MODEL 3                    41900000
+         AIF   (&CTLPTR EQ &K).TSTCNT   IS IT THE SAME CTRL UNIT        42000000
+&CTLPTR  SETA  &K                       NO,CHANGE CTRL UNIT PTR         42100000
+&CU      SETA  &CU+1                    COUNT 2840 CTRL UNITS           42200000
+&COUNT   SETA  0                        ERASE COUNT OF DEVICES          42300000
+&EXPA    SETA  &SGCUN1A(&J)                                             42400000
+&ADDR     SETC   '&CT'         ADDRESS OF CURRENT DEVICE                42410000
+&M       SETA   0                                                       42420000
+.SRPCU   AIF    (&M GT &SGCNTRA(3)).INCCNT  END OF DADR BOX             42430000
+&M       SETA   &M+1                       SET DADR POINTER             42440000
+&N SETA &SGDADRA(&M)/4096-&SGDADRA(&M)/1048576*256  GET CU POINTER      42450000
+         AIF    (&N GT &E).RESLCL          HIGHEST PCU NUMBER? @ZA29084 42460000
+.CHPCU   AIF    (&CTLPTR NE &N).SRPCU      SAME PCU NUMBER     @ZA29084 42463000
+&A  SETA &SGDADRA(&M)-&SGDADRA(&M)/4096*4096 GET ADDRESS                42470000
+&NEWADDR SETC   '&A'                                                    42480000
+         AIF    ('&ADDR'(1,1) EQ '&NEWADDR'(1,1)).SRPCU                 42490000
+     MNOTE 5,'IEIGEN166 DEVICE TYPE 2250 MODEL 3 WITH SAME PCU MUST BE *42492000
+                ON THE SAME CHANNEL'                                    42494000
+&SGQUITB SETB   1                                                       42496000
+         AGO   .INCCNT                                                  42500000
+.RESLCL  ANOP                                                  @ZA29084 42520000
+&E       SETA  &N                                              @ZA29084 42540000
+         AGO   .CHPCU                                          @ZA29084 42560000
+.TSTCNT  AIF   (&COUNT LT 4).INCCNT   CHECK COUNT LT MAX                42600000
+         CONVERT TO=EBCDIC,DIGITS=3,VALUE=&CT                           42700000
+    MNOTE 5,'* * * IEIGEN150 DEVICE ADDRESS &EBCDIC EXCEEDS MAXIMUM OF *42800000
+               4 DEVICES ON CONTROL UNIT'                               42900000
+&SGQUITB SETB  1                                                        43000000
+         AGO   .D01                                                     43100000
+.INCCNT  ANOP                    INCREASE COUNT OF DEVICES  BY ONE      43200000
+&COUNT   SETA  &COUNT+1                                                 43300000
+         AIF   (&EXPA EQ &SGCUN1A(&J)).D01                              43400000
+    MNOTE 5,'* * * IEIGEN149 DEVICE ADDRESS &EBCDIC, EXPBFR VALUE MUST *43500000
+               BE SAME FOR ALL 2250 MODEL 3''S ON SAME CONTROL UNIT'    43600000
+&SGQUITB SETB  1                                                        43700000
+         AGO   .D01                                                     43800000
+.CHKCNT1 ANOP                    MAX OF 8 2250 MODEL 1 ON ONE CHANNEL   43900000
+&CH      SETA  &CT/X'100'        TAKE CHANNEL NO                        44000000
+         AIF  (&CH EQ &OLDCH).TSTCNT2   IS THIS CHANNEL ALREADY USED    44100000
+&OLDCH   SETA  &CH               CHANNEL ADDR                           44200000
+&COUNT2  SETA  0                 ERASE DEVICE COUNT                     44300000
+         AGO  .INCPTR2                                                  44400000
+.TSTCNT2 AIF  (&COUNT2 LT 8).INCPTR2                                    44500000
+    MNOTE 5,'* * * IEIGEN151 MAX OF EIGHT 2250 ON THE SAME CHANNEL EXCE*44600000
+               EDED'                                                    44700000
+&SGQUITB SETB  1                                                        44800000
+         AGO   .D01                                                     44900000
+.INCPTR2 ANOP                    INCREASE  DEVICE COUNT                 45000000
+&COUNT2  SETA  &COUNT2+1                                                45100000
+         AGO  .D01                                                      45200000
+.*      CHECK READER/PUNCH DEVICES                                      45300000
+.DU1     AIF   (NOT (&SGDU08B(&J) OR &SGDU09B(&J))).D01  3505/3525      45400000
+         AIF   (&XB).D01                                                45500000
+         AIF   (&SG3505A GE &SG3525A).D01                               45600000
+    MNOTE 0,'* * * IEIGEN145 GREATER NUMBER OF 3525 PUNCHES THAN 3505 C*45700000
+               ONTROL UNITS'                                   @ZA36178 45750000
+&XB      SETB  1                                                        45800000
+         AGO   .D01                                                     46100000
+.M2      ANOP                                                           46200000
+&J       SETA (&CT/256)                                                 46300000
+         CONVERT TO=EBCDIC,DIGITS=3,VALUE=&CT                           46400000
+    MNOTE 5,'* * * IEIGEN164 ADDRESS &EBCDIC REQUIRES CHANNEL &J'       46500000
+&SGQUITB  SETB  1                                                       46600000
+         AGO  .D01                                                      46700000
+.*             CHECK THAT ALL CHANNELS HAVE A DEVICE                    46800000
+.D99     ANOP                                                           46900000
+&I       SETA  0                                                        47000000
+.M4      AIF   (&I EQ 16).M6                                   @AZ11149 47100000
+&I       SETA  &I+1                                                     47200000
+         AIF (NOT (&CHAN(&I))).M4                                       47300000
+&CT      SETA  &I-1                                                     47400000
+.*  NEXT MSG UPDATED BY OZ30343                                @ZA30343 47500000
+    MNOTE 5,'* * * IEIGEN165 CHANNEL &CT CONTAINS NO DEVICES, OR       X47520000
+                             CHANNEL &CT SPECIFIED AS OPTCHAN,         X47540000
+                             MINIMUM OF A DUMMY DEVICE REQUIRED'        47560000
+&SGQUITB  SETB  1                                                       47600000
+         AGO  .M4                                                       47700000
+.M6      ANOP         THESE 9 LINES CHECK FOR 3851 IF          @AZ11149 47710000
+&I       SETA  0      3330V IS SPECIFIED.                      @AZ11149 47720000
+.M7      AIF (&I GT &SGCNTRA(3)).M5                            @AZ11149 47730000
+&I       SETA &I+1                                             @AZ11149 47740000
+         AIF (NOT (&SGDT03B(&I) AND &SGDU07B(&I) AND &SGDF03B(&I))).M7  47750000
+         AIF (&SGDCLSB(28)).M5                                 @AZ11149 47760000
+   MNOTE 5,'* * * IEIGEN163 MUST SPECIFY 3851 WITH 3330V'      @AZ11149 47770000
+&SGQUITB SETB 1                                                @AZ11149 47780000
+         AGO .M5                                               @AZ11149 47790000
+.*       END OF HARDWARE COMPATIBILITY CHECK                            47800000
+.M5      AIF   (&E NE &CU).PCUMSG                              @ZA29084 47900000
+.M5A     AIF   (&SGCNTRA(2) EQ &CU).M51                        @ZA29084 47930000
+&SGCNTRA(2)  SETA  &CU           SET 2840 CTRL UNIT COUNT               48000000
+.M51     AIF   (&SGOPCHA LE 0).UCS                                      48100000
+&SGSUPRB(35)  SETB  1         ALTERNATE PATH RETRY                      48200000
+    MNOTE 0,'     ALTERNATE PATH RETRY PROVIDED'                        48300000
+.UCS     AIF   (&SGMENTB(34)).MEND                                      48400000
+&SGUCSDC(1)   SETC 'ALL'                                                48500000
+    MNOTE 0,'     ALL UCS IMAGES ARE DEFAULTS'                          48600000
+         AGO  .MEND                                            @ZA29084 48700000
+.PCUMSG  ANOP                                                  @ZA29084 48750000
+  MNOTE 5,'* * * IEIGEN167 2250 MODEL 3 HIGHEST PCU NUMBER NOT EQUAL TO*48800000
+                             TOTAL NUMBER OF CONTROL UNITS.            *48850000
+                             IFFBDA WILL NOT ASSEMBLE CORRECTLY'        48900000
+&SGQUITB  SETB 1                                               @ZA33305 48950000
+         AGO  .M5A                                             @ZA29084 49000000
+.MEND    MEND                                                           49050000

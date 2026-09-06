@@ -1,0 +1,61 @@
+.***** START OF SPECIFICATIONS **************************************   00050003
+.*                                                                      00100003
+.* MODULE NAME - SGLEDPK2                                               00150003
+.*                                                                      00200003
+.* DESCRIPTIVE NAME - SGLEDPK2                                          00250003
+.*                                                                      00300003
+.* COPYRIGHT - NONE                                                     00350003
+.*                                                                      00400003
+.* STATUS - CHANGE LEVEL 03                                             00450003
+.*                                                                      00500003
+.* FUNCTION -                                                           00550003
+.*       THE SGLEDPK2 MACRO IS USED TO PUNCH A SYSLIN DD CARD AND TO    00600003
+.*       NULL 7 C TYPE GLOBALS.                                         00650003
+.*                                                                      00700003
+.* NOTES - N/A                                                          00750003
+.*                                                                      00800003
+.* MODULE TYPE - MACRO                                                  00850003
+.*                                                                      00900003
+.* ENTRY POINT - N/A                                                    00950003
+.*                                                                      01000003
+.* INPUT - THE FOLLOWING GLOBALS ARE PASSED TO SGLEDPK2                 01050003
+.*           &SGCTRLC(6) - MODULE NAME                                  01100003
+.*           &SGCTRLC(9) - LIBRARY MODULE LINKED INTO                   01150003
+.*           &SGCTRLC(10) - LINKAGE EDITOR ATTRIBUTE                    01200003
+.*           &SGCTRLC(11) - LINKAGE EDITOR ATTRIBUTE                    01250003
+.*           &SGCTRLC(12) - LINKAGE EDITOR ATTRIBUTE                    01300003
+.*           &SGCTRLC(13) - LINKAGE EDITOR ATTRIBUTE                    01350003
+.*           &SGCTRLC(14) - LINKAGE EDITOR ATTRIBUTE                    01400003
+.*                                                                      01450003
+.* OUTPUT -                                                             01500003
+.*       GLOBALS USED ARE -                                             01550003
+.*           &SGCTRLC(6) - MODULE NAME IS NULLED.                       01600003
+.*           &SGCTRLC(9) - LIBRARY THE MODULE IS LINKED INTO IS NULLED. 01650003
+.*           &SGCTRLC(10) - LINKAGE EDITOR ATTRIBUTE IS NULLED.         01700003
+.*           &SGCTRLC(11) - LINKAGE EDITOR ATTRIBUTE IS NULLED.         01750003
+.*           &SGCTRLC(12) - LINKAGE EDITOR ATTRIBUTE IS NULLED.         01800003
+.*           &SGCTRLC(14) - LINKAGE EDITOR ATTRIBUTE IS NULLED.         01850003
+.*                                                                      01900003
+.*       LOCALS USED ARE - NONE                                         01950003
+.*                                                                      02000003
+.* EXIT, NORMAL - N/A                                                   02050003
+.*                                                                      02100003
+.* EXIT, ERROR - N/A                                                    02150003
+.*                                                                      02200003
+.* EXTERNAL REFERENCES - N/A                                            02250003
+.*                                                                      02300003
+.* TABLES - N/A                                                         02350003
+.*                                                                      02400003
+.* MACROS - NONE                                                        02450003
+.*                                                                      02500003
+.* CHANGE ACTIVITY - ZM30850                                            02550003
+.*                                                                      02600003
+.****** END OF SPECIFICATIONS ***************************************   02650003
+ PUNCH '//SYSLIN DD *'                                          ZM30850 02700003
+&SGCTRLC(6)    SETC ''                                                  02750003
+&SGCTRLC(9)    SETC ''                                                  02800003
+&SGCTRLC(10)   SETC ''                                                  02850003
+&SGCTRLC(11)   SETC ''                                                  02900003
+&SGCTRLC(12)   SETC ''                                                  02950003
+&SGCTRLC(13)   SETC ''                                                  03000003
+&SGCTRLC(14)   SETC ''                                                  03050003

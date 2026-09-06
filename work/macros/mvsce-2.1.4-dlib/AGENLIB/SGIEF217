@@ -1,0 +1,22 @@
+         MACRO                                                          00002002
+         SGIEF217                                                       00004002
+.*A000000-999999                                                 Y02670 00005002
+.*****************************************************************      00006002
+.*                                                                      00008002
+.* THIS STAGE1 SYSGEN MACRO IS CALLED AFTER SGIEF213 TO BUILD THE       00010002
+.* NUCLEUS RESIDENT MODULE IEFAQTOP                                     00012002
+.*                                                                      00014002
+.*****************************************************************      00016002
+         COPY SGGBLPAK                                                  00018002
+&SGCTRLC(6) SETC 'IEFAQTOP'                                             00020002
+         COPY SGASMPAK                                                  00022002
+ PUNCH 'IEFAQTOP CSECT'                                                 00024002
+ PUNCH 'MAIN DC A(MAIN,MAIN)'                                           00026002
+ PUNCH 'QUEUEA DC A(MAIN,MAIN)'                                         00028002
+ PUNCH 'QUEUEB DC A(QUEUEA,QUEUEA)'                                     00030002
+ PUNCH 'QUEUEC DC A(QUEUEB,QUEUEB)'                                     00032002
+ PUNCH 'AMASK DC BL.&SGCNTRA(10)''0'''                                  00034002
+ PUNCH 'BMASK DC BL.&SGCNTRA(10)''0'''                                  00036002
+ PUNCH ' END'                                                           00038002
+ PUNCH '/*'                                                             00040002
+         MEND                                                           00042002

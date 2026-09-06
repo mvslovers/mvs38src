@@ -1,0 +1,92 @@
+          MACRO                                                         00050002
+          SGIGF301                                                      00060002
+.*********************************************************************  00100002
+.*         THIS SYSGEN MACRO SUPPLIES THE INCLUDES FOR THE RMS MODULES  00150002
+.*         THAT ARE TO BE PART OF THE NUCLEUS LOAD MODULE IEANUC01,     00200002
+.*         THAT IS, ALL MCH MODULES (OTHER THAN IGFPINIT, IGF2603D, AND 00250002
+.*         IGFPWMSG), MIH MODULES IGFTMC00 AND IGFINTVL, AND   @ZA31032 00300064
+.*         CCH MODULES IGFCCHCR AND IGFCHDA.                   @ZA31032 00310064
+.*         IN ADDITION, AN INCLUDE IS ALSO PROVIDED FOR        @ZA31032 00320064
+.*         THE MODULE THAT WILL BE GIVEN CONTROL BY MCH WHEN IT DETECTS 00360002
+.*         A POWER WARNING MACHINE CHECK (EITHER MODULE ICFBDF00 OR     00370002
+.*         OR DUMMY MODULE ICFBDX00).  AN INCLUDE IS ALSO PROVIDED FOR  00380002
+.*         IFBDCB01, THE SYS1.LOGREC DCB.                               00382002
+.*                                                                      00390002
+.*         SGIGF301 CONTAINS INSERT STATEMENTS TO INSURE THAT MCH       00400002
+.*         MODULE IGFPMCIH IS THE FIRST CSECT AND IGFPTREC THE LAST.    00450002
+.*         THIS IS REQUIRED SO THAT DSS CAN DETERMINE THE LOWER AND     00460002
+.*         UPPER BOUNDS OF MCH.                                         00470002
+.*                                                                      00475064
+.*        CHANGE ACTIVITY-                                              00480064
+.*        A010500,A010600                                      @ZA31032 00485064
+.*        NO MACRO CHANGE REQUIRED FOR SU64                    @G64JPLE 00490064
+.*                                                                      00495064
+.********************************************************************** 00500002
+          COPY  SGGBLPAK                                                00600002
+          LCLC  &LEV                                                    00650002
+          LCLC  &REL                                                    00700002
+&LEV      SETC  '00'                                                    00750002
+&REL      SETC  '00'                                                    00800002
+          MNOTE *,'SGIGF301 IS LEVEL &LEV RELEASE &REL .'               00850002
+.*                                                                      00900002
+          PUNCH ' INCLUDE AOSCE(IGFCCHCR) '                             00950002
+          PUNCH ' INCLUDE AOSCE(IGFCHDA) '                              01000002
+.* INCLUDES FOR MISSING INTERRUPTION HANDLER MODULES           @ZA31032 01050064
+          PUNCH ' INCLUDE AOSCE(IGFTMC00) '                             01055064
+          PUNCH ' INCLUDE AOSCE(IGFINTVL) '                    @ZA31032 01060064
+.* 'INSERT' STATEMENTS ARE USED TO ORDER THE MCH MODULES       @YM04098 01070002
+          PUNCH ' INSERT IGFPMCIH,IGFRWAC '                             01100002
+          PUNCH ' INSERT IGFPMPFX,IGFPMSCA,IGFPMHCA '                   01150002
+          PUNCH ' INSERT IGFPMRTM,IGFPMTHA,IGFPMFRS '                   01200002
+          PUNCH ' INSERT IGFPMMSG,IGFPMKTA,IGFPKREF '                   01250002
+          PUNCH ' INSERT IGFPTERM,IGFPTSIG '                            01300002
+          PUNCH ' INSERT IGFCCHED '                            @G552PLM 01301055
+          PUNCH ' INSERT IGFPNRFH '                            @G559P2L 01301555
+.* IF ACR IS NOT SYSGENNED, IGFPXMFA , IGFPTAIM ARE NOT NEEDED @YM00966 01302002
+          AIF   (NOT &SGCPRGB(9)).SKIP1                                 01310002
+          PUNCH ' INSERT IGFPXMFA,IGFPTAIM '                            01320002
+.SKIP1    ANOP                                                          01330002
+          PUNCH ' INSERT IGFPBUCR,IGFPEXIT '                            01350002
+          PUNCH ' INSERT IGFPSAD0 '                            @G51BP2O 01360051
+          PUNCH ' INSERT IGFPTCON,IGFPTREC '                            01400002
+.*                                                                      01450002
+          PUNCH ' INCLUDE AOSCE(IGFPMCIH) '                             01500002
+.*  INCLUDE FOR IGFRVT WAS NO LONGER NEEDED.                   @YM00967 01550002
+          PUNCH ' INCLUDE AOSCE(IGFRWAC) '                              01600002
+          PUNCH ' INCLUDE AOSCE(IGFPMPFX) '                             01650002
+          PUNCH ' INCLUDE AOSCE(IGFPMSCA) '                             01700002
+          PUNCH ' INCLUDE AOSCE(IGFPMHCA) '                             01750002
+          PUNCH ' INCLUDE AOSCE(IGFPMRTM) '                             01800002
+          PUNCH ' INCLUDE AOSCE(IGFPMTHA) '                             01850002
+          PUNCH ' INCLUDE AOSCE(IGFPMFRS) '                             01900002
+          PUNCH ' INCLUDE AOSCE(IGFPMMSG) '                             01950002
+          PUNCH ' INCLUDE AOSCE(IGFPMKTA) '                             02000002
+          PUNCH ' INCLUDE AOSCE(IGFPKREF) '                             02050002
+          PUNCH ' INCLUDE AOSCE(IGFPTERM) '                             02150002
+          PUNCH ' INCLUDE AOSCE(IGFPTSIG) '                             02200002
+          PUNCH ' INCLUDE AOSCE(IGFCCHED) '                    @G552PLM 02200255
+          PUNCH ' INCLUDE AOSCE(IGFPNRFH) '                    @G559P2L 02200355
+.*    IF ACR IS NOT SYSGENNED, SKIP NEXT TWO MODULES           @YM00966 02200402
+          AIF   (NOT &SGCPRGB(9)).SKIP2                                 02202002
+          PUNCH ' INCLUDE AOSCE(IGFPXMFA) '                             02210002
+          PUNCH ' INCLUDE AOSCE(IGFPTAIM) '                             02250002
+.SKIP2    ANOP                                                          02260002
+          PUNCH ' INCLUDE AOSCE(IGFPBUCR) '                             02300002
+          PUNCH ' INCLUDE AOSCE(IGFPEXIT) '                             02350002
+          PUNCH ' INCLUDE AOSCE(IGFPSAD0) '                    @G51BP2O 02355051
+          PUNCH ' INCLUDE AOSCE(IGFPTCON) '                             02400002
+          PUNCH ' INCLUDE AOSCE(IGFPTREC) '                             02450002
+.* INCLUDE POWER WARNING MODULE ICFBDF00 OR DUMMY MODULE       @YM00997 02460002
+.* ICFBDX00 DEPENDING ON WHETHER OR NOT POWER WARNING SUPPORT  @YM00997 02462002
+.* WAS SPECIFIED                                               @YM00997 02464002
+.*                                                             @YM02556 02466002
+          AIF   (NOT &SGCPRGB(13)).SKIP3                                02470002
+          PUNCH ' INCLUDE AOSCE(ICFBDF00) '                             02480002
+          AGO   .SKIP4                                                  02490002
+.SKIP3    ANOP                                                          02492002
+          PUNCH ' INCLUDE AOSCE(ICFBDX00) '                             02494002
+.SKIP4    ANOP                                                          02496002
+.* INCLUDE SYS1.LOGREC DCB                                     @YM02421 02498002
+          PUNCH ' INCLUDE AOSCD(IFBDCB01) '                             02498402
+.*                                                                      02500002
+          MEND                                                          02550002

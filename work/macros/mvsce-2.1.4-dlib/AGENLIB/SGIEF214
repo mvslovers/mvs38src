@@ -1,0 +1,237 @@
+         MACRO                                                          00050002
+         SGIEF214                                                       00100002
+.* CHANGE LEVEL = 03/01/77    VS2 SYSTEM CONTROL PROGRAM 2     @G64IPSJ 00100164
+.*              = 12/01/78                                     @ZA15758 00100264
+.*              = 08/28/74                                     @ZM30423 00100464
+.*              = 07/24/74                                     @Z30ANSF 00100564
+.*C023100, D022500-022900,036000-053500                        @YM08650 00102002
+.*                                                             @YM04048 00105002
+.*                                                             @YM03292 00110002
+.*A000000-999999                                                 Y02670 00120002
+         COPY     SGGBLPAK                                              00150002
+         LCLA  &GRP,&GCTR,&I,&X,&ARG,&START,&ESO,&INDEX,&J,&K           00200002
+         LCLA  &COUNT(200),&DLIST(2056)                        @ZA15758 00250064
+         LCLB  &PROTOSW,&RC,&MEMBR                                      00290064
+         LCLB  &PATTRN(200),&B                                          00330064
+         ACTR  29000000                                        @ZA15758 00370064
+.********************************************************************** 00450002
+.*                                                                      00500002
+.*  THIS MACRO SEGREGATES ALL DEVICES OF THE SYSTEM INTO GROUPS, SUCH   00550002
+.*  THAT EACH GROUP CONSISTS OF ALL THOSE DEVICES (AND ONLY THOSE)      00600002
+.*  WHICH ARE ELIGIBLE TO THE IDENTICAL SET OF NAMES.                   00650002
+.*                                                                      00700002
+.*  INPUTS ARE SGUNNMC,SGUNNMA,SGDADRA,SGGENDB,SGDAUPA,        @G64IPSJ 00720064
+.*  ( THE MACRO HAS NO PARAMETERS).                            @Z30ANSF 00800003
+.*                                                                      00850002
+.*  ALL ADDRESSES ARE EXTRACTED FORM SGUNNMA AND STORED IN LOCAL VAR    00900002
+.*  DLIST FOR MORE CONVENIENT ACCESS.                                   00950003
+.*                                                                      01200002
+.*  ALL ADDRESSES NOW ASSOCIATED WITH A SUPPORTED GENERIC TYPE CODE     01250002
+.*  ARE ASSIGNED TO GROUPS. ADDRESSES ARE PROCESSED IN ORDER FIRST      01300002
+.*  BY GENERIC CODE, THEN BY GROUP WITHIN GENERIC.  THAT IS ALL         01350002
+.*  ADDRESSES OF A SINGLE GROUP (HAVING SAME NAME ASSOCIATIONS) ARE     01400002
+.*  PROCESSED BEFORE STARTING A NEXT GROUP.                             01450002
+.*  WHEN ALL ADDRESSES OF A GIVEN GENERIC HAVE BEEN ASSIGNED TO GROUPS  01500002
+.*  THE NEXT GENERIC IS SELECTED.  THE PROCESS IS COMPLETE WHEN ALL     01550002
+.*  GENERIC TYPES HAVE BEEN PROCESSED.                                  01600002
+.*                                                                      01650002
+.*  OUTPUTS ARE PUNCH'ED SGIEF018 CALLS DESCRIBING GROUPS TO            01700002
+.*  STAGE 2.                                                            01750002
+.*       ONE TYP=D FOR EACH DEVICE ADDRESS ASSIGNED TO A GROUP, GIVING  01800002
+.*           GROUP ID, GENERIC ID, UCB INDEX, AND ADDRESS.              01850002
+.*                                                                      01900002
+.*       ONE TYP=G FOR EACH GROUP, GIVING GROUP ID AND GENERIC ID.      01950002
+.*                                                                      02000002
+.*       ONE TYP=E FOR EACH GROUP-TO-NAME ASSOCIATION GIVING GROUP ID   02050002
+.*           AND NAME CODE (INDEX OF THE ESOTERIC NAME)                 02100002
+.********************************************************************** 02150002
+         AGO   .L090          CALL  GROUP-FACTOR SETUP.                 02200002
+.M001    AGO   .L100    CALL GROUP FACTORING ROUTINE           @YM08650 02310002
+.M0010   ANOP                                                           02350002
+&SGCNTRA(10)   SETA  &GRP-1                                             02380064
+         MEXIT                                                          02450002
+.********************************************************************** 02500002
+.*                                                                      02550002
+.L090    ANOP                                                           02600002
+&K       SETA  0                   *   THIS ROUTINE MOVES DEVICE        02650002
+&B       SETB  1                   *   ADDRESSES FROM'SGUNNMA'TO'DLIST' 02700002
+&I       SETA  0                   *   AND STORES COUNT UP TO EACH      02750002
+&J       SETA  0                   *   END-FLAG IN  'COUNT'             02800002
+.L0901   ANOP                                                           02850002
+&I       SETA  &I+1                             NAME COUNTER            02900002
+         AIF  (&I GT &SGCNTRA(4)).M001  RETURN IF LAST NAME    @YM03292 02910064
+.L0902   ANOP                                                           02950002
+&J       SETA  &J+&B                            SGUNNMA-BOX CTR         03000002
+&B       SETB  (NOT &B)                         FLIP-FLOP FOR LFT/RIGHT 03050002
+&X       SETA  &SGUNNMA(&J)/X'1000'         EXTRACT LEFT                03100002
+         AIF   (NOT &B).L0903                   TEXT L-R                03150002
+&X       SETA  &SGUNNMA(&J)-&X*X'1000'      EXTRACT RIGHT               03200002
+.L0903   ANOP                                                  @YM03292 03250002
+         AIF   (&X EQ X'FFF').L0901             TEST NAME TERMINATE     03300002
+&K       SETA  &K+1                             COUNT ACTUALS           03350002
+&DLIST(&K) SETA  &X                             STORE IN DLIST          03400002
+&COUNT(&I) SETA  &COUNT(&I)+1                   BUMP COUNT-IN-NAME      03450002
+         AGO   .L0902                           KEEP GOING              03500002
+.*                                                                      03550002
+.********************************************************************** 05400002
+.*  FACTOR                                                              05450002
+.********************************************************************** 05500002
+.*                                                                      05550002
+.*                                                                      05600002
+.*          GRP=2;         (SEE GENERIC FOR PURPOSE OF THIS STMT.)      05650002
+.*                                                                      05700002
+.*          DO  GCTR=1 BY 1 TO SGCNTRA(10) WHERE SGGENDB(GCTR)          05750064
+.*              CALL GENERIC;   (TO PROCESS ONE DEVICE TYPE)            05800002
+.*          END;                                                        05850002
+.*                                                                      05900002
+.*                                                                      05950002
+.L100    ANOP                                                           06000002
+&GRP     SETA  2                            (INIT FOR LEVEL TWO)        06050002
+&GCTR    SETA  0                             INITIALIZE DO.             06100002
+.L101    ANOP                                RETURN POINT FM LEV TWO.   06150002
+&GCTR    SETA  &GCTR+1                       BY CLAUSE                  06200002
+         AIF   (&GCTR GT &SGCNTRA(10)).M0010 TO CLAUSE (EXIT TO MAIN)   06250002
+         AIF   (NOT &SGGENDB(&GCTR)).L101    BODY OF DO (RTRN IS L101)  06270064
+.*                                                             @G64IPSJ 06290064
+         AGO   .L200                        CALL GENERIC                06350002
+.*                                                                      06400002
+.****  END OF GROUP FACTORING  **************************************** 06450002
+.L200    ANOP                                                           06500002
+.********************************************************************** 06550002
+.*  GENERIC                                                             06600002
+.********************************************************************** 06650002
+.*                                                                      06700002
+.* COMMENT:  WE ALWAYS END EACH GENERIC WITH AN EMPTY GROUP, BUT AN ID  06750002
+.*           WAS GENERATED. WE THEREFORE ALWAYS START EACH GENERIC BY   06800002
+.*           DECREMENTING GROUP ID.  IT WAS INITIALIZED TO 2 TO CAUSE   06850002
+.*           FIRST ID ASSIGNED TO BE ONE FOR FIRST GROUP IN SYSTEM.     06900002
+.*                                                                      06950002
+.*          SET PROTOSW OFF;                                            07000002
+.*          DO GRP=GRP-1  BY 1 WHILE NOT PROTOSW;       (COUNT GROUPS)  07050002
+.*               CALL GROUP;   (TO COLLECT ONE GROUP);                  07100002
+.*          END;                                                        07150002
+.*          RETURN;                                                     07200002
+.*                                                                      07250002
+.********************************************************************** 07300002
+&GRP     SETA  &GRP-2                        INITIALIZE DO.             07350002
+&PROTOSW SETB  0                             INITIALIZE FOR WHILE TEST. 07400002
+.L201    ANOP      DO LOOP POINT.   (THIS IS RETURN FM LEVEL THREE.)    07450002
+&GRP     SETA  &GRP+1                        BY CLAUSE FOR DO.          07500002
+         AIF  (&PROTOSW).L101                WHILE CLAUSE FOR DO.       07550002
+         AGO  .L300                          LEVEL 3 CALL.              07600002
+.*                                                                      07650002
+.****  END LEVEL 2 GROUP FACTORING  *********************************** 07700002
+.********************************************************************** 07750002
+.*  GROUP                                                               07800002
+.********************************************************************** 07850002
+.L300    ANOP                                                           07900002
+.*                                                                      07950002
+.*          SET PROTOSW ON       (INDICATES STARTINT A GROUP)           08000002
+.*          DO I=1 BY 1 TO SGCNTRA(3) WHERE SGDADRA(I) BIT 31 OFF AND   08020064
+.*                                          SGDADRA(I) BITS 23-30 =GCTR 08100002
+.*              ARG = SGDADRA(I) BITS 1-12;(ADDRESS FIELD)              08150002
+.*              CALL ESOTERIC;(TO SCAN ESOTERIC SETS)                   08200002
+.*              IF RC;             (RC SET BY LEVEL4 ON MEMBER FOUND.)  08250002
+.*                  PUNCH SGIEF018 TYPE-D;                              08300002
+.*                  SET BIT 31 ON IN SGDADRA(I);                        08350002
+.*                  SET PROTOSW OFF;                                    08400002
+.*          END;                                                        08450002
+.*          RETURN,                                                     08500002
+.*                                                                      08550002
+&PROTOSW SETB  1                             SEE EXPL.                  08600002
+&I       SETA  0                             INITIALIZE DO.             08650002
+.L301    ANOP                                DO LOOPING POINT.          08700002
+&I       SETA  &I+1                          BY CLAUSE.                 08750002
+         AIF   (&I GT &SGCNTRA(03)).L201     TO CLAUSE.                 08800002
+         AIF   (&SGDADRA(&I) GT X'40000000').L301    WHERE CLAUSE       08850002
+&X       SETA  &SGDADRA(&I)                  CONVENIENCE STATEMENT.     08900002
+         AIF   (&GCTR NE &X/X'400000').L301  WHERE CLAUSE.              08950002
+&ARG     SETA  &X-&X/X'1000'*X'1000'         SEE PROC EXPL.             09000002
+         AGO   .L400                         CALL LEVEL 4.              09050002
+.L302    AIF   (NOT &RC).L303                RETURN HERE FROM 4.        09100002
+&X       SETA  &SGDAUPA(&I)     RETRIEVE UCB LOOKUP VALUE      @Z30ANSF 09150003
+&X       SETA  &X-1       ADJUST TO ZERO OFFSET                         09220002
+ PUNCH ' SGIEF018  &GRP,&GCTR,&X,&ARG,TYP=D '                           09250002
+&SGDADRA(&I) SETA &SGDADRA(&I)+X'40000000'   MARK AS PROCESSED.         09300002
+&PROTOSW  SETB 0                             CONTINUE THE DO.           09350002
+.L303    AGO   .L301                                                    09400002
+.****  ENA LEVEL 3 GROUP FACTORING  *********************************** 09450002
+.********************************************************************** 09500002
+.*  ESOTERIC                                                            09550002
+.********************************************************************** 09600002
+.*                                                                      09650002
+.* COMMENT: THIS LEVEL GETS A DEVICE ADDRESS IN ARG AS INPUT. IT IS     09700002
+.*          EITHER THE FIRST MEMBER OF A GROUP, OR A CANDIDATE FOR      09750002
+.*          MEMBERSHIP IN A GROUP THAT ALREADY HAS AT LEAST ONE         09800002
+.*          ADDRESS. (PROTOSW ON IF THE FORMER) IN EITHER CASE,         09850002
+.*          PROCESSING IS SIMILAR.  IF PROTOTYPE MEMBER, WE DISCOVER    09900002
+.*          WHICH ESOTERICS CONTAIN THE ADDRESS,AND STORE A DESCRIPTION 09950002
+.*          IN PATTRN.  IF NOT PROTOTYPE WE SEE IF THIS DEVICE'S        10000002
+.*          ESOTERIC ASSOCIATIONS AGREE EXACTLY WITH PROTOTYPE OF       10050002
+.*          CURRENT GROUP. IN THE LATTER CASE, WE EXIT UPON DETECTION   10100002
+.*          OF A NON-MATCH WITH RC SET FALSE.  UNDER ALL OTHER          10150002
+.*          CIRCUMSTANCES, ALL ESOTERICS ARE SCANNED AND A TRUE VALUE   10200002
+.*          IS RETURNED IN RC. IN AADDITION, THE GENERIC ASSOCIATION    10250002
+.*          OF EACH PROTOTYPE IS PASSED TO STAGE 2, AND EACH ESOTERIC   10300002
+.*          ASSOCIATION OF EACH PROTOTYPE IS PASSED TO STAGE 2.         10350002
+.*                                                                      10400002
+.********************************************************************** 10450002
+.*  PROCEDURE -                                                         10500002
+.*                                                                      10550002
+.*          START=0,                                                    10600002
+.*          RC=TRUE;                                                    10650002
+.*          IF PROTOSW;                                                 10700002
+.*             PUNCH SGIEF018 TYPE=G                                    10750002
+.*          DO ESO=1 BY 1 TO SGCNTRA(4) WHILE RC                        10800002
+.*             MEMBER=FALSE                                             10850002
+.*             DO INDEX=1 BY TO COUNT(ESO) WHILE NOT MEMBR;             10900002
+.*                MEMBR= (ARG=DLIST(START+INDEX);                       10950002
+.*             END;                                                     11000002
+.*             START=START+COUNT(ESO)                                   11050002
+.*             IF PROTOSW;                                              11100002
+.*                PATTRN(ESO,GRP)=MEMBR;                                11150002
+.*                IF MEMBR;                                             11200002
+.*                   PUNCH SGIEF018 TYP=E                               11250002
+.*             ELSE;                                                    11300002
+.*                IF MEMBR NE PATTRN(ESO,GRP);                          11350002
+.*                   RC=FALSE,                                          11400002
+.*          END;                                                        11450002
+.*          RETURN;                                                     11500002
+.*                                                                      11550002
+.*                                                                      11600002
+.*                                                                      11650002
+.********************************************************************** 11700002
+.*  IMPLEMENTATION  -                                                   11750002
+.*                                                                      11800002
+.L400    ANOP                                                           11850002
+&START   SETA  0                                                        11900002
+&RC      SETB  1                                                        11950002
+         AIF   (NOT &PROTOSW).L400A                                     12000002
+ PUNCH ' SGIEF018  TYP=G,&GRP,&GCTR '                                   12050002
+.L400A   ANOP                                                           12100002
+&ESO     SETA  0                                                        12150002
+.L401    ANOP                                                           12200002
+&ESO     SETA  &ESO+1                        BY CLAUSE                  12250002
+         AIF  ((&ESO GT &SGCNTRA(4)) OR NOT &RC).L302                   12300002
+.*   OUTER DO TERMINATION CLAUSE ON PREV. LINE. (BOTH TO AND WHILE)     12350002
+&MEMBR   SETB  0                                                        12400002
+.*    START INNERMOST DO LOOP                                           12450002
+&INDEX   SETA  0                             INITIALIZE DO INDEX        12500002
+.L402    ANOP                                INNER DO START             12550002
+&INDEX   SETA  &INDEX+1                      BY CLAUSE                  12600002
+         AIF  ((&INDEX GT &COUNT(&ESO)) OR &MEMBR).L403 TO/WHILE CLAUSE 12650002
+&MEMBR   SETB  (&ARG EQ  &DLIST(&START+&INDEX))   BODY OF INNER DO      12700002
+         AGO   .L402                         REPEAT INNER DO            12750002
+.L403    ANOP                                END INNER DO               12800002
+&START SETA &START+&COUNT(&ESO)                                         12850002
+         AIF   (NOT &PROTOSW).L404           GO TO ELSE                 12900002
+&PATTRN(&ESO)  SETB  (&MEMBR)                THEN CLAUSE                12950002
+         AIF   (NOT &MEMBR).L405                                        13000002
+ PUNCH ' SGIEF018 &GRP,&ESO,TYP=E'                                      13050002
+         AGO   .L405                         JUMP OVER ELSE CLAUSE      13100002
+.L404    AIF   (&MEMBR EQ &PATTRN(&ESO)).L405                           13150002
+&RC      SETB  0             KILL THE DO - WE DONT HAVE A MEMBER.       13200002
+.L405    AGO   .L401         REPEAT OUTER DO                            13250002
+.****  END OF LEVEL 4 OF GROUP FACTORING  ***************************** 13300002
+.********************************************************************** 13350002
+         MEND                                                           13400002

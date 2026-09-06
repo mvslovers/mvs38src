@@ -1,0 +1,59 @@
+         MACRO                                                          03000019
+         SGIGG501                                                       06000019
+.****************************************************************       06060003
+.*                                                                      06110002
+.* MODULE-NAME=SGIGG501(OS/VS2)MACRO                           @YM00638 06112002
+.*                                                                      06114002
+.* DESCRIPTIVE-NAME=MIC/OCR SYSGEN MACRO                       @YM00638 06116002
+.*                                                                      06118002
+.* COPYRIGHT=NONE                                              @YM00638 06118402
+.*                                                                      06120003
+.*VS1 RELEASE 2 ADDITIONS/CHANGES/DELETIONS                             06180003
+.*D300000 - 720000                                                      06240003
+.*                                                                      06300003
+.*VS1 RELEASE 3 ADDITIONS/CHANGES/DELETIONS                             06360003
+.*                                                                      06420003
+.*A060800,088000                                                 XM4256 06480003
+.*                                                               XM4256 06540003
+.*PURPOSE                                                        XM4256 06600003
+.*                                                               XM4256 06660003
+.*       THE PURPOSE OF THIS MACRO IS TO LOAD DEVICE SUPPORTED   XM4256 06720003
+.*       ROCHESTER OWNED MODULES FROM THE DISTRIBUTION LIBRARY   XM4256 06780003
+.*       ' SYS1.AOSU0 ' TO THE SYSTEM LIBRARY ' SYS1.LINKLIB '   XM4256 06840003
+.*       AT SYSGEN TIME.                                         XM4256 06900003
+.*                                                               XM4256 06960003
+.*                                                               XM4256 07020003
+.*DISCRIPTION                                                    XM4256 07080003
+.*                                                               XM4256 07140003
+.*                                                               XM4256 07200003
+.*       THIS MACRO WILL CHECK THE GLOBALS PASSED BY THE         XM4256 07260003
+.*       GENERATE MACRO. EACH GLOBAL CORRESPONDS TO A DEVICE     XM4256 07320003
+.*       BEING SYSGEN'D. THE GLOBALS AND CORRESPONDING           XM4256 07380003
+.*       DEVICES ARE:                                            XM4256 07440003
+.*                                                               XM4256 07500003
+.*         GLOBAL      DEVICE      RELEASE DEVEPOLED             XM4256 07560003
+.*                                                               XM4256 07620003
+.*       &SGDCLSB(13)  2495         OS REL 19                    XM4256 07680003
+.*                                                               XM4256 07740003
+.*       IF THE GLOBAL WAS SET BY GENERATE FOR ANY DEVICE        XM4256 07800003
+.*       IN THE MACRO; A CORRESPONDING 'COPY' AND 'SELECT'       XM4256 07860003
+.*       STATEMENT IS CREATED BY USE OF THE PUNCH COMMAND.       XM4256 07920003
+.*       THE MODULES SO SELECTED ARE LATER COPIED INTO           XM4256 07980003
+.*       ' SYS1.LINKLIB '                                        XM4256 08040003
+.*                                                               XM4256 08100003
+.*HISTORY                                                        XM4256 08160003
+.*                                                               XM4256 08220003
+.*       THIS MACRO WAS CREATED IN OS RELEASE 19 FOR THE 1287/128XM4256 08280003
+.*       THIS MACRO WAS CREATED IN OS RELEASE 19 FOR THE         XM4256 08340003
+.*       1287/1288 OCR SUPPORT. IN VS1 RELEASE 2 IT WAS          XM4256 08400003
+.*       DECIDED THAT THE MACRO SHOULD COPY ONLY TO ONE SYSTEM   XM4256 08460003
+.*       DATA SET 'SYS1.LINKLIB'. FOR THIS REASON SGIGG501 WAS   XM4256 08520003
+.*       SPLIT INTO MACROS SGIGG501 AND SGIGG502.                XM4256 08580003
+.*                                                               XM4256 08640003
+         COPY  SGGBLPAK                                                 09000019
+         AIF   (NOT (&SGDCLSB(61))).NEXT1                               12000019
+         PUNCH ' COPY OUTDD=LINKLIB,INDD=AOSU0'                         15000003
+         PUNCH ' SELECT MEMBER=(IEBTCRIN,IEBTCR02,IEBTCR03) '           19000019
+         PUNCH ' SELECT MEMBER=(IEBTCR04,IEBTCR05) '                    22000019
+.NEXT1   ANOP                                                           27000019
+         MEND                                                           84000019

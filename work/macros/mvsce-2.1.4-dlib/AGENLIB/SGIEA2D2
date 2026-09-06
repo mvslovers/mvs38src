@@ -1,0 +1,368 @@
+         MACRO                                                          00400000
+         SGIEA2D2                                                       00800000
+.*                                                                      01200000
+.*** START OF SPECIFICATIONS ****************************************** 01202303
+.*                                                            @ZA36190* 01204603
+.* MACRO NAME = SGIEA2D2                                      @ZA36190* 01206903
+.*                                                            @ZA36190* 01209203
+.* DESCRIPTIVE NAME = IEECRDCM, IEECVSUB, AND IEEPFKEY BUILD  @ZA36190* 01211503
+.*                    MACRO                                   @ZA36190* 01213803
+.*                                                            @ZA36190* 01216103
+.* COPYRIGHT = NONE                                           @ZA36190* 01218403
+.*                                                            @ZA36190* 01220703
+.* STATUS = OS/VS2 037                                        @ZA36190* 01223003
+.*                                                            @ZA36190* 01225303
+.* FUNCTION = BUILDS JOBSTEPS FOR STAGE 2 TO BUILD RESIDENT   @ZA36190* 01227603
+.*            DISPLAY CONTROL MODULES (RDCM'S) FOR DISPLAY    @ZA36190* 01229903
+.*            CONSOLES, AND NUCLEUS CSECTS IEECVSUB AND       @ZA36190* 01232203
+.*            IEEPFKEY.                                       @ZA36190* 01234503
+.*                                                            @ZA36190* 01236803
+.* OPERATION = THIS MACRO BUILDS A STAGE 2 JOBSTEP FOR EACH   @ZA36190* 01239103
+.*             DISPLAY CONSOLE TO BUILD ITS RDCM.  THE AREAS  @ZA36190* 01241403
+.*             DEFINED ON THE 'CONSOLE' MACRO ARE USED HERE.  @ZA36190* 01243703
+.*                                                            @ZA36190* 01246003
+.*             A STEP IS BUILT TO ASSEMBLE IEECVSUB,          @ZA36190* 01248303
+.*             INCLUDING CHANNEL PROGRAMS FOR EACH DEVICE     @ZA36190* 01250603
+.*             TYPE DEFINED AS A CONSOLE.                     @ZA36190* 01252903
+.*                                                            @ZA36190* 01255203
+.*             ANOTHER STAGE 2 JOBSTEP IS BUILT TO ASSEMBLE   @ZA36190* 01257503
+.*             IEEPFKEY.   THE IEEPFKEY CSECT WILL INCLUDE    @ZA36190* 01259803
+.*             SPACE FOR EACH PFK DEFINED FOR DISPLAY         @ZA36190* 01262103
+.*             CONSOLES.                                      @ZA36190* 01264403
+.*                                                            @ZA36190* 01266703
+.* MODULE TYPE = MACRO                                        @ZA36190* 01269003
+.*                                                            @ZA36190* 01271303
+.*   PROCESSOR = OS/VS2 ASSEMBLER                             @ZA36190* 01273603
+.*                                                            @ZA36190* 01275903
+.*   MODULE SIZE = N/A                                        @ZA36190* 01278203
+.*                                                            @ZA36190* 01280503
+.*   ATTRIBUTES = N/A                                         @ZA36190* 01282803
+.*                                                            @ZA36190* 01285103
+.* ENTRY POINT = N/A                                          @ZA36190* 01287403
+.*                                                            @ZA36190* 01289703
+.* INPUT = THE FOLLOWING GLOBAL VARIABLES ARE USED:           @ZA36190* 01292003
+.*                                                            @ZA36190* 01294303
+.*       NAME         FUNCTION                                @ZA36190* 01296603
+.* ----------------   --------                                @ZA36190* 01298903
+.*                                                            @ZA36190* 01301203
+.* &SG5450A           NUMBER OF 3066 CONSOLES                 @ZA36190* 01303503
+.*                                                            @ZA36190* 01305803
+.* &SGSCHDA(10,11,    NUMBER OF 2250, 2260, 3277-1, 3277-2,   @ZA36190* 01308103
+.*    17,18,)         CONSOLES RESPECTIVELY                   @ZA36190* 01310403
+.*                                                            @ZA36190* 01312703
+.* &SGSCHDA(16)       NUMBER OF PFK'S FOR MASTER CONSOLE      @ZA36190* 01315003
+.*                                                            @ZA36190* 01317303
+.* &SGSCHDC(1)        MASTER CONSOLE INPUT/OUTPUT ADDRESSES   @ZA36190* 01319603
+.*                                                            @ZA36190* 01321903
+.* &SGSCHAA(1-12)     DISPLAY AREA DEFINITION OF MASTER       @ZA36190* 01324203
+.*                    CONSOLE                                 @ZA36190* 01326503
+.*                                                            @ZA36190* 01328803
+.* &SGSCNYA(1)        NUMBER OF SECONDARY CONSOLES DEFINED    @ZA36190* 01331103
+.*                                                            @ZA36190* 01333403
+.* &SGSCNCC(1-98)     SECONDARY CONS INPUT/OUTPUT ADDRESSES   @ZA36190* 01335703
+.*                                                            @ZA36190* 01338003
+.* &SGARXXA(1-98)     WHERE XX=01-12, DISPLAY AREA            @ZA36190* 01340303
+.*                    DEFINITIONS OF SECONDARY CONSOLES       @ZA36190* 01342603
+.*                                                            @ZA36190* 01344903
+.* &SGSCNPA(1-98)     NUMBER OF PFK'S FOR SECONDARY CONSOLES  @ZA36190* 01347203
+.*                                                            @ZA36190* 01349503
+.* &SGDT05B(1-1917)   IF ON, DEVICE IS GRAPHICS CLASS         @ZA36190* 01351803
+.*                                                            @ZA36190* 01354103
+.* &SGDUXXB(1-1917)   WHERE XX=01-13, DENOTES DEVICE TYPE     @ZA36190* 01356403
+.*                                                            @ZA36190* 01358703
+.* &SGDMXXB(1-1917)   WHERE XX=MODEL NUMBER OF DEVICE         @ZA36190* 01361003
+.*                                                            @ZA36190* 01363303
+.* &HEX               DEVICE ADDRESS RETURNED BY CONVERT      @ZA36190* 01365603
+.*                                                            @ZA36190* 01367903
+.* OUTPUT = FOR EACH DISPLAY CONSOLE DEFINED, A STAGE 2       @ZA36190* 01370203
+.*          JOBSTEP IS BUILT.   &SGCTRLC(6) IS SET EQUAL TO   @ZA36190* 01372503
+.*          THE RDCM NAME, IN THE FORM 'IEECVXYY', WHERE X IS @ZA36190* 01374803
+.*          A LETTER THAT INDICATES THE DEVICE TYPE, AND YY   @ZA36190* 01377103
+.*          IS A ONE- OR TWO-DIGIT NUMBER THAT IS INCREMENTED @ZA36190* 01379403
+.*          FOR EACH DEVICE TO MAKE THE RDCM NAME UNIQUE.     @ZA36190* 01381703
+.*          THESE STEPS ARE ASSEMBLIES OF IEECVXYY MODULES,   @ZA36190* 01384003
+.*          USING THE IEECRDCM MACRO.                         @ZA36190* 01386303
+.*                                                            @ZA36190* 01388603
+.*          ANOTHER STAGE 2 JOBSTEP IS BUILT, WITH            @ZA36190* 01390903
+.*          &SGCTRLC(6) SET EQUAL TO 'IEECVSUB'. THIS IS AN   @ZA36190* 01393203
+.*          ASSEMBLY OF IEECVSUB.                             @ZA36190* 01395503
+.*                                                            @ZA36190* 01397803
+.*          THE LAST STAGE 2 JOBSTEP BUILT BY THIS MACRO IS   @ZA36190* 01400103
+.*          AN ASSEMBLY OF CSECT 'IEEPFKEY'.  IT CONTAINS     @ZA36190* 01402403
+.*          SPACE FOR EACH PFK DEFINED FOR DISPLAY CONSOLES.  @ZA36190* 01404703
+.*          &SGCTRLC(6) IS SET EQUAL TO 'IEEPFKEY'.           @ZA36190* 01407003
+.*                                                            @ZA36190* 01409303
+.* EXIT NORMAL = N/A                                          @ZA36190* 01411603
+.*                                                            @ZA36190* 01413903
+.* EXIT ERROR = N/A                                           @ZA36190* 01416203
+.*                                                            @ZA36190* 01418503
+.* EXTERNAL REFERENCES = N/A                                  @ZA36190* 01420803
+.*                                                            @ZA36190* 01423103
+.* TABLES = &PFKLIM - CONTAINS THE NUMBER OF PFK'S OF EACH    @ZA36190* 01425403
+.*                    CONSOLE                                 @ZA36190* 01427703
+.*                                                            @ZA36190* 01430003
+.*          &NDX    - USED TO GENERATE THE LABEL FOR THE      @ZA36190* 01432303
+.*                    PFK AREA OF EACH DISPLAY CONSOLE        @ZA36190* 01434603
+.*                                                            @ZA36190* 01436903
+.*          &PFKORG - CONTAINS A '1'B IF CORRESPONDING        @ZA36190* 01439203
+.*                    CONSOLE IS A 3277 OR 3270-LIKE DEVICE.  @ZA36190* 01441503
+.*                    CONTAINS A '0'B OTHERWISE.  INDICATES   @ZA36190* 01443803
+.*                    THE 'NUMBER' OF THE FIRST PFK FOR THE   @ZA36190* 01446103
+.*                    DEVICE.                                 @ZA36190* 01448403
+.*                                                            @ZA36190* 01450703
+.* VARIABLES = THE FOLLOWING LOCAL VARIABLES ARE USED:        @ZA36190* 01453003
+.*                                                            @ZA36190* 01455303
+.*       NAME         FUNCTION                                @ZA36190* 01457603
+.* ----------------   --------                                @ZA36190* 01459903
+.*                                                            @ZA36190* 01462203
+.* &TOTPFK            TOTAL NUMBER OF PFK'S FOR ALL           @ZA36190* 01464503
+.*                    CONSOLES                                @ZA36190* 01466803
+.*                                                            @ZA36190* 01469103
+.* &T2(1-5)           NUMBER OF CONSOLES OF EACH DEVICE TYPE  @ZA36190* 01471403
+.*                                                            @ZA36190* 01473703
+.* &I                 INDEX INTO COMPOSITE CONSOLE ADDRESS.   @ZA36190* 01476003
+.*                    ALSO, INDEX INTO IEEPFKEY NAME TABLE    @ZA36190* 01478303
+.*                    (&NDX)                                  @ZA36190* 01480603
+.*                                                            @ZA36190* 01482903
+.* &J                 PFK NUMBER FOR BUILDING IEEPFKEY        @ZA36190* 01485203
+.*                                                            @ZA36190* 01487503
+.* &N                 INDEX INTO TABLE OF SECONDARY CONSOLE   @ZA36190* 01489803
+.*                    ADDRESSES (&SGSCNCC) AND CORRESPONDING  @ZA36190* 01492103
+.*                    PFK TABLES                              @ZA36190* 01494403
+.*                                                            @ZA36190* 01496703
+.* &P                 NUMBER OF CONSOLES WITH PFK'S DEFINED   @ZA36190* 01499003
+.*                                                            @ZA36190* 01501303
+.* &T                 INDEX INTO TABLES INDICATING DEVICE     @ZA36190* 01503603
+.*                    TYPE                                    @ZA36190* 01505903
+.*                                                            @ZA36190* 01508203
+.* &X                 DEVICE ADDRESS IN ARITHMETIC FORM (FOR  @ZA36190* 01510503
+.*                    USE WITH IOCHECK MACRO)                 @ZA36190* 01512803
+.*                    ALSO, MULTIPLIER FOR CALCULATING LENGTH @ZA36190* 01515103
+.*                    OF IEEPFKEY HEADER                      @ZA36190* 01517403
+.*                                                            @ZA36190* 01519703
+.* &T1                LETTER INDICATING DEVICE TYPE.  USED    @ZA36190* 01522003
+.*                    TO REPLACE 'X' IN IEECVXYY              @ZA36190* 01524303
+.*                                                            @ZA36190* 01526603
+.* &TYP               LETTER INDICATING DEVICE TYPE AS USED   @ZA36190* 01528903
+.*                    BY IEECRDCM                             @ZA36190* 01531203
+.*                                                            @ZA36190* 01533503
+.* &H(1-2)            ADDRESSES OF INPUT AND OUTPUT HALVES    @ZA36190* 01535803
+.*                    OF CONSOLES                             @ZA36190* 01538103
+.*                                                            @ZA36190* 01540403
+.* &Y(1-5)            SET TO 'Y' IF CORRESPONDING DEVICE      @ZA36190* 01542703
+.*                    TYPE IS DEFINED, TO 'N' OTHERWISE       @ZA36190* 01545003
+.*                                                            @ZA36190* 01547303
+.* &Y(6)              SET TO 'Y' IF PFK'S WERE DEFINED FOR    @ZA36190* 01549603
+.*                    ONE OR MORE CONSOLES, TO 'N' OTHERWISE  @ZA36190* 01551903
+.*                                                            @ZA36190* 01554203
+.* &K1,&K2,&A1,&A2,   USED TO BUILD PARAMETERS FOR GENERATED  @ZA36190* 01556503
+.* &A3,&A4,&A5        IEECRDCM MACROS                         @ZA36190* 01558803
+.*                                                            @ZA36190* 01561103
+.* MACROS = SGGBLPAK, SGASMPAK, CONVERT, IOCHECK              @ZA36190* 01563403
+.*                                                            @ZA36190* 01565703
+.* MESSAGES = NONE                                            @ZA36190* 01568003
+.*                                                            @ZA36190* 01570303
+.* COMPLETION CODES = N/A                                     @ZA36190* 01572603
+.*                                                            @ZA36190* 01574903
+.* CHANGE ACTIVITY = G911P2G,ZA38565                          @ZA36190* 01577203
+.*                                                            @ZA36190* 01579503
+.*** END OF SPECIFICATIONS ******************************************** 01581803
+.*  GLOBAL DEFINITION                                                   01600000
+         COPY SGGBLPAK                                                  02000000
+.*  LOCAL A DEFINITION                                                  02400000
+.*  THE FOLLOWING CHANGE TO 99 FOR PFKLIM, NDX, AND PFKORG SUPPORTS     02800003
+.*  THE CHANGE FROM 32 TO 99 CONSOLES                        @ZA36190   02850003
+         LCLA &TOTPFK,&PFKLIM(99),&NDX(99),&T2(5),&I,&J,&N,&P,&T,&X     02900003
+.*  LOCAL B DEFINITION                                                  02950003
+         LCLB &PFKORG(99)                                               03000003
+.*  LOCAL C DEFINITION                                                  04000000
+         LCLC &T1,&TYP,&H(2),&Y(6),&K1,&K2,&A1,&A2,&A3,&A4,&A5          04400000
+.*                                                                      04800000
+.*  THIS MACRO WAS CREATED FOR VS/2 RELEASE 2 DIDOCS (SD CODE Y02958)   05200000
+.*  TO ASSEMBLE A RESIDENT DCM FOR EACH CRT CONSOLE GENERATED,          05600000
+.*  ASSEMBLE THE IEECVSUB AND ASSEMBLE THE IEEPFKEY TO RESIDE IN        06000000
+.*  THE SYSTEM NUCLEUS.                                                 06400000
+.*  THE NAMING CONVENTION FOR THE RESIDENT DCM IS AS FOLLOWS:           06800000
+.*     A) 2250 IEECVEX                                                  07200000
+.*     B) 2260 IEECVFX                                                  07600000
+.*     C) 3066 IEECVDX                                                  08000000
+.*     D) 3272 MOD 1 IEECVGX                                            08400000
+.*     E) 3272 MOD 2 IEECVHX                                            08800000
+.*  WHERE X RUNS FROM 1 TO THE TOTAL NUMBER DEVICES OF A                09200000
+.*  PARTICULAR TYPE.                                                    09600000
+.*                                                                      10000000
+         AIF   (&SG5450A+&SGSCHDA(10)+&SGSCHDA(11)+&SGSCHDA(17)+&SGSCHDX10400000
+               A(18) LT 1).OUT  NO GRAPHIC CONSOLES           MB YM4302 10800000
+.*                                                                      11200000
+.*  THE FOLLOWING COMMENT CARD WILL BE GENERATED INTO THE STAGE 1       11600000
+.*  OUTPUT TO IDENTIFY THE LEVEL AND CHANGE DATE ASSOCIATED WITH        12000000
+.*  THE COPY OF SGIEA2D2 BEING USED IN ANY GIVEN SYSGEN.                12400000
+.*  THE COMMENT SHOULD BE UPDATED WITH A NEW LEVEL NUMBER AND DATE      12800000
+.*  WHENEVER ANY CHANGES ARE MADE TO THIS MACRO                         13200000
+.*                                                                      13600000
+*** SGIEA2D2 *** DIDOCS *** 04/24/80 *** CHANGE LEVEL 3.7***   @ZA38565 14000003
+.*                                                                      14400000
+&Y(1)    SETC  'N'                                                      14800000
+&Y(2)    SETC  'N'                                                      15200000
+&Y(3)    SETC  'N'                                                      15600000
+&Y(4)    SETC  'N'                                                      16000000
+&Y(5)    SETC  'N'                                                      16400000
+&Y(6)    SETC  'N'                                                      16800000
+&I       SETA  2                                                        17200000
+&H(1)    SETC  '&SGSCHDC(1)'(1,3)                                       17600000
+&H(2)    SETC  '&SGSCHDC(1)'(4,3)                                       18000000
+         AIF   (&SGSCHAA(12) EQ 0).AREADUN                              18400000
+&A1      SETC  ',A=('.'&SGSCHAA(1)'                                     18800000
+         AIF   (&SGSCHAA(2) EQ 0).STOPA                                 19200000
+&A2      SETC  ','.'&SGSCHAA(2)'                                        19600000
+         AIF   (&SGSCHAA(3) EQ 0).STOPA                                 20000000
+&A2      SETC  '&A2'.','.'&SGSCHAA(3)'                                  20400000
+         AIF   (&SGSCHAA(4) EQ 0).STOPA                                 20800000
+&A3      SETC  ','.'&SGSCHAA(4)'                                        21200000
+         AIF   (&SGSCHAA(5) EQ 0).STOPA                                 21600000
+&A3      SETC  '&A3'.','.'&SGSCHAA(5)'                                  22000000
+         AIF   (&SGSCHAA(6) EQ 0).STOPA                                 22400000
+&A4      SETC  ','.'&SGSCHAA(6)'                                        22800000
+         AIF   (&SGSCHAA(7) EQ 0).STOPA                                 23200000
+&A4      SETC  '&A4'.','.'&SGSCHAA(7)'                                  23600000
+         AIF   (&SGSCHAA(8) EQ 0).STOPA                                 24000000
+&A4      SETC  '&A4'.','.'&SGSCHAA(8)'                                  24400000
+         AIF   (&SGSCHAA(9) EQ 0).STOPA                                 24800000
+&A5      SETC  ','.'&SGSCHAA(9)'                                        25200000
+         AIF   (&SGSCHAA(10) EQ 0).STOPA                                25600000
+&A5      SETC  '&A5'.','.'&SGSCHAA(10)'                                 26000000
+         AIF   (&SGSCHAA(11) EQ 0).STOPA                                26400000
+&A5      SETC  '&A5'.','.'&SGSCHAA(11)'                                 26800000
+.STOPA   ANOP                                                           27200000
+&A5      SETC  '&A5'.')'                                                27600000
+.AREADUN AIF   (&SGSCHDA(16) EQ 0).LEAVEP                               28000000
+&P       SETA  1                                                        28400000
+&PFKLIM(1) SETA &SGSCHDA(16)                                            28800000
+&TOTPFK  SETA  &SGSCHDA(16)                                             29200000
+         AGO   .ENDMAST                                                 29600000
+.HALFDUN AIF   ('&H(2)' NE 'FFF' AND &I EQ 1).NEXTI                     30000000
+.JESCON  AIF   (&N GE &SGSCNYA(1)).RDCMDUN                  JE @ZM32389 30400000
+&N       SETA  &N+1                                                     30800000
+         AIF   ('&SGSCNCC(&N)' EQ 'JESJES').JESCON          JE @ZM32389 31200000
+&H(1)    SETC  '&SGSCNCC(&N)'(1,3)                                      31600000
+&H(2)    SETC  '&SGSCNCC(&N)'(4,3)                                      32000000
+         AIF   ('&H(1)' EQ 'FFF').NEXTI                                 32400000
+.STARTI  ANOP                                                           32800000
+&I       SETA  1                                                        33200000
+         AIF   ('&H(1)' NE '&H(2)').LEAVEI                              33600000
+.NEXTI   ANOP                                                           34000000
+&I       SETA  2                                                        34400000
+.LEAVEI  ANOP                                                           34800000
+&K1      SETC  ''                                                       35200000
+&K2      SETC  ''                                                       35600000
+&A1      SETC  ''                                                       36000000
+&A2      SETC  ''                                                       36400000
+&A3      SETC  ''                                                       36800000
+&A4      SETC  ''                                                       37200000
+&A5      SETC  ''                                                       37600000
+         AIF   (&SGAR12A(&N) EQ 0).ARDUN                                38000000
+&A1      SETC  ',A=('.'&SGAR01A(&N)'                                    38400000
+         AIF   (&SGAR02A(&N) EQ 0).STOPAR                               38800000
+&A2      SETC  ','.'&SGAR02A(&N)'                                       39200000
+         AIF   (&SGAR03A(&N) EQ 0).STOPAR                               39600000
+&A2      SETC  '&A2'.','.'&SGAR03A(&N)'                                 40000000
+         AIF   (&SGAR04A(&N) EQ 0).STOPAR                               40400000
+&A3      SETC  ','.'&SGAR04A(&N)'                                       40800000
+         AIF   (&SGAR05A(&N) EQ 0).STOPAR                               41200000
+&A3      SETC  '&A3'.','.'&SGAR05A(&N)'                                 41600000
+         AIF   (&SGAR06A(&N) EQ 0).STOPAR                               42000000
+&A4      SETC  ','.'&SGAR06A(&N)'                                       42400000
+         AIF   (&SGAR07A(&N) EQ 0).STOPAR                               42800000
+&A4      SETC  '&A4'.','.'&SGAR07A(&N)'                                 43200000
+         AIF   (&SGAR08A(&N) EQ 0).STOPAR                               43600000
+&A4      SETC  '&A4'.','.'&SGAR08A(&N)'                                 44000000
+         AIF   (&SGAR09A(&N) EQ 0).STOPAR                               44400000
+&A5      SETC  ','.'&SGAR09A(&N)'                                       44800000
+         AIF   (&SGAR10A(&N) EQ 0).STOPAR                               45200000
+&A5      SETC  '&A5'.','.'&SGAR10A(&N)'                                 45600000
+         AIF   (&SGAR11A(&N) EQ 0).STOPAR                               46000000
+&A5      SETC  '&A5'.','.'&SGAR11A(&N)'                                 46400000
+.STOPAR  ANOP                                                           46800000
+&A5      SETC  '&A5'.')'                                                47200000
+.ARDUN   AIF   (&SGSCNPA(&N) EQ 0).LEAVEP                               47600000
+&P       SETA  &P+1                                                     48000000
+&PFKLIM(&P) SETA &SGSCNPA(&N)                                           48400000
+&TOTPFK  SETA  &TOTPFK+&SGSCNPA(&N)                                     48800000
+.ENDMAST ANOP                                                           49200000
+&NDX(&P) SETA  &N                                                       49600000
+&K1      SETC  ',KEY='                                                  50000000
+&K2      SETC  'IEECVK&N'                                               50400000
+.LEAVEP  CONVERT TO=HEX,VALUE=&H(&I),DIGITS=3                           50800000
+&X       SETA  &HEX                                                     51200000
+         IOCHECK LOOKFOR=&X                                             51600000
+&X       SETA  &SGDASPA(&HEX)                                  @ZA15421 52000000
+         AIF   (NOT &SGDT05B(&X)).HALFDUN                               52400000
+&T       SETA  4                                                        52800000
+         AIF   (&SGDU10B(&X) OR &SGDU08B(&X) AND &SGDM02B(&X) OR &SGDU1X53200000
+               3B(&X)).GR                                      @G51AK02 53250000
+&T       SETA  5                                                        53600000
+         AIF   (&SGDU08B(&X) AND &SGDM01B(&X)).GR                       54000000
+&T       SETA  3                                                        54400000
+         AIF   (&SGDU02B(&X)).GR                                        54800000
+&T       SETA  2                                                        55200000
+         AIF   (&SGDU01B(&X)).GR                                        55600000
+&T       SETA  1                                                        56000000
+         AIF   (NOT &SGDU06B(&X)).HALFDUN                               56400000
+.GR      AIF   (&P EQ 0).NOPFK                                          56800000
+         AIF   (&NDX(&P) NE &N).NOPFK                                   57200000
+&PFKORG(&P) SETB (&T EQ 4)                                              57600000
+&PFKLIM(&P) SETA &PFKLIM(&P)+&PFKORG(&P)                                58000000
+&Y(6)    SETC  'Y'                                                      58400000
+.NOPFK   ANOP                                                           58800000
+&Y(&T)   SETC  'Y'                                                      59200000
+&TYP     SETC  'ABCDE'(&T,1)                                            59600000
+&T1      SETC  'DEFHG'(&T,1)                                            60000000
+&T2(&T)  SETA  &T2(&T)+1                                                60400000
+&SGCTRLC(6) SETC 'IEECV&T1&T2(&T)'                                      60800000
+         COPY  SGASMPAK                                                 61200000
+         PUNCH 'IEECV&T1&T2(&T)  CSECT'                                 61600000
+         PUNCH '         IEECRDCM DEV=&TYP&K1&K2&A1&A2&A3&A4&A5'        62000000
+         PUNCH '         END'                                           62400000
+         PUNCH '/*'                                                     62800000
+         AGO   .HALFDUN                                                 63200000
+.RDCMDUN ANOP                                                           63600000
+         AIF   ('&Y(5)' NE 'Y').LEAVE4                                  64000000
+&Y(4)    SETC  'Y'                                                      64400000
+.LEAVE4  ANOP                                                           64800000
+&SGCTRLC(6) SETC 'IEECVSUB'                                             65200000
+         COPY  SGASMPAK                                                 65600000
+         PUNCH 'IEECVSUB CSECT '                                        66000000
+         PUNCH '         IEECSUB &Y(6),&Y(3),&Y(4),&Y(1),&Y(2)'         66400000
+         PUNCH '         CVT   DSECT=YES'                      @ZA00513 66800000
+         PUNCH '         IEECUCM  FORMAT=NEW'                  @ZA00513 67200000
+         PUNCH '         IHAPSA'                               @ZA00513 67600000
+         PUNCH 'DCMTSRT  DSECT'                                @ZA00513 68000000
+         PUNCH '         IEECRDCM'                             @ZA00513 68400000
+         PUNCH '         END'                                           68800000
+         PUNCH '/*'                                                     69200000
+         AIF   (&P EQ 0).OUT                                            69600000
+&SGCTRLC(6) SETC 'IEEPFKEY'                                             70000000
+         COPY  SGASMPAK                                                 70400000
+         PUNCH 'IEEPFKEY CSECT'                                         70800000
+         PUNCH '         DC    A(KEY)'                                  71200000
+&X       SETA  (((&TOTPFK*110+99)+3000)/3000) TOTPFK=TOT #PFK @ZA36190  71600003
+         PUNCH '         DC    &X.XL10''0''' LLMBBCCHHR                 72000000
+         PUNCH 'KEY      DC    AL4(ENDPFK-IEEPFKEY)  '        @ZA38565  72400003
+&I       SETA  1                                                        73200000
+.CONLOOP ANOP                                                           73600000
+         PUNCH '         ENTRY IEECVK&NDX(&I)'                          74000000
+         PUNCH 'IEECVK&NDX(&I)  EQU   *'                                74400000
+&J       SETA  &PFKORG(&I)                                              74800000
+.KEYLOOP ANOP                                                           75200000
+         PUNCH '         DC    FL1''&J'''                               75600000
+         PUNCH '         DC    X''0'''                                  76000000
+         PUNCH '         DC    CL108'' '''                              76400000
+&J       SETA  &J+1                                                     76800000
+         AIF   (&J LT &PFKLIM(&I)).KEYLOOP                              77200000
+         PUNCH '         DC    FL1''100'''                              77600000
+&I       SETA  &I+1                                                     78000000
+         AIF   (&I LE &P).CONLOOP                                       78400000
+         PUNCH 'ENDPFK   EQU   *'                                       78800000
+         PUNCH '         END'                                           79200000
+         PUNCH '/*'                                                     79600000
+.OUT     MEND                                                           80000000

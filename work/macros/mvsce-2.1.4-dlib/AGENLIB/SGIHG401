@@ -1,0 +1,60 @@
+               MACRO                                                    00050001
+               SGIHG401                                                 00100001
+.* UTILITY SYSGEN MACRO FOR AOS                                         00150001
+.* D 009200,010100,011000-011500,013000                         YL026VD 00160002
+.* A 018100,019100,020100                                       YL026VD 00170002
+.* CHANGES REPRESENT REMOVAL OF SYSGEN OPTIONS AND ADDING OF    YL026VD 00180002
+.*   APF AUTHORIZATION TO IEHINITT                              YL026VD 00190002
+.* D 019100,020100 APF AUTHORIZ. ONLY FOR ENTRY MODULES 790320 @ZA38828 00195099
+               COPY          SGGBLPAK  DEFINE SYSTEM GLOBALS            00200001
+&SGCTRLC(7)    SETC          '&SGCTRLC(32)'                             00250001
+&SGCTRLC(8)    SETC          '&SGCTRLC(31)'                             00300001
+&SGCTRLC(9)    SETC          'LINKLIB'                                  00350001
+&SGCTRLC(11)   SETC          ',LET'                                     00400001
+&SGCTRLC(12)   SETC          ',DC'                                      00450001
+ COPY SGLEDPK1                                                          00510001
+ PUNCH '//AOSU0 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSU0'         00550001
+ COPY SGLEDPK2                                                          00600001
+ PUNCH ' INCLUDE AOSU0(IEHLIST1,IEHLIST2,IEHLIST3,IEHMVSSF)'       9116 00620001
+ PUNCH ' ENTRY IEHLISTR'                                                00630001
+ PUNCH ' NAME IEHLIST(R)'                                               00640001
+ PUNCH '  INCLUDE AOSU0(IEHPROG1,IEHPROG2,IEHPROG3,IEHPROG4)'           00800001
+ PUNCH ' INCLUDE AOSU0(IEHPROG5,IEHMVSSF)'                              00850001
+ PUNCH ' ENTRY IEHPROG1'                                           9116 00870001
+ PUNCH ' SETCODE AC(1)'                                            2026 01000001
+ PUNCH '  NAME IEHPROGM(R)'                                             01050001
+ PUNCH '  INCLUDE AOSU0(IFHSTATR)'                                      01200001
+ PUNCH ' NAME IFHSTATR(R)'                                       56245  01250001
+ PUNCH ' INCLUDE AOSU0(IEHINITT)'                                       01800001
+ PUNCH ' SETCODE AC(1)'                                         YL026VD 01810002
+ PUNCH ' NAME    IEHINITT(R)'                                    56245  01850001
+ PUNCH ' INCLUDE AOSU0(IEHPRNT)'                                        01900001
+.*                                             1 LINE DELETED. @ZA38828 01910099
+ PUNCH ' NAME    IEHPRNT(R)'                                            01945099
+ PUNCH ' INCLUDE AOSU0(IEHSCAN)'                                        01980099
+.*                                             1 LINE DELETED. @ZA38828 02015099
+ PUNCH ' NAME    IEHSCAN(R)'                                            02050001
+ PUNCH '/*'                                                             02100001
+&SGCTRLC(6)    SETC          'IEBEDIT'                                  02150001
+&SGCTRLC(9)    SETC          'LINKLIB'                                  02200001
+&SGCTRLC(10)   SETC          ',REUS'                                    02250001
+&SGCTRLC(11)   SETC          ',LET'                                     02300001
+&SGCTRLC(12)   SETC          ',DC'                                      02350001
+ COPY SGLEDPK1                                                          02410001
+ PUNCH '//AOSU0 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOSU0'         02450001
+ COPY SGLEDPK2                                                          02500001
+ PUNCH ' INCLUDE AOSU0(IEBEDIT)'                                        02550001
+ PUNCH ' NAME    IEBEDIT(R)'                                            02600001
+ PUNCH '/*'                                                             02650001
+&SGCTRLC(6)    SETC          'IEBIMAGE'                        @Z40MSTT 02700004
+&SGCTRLC(9)    SETC          'LINKLIB'                         @Z40MSTT 02750004
+&SGCTRLC(10)   SETC          ',REUS'                           @Z40MSTT 02800004
+&SGCTRLC(11)   SETC          ',LET'                            @Z40MSTT 02850004
+ COPY SGLEDPK1                                                 @Z40MSTT 02900004
+ PUNCH '//AOSU0 DD DISP=SHR,VOLUME=(,RETAIN),DSN=SYS1.AOSU0'   @Z40MSTT 02950004
+ COPY SGLEDPK2                                                 @Z40MSTT 03000004
+ PUNCH ' INCLUDE AOSU0(IEBIMAGE,IEBISCAN,IEBIMSGS)'            @Z40MSTT 03050004
+ PUNCH ' ENTRY   IEBIMAGE'                                     @Z40MSTT 03100004
+ PUNCH ' NAME    IEBIMAGE(R)'                                  @Z40MSTT 03150004
+ PUNCH '/*'                                                    @Z40MSTT 03200004
+               MEND                                                     03250004

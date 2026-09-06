@@ -1,0 +1,49 @@
+         MACRO                                                          00050000
+         SGICG400                                                       00100000
+.* /* START OF SPECIFICATIONS ****                                      00150000
+.*                                                                      00200000
+.*01  MODULE-NAME = SGICG400                                            00250000
+.*                                                                      00300000
+.*01  DESCRIPTIVE-NAME = MSCTC VS/2 SYSGEN LINKLIB LINKEDIT MACRO       00350000
+.*                                                                      00450000
+.*01  STATUS = OS/VS2 RELEASE 3 LEVEL 0                                 00500000
+.*                                                                      00550000
+.*01  FUNCTION = SGICG400 LINKEDITS MSC TABLE CREATE MODULE             00600000
+.*               WITH APF AUTHORIZATION INTO THE TARGET                 00610000
+.*               SYS1.LINKLIB (VS2) FROM THE                            00650000
+.*               DISTRIBUTION LIBRARY SYS1.AOSD0                        00700000
+.*                                                                      00750000
+.*01  OPERATION = VIA THE ASSEMBLER PUNCH COMMAND, LINKAGE              00800000
+.*                EDITOR INCLUDE STATEMENTS ARE GENERATED               00850000
+.*                FOR THE MODULES                                       00900000
+.*                                                                      00910000
+.*01  MODULE-TYPE = MACRO                                               00950000
+.*02    PROCESSOR = ASSEMBLER XF                                        01000000
+.*02    MACRO-SIZE = 18 STATEMENTS                                      01050000
+.*                                                                      01100000
+.*01  OUTPUT = LINKAGE EDITOR JCL AND CONTROL STATEMENTS                01150000
+.*                                                                      01200000
+.*01  INNER-MACRO = SGGBLPAK - DEFINE SYSTEM GLOBALS                    01250000
+.*                  SGLEDPK1 - GENERATE LINKEDIT JCL                    01300000
+.*                  SGLEDPK2 - GENERATE LINKEDIT SYSIN JCL              01350000
+.*                                                                      01400000
+.*01  MESSAGES = NONE                                                   01450000
+.*                                                                      01500000
+.**** END OF SPECIFICATIONS ***/                                        01550000
+         COPY  SGGBLPAK                DEFINE SYSTEM GLOBAL VARIABLES   01600000
+&SGCTRLC(6)    SETC ''                 SYSLMOD MEMBER                   01650000
+&SGCTRLC(7)    SETC '&SGCTRLC(32)'     SYSLMOD VOLUME                   01700000
+&SGCTRLC(8)    SETC '&SGCTRLC(31)'     SYSLMOD UNIT                     01750000
+&SGCTRLC(9)    SETC 'LINKLIB'          SYSLMOD DSNAME                   01800000
+&SGCTRLC(10)   SETC ''                 NULL ATTRIBUTE                   01850000
+&SGCTRLC(11)   SETC ''                 NULL ATTRIBUTE                   01900000
+         COPY  SGLEDPK1                GENERATE LINK EDIT STEP          01950000
+ PUNCH '//AOSD0 DD DSNAME=SYS1.AOSD0,VOLUME=(,RETAIN),DISP=SHR'         02000000
+         COPY  SGLEDPK2                LINK EDIT SYSIN STAGE            02010000
+.* INCLUDE MSCTC COMPONENT MODULE                                       02030000
+ PUNCH ' INCLUDE AOSD0(ICGDSINT)'                                       02050000
+ PUNCH ' ENTRY ICGDSINT'                                                02100000
+ PUNCH ' SETCODE AC(1)'                                                 02150000
+ PUNCH ' NAME MSCTC(R)'                                                 02200000
+ PUNCH '/*'                                                             02250000
+         MEND                                                           02300000

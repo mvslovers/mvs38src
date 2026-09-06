@@ -1,0 +1,275 @@
+)F FUNCTION -                                                           00400002
+  THE ALTER COMMAND IS USED TO ALTER ATTRIBUTES IN CATALOG ENTRIES.     00800002
+)X SYNTAX -                                                             01200002
+         ALTER     'ENTRYNAME/PASSWORD'                                 01600002
+                   NEWNAME('NEWNAME')                                   02000002
+                   NULLIFY(MASTERPW CONTROLPW UPDATEPW READPW OWNER     02400002
+                           AUTHORIZATION(MODULE|STRING) RETENTION CODE  02800003
+                           EXCEPTIONEXIT )                              02850003
+                   MASTERPW('PASSWORD')                                 03200002
+                   CONTROLPW('PASSWORD')                                03600002
+                   UPDATEPW('PASSWORD')                                 04000002
+                   READPW('PASSWORD')                                   04400002
+                   UNINHIBIT | INHIBIT                                  04800002
+                   CODE('CODE')                                         05200002
+                   ATTEMPTS('NUMBER')                                   05600002
+                   AUTHORIZATION('ENTRYPOINT' 'STRING')                 06000002
+                   OWNER('OWNERID')                                     06400002
+                   TO('DATE') | FOR('DAYS')                             06800002
+                   SHAREOPTIONS('CROSSREGION' 'CROSSSYSTEM')            07200002
+                   ERASE | NOERASE                                      07600002
+                   EXCEPTIONEXIT('MNAME')                               07650003
+                   WRITECHECK | NOWRITECHECK                            08000002
+                   DESTAGEWAIT | NODESTAGEWAIT                          08050003
+                   RECORDSIZE('AVERAGE' 'MAXIMUM')                      08060003
+                   KEYS('LENGTH' 'OFFSET')                              08100003
+                   UNIQUEKEY | NONUNIQUEKEY                             08150003
+                   FILE('DNAME')                                        08400002
+                   FREESPACE('CIPERCENT' 'CAPERCENT')                   08800002
+                   BUFFERSPACE('SIZE')                                  09200002
+                   ADDVOLUMES('VOLSER' ...)                             09600002
+                   REMOVEVOLUMES('VOLSER' ...)                          10000002
+                   STAGE | BIND | CYLINDERFAULT                         10400003
+                   UPGRADE | NOUPGRADE                                  10410003
+                   UPDATE | NOUPDATE                                    10420003
+                   EMPTY | NOEMPTY                                      10450003
+                   SCRATCH | NOSCRATCH                                  10800002
+                   CATALOG('CATNAME/PASSWORD')                          11200003
+  REQUIRED - 'ENTRYNAME'                                                11600002
+  DEFAULTS - NONE                                                       12000002
+  ABBREVIATIONS -                                                       12400002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 12800002
+             NEWNAME              NEWNM                                 13200002
+             MASTERPW             MRPW                                  14000002
+             CONTROLPW            CTLPW                                 14400002
+             UPDATEPW             UPDPW                                 14800002
+             READPW               RDPW                                  15200002
+             MODULE               MDLE                                  16000002
+             STRING               STRG                                  16400002
+             RETENTION            RETN                                  16800002
+             UNINHIBIT            UNINH                                 17200002
+             SHAREOPTIONS         SHR                                   18400002
+             NOERASE              NERAS                                 19200002
+             EXCEPTIONEXIT        EEXT                                  19250003
+             WRITECHECK           WCK                                   19600002
+             NOWRITECHECK         NWCK                                  20000002
+             DESTAGEWAIT          DSTGW                                 20050003
+             NODESTAGEWAIT        NDSTGW                                20100003
+             UNIQUEKEY            UNQK                                  20150003
+             NONUNIQUEKEY         NUNQK                                 20200003
+             FREESPACE            FSPC                                  20400002
+             BUFFERSPACE          BUFSPC OR BUFSP                       20800002
+             ADDVOLUMES           AVOL                                  21200002
+             REMOVEVOLUMES        RVOL                                  21600002
+             CYLINDERFAULT        CYLF                                  21650003
+             UPGRADE              UPG                                   21700003
+             NOUPGRADE            NUPG                                  21750003
+             UPDATE               UPD                                   21800003
+             NOUPDATE             NUPD                                  21850003
+             NOEMPTY              NEMP                                  22400002
+             NOSCRATCH            NSCR                                  23200002
+)O OPERANDS -                                                           24000002
+  'ENTRYNAME/PASSWORD'                                                  24400002
+           - SPECIFIES THE NAME OF THE ENTRY TO BE ALTERED.             24800002
+  'ENTRYNAME'                                                           25200002
+           - NAME OF THE ENTRY TO BE ALTERED.                           25600002
+  'PASSWORD'                                                            26000002
+           - PASSWORD OF THE ENTRY TO BE ALTERED.                       26400002
+  REQUIRED - 'ENTRYNAME'                                                26800002
+))NEWNAME('NEWNAME')                                                    27200002
+           - SPECIFIES THAT THE ENTRY TO BE ALTERED IS TO BE GIVEN A    27600002
+             NEW NAME.                                                  28000002
+  'NEWNAME'                                                             28400002
+           - NEW NAME FOR ENTRY TO BE ALTERED.                          28800002
+))NULLIFY(MASTERPW CONTROLPW UPDATEPW READPW OWNER                      29200002
+          AUTHORIZATION(MODULE|STRING) RETENTION CODE                   29600003
+          EXCEPTIONEXIT)                                                29650003
+           - SPECIFIES THAT THE ATTRIBUTES IDENTIFIED BY THE            30000003
+             KEYWORDS CODED AS SUBPARAMETERS ARE TO BE NULLIFIED.       30400002
+  MASTERPW - MASTER PASSWORD IS TO BE NULLIFIED.                        30800002
+  CONTROLPW                                                             31200002
+           - CONTROL LEVEL PASSWORD IS TO BE NULLIFIED.                 31600002
+  UPDATEPW - UPDATE LEVEL PASSWORD IS TO BE NULLIFIED.                  32000002
+  READPW   - READ LEVEL PASSWORD IS TO BE NULLIFIED.                    32400002
+  OWNER    - OWNER IDENTIFICATION IS TO BE NULLIFIED.                   32800002
+  AUTHORIZATION(MODULE|STRING)                                          33200002
+           - SPECIFIES THAT EITHER THE NAME OF THE USER SECURITY        33600003
+             VERIFICATION ROUTINE (USVR) OR  THE USER                   33650003
+             AUTHORIZATION RECORD IS TO BE NULLIFIED.                   34000003
+  MODULE   - THE NAME OF THE USVR IS TO BE NULLIFIED.                   34400003
+  STRING   - THE USER AUTHORIZATION RECORD IS TO BE NULLIFIED.          34800002
+  RETENTION                                                             35200002
+           - THE RETENTION PERIOD IS TO BE NULLIFIED.                   35600002
+  CODE     - THE CODE NAME USED FOR PROMPTING IS TO BE NULLIFIED.       36000002
+  EXCEPTIONEXIT                                                         36050003
+           - THE EXCEPTIONEXIT IS TO BE NULLIFIED.                      36100003
+))MASTERPW('PASSWORD')                                                  36400002
+           - SPECIFIES A MASTER LEVEL PASSWORD FOR THE ENTRY BEING      36800002
+             DEFINED.                                                   37200002
+  'PASSWORD'                                                            37600002
+           - MASTER LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.         38000002
+))CONTROLPW('PASSWORD')                                                 38400002
+           - SPECIFIES A CONTROL LEVEL PASSWORD FOR THE ENTRY BEING     38800002
+             DEFINED.                                                   39200002
+  'PASSWORD'                                                            39600002
+           - CONTROL LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.        40000002
+))UPDATEPW('PASSWORD')                                                  40400002
+           - SPECIFIES AN UPDATE LEVEL PASSWORD FOR THE ENTRY BEING     40800002
+             DEFINED.                                                   41200002
+  'PASSWORD'                                                            41600002
+           - UPDATE LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.         42000002
+))READPW('PASSWORD')                                                    42400002
+           - SPECIFIES A READ LEVEL PASSWORD FOR THE ENTRY BEING        42800002
+             DEFINED.                                                   43200002
+  'PASSWORD'                                                            43600002
+           - READ LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.           44000002
+))UNINHIBIT                                                             44400002
+           - THE READ-ONLY RESTRICTION SET BY A PREVIOUS ALTER OR       44800002
+             EXPORT COMMAND IS TO BE REMOVED.                           45200002
+))INHIBIT  - THE ENTRY BEING ALTERED IS ONLY TO BE READ.                45600002
+))CODE('CODE')                                                          46000002
+           - SPECIFIES A CODE NAME FOR THE ENTRY BEING DEFINED.         46400002
+  'CODE'   - CODE NAME FOR THE ENTRY BEING DEFINED.                     46800002
+))ATTEMPTS('NUMBER')                                                    47200002
+           - SPECIFIES THE MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY 47600002
+             TO ENTER A CORRECT PASSWORD IN RESPONSE TO A PROMPTING     48000002
+             MESSAGE.                                                   48400002
+  'NUMBER' - MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY TO ENTER A    48800002
+             CORRECT PASSWORD IN RESPONSE TO A PROMPTING MESSAGE.       49200002
+))AUTHORIZATION('ENTRYPOINT' 'STRING')                                  49600002
+           - SPECIFIES THAT A USER-SECURITY-VERIFICATION ROUTINE (USVR) 50000002
+             IS AVAILABLE FOR ADDITIONAL SECURITY VERIFICATION.         50400002
+  'ENTRYPOINT'                                                          50800002
+           - ENTRY POINT OF THE USVR.                                   51200002
+  'STRING' - INFORMATION TO BE PASSED TO THE USVR WHEN IT RECEIVES      51600002
+             CONTROL TO VERIFY AUTHORIZATION.                           52000002
+  REQUIRED - 'ENTRYPOINT'                                               52400002
+))OWNER('OWNERID')                                                      52800002
+           - SPECIFIES THE IDENTIFICATION OF THE OWNER OF THE ENTRY     53200002
+             BEING ALTERED.                                             53600002
+  'OWNERID'                                                             54000002
+           - IDENTIFICATION OF THE OWNER OF THE ENTRY BEING ALTERED.    54400002
+))TO('DATE')                                                            54800002
+           - SPECIFIES THE DATE THROUGH WHICH THE ENTRY IS TO BE KEPT.  55200002
+  'DATE'   - THE DATE (YYDDD) THROUGH WHICH THE ENTRY IS TO BE KEPT.    55600002
+))FOR('DAYS')                                                           56000002
+           - SPECIFIES THE NUMBER OF DAYS FOR WHICH THE ENTRY IS TO BE  56400002
+             KEPT.                                                      56800002
+  'DAYS'   - NUMBER OF DAYS FOR WHICH THE ENTRY IS TO BE KEPT.          57200002
+))SHAREOPTIONS('CROSSREGION' 'CROSSSYSTEM')                             57600002
+           - SPECIFIES HOW A DATA OR INDEX COMPONENT OF A CLUSTER CAN   58000002
+             BE SHARED.                                                 58200002
+  'CROSSREGION'                                                         58400002
+           - SPECIFIES THE AMOUNT OF SHARING ALLOWED AMONG REGIONS.     58800002
+  'CROSSSYSTEM'                                                         59200002
+           - SPECIFIES THE AMOUNT OF SHARING ALLOWED AMONG SYSTEMS.     59600002
+  REQUIRED - 'CROSSREGION'                                              60000002
+))ERASE    - THE DATA COMPONENT IS TO BE OVERWRITTEN WITH BINARY ZEROS  60400002
+             WHEN ITS CATALOG ENTRY IS DELETED.                         60800002
+))NOERASE  - THE DATA COMPONENT IS NOT TO BE OVERWRITTEN WITH BINARY    61200002
+             ZEROS WHEN ITS CATALOG ENTRY IS DELETED.                   61600002
+))EXCEPTIONEXIT('MNAME')                                                61650003
+           - SPECIFIES THE NAME OF THE USER MODULE TO BE GIVEN          61700003
+             CONTROL WHEN AN EXCEPTION OCCURS DURING PROCESSING.        61750003
+  'MNAME'  - NAME OF USER MODULE.                                       61800003
+))WRITECHECK                                                            62000002
+           - THE DATA OR INDEX COMPONENT IS TO BE CHECKED BY A MACHINE  62400002
+             ACTION CALLED 'WRITE-CHECK' WHEN A RECORD IS WRITTEN INTO  62800002
+             IT.                                                        63200002
+))NOWRITECHECK                                                          63600002
+           - THE DATA OR INDEX COMPONENT IS NOT TO BE CHECKED BY A      64000002
+             MACHINE ACTION CALLED 'WRITE-CHECK' WHEN A RECORD IS       64400002
+             WRITTEN INTO IT.                                           64800002
+))DESTAGEWAIT                                                           64850003
+           - INDICATES THAT DESTAGING TO MASS STORAGE IS TO             64900003
+             BE COMPLETED BEFORE CONTROL IS RETURNED FROM VSAM          64950003
+             TO THE PROGRAM THAT ISSUES THE CLOSE MACRO.                65000003
+))NODESTAGEWAIT                                                         65050003
+           - INDICATES THAT NOTIFICATION OF UNSUCCESSFUL DESTAGING      65100003
+             TO MASS STORAGE IS TO BE MADE ONLY BY A MESSAGE TO THE     65150003
+             OPERATOR AND TO THE MESSAGES (SYSPRINT) DATA SET.          65160003
+))RECORDSIZE('AVERAGE' 'MAXIMUM')                                       65162003
+           - SPECIFIES THE AVERAGE AND MAXIMUM LENGTHS, IN BYTES, OF    65164003
+             THE RECORDS IN THE DATA COMPONENT.                         65166003
+  'AVERAGE'                                                             65168003
+           - AVERAGE LENGTH OF THE RECORDS IN THE DATA COMPONENT.       65168403
+  'MAXIMUM'                                                             65168803
+           - MAXIMUM LENGTH OF THE RECORDS IN THE DATA COMPONENT.       65169203
+))KEYS('LENGTH' 'OFFSET')                                               65170003
+           - SPECIFIES THAT INFORMATION ABOUT THE KEY FIELD FOR         65180003
+             KEY-SEQUENCED DATA FOLLOWS.                                65190003
+  'LENGTH' - LENGTH OF THE KEY.                                         65192003
+  'OFFSET' - OFFSET OF THE KEY.                                         65194003
+))UNIQUEKEY                                                             65196003
+           - SPECIFIES THAT THE ALTERNATE KEY MAY NOT RESOLVE INTO MORE 65198003
+             THAN ONE PRIME KEY.                                        65198403
+))NONUNIQUEKEY                                                          65198803
+           - SPECIFIES THAT THE ALTERNATE KEY MAY RESOLVE INTO MORE     65199203
+             THAN ONE PRIME KEY.                                        65199603
+))FILE('DNAME')                                                         65200002
+           - SPECIFIES THE NAME OF A DD STAMEMENT THAT IDENTIFIES THE   65600002
+             ENTRY TO BE ALTERED.                                       66000002
+  'DNAME'  - NAME OF A DD STATEMENT THAT IDENTIFIES THE ENTRY TO BE     66400002
+             ALTERED.                                                   66800002
+))FREESPACE('CIPERCENT' 'CAPERCENT')                                    67200002
+           - SPECIFIES THE AMOUNT OF SPACE THAT IS TO BE LEFT FREE      67600002
+             AFTER ANY ALLOCATION AND AFTER ANY SPLIT OF CONTROL        68000002
+             INTERVALS (CIPERCENT) AND CONTROL AREAS (CAPERCENT).       68400002
+  'CIPERCENT'                                                           68800002
+           - PERCENTAGE OF SPACE THAT IS TO BE LEFT FREE IN EACH        69200002
+             CONTROL INTERVAL.                                          69600002
+  'CAPERCENT'                                                           70000002
+           - PERCENTAGE OF SPACE THAT IS TO BE LEFT FREE IN EACH        70400002
+             CONTROL AREA.                                              70800002
+  REQUIRED - 'CIPERCENT'                                                71000002
+))BUFFERSPACE('SIZE')                                                   71200002
+           - SPECIFIES THE MINIMUM SPACE TO BE PROVIDED FOR BUFFERS.    71600002
+  'SIZE'   - AMOUNT OF SPACE TO BE PROVIDED FOR BUFFERS.                72000002
+))ADDVOLUMES('VOLSER' ...)                                              72400002
+           - SPECIFIES VOLUMES TO BE ADDED TO THE LIST OF OVERFLOW      72800002
+             (CANDIDATE) VOLUMES.                                       73200002
+  'VOLSER' - VOLUME SERIAL NUMBER OF VOLUME TO BE ADDED TO THE LIST OF  73600002
+             OVERFLOW (CANDIDATE) VOLUMES.                              74000002
+))REMOVEVOLUMES('VOLSER' ...)                                           74400002
+           - SPECIFIES VOLUMES TO BE REMOVED FROM THE LIST OF           74800002
+             CANDIDATE VOLUMES.                                         75200002
+  'VOLSER' - VOLUME SERIAL NUMBER OF VOLUME TO BE REMOVED FROM THE LIST 75600002
+             OF CANDIDATE VOLUMES.                                      76000002
+))STAGE    - INDICATES THAT THE CLUSTER OR COMPONENT IS TO BE STAGED    76050003
+             FROM MASS STORAGE TO A DIRECT ACCESS STORAGE STAGING       76100003
+             DRIVE WHEN THE CLUSTER OR COMPONENT IS OPENED.             76150003
+))BIND     - INDICATES THAT THE CLUSTER OR COMPONENT IS NOT ONLY TO BE  76200003
+             STAGED, BUT ALSO TO BE BOUND, THAT IS, RETAINED ON THE     76250003
+             DIRECT ACCESS STORAGE STAGING DRIVE WHEN THE CLUSTER OR    76300003
+             COMPONENT IS OPENED.                                       76350003
+))CYLINDERFAULT                                                         76400003
+           - INDICATES THAT THE CLUSTER OR COMPONENT IS NOT TO BE       76450003
+             STAGED WHEN IT IS OPENED, BUT THAT DATA FROM IT IS TO      76500003
+             BE STAGED AS A PROCESSING PROGRAM NEEDS IT.                76550003
+))UPGRADE  - SPECIFIES THAT THE ALTERNATE INDEX IS TO BE KEPT UP TO     76600003
+             DATE WITH ITS BASE CLUSTER AUTOMATICALLY BY VSAM.          76650003
+))NOUPGRADE                                                             76700003
+           - SPECIFIES THAT THE ALTERNATE INDEX IS NOT TO BE KEPT UP    76750003
+             AUTOMATICALLY BY VSAM.                                     76760003
+))UPDATE   - INDICATES THAT SPECIFICATION OF THE PATH NAME IN JCL       76770003
+             CAUSES ALLOCATION OF THE ENTIRE UPGRADE SET.               76780003
+))NOUPDATE - INDICATES THAT SPECIFICATION OF THE PATH NAME IN JCL       76790003
+             CAUSES ONLY THE BASE CLUSTER TO BE ALLOCATED.              76792003
+))EMPTY    - ALL OF THE GENERATION DATA SETS ARE TO BE UNCATALOGED WHEN 76800002
+             THE MAXIMUM NUMBER OF GDG'S HAVE BEEN CATALOGED.           77200002
+))NOEMPTY  - ONLY THE OLDEST GENERATION DATA SET IS TO BE UNCATALOGED   77600002
+             WHEN THE MAXIMUM NUMBER OF GDG'S HAVE BEEN CATALOGED.      78000002
+))SCRATCH  - GENERATION DATA SETS ARE TO BE REMOVED FROM THE VTOC OF    78400002
+             THE VOLUME ON WHICH THEY RESIDE WHEN THEY ARE UNCATALOGED. 78800002
+))NOSCRATCH                                                             79200002
+           - GENERATION DATA SETS ARE NOT TO BE REMOVED FROM THE VTOC   79600002
+             OF THE VOLUME ON WHICH THEY RESIDE WHEN THEY ARE           80000002
+             UNCATALOGED.                                               80400002
+))CATALOG('CATNAME/PASSWORD')                                           80800003
+           - SPECIFIES THE CATALOG LOCATION OF THE ENTRY TO BE ALTERED. 81200002
+  'CATNAME'                                                             81600002
+           - NAME OF THE CATALOG THAT CONTAINS THE ENTRY.               82000002
+  'PASSWORD'                                                            82400002
+           - MASTER PASSWORD OF THE CATALOG THAT CONTAINS THE ENTRY TO  82800002
+             BE ALTERED.                                                83200002
+  REQUIRED - 'CATNAME'                                                  85200002

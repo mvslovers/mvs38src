@@ -1,0 +1,26 @@
+         MACRO                                                          03000002
+         SGIKJ4EG                                                       06000002
+.********************************************************************   09000002
+.***  THIS MACRO PRODUCES THE LINKEDIT CONTROL STATEMENTS               12000002
+.***  NECESSARY TO LINKAGE EDIT THE LINK-EDITABLE MODULES               15000002
+.***  FOR THE TSO TEST FUNCTION.                                        18000002
+.********************************************************************   21000002
+         COPY  SGGBLPAK                                                 24000002
+&SGCTRLC(7) SETC  '&SGCTRLC(23)'        CMDVOL                          27000002
+&SGCTRLC(8) SETC  '&SGCTRLC(24)'        UNIT NAME OF CMDVOL             30000002
+&SGCTRLC(9) SETC  'CMDLIB'              LIBRARY NAME                    33000002
+&SGCTRLC(10) SETC ',REFR'               LINKAGE EDITOR OPTION           36000002
+&SGCTRLC(11) SETC ',RENT'               LINKAGE EDITOR OPTION           39000002
+         COPY  SGLEDPK1                                                 42000002
+ PUNCH '//ACMDLIB DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.ACMDLIB'     45000002
+         COPY  SGLEDPK2                                                 48000002
+ PUNCH '  INCLUDE ACMDLIB(IKJEGCVT,IKJEGATN,IKJEGSTA)'                  51000002
+ PUNCH '  INCLUDE ACMDLIB(IKJEGIO,IKJEGSRH,IKJEGMNL)'                   54000002
+ PUNCH '  INCLUDE ACMDLIB(IKJEGINT,IKJEGMSG)'                           54050002
+ PUNCH '  ENTRY  IKJEGINT'                                              57000002
+ PUNCH '  NAME   TEST(R)'                                               60000002
+ PUNCH '  INCLUDE ACMDLIB(IKJEGPCH,IKJEGASN)'                           60050002
+ PUNCH '  ENTRY  IKJEGPCH'                                              60100002
+ PUNCH '  NAME   IKJEGPCH(R)'                                           60150002
+ PUNCH '/*'                                                             72000002
+          MEND                                                          75000002

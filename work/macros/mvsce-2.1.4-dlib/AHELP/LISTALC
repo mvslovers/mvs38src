@@ -1,0 +1,14 @@
+)F FUNCTION -                                                           06000020
+  THE LISTALC COMMAND IS USED TO DISPLAY THE NAMES OF CURRENTLY         12000020
+  ALLOCATED DATA SETS.                                                  18000020
+)X SYNTAX -                                                             24000020
+         LISTALC   STATUS  HISTORY  MEMBERS  SYSNAMES                   30000020
+  REQUIRED - NONE                                                       36000020
+  DEFAULTS - NONE                                                       42000020
+)O OPERANDS -                                                           48000020
+))STATUS   - DDNAME AND DATA SET DISPOSITION ARE DISPLAYED.             54000020
+))HISTORY  - CREATION AND EXPIRATION DATES, DATA SET ORGANIZATION AND   60000020
+             SECURITY STATUS ARE DISPLAYED.                             66000020
+))MEMBERS  - MEMBER AND ALIAS NAMES OF PARTITIONED DATA SETS ARE        72000020
+             DISPLAYED.                                                 78000020
+))SYSNAMES - SYSTEM ASSIGNED NAMES ARE DISPLAYED.                       84000020

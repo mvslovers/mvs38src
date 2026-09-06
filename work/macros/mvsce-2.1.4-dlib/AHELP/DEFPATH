@@ -1,0 +1,130 @@
+)F FUNCTION -                                                           00050003
+  THE DEFINE COMMAND CAN BE USED TO DEFINE A CATALOG ENTRY FOR A        00100003
+  PATH.                                                                 00150003
+)X SYNTAX -                                                             00200003
+         DEFINE    PATH                                                 00250003
+                   (  NAME('ENTRYNAME')                                 00300003
+                      PATHENTRY('NAME/PASSWORD')                        00310003
+                      FILE('DNAME')                                     00350003
+                      UPDATE | NOUPDATE                                 00400003
+                      MASTERPW('PASSWORD')                              01050003
+                      CONTROLPW('PASSWORD')                             01100003
+                      UPDATEPW('PASSWORD')                              01150003
+                      READPW('PASSWORD')                                01200003
+                      CODE('CODE')                                      01250003
+                      ATTEMPTS('NUMBER')                                01300003
+                      AUTHORIZATION('ENTRYPOINT' 'STRING')              01350003
+                      OWNER('OWNERID')                                  01400003
+                      TO('DATE') | FOR('DAYS')                          01450003
+                      MODEL('ENTRYNAME/PASSWORD' 'CATNAME/PASSWORD'))   02050003
+                   CATALOG('CATNAME/PASSWORD')                          02250003
+  REQUIRED - PATH, NAME, PATHENTRY                                      02300003
+  DEFAULTS - UPDATE                                                     02400003
+  ABBREVIATIONS -                                                       02550003
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 02600003
+             PATHENTRY            PENT                                  02850003
+             NOUPDATE             NUPD                                  02950003
+             MASTERPW             MRPW                                  03150003
+             CONTROLPW            CTLPW                                 03200003
+             UPDATEPW             UPDPW                                 03250003
+             READPW               RDPW                                  03300003
+)O OPERANDS -                                                           03450003
+))PATH     - SPECIFIES THAT A PATH IS TO BE DEFINED.                    03500003
+))NAME('ENTRYNAME')                                                     03550003
+           - SPECIFIES THE NAME OF THE ENTRY (PATH)                     03600003
+             BEING DEFINED.                                             03650003
+  'ENTRYNAME'                                                           03700003
+           - NAME OF THE ENTRY BEING DEFINED.                           03750003
+))PATHENTRY('NAME/PASSWORD')                                            03760003
+           - SPECIFIES THE NAME OF THE ALTERNATE INDEX OR CLUSTER       03770003
+             WHICH IS TO BE CONSIDERED AS THE ENTRY TO THE PATH.        03780003
+  'NAME'   - NAME OF THE ALTERNATE INDEX OR CLUSTER.                    03790003
+  'PASSWORD'                                                            03792003
+           - THE MASTER PASSWORD OF THE BASE CLUSTER OR ALTERNATE       03794003
+             INDEX.                                                     03796003
+))FILE('DNAME')                                                         03800003
+           - IF THE PATH IS BEING DEFINED IN A RECOVERABLE CATALOG,     03850003
+             THE 'INITIAL' VOLUME OF THE 'PATHENTRY' ENTITY CAN         03900003
+             BE SPECIFIED.                                              03950003
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE DEVICES AND   04000003
+             VOLUMES                                                    04010003
+))UPDATE   - INDICATES THAT SPECIFICATION OF THE PATH NAME IN JCL       04050003
+             CAUSES ALLOCATION OF THE ENTIRE UPGRADE SET.               04100003
+))NOUPDATE - INDICATES THAT SPECIFICATION OF THE PATH NAME IN JCL       04150003
+             CAUSES ONLY THE BASE CLUSTER TO BE ALLOCATED.              04200003
+))MASTERPW('PASSWORD')                                                  04250003
+           - SPECIFIES A MASTER LEVEL PASSWORD FOR THE ENTRY BEING      04300003
+             DEFINED.                                                   04350003
+  'PASSWORD'                                                            04400003
+           - MASTER LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.         04450003
+))CONTROLPW('PASSWORD')                                                 04500003
+           - SPECIFIES A CONTROL LEVEL PASSWORD FOR THE ENTRY BEING     04550003
+             DEFINED.                                                   04600003
+  'PASSWORD'                                                            04650003
+           - CONTROL LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.        04700003
+))UPDATEPW('PASSWORD')                                                  04750003
+           - SPECIFIES AN UPDATE LEVEL PASSWORD FOR THE ENTRY BEING     04800003
+             DEFINED.                                                   04850003
+  'PASSWORD'                                                            04900003
+           - UPDATE LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.         04950003
+))READPW('PASSWORD')                                                    05000003
+           - SPECIFIES A READ LEVEL PASSWORD FOR THE ENTRY BEING        05050003
+             DEFINED.                                                   05100003
+  'PASSWORD'                                                            05150003
+           - READ LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.           05200003
+))CODE('CODE')                                                          05250003
+           - SPECIFIES A PASSWORD-PROMPTING CODE NAME FOR THE ENTRY     05300003
+             BEING DEFINED.                                             05350003
+  'CODE'   - PASSWORD-PROMPTING CODE NAME FOR THE ENTRY BEING DEFINED.  05400003
+))ATTEMPTS('NUMBER')                                                    05450003
+           - SPECIFIES THE MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY 05500003
+             TO ENTER A CORRECT PASSWORD IN RESPONSE TO A PROMPTING     05550003
+             MESSAGE.                                                   05600003
+  'NUMBER' - MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY TO ENTER A    05650003
+             CORRECT PASSWORD IN RESPONSE TO A PROMPTING MESSAGE.       05700003
+  DEFAULTS - ATTEMPTS(2)                                                05750003
+))AUTHORIZATION('ENTRYPOINT' 'STRING')                                  05800003
+           - SPECIFIES THE USER-SECURITY-VERIFICATION ROUTINE (USVR)    05850003
+             THAT EXISTS FOR ADDITIONAL SECURITY VERIFICATION.          05900003
+  'ENTRYPOINT'                                                          05950003
+           - ENTRY POINT OF THE USVR.                                   06000003
+  'STRING' - SPECIFIES INFORMATION TO BE PASSED TO THE USVR WHEN IT     06050003
+             RECEIVES CONTROL TO VERIFY AUTHORIZATION.                  06100003
+  REQUIRED - 'ENTRYPOINT'                                               06150003
+))OWNER('OWNERID')                                                      06200003
+           - SPECIFIES THE IDENTIFICATION OF THE OWNER OF THE ENTRY     06250003
+             BEING DEFINED.                                             06300003
+  'OWNERID'                                                             06350003
+           - IDENTIFICATION OF THE OWNER OF THE ENTRY BEING DEFINED.    06400003
+))TO('DATE')                                                            06450003
+           - SPECIFIES THE RETENTION PERIOD FOR THE PATH BEING          06500003
+             DEFINED.                                                   06550003
+  'DATE'   - DATE (YYDDD) THROUGH WHICH THE PATH BEING DEFINED IS TO    06600003
+             BE KEPT.                                                   06650003
+))FOR('DAYS')                                                           06700003
+           - SPECIFIES THE RETENTION PERIOD FOR THE PATH BEING          06750003
+             DEFINED.                                                   06800003
+  'DAYS'   - NUMBER OF DAYS FOR WHICH THE PATH BEING DEFINED IS TO      06850003
+             BE KEPT.                                                   06900003
+))MODEL('ENTRYNAME/PASSWORD' 'CATNAME/PASSWORD')                        06950003
+           - SPECIFIES THAT AN EXISTING ENTRY IS TO BE USED AS A MODEL  07000003
+             FOR THE ENTRY BEING DEFINED.                               07050003
+  'ENTRYNAME'                                                           07100003
+           - NAME OF THE ENTRY TO BE USED AS A MODEL.                   07150003
+  'PASSWORD'                                                            07200003
+           - PASSWORD OF THE ENTRY TO BE USED AS A MODEL.               07250003
+  'CATNAME'                                                             07300003
+           - NAME OF THE CATALOG IN WHICH THE ENTRY TO BE USED AS A     07350003
+             MODEL IS DEFINED.                                          07400003
+  'PASSWORD'                                                            07450003
+           - PASSWORD OF THE CATALOG.                                   07500003
+  REQUIRED - 'ENTRYNAME'                                                07650003
+))CATALOG('CATNAME/PASSWORD')                                           07700003
+           - IDENTIFIES THE CATALOG IN WHICH THE PATH IS TO BE          07750003
+             DEFINED.                                                   07800003
+  'CATNAME'                                                             07850003
+           - NAME OF THE CATALOG IN WHICH THE ENTRY IS TO BE DEFINED.   07900003
+  'PASSWORD'                                                            07950003
+           - PASSWORD OF THE CATALOG IN WHICH THE ENTRY IS TO BE        08000003
+             DEFINED.                                                   08050003
+  REQUIRED - 'CATNAME'                                                  08250003

@@ -1,0 +1,711 @@
+         TITLE 'LOCAL 3270 SAMPLE PROGRAM'                              00400002
+SAMP327L CSECT                                                          00500002
+* STATUS - CHANGE LEVEL 000                                             00600002
+*                                                                       00700002
+* ENTRY POINT - SAMP327L                                                00800002
+*                                                                       00900002
+* INPUT - REGISTERS 1, 13, AND 14 PROVIDE INPUT AS FOLLOWS              01000002
+*    1 - ADDRESS OF PARM AREA POINTER                                   01100002
+*    13- ADDRESS OF SAVE AREA                                           01200002
+*    14- RETURN ADDRESS                                                 01300002
+*                                                                       01400002
+*    THE PARM AREA HAS THE FOLLOWING FORMAT                             01500002
+*    +0  LENGTH FIELD (HALF WORD)                                       01600002
+*    +2  NO. OF DEVICES IN LINE GROUP (1-3 DIGITS,1-255, 1=DEFAULT)     01700002
+*        NO. OF PRINTERS IN LINE GROUP (1-3 DIGITS,<NO. DEVICES, 0=DEF) 01800002
+*        RLN'S OF PRINTERS (1-3 DIGITS,NO LARGER THAN NO. OF DEVICES,   01900002
+*             DEFAULT OF 1 IF NO. OF PRINTERS =1)                       02000002
+*    ALL FIELDS SEPARATED BY COMMAS                                     02100002
+*                                                                       02200002
+*    DDNAME FOR 3270 DEVICES = DD3270                                   02300002
+*        DD CARDS ARRANGED - PRINTER, DISPLAYS, PRINTER, DISPLAYS, ETC. 02400002
+*        THOSE FOR PRINTERS OMITTED IF NO PRINTERS                      02500002
+*                                                                       02600002
+*    SYSPRINT  DD  SYSOUT=A  REQUIRED                                   02700002
+*                                                                       02800002
+* OUTPUT - DISPLAY OUTPUT, PRINTER OUTPUT                               02900002
+*                                                                       03000002
+*********************************************************************** 03020000
+*        CHANGE ACTIVITY                                              * 03040000
+*        AZ07661  (12/08/75)                                          * 03060000
+*                                                                     * 03100000
+*********************************************************************** 03200000
+*                                                                     * 03220000
+ZEROREG  EQU   0                                                        03240000
+PARMREG  EQU   1                   PARAMETER REGISTER                   03260000
+EVENREG  EQU   2                                                        03300002
+ODDREG   EQU   3                                                        03400002
+LOOPREG  EQU   4                                                        03500002
+INDXREG  EQU   5                                                        03600002
+CNTREG   EQU   6                                                        03700002
+RLNREG   EQU   CNTREG                                                   03800002
+LOOPREG2 EQU   7                                                        03900002
+DECBREG  EQU   7                                                        04000002
+INDXREG2 EQU   8                                                        04100002
+BUFREG   EQU   8                                                        04200002
+TABBASE  EQU   9                   BASE FOR CONTROL TABLE               04300002
+BASEREG2 EQU   10                                                       04400002
+BASEREG  EQU   11                  CSECT BASE REGISTER                  04500002
+SAVEREG  EQU   13                                                       04600002
+RETNREG  EQU   14                                                       04700002
+EPREG    EQU   15                                                       04800002
+*                                                                       04900002
+ZERO     EQU   0                                               @ZA07661 04930000
+K3       EQU   3                                               @ZA07661 04960000
+TYPE     EQU   5                   DISP TO TYPE FIELD IN DECB           05000002
+COUNT    EQU   18                  DISP TO RESIDUAL COUNT IN DECB       05100002
+RLN      EQU   25                  DISP TO RLN FIELD IN DECB            05200002
+POLPT    EQU   36                  DISP TO POLPT FIELD IN DECB          05300002
+XF0      EQU   X'F0'                                           @ZA07661 05350000
+*                                                                       05400002
+         SAVE  (14,12),T,*         SAVE REGISTER                        05500002
+         BALR  BASEREG,0           ESTABLISH BASE REG                   05600002
+         USING *,BASEREG,BASEREG2  & ADDRESSABILITY                     05700002
+         LA    BASEREG2,4095(BASEREG)   INITIALIZE SECOND BASE          05800002
+         LA    BASEREG2,1(BASEREG2)                                     05900002
+         ST    SAVEREG,SAVE+4      ESTABLISH                            06000002
+         LA    EVENREG,SAVE             SAVE AREA                       06100002
+         ST    EVENREG,8(SAVEREG)            CHAIN                      06200002
+         LR    SAVEREG,EVENREG     ESTABLISH NEW SAVE AREA              06300002
+*                                                                       06400002
+         L     ODDREG,0(PARMREG)   GET ADDR OF PARM AREA                06500002
+         LH    LOOPREG,0(ODDREG)   GET LENGTH OF PARM AREA              06600002
+         LTR   LOOPREG,LOOPREG     PARMS PASSED                         06700002
+         BZ    DEFAULTS            NO, TAKE DEFAULTS                    06800002
+         LA    INDXREG,2(ODDREG)   INITIALIZE POINTER TO PARM STRING    06900002
+         BAL   RETNREG,GETPARM     GET NUMBER OF DEVICES                07000002
+         LTR   PARMREG,PARMREG     VALUE LESS THAN 1                    07100002
+         BNP   DFLTNO              YES, TREAT AS 1                      07200002
+         C     PARMREG,MAXRLN      VALUE GREATER THAN 255               07300002
+         BH    DFLTNO              YES, TREAT AS 1                      07400002
+         ST    PARMREG,NODVCS      SAVE NUMBER OF DEVICES               07500002
+*                                                                       07600002
+PARM2    LTR   LOOPREG,LOOPREG     ANY MORE PARMS                       07700002
+DFLTNO   EQU   PARM2               DEFAULT NO OF DVCS = 1               07800002
+         BZ    DFLTPTR             NO, DEFAULT NUMBER OF PRINTERS       07900002
+*                                                                       08000002
+         BAL   RETNREG,GETPARM     GET NUMBER OF PRINTERS               08100002
+         C     PARMREG,NODVCS      NUMBER OF PRINTERS LESS THAN         08200002
+         BNL   DFLTPTR             NUMBER OF DEVICES                    08300002
+         ST    PARMREG,NOPTRS      SAVE NUMBER OF PRINTERS              08400002
+*                                                                       08500002
+GETTAB   L     EVENREG,NODVCS      GET SIZE OF TERMINAL ENTRIES         08600002
+*                                                                       08700002
+DEFAULTS EQU   GETTAB                                                   08800002
+DFLTPTR  EQU   GETTAB              DEFAULT NO OF PTRS = 0               08900002
+*                                                                       09000002
+         SLA   EVENREG,3                                                09100002
+         L     ODDREG,NOPTRS       GET SIZE OF PRINTER ECB'S            09200002
+         SLA   ODDREG,2                                                 09300002
+         LA    ZEROREG,368(EVENREG,ODDREG)  GET SIZE OF CONTROL TABLE   09400002
+         ST    ZEROREG,TABSIZE     SAVE SIZE                            09500002
+         GETMAIN  R,LV=(0)                                              09600002
+         LR    TABBASE,PARMREG     GET ADDR OF CONTROL TABLE            09700002
+         MVC   0(2,TABBASE),NODVCS+2  SAVE NO. OF DEVICES               09800002
+         XC    2(2,TABBASE),2(TABBASE) CLEAR ACTIVE NO. OF DEVICES      09900002
+         LA    PARMREG,16(EVENREG,TABBASE) GET ADDR OF ECB LIST         10000002
+         ST    PARMREG,4(TABBASE)  & SAVE IT                            10100002
+         LA    PARMREG,4(PARMREG,ODDREG) GET ADDR OF DECB               10200002
+         ST    PARMREG,8(TABBASE)  & SAVE IT                            10300002
+         LA    PARMREG,40(PARMREG) GET ADDR OF BUFFER                   10400002
+         ST    PARMREG,12(TABBASE) & SAVE IT                            10500002
+*                                                                       10600002
+         LA    PARMREG,351(EVENREG,ODDREG) GET LENGTH TO CLEAR          10700002
+         MVI   16(TABBASE),0       CLEAR FIRST BYTE                     10800002
+         LA    EVENREG,16(TABBASE) INITIALIZE ADDRESS POINTER           10900002
+CLRLOOP  C     PARMREG,F256        MOVE LENGTH OVER 256                 11000002
+         BL    LASTMOVE            NO, DO LAST MOVE                     11100002
+         MVC   1(256,EVENREG),0(EVENREG) CLEAR 256 BYTES                11200002
+         LA    EVENREG,256(EVENREG) INCREMENT ADDRESS POINTER           11300002
+         S     PARMREG,F256        DECR MOVE COUNT                      11400002
+         BNZ   CLRLOOP             REPEAT IF MORE TO DO                 11500002
+         B     GETPTRS             GET PRINTER RLNS                     11600002
+*                                                                       11700002
+LASTMOVE BCTR  PARMREG,0           DECR COUNT FOR EXECUTE               11800002
+         EX    PARMREG,CLRMOVE     CLEAR REST OF AREA                   11900002
+         B     GETPTRS             GET PRINTER RLNS                     12000002
+*                                                                       12100002
+CLRMOVE  MVC   1(0,EVENREG),0(EVENREG)                                  12200002
+*                                                                       12300002
+*                                                                       12400002
+GETPTRS  SR    LOOPREG2,LOOPREG2   INITIALIZE COUNTER                   12500002
+         SR    INDXREG2,INDXREG2   INITIALIZE PRINTER ECB INDEX         12600002
+PTRLOOP  C     LOOPREG2,NOPTRS     ALL PTR RLNS OBTAINED                12700002
+         BNL   FININIT             YES, COMPLETE INITIALIZATION         12800002
+ENDLIST  LTR   LOOPREG,LOOPREG     ANY MORE PARMS                       12900002
+         BZ    DFLTRLN             NO, TAKE DEFAULTS                    13000002
+         BAL   RETNREG,GETPARM                                          13100002
+         LTR   PARMREG,PARMREG     RLN VALID                            13200002
+         BZ    ENDLIST             NO, IGNORE IT                        13300002
+         C     PARMREG,NODVCS                                           13400002
+         BH    ENDLIST                                                  13500002
+INITPTR  SLA   PARMREG,3           GET INDEX TO ENTRY                   13600002
+         LA    PARMREG,8(TABBASE,PARMREG) GET ADDR OF ENTRY FOR PTR     13700002
+         MVC   0(2,PARMREG),MIN1   FREE PTR FORMAT                      13800002
+         STH   INDXREG2,2(PARMREG) INDEX TO ECB PTR                     13900002
+         LA    INDXREG2,4(INDXREG2) INCR TO NEXT ECB                    14000002
+         LA    LOOPREG2,1(LOOPREG2) INCR PRINTER COUNTER                14100002
+         B     PTRLOOP                                                  14200002
+*                                                                       14300002
+*                                                                       14400002
+DFLTRLN  LTR   LOOPREG2,LOOPREG2   NO PTR RLNS PROCESSED                14500002
+         BNZ   FININIT             NO, COMPLETE INITIALIZATION          14600002
+         LA    PARMREG,1           YES, DEFAULT RLN = 1                 14700002
+         B     INITPTR                                                  14800002
+*                                                                       14900002
+*                                                                       15000002
+FININIT  L     PARMREG,NODVCS      GET NUMBER OF DISPLAYS               15100002
+         LR    LOOPREG,PARMREG     SAVE LOOP COUNTER            YA01575 15150002
+         S     PARMREG,NOPTRS                                           15200002
+         M     ZEROREG,DATASZ      GET SIZE OF DATA AREAS               15400002
+         LR    ZEROREG,PARMREG                                          15500002
+         ST    ZEROREG,DATBLKSZ    SAVE DATA AREA SIZE                  15600002
+         GETMAIN  R,LV=(0)         GET CORE FOR DATA AREAS              15700002
+         ST    PARMREG,DATBLKAD    SAVE DATA AREA ADDR                  15800002
+         LR    INDXREG,PARMREG     GET ADDRESS OF AREA                  15900002
+         LA    INDXREG2,16(TABBASE) GET ADDR OF ENTRY                   16000002
+         SR    CNTREG,CNTREG       PRINTER RLN                          16100002
+         LA    LOOPREG2,1          RLN COUNTER                          16200002
+*                                                                       16300002
+INITLOOP CLC   0(2,INDXREG2),MIN1  PRINTER ENTRY                        16400002
+         BE    PTRINIT             YES, GET RLN                         16500002
+         XC    0(130,INDXREG),0(INDXREG)  CLEAR DATA AREA               16600002
+         STH   CNTREG,2(INDXREG2)  STORE PRINTER RLN FOR THIS DISPLAY   16700002
+         ST    INDXREG,4(INDXREG2) STORE ADDR OF DATA AREA              16800002
+         A     INDXREG,DATASZ      INCR DATA AREA PTR                   16900002
+INCRPTRS LA    INDXREG2,8(INDXREG2) INCR ENTRY PTR                      17000002
+         LA    LOOPREG2,1(LOOPREG2) INCR RLN                            17100002
+         BCT   LOOPREG,INITLOOP    BR IF MORE TO DO                     17200002
+         L     PARMREG,4(TABBASE)  GET ADDR OF ECB LIST                 17300002
+         L     INDXREG,NOPTRS      GET INDEX PAST PRINTER ECB           17400002
+         LTR   INDXREG,INDXREG                                  YA01575 17450002
+         BZ    DISPECB                                          YA01575 17460002
+         LA    EVENREG,DUMMYECB                                 YA01575 17470002
+PTRECB   ST    EVENREG,0(PARMREG)                               YA01575 17480002
+         LA    PARMREG,4(PARMREG)                               YA01575 17490002
+         BCT   INDXREG,PTRECB                                   YA01575 17492002
+DISPECB  MVI   0(PARMREG),X'80'                                 YA01575 17494002
+         MVC   1(3,PARMREG),9(TABBASE)  MOVE IN ADDR OF ECB             17800002
+         B     IOINIT                                                   17900002
+PTRINIT  LR    CNTREG,LOOPREG2     GET RLN OF PRINTER                   18000002
+         B     INCRPTRS                                                 18100002
+IOINIT   OPEN  (SYSPRINT,OUTPUT,DD3270)                                 18200002
+         WTO   'LOCAL 3270 SAMPLE PROGRAM RUNNING'                      18300002
+         L     LOOPREG,NODVCS      GET LOOP CTR                         18400002
+         L     DECBREG,8(TABBASE)  GET ADDR OF DECB                     18500002
+         L     BUFREG,12(TABBASE)  GET ADDR OF BUFFER                   18600002
+         LA    INDXREG,16(TABBASE) GET ADDR OF FIRST TERM ENTRY         18700002
+         LA    RLNREG,1            INITIALIZE RLN REG                   18800002
+*                                                                       18900002
+IOLOOP   LA    EPREG,WRTFMT1       GET ADDR OF FIRST WRITE RTN          19000002
+         CLC   0(2,INDXREG),MIN1   PRINTER ENTRY                        19100002
+         BE    UPCOUNT             YES, DON'T DO WRITE                  19200002
+         LR    PARMREG,RLNREG      PUT RLN IN REG 1                     19300002
+         BALR  RETNREG,EPREG       WRITE FIRST MSG                      19400002
+         LTR   EPREG,EPREG         SUCCESSFUL                           19500002
+         BZ    UPCOUNT             YES, TRY NEXT                        19600002
+         XC    0(2,INDXREG),0(INDXREG) MARK TERMINAL INACTIVE           19700002
+         B     IOLPCNT                                                  19800002
+*                                                                       19900002
+UPCOUNT  LH    EVENREG,2(TABBASE)  INCREMENT                            20000002
+         LA    EVENREG,1(EVENREG)       COUNT OF ACTIVE                 20100002
+         STH   EVENREG,2(TABBASE)            DEVICES                    20200002
+IOLPCNT  LA    RLNREG,1(RLNREG)    INCR RLN                             20300002
+         LA    INDXREG,8(INDXREG)  INCR TO NEXT ENTRY                   20400002
+         BCT   LOOPREG,IOLOOP      LOOP IF MORE TO DO                   20500002
+*                                                                       20600002
+         LA    CNTREG,1            INIT RLN                             20700002
+         LA    INDXREG,16(TABBASE) POINTER TO FIRST ENTRY               20800002
+         L     LOOPREG,NODVCS      LOOP LIMIT                           20900002
+FINDFRST CLC   0(2,INDXREG),MIN1   PRINTER                              21000002
+         BNE   DSPLY1              NO, SAVE RLN                         21100002
+         LA    CNTREG,1(CNTREG)    INCR RLN                             21200002
+         LA    INDXREG,8(INDXREG)  INCR TO NEXT ENTRY                   21300002
+         BCT   LOOPREG,FINDFRST                                         21400002
+         LA    CNTREG,1                                                 21500002
+DSPLY1   ST    CNTREG,READRLN      SAVE RLN FOR READS                   21600002
+*                                                                       21700002
+READ     L     RLNREG,READRLN      GET READ RLN                         21800002
+         XC    0(4,DECBREG),0(DECBREG)                                  21900002
+         READ  (DECBREG),TI,DD3270,(BUFREG),308,,(RLNREG),MF=E          22000002
+         LTR   EPREG,EPREG         OK                                   22100002
+         BNZ   ERRABEND            NO, ABEND                            22200002
+TWAIT    L     ODDREG,4(TABBASE)   GET ADDR OF ECB LIST                 22300002
+         TWAIT (EVENREG),ECBLIST=(ODDREG)  WAIT FOR OPERATION TO END    22400002
+*                                                                       22500002
+         CLI   TYPE(EVENREG),X'01' OPERATION = READ INITIAL             22600002
+         BNE   PRNTREND            NO, PRINTER OPERATION                22700002
+         CLI   0(EVENREG),X'44'    INTERCEPTED                          22800002
+         BE    READ                YES, RETRY READ                      22900002
+         CLI   0(EVENREG),X'7F'    SUCCESSFUL                           23000002
+         BNE   ERRABEND            NO, END                              23100002
+         L     PARMREG,POLPT(EVENREG) GET RESPONDING RLN                23200002
+         LR    ODDREG,PARMREG                                           23300002
+         SLA   ODDREG,3            GET INDEX TO TERM ENTRY              23400002
+         LH    CNTREG,8(TABBASE,ODDREG)  GET FORMAT NO.                 23500002
+         SLA   CNTREG,2            MULTIPLY BY 4                        23600002
+         B     READRTN(CNTREG)                                          23700002
+READRTN  B     ERRABEND            RLN = INACTIVE DEVICE                23800002
+         B     READFMT1            FORMAT 1 ON SCREEN                   23900002
+         B     READFMT2            FORMAT 2 ON SCREEN                   24000002
+         B     READFMT3            FORMAT 3 ON SCREEN                   24100002
+         B     READ                FORMAT 4 ON SCREEN - IGNORE IT       24200002
+*                                                                       24300002
+*                                                                       24400002
+READFMT1 CLI   0(BUFREG),X'6E'     INTERRUPT IS PA2 KEY                 24500002
+         BNE   CLR1                NO, TEST FOR CLEAR KEY               24600002
+*                                                                       24700002
+WRTFMT4  LR    RLNREG,PARMREG      SAVE RLN                             24800002
+ENDMSG   EQU   WRTFMT4             RETURN = REESTABLISH READ            24900002
+         SLA   PARMREG,3           CONVERT RLN TO TABLE INDEX           25000002
+         LA    EVENREG,4           FORMAT ID                            25100002
+         STH   EVENREG,8(TABBASE,PARMREG)  STORE ID IN TABLE            25200002
+         CHGNTRY  DD3270,ATTLST,(RLNREG),,SKIP    DEACTIVATE TERMINAL   25300002
+*                                  FOR READ INITIAL                     25400002
+WRITE4   XC    0(4,DECBREG),0(DECBREG)  CLEAR ECB                       25500002
+         WRITE (DECBREG),TS,DD3270,FORMAT4,FMT4SZ,,(RLNREG),MF=E        25600002
+         LTR   EPREG,EPREG         END IF RC                            25700002
+         BNZ   ERRABEND                 NON-ZERO                        25800002
+         WAIT  ECB=(DECBREG)                                            25900002
+         CLI   0(DECBREG),X'7F'    SATISFACTORY COMPLETION              26000002
+         BE    QUIESCE             UPDATE ACTIVE TERM COUNT             26100002
+         CLI   0(DECBREG),X'44'    INTERCEPT                            26200002
+         BE    WRITE4              YES, RETRY                           26300002
+         B     ERRABEND            NO, END                              26400002
+*                                                                       26500002
+*                                                                       26600002
+QUIESCE  LH    EVENREG,2(TABBASE)  GET NO. OF ACTIVE TERMS              26700002
+         BCT   EVENREG,QCNTSTR     DECR COUNT                           26800002
+         CLOSE (SYSPRINT,,DD3270)  IF ZERO, CLOSE DCB'S                 26900002
+         L     PARMREG,DATBLKAD    LOCATION OF DATA AREAS               27000002
+         L     ZEROREG,DATBLKSZ    SIZE OF DATA AREAS                   27100002
+         FREEMAIN  R,LV=(0),A=(1)  FREE DATA AREAS                      27200002
+         LR    PARMREG,TABBASE     LOCATION OF CONTROL TABLE            27300002
+         L     ZEROREG,TABSIZE     SIZE OF CONTROL TABLE                27400002
+         FREEMAIN  R,LV=(0),A=(1)  FREE CONTROL TABLE                   27500002
+         L     SAVEREG,SAVE+4                                           27600002
+         RETURN  (14,12),T         RETURN TO CALLING PROGRAM            27700002
+*                                                                       27800002
+QCNTSTR  STH   EVENREG,2(TABBASE)  SAVE UPDATE ACTIVE TERM CNT          27900002
+         B     READ                SET UP READ                          28000002
+*                                                                       28100002
+*                                                                       28200002
+CLR1     CLI   0(BUFREG),X'6D'     CLEAR KEY                            28300002
+         BNE   ENT1                NO, TEST FOR ENTER KEY               28400002
+*                                                                       28500002
+WRTFMT3  LR    RLNREG,PARMREG      SAVE RLN                             28600002
+CNTRLMSG EQU   WRTFMT3                                                  28700002
+*                                  WRITE CONTROL OPTIONS                28800002
+         SLA   PARMREG,3           CONVERT RLN TO TABLE INDEX           28900002
+         LA    EVENREG,3           FORMAT ID                            29000002
+         STH   EVENREG,8(TABBASE,PARMREG)  STORE ID IN TABLE            29100002
+WRITE3   XC    0(4,DECBREG),0(DECBREG)  CLEAR ECB                       29200002
+         WRITE (DECBREG),TS,DD3270,FORMAT3,FMT3SZ,,(RLNREG),MF=E        29300002
+         LTR   EPREG,EPREG         END IF RC                            29400002
+         BNZ   ERRABEND                 NON-ZERO                        29500002
+         WAIT  ECB=(DECBREG)       WAIT FOR COMPLETION                  29600002
+         CLI   0(DECBREG),X'7F'    SATISFACTORY COMPLETION              29700002
+         BE    READ                YES, SET UP READ                     29800002
+         CLI   0(DECBREG),X'44'    INTERCEPT                            29900002
+         BE    WRITE3              YES, RETRY OPERATION                 30000002
+         B     ERRABEND            NO, END                              30100002
+*                                                                       30200002
+ENT1     CLI   0(BUFREG),X'7D'     ENTER KEY                            30300002
+         BNE   READ                NO, REESTABLISH READ                 30400002
+         L     ODDREG,12(TABBASE,ODDREG) GET ADDR OF DATA AREA          30500002
+         LA    INDXREG,3(BUFREG)   INDEX PAST AID & CURSOR ADDR         30600002
+         LA    LOOPREG,308                                              30700002
+         SH    LOOPREG,COUNT(EVENREG) GET NUMBER OF BYTES READ          30800002
+         S     LOOPREG,THREE       ADJUST FOR LENGTH OF AID & ADDR      30900002
+         LTR   LOOPREG,LOOPREG                                          31000002
+         BNP   WRTRSPNS            NOTHING ENTERED                      31100002
+*                                                                       31200002
+         CLC   0(3,INDXREG),FLD1   FIRST FIELD                          31300002
+         BNE   FLD2CHK             NO, CHECK FOR SECOND                 31400002
+         XC    0(33,ODDREG),0(ODDREG)   CLEAR FIELD IN DATA AREA        31500002
+         BAL   RETNREG,GETFIELD    FIND FIELD DELIMITERS                31600002
+         LTR   LOOPREG,LOOPREG     END OF DATA                          31700002
+         BNP   WRTRSPNS            YES, WRITE RESPONSE                  31800002
+*                                                                       31900002
+FLD2CHK  LA    ODDREG,34(ODDREG)   INCR TO NEXT FIELD IN DATA AREA      32000002
+         CLC   0(3,INDXREG),FLD2   SECOND FIELD                         32100002
+         BNE   FLD3CHK             NO, CHECK FOR THIRD FIELD            32200002
+         XC    0(33,ODDREG),0(ODDREG)   CLEAR FIELD IN DATA AREA        32300002
+         BAL   RETNREG,GETFIELD    GET FIELD                            32400002
+         LTR   LOOPREG,LOOPREG     END OF DATA                          32500002
+         BNP   WRTRSPNS            YES, WRITE RESPONSE                  32600002
+*                                                                       32700002
+FLD3CHK  LA    ODDREG,34(ODDREG)   INCR TO THIRD FIELD IN DATA AREA     32800002
+         CLC   0(3,INDXREG),FLD3   THIRD FIELD                          32900002
+         BNE   FLD4CHK             NO, CHECK FOR FOURTH FIELD           33000002
+         XC    0(33,ODDREG),0(ODDREG)   CLEAR FIELD                     33100002
+         BAL   RETNREG,GETFIELD    GET FIELD                            33200002
+         LTR   LOOPREG,LOOPREG     END OF DATA                          33300002
+         BNP   WRTRSPNS            YES, WRITE RESPONSE                  33400002
+*                                                                       33500002
+FLD4CHK  LA    ODDREG,34(ODDREG)   INCR TO FOURTH FIELD                 33600002
+         CLC   0(3,INDXREG),FLD4   FOURTH FIELD                         33700002
+         BNE   FLD5CHK             NO, CHECK FOR LAST FIELD             33800002
+         XC    0(21,ODDREG),0(ODDREG)   CLEAR FIELD                     33900002
+         BAL   RETNREG,GETFIELD    GET FIELD                            34000002
+         LTR   LOOPREG,LOOPREG     END OF DATA                          34100002
+         BNP   WRTRSPNS            YES, WRITE RESPONSE                  34200002
+*                                                                       34300002
+FLD5CHK  LA    ODDREG,22(ODDREG)   INCR TO LAST FIELD                   34400002
+         CLC   0(3,INDXREG),FLD5   FIFTH FIELD                          34500002
+         BNE   WRTRSPNS            NO, WRITE RESPONSE                   34600002
+         XC    0(5,ODDREG),0(ODDREG) CLEAR FIELD                        34700002
+         BAL   RETNREG,GETFIELD    GET FIELD                            34800002
+*                                                                       34900002
+*                                                                       35000002
+WRTFMT2  LR    RLNREG,PARMREG      SAVE RLN                             35100002
+WRTRSPNS EQU   WRTFMT2             RETURN = REESTABLISH READ            35200002
+*                                  WRITE FORMAT 2                       35300002
+         MVC   0(256,BUFREG),FORMAT2  MOVE BASE MESSAGE                 35400002
+         MVC   256(FMT2SZ-256,BUFREG),FORMAT2+256  INTO BUFFER          35500002
+         SLA   PARMREG,3           CONVERT RLN TO TABLE INDEX           35600002
+         LA    EVENREG,2           GET FORMAT ID                        35700002
+         STH   EVENREG,8(TABBASE,PARMREG)  & STORE IN TABLE ENTRY       35800002
+         L     ODDREG,12(TABBASE,PARMREG)  GET DATA AREA ADDR           35900002
+         MVC   FMT2FLD1(33,BUFREG),0(ODDREG)      MOVE DATA             36000002
+         MVC   FMT2FLD2(33,BUFREG),34(ODDREG)     FROM                  36100002
+         MVC   FMT2FLD3(33,BUFREG),68(ODDREG)     DATA AREA             36200002
+         MVC   FMT2FLD4(21,BUFREG),102(ODDREG)    TO                    36300002
+         MVC   FMT2FLD5(5,BUFREG),124(ODDREG)     BUFFER                36400002
+WRITE2   XC    0(4,DECBREG),0(DECBREG)  CLEAR ECB                       36500002
+         WRITE (DECBREG),TS,DD3270,(BUFREG),FMT2SZ,,(RLNREG),MF=E       36600002
+         LTR   EPREG,EPREG         END IF RC                            36700002
+         BNZ   ERRABEND                 NON-ZERO                        36800002
+         WAIT  ECB=(DECBREG)       WAIT FOR OPERATION TO END            36900002
+         CLI   0(DECBREG),X'7F'    COMPLETION SATISFACTORY              37000002
+         BE    READ                YES, SET UP READ                     37100002
+         CLI   0(DECBREG),X'44'    INTERCEPT                            37200002
+         BE    WRITE2              YES, RETRY                           37300002
+         B     ERRABEND            NO, END                              37400002
+*                                                                       37500002
+READFMT2 CLI   0(BUFREG),X'6C'     PA1 KEY                              37600002
+         BNE   READFMT1            NO, GO TO READ FORMAT 1 LOGIC        37700002
+         LR    EVENREG,PARMREG     GET RLN OF DISPLAY                   37800002
+         SLA   EVENREG,3           GET INDEX TO ENTRY                   37900002
+         LH    ODDREG,10(EVENREG,TABBASE)  GET RLN OF ASSIGNED PTR      38000002
+         LTR   ODDREG,ODDREG       PRINTER ASSIGNED                     38100002
+         BZ    SYSOUT              NO, USE SYSOUT                       38200002
+         LR    RLNREG,ODDREG       SAVE RLN                             38300002
+         SLA   ODDREG,3            GET INDEX TO ENTRY OF PRINTER        38400002
+         LA    ZEROREG,184                                              38500002
+         GETMAIN  R,LV=(0)         GET CORE FOR PRINTER REQUEST BLOCK   38600002
+         XC    0(184,PARMREG),0(PARMREG) CLEAR IT                       38700002
+         LA    LOOPREG,44(PARMREG) GET ADDR OF PRINT BUFFER             38800002
+         L     INDXREG,12(EVENREG,TABBASE)   GET ADDR OF DATA AREA      38900002
+         MVI   0(LOOPREG),X'C8'    STORE WCC IN BUFFER                  39000002
+         MVC   1(129,LOOPREG),0(INDXREG) MOVE IN DATA                   39100002
+         MVI   34(LOOPREG),X'15'   NEW LINE                             39200002
+         MVI   68(LOOPREG),X'15'   NEW LINE                             39300002
+         MVI   102(LOOPREG),X'15'  NEW LINE                             39400002
+         MVI   124(LOOPREG),C' '   BLANK                                39500002
+         MVI   130(LOOPREG),X'19'  END OF MESSAGE                       39600002
+*                                                                       39700002
+         LH    ZEROREG,8(TABBASE,ODDREG)  GET CURRENT PRINTER FORMAT    39800002
+         CH    ZEROREG,MIN1        PRINTER BUSY                         39900002
+         BE    STRTPRTR            NO, START OPERATION                  40000002
+         L     INDXREG,12(TABBASE,ODDREG)  GET POINTER TO LAST REQ      40100002
+         ST    PARMREG,0(INDXREG)  STORE POINTER                        40200002
+         ST    PARMREG,12(TABBASE,ODDREG)  UPDATE POINTER TO CURR REQ   40300002
+RSTRKYBD LR    PARMREG,EVENREG     RECOVER RLN OF DISPLAY               40400002
+         SRA   PARMREG,3           FROM TABLE INDEX                     40500002
+         B     WRTRSPNS            GO TO UNLOCK KEYBOARD                40600002
+*                                                                       40700002
+STRTPRTR ST    PARMREG,12(TABBASE,ODDREG)  STORE POINTER TO REQ         40800002
+         LA    PARMREG,4(PARMREG)  GET ADDRESS OF DECB                  40900002
+         L     INDXREG,4(TABBASE)  GET ADDRESS OF ECB LIST              41000002
+         AH    INDXREG,10(TABBASE,ODDREG)  ADD INDEX TO PRTR'S PTR      41100002
+         ST    PARMREG,0(INDXREG)  STORE ECB ADDR IN LIST               41200002
+         BCTR  ZEROREG,0           INDICATE                             41300002
+         STH   ZEROREG,8(TABBASE,ODDREG)  PRINTER BUSY                  41400002
+         WRITE (PARMREG),TS,DD3270,(LOOPREG),131,,(RLNREG),MF=E         41500002
+         B     RSTRKYBD                                                 41600002
+*                                                                       41700002
+SYSOUT   L     INDXREG,12(TABBASE,EVENREG)  GET ADDR OF DATA AREA       41800002
+         MVC   SYSOUTBF(130),0(INDXREG)  MOVE DATA TO PRINT BUFFER      41900002
+         MVI   SYSOUTBF+33,C','    MOVE IN                              42000002
+         MVI   SYSOUTBF+67,C','         FIELD DELIMITERS                42100002
+         MVI   SYSOUTBF+101,C','             FOR LINE                   42200002
+         MVI   SYSOUTBF+123,C' '                  TO BE                 42300002
+         MVI   SYSOUTBF+129,C'.'                       PRINTED          42400002
+         TR    SYSOUTBF(130),FLDXLATE   TRANSLATE TO VALIDATE DATA      42500002
+         PUT   SYSPRINT,SYSOUTBF   WRITE TO SYSOUT                      42600002
+         B     RSTRKYBD                                                 42700002
+*                                                                       42800002
+READFMT3 CLI   ZERO(BUFREG),XF0                                @ZA07661 42820000
+         BE    READ                                            @ZA07661 42840000
+         CLC   ZERO(K3,BUFREG),SOHRFT                          @ZA07661 42860000
+         BE    READ                                            @ZA07661 42880000
+         CLI   0(BUFREG),X'7D'     ENTER KEY                            42900000
+         BE    WRTRSPNS            YES, WRITE RESPONSE                  43000002
+         CLI   0(BUFREG),X'6E'     PA2 KEY                              43100002
+         BE    ENDMSG              YES, END TERMINAL                    43200002
+         CLI   0(BUFREG),X'6C'     PA1 KEY                              43300002
+         BNE   CNTRLMSG            NO, WRITE CONTROL OPTIONS MSG        43400002
+*                                                                       43500002
+         L     EVENREG,12(TABBASE,ODDREG)  GET ADDR OF DATA AREA        43600002
+         XC    0(130,EVENREG),0(EVENREG)   CLEAR IT                     43700002
+         BAL   RETNREG,WRTFMT1     WRITE OUT FIRST FORMAT               43800002
+         LTR   EPREG,EPREG         WRITE SUCCESSFUL                     43900002
+         BNZ   ERRABEND            NO, END                              44000002
+         B     READ                                                     44100002
+*                                                                       44200002
+WRTFMT1  LR    ODDREG,RETNREG      SAVE RETURN ADDRESS                  44300002
+         LR    RLNREG,PARMREG      SAVE RLN                             44400002
+WRITE1   XC    0(4,DECBREG),0(DECBREG)  CLEAR ECB                       44500002
+         WRITE (DECBREG),TS,DD3270,FORMAT1,FMT1SZ,,(RLNREG),MF=E        44600002
+         LTR   EPREG,EPREG         END IF RC                            44700002
+         BNZ   ERRABEND                 NON-ZERO                        44800002
+         WAIT  ECB=(DECBREG)       WAIT FOR OPERATION TO END            44900002
+         CLI   0(DECBREG),X'7F'    SATISFACTORY COMPLETION              45000002
+         BE    FMT1CD              YES, STORE FORMAT CODE IN ENTRY      45100002
+         CLI   0(DECBREG),X'44'    INTERCEPT                            45200002
+         BE    WRITE1              YES, RETRY OPERATION                 45300002
+         LA    EPREG,*             SET NON-ZERO RETURN CODE             45400002
+         BR    ODDREG              AND RETURN TO CALLER                 45500002
+*                                                                       45600002
+FMT1CD   LA    EVENREG,1           GET FORMAT ID                        45700002
+         SLA   RLNREG,3            CONVERT RLN TO TABLE INDEX           45800002
+         STH   EVENREG,8(TABBASE,RLNREG)  STORE ID IN TABLE             45900002
+         SRA   RLNREG,3            RESTORE RLN REGISTER TO RLN          46000002
+         SR    EPREG,EPREG         SET RETURN CODE =0                   46100002
+         BR    ODDREG              RETURN TO CALLER                     46200002
+*                                                                       46300002
+PRNTREND SR    ODDREG,ODDREG                                            46400002
+         IC    ODDREG,RLN(EVENREG) GET RLN OF ENDING PRINTER            46500002
+         LR    RLNREG,ODDREG       SAVE RLN                             46600002
+         SLA   ODDREG,3            CONVERT RLN TO TABLE INDEX           46700002
+         S     EVENREG,FOUR        GET BEGIN OF PRINTER RB              46800002
+         LA    ODDREG,8(ODDREG,TABBASE)  GET ADDR OF TABLE ENTRY        46900002
+         L     INDXREG,4(TABBASE)  GET ADDR OF ECB LIST                 47000002
+         AH    INDXREG,2(ODDREG)   GET ADDR OF PRINTER'S ECB            47100002
+         CLI   4(EVENREG),X'7F'    GOOD END                             47200002
+         BE    PRNTRNXT            YES, CLEAN UP                        47300002
+         CLI   4(EVENREG),X'44'    INTERCEPT                            47400002
+         BE    WRITEPI             YES, RESTART OPERATION               47500002
+         B     ERRABEND            NO, END                              47600002
+*                                                                       47700002
+PRNTRNXT MVC   4(4,ODDREG),0(EVENREG)   UPDATE LINK POINTER             47800002
+         LR    PARMREG,EVENREG     ADDRESS OF PRINTER RB                47900002
+         LA    ZEROREG,184         SIZE OF RB                           48000002
+         FREEMAIN  R,LV=(0),A=(1)  FREE BLOCK                           48100002
+         L     EVENREG,4(ODDREG)   GET ADDR OF NEXT RB                  48200002
+         LTR   EVENREG,EVENREG     END OF CHAIN                         48300002
+         BNZ   WRITEP              NO, START NEXT                       48400002
+         LA    EVENREG,DUMMYECB                                  YM5693 48450000
+         ST    EVENREG,0(INDXREG)                               YA01575 48460002
+         MVC   0(2,ODDREG),MIN1    MARK PRINTER AVAILABLE               48600002
+         B     TWAIT               WAIT FOR NEXT COMPLETION             48700002
+*                                                                       48800002
+WRITEP   RESETPL  (DECBREG),ATTENT RESET READ INITIAL                   48900002
+         LTR   EPREG,EPREG         RC = 0                               49000002
+         BZ    WRITEPS             YES, PROCEED                         49100002
+         C     EPREG,FOUR          RC = 4                               49200002
+         BNE   ERRABEND            NO, END                              49300002
+         WAIT  ECB=(DECBREG)       WAIT FOR READ TO COMPLETE            49400002
+*                                                                       49500002
+WRITEPS  LA    EVENREG,4(EVENREG)  GET ADDR OF ECB                      49600002
+         ST    EVENREG,0(INDXREG)  STORE ADDR OF ECB IN ECB LIST        49700002
+         LA    ODDREG,40(EVENREG)  GET ADDR OF PRINT BUFFER             49800002
+         WRITE (EVENREG),TS,DD3270,(ODDREG),131,,(RLNREG),MF=E          49900002
+         LTR   EPREG,EPREG         END IF RC                            50000002
+         BNZ   ERRABEND                 NON-ZERO                        50100002
+         CLI   0(DECBREG),X'48'    READ INITIAL ENDED BY RESETPL        50200002
+         BE    READ                YES, REISSUE READ                    50300002
+         B     TWAIT               NO, CHECK STATUS                     50400002
+*                                                                       50500002
+WRITEPI  XC    4(4,EVENREG),4(EVENREG)  CLEAR ECB                       50600002
+         B     WRITEP              RESTART WRITE                        50700002
+*                                                                       50800002
+*                                                                       50900002
+ERRABEND ABEND (15),DUMP                                                51000002
+GETPARM  SR    EVENREG,EVENREG     CLEAR REGISTER                       51100002
+         SR    CNTREG,CNTREG                                            51200002
+GETCHAR  CLI   0(INDXREG),C'0'     CHARACTER A NUMBER                   51300002
+         BL    DELIM               NO, CHECK FOR DELIMITER              51400002
+         CLI   0(INDXREG),C'9'     MAYBE                                51500002
+         BH    INVLDCHR            NO, INVALID CHARACTER                51600002
+         SLL   EVENREG,8           CLEAR LOW CHARACTER                  51700002
+         IC    EVENREG,0(INDXREG)  GET CHARACTER                        51800002
+PARMLOOP LA    CNTREG,1(CNTREG)    INCR LENGTH                          51900002
+         LA    INDXREG,1(INDXREG)  INCR STRING POINTER                  52000002
+         BCT   LOOPREG,GETCHAR     GET NEXT CHARACTER, IF ANY LEFT      52100002
+HAVEPARM C     CNTREG,THREE        CHECK PARM LENGTH                    52200002
+         BNH   CNVRT               BR IF VALID                          52300002
+         N     EVENREG,SIXFS       REDUCE TO THREE BYTES                52400002
+         L     CNTREG,THREE        SET COUNT TO THREE                   52500002
+CNVRT    ST    EVENREG,RAWPARM     STORE RAW PARM VALUE                 52600002
+         LA    ODDREG,4            LENGTH OF RAWPARM                    52700002
+         SR    ODDREG,CNTREG       SUBT LENGTH OF PARM &                52800002
+         LA    ODDREG,RAWPARM(ODDREG) GET ADDR OF FIRST CHARACTER       52900002
+         BCTR  CNTREG,0            DECR COUNT FOR EXECUTE               53000002
+         EX    CNTREG,PACK         PACK PARM                            53100002
+         CVB   PARMREG,PCKDPARM    & CONVERT TO BINARY                  53200002
+         BR    RETNREG             RETURN TO CALLER                     53300002
+*                                                                       53400002
+DELIM    CLI   0(INDXREG),C','     COMMA                                53500002
+         BNE   INVLDCHR            NO, TREAT AS INVALID                 53600002
+         LTR   CNTREG,CNTREG       PARM OMITTED                         53700002
+         BZ    ZEROPARM            YES, SET IT TO ZERO                  53800002
+         LA    INDXREG,1(INDXREG)  INCR STRING POINTER                  53900002
+         BCTR  LOOPREG,0           DECR LOOP COUNTER                    54000002
+         B     HAVEPARM            BR TO CONVERT PARM                   54100002
+*                                                                       54200002
+ZEROPARM SR    PARMREG,PARMREG     SET PARM = 0                         54300002
+         BR    RETNREG             RETURN                               54400002
+INVLDCHR SLL   EVENREG,8           CLEAR LOW CHARACTER                  54500002
+         IC    EVENREG,C0          SUBSTITUTE C'0' FOR INVALID CHAR     54600002
+         B     PARMLOOP            BR TO ADJUST COUNTERS & POINTERS     54700002
+*                                                                       54800002
+PACK     PACK  PCKDPARM(8),0(0,ODDREG)                                  54900002
+*                                                                       55000002
+GETFIELD LA    EVENREG,3(INDXREG)  INCR TO FIRST DATA BYTE OF FIELD     55100002
+         S     LOOPREG,THREE       CORRECT LENGTH FOR SBA SEQUENCE      55200002
+         SR    CNTREG,CNTREG       SET COUNT = ZERO                     55300002
+FNDLOOP  CLI   0(EVENREG),X'11'    BYTE = SBA ORDER                     55400002
+         BE    MVFLD               YES, MOVE FIELD                      55500002
+         LA    CNTREG,1(CNTREG)    INCR FIELD SIZE                      55600002
+         LA    EVENREG,1(EVENREG)  INCR TO NEXT DATA BYTE               55700002
+         BCT   LOOPREG,FNDLOOP     LOOP IF MORE DATA                    55800002
+MVFLD    BCTR  CNTREG,0            ADJUST COUNT FOR EXECUTE             55900002
+         EX    CNTREG,FLDMOVE      MOVE FIELD INTO DATA AREA            56000002
+         LR    INDXREG,EVENREG     GET START OF NEXT FIELD              56100002
+         BR    RETNREG             RETURN                               56200002
+*                                                                       56300002
+FLDMOVE  MVC   0(0,ODDREG),3(INDXREG) MOVE FIELD FROM BUFFER            56400002
+*                                  TO DATA AREA                         56500002
+SOHRFT   DC    X'016C61'                                       @ZA07661 56550000
+         DS    0D                                                       56600002
+PCKDPARM DC    8C'0'               PACKED PARM AREA                     56700002
+SYSOUTBF DS    0D                  SYSOUT PRINT BUFFER                  56800002
+         DS    CL130                                                    56900002
+SAVE     DS    18F                 SAVE AREA                            57000002
+MAXRLN   DC    F'255'              MAXIMUM RLN                          57100002
+NODVCS   DC    F'1'                NO. OF DEVICES (DEFAULT = 1)         57200002
+NOPTRS   DC    F'0'                NO. OF PRINTERS (DEFAULT = 0)        57300002
+TABSIZE  DS    F                   SIZE OF CONTROL TABLE                57400002
+F256     DC    F'256'                                                   57500002
+DATASZ   DC    F'130'              SIZE OF DISPLAY TERM DATA AREA       57600002
+DATBLKSZ DS    F                   SIZE OF DATA AREA CORE BLOCK         57700002
+DATBLKAD DS    F                   ADDR OF DATA AREA CORE BLOCK         57800002
+READRLN  DC    F'1'                RLN TO BE USED FOR READ INITIALS     57900002
+RAWPARM  DS    1F                  ZONED PARM AREA                      58000002
+THREE    DC    F'3'                                                     58100002
+SIXFS    DC    XL4'00FFFFFF'                                            58200002
+FOUR     DC    F'4'                                                     58300002
+ZEROWRD  DC    F'0'                                                     58400002
+DUMMYECB DC    F'0'                                             YA01575 58450002
+SYSPRINT DCB   DDNAME=SYSPRINT,DSORG=PS,DEVD=DA,MACRF=(PM),RECFM=F,LREC*58500002
+               L=130,BLKSIZE=130                                        58600002
+DD3270   DCB   DDNAME=DD3270,DSORG=CX,MACRF=(R,W),EROPT=T               58700002
+MIN1     DC    H'-1'               FREE PRINTER FORMAT ID               58800002
+C0       DC    C'0'                                                     58900002
+FLD1     DC    XL3'11C1D6'         SBA SEQ OF FIRST FIELD ( SBA = 86)   59000002
+FLD2     DC    XL3'11C17E'         SBA SEQ OF SECOND FIELD( SBA =126)   59100002
+FLD3     DC    XL3'11C2E6'         SBA SEQ OF THIRD FIELD ( SBA =166)   59200002
+FLD4     DC    XL3'11C34F'         SBA SEQ OF FOURTH FIELD (SBA =207)   59300002
+FLD5     DC    XL3'11C36A'         SBA SEQ OF FIFTH FIELD ( SBA =234)   59400002
+FORMAT1  DC    X'C7114040'          WCC, SBA = 0                        59500002
+         DC    C'ENTER DATA REQUESTED BELOW:'                           59600002
+         DC    X'11C150'           SBA = 80                             59700002
+         DC    C'NAME:'                                                 59800002
+         DC    X'1D401311C1F71D60' SF = UNPROT, IC, SBA=119, SF=PROT    59900002
+         DC    C'ADDR:'                                                 60000002
+         DC    X'1D4011C25F1D60'   SF = UNPROT, SBA = 159, SF = PROT    60100002
+         DC    C'CITY:'                                                 60200002
+         DC    X'1D4011C3C71D60'   SF = UNPROT, SBA=199, SF=PROT        60300002
+         DC    C'STATE:'                                                60400002
+         DC    X'1D4011C3E41D60'   SF = UNPROT, SBA=228, SF=PROT        60500002
+         DC    C'ZIP:'                                                  60600002
+         DC    X'1D5011C36F1D6011C540'  SF=UNPROT, SBA=239, SF=PROT,    60700002
+*                                  SBA= 320                             60800002
+         DC    C'ENTER KEY: ENTER DATA;'                                60900002
+         DC    X'11C5E8'           SBA = 360                            61000002
+         DC    C'PA2 KEY: END PROGRAM;'                                 61100002
+         DC    X'11C650'           SBA = 400                            61200002
+         DC    C'CLEAR KEY: CONTROL OPTIONS.'                           61300002
+FMT1SZ   EQU   *-FORMAT1                                                61400002
+*                                                                       61500002
+FORMAT2  DC    X'C7114040'         WCC, SBA = 0                         61600002
+         DC    C'DATA GIVEN BELOW ENTERED:'                             61700002
+         DC    X'11C150'           SBA = 80                             61800002
+         DC    C'NAME:'                                                 61900002
+         DC    X'1D4013'           SF=UNPROT, IC                        62000002
+FMT2FLD1 EQU   *-FORMAT2                                                62100002
+         DC    XL33'0'             DATA FIELD 1                         62200002
+         DC    X'1D60'             SF = PROT                            62300002
+         DC    C'ADDR:'                                                 62400002
+         DC    X'1D40'             SF= UNPROT                           62500002
+FMT2FLD2 EQU   *-FORMAT2                                                62600002
+         DC    XL33'0'             DATA FIELD 2                         62700002
+         DC    X'1D60'             SF = PROT                            62800002
+         DC    C'CITY:'                                                 62900002
+         DC    X'1D40'             SF = UNPROT                          63000002
+FMT2FLD3 EQU   *-FORMAT2                                                63100002
+         DC    XL33'0'             DATA FIELD 3                         63200002
+         DC    X'1D60'             SF = PROT                            63300002
+         DC    C'STATE:'                                                63400002
+         DC    X'1D40'             SF = UNPROT                          63500002
+FMT2FLD4 EQU   *-FORMAT2                                                63600002
+         DC    XL21'0'                                                  63700002
+         DC    X'1D60'             SF = PROT                            63800002
+         DC    C'ZIP:'                                                  63900002
+         DC    X'1D50'             SF = UNPROT, NUM ONLY                64000002
+FMT2FLD5 EQU   *-FORMAT2                                                64100002
+         DC    XL5'0'                                                   64200002
+         DC    X'1D6011C540'       SF = PROT, SBA = 320                 64300002
+         DC    C'ENTER KEY: UPDATE DATA;'                               64400002
+         DC    X'11C5E8'           SBA = 360                            64500002
+         DC    C'PA1 KEY: PRINT DATA;'                                  64600002
+         DC    X'11C650'           SBA = 400                            64700002
+         DC    C'PA2 KEY: END PROGRAM;'                                 64800002
+         DC    X'11C6F8'           SBA = 440                            64900002
+         DC    C'CLEAR KEY: CONTROL OPTIONS.'                           65000002
+FMT2SZ   EQU   *-FORMAT2                                                65100002
+*                                                                       65200002
+FORMAT3  DC    X'C711404013'       WCC, SBA =0, IC                      65300002
+         DC    C'XXYY3CUU'                                              65400002
+         DC    X'11C150'           SBA = 80                             65500002
+         DC    C'ENTER KEY: RESUME AND CONTINUE;'                       65600002
+         DC    X'11C1F8'           SBA = 120                            65700002
+         DC    C'PA1 KEY: BEGIN NEW ENTRY;'                             65800002
+         DC    X'11C260'           SBA = 160                            65900002
+         DC    C'PA2 KEY: END PROGRAM;'                                 66000002
+         DC    X'11C3F0'           SBA = 240                            66100002
+         DC    C'TO REQUEST BTAM OLT -- ENTER REQUEST FOR TEST MESSAGE *66200002
+               OVER SAMPLE FORMAT ABOVE:  '                             66300002
+         DC    C'XX=TEST NO. (23-28)  YY=REPEATS (01-99)'               66400002
+         DC    C' CUU=ADDRESS OF TARGET DEVICE'                         66500002
+         DC    X'11C6D1'           SBA = 401                            66600002
+         DC    C'THEN HIT ERASE EOF AND THEN TEST REQ.  USE CLEAR KEY T*66700002
+               O RESUME AFTER TEST.'                                    66800002
+FMT3SZ   EQU   *-FORMAT3                                                66900002
+*                                                                       67000002
+FORMAT4  DC    X'C711C17D'         WCC, SBA = 125                       67100002
+         DC    C'LOCAL 3270 SAMPLE PROGRAM ENDED.'                      67200002
+FMT4SZ   EQU   *-FORMAT4                                                67300002
+*                                                                       67400002
+*                                                                       67500002
+*                0123456789ABCDEF                                       67600002
+FLDXLATE DC    C'                ' 0                                    67700002
+         DC    C'                ' 1                                    67800002
+         DC    C'                ' 2                                    67900002
+         DC    C'                ' 3                                    68000002
+         DC    C'          ¢.<(+|' 4                                    68100002
+         DC    C'&&         !$*);¬' 5                                   68200002
+         DC    C'-/         ,%_>?' 6                                    68300002
+         DC    C'          :#@''="' 7                                   68400002
+         DC    C' ABCDEFGHI      ' 8                                    68500002
+         DC    C' JKLMNOPQR      ' 9                                    68600002
+         DC    C'  STUVWXYZ      ' A                                    68700002
+         DC    C'                ' B                                    68800002
+         DC    C' ABCDEFGHI      ' C                                    68900002
+         DC    C' JKLMNOPQR      ' D                                    69000002
+         DC    C'  STUVWXYZ      ' E                                    69100002
+         DC    C'0123456789      ' F                                    69200002
+*                0123456789ABCDEF                                       69300002
+         END                                                            69400002

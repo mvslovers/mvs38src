@@ -1,0 +1,22 @@
+         MACRO                                                          00050037
+         SGIDSP01  &UNIT=,&ID=                                          00100037
+         LCLC      &NMODSC                                              00120037
+.* FUNCTION - SET DEVICE INFORMATION TABLE (DIT) FOR 3203 MODEL 4.      00150037
+.* STATUS CHANGE LEVEL                                                  00166637
+.* C006500                                                     @ZA42486 00183237
+.* C005200                                                     @ZA43728 00191637
+.* C005200  CHANGED UCBTYPE FROM 1080080B T0 1000080B          @ZA48286 00195700
+         COPY SGGBLPAK               SYSGEN GLOBALS DEFINITIONS         00200037
+         AIF ('&UNIT' NE '3203').EXIT01                                 00250037
+.*  SET DIT IDEX FOR EACH 3203-4                                        00300037
+&SGDITXA(&SGCNTRA(3))  SETA  101     INDEX FOR A 3203 IN DIT TABLE      00350037
+         AIF (&SGGENDB(101)).EXIT01  IF ALREADY GEN, EXIT               00400037
+&SGGENDB(101)          SETB  1       SET GEN FLAG FOR THIS DEVICE       00450037
+&NMODSC  SETC  'IECVDDT1,IECVXURS,IECVXURT,IECVOTBL'  SET NUC MODS      00500037
+         SGDITGBL  GENERIC=3203,UCBTYPE=1000080B,DDTMOD=IECVDDT1,      X00520000
+               NUCMOD=&NMODSC,                                         X00540037
+               NUCDLB=AOSC5,                                           X00600037
+               ERPMOD=IGE0000G,ERPDLB=AOSCA,                           X00650037
+               LPAMOD=IECLMSGU,LPADLB=AOSC5,                           X00700037
+               STATBL=1,SENSE=24                                        00750037
+.EXIT01  MEND                                                           00800000

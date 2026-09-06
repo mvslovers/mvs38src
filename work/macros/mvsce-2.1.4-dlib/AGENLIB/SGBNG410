@@ -1,0 +1,30 @@
+         MACRO                                                          00050000
+         SGBNG410                                                       00100000
+.*A-000000-9999999                                             @OZ30243 00150000
+.********************************************************************** 00200000
+.*  5752CM100 SU868 SYSGEN FOR TELCMLIB                               * 00250000
+.*  CHANGE ACTIVITY FOLLOWS                                           * 00300000
+.*C011000                                                      @OZ37101 00300107
+.*                                                                    * 00350000
+.*                                                                    * 00400000
+.********************************************************************** 00450000
+         COPY  SGGBLPAK                                                 00500000
+         AIF   ('&SGCTRLC(33)' EQ '').NOTCAM  UNIT ASSIGNED TELCMLIB    00550000
+         AIF   ('&SGCTRLC(34)' EQ '').NOTCAM  SERIAL FOR TELCMLIB       00600000
+         AIF   (NOT &SGDMGTB(5)).NOTCAM  TCAM NOT SPECIFIED, EXIT       00650000
+&SGCTRLC(6)  SETC  ''              NULL                                 00700000
+&SGCTRLC(7)  SETC  '&SGCTRLC(34)'  TARGET SERIAL                        00750000
+&SGCTRLC(8)  SETC  '&SGCTRLC(33)'  TARGET UNIT                          00800000
+&SGCTRLC(9)  SETC  'TELCMLIB'      TARGET LIBRARY NAME                  00850000
+&SGCTRLC(10) SETC  ',LET'          ATTRIBUTE                            00900000
+&SGCTRLC(11) SETC  ',AC=1'         ATTRIBUTE                            00950000
+.*  PUT DEMF/TCAM MODULE BNGTQEMA INTO TELCMLIB                         01000000
+         COPY  SGLEDPK1                                                 01050000
+ PUNCH '//AOS29 DD DSN=SYS1.AOS29,DISP=SHR'                    @OZ37101 01100007
+         COPY  SGLEDPK2                                                 01150000
+ PUNCH ' INCLUDE AOS29(BNGTQEMA)'                                       01200000
+ PUNCH ' ENTRY BNGTQEMA'                                                01250000
+ PUNCH ' NAME BNGTQEMA(R)'                                              01300000
+ PUNCH '/*'                                                             01350000
+.NOTCAM  ANOP                                                           01400000
+         MEND                                                           01450000

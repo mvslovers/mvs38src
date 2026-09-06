@@ -1,0 +1,65 @@
+         MACRO                                                          00050000
+         SGIEA4D2                                                       00100000
+         COPY SGGBLPAK                                                  00150000
+         LCLA &N                                                        00200000
+.*                                                                      00250000
+.*  THIS MACRO CREATED FOR AOS/2 RELEASE 2 DIDOCS (SD CODE Y02958).     00300000
+.*  IT CREATES LINK EDIT JCL TO INCLUDE RESIDENT DCM'S, IEECVSUB AND    00350000
+.*  IEEPFKEY CONTROL BLOCKS INTO THE NUCLEUS.                           00400000
+.*                                                                      00410000
+         AIF   (&SG5450A+&SGSCHDA(10)+&SGSCHDA(11)+&SGSCHDA(17)+&SGSCHDX00420000
+               A(18) LT 1).OUT NO GRAPHIC CONSOLES            MB YM4302 00430000
+.*                                                                      00450000
+.*  THE FOLLOWING COMMENT CARD WILL BE GENERATED INTO THE STAGE 1       00500000
+.*  OUTPUT TO IDENTIFY THE LEVEL AND CHANGE DATE ASSOCIATED WITH        00550000
+.*  THE COPY OF SGIEA4D2 BEING USED IN ANY GIVEN SYSGEN.                00600000
+.*  THE COMMENT SHOULD BE UPDATED WITH A NEW LEVEL NUMBER               00650000
+.*  AND DATE WHENEVER ANY CHANGES ARE MADE TO THIS MACRO                00700000
+.*                                                                      00750000
+*** SGIEA4D2 *** DIDOCS *** 03/22/74 *** CHANGE LEVEL 01 ***  MB YM4302 00800000
+.*                                                                      00850000
+&N       SETA  &SG5450A                                                 00900000
+.KCHECK  ANOP                                                           00950000
+         AIF   (&N EQ 0).TST2250                                        01000000
+         PUNCH ' INCLUDE SYSPUNCH(IEECVD&N)'                            01050000
+&N       SETA  &N-1                                                     01100000
+         AGO   .KCHECK                                                  01150000
+.TST2250 ANOP                                                           01200000
+&N       SETA  &SGSCHDA(10)                                             01250000
+.RCHECK  ANOP                                                           01300000
+         AIF   (&N EQ 0).TST2260                                        01350000
+         PUNCH ' INCLUDE SYSPUNCH(IEECVE&N)'                            01400000
+&N       SETA  &N-1                                                     01450000
+         AGO   .RCHECK                                                  01500000
+.TST2260 ANOP                                                           01550000
+&N       SETA  &SGSCHDA(11)                                             01600000
+.CCHECK  ANOP                                                           01650000
+         AIF   (&N EQ 0).TSTAN48                                        01700000
+         PUNCH ' INCLUDE SYSPUNCH(IEECVF&N)'                            01750000
+&N       SETA  &N-1                                                     01800000
+         AGO   .CCHECK                                                  01850000
+.TSTAN48 ANOP                                                           01900000
+&N       SETA  &SGSCHDA(17)                                             01950000
+.AN4CHK  ANOP                                                           02000000
+         AIF   (&N EQ 0).TSTAN19                                        02050000
+         PUNCH ' INCLUDE SYSPUNCH(IEECVG&N)'                            02100000
+&N       SETA  &N-1                                                     02150000
+         AGO   .AN4CHK                                                  02200000
+.TSTAN19 ANOP                                                           02250000
+&N       SETA  &SGSCHDA(18)                                             02300000
+.AN9CHK  ANOP                                                           02350000
+         AIF   (&N EQ 0).SUBCHK                                         02400000
+         PUNCH ' INCLUDE SYSPUNCH(IEECVH&N)'                            02450000
+&N       SETA  &N-1                                                     02500000
+         AGO   .AN9CHK                                                  02550000
+.SUBCHK  ANOP                                                           02600000
+         PUNCH ' INCLUDE SYSPUNCH(IEECVSUB)'                            02850000
+         AIF   (&SGSCHDA(16) NE 0).PFKIN                                02900000
+&N       SETA  0                                                        02950000
+.NXTCONS ANOP                                                           03000000
+         AIF   (&N GE &SGSCNYA(1)).OUT                                  03050000
+&N       SETA  &N+1                                                     03100000
+         AIF   (&SGSCNPA(&N) EQ 0).NXTCONS                              03200000
+.PFKIN   ANOP                                                           03250000
+         PUNCH ' INCLUDE SYSPUNCH(IEEPFKEY)'                            03300000
+.OUT     MEND                                                           03350000

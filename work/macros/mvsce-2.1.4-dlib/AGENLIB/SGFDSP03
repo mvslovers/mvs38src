@@ -1,0 +1,98 @@
+         MACRO                                                   MVS38J 01000038
+         SGFDSP03 &ID=,&UNIT=                                    MVS38J 01100038
+.*******   *DATE WRITTEN : 86-04-29                              MVS38J 01200038
+.*******   *AUTHOR       : BERTUS                                MVS38J 01300038
+.*******   *FUNCTION     : REPLACEMENT FOR DUMMY SGFDSP03        MVS38J 01400038
+.*******   *               IN MVS 3.8 TO SUPPORT 3380 SYSGENS    MVS38J 01500038
+.*******   *               (DEVICE FEATURES TABLE)               MVS38J 01600038
+.*******   *LIBRARY      : AGENLIB                               MVS38J 01700038
+.*******   *DEPENDENCIES : GLOBAL SYSGEN VARIABLES (SGGBLPAK)    MVS38J 01800038
+.*******   *               OLD SYSGEN DIT GEN      (SGDITGBL)    MVS38J 01900038
+.*******   *PARAMETERS   : UNIT   = DEVICE TYPE                  MVS38J 02000038
+.*******   *               ID     = MAC ID FOR MNOTES            MVS38J 02100038
+         COPY  SGGBLPAK                    +GLOBAL VARIABLES     MVS38J 02200038
+         LCLC  &UCBFLG5                    +UCB FLAG 5 BITS      MVS38J 02300038
+         LCLC  &UCBFLP1                    +UCB        BITS      MVS38J 02400038
+         LCLC  &UCBTB2                     +UCB TYPE BYTE 2      MVS38J 02500038
+         LCLB  &SHR,&SHRU                  +SHARED,SHAREDUP      MVS38J 02600038
+         LCLB  &TCS                        +2-CHAN SWITCH        MVS38J 02700038
+         LCLB  &OFF                        +OFFLINE              MVS38J 02800038
+         LCLA  &N                          +INDEX COUNTER        MVS38J 02900038
+         LCLA  &PCCW                       +# OF PREFIX CCWS     MVS38J 03000038
+         AIF   ('&UNIT' EQ '3380').G3380   +GEN 3380 CALL??      MVS38J 03100038
+         AGO   .ERROR01                    +INVALID DEV TYPE     MVS38J 03200038
+.G3380   ANOP                                                    MVS38J 03300038
+         MNOTE *,'&UNIT DEVICE TYPES'      +TELL USER            MVS38J 03400038
+&UCBFLG5 SETC  '(DISCONCC,ENVRTNS'         +STD. DASD FEATURES   MVS38J 03500038
+         MNOTE *,'DISCONNECT FEATURE'      +TELL USER            MVS38J 03600038
+         MNOTE *,'ENVIRONMENTAL DATA '     +TELL USER            MVS38J 03700038
+&SGDCLSB(88) SETB 1                        +SET RPS              MVS38J 03800038
+         MNOTE *,'ROTATIONAL POSITION SENSING' +TELL USER        MVS38J 03900038
+&PCCW    SETA  5                           +# OF PREFIX CCWS     MVS38J 04000038
+&UCBTB2  SETC  '10'                        +UCB TYPE BYTE 2      MVS38J 04100038
+&OFF     SETB  ('&SGOFLPC' EQ 'YES')       +SET OFFLINE INDIC    MVS38J 04200038
+&N       SETA  0                           +INIT INDEX           MVS38J 04300038
+.FTLOOP  ANOP                              +FEATURE CHECK LOOP   MVS38J 04400038
+&N       SETA  &N+1                        +UP INDEX             MVS38J 04500038
+         AIF   (&SGFCNTA LT &N).FTFIN      +ALL DONE??           MVS38J 04600038
+         AIF   ('&SGFETPC(&N)' EQ 'SHARED').SHARED               MVS38J 04700038
+         AIF   ('&SGFETPC(&N)' EQ 'SHAREDUP').SHAREDU            MVS38J 04800038
+         AIF   ('&SGFETPC(&N)' EQ 'ALTCTRL').ALTCTRL             MVS38J 04900038
+         AIF   ('&SGFETPC(&N)' EQ '2-CHANSW').TCHANSW            MVS38J 05000038
+         MNOTE 5,'SGFDSP03 - 003 - INVALID FEATURE &SGFETPC(&N)' MVS38J 05100038
+&SGQUITB SETB  1                           +SET QUIT SWITCH      MVS38J 05200038
+         AGO   .FTLOOP                     +DO NEXT              MVS38J 05300038
+.SHARED  ANOP                              +                     MVS38J 05400038
+         MNOTE *,'SHARED BY CPUS'          +TELL USER            MVS38J 05500038
+&PCCW    SETA  &PCCW+1                     +ADD RESERVE CCW SPC  MVS38J 05600038
+&UCBTB2  SETC  '30'                        +UCB TYPE BYTE 2      MVS38J 05700038
+&SHR     SETB  1                           +INDICATE SHARED      MVS38J 05800038
+         AGO   .FTLOOP                     +DO NEXT              MVS38J 05900038
+.SHAREDU ANOP                              +                     MVS38J 06000038
+         MNOTE *,'SHARED WHEN IN UP MODE'  +TELL USER            MVS38J 06100038
+&PCCW    SETA  &PCCW+1                     +ADD RESERVE CCW SPC  MVS38J 06200038
+&UCBFLP1 SETC  'UPSHARBL'                  +INDICATE SHRDUP      MVS38J 06300038
+&SHRU    SETB  1                           +INDICATE SHRDUP      MVS38J 06400038
+         AGO   .FTLOOP                     +DO NEXT              MVS38J 06500038
+.ALTCTRL ANOP                              +                     MVS38J 06600038
+         MNOTE *,'HAS ALTERNATE CONTROLLER' +TELL USER           MVS38J 06700038
+&UCBFLG5 SETC  '&UCBFLG5,ALTCTRL'          +ADD FEATURE TO LIST  MVS38J 06800038
+         AGO   .FTLOOP                     +DO NEXT              MVS38J 06900038
+.TCHANSW ANOP                              +                     MVS38J 07000038
+&TCS     SETB  1                           +SET FOR 2CS          MVS38J 07100038
+         AGO   .FTLOOP                     +DO NEXT              MVS38J 07200038
+.FTFIN   ANOP                              +                     MVS38J 07300038
+         AIF   (&SHR AND &SHRU).ERROR02    +MUTEX FEATURES USD?  MVS38J 07400038
+         AIF   (&SGOPCTA EQ 0).SINGPTH     +OPTCHAN??            MVS38J 07500038
+         MNOTE *,'OPTIONAL CHANNEL &SGOPCTA' TELL USER           MVS38J 07600038
+&UCBFLG5 SETC  '&UCBFLG5,ALTPATH'          +ADD FEATURE TO LIST  MVS38J 07700038
+.SINGPTH ANOP                              +                     MVS38J 07800038
+&UCBFLG5 SETC  '&UCBFLG5.)'                +END OF FEATURE LIST  MVS38J 07900038
+&N       SETA  1                           +INIT INDEX           MVS38J 08000038
+.DEVLOOP ANOP                              +LOOP FOR DEVICES     MVS38J 08100038
+&SGDOFFB(&SGCNTRA(3)) SETB (&OFF EQ 1)     +OFFLINE OPTION       MVS38J 08200038
+&SGDF01B(&SGCNTRA(3)) SETB (&TCS EQ 1)     +TWO CHANNEL SWITCH   MVS38J 08300038
+&SGUFP6B(&SGCNTRA(3)) SETB 1               +DYNAMIC PATHING      MVS38J 08400038
+         SGOPCHAN PERMIT=YES,UNIT=&UNIT,ID=&ID  +OPTCHAN SPEC    MVS38J 08500038
+         SGAP  PERMIT=YES,UNIT=&UNIT,ID=&ID +ALT. POWER SUPPLY   MVS38J 08600038
+         SGDFTGBL UCBFLP1=(&UCBFLP1),CCWPFIX=&PCCW,              MVS38J+08700038
+               UCBFL5=&UCBFLG5,                                  MVS38J+08800038
+               ATNTABX=0,DSEGLEN=16,DPNDSEG=4A(0),               MVS38J+08900038
+               ERRTAB=0,UNMOVBL=YES,DEVTYPE=30&UCBTB2.200E       MVS38J 09000038
+&N       SETA  &N+1                        +UP   INDEX           MVS38J 09100038
+         AIF   (&N GT &SGADRPC(2)).DEVFIN   +ALL DONE??          MVS38J 09200038
+         SGADDR ,                          +  NO - UP ADDRESS    MVS38J 09300038
+         AGO   .DEVLOOP                    +       AND REPEAT    MVS38J 09400038
+.DEVFIN  ANOP                                                    MVS38J 09500038
+         AGO   .EXIT001                    +GET OUT              MVS38J 09600038
+.ERROR01 ANOP                                                    MVS38J 09700038
+    MNOTE 5,'SGFDSP03 - 001 - INVALID DEVICE TYPE (LOGIC ERROR)' MVS38J 09800038
+&SGQUITB SETB  1                           +SET QUIT SWITCH      MVS38J 09900038
+         AGO   .EXIT001                    +GET OUT              MVS38J 10000038
+.ERROR02 ANOP                                                    MVS38J 10100038
+         MNOTE 5,'SGFDSP03 - 002 - MUTUALLY EXCLUSIVE FEATURES'  MVS38J 10200038
+&SGQUITB SETB  1                           +SET QUIT SWITCH      MVS38J 10300038
+         AGO   .EXIT001                    +GET OUT              MVS38J 10400038
+.EXIT001 ANOP                                                    MVS38J 10500038
+         MEXIT                                                   MVS38J 10600038
+         MEND                                                    MVS38J 10700038

@@ -1,0 +1,101 @@
+         MACRO                                                          00050002
+         SGAHL400                                                       00100002
+.*A 000000-999999                                               @Y02014 00110002
+         COPY SGGBLPAK                                          @Y02014 00150002
+&SGCTRLC(7) SETC '&SGCTRLC(20)'  SET VOLUME FOR LPALIB          @Y02014 00200002
+&SGCTRLC(8) SETC '&SGCTRLC(19)'  SET UNIT FOR LPALIB            @Y02014 00250002
+&SGCTRLC(9) SETC 'LPALIB'        DSNAME FOR LPALIB DATASET      @Y02014 00286600
+&SGCTRLC(12) SETC ',RENT'        SET REETRANCY                  @Y02014 00360002
+         COPY SGLEDPK1                                          @Y02014 00400002
+ PUNCH '//AOS11 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS11' @Y02014 00450002
+         COPY SGLEDPK2                                          @Y02014 00500002
+ PUNCH ' ORDER AHLSBLOK(P),AHLSBUF'                             @Y02014 00550002
+ PUNCH ' INCLUDE AOS11(AHLSBLOK,AHLSBUF)'                       @Y02014 00600002
+ PUNCH ' ALIAS AHLSBCU1'                                        @Y02014 00650002
+ PUNCH ' ALIAS AHLSFEOB'                                        @Y02014 00700002
+ PUNCH ' ALIAS AHLSBUF'                                         @Y02014 00750002
+ PUNCH ' ALIAS AHLSBLOK'                                        @Y02014 00800002
+ PUNCH ' ENTRY AHLSBLOK'                                        @Y02014 00850002
+ PUNCH ' NAME AHLWSMOD(R)'                                      @Y02014 00900002
+ PUNCH ' ORDER AHLSETD(P),AHLMCER,AHLTDIR,AHLWTO'               @Y02014 00950002
+ PUNCH ' INCLUDE AOS11(AHLSETD,AHLMCER,AHLTDIR,AHLWTO)'         @Y02014 01000002
+ PUNCH ' ALIAS AHLMCER'                                         @Y02014 01050002
+ PUNCH ' ALIAS AHLTDIR'                                         @Y02014 01100002
+ PUNCH ' ALIAS AHLWTOMD'                                        @Y02014 01110002
+ PUNCH ' ALIAS AHLDMPMD'                                        @Y02014 01120002
+ PUNCH ' ENTRY AHLSETD'                                         @Y02014 01150002
+ PUNCH ' NAME AHLSETD(R)'                                       @Y02014 01200002
+ PUNCH ' INCLUDE AOS11(AHLSETEV,AHLSETMG)'                      @Y02014 01250002
+ PUNCH ' ENTRY AHLSETEV'                                        @Y02014 01300002
+ PUNCH ' NAME AHLSETEV(R)'                                      @Y02014 01350002
+ PUNCH ' PAGE AHLTEXT'                                          @Y02014 01400002
+ PUNCH ' INCLUDE AOS11(AHLTEXT)'                                @Y02014 01450002
+ PUNCH ' ENTRY AHLTEXT'                                         @Y02014 01500002
+ PUNCH ' NAME AHLTEXT(R)'                                       @Y02014 01550002
+ PUNCH ' INCLUDE AOS11(AHLTFOR)'                                @Y02014 01600002
+ PUNCH ' ALIAS AHLTFRR'                                         @Y02014 01650002
+ PUNCH ' ALIAS AHLTSRM'                                         @Y02014 01700002
+ PUNCH ' ALIAS AHLTRNIO'                                      @ZA52148  01750000
+ PUNCH ' ALIAS AHLTSTAE'                                        @Y02014 01800002
+ PUNCH ' ENTRY AHLTFOR'                                         @Y02014 01850002
+ PUNCH ' NAME AHLTFOR(R)'                                       @Y02014 01900002
+ PUNCH ' PAGE AHLTPID'                                          @Y02014 01910002
+ PUNCH ' INCLUDE AOS11(AHLTPID)'                                @Y02014 01950002
+ PUNCH ' ALIAS AHLTPI'                                          @Y02014 02000002
+ PUNCH ' ALIAS AHLTSRB'                                         @Y02014 02050002
+ PUNCH ' ALIAS AHLTDSP'                                         @Y02014 02100002
+ PUNCH ' ALIAS AHLTLSR'                                         @Y02014 02150002
+ PUNCH ' ENTRY AHLTPID'                                         @Y02014 02200002
+ PUNCH ' NAME AHLTPID(R)'                                       @Y02014 02250002
+ PUNCH ' INCLUDE AOS11(AHLTSIO)'                                @Y02014 02300002
+ PUNCH ' ALIAS AHLTIO'                                          @Y02014 02350002
+ PUNCH ' ALIAS AHLTUIO'                                         @Y02014 02400002
+ PUNCH ' ALIAS AHLTSIO1'                                        @Y02014 02470002
+ PUNCH ' ENTRY AHLTSIO'                                         @Y02014 02550002
+ PUNCH ' NAME AHLTSIO(R)'                                       @Y02014 02600002
+ PUNCH ' PAGE AHLTSVC'                                          @Y02014 02650002
+ PUNCH ' INCLUDE AOS11(AHLTSVC)'                                @Y02014 02700002
+ PUNCH ' ENTRY AHLTSVC'                                         @Y02014 02750002
+ PUNCH ' NAME AHLTSVC(R)'                                       @Y02014 02800002
+ PUNCH ' INCLUDE AOS11(AHLTSYFL)'                               @Y02014 02850002
+ PUNCH ' ALIAS AHLFPI'                                          @Y02014 02900002
+ PUNCH ' ALIAS AHLFSVC'                                         @Y02014 02950002
+ PUNCH ' ALIAS AHLFIO'                                          @Y02014 03000002
+ PUNCH ' ALIAS AHLFSIO'                                         @Y02014 03050002
+ PUNCH ' ENTRY AHLTSYFL'                                        @Y02014 03100002
+ PUNCH ' NAME AHLTSYFL(R)'                                      @Y02014 03150002
+ PUNCH ' PAGE AHLTSYSM'                                         @Y02014 03200002
+ PUNCH ' INCLUDE AOS11(AHLTSYSM)'                               @Y02014 03250002
+ PUNCH ' ALIAS AHLSVC'                                          @Y02014 03300002
+ PUNCH ' ALIAS AHLSIO'                                          @Y02014 03350002
+ PUNCH ' ALIAS AHLIO'                                           @Y02014 03400002
+ PUNCH ' ALIAS AHLUIO'                                          @Y02014 03450002
+ PUNCH ' ALIAS AHLEXT'                                          @Y02014 03500002
+ PUNCH ' ALIAS AHLFRR'                                          @Y02014 03550002
+ PUNCH ' ALIAS AHLSTAE'                                         @Y02014 03600002
+ PUNCH ' ALIAS AHLPINT'                                         @Y02014 03750002
+ PUNCH ' ALIAS AHLTINT'                                         @Y02014 03760002
+ PUNCH ' ENTRY AHLTSYSM'                                        @Y02014 03900002
+ PUNCH ' NAME AHLTSYSM(R)'                                      @Y02014 03950002
+ PUNCH ' INCLUDE AOS11(AHLTUSR)'                                @Y02014 04000002
+ PUNCH ' ENTRY AHLTUSR'                                         @Y02014 04050002
+ PUNCH ' NAME AHLTUSR(R)'                                       @Y02014 04100002
+ PUNCH ' PAGE AHLTXSYS'                                         @Y02014 04105002
+ PUNCH ' INCLUDE AOS11(AHLTXSYS)'                               @Y02014 04110002
+ PUNCH ' ALIAS AHLSRM'                                          @Y02014 04115002
+ PUNCH ' ALIAS AHLSRB'                                          @Y02014 04120002
+ PUNCH ' ALIAS AHLDSP'                                          @Y02014 04125002
+ PUNCH ' ALIAS AHLRNIO'                                       @ZA59442  04130000
+ PUNCH ' ENTRY AHLTXSYS'                                        @Y02014 04135002
+ PUNCH ' NAME AHLTXSYS(R)'                                      @Y02014 04140002
+ PUNCH ' PAGE AHLTSLIP'                                        @G64RP2H 04150064
+ PUNCH ' INCLUDE AOS11(AHLTSLIP)'                              @G64RP2H 04200064
+ PUNCH ' ENTRY AHLTSLIP'                                       @G64RP2H 04250064
+ PUNCH ' NAME AHLTSLIP(R)'                                     @G64RP2H 04300064
+ PUNCH ' INCLUDE AOS11(AHLTVTAM)'                              @ZA51029 04308300
+ PUNCH ' ALIAS AHLTACFV'                                       @ZA48643 04316600
+ PUNCH ' ALIAS AHLACFV'                                        @ZA48643 04324900
+ PUNCH ' ENTRY AHLTVTAM'                                       @ZA51029 04333200
+ PUNCH ' NAME AHLTVTAM(R)'                                     @ZA51029 04341500
+ PUNCH '/*'                                                     @Y02014 04350064
+         MEND                                                           04400064

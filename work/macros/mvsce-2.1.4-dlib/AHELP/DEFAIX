@@ -1,0 +1,349 @@
+)F FUNCTION -                                                           00300003
+  THE DEFINE COMMAND CAN BE USED TO DEFINE A CATALOG ENTRY FOR AN       00600003
+  ALTERNATE INDEX.                                                      00900003
+)X SYNTAX -                                                             01200003
+         DEFINE    ALTERNATEINDEX                                       01500003
+                   (  NAME('ENTRYNAME')                                 01800003
+                      RELATE('NAME/PASSWORD')                           01860003
+                      UPGRADE | NOUPGRADE                               01920003
+                      FILE('DNAME')                                     02100003
+                      VOLUMES('VOLSER' ...)                             02400003
+                      TRACKS('PRIMARY' 'SECONDARY') |                   02700003
+                         CYLINDERS('PRIMARY' 'SECONDARY') |             03000003
+                         RECORDS('PRIMARY' 'SECONDARY')                 03300003
+                      RECORDSIZE('AVERAGE' 'MAXIMUM')                   03600003
+                      FREESPACE('CIPERCENT' 'CAPERCENT')                03900003
+                      UNIQUE | SUBALLOCATION                            04200003
+                      KEYRANGES(('LOWKEY' 'HIGHKEY') ...)               04800003
+                      ORDERED | UNORDERED                               05100003
+                      BUFFERSPACE('SIZE')                               05400003
+                      CONTROLINTERVALSIZE('SIZE')                       05700003
+                      STAGE | BIND | CYLINDERFAULT                      06000003
+                      MASTERPW('PASSWORD')                              06300003
+                      CONTROLPW('PASSWORD')                             06600003
+                      UPDATEPW('PASSWORD')                              06900003
+                      READPW('PASSWORD')                                07200003
+                      CODE('CODE')                                      07500003
+                      ATTEMPTS('NUMBER')                                07800003
+                      AUTHORIZATION('ENTRYPOINT' 'STRING')              08100003
+                      OWNER('OWNERID')                                  08400003
+                      TO('DATE') | FOR('DAYS')                          08700003
+                      SHAREOPTIONS('CROSSREGION' 'CROSSSYSTEM')         09000003
+                      ERASE | NOERASE                                   09300003
+                      EXCEPTIONEXIT('MNAME')                            09600003
+                      SPEED | RECOVERY                                  09900003
+                      WRITECHECK | NOWRITECHECK                         10200003
+                      DESTAGEWAIT | NODESTAGEWAIT                       10500003
+                      KEYS('LENGTH' 'OFFSET')                           11100003
+                      UNIQUEKEY | NONUNIQUEKEY                          11160003
+                      REPLICATE | NOREPLICATE                           11400003
+                      IMBED | NOIMBED                                   11700003
+                      REUSE | NOREUSE                                   12000003
+                      MODEL('ENTRYNAME/PASSWORD' 'CATNAME/PASSWORD'))   12300003
+                   DATA('OPTIONS')                                      12900003
+                   INDEX('OPTIONS')                                     13200003
+                   CATALOG('CATNAME/PASSWORD')                          13500003
+  REQUIRED - ALTERNATEINDEX, NAME, RELATE, TRACKS|CYLINDERS|RECORDS,    13800003
+             VOLUMES                                                    14100003
+  DEFAULTS - SUBALLOCATION, UPGRADE, UNORDERED, NOERASE, RECOVERY,      14400003
+             NOWRITECHECK, NONUNIQUEKEY, NOREPLICATE, NOIMBED, NOREUSE, 14700003
+             STAGE, NODESTAGEWAIT                                       15000003
+           - RECORDSIZE(4086 32600)                                     15050003
+           - KEYS(64 0)                                                 15100003
+  ABBREVIATIONS -                                                       15300003
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 15600003
+             ALTERNATEINDEX       AIX                                   15900003
+             NOUPGRADE            NUPG                                  15984003
+             TRACKS               TRK                                   16020003
+             RECORDSIZE           RECSZ                                 16200003
+             FREESPACE            FSPC                                  16500003
+             UNIQUE               UNQ                                   16800003
+             KEYRANGES            KRNG                                  17700003
+             BUFFERSPACE          BUFSPC OR BUFSP                       18000003
+             CONTROLINTERVALSIZE  CNVSZ OR CISZ                         18300003
+             CYLINDERFAULT        CYLF                                  18600003
+             MASTERPW             MRPW                                  18900003
+             CONTROLPW            CTLPW                                 19200003
+             UPDATEPW             UPDPW                                 19500003
+             READPW               RDPW                                  19800003
+             SHAREOPTIONS         SHR                                   20100003
+             NOERASE              NERAS                                 20400003
+             EXCEPTIONEXIT        EEXT                                  20700003
+             RECOVERY             RECY                                  21000003
+             WRITECHECK           WCK                                   21300003
+             NOWRITECHECK         NWCK                                  21600003
+             DESTAGEWAIT          DSTGW                                 21900003
+             NODESTAGEWAIT        NDSTGW                                22200003
+             UNIQUEKEY            UNQK                                  22500003
+             NONUNIQUEKEY         NUNQK                                 22800003
+             NOREPLICATE          NREPL                                 23400003
+             IMBED                IMBD                                  23700003
+             NOIMBED              NIMBD                                 24000003
+             REUSE                RUS                                   24300003
+             NOREUSE              NRUS                                  24600003
+             INDEX                IX                                    24900003
+)O OPERANDS -                                                           25200003
+))ALTERNATEINDEX                                                        25500003
+           - SPECIFIES THAT AN ALTERNATEINDEX IS TO BE DEFINED.         25560003
+))NAME('ENTRYNAME')                                                     25800003
+           - SPECIFIES THE NAME OF THE ENTRY (AIX OR COMPONENT)         26100003
+             BEING DEFINED.                                             26400003
+  'ENTRYNAME'                                                           26700003
+           - NAME OF THE ENTRY BEING DEFINED.                           27000003
+))RELATE   - SPECIFIES THE BASE CLUSTER TO WHICH THE ALTERNATE INDEX    27060003
+             IS TO BE RELATED.                                          27120003
+  'NAME'   - SPECIFIES THE NAME OF THE BASE CLUSTER TO WHICH            27170003
+             THE ALTERNATE INDEX IS TO BE RELATED.                      27172003
+  'PASSWORD'                                                            27174003
+           - SPECIFIES THE PASSWORD OF THE BASE CLUSTER TO              27176003
+             WHICH THE ALTERNATE INDEX IS TO BE RELATED.                27178003
+))UPGRADE  - SPECIFIES THAT THE ALTERNATE INDEX IS TO BE KEPT UP TO     27180003
+             DATE WITH ITS BASE CLUSTER AUTOMATICALLY BY VSAM.          27240003
+))NOUPGRADE                                                             27252003
+           - SPECIFIES THAT THE ALTERNATE INDEX IS NOT TO BE KEPT UP    27264003
+             AUTOMATICALLY BY VSAM.                                     27276003
+))FILE('DNAME')                                                         27300003
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES THE 27600003
+             DEVICES AND VOLUMES TO BE USED FOR SPACE ALLOCATION OF     27900003
+             UNIQUE COMPONENTS OR THAT IDENTIFIES THE PRIME             28200003
+             CRA VOLUME FOR THE ALTERNATE INDEX.                        28250003
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE DEVICES AND   28500003
+             VOLUMES TO BE USED FOR SPACE ALLOCATION OF UNIQUE          28800003
+             COMPONENTS OR THAT IDENTIFIES THE PRIME                    29100003
+             CRA VOLUME FOR THE ALTERNATE INDEX.                        29200003
+))VOLUMES('VOLSER' ...)                                                 29400003
+           - SPECIFIES THE VOLUMES TO CONTAIN THE AIX OR COMPONENT.     29700003
+  'VOLSER' - VOLUME SERIAL NUMBER OF THE VOLUME TO CONTAIN THE AIX      30000003
+             OR COMPONENT.                                              30300003
+))TRACKS('PRIMARY' 'SECONDARY')                                         30600003
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  30900003
+             TRACKS.                                                    31200003
+  'PRIMARY'                                                             31500003
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                31800003
+  'SECONDARY'                                                           32100003
+           - SIZE OF A SECONDARY EXTENT TO BE ALLOCATED.                32400003
+  REQUIRED - 'PRIMARY'                                                  32700003
+))CYLINDERS('PRIMARY' 'SECONDARY')                                      33000003
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  33300003
+             CYLINDERS.                                                 33600003
+  'PRIMARY'                                                             33900003
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                34200003
+  'SECONDARY'                                                           34500003
+           - SIZE OF A SECONDARY EXTENT TO BE ALLOCATED.                34800003
+  REQUIRED - 'PRIMARY'                                                  35100003
+))RECORDS('PRIMARY' 'SECONDARY')                                        35400003
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  35700003
+             RECORDS.                                                   36000003
+  'PRIMARY'                                                             36300003
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                36600003
+  'SECONDARY'                                                           36900003
+           - SIZE OF A SECONDARY EXTENT TO BE ALLOCATED.                37200003
+  REQUIRED - 'PRIMARY'                                                  37500003
+))RECORDSIZE('AVERAGE' 'MAXIMUM')                                       37800003
+           - SPECIFIES THE AVERAGE AND MAXIMUM LENGTHS, IN BYTES, OF    38100003
+             THE RECORDS IN THE DATA COMPONENT.                         38400003
+  'AVERAGE'                                                             38700003
+           - AVERAGE LENGTH OF THE RECORDS IN THE DATA COMPONENT.       39000003
+  'MAXIMUM'                                                             39300003
+           - MAXIMUM LENGTH OF THE RECORDS IN THE DATA COMPONENT.       39600003
+  REQUIRED - 'AVERAGE' AND 'MAXIMUM'                                    39900003
+  DEFAULTS - RECORDSIZE(4086 32600)                                     40200003
+))FREESPACE('CIPERCENT' 'CAPERCENT')                                    40800003
+           - SPECIFIES THE AMOUNT OF SPACE THAT IS TO BE LEFT FREE      41100003
+             AFTER ANY ALLOCATION AND AFTER ANY SPLIT OF CONTROL        41400003
+             INTERVALS (CIPERCENT) AND CONTROL AREAS (CAPERCENT).       41700003
+  'CIPERCENT'                                                           42000003
+           - PERCENTAGE OF SPACE THAT IS TO BE LEFT FREE IN EACH        42300003
+             CONTROL INTERVAL.                                          42600003
+  'CAPERCENT'                                                           42900003
+           - PERCENTAGE OF SPACE THAT IS TO BE LEFT FREE IN EACH        43200003
+             CONTROL AREA.                                              43500003
+  REQUIRED - 'CIPERCENT'                                                43800003
+))UNIQUE   - THIS AIX OR COMPONENT IS ALLOCATED SPACE OF ITS OWN.       44100003
+))SUBALLOCATION                                                         44400003
+           - A PORTION OF A PREVIOUSLY DEFINED VSAM DATA SPACE IS TO BE 44700003
+             USED FOR THIS ALTERNATEINDEX OR COMPONENT.                 45000003
+))KEYRANGES(('LOWKEY' 'HIGHKEY') ...)                                   46800003
+           - SPECIFIES THAT PORTIONS OF KEY-SEQUENCED DATA ARE TO BE    47100003
+             PLACED ON DIFFERENT VOLUMES.                               47400003
+  'LOWKEY' - LOW KEY OF THE KEY RANGE.                                  47700003
+  'HIGHKEY'                                                             48000003
+           - HIGH KEY OF THE KEY RANGE.                                 48300003
+  REQUIRED - 'LOWKEY' AND 'HIGHKEY'                                     48600003
+))ORDERED  - VOLUMES ARE TO BE USED IN THE ORDER IN WHICH THEY WERE     48900003
+             LISTED IN THE VOLUMES PARAMETER.                           49200003
+))UNORDERED                                                             49500003
+           - VOLUMES DO NOT HAVE TO BE USED IN THE ORDER IN WHICH THEY  49800003
+             WERE LISTED IN THE VOLUMES PARAMETER.                      50100003
+  DEFAULT  - UNORDERED                                                  50150003
+))BUFFERSPACE('SIZE')                                                   50400003
+           - SPECIFIES THE MINIMUM SPACE TO BE PROVIDED FOR BUFFERS.    50700003
+  'SIZE'   - AMOUNT OF SPACE TO BE PROVIDED FOR BUFFERS.                51000003
+))CONTROLINTERVALSIZE('SIZE')                                           51300003
+           - SPECIFIES THE SIZE OF THE CONTROL INTERVAL FOR THE         51600003
+             ALTERNATEINDEX OR COMPONENT.                               51900003
+  'SIZE'   - SIZE OF THE CONTROL INTERVAL FOR THE AIX OR COMPONENT.     52200003
+))STAGE    - INDICATES THAT THE AIX OR COMPONENT IS TO BE STAGED        52500003
+             FROM MASS STORAGE TO A DIRECT ACCESS STORAGE STAGING       52800003
+             DRIVE WHEN THE AIX OR COMPONENT IS OPENED.                 53100003
+))BIND     - INDICATES THAT THE AIX OR COMPONENT IS NOT ONLY TO BE      53400003
+             STAGED, BUT ALSO TO BE BOUND, THAT IS, RETAINED ON THE     53700003
+             DIRECT ACCESS STORAGE STAGING DRIVE WHEN THE AIX OR        54000003
+             COMPONENT IS OPENED.                                       54300003
+))CYLINDERFAULT                                                         54600003
+           - INDICATES THAT THE AIX OR COMPONENT IS NOT TO BE           54900003
+             STAGED WHEN IT IS OPENED, BUT THAT DATA FROM IT IS TO      55200003
+             BE STAGED AS A PROCESSING PROGRAM NEEDS IT.                55500003
+))MASTERPW('PASSWORD')                                                  55800003
+           - SPECIFIES A MASTER LEVEL PASSWORD FOR THE ENTRY BEING      56100003
+             DEFINED.                                                   56400003
+  'PASSWORD'                                                            56700003
+           - MASTER LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.         57000003
+))CONTROLPW('PASSWORD')                                                 57300003
+           - SPECIFIES A CONTROL LEVEL PASSWORD FOR THE ENTRY BEING     57600003
+             DEFINED.                                                   57900003
+  'PASSWORD'                                                            58200003
+           - CONTROL LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.        58500003
+))UPDATEPW('PASSWORD')                                                  58800003
+           - SPECIFIES AN UPDATE LEVEL PASSWORD FOR THE ENTRY BEING     59100003
+             DEFINED.                                                   59400003
+  'PASSWORD'                                                            59700003
+           - UPDATE LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.         60000003
+))READPW('PASSWORD')                                                    60300003
+           - SPECIFIES A READ LEVEL PASSWORD FOR THE ENTRY BEING        60600003
+             DEFINED.                                                   60900003
+  'PASSWORD'                                                            61200003
+           - READ LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.           61500003
+))CODE('CODE')                                                          61800003
+           - SPECIFIES A PASSWORD-PROMPTING CODE NAME FOR THE ENTRY     62100003
+             BEING DEFINED.                                             62400003
+  'CODE'   - PASSWORD-PROMPTING CODE NAME FOR THE ENTRY BEING DEFINED.  62700003
+))ATTEMPTS('NUMBER')                                                    63000003
+           - SPECIFIES THE MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY 63300003
+             TO ENTER A CORRECT PASSWORD IN RESPONSE TO A PROMPTING     63600003
+             MESSAGE.                                                   63900003
+  'NUMBER' - MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY TO ENTER A    64200003
+             CORRECT PASSWORD IN RESPONSE TO A PROMPTING MESSAGE.       64500003
+  DEFAULTS - ATTEMPTS(2)                                                64800003
+))AUTHORIZATION('ENTRYPOINT' 'STRING')                                  65100003
+           - SPECIFIES THE USER-SECURITY-VERIFICATION ROUTINE (USVR)    65400003
+             THAT EXISTS FOR ADDITIONAL SECURITY VERIFICATION.          65700003
+  'ENTRYPOINT'                                                          66000003
+           - ENTRY POINT OF THE USVR.                                   66300003
+  'STRING' - SPECIFIES INFORMATION TO BE PASSED TO THE USVR WHEN IT     66600003
+             RECEIVES CONTROL TO VERIFY AUTHORIZATION.                  66900003
+  REQUIRED - 'ENTRYPOINT'                                               67200003
+))OWNER('OWNERID')                                                      67500003
+           - SPECIFIES THE IDENTIFICATION OF THE OWNER OF THE ENTRY     67800003
+             BEING DEFINED.                                             68100003
+  'OWNERID'                                                             68400003
+           - IDENTIFICATION OF THE OWNER OF THE ENTRY BEING DEFINED.    68700003
+))TO('DATE')                                                            69000003
+           - SPECIFIES THE RETENTION PERIOD FOR THE ALTERATEINDEX BEING 69300003
+             DEFINED.                                                   69600003
+  'DATE'   - DATE (YYDDD) THROUGH WHICH THE ALTERATEINDEX BEING         69900003
+             DEFINED IS TO BE KEPT.                                     70200003
+))FOR('DAYS')                                                           70500003
+           - SPECIFIES THE RETENTION PERIOD FOR THE ALTERNATEINDEX      70800003
+             BEING DEFINED.                                             71100003
+  'DAYS'   - NUMBER OF DAYS FOR WHICH THE ALTERNATEINDEX BEING          71400003
+             DEFINED IS TO BE KEPT.                                     71700003
+))SHAREOPTIONS('CROSSREGION' 'CROSSSYSTEM')                             72000003
+           - SPECIFIES HOW A COMPONENT OR ALTERNATEINDEX CAN BE SHARED. 72300003
+  'CROSSREGION'                                                         72600003
+           - SPECIFIES THE AMOUNT OF SHARING ALLOWED AMONG REGIONS.     72900003
+  'CROSSSYSTEM'                                                         73200003
+           - SPECIFIES THE AMOUNT OF SHARING ALLOWED AMONG SYSTEMS.     73500003
+  REQUIRED - 'CROSSREGION'                                              73800003
+))ERASE    - THE DATA COMPONENT IS OVERWRITTEN WITH BINARY ZEROS WHEN   74100003
+             ITS CATALOG ENTRY IS DELETED.                              74400003
+))NOERASE  - THE DATA COMPONENT IS NOT OVERWRITTEN WITH BINARY ZEROS    74700003
+             WHEN ITS CATALOG ENTRY IS DELETED.                         75000003
+))EXCEPTIONEXIT('MNAME')                                                75300003
+           - SPECIFIES THE NAME OF THE USER MODULE TO BE GIVEN          75600003
+             CONTROL WHEN AN EXCEPTION OCCURS DURING PROCESSING.        75900003
+  'MNAME'  - NAME OF USER MODULE.                                       76200003
+))SPEED    - STORAGE ALLOCATED TO THE DATA COMPONENT IS NOT TO BE       76500003
+             PREFORMATTED BEFORE RECORDS ARE INSERTED.                  76800003
+))RECOVERY - STORAGE ALLOCATED TO THE DATA COMPONENT IS TO BE           77100003
+             PREFORMATTED BEFORE RECORDS ARE INSERTED.                  77400003
+))WRITECHECK                                                            77700003
+           - THE DATA OR INDEX COMPONENT IS TO BE CHECKED BY A MACHINE  78000003
+             ACTION CALLED 'WRITE-CHECK' WHEN A RECORD IS WRITTEN INTO  78300003
+             IT.                                                        78600003
+))NOWRITECHECK                                                          78900003
+           - THE DATA OR INDEX COMPONENT IS NOT TO BE CHECKED BY A      79200003
+             MACHINE ACTION CALLED 'WRITE-CHECK' WHEN A RECORD IS       79500003
+             WRITTEN INTO IT.                                           79800003
+))DESTAGEWAIT                                                           80100003
+           - INDICATES THAT DESTAGING IS TO BE COMPLETED BEFORE         80400003
+             CONTROL IS RETURNED FROM VSAM TO THE PROGRAM THAT ISSUES   80700003
+             THE CLOSE MACRO.                                           81000003
+))NODESTAGEWAIT                                                         81300003
+           - INDICATES THAT NOTIFICATION OF UNSUCCESSFUL DESTAGING IS   81600003
+             TO BE MADE ONLY BY A MESSAGE TO THE OPERATOR AND TO        81900003
+             THE MESSAGES (SYSPRINT) DATA SET.                          82200003
+))KEYS('LENGTH' 'OFFSET')                                               84600003
+           - SPECIFIES THAT INFORMATION ABOUT THE KEY FIELD             84900003
+             FOLLOWS.                                                   85200003
+  'LENGTH' - LENGTH OF THE ALTERNATE KEY IN BASE CLUSTER RECORD.        85500003
+  'OFFSET' - OFFSET OF THE ALTERNATE KEY IN BASE CLUSTER RECORD. .      85800003
+  REQUIRED - 'LENGTH' AND 'OFFSET'                                      86100003
+  DEFAULTS - KEYS(64 0)                                                 86400003
+))UNIQUEKEY                                                             86460003
+           - SPECIFIES THAT THE ALTERNATE KEY MAY NOT RESOLVE INTO MORE 86520003
+             THAN ONE PRIME KEY.                                        86580003
+))NONUNIQUEKEY                                                          86640003
+           - SPECIFIES THAT THE ALTERNATE KEY MAY RESOLVE INTO MORE     86652003
+             THAN ONE PRIME KEY.                                        86664003
+  DEFAULT  - NONUNIQUEKEY                                               86674003
+))REPLICATE                                                             86700003
+           - EACH INDEX RECORD IS TO BE WRITTEN ON A TRACK AS MANY      87000003
+             TIMES AS IT WILL FIT TO REDUCE ROTATIONAL DELAY AND        87300003
+             IMPROVE PERFORMANCE.                                       87600003
+))NOREPLICATE                                                           87900003
+           - COPIES OF INDEX RECORDS ARE NOT WRITTEN ON A TRACK.        88200003
+))IMBED    - THE SEQUENCE SET IS TO BE PLACED WITH THE DATA COMPONENT.  88500003
+))NOIMBED  - THE SEQUENCE SET IS NOT TO BE PLACED WITH THE DATA         88800003
+             COMPONENT.                                                 89100003
+))REUSE    - SPECIFIES THAT THE ALTERNATEINDEX IS REPETITIVELY OPENABLE 89400003
+             AS A NEW DATA SET.                                         89700003
+))NOREUSE  - SPECIFIES THAT THE ALTERNATEINDEX IS NOT REPETITIVELY      90000003
+             OPENABLE AS A NEW DATA SET.                                90300003
+))MODEL('ENTRYNAME/PASSWORD' 'CATNAME/PASSWORD')                        90600003
+           - SPECIFIES THAT AN EXISTING ENTRY IS TO BE USED AS A MODEL  90900003
+             FOR THE ENTRY BEING DEFINED.                               91200003
+  'ENTRYNAME'                                                           91500003
+           - NAME OF THE ENTRY TO BE USED AS A MODEL.                   91800003
+  'PASSWORD'                                                            92100003
+           - PASSWORD OF THE ENTRY TO BE USED AS A MODEL.               92400003
+  'CATNAME'                                                             92700003
+           - NAME OF THE CATALOG IN WHICH THE ENTRY TO BE USED AS A     93000003
+             MODEL IS DEFINED.                                          93300003
+  'PASSWORD'                                                            93600003
+           - PASSWORD OF THE CATALOG.                                   93900003
+  REQUIRED - 'ENTRYNAME'                                                94800003
+))DATA('OPTIONS')                                                       95100003
+           - SPECIFIES ATTRIBUTES OF THE DATA COMPONENT OF THE          95400003
+             ALTERNATEINDEX.                                            95460003
+  'OPTIONS'                                                             95700003
+           - ANY PARAMETER CAN BE SPECIFIED EXCEPT TO, FOR,             96000003
+             UPGRADE, NOUPGRADE, REPLICATE, NOREPLICATE, IMBED,         96300003
+             NOIMBED AND ENTRY-TYPE PARAMETERS.                         96600003
+))INDEX('OPTIONS')                                                      96900003
+           - SPECIFIES ATTRIBUTES OF THE INDEX COMPONENT OF THE         97200003
+             ALTERNATEINDEX.                                            97500003
+  'OPTIONS'                                                             97800003
+           - ANY PARAMETER CAN BE SPECIFIED EXCEPT RECORDSIZE,          98100003
+             FREESPACE, KEYRANGES, SPEED, RECOVERY, BUFFERSPACE, TO,    98400003
+             FOR, UPGRADE, NOUPGRADE, ERASE, NOERASE,                   98700003
+             UNIQUEKEY, NONUNIQUEKEY, KEYS AND ENTRY-TYPE PARAMETERS.   99000003
+))CATALOG('CATNAME/PASSWORD')                                           99300003
+           - IDENTIFIES THE CATALOG IN WHICH THE ALTERNATEINDEX         99600003
+             IS TO BE DEFINED.                                          99900003
+  'CATNAME'                                                             99960003
+           - NAME OF THE CATALOG IN WHICH THE ENTRY IS TO BE DEFINED.   99972003
+  'PASSWORD'                                                            99984003
+           - PASSWORD OF THE CATALOG IN WHICH THE ENTRY IS TO BE        99996003
+             DEFINED.                                                   99998403
+  REQUIRED - 'CATNAME'                                                  99999703

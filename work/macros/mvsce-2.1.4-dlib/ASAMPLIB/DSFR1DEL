@@ -1,0 +1,158 @@
+//JOB1 JOB                                                              00050000
+//*****************************************************************     00100000
+//*                                                               *     00150000
+//*  THIS JOB DELETES UNUSED LOAD MODULES FROM SYSTEM LIBRARIES   *     00200000
+//*  AFTER INSTALLING FDS1643                                     *     00250000
+//*                                                               *     00300000
+//*****************************************************************     00350000
+//STEP1 EXEC PGM=IEHPROGM                                               00400000
+//SYSPRINT DD SYSOUT=A                                                  00450000
+//*****************************************************************     00500000
+//*                                                               *     00550000
+//* THE FOLLOWING STATEMENT DEFINES THE VOLUME UPON WHICH         *     00600000
+//* SYS1.LINKLIB RESIDES , UPDATE THE VOLUME SERIAL AND UNIT      *     00650000
+//* PARAMETERS BEFORE EXECUTING THE JOB                           *     00700000
+//*                                                               *     00750000
+//*****************************************************************     00800000
+//VOLUME DD DISP=OLD,VOL=SER=XXXXXX,UNIT=****                           00850000
+//SYSIN DD *                                                            00900000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKEX02,VOL=****=XXXXXX            00950000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKEX03,VOL=****=XXXXXX            01000000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKIO02,VOL=****=XXXXXX            01050000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKSA05,VOL=****=XXXXXX            01100000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKRI01,VOL=****=XXXXXX            01150000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKRIKT,VOL=****=XXXXXX            01200000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKRILT,VOL=****=XXXXXX            01250000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTP04,VOL=****=XXXXXX            01300000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTP05,VOL=****=XXXXXX            01350000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTSEX0,VOL=****=XXXXXX           01400000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTSTP0,VOL=****=XXXXXX           01450000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTSTP1,VOL=****=XXXXXX           01500000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTSSA0,VOL=****=XXXXXX           01550000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTSIO0,VOL=****=XXXXXX           01600000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTSRI0,VOL=****=XXXXXX           01650000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTSUV0,VOL=****=XXXXXX           01700000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTSCC0,VOL=****=XXXXXX           01750000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTSEF0,VOL=****=XXXXXX           01800000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKTSDV0,VOL=****=XXXXXX           01850000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKCDIN,VOL=****=XXXXXX            01900000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKCDRF,VOL=****=XXXXXX            01950000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKCDIT,VOL=****=XXXXXX            02000000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKDAS1,VOL=****=XXXXXX            02050000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKIN01,VOL=****=XXXXXX            02100000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKIT01,VOL=****=XXXXXX            02150000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKRF01,VOL=****=XXXXXX            02200000
+  SCRATCH DSNAME=SYS1.LINKLIB,MEMBER=ICKVLBL,VOL=****=XXXXXX            02250000
+  SCRATCH DSNAME=SYS1.SAMPLIB,MEMBER=ICLSAV2,VOL=****=XXXXXX            02266600
+  SCRATCH DSNAME=SYS1.SAMPLIB,MEMBER=SAMPL84,VOL=****=XXXXXX            02283200
+/*                                                                      02300000
+//JOB2 JOB                                                              02350000
+//*****************************************************************     02400000
+//*                                                               *     02450000
+//*  THIS JOB SUPPLIES THE UCLIN TO CORRECT THE CDS               *     02500000
+//*  AFTER INSTALLING FDS1643                                     *     02550000
+//*                                                               *     02600000
+//*  NOTE THAT THE UNIT PARAMETER IN THE FOLLOWING JCL MAY HAVE   *     02650000
+//*  TO BE CHANGED SPECIFIC TO USERS INSTALLATION, AND ADDITION-  *     02700000
+//*  ALLY THE SPACE PARAMETERS MAY HAVE TO BE CHANGED.            *     02750000
+//*                                                               *     02800000
+//*****************************************************************     02850000
+//STEP1   EXEC PGM=HMASMP,PARM='DATE=U',REGION=4000K                    02900000
+//SYSUT1  DD UNIT=3330,SPACE=(1700,(600,100))                           02950000
+//SYSUT2  DD UNIT=3330,SPACE=(1700,(600,100))                           03000000
+//SYSUT3  DD UNIT=3330,SPACE=(1700,(600,100))                           03050000
+//SMPWRK1 DD UNIT=3330,SPACE=(CYL,(5,10,84)),DCB=(BLKSIZE=3120,         03100000
+//           LRECL=80)                                                  03150000
+//SMPWRK2 DD UNIT=3330,SPACE=(CYL,(5,10,84)),DCB=(BLKSIZE=3120,         03200000
+//           LRECL=80)                                                  03250000
+//SMPWRK3 DD UNIT=3330,SPACE=(CYL,(5,10,84)),DCB=(BLKSIZE=3120,         03300000
+//           LRECL=80)                                                  03350000
+//SMPWRK4 DD UNIT=3330,SPACE=(CYL,(5,10,84)),DCB=(BLKSIZE=3120,         03400000
+//           LRECL=80)                                                  03450000
+//SMPWRK5 DD UNIT=3330,SPACE=(CYL,(30,10,250))                          03500000
+//SYSLIB  DD DUMMY                                                      03550000
+//SMPOUT  DD SYSOUT=A                                                   03600000
+//SYSPRINT DD SYSOUT=A                                                  03650000
+//SMPPTFIN DD DUMMY                                                     03700000
+//*****************************************************************     03750000
+//*                                                               *     03800000
+//*  NOTE THAT THE UNIT AND VOLUME SERIAL PARAMETERS MAY HAVE TO  *     03850000
+//*  BE PROVIDED FOR THE FOLLOWING SMP DATA SETS.                 *     03900000
+//*                                                               *     03950000
+//*****************************************************************     04000000
+//SMPLOG  DD DUMMY                                                      04050000
+//SMPCDS  DD DSN=SYS1.SMPCDS,DISP=OLD                                   04100000
+//SMPCNTL DD *                                                          04150000
+   UCLIN CDS .                                                          04200000
+   REP MOD(ICKEX02) LMOD(ICKDSF).                                       04250000
+   REP MOD(ICKEX03) LMOD(ICKDSF).                                       04300000
+   REP MOD(ICKIO02) LMOD(ICKDSF).                                       04350000
+   REP MOD(ICKSA05) LMOD(ICKDSF).                                       04400000
+   REP MOD(ICKRI01) LMOD(ICKDSF).                                       04450000
+   REP MOD(ICKRI02) LMOD(ICKDSF).                                       04500000
+   REP MOD(ICKRI03) LMOD(ICKDSF).                                       04550000
+   REP MOD(ICKRIKT) LMOD(ICKDSF).                                       04600000
+   REP MOD(ICKRILT) LMOD(ICKDSF).                                       04650000
+   REP MOD(ICKTP04) LMOD(ICKDSF).                                       04700000
+   REP MOD(ICKTP05) LMOD(ICKDSF).                                       04750000
+   REP MOD(ICKTSEX0) LMOD(ICKDSF).                                      04800000
+   REP MOD(ICKTSTP0) LMOD(ICKDSF).                                      04850000
+   REP MOD(ICKTSTP1) LMOD(ICKDSF).                                      04900000
+   REP MOD(ICKTSSA0) LMOD(ICKDSF).                                      04950000
+   REP MOD(ICKTSIO0) LMOD(ICKDSF).                                      05000000
+   REP MOD(ICKTSRI0) LMOD(ICKDSF).                                      05050000
+   REP MOD(ICKTSUV0) LMOD(ICKDSF).                                      05100000
+   REP MOD(ICKTSCC0) LMOD(ICKDSF).                                      05150000
+   REP MOD(ICKTSEF0) LMOD(ICKDSF).                                      05200000
+   REP MOD(ICKTSDV0) LMOD(ICKDSF).                                      05250000
+   REP MOD(ICKCDIN) LMOD(ICKDSF).                                       05300000
+   REP MOD(ICKCDRF) LMOD(ICKDSF).                                       05350000
+   REP MOD(ICKCDIT) LMOD(ICKDSF).                                       05400000
+   REP MOD(ICKIN01) LMOD(ICKDSF).                                       05450000
+   REP MOD(ICKIT01) LMOD(ICKDSF).                                       05500000
+   REP MOD(ICKRF01) LMOD(ICKDSF).                                       05550000
+   REP MOD(ICKTA01) LMOD(ICKDSF).                                       05600000
+   REP MOD(ICKAA01) LMOD(ICKDSF).                                       05650000
+   REP MOD(ICKRA01) LMOD(ICKDSF).                                       05700000
+   REP MOD(ICKRD01) LMOD(ICKDSF).                                       05750000
+   REP MOD(ICKRP01) LMOD(ICKDSF).                                       05800000
+   REP MOD(ICKRT01) LMOD(ICKDSF).                                       05850000
+   REP MOD(ICKVA01) LMOD(ICKDSF).                                       05900000
+   REP MOD(ICKRL01) LMOD(ICKDSF).                                       05950000
+   REP MOD(ICKWL01) LMOD(ICKDSF).                                       06000000
+   REP MOD(ICKVV01) LMOD(ICKDSF).                                       06050000
+   REP MOD(ICKCV01) LMOD(ICKDSF).                                       06100000
+   REP MOD(ICKCL01) LMOD(ICKDSF).                                       06150000
+   REP MOD(ICKWV01) LMOD(ICKDSF).                                       06200000
+   REP MOD(ICKWI01) LMOD(ICKDSF).                                       06250000
+   REP MOD(ICKVP01) LMOD(ICKDSF).                                       06300000
+   REP MOD(ICKVD01) LMOD(ICKDSF).                                       06350000
+   REP MOD(ICKBM01) LMOD(ICKDSF).                                       06400000
+   REP MOD(ICKPP01) LMOD(ICKDSF).                                       06450000
+   REP MOD(ICKVLBL) LMOD(ICKDSF).                                       06500000
+   DEL LMOD(ICKEX02) .                                                  06550000
+   DEL LMOD(ICKEX03) .                                                  06600000
+   DEL LMOD(ICKIO02) .                                                  06650000
+   DEL LMOD(ICKSA05) .                                                  06700000
+   DEL LMOD(ICKRI01) .                                                  06750000
+   DEL LMOD(ICKRIKT) .                                                  06800000
+   DEL LMOD(ICKRILT) .                                                  06850000
+   DEL LMOD(ICKTP04) .                                                  06900000
+   DEL LMOD(ICKTP05) .                                                  06950000
+   DEL LMOD(ICKTSEX0) .                                                 07000000
+   DEL LMOD(ICKTSTP0) .                                                 07050000
+   DEL LMOD(ICKTSTP1) .                                                 07100000
+   DEL LMOD(ICKTSSA0) .                                                 07150000
+   DEL LMOD(ICKTSIO0) .                                                 07200000
+   DEL LMOD(ICKTSRI0) .                                                 07250000
+   DEL LMOD(ICKTSUV0) .                                                 07300000
+   DEL LMOD(ICKTSCC0) .                                                 07350000
+   DEL LMOD(ICKTSEF0) .                                                 07400000
+   DEL LMOD(ICKTSDV0) .                                                 07450000
+   DEL LMOD(ICKCDIN) .                                                  07500000
+   DEL LMOD(ICKCDRF) .                                                  07550000
+   DEL LMOD(ICKCDIT) .                                                  07600000
+   DEL LMOD(ICKDAS1) .                                                  07650000
+   DEL LMOD(ICKVLBL) .                                                  07700000
+   ENDUCL.                                                              07750000
+/*                                                                      07800000

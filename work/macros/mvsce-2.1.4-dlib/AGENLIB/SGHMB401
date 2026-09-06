@@ -1,0 +1,21 @@
+         MACRO                                                          00050000
+         SGHMB401                                                       00100000
+         COPY  SGGBLPAK                                                 00150000
+&SGCTRLC(7)    SETC          '&SGCTRLC(32)'                             00200000
+&SGCTRLC(8)    SETC          '&SGCTRLC(31)'                             00250000
+&SGCTRLC(9)    SETC          'LINKLIB'                                  00300000
+&SGCTRLC(10)   SETC          ',LET'                                     00400000
+&SGCTRLC(11)   SETC          ',RENT'                                    00410000
+         COPY  SGLEDPK1                                                 00450000
+         PUNCH '//AOS12  DD  DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.AOS1*00500000
+               2  SERVICE AIDS '                                        00550000
+         COPY  SGLEDPK2                                                 00600000
+         PUNCH ' INCLUDE  AOS12(HMBLKCTL,HMBLKOBJ,HMBLKLDM,HMBLKXRF,HMB*00650000
+               LKIDR)     '                                             00700000
+         PUNCH ' INCLUDE  AOS12(HMBLKMSG,HMBLKERR,HMBLKSZE,HMBLKLPA) '  00750000
+         PUNCH ' ENTRY  HMBLKCTL     '                                  00800000
+         PUNCH ' ALIAS  IMBLIST     '                                   01250000
+         PUNCH ' ALIAS  HMBLIST     '                                   01260000
+         PUNCH ' NAME  AMBLIST(R)     '                                 01300000
+         PUNCH '/*     '                                                01350000
+         MEND                                                           01400000

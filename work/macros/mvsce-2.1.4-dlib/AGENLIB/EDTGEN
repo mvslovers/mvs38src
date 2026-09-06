@@ -1,0 +1,360 @@
+         MACRO                                                          00050064
+         EDTGEN &DSN=SYS1.MLPALIB,&OBJDSN=SYS1.OBJDEV,                 X00100064
+               &DSNVOL=(SYSRES,3330),&ID=EDTGEN,&CHECK=YES,            X00150064
+               &DIAGNOS=YES,&OCLASS=A,&JCLASS=A                         00160064
+.********************************************************************** 00200064
+.*                                                                      00250064
+.* MODULE NAME - EDTGEN                                                 00300064
+.*                                                                      00350064
+.* DESCRIPTIVE NAME - ALLOCATION TABLE MACRO                            00400064
+.*                                                                      00440064
+.* COPYRIGHT - NONE                                                     00480064
+.*                                                                      00520064
+.* STATUS - OS/VS2 MVS SYSTEM CONTROL PROGRAM 2                @G64QPSJ 00560064
+.*                                                                      00650064
+.* FUNCTION -                                                           00700064
+.*       THE EDTGEN MACRO IS USED TO GENERATE THE STAGE II JOBSTREAM    00750064
+.*       TO BUILD THE ALLOCATION DEVICE TABLES.  THIS INCLUDES          00800064
+.*       THE INPUT AND OUTPUT CLASSES FOR THE STAGE II JOB STREAM,      00850064
+.*       AND THE DESTINATION DATA SET FOR THE NEW TABLES.               00900064
+.*                                                                      00950064
+.* OPERATION -                                                          01000064
+.*       . VERIFY THAT NEITHER THE EDTGEN NOR GENERATE MACROS           01050064
+.*         HAVE BEEN INVOKED PREVIOUSLY.                                01100064
+.*                                                                      01150064
+.*       . VERIFY THE INPUT PARAMETERS SPECIFIED BY THE USER.           01200064
+.*                                                                      01250064
+.*       . INITIALIZE THE INTERNAL PARAMETERS REQUIRED FOR              01300064
+.*         SUCCESSFUL OPERATION OF THE INTERNAL MACROS.                 01350064
+.*                                                                      01400064
+.*       . INVOKE THE INTERNAL MACROS TO BUILD THE ASSEMBLY AND         01450064
+.*         LINKEDIT STEPS FOR THE ALLOCATION TABLES.                    01500064
+.*                                                                      01550064
+.* NOTES - N/A                                                          01600064
+.*                                                                      01650064
+.* DEPENDENCIES -                                                       01700064
+.*            . THE SGIEI1IO INTERNAL MACRO DOES NOT REQUIRE ANY        01750064
+.*              INPUT EXCEPT:                                           01800064
+.*                    CHANNEL                                           01850064
+.*                    IODEVICE                                          01900064
+.*                    UNITNAME                                          01950064
+.*                                                                      02000064
+.* MODULE TYPE - MACRO                                                  02050064
+.*                                                                      02100064
+.* ENTRY POINT - N/A                                                    02150064
+.*                                                                      02200064
+.* INPUT - THE FOLLOWING MAY BE SPECIFIED AS PARAMETERS TO EDTGEN       02250064
+.*           . &DSN      - OUTPUT DATA SET FOR NEW ALLOCATION TABLES    02300064
+.*           . &DSNVOL   - SERIAL NUMBER & UNIT TYPE OF &DSN DATA SET   02350064
+.*           . &OBJDSN   - PARTITIONED DATA SET TO BE USED FOR THE      02400064
+.*                         STORAGE OF OBJECT MODULES ASSEMBLED DURING   02450064
+.*                         STAGE II.                                    02500064
+.*           . &ID       - USER ID FOR EDT                              02510064
+.*           . &CHECK    - VERIFICATION STEP REQUESTED                  02520064
+.*           . &DIAGNOS  - DIAGNOSTIC OVERRIDE REQUESTED                02550064
+.*           . &JCLASS   - JOB CLASS FOR STAGE II                       02600064
+.*           . &OCLASS   - OUTPUT CLASS FOR STAGE II                    02650064
+.*                                                                      02700064
+.* OUTPUT -                                                             02750064
+.*         THE OUTPUT FROM EDTGEN CONSISTS OF A JOB CALLED A STAGE II   02800064
+.*         INPUT DECK. WHEN THIS JOB IS RUN, A NEW SET OF ALLOCATION    02850064
+.*         TABLES IS CREATED.                                           02900064
+.*                                                                      02950064
+.* EXIT, NORMAL -                                                       03000064
+.*   CONDITION - NO ERRORS DETECTED OR DIAGNOSTICE OVERRIDE SPECIFIED   03050064
+.*   OUTPUT    - INFORMATIONAL MNOTES AND THE STAGE II JOB TO ASSEMBLE  03100064
+.*               AND LINKEDIT THE ALLOCATION TABLES.                    03150064
+.*               MNOTE IEIEDT013 ISSUED IF DIAGNOSTIC OVERRIDE          03200064
+.*               REQUESTED AND ERRORS ENCOUNTERED.                      03250064
+.*                                                                      03300064
+.* EXIT, ERROR -                                                        03350064
+.*   CONDITION - EDTGEN MACRO PREVIOUSLY INVOKED                        03400064
+.*   OUTPUT    - MNOTE IEIEDT000 ISSUED AND MACRO TERMINATED            03450064
+.*               UNLESS DIAGNOSTIC OVERRIDE SPECIFIED                   03500064
+.*                                                                      03550064
+.* EXIT, ERROR -                                                        03600064
+.*   CONDITION - GENERATE MACRO PREVIOUSLY INVOKED                      03650064
+.*   OUTPUT    - MNOTE IEIEDT001 ISSUED AND MACRO TERMINATED            03700064
+.*               UNLESS DIAGNOSTIC OVERRIDE SPECIFIED                   03750064
+.*                                                                      03800064
+.* EXIT, ERROR -                                                        03850064
+.*   CONDITION - &DSN PARAMETER LENGTH GREATER THAN 17                  03900064
+.*               OR NOT INDEXED.                                        03920064
+.*   OUTPUT    - MNOTE IEIEDT002 ISSUED AND MACRO TERMINATED            03950064
+.*               UNLESS DIAGNOSTIC OVERRIDE SPECIFIED                   04000064
+.*                                                                      04050064
+.* EXIT, ERROR -                                                        04100064
+.*   CONDITION - &DSNVOL VOLUME PARAMETER LENGTH IS GREATER THAN 6      04150064
+.*   OUTPUT    - MNOTE IEIEDT003 ISSUED AND MACRO TERMINATED            04200064
+.*               UNLESS DIAGNOSTIC OVERRIDE SPECIFIED                   04250064
+.*                                                                      04300064
+.* EXIT, ERROR -                                                        04350064
+.*   CONDITION - &DSNVOL UNIT PARAMETER IS NOT DIRECT ACCESS DEVICE     04400064
+.*   OUTPUT    - MNOTE IEIEDT004 ISSUED AND MACRO TERMINATED            04450064
+.*               UNLESS DIAGNOSTIC OVERRIDE SPECIFIED                   04500064
+.*                                                                      04550064
+.* EXIT, ERROR -                                                        04600064
+.*   CONDITION - &OBJDSN PARAMETER LENGTH IS LESS THAN 6 OR GREATER     04650064
+.*                   THAN 13 CHARACTERS                                 04700064
+.*               OR DOES NOT BEGIN WITH "SYS1."                         04750064
+.*   OUTPUT    - MNOTE IEIEDT005 ISSUED AND MACRO TERMINATED            04800064
+.*               UNLESS DIAGNOSTIC OVERRIDE SPECIFIED                   04850064
+.*                                                                      04900064
+.* EXIT, ERROR -                                                        04950064
+.*   CONDITION - &CHECK PARAMETER NOT "YES" OR "NO"                     04958064
+.*   OUTPUT    - MNOTE IEIEDT006 ISSUED.  DEFAULT OF YES                04966064
+.*               ASSUMED AND PROCESSING CONTINUES                       04974064
+.*                                                                      04982064
+.* EXIT, ERROR -                                                        04990064
+.*   CONDITION - &OCLASS PARAMETER IS NOT A-Z OR 0-9                    05000064
+.*   OUTPUT    - MNOTE IEIEDT008 ISSUED AND MACRO TERMINATED            05050064
+.*               UNLESS DIAGNOSTIC OVERRIDE SPECIFIED                   05100064
+.*                                                                      05150064
+.* EXIT, ERROR -                                                        05200064
+.*   CONDITION - &JCLASS PARAMETER IS NOT A-Z OR 0-9                    05250064
+.*   OUTPUT    - MNOTE IEIEDT009 ISSUED AND MACRO TERMINATED            05300064
+.*               UNLESS DIAGNOSTIC OVERRIDE SPECIFIED                   05350064
+.*                                                                      05400064
+.* EXIT, ERROR -                                                        05450064
+.*   CONDITION - &DIAGNOS PARAMETER NOT "YES" OR "NO"                   05500064
+.*   OUTPUT    - MNOTE IEIEDT010 ISSUED.  DEFAULT OF YES                05550064
+.*               ASSUMED AND PROCESSING CONTINUES                       05600064
+.*                                                                      05650064
+.* EXIT, ERROR -                                                        05700064
+.*   CONDITION - NO DIAGNOSTIC OVERRIDE SPECIFIED AND QUIT              05750064
+.*               SWITCH SET BEFORE EDTGEN INVOKED                       05800064
+.*   OUTPUT    - MNOTE IEIEDT011 ISSUED AND MACRO TERMINATED            05850064
+.*                                                                      05900064
+.* EXIT, ERROR -                                                        05950064
+.*   CONDITION - NO DIAGNOSTIC OVERRIDE SPECIFIED AND QUIT              06000064
+.*               SWITCH SET WITHIN EDTGEN                               06050064
+.*   OUTPUT    - MNOTE IEIEDT012 ISSUED AND MACRO TERMINATED            06100064
+.*                                                                      06150064
+.* EXTERNAL REFERENCES - SEE MACROS                                     06200064
+.*                                                                      06250064
+.* TABLES - SYSGEN GLOBAL DATA AREA (SGGBLPAK)                          06300064
+.*                                                                      06350064
+.* MACROS -                                                             06400064
+.*         SGGBLPAK - MACRO GLOBAL DATA AREA                            06450064
+.*         SGIEI1IO - VALIDATES IO DEVICES                              06500064
+.*         SGSETGPT - INITIALIZES PREFERENCE TABLE                      06520064
+.*         JOBCARD  - GENERATES INSTALLATION JOB CARD                   06550064
+.*         SGIEF213 - BUILDS ASSEMBLY STEPS FOR ALLOCATION TABLES       06600064
+.*                                                                      06700064
+.* CHANGE ACTIVITY - G64QPSJ                                            06750064
+.*                                                                      06800064
+.* MESSAGES (MNOTES) -                                                  06850064
+.*       IEIEDT000 EDTGEN MACRO PREVIOUSLY INVOKED                      06900064
+.*       IEIEDT001 GENERATE MACRO PREVIOUSLY INVOKED                    06950064
+.*       IEIEDT002 DATA SET NAME XXXXXXXX ON DSN PARAMETER INVALID      07000064
+.*                                          - REASON CODE               07050064
+.*       IEIEDT003 VOLUME SERIAL XXXXXX ON DSNVOL PARAMETER INVALID     07070064
+.*       IEIEDT004 DEVICE TYPE XXXXXXXX ON DSNVOL PARAMETER INVALID     07090064
+.*       IEIEDT005 DATA SET NAME XXXXXXXX ON OBJDSN PARAMETER INVALID   07110064
+.*                                          - REASON CODE               07130064
+.*       IEIEDT006 CHECK PARAMETER XXX INVALID                          07150064
+.*       IEIEDT008 OCLASS PARAMETER X INVALID                           07200064
+.*       IEIEDT009 JCLASS PARAMETER X INVALID                           07250064
+.*       IEIEDT010 DIAGNOS PARAMETER XXX INVALID                        07300064
+.*       IEIEDT011 QUIT SWITCH SET PRIOR TO EDTGEN MACRO                07350064
+.*       IEIEDT012 QUIT SWITCH SET IN EDTGEN MACRO                      07400064
+.*       IEIEDT013 DIAGNOSTIC OVERRIDE SPECIFIED                        07450064
+.*                 ERROR MESSAGES ARE INTERPRETED                       07500064
+.*                 AS WARNINGS                                          07550064
+.*                                                                      07600064
+.* SYSGEN - THIS MACRO RESIDES IN SYS1.AGENLIB                          07650064
+.*                                                                      07700064
+.********************************************************************** 07750064
+.*A 000000-999999                                              @G64QPSJ 07800064
+.********************************************************************** 07850064
+.*                         ***** MACRO VARIABLES *****                * 07900064
+.********************************************************************** 07950064
+         COPY  SGGBLPAK                   SYSGEN GLOBAL DATA AREA       08000064
+         LCLA  &I                         LOCAL INDEX COUNTER           08020064
+         LCLB  &QUITONB                   SAVE FOR GLOBAL QUIT SWITCH   08040064
+         LCLC  &UCBTYPE                   WORK AREA FOR DEVICE CLASS    08060064
+         LCLC  &RC                        RETURN CODE VALUE             08070064
+         LCLC  &IDTEMP                    WORK AREA FOR USER ID         08100064
+.********************************************************************** 08200064
+.*                         ***** ENTRY *****                          * 08250064
+.********************************************************************** 08300064
+         AIF   (&SGMENTB(84)).A0          EDTGEN PREVIOUSLY ENTERED?    08350064
+&SGMENTB(84)   SETB 1                     SET EDTGEN ENTRY SWITCH       08400064
+&QUITONB       SETB (&SGQUITB)            SAVE GLOBAL QUIT SWITCH VALUE 08450064
+&SGQUITB SETB  0                          TURN OFF GLOBAL QUIT SWITCH   08480064
+         AGO   .A1                        CHECK GENERATE IF ENTERED     08550064
+.A0      MNOTE 5,'* * * IEIEDT000 EDTGEN MACRO PREVIOUSLY INVOKED'      08600064
+&SGQUITB SETB  1                          SET QUIT SWITCH               08650064
+         AGO   .EXIT                      EXIT MACRO                    08700064
+.A1      AIF   (&SGMENTB(88)).A2          GENERATE PREVIOUSLY ENTERED?  08750064
+&SGMENTB(88)   SETB 1                     SET GENERATE ENTRY SWITCH     08800064
+         AGO   .A3                        CHECK DSN PARAMETER           08850064
+.A2      MNOTE 5,'* * * IEIEDT001 GENERATE MACRO PREVIOUSLY INVOKED'    08880064
+&SGQUITB SETB  1                          SET QUIT SWITCH               08910064
+         AGO   .EXIT                      EXIT MACRO                    08940064
+.A3      ANOP                                                           08970064
+         MNOTE *,'  ALLOCATION TABLE MACRO'                             09050064
+         MNOTE *,'     REPLACES GENERATE MACRO'                         09100064
+.********************************************************************** 09150064
+.*                         ***** DSN *****                            * 09200064
+.********************************************************************** 09250064
+.B0      ANOP                                                           09300064
+&RC      SETC  '1'                        INIT WRONG LENGTH RC          09310064
+         AIF   (K'&DSN GT 17 OR K'&DSN LT 3).B2   LENGTH INVALID?       09320064
+&RC      SETC  '2'                        INIT NOT INDEXED RC           09330064
+&I       SETA  1                          INIT INDEX FOR SCAN           09340064
+.B1      ANOP                                                           09350064
+&I       SETA  &I+1                       INCREMENT INDEX               09360064
+         AIF   (&I GT 9).B2               IF END, THEN ERROR            09370064
+         AIF   ('&DSN'(&I,1) NE '.').B1   IF NOT INDEXED, CONT SCAN     09380064
+&SGCTRLC(40)  SETC  '&DSN'(1,&I-1)        SET PREFIX VALUE              09384064
+&SGCTRLC(9)   SETC  '&DSN'(&I+1,17)       SET BASE NAME VALUE           09388064
+         AGO   .C0                        CHECK DSNVOL PARAMETER        09398064
+.B2      MNOTE 5,'* * * IEIEDT002 DATA SET NAME &DSN ON DSN PARAMETER IX09402064
+               NVALID - &RC'                                            09410064
+&SGQUITB SETB  1                          SET QUIT SWITCH               09550064
+.********************************************************************** 09600064
+.*                         ***** DSNVOL *****                         * 09650064
+.********************************************************************** 09700064
+.C0      ANOP                                                           09750064
+.*   CHECK FOR VALID VOLUME SERIAL                                      09800064
+         AIF   (T'&DSNVOL(1) NE 'O').C1   IF NO VOL SER SPECIFIED THEN  09850064
+&SGCTRLC(7)  SETC 'SYSRES'                SET DEFAULT VOL SER           09900064
+         AGO   .C2                        PROCESS UNIT TYPE             09950064
+.C1      AIF   (K'&DSNVOL(1) LE 6).C2     LENGTH VALID?                 10000064
+         MNOTE 5,'* * * IEIEDT003 VOLUME SERIAL &DSNVOL(1) ON DSNVOL PAX10050064
+               RAMETER INVALID'                                         10100064
+&SGQUITB SETB  1                          SET QUIT SWITCH               10150064
+.C2      ANOP                                                           10200064
+&SGCTRLC(7)  SETC '&DSNVOL(1)'            COPY SPECIFIED VOL SER        10250064
+.*   CHECK FOR VALID DIRECT ACCESS DEVICE TYPE                          10280064
+.*   BY SCANNING THE DEVICE INFORMATION TABLE(DIT)                      10287064
+.*   FOR A MATCHING GENERIC THAT IS DEFINED TO BE                       10294064
+.*   DIRECT ACCESS.                                                     10301064
+         AIF   (T'&DSNVOL(2) NE 'O').C3   IF NO UNIT SPECIFIED,         10310064
+&SGCTRLC(8)  SETC '3330'                  SET DEFAULT UNIT TYPE         10340064
+         AGO   .C6                        ISSUE INFO MNOTE              10370064
+.C3      ANOP                                                           10400064
+&SGCTRLC(8)  SETC '&DSNVOL(2)'            SAVE UNIT VALUE               10430064
+&I       SETA  1                          SET INDEX TO 1                10550064
+.C31     AIF   (&I GT &SGDITDA).C5        IF NO MORE ENTRIES, ERROR     10590064
+         AIF   ('&SGGNRIC(&I)' NE '&DSNVOL(2)').C32                     10630064
+&UCBTYPE SETC  '&SGDTYPC(&I)'(5,2)        OBTAIN DEVICE CLASS           10670064
+         AIF   ('&UCBTYPE' EQ '20').C6    IF DA UNIT, CONTINUE          10710064
+         AGO   .C5                        ISSUE ERROR MNOTE             10750064
+.C32     ANOP                                                           10850064
+&I       SETA  &I+1                       INCREMENT INDEX               10900064
+         AGO   .C31                       TRY NEXT DEVICE ENTRY         10950064
+.C5      MNOTE 5,'* * * IEIEDT004 DEVICE TYPE &DSNVOL(2) ON DSNVOL PARAX11050064
+               METER INVALID'                                           11090064
+&SGQUITB SETB  1                          SET QUIT SWITCH               11130064
+.C6      ANOP                                                           11170064
+         MNOTE *,'  ALLOCATION TABLES WILL RESIDE IN &DSN ON &SGCTRLC(7X11210064
+               ) UNIT &SGCTRLC(8)'                                      11230064
+.********************************************************************** 11290064
+.*                         ***** OBJDSN *****                         * 11330064
+.********************************************************************** 11370064
+.D0      ANOP                                                           11410064
+&RC      SETC  '1'                        INIT WRONG LENGTH RC          11450064
+         AIF   (K'&OBJDSN LT 6 OR K'&OBJDSN GT 13).D1 LENGTH INVALID?   11490064
+&RC      SETC  '2'                        INIT BAD PREFIX RC            11530064
+         AIF   ('&OBJDSN'(1,5) NE 'SYS1.').D1  PREFIX INVALID?          11570064
+&SGCTRLC(5)    SETC '&OBJDSN'(6,8)        SET UP OBJDSN                 11590064
+         AGO   .E0                        CHECK OCLASS PARAMETER        11610064
+.D1      MNOTE 5,'* * * IEIEDT005 DATA SET NAME &OBJDSN ON OBJDSN PARAMX11650064
+               ETER INVALID - &RC'                                      11690064
+&SGQUITB SETB  1                          SET QUIT SWITCH               11850064
+.********************************************************************** 11900064
+.*                         ***** OCLASS *****                         * 11950064
+.********************************************************************** 12000064
+.E0  AIF (('&OCLASS' LT 'A') OR ('&OCLASS' GT 'I' AND '&OCLASS' LT 'J')X12050064
+               OR ('&OCLASS' GT 'R' AND '&OCLASS' LT 'S') OR ('&OCLASS'X12100064
+               GT 'Z' AND '&OCLASS' LT '0') OR ('&OCLASS' GT '9')).E1   12150064
+&SGCTRLC(41)   SETC  '&OCLASS'            SET OCLASS PARAMETER          12200064
+         AGO   .F0                        CHECK JCLASS PARM             12250064
+.E1      MNOTE 5,'* * * IEIEDT008 OCLASS PARAMETER &OCLASS INVALID'     12300064
+&SGQUITB SETB  1                          SET QUIT SWITCH               12350064
+.********************************************************************** 12400064
+.*                         ***** JCLASS *****                         * 12450064
+.********************************************************************** 12500064
+.F0  AIF (('&JCLASS' LT 'A') OR ('&JCLASS' GT 'I' AND '&JCLASS' LT 'J')X12550064
+               OR ('&JCLASS' GT 'R' AND '&JCLASS' LT 'S') OR ('&JCLASS'X12600064
+               GT 'Z' AND '&JCLASS' LT '0') OR ('&JCLASS' GT '9')).F1   12650064
+&SGCTRLC(42)   SETC  '&JCLASS'            SET JCLASS PARAMETER          12700064
+         AGO   .G0                        CHECK DIAGNOSE PARAMETER      12750064
+.F1      MNOTE 5,'* * * IEIEDT009 JCLASS PARAMETER &JCLASS INVALID'     12800064
+&SGQUITB SETB  1                          SET QUIT SWITCH               12850064
+.********************************************************************** 12900064
+.*                         ***** DIAGNOS *****                        * 12950064
+.********************************************************************** 12990064
+.G0      AIF   ('&DIAGNOS' EQ 'NO').H0    IF NO SPECIFIED, CONTINUE     13030064
+         AIF   ('&DIAGNOS' EQ 'YES').G1   IF YES SPECIFIED, SET SWITCH  13070064
+         MNOTE 5,'* * * IEIEDT010 DIAGNOS PARAMETER &DIAGNOS INVALID'   13110064
+.G1      ANOP                                                           13150064
+&SGMENTB(16) SETB 1                       SET DIAGNOSTIC OVERRIDE ON    13190064
+.********************************************************************** 13300064
+.*                         ***** INTERNAL MACROS *****                * 13350064
+.********************************************************************** 13400064
+.H0      ANOP                                                           13450064
+&SGACTR  SETA  600000                     SET ACTR COUNTER              13500064
+*** SGIEI1IO *** SYSGEN                                   *** SC1S1 *** 13550064
+         SGIEI1IO                                                       13600064
+*** SGSETGPT *** SYSGEN                                   *** SC1S1 *** 13610064
+         SGSETGPT                                                       13620064
+         AIF   (&SGMENTB(16)).H2          OVERRIDE SWITCH?              13650064
+         AIF   (&QUITONB).I1              QUIT SWITCH BEFORE EDTGEN?    13700064
+         AIF   (&SGQUITB).I2              QUIT SWITCH SET IN EDTGEN?    13730064
+         AGO   .H4                                                      13800064
+.H2      AIF   (NOT(&QUITONB OR &SGQUITB)).H4                           13850064
+         MNOTE 7,'* * * IEIEDT013 DIAGNOSTIC OVERRIDE SPECIFIED'        13900064
+         MNOTE 7,'* * *           ERROR MESSAGES ARE INTERPRETED'       13950064
+         MNOTE 7,'* * *           AS WARNINGS'                          14000064
+.H4      ANOP                                                           14050064
+&SGQUITB SETB  0                    TURN OFF QUIT SWITCH TO FORCE       14090064
+.*                                  COMPLETE TABLE GENERATION           14130064
+&SGCPRGB(8)    SETB  1              INDICATE VS2-2                      14180064
+&IDTEMP  SETC  '&ID'(1,8)           TRUNCATE USER ID TO 8 CHARACTERS    14190064
+.********************************************************************** 14250064
+.*                                                                      14300064
+.*          CALL JOBCARD MACRO FOR ALLOCATION JOB                       14350064
+.*                                                                      14400064
+.********************************************************************** 14450064
+         JOBCARD                                                        14500064
+*** SGIEF213 *** SCHEDULER ALLOCATION TABLE ASSEMBLIES    *** SC1S5 *** 14600064
+         SGIEF213  ID=&IDTEMP                                           14650064
+*** SCHEDULER ALLOCATION TABLE LINKEDITS                                14660064
+&SGCTRLC(1)    SETC  ',LIST'        DEFAULT LIST LKED OPTION            14670064
+&SGCTRLC(2)    SETC  ',XREF'        DEFAULT XREF LKED OPTION            14671064
+&SGCTRLC(6)    SETC  ''             SET NULL PROGRAM NAME               14672064
+&SGCTRLC(10)   SETC  ',LET'         DEFAULT LET LKED OPTION             14673064
+&SGCTRLC(11)   SETC  ',RENT'        DEFAULT RENT LKED OPTION            14674064
+         COPY  SGLEDPK1                                                 14680064
+         COPY  SGLEDPK2                                                 14690064
+         PUNCH '     INCLUDE SYSPUNCH(IEFWMAS1)'                        14700064
+         PUNCH '  NAME DEVNAMET(R)'                                     14710064
+         PUNCH '     INCLUDE SYSPUNCH(IEFDEVPT)'                        14720064
+         PUNCH '  NAME IEFDEVPT(R)'                                     14730064
+         PUNCH '     INCLUDE SYSPUNCH(IEFWMSKA)'                        14740064
+         PUNCH '  NAME DEVMASKT(R)'                                     14750064
+         PUNCH '     INCLUDE SYSPUNCH(IEFEDTTB)'                        14760064
+         PUNCH '  ENTRY EDTTAB'                                         14770064
+         PUNCH '  NAME IEFEDTTB(R)'                                     14780064
+         PUNCH '/*'                                                     14785064
+         AIF   ('&CHECK' EQ 'NO').EXIT    VERIFICATION REQUESTED?       14790064
+&SGCTRLA(1)  SETA  &SGCTRLA(1)+1          INCREMENT STEP INDEX          14800064
+ PUNCH '//SG&SGCTRLA(1)      EXEC  PGM=IEFEB400'                        14810064
+ PUNCH '//SYSPRINT DD  SYSOUT=&SGCTRLC(41)'                             14820064
+ PUNCH '//EDT      DD  VOL=SER=&SGCTRLC(7),UNIT=&SGCTRLC(8),DISP=SHR,'  14830064
+ PUNCH '//             DSN=&DSN'                                        14840064
+ PUNCH '//SYSABEND DD  SYSOUT=&SGCTRLC(41)'                             14850064
+         AGO   .EXIT                                                    15050064
+.********************************************************************** 15100064
+.*        QUIT SWITCH MESSAGE PROCESSING                                15150064
+.********************************************************************** 15200064
+.I1      ANOP                                                           15250064
+        MNOTE 7,'* * * IEIEDT011 QUIT SWITCH SET PRIOR TO EDTGEN MACRO' 15300064
+         AGO   .EXIT                                                    15350064
+.I2      ANOP                                                           15400064
+         MNOTE 7,'* * * IEIEDT012 QUIT SWITCH SET IN EDTGEN MACRO'      15450064
+.EXIT    ANOP                                                           15500064
+         MEND                                                           15550064

@@ -1,0 +1,156 @@
+         MACRO                                                          00400021
+         SGIEC5PS                                                       00800021
+*                                                                       00850000
+*                                                                       00900000
+*                 VS2 RELEASE 01 DELETIONS/CHANGES                      00950000
+*0000                                                            YM2707 00960000
+*0000004500-005500                                               YM3037 01000000
+         COPY  SGGBLPAK                                                 01200021
+         AIF   (NOT &GETB(3)).ALLGEN                                    01600021
+         MEXIT                                                          02400021
+.ALLGEN  ANOP                                                           02800021
+         PUNCH ' COPY OUTDD=&SGCTRLC(36),INDD=AOSD0 '                   03200000
+*  THESE ARE OPEN CLOSE END OF VOLUME MODULES                           22000021
+*                                                                       22400021
+         PUNCH ' SELECT MEMBER=((IGC00020,IGC0002{)) '                  22800021
+         PUNCH ' SELECT MEMBER=(IGC0001I) '                             23200021
+         PUNCH ' SELECT MEMBER=(IGC0002B) '                             23600021
+         PUNCH ' SELECT MEMBER=(IGC0002C) '                             23650000
+         PUNCH ' SELECT MEMBER=(IGC0003A) '                             24400021
+         PUNCH ' SELECT MEMBER=(READPSWD) '                             24800021
+         PUNCH ' SELECT MEMBER=(SECLOADA) '                             25600021
+         PUNCH ' SELECT MEMBER=(IGG0196M) '                             26400021
+         PUNCH ' SELECT MEMBER=(IGC0005E) '                             26800021
+         PUNCH ' SELECT MEMBER=(IGC0006D) '                             27200021
+*                                                                YM2707 27210000
+* MEMBER IFG019RA                                                YM2707 27250000
+         PUNCH ' SELECT MEMBER=(IFG019RA) '                             27300000
+         PUNCH ' SELECT MEMBER=(IFG0190P) '                             27600021
+*                                                                       28000021
+* MEMBER IFG0190R AND ALIAS 200R 550R                                   28400021
+         PUNCH ' SELECT MEMBER=(IFG0190R,IFG0200R,IFG0550R) '           28800021
+         PUNCH ' SELECT MEMBER=(IFG0193A,IFG0193B,IFG0193D) '           29200021
+*                                                                       29600021
+* MEMBER IFG0193C AND ALIAS OMODVOL1                                    30000021
+         PUNCH ' SELECT MEMBER=(IFG0193C,OMODVOL1) '                    30400021
+         PUNCH ' SELECT MEMBER=(IFG0193E,IFG0194A,IFG0194C,IFG0194D) '  30800021
+         PUNCH ' SELECT MEMBER=(IFG0194E,IFG0194F,IFG0194G,IFG0194H) '  31200021
+         PUNCH ' SELECT MEMBER=(IFG0194I,IFG0195A,IFG0195B) '           31600021
+*                                                                       32000021
+* MEMBER IFG0194J AND ALIAS IGG0190A                                    32400021
+         PUNCH ' SELECT MEMBER=(IFG0194J,IGG0190A) '                    32800021
+         PUNCH ' SELECT MEMBER=(IFG0195C,IFG0195E,IFG0195G) '           33200021
+*                                                                       33600021
+* MEMBER IFG0195D AND ALIAS IGG0190B                                    34000021
+         PUNCH ' SELECT MEMBER=(IFG0195D,IGG0190B) '                    34400021
+         PUNCH ' SELECT MEMBER=(IFG0195H,IFG0195J,IFG0195K,IFG0195M) '  34800021
+         PUNCH ' SELECT MEMBER=(IFG0195N,IFG0195O,IFG0195P,IFG0195T) '  35200021
+         PUNCH ' SELECT MEMBER=(IFG0195U,IFG0196J,IFG0196K) '           35600021
+         PUNCH ' SELECT MEMBER=(IFG0196L,IFG0196M,IFG0196N) '           36000021
+    AIF  (&SGSCHDB(44) LT 1).SKIPTSO                                    36010000
+*                                                                M0455  36050021
+* TSO MEMBER IFG0195V                                            M0455  36100021
+*                                                                M0455  36150021
+         PUNCH ' SELECT MEMBER=(IFG0195V) '                      M0455  36250021
+*                                                                M0455  36300021
+.SKIPTSO ANOP                                                    M0455  36350021
+*                                                                       36400021
+* MEMBER IFG0196O AND ALIAS IGG0190R                                    36800021
+         PUNCH ' SELECT MEMBER=(IFG0196O,IGG0190R) '                    37200021
+         PUNCH ' SELECT MEMBER=(IFG0196Q,IFG0196T,IFG0196U,IFG0196V) '  37600021
+*                                                                       38000021
+* MEMBER IFG0197A AND ALIAS IGG0190S                                    38400000
+         PUNCH ' SELECT MEMBER=(IFG0197A,IGG0190S) '                    38800000
+         PUNCH ' SELECT MEMBER=(IFG0196W) '                             38850000
+         PUNCH ' SELECT MEMBER=(IFG0196X,IFG0198N) '                    39200021
+*                                                                       39600021
+* MEMBER IFG0199B AND ALIAS 209B 239B 559B                              40000021
+         PUNCH ' SELECT MEMBER=(IFG0199B,IFG0209B,IFG0239B,IFG0559B) '  40400021
+*                                                                       40800021
+* MEMBER IFG0199D AND ALIAS 209D 239D 559D                              41200021
+         PUNCH ' SELECT MEMBER=(IFG0199D,IFG0209D,IFG0239D,IFG0559D) '  41600021
+*                                                                       42000021
+* MEMBER IFG0199E AND ALIAS 209E 239E 559E                              42400021
+         PUNCH ' SELECT MEMBER=(IFG0199E,IFG0209E,IFG0239E,IFG0559E) '  42800021
+*                                                                       43200021
+* MEMBER IFG0199R AND ALIAS 209R 239R 559R                              43600021
+         PUNCH ' SELECT MEMBER=(IFG0199R,IFG0209R,IFG0239R,IFG0559R) '  44000021
+*                                                                       44400021
+* MEMBER IFG019TR AND ALIAS 20TR 23TR 55TR                              44800021
+         PUNCH ' SELECT MEMBER=(IFG019TR,IFG020TR,IFG023TR,IFG055TR) '  45200021
+*                                                                       45600021
+* MEMBER IFG0200P AND ALIAS IGG0206M                                    46000021
+         PUNCH ' SELECT MEMBER=(IFG0200P,IGG0206M) '                    46400021
+         PUNCH ' SELECT MEMBER=(IFG0200V,IFG0200W,IFG0200Z) '           46800021
+*                                                                       46850000
+* MEMBER IFG0200X AND ALIAS IGG0200F IGG0200G                           46900000
+         PUNCH ' SELECT MEMBER=(IFG0200X,IGG0200F,IGG0200G) '           48000000
+         PUNCH ' SELECT MEMBER=(IFG0200Y) '                             48050000
+         PUNCH ' SELECT MEMBER=(IFG0201R) '                             48400021
+         PUNCH ' SELECT MEMBER=(IFG0202A) '                             48800021
+*                                                                       49200021
+* MEMBER IFG0202B AND ALIAS IGG0200B IFG0232Y IFG0556B                  49600021
+         PUNCH ' SELECT MEMBER=(IFG0202B,IGG0200B,IFG0232Y,IFG0556B) '  50000021
+         PUNCH ' SELECT MEMBER=(IFG0202C,IFG0202D,IFG0202E,IFG0202F) '  50400021
+*                                                                       50800021
+* MEMBER IFG0202H AND ALIAS IFG0553B                                    51200021
+         PUNCH ' SELECT MEMBER=(IFG0202H,IFG0553B) '                    51600021
+         PUNCH ' SELECT MEMBER=(IFG0202G,IFG0202I,IFG0202J) '           52000021
+         PUNCH ' SELECT MEMBER=(IFG0202K,IFG0202L) '                    52400021
+         PUNCH ' SELECT MEMBER=(IFG0230P,IFG0232D,IFG0232G,IFG0232J) '  52800021
+         PUNCH ' SELECT MEMBER=(IFG0232M,IFG0232S) '                    52900021
+*                                                                       53000021
+* MEMBER IFG0232Z AND ALIAS IFG0202U                                    53100021
+         PUNCH ' SELECT MEMBER=(IFG0232Z,IFG0202U) '                    53200021
+         PUNCH ' SELECT MEMBER=(IFG0550P,IFG0551B,IFG0551D,IFG0551F) '  53600021
+         PUNCH ' SELECT MEMBER=(IFG0551H,IFG0551J) '                    54000021
+*                                                                       54400021
+* MEMBER IFG0551L AND ALIAS IGG0551A                                    54800021
+         PUNCH ' SELECT MEMBER=(IFG0551L,IGG0551A) '                    55200021
+*                                                                       55600021
+* MEMBER IFG0551N AND ALIAS IGG0551B                                    56000021
+         PUNCH ' SELECT MEMBER=(IFG0551N,IGG0551B) '                    56400021
+         PUNCH ' SELECT MEMBER=(IFG0551P,IFG0551R,IFG0551V,IFG0551Z) '  56800021
+*                                                                       57200021
+* MEMBER IFG0551T AND ALIAS IGG0550F                                    57600021
+         PUNCH ' SELECT MEMBER=(IFG0551T,IGG0550F) '                    58000021
+*                                                                       58400021
+* MEMBER IFG0551X AND ALIAS IGG0550P                                    58800021
+         PUNCH ' SELECT MEMBER=(IFG0551X,IGG0550P) '                    59200021
+         PUNCH ' SELECT MEMBER=(IFG0552B,IFG0552D,IFG0552F,IFG0552H) '  59600021
+*                                                                       60000021
+* MEMBER IFG0552J AND ALIAS EMODVOL1                                    60400021
+         PUNCH ' SELECT MEMBER=(IFG0552J,EMODVOL1) '                    60800021
+*                                                                       61200021
+* MEMBER IFG0552N AND ALIAS IGG0550H                                    61600021
+         PUNCH ' SELECT MEMBER=(IFG0552N,IGG0550H) '                    62000021
+*                                                                       62400021
+* MEMBER IFG0552R AND ALIAS IGG0550B                                    62800021
+         PUNCH ' SELECT MEMBER=(IFG0552R,IGG0550B) '                    63200021
+         PUNCH ' SELECT MEMBER=(IFG0552L,IFG0552P,IFG0552T) '           63600021
+         PUNCH ' SELECT MEMBER=(IFG0552V,IFG0552X,IFG0552Z,IFG0553D) '  64000021
+         PUNCH ' SELECT MEMBER=(IFG0553F,IFG0553P,IFG0553R) '           64400021
+*                                                                       64800021
+* MEMBER IFG0553H AND ALIAS IGG0550D                                    65200021
+         PUNCH ' SELECT MEMBER=(IFG0553H,IGG0550D) '                    65600021
+         PUNCH ' SELECT MEMBER=(IFG0553T,IFG0553V,IFG0553X,IFG0553Z) '  66000021
+         PUNCH ' SELECT MEMBER=(IFG0554B,IFG0554D,IFG0554J,IFG0554N) '  66400021
+*                                                                       66800021
+* MEMBER IFG0554L AND ALIAS IFG0195F                                    67200021
+         PUNCH ' SELECT MEMBER=(IFG0554L,IFG0195F) '                    67600021
+*                                                                       68000021
+* MEMBER IFG0554P AND ALIAS IGG0550K                                    68400021
+         PUNCH ' SELECT MEMBER=(IFG0554P,IGG0550K) '                    68800021
+*                                                                       69200021
+* MEMBER IFG0554R AND ALIAS IGG0552K                                    69600021
+         PUNCH ' SELECT MEMBER=(IFG0554R,IGG0552K) '                    70000021
+*                                                                       70400021
+* MEMBER IFG0554T AND ALIAS IGG0550S                                    70800021
+         PUNCH ' SELECT MEMBER=(IFG0554T,IGG0550S) '                    71200021
+         PUNCH ' SELECT MEMBER=(IFG0554V,IFG0554X,IFG0554Z,IFG0555B) '  71600021
+         PUNCH ' SELECT MEMBER=(IFG0555D,IFG0555F,IFG0555H) '           72000021
+*                                                                       72400021
+* MEMBER IFG0555J AND ALIAS IFG0196P                                    72800021
+         PUNCH ' SELECT MEMBER=(IFG0555J,IFG0196P) '                    73200021
+*                                                                       73600021
+.MEND    MEND                                                           87200021

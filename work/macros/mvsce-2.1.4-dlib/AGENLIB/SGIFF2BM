@@ -1,0 +1,129 @@
+         MACRO                                                          00050000
+         SGIFF2BM                                                       00100000
+.*      CHANGES INCLUDED:                                               00150000
+.*         ZA03965,ZA04860,ZA04890,ZA11738,ZA41749,ZA44878.             00200000
+.*                                                                      00250000
+.*  THE FOLLOWING APAR FIXES HAVE BEEN REMOVED BY ZA32710   R22 ZA32710 00300000
+.*      ZA03965, ZA04860, ZA04890, ZA11738                  R22 ZA32710 00350000
+.*               ZA15420    ALSO ZA40AKLG                   R22 ZA15420 00400000
+.*               ZA36692                                                00450000
+.*               ZA38865                                                00500000
+.*  APAR FIX OZ32710 HAS BEEN REWORKED BY OZ41749.                      00550000
+.*                                                                      00600000
+.*                                                                      00650000
+.*                                                                      00700000
+.*                                                                      00750000
+.*                                                                      00800000
+.*                                                                      00850000
+.*                                                                      00900000
+         COPY  SGGBLPAK                      GET GLOBAL VARIABLES       00950000
+         LCLA  &CU,&CU1,&LTBLIX,&DADRIX,&NUM2840,&CUSTBL(255)  @ZA41749 01000000
+         LCLA  &NUMMOD1,&DEV,&CUSTBLX                          @ZA41749 01050000
+         LCLA  &BFRSIZE(311),&EXPBFR(255)                      @ZA41749 01100000
+         LCLA  &A,&B,&C,&D,&E,&F,&G,&NUMSEC1(255)              @ZA41749 01150000
+         LCLA  &NUMSEC2(255),&NUMSEC3(255)                     @ZA41749 01200000
+         LCLA  &NUMSEC4(255),&NUMSEC5(255)                     @ZA41749 01250000
+         LCLA  &NUMSEC6(255),&NUMSEC7(255)                     @ZA41749 01300000
+         LCLA  &NUMSEC8(255),&NUMDEV(255)                      @ZA41749 01350000
+         LCLA  &CONVCON                                        @ZA41749 01400000
+         LCLB  &ASMBLY                                                  01450000
+         LCLC  &DEVADR,&TBLNAME(311)                           @ZA41749 01500000
+         LCLC  &CUADDR,&LSTCUNM,&DVADR                         @ZA41749 01550000
+         ACTR  28692                         SET ACTR VALUE R22 ZA38865 01600000
+&LTBLIX  SETA  256                      SET LOCAL TBL INDEX    @ZA41749 01650000
+&NUMMOD1 SETA  0                             SET 2250 MOD 1 COUNTER     01700000
+&DEV     SETA  1                             SET DEV ADR SW SUBSCRIPT   01750000
+.BM04    ANOP                                                           01800000
+&DADRIX  SETA  &SGDASPA(&DEV)                DVC ADDR INDX  E12 ZA15420 01850000
+         AIF   (NOT &SGDT05B(&DADRIX)).BM22  CHK FOR GRAPHIC DEVICE     01900000
+         AIF   (NOT &SGDU01B(&DADRIX)).BM22  CHECK FOR 2250'S     AOS/1 01950000
+         AIF   (&SGDM01B(&DADRIX)).BM04B     CHK FOR MODEL 1            02000000
+         AIF   (&SGDM03B(&DADRIX)).BM07      CHECK FOR MOD 3      AOS/1 02050000
+         AGO   .BM22                         BRANCH TO CHK IF LAST DEV  02100000
+.BM04B   ANOP                                                           02150000
+&ASMBLY  SETB  1                             SET ASSEMBLY SWITCH        02200000
+&CONVCON SETA  &SGDADRA(&DEV)-&SGDADRA(&DEV)/4096*4096 ISOLATE ADD AHD4 02250000
+         CONVERT TO=EBCDIC,VALUE=&CONVCON,DIGITS=3 CONV DEV NAME   AHD4 02300000
+&TBLNAME(&LTBLIX) SETC '&EBCDIC'             SET DEV NAME IN NAME TABLE 02350000
+         AIF   (&SGDF05B(&DADRIX)).BT04C     CHK FOR BUFFER SIZE        02400000
+         AIF   (&SGDF06B(&DADRIX)).BM05      CHK FOR BUFFER SIZE        02450000
+&BFRSIZE(&LTBLIX) SETA 0                     SET BUF TABLE TO 0         02500000
+         AGO   .BM06                         BRANCH TO INCREM CTR & IDX 02550000
+.BT04C   ANOP                                                           02600000
+&BFRSIZE(&LTBLIX) SETA 4096                  SET BUF TABLE TO 4096      02650000
+         AGO   .BM06                         BRANCH TO INCREM CTR & IDX 02700000
+.BM05    ANOP                                                           02750000
+&BFRSIZE(&LTBLIX) SETA 8192                  SET BUF TABLE TO 8192      02800000
+.BM06    ANOP                                                           02850000
+&NUMMOD1 SETA  &NUMMOD1+1                    INCREMENT 2250 MOD 1 CTR   02900000
+&LTBLIX  SETA  &LTBLIX+1                     INCREMENT LOCAL TBLES INDX 02950000
+         AGO   .BM22                         BRANCH TO CHK IF LAST DEV  03000000
+.BM07    ANOP                                                           03050000
+&CU      SETA  &SGDADRA(&DEV)/4096-&SGDADRA(&DEV)/1048576*256      000A 03100000
+&CUSTBL(&CU) SETA  &CU                       SET CU SUBSCPT    @ZA41749 03150000
+&BFRSIZE(&CU) SETA  32768                    SET BUFR SIZE     @ZA41749 03200000
+&ASMBLY  SETB  1                             SET ASSEMBLY SWITCH        03250000
+&CU1     SETA  &CU+1000                      GET LEADING ZEROS @ZA41749 03300000
+&TBLNAME(&CU) SETC 'P'.'&CU1'(2,3)           SET PCU NAME      @ZA41749 03350000
+&EXPBFR(&CU) SETA &SGCUN1A(&DADRIX)          SET EXP BUF SIZE  @ZA41749 03400000
+         AIF   (&NUMDEV(&CU) EQ 0).BM13  CHK CORRECT TBL SLOT  @ZA41749 03450000
+         AIF   (&NUMDEV(&CU) EQ 1).BM14  CHK CORRECT TBL SLOT  @ZA41749 03500000
+         AIF   (&NUMDEV(&CU) EQ 2).BM15  CHK CORRECT TBL SLOT  @ZA41749 03550000
+         AIF   (&NUMDEV(&CU) EQ 3).BM16  CHK CORRECT TBL SLOT  @ZA41749 03600000
+         AGO   .BM22               NO SLOTS OPEN, BR TO CHK IF LAST DEV 03650000
+.BM13    ANOP                                                           03700000
+&NUMSEC1(&CU) SETA &SGDNBFA(&DADRIX)    SET NUMSECT FOR DEV 1  @ZA41749 03750000
+         AGO   .BM21                         BRANCH TO INC DEV CTR      03800000
+.BM14    ANOP                                                           03850000
+&NUMSEC2(&CU) SETA &SGDNBFA(&DADRIX)    SET NUMSECT FOR DEV 2  @ZA41749 03900000
+         AGO   .BM21                         BRANCH TO INC DEV CTR      03950000
+.BM15    ANOP                                                           04000000
+&NUMSEC3(&CU) SETA &SGDNBFA(&DADRIX)    SET NUMSECT FOR DEV 3  @ZA41749 04050000
+         AGO   .BM21                         BRANCH TO INC DEV CTR      04100000
+.BM16    ANOP                                                           04150000
+&NUMSEC4(&CU) SETA &SGDNBFA(&DADRIX)    SET NUMSECT FOR DEV 4  @ZA41749 04200000
+.BM21    ANOP                                                           04250000
+&NUMDEV(&CU) SETA &NUMDEV(&CU)+1   INC DEV COUNT FOR THIS CU   @ZA41749 04300000
+.BM22    AIF   (&DEV EQ &SGCNTRA(3)).BM23    CHK FOR LAST DEVICE        04350000
+&DEV     SETA  &DEV+1                        INCREM DEV ADR SW SUBSCRIP 04400000
+         AGO   .BM04                         BRANCH TO PROCESS NEXT DEV 04450000
+.BM23    AIF   (NOT &ASMBLY).BM29            CHK IF ASSEMBLY SW IS SET  04500000
+&SGCTRLC(6) SETC 'IFFBDA'                    SET CSECT NAME             04550000
+         COPY  SGASMPAK                      COPY ASSEMBLY MACRO        04600000
+         PUNCH 'IFFBDA   CSECT'                                         04650000
+         AIF   (&SGCNTRA(2) EQ 0).BM26      CHK FOR NO 2840    @ZA44878 04700000
+&LTBLIX  SETA  1                             SET LOCAL TABLE INDEX      04750000
+.BM24    ANOP                                                           04800000
+&CUADDR  SETC  '&TBLNAME(&LTBLIX)'           SET BUFFER TABLE NAME      04850000
+         AIF   ('&CUADDR' EQ '').INCRNDX     SKIP IF NO ENTRY  @ZA41749 04900000
+&A       SETA  &BFRSIZE(&LTBLIX)             SET BUFFER SIZE            04950000
+&B       SETA  &EXPBFR(&LTBLIX)              SET EXP BUFF REQUIREMENT   05000000
+&C       SETA  &NUMDEV(&LTBLIX)              SET DEVICE COUNT           05050000
+&D       SETA  &NUMSEC1(&LTBLIX)                  SET SECTIONS VALUE    05100000
+&E       SETA  &NUMSEC2(&LTBLIX)                  SET SECTIONS VALUE    05150000
+&F       SETA  &NUMSEC3(&LTBLIX)                  SET SECTIONS VALUE    05200000
+&G       SETA  &NUMSEC4(&LTBLIX)                  SET SECTIONS VALUE    05250000
+.*                                                                      05300000
+         PUNCH 'IFFB&CUADDR SGIFF0BT &A,&B,&C,&D,&E,&F,&G'     @ZA41749 05350000
+.* &CUADDR IS 'P'| |PCU. 2250-1'S USE THREE DIGIT              @ZA41749 05400000
+.* DEVICE ADDRESSES WHICH WILL NOT CLASH WITH IT.              @ZA41749 05450000
+.INCRNDX ANOP                                                  @ZA44878 05500000
+         AIF   (&LTBLIX EQ 255).BM26         CHK LAST PCU VAL  @ZA44878 05550000
+&LTBLIX  SETA  &LTBLIX+1                     INCREMENT LOCAL TABLE INDX 05600000
+         AGO   .BM24                         BRANCH TO PROCESS NEXT CU  05650000
+.BM26    ANOP                                                           05700000
+         AIF   (&NUMMOD1 EQ 0).BM28          CHK FOR NO MOD 1           05750000
+&LTBLIX  SETA  256                SET LOCAL TABLE INDEX        @ZA41749 05800000
+.BM27    ANOP                                                           05850000
+&DEVADR  SETC  '&TBLNAME(&LTBLIX)'           SET BUFFER TABLE NAME      05900000
+&A       SETA  &BFRSIZE(&LTBLIX)             SET BUFFER SIZE            05950000
+         PUNCH 'IFFB&DEVADR SGIFF0BT &A'                                06000000
+         AIF   (&NUMMOD1 EQ 1).BM28          CHK FOR LAST 2250          06050000
+&NUMMOD1 SETA  &NUMMOD1-1                    DECREMENT 2250 MOD 1 CTR   06100000
+&LTBLIX  SETA  &LTBLIX+1                     INCREM LOCAL TABLE INDEX   06150000
+         AGO   .BM27                         BRANCH TO PROCESS NEXT DEV 06200000
+.BM28    ANOP                                                           06250000
+         PUNCH '         END'                                           06300000
+         PUNCH '/*'                                                     06350000
+.BM29    ANOP                                                           06400000
+         MEND                                                   ZA36692 06450000

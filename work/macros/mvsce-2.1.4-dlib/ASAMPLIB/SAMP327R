@@ -1,0 +1,453 @@
+//SAMP327R JOB BTAM,MSGLEVEL=1                                          00200000
+// EXEC ASMFCLG                                                         00400000
+//ASM.SYSIN DD *                                                        00600000
+*********************************************************************** 00630000
+*          APARS FIXED:                                               * 00660000
+*         AZ09358  (04/07/76)        AZ09359  (04/07/76)              * 00690000
+*         AZ10036  (04/14/76)                                         * 00720000
+*********************************************************************** 00750000
+SAMP327R CSECT                                                          00800000
+         SPACE 5                                                        01000000
+*        THIS IS A SAMPLE PROGRAM FOR A REMOTE 3270 INFORMATION DISPLAY 01200000
+*  SYSTEM.  PLEASE NOTE THAT THIS PROGRAM HAS BEEN WRITTEN FOR TWO      01400000
+*  3270 DEVICES, BOTH OF WHICH MUST BE 3277 DISPLAYS.                   01600000
+*                                                                       01800000
+*        THIS PROGRAM IS SET UP FOR AN ASSEMBLE, LINKEDIT AND GO .      02000000
+*    THE DD3270 DD CARD WILL HAVE TO BE CHANGED TO REFLECT THE          02200000
+*    ADDRESS OF THE BSC LINE IN THE TRANSMISSION CONTROL UNIT .         02400000
+*                                                                       02600000
+*        IT MAY BE NECESSARY TO ALTER THIS SAMPLE PROBLEM SO THAT IT    02800000
+*  MAY FUNCTION WITH MORE THAN TWO DEVICES.  TO DO SO, THE FOLLOWING    03000000
+*  CARDS MUST BE CHANGED IN THE SOURCE DECK:                            03200000
+*                           1. DFTRMLST MACROS  (SELDSPLY)              03400000
+*                                               (SPECPOL)               03600000
+*                                                                       03800000
+*        THIS SAMPLE PROGRAM IS RESTRICTED TO A MAXIMIM OF 32 DEVICES,  04000000
+*  ALL OF WHICH MUST BE ATTACHED TO ONE REMOTE 3271 CONTROL UNIT.       04200000
+         EJECT                                                          04400000
+*        REGISTER EQUATES                                               04600000
+REGZERO  EQU   0                   REGISTER 0                           04800000
+REG2     EQU   2                   WORK REGISTER                        05000000
+WORKREG  EQU   3                   WORK REGISTER                        05200000
+MSGADDR  EQU   4                   ADDR OF OUTPUT MESSAGE               05400000
+MSGLEN   EQU   5                   LENGTH OF OUTPUT MESSAGE             05600000
+SELREG   EQU   6              SPEC POLL ADDR OF 3270 DISPLAY            05800000
+FMTREG   EQU   8                   FORMAT IDENTIFIER                    06000000
+DSPTABRG EQU   9                   ADDRESS OF DISPLAY TABLE             06200000
+LNKREG   EQU   10                  LINKAGE REGISTER                     06400000
+BASEREG  EQU   11                  FIRST BASE REG                       06600000
+BASEREG2 EQU   12                  SENOND BASE REG                      06800000
+PTRTAB   EQU   13                  PRINTER RLN TABLE ADDRESS            07000000
+RTNCDRG  EQU   15                  RETURN CODE REGISTER                 07200000
+         SPACE 5                                                        07400000
+*        EQUATES                                                        07600000
+ZERO     EQU   0                   LENGTH OF 0                          07800000
+ONE      EQU   1                   LENGTH OF 1                          08000000
+TWO      EQU   2                   LENGTH OF 2                          08200000
+THREE    EQU   3                   LENGTH OF 3                          08400000
+FOUR     EQU   4                   FORMAT 1 IDENTIFIER                  08600000
+FIVE     EQU   5              LENGTH OF TERMINAL LIST ENTRIES           08800000
+SIX      EQU   6                   LENGTH OF 6                          09000000
+TP06     EQU   6                   TP CODE OF 6                         09200000
+SEVEN    EQU   7                   LENGTH OF 7                          09400000
+EIGHT    EQU   8                   FORMAT 2 IDENTIFIER                  09600000
+TP11     EQU   X'11'               TP CODE OF 11                        09800000
+SIXTN    EQU   16                  LENGTH IF 16                         10000000
+TP20     EQU   X'20'                                                    10200000
+TWENTY4  EQU   24             LENGTH OF 24                              10400000
+TWENTY8  EQU   28                  LENGTH OF 28                         10600000
+TIMEOUT  EQU   X'01'               DECB TIME OUT FLAG                   10800000
+SSMSG    EQU   X'10'               SENSE/STATUS RECEIVED FLAG           11000000
+EOTRSPTX EQU   X'40'               EOT RESPONSE TO TEXT                 11200000
+EOTRCVD  EQU   X'40'               EOT RECEIVED FLAG                    11400000
+FOURTY1  EQU   X'41'               I/O ERROR COMP CODE                  11600000
+PA1      EQU   X'6C'               ATTENTION ID FOR PA1 KEY             11800000
+CLEAR    EQU   X'6D'               ATTENTION ID FOR CLEAR KEY           12000000
+PA2      EQU   X'6E'               ATTENTION ID FOR PA2 (CNCL) KEY      12200000
+ENTER    EQU   X'7D'               ATTENTION ID FOR ENTER KEY           12400000
+SEVENF   EQU   X'7F'               NORMAL COMPLETION CODE               12600000
+LAST     EQU   X'80'          SIGNIFIES END OF POLLING LIST             12800000
+         EJECT                                                          13000000
+         SAVE  (14,12)                                                  13200000
+         BALR  BASEREG,0           ESTABLISH                            13400000
+         USING *,BASEREG,BASEREG2            ADDRESSABILITY             13600000
+         LR    BASEREG2,BASEREG    INITIALIZE                           13800000
+         AH    BASEREG2,H4096                 SECOND BASE               14000000
+         ST    13,SAVE+4                                                14200000
+         LA    13,SAVE                                                  14400000
+         B     BEGIN          BRANCH AROUND PATCH                       14420000
+         DC    CL8'SAMP327R'       EYE CATCHER                          14440000
+         DC    CL8'&SYSDATE'       DATE LAST ASSEMBLY                   14460000
+         DC    S(*)                BASE/DISP OF PATCH                   14480000
+         DC    32X'00'             PATCH AREA                           14500000
+         DS    0H                                                       14520000
+BEGIN    EQU   *                                                        14540000
+*        OPEN THE LINE GROUP                                            14600000
+         OPEN  (DCBR)    OPEN THE DCB                                   14800000
+         TM    DCBR+48,X'10'     TEST FOR SUCCESSFUL OPEN               15000000
+         BO    START        YES, GO TO START                            15200000
+         WTO   'OPEN FAILURE'                                           15400000
+         B     ABNORMAL                                                 15600000
+START    LA    DSPTABRG,DSPTAB     ADDRESS THE DISPLAY TABLE            15800000
+         LA    SELREG,SELDSPLY     GET SELECTION ADDRESS OF             16000000
+*                                       FIRST 3270 DISPLAY              16200000
+         SPACE 5                                                        16400000
+INITIAL   EQU  *                                                        16600000
+         LA    MSGADDR,FORMAT0     ADDR OF FORMAT0 MESSAGE              16800000
+         LA    MSGLEN,FMT0SZ       LENGTH OF MESSAGE                    17000000
+         BAL   LNKREG,WRITETI      GO WRITE FORMAT 0                    17200000
+         BAL   LNKREG,RETCODE      CHECK RETURN CODE                    17400000
+         BAL   LNKREG,WAITD        WAIT FOR COMPLETION                  17600000
+         LA    SELREG,FIVE(SELREG) ADDR NEXT SPECIFIC POLL ENTRY        17800000
+         TM    ZERO(SELREG),LAST   END OF SELECTION LIST                18000000
+         BO    READ                YES, GO ISSUE A READ                 18200000
+         LA    SELREG,ONE(SELREG)  ADDR OF NEXT ENTRY                   18400000
+         B     INITIAL             NO, WRITE TO REMAINING DISPLAYS      18600000
+         SPACE 5                                                        18800000
+READ     EQU   *                                                        19000000
+         LA    MSGADDR,INAREA      ADDR OF INPUT AREA                   19200000
+         XC    INAREA(255),INAREA  CLEAR INPUT                          19400000
+         XC    INAREA+255(43),INAREA+255      AREA             @ZA09359 19600000
+         BAL   LNKREG,READTI       GO READ A DISPLAY                    19800000
+         BAL   LNKREG,RETCODE      CHECK RETURN CODE                    20000000
+         BAL   LNKREG,WAITD        WAIT FOR COMPLETION                  20200000
+         MVC   CUDVSAVE(TWO),INAREA+TWO SAVE CU,DV                      20400000
+         TM    DECBD+TWENTY4,X'02'           STATUS MSG RECIEVED        20600000
+         BO    SSCHECK                                                  20800000
+         LA    SELREG,SPECPOL      ADDR OD SPEC POLL TABLE              21000000
+         SR    REG2,REG2           CLEAR REGISTER 2                     21200000
+CHKIT    EQU   *                                                        21400000
+         CLC    ONE(TWO,SELREG),INAREA+TWO CHECK FOR CU,DV              21600000
+         BE    FNDSEL              YES, GET SELECTION ADDR              21800000
+         LA    REG2,ONE(REG2)      ADD ONE TO INDEX                     22000000
+         LA    SELREG,FIVE(SELREG)  POINT TO END OF ENTRY      @ZA10036 22200000
+         TM    ZERO(SELREG),LAST   END OF LIST                          22400000
+         BO    ABNORMAL                                                 22600000
+         LA    SELREG,ONE(SELREG)  POINT TO NEXT ENTRY         @ZA10036 22700000
+         B     CHKIT               NO KEEP CHECKING                     22800000
+FNDSEL   EQU   *                                                        23000000
+         STC   REG2,INDEX          SAVE INDEX BYTE                      23200000
+         LR    WORKREG,REG2        GET INDEX INTO ODD REGISTER          23400000
+         M     REG2,SIXL           MULTIPLY INDEX BY 6                  23600000
+         LR    REG2,WORKREG        RE-ESTABLISH INDEX REG               23800000
+         LA    SELREG,SELDSPLY     GET SELECTION ADDRES                 24000000
+         AR    SELREG,REG2         ADDR OUTPUT ENTRY IN TABLE           24200000
+         ST    SELREG,SELSAVE      SAVE SELECTION ADDR                  24400000
+         SR    FMTREG,FMTREG       CLEAR FORMAT REG                     24600000
+         LA    DSPTABRG,DSPTAB     ADDR OF DISPLAY TABLE                24800000
+         IC    REG2,INDEX                                      @ZA09358 24900000
+         IC    FMTREG,ZERO(DSPTABRG,REG2)  GET FORMAT ID                25000000
+         B     FORMATBR(FMTREG)                                         25200000
+         SPACE 5                                                        25400000
+FORMATBR EQU   *                                                        25600000
+         B     FMT0                FORMAT 0 ON SCREEN                   25800000
+         B     FMT1                FORMAT 1 ON SCREEN                   26000000
+         B     FMT2                FORMAT 2 ON SCREEN                   26200000
+         SPACE 5                                                        26400000
+FMT0     EQU   *                                                        26600000
+*   VERIFY THE NAME AND SOCIAL SECURITY NUMBER. ASSUMING THAT THEY      26800000
+* ARE VALID, WE SHALL CONTINUE PROCESSING.                              27000000
+FMT01    EQU   *                                                        27200000
+         LA    FMTREG,FOUR         GET FORMAT 1 ID                      27400000
+         STC    FMTREG,ZERO(DSPTABRG,REG2) STORE IN DISPLAY TABLE       27600000
+         LA    MSGADDR,FORMAT1     ADDR OF FORMAT1 MESSAGE              27800000
+         LA    MSGLEN,FMT1SZ       LENGTH OF MESSAGE                    28000000
+         BAL    LNKREG,WRITETI     GO WRITE FORMAT 1                    28200000
+         BAL   LNKREG,RETCODE      CHECK RETURN CODE                    28400000
+         BAL   LNKREG,WAITD        WAIT FOR COMPLETION                  28600000
+         B     READ                GO READ ANOTHER DISPLAY              28800000
+         SPACE 5                                                        29000000
+FMT1     EQU   *                                                        29200000
+         CLI   INAREA+FOUR,ENTER   ENTER KEY INTERRUPT                  29400000
+         BE    ENTERINT            YES, GO UPDATE RECORDS               29600000
+         CLI   INAREA+FOUR,PA1     PA1 KEY INTERRUPT                    29800000
+         BE    PA1INT              YES, GO MAKE HARD COPY               30000000
+         CLI   INAREA+FOUR,PA2     PA2 OR CNCL KEY INTERRUPT            30200000
+         BE    PA2INT              YES, GO DEACTIVATE TERMINAL          30400000
+         CLI   INAREA+FOUR,CLEAR   CLEAR KEY INTERRUPT                  30600000
+         BE    CLEARINT            YES, GO WRITE FORMAT 2               30800000
+         B     READ                IGNORE THE INTERRUPT AND GO READ     31000000
+         SPACE 5                                                        31200000
+ENTERINT EQU   *                                                        31400000
+*   CREATE A NEW OR UPDATE AN EXISTING ENTRY IN YOUR PERMANENT          31600000
+* DATA SET.                                                             31800000
+         LA    MSGADDR,ERALUNP     ADDR OF MESSAGE                      32000000
+         LA    MSGLEN,ERALUNPL     LENGTH OF MESSAGE                    32200000
+         BAL   LNKREG,WRITETI      GO ERASE ALL UNPROTECTED DATA        32400000
+         BAL   LNKREG,RETCODE      CHECK RETURN CODE                    32600000
+         BAL   LNKREG,WAITD        WAIT FOR COMPLETION                  32800000
+         B     READ                GO READ ANOTHER DISPLAY              33000000
+PA1INT   EQU   *                                                        33200000
+         B     NOPRINT             NO PRINTER DEFINED                   33400000
+PA2INT   EQU   *                                                        33600000
+*   DETERMINE IF ANY DATA WAS ENTERED. IF SO, CREATE A NEW OR UPDATE    33800000
+* AN EXISTING ENTRY IN YOUR PERMANENT DATA SET. NOW DEACTIVATE THE      34000000
+* TERMINAL.                                                             34200000
+PA2INT1  EQU   *                                                        34400000
+         LA    MSGADDR,CLOSEMG     ADDR OF CLOSE MSG                    34600000
+         LA    MSGLEN,CLOSEMGL     LENGTH OF MSG                        34800000
+         LA    SELREG,SELDSPLY     ADDR OF SELECTION TABLE              35000000
+ONCEMORE EQU   *                                                        35200000
+         BAL   LNKREG,WRITETI      GO WRITE ENDING MSG                  35400000
+         BAL   LNKREG,RETCODE      CHECK RETURN CODE                    35600000
+         BAL   LNKREG,WAITD        WAIT FOR COMPLETION                  35800000
+         LA    SELREG,FIVE(SELREG) POINT TO INDICATOR BYTE              36000000
+         TM    ZERO(SELREG),LAST   END OF SELECTION LIST                36200000
+         BO    CLOSE               YES, TERMINATE PROGRAM               36400000
+         LA    SELREG,ONE(SELREG)  POINT TO NEXT ADDRESS                36600000
+         B     ONCEMORE            NO, WRITE ANOTHER MESSAGE            36800000
+CLEARINT EQU   *                                                        37000000
+         LA    MSGADDR,FORMAT2     ADDR OF FORMAT 2 MSG                 37200000
+         LA    MSGLEN,FMT2SZ       LENGTH OF MSG                        37400000
+         BAL   LNKREG,WRITETI      GO WRITE FORMAT 2                    37600000
+         BAL   LNKREG,RETCODE      CHECK RETURN CODE                    37800000
+         BAL   LNKREG,WAITD        WAIT FOR COMPLETION                  38000000
+         LA    FMTREG,EIGHT        GET FORMAT 2 ID                      38200000
+         STC   FMTREG,ZERO(DSPTABRG,REG2) STORE IN DISPLAY TABLE        38400000
+         B     READ                GO READ ANOTHER DISPLAY              38600000
+FMT2     EQU   *                                                        38800000
+         CLI   INAREA+FOUR,ENTER   ENTER KEY INTERRUPT                  39000000
+         BE    FMT01               YES, GO WRITE FORMAT 1               39200000
+         CLI   INAREA+FOUR,PA1     PA1 KEY INTERRUPT                    39400000
+         BE    PA1INT              YES, GO MAKE HARD COPY               39600000
+         CLI   INAREA+FOUR,PA2     PA2 OR CNCL KEY INTERRUPT            39800000
+         BE    PA2INT1             YES, GO DEACTIVATE TERMINAL          40000000
+         CLI   INAREA+FOUR,CLEAR   CLEAR KEY INTERRUPT                  40200000
+         BE    CLEARINT            GO WRITE FORMAT 2                    40400000
+         B     READ                GO READ ANOTHER DISPLAY              40600000
+NOPRINT  EQU   *                                                        40800000
+         LA    MSGADDR,NOPTR       ADDR OF NO PRINTER MSG               41000000
+         LA    MSGLEN,NOPTRL       LENGTH OF MSG                        41200000
+         BAL   LNKREG,WRITETI      GO WRITE MSG                         41400000
+         BAL   LNKREG,RETCODE      CHECK RETURN CODE                    41600000
+         BAL   LNKREG,WAITD        WAIT FOR COMPLETION                  41800000
+         B     READ                GO READ ANOTHER DISPLAY              42000000
+         EJECT                                                          42200000
+RETCODE  EQU   *                                                        42400000
+         B     RTNCDTAB(RTNCDRG)   BRANCH TO CORRESPONDING ENYRY        42600000
+RTNCDTAB EQU   *                                                        42800000
+         B     RTNCD0              I/O SUCCESSFULLY INITIATED           43000000
+         B     RTNCD4              DTFBT BUSY                           43200000
+         B     RTNCD8              INVALID RLN                          43400000
+         B     RTNCDC              INVALID TYPE CODE                    43600000
+         B     RTNCD10             ALL SKIP BITS ON                     43800000
+         B     RTNCD14             LINE ERROR AT OPEN                   44000000
+         B     RTNCD18             NO BUFFERS                           44200000
+         B     RTNCD1C             NO BUFFER POOL                       44400000
+         B     RTNCD20             NO BUFFER MANAGEMENT                 44600000
+         B     RTNCD24             BSC USAGE COUNT EXCEEDED             44800000
+RTNCD0   EQU   *                                                        45000000
+         BR    LNKREG              RETURN                               45200000
+RTNCD4   EQU   *                                                        45400000
+         S     LNKREG,EIGHT8       SUBTRACT 8 FROM RETURN ADDR          45600000
+         BR    LNKREG                 TO RETRY THE OPERATION            45800000
+RTNCD8   EQU   *                                                        46000000
+RTNCDC   EQU   *                                                        46200000
+         B     ABNORMAL            THIS CONDITION SHOULD NOT OCCUR      46400000
+RTNCD10  EQU   *                                                        46600000
+         B     CLOSE               ALL TERMINALS, TERMINATE             46800000
+RTNCD14  EQU   *                                                        47000000
+         B     ABNORMAL            THIS CONDITION SHOULD NOT OCCUR      47200000
+RTNCD18  EQU   *                                                        47400000
+         B     ABNORMAL            THIS CONDITION SHOULD NOT OCCUR      47600000
+RTNCD1C  EQU   *                                                        47800000
+         B     ABNORMAL            THIS CONDITION SHOULD NOT OCCUR      48000000
+RTNCD20  EQU   *                                                        48200000
+         B     ABNORMAL            THIS CONDITION SHOULD NOT OCCUR      48400000
+RTNCD24  EQU   *                                                        48600000
+         B     ABNORMAL            THIS CONDITION SHOULD NOT OCCUR      48800000
+         EJECT                                                          49000000
+WAITD    EQU   *                                                        49200000
+         WAIT  ECB=DECBD                                                49400000
+CHK7FCC  EQU   *                                                        49600000
+         CLI   DECBD,SEVENF        NORMAL COMPLETION CODE               49800000
+         BNE   CHK41CC             NO, KEEP CHECKING                    50000000
+         BR    LNKREG              RETURN                               50200000
+CHK41CC  EQU   *                                                        50400000
+         CLI   DECBD,FOURTY1       I/O ERROR COMP CODE                  50600000
+         BNE   ABNORMAL          INVALID COMP CODE                      50800000
+         CLI   DECBD+TWENTY8,TP06  TP CODE OF 6                         51000000
+         BNE   CKTP20              NO, CHECK OTHER TP CODES             51200000
+         TM    DECBD+SIXTN,TIMEOUT DID DEVICE TIME OUT                  51400000
+         BNO   ABNORMAL            NO, TERMINATE                        51600000
+         S     LNKREG,TWELVE       SUBTRACR 12 FROM RETURN ADDR         51800000
+         BR    LNKREG              TO RETRY THE OPERATION               52000000
+CKTP20   EQU   *                                                        52200000
+         CLI   DECBD+TWENTY8,TP20  TP CODE OF 20                        52400000
+         BNE   CKTP11              NO, CHECK OTHERS                     52600000
+CHKEOT   EQU   *                                                        52800000
+         TM    DECBD+TWENTY4,EOTRSPTX EOT RESPONSE TO TEXT              53000000
+         BNO   ABNORMAL            NO, TERMINATE                        53200000
+         B     READ                YES, GO GET SENSE STATUS MESSAGE     53400000
+CKTP11   EQU   *                                                        53600000
+         CLI   DECBD+TWENTY8,TP11  TP CODE OF 11                        53800000
+         BNE   ABNORMAL            NO, TERMINATE                        54000000
+         B     CHKEOT              YES, CHECK EOT RESPONSE TO TEXT      54200000
+CHKTP20  EQU   *                                                        54400000
+         CLI   DECBD+TWENTY8,TP20  TP CODE OF 20                        54600000
+         BNE   ABNORMAL            NO, TERMINATE                        54800000
+         WRITE DECBD,TR,DCBR,INAREA,,,1,MF=E                            55000000
+         B     CHK7FCC             CHECK COMPLETION CODE                55200000
+         EJECT                                                          55400000
+CLOSE    EQU   *                                                        55600000
+         CLOSE (DCBR)    CLOSE THE DCB                                  55800000
+         L    13,SAVE+4                                                 56000000
+         RETURN (14,12)                                                 56200000
+         SPACE 5                                                        56400000
+SSCHECK  EQU   *                                                        56600000
+*     INVESTIGATE THE SENSE/STATUS BYTES SENT BY THE REMOTE DEVICE.     56800000
+*  IF RECOVERY IS POSSIBLE, ATTEMPT TO DO SO.  WE SHALL ASSUME THAT     57000000
+*  THE ERROR IS UNRECOVERABLE AND TERMINATE.                            57200000
+         SPACE 5                                                        57400000
+ABNORMAL EQU   *                                                        57600000
+         ABEND 1,DUMP     TAKE A DUMP                                   57800000
+         L    13,SAVE+4                                                 58000000
+         RETURN (14,12)                                                 58200000
+         EJECT                                                          58400000
+FORMAT0  EQU   *                                                        58600000
+         DC    X'0227F5'           STX,ESC,E/W                          58800000
+         DC    X'C71DC811C150'     WCC, SF = PROT, SBA = 80             59000000
+         DC    C'GOOD MORNING.'                                         59200000
+         DC    X'1D6011C15F'       SF = PROT, SBA = 94                  59400000
+         DC    C'THIS BEGINS THE DEMONSTRATION '                        59600000
+         DC    C'OF THE  OS/BTAM '                                      59800000
+         DC    X'1DC8'             SF = PROT                            60000000
+         DC    C'3270 '                                                 60200000
+         DC    X'1D60'             SF = PROT                            60400000
+         DC    C'REMOTE SAMPLE PROGRAM.'                                60600000
+         DC    X'1D6011C3F0'       SF = PROT, SBA = 240                 60800000
+         DC    C'ENTER THE FOLLOWING:'                                  61000000
+         DC    X'1D6011C4D8'       SF = PROT, SBA = 280                 61200000
+         DC    C'NAME:'                                                 61400000
+         DC    X'1D4013'           SF = UNPROT, IC                      61600000
+         DC    X'11C5401D60'       SBA = 320,SF = PROT                  61800000
+         DC    C'SOC SEC NUM:'                                          62000000
+         DC    X'1D40'             SF = UNPROT                          62200000
+         DC    X'11C5E81D60'       SBA = 360,SF = PROT                  62400000
+         DC    X'03'               ETX                                  62600000
+FMT0SZ   EQU   *-FORMAT0                                                62800000
+         SPACE 5                                                        63000000
+FORMAT1  EQU   *                                                        63200000
+         DC    X'0227F5'           STX,ESC,E/W                          63400000
+         DC    X'C71D60114040'     WCC, SF = PROT, SBA = 0              63600000
+         DC    C'ENTER DATA REQUESTED BELOW:'                           63800000
+         DC    X'11C150'           SBA = 80                             64000000
+         DC    C'NAME:'                                                 64200000
+         DC    X'1D401311C1F81D60' SF = UNPROT, IC, SBA = 120,          64400000
+*                                   SF = PROT                           64600000
+         DC    C'ADDR:'                                                 64800000
+         DC    X'1D4011C2601D60'   SF = UNPROT, SBA = 160, SF = PROT    65000000
+         DC    C'CITY:'                                                 65200000
+         DC    X'1D4011C3C81D60'   SF = UNPROT, SBA = 200, SF = PROT    65400000
+         DC    C'STATE:'                                                65600000
+         DC    X'1D4011C3E41D60'   SF = UNPROT, SBA = 228, SF = PROT    65800000
+         DC    C'ZIP:'                                                  66000000
+         DC    X'1D5011C3F01D6011C4D8'  SF = UNPROT, SBA = 240,         66200000
+*                                  SF = PROT, SBA = 280                 66400000
+         DC    C'ENTER KEY: ENTER DATA;'                                66600000
+         DC    X'11C540'           SBA = 320                            66800000
+         DC    C'PA1 KEY: PRINT DATA;'                                  67000000
+         DC    X'11C5E8'           SBA = 360                            67200000
+         DC    C'PA2 (CNCL) KEY: DEACTIVATE TERMINAL;'                  67400000
+         DC    X'11C650'           SBA = 400                            67600000
+         DC    C'CLEAR KEY: CONTROL OPTIONS;'                           67800000
+         DC    X'03'               ETX                                  68000000
+FMT1SZ   EQU   *-FORMAT1                                                68200000
+         EJECT                                                          68400000
+FORMAT2  EQU   *                                                        68600000
+         DC    X'0227F5'           STX,ESC,E/W                          68800000
+         DC    X'C711404013'       WCC, SBA = 0, IC                     69000000
+         DC    C'XXYY4CCDD'                                             69200000
+         DC    X'1140E8'           SBA = 40                             69400000
+         DC    C'TO REQUEST BTAM OLT -- ENTER REQUEST FOR TEST MESS'    69600000
+         DC    C'AGE OVER SAMPLE FORMAT ABOVE:  XX=TEST NO. (23-28)'    69800000
+         DC    C'  YY=REPEATS (01-99) CCDD=ADDRESS OF TARGET DEVICE'    70000000
+         DC    C'THEN HIT ERASE EOF AND THEN TEST REQ. USE CLEAR KE'    70200000
+         DC    C'Y TO RESUME AFTER TEST.'                               70400000
+         DC    X'11C3C8'           SBA = 200                            70600000
+         DC    X'03'               ETX                                  70800000
+FMT2SZ   EQU   *-FORMAT2                                                71000000
+         SPACE 5                                                        71200000
+NOPTR    EQU   *                                                        71400000
+         DC    X'0227F1'           STX,ESC,WRITE                        71600000
+         DC    X'C61DC811C6F8'     WCC, SF = PROT, SBA = 440            71800000
+         DC    C'NO PRINTER DEFINED FOR THIS PROGRAM'                   72000000
+         DC    X'03'               ETX                                  72200000
+NOPTRL   EQU   *-NOPTR                                                  72400000
+         SPACE 5                                                        72600000
+CLOSEMG  EQU   *                                                        72800000
+         DC    X'0227F5'           STX,ESC,E/W                          73000000
+         DC    X'C71140401DC8'     WCC, SBA = 0, SF = PROT              73200000
+         DC    C'     THE REMOTE 3270 SAMPLE PROGRAM HAS CONCLUDED.'    73400000
+         DC    X'03'               ETX                                  73600000
+CLOSEMGL EQU   *-CLOSEMG                                                73800000
+         SPACE 5                                                        74000000
+         SPACE 5                                                        74200000
+READBUF  EQU   *                                                        74400000
+         DC    X'0227F203'         STX,ESC,RD BUF,ETX                   74600000
+READBUFL EQU   *-READBUF                                                74800000
+         SPACE 5                                                        75000000
+ERALUNP  EQU   *                                                        75200000
+         DC    X'02276F03'         STX,ESC,EAU,ETX                      75400000
+ERALUNPL EQU   *-ERALUNP                                                75600000
+         EJECT                                                          75800000
+*        READ AND WRITE MACROS                                          76000000
+         DS    0F                                                       76200000
+WRITETI  EQU   *                                                        76400000
+         WRITE DECBD,TI,DCBR,(MSGADDR),(MSGLEN),(SELREG),1,MF=E         76600000
+         BR    LNKREG                                                   76800000
+         SPACE 5                                                        77000000
+READTI   EQU   *                                                        77200000
+         READ  DECBD,TI,DCBR,INAREA,300,POLDSPLY,1,MF=E                 77400000
+         BR    LNKREG                                                   77600000
+         EJECT                                                          77800000
+READTRV  EQU   *                                                        78000000
+         READ  DECBD,TRV,DCBR,INAREA,256,,1,MF=E                        78200000
+         BR    LNKREG              RETURN                               78400000
+         SPACE 5                                                        78600000
+WRITETIV EQU   *                                                        78800000
+         WRITE DECBD,TIV,DCBR,(INAREA,(MSGADDR)),(256,(MSGLEN)),       X79000000
+               (SELREG),1,MF=E                                          79200000
+         BR    LNKREG              RETURN                               79400000
+         EJECT                                                          79600000
+READTT   EQU   *                                                        79800000
+         READ  DECBD,TT,DCBR,(MSGADDR),256,,1,MF=E                      80000000
+         BR    LNKREG              RETURN                               80200000
+         EJECT                                                          80400000
+*        DISPLAY SELECTION ADDRESSES                                    80600000
+*   THE CURRENT MACRO OPERANDS ARE FOR TWO REMOTE 3270 DISPLAYS;        80800000
+*                          1. 0TH CU, 0TH DEV (60604040)                81000000
+*                          2. 0TH CU, 1ST DEV (6060C1C1)                81200000
+SELDSPLY DFTRMLST OPENLST,(606040402D,6060C1C12D)                       81400000
+         SPACE 5                                                        81600000
+*    DISPLAY SPECIFIC POLLING ADDRESSES                                 81800000
+*   THE CURRENT MACRO OPERANDS ARE FOR TWO REMOTE 3270 DISPLAYS:        82000000
+*                          1. 0TH CU, 0TH DEV (40404040)                82200000
+*                          2. 0TH CU, 1ST DEV (4040C1C1)                82400000
+SPECPOL  DFTRMLST OPENLST,(404040402D,4040C1C12D)                       82600000
+         EJECT                                                          82800000
+*        DISPLAY GENERAL POLLING ADDRESS                                83000000
+POLDSPLY DFTRMLST AUTOWLST,(40407F7F2D,3737373737)                      83200000
+         SPACE 5                                                        83400000
+         SPACE 5                                                        83600000
+*        CONSTANTS                                                      83800000
+H4096    DC    H'4096'                                                  84000000
+EIGHT8   DC    F'8'                CONSTANT OF 8                        84200000
+DSPTAB   DC    XL32'0'             DISPLAY TABLE                        84400000
+TWELVE   DC    F'12'               LENGTH OF 12                         84600000
+INDEX    DC    X'00'               INDEX BYTE SAVE AREA                 84800000
+CUDVSAVE DC    X'0000'             CU,DV SAVEAREA                       85000000
+SELSAVE  DC    F'0'                                                     85200000
+SIXL     DC    F'6'                                                     85400000
+INAREA   DC    500F'0'             INPUT AREA                           85600000
+INAREAL  EQU   *-INAREA                                                 85800000
+SAVE     DC    18F'0'                                                   86000000
+         DS    0F                                                       86200000
+DECBADDR DC    X'80'                                                    86400000
+         DC    AL3(DECBD)                                               86600000
+DCBR     DCB   DSORG=CX,MACRF=(R,W),DDNAME=DD3270,EROPT=T,DEVD=BS,     X86800000
+               MODE=(,,A,A),CODE=EBCDIC                                 87000000
+         READ  DECBD,TI,DCBR,MF=L                                       87200000
+         END                                                            87400000
+//GO.DD3270 DD UNIT=050                                                 87600000
+//GO.SYSABEND DD SYSOUT=A                                               87800000

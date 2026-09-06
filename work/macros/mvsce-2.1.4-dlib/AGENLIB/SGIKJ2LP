@@ -1,0 +1,13 @@
+         MACRO                                                          07000000
+         SGIKJ2LP                                                       14000000
+         COPY  SGGBLPAK                                                 21000000
+         LCLA  &A,&B,&C                                                 28000000
+&SGCTRLC(6) SETC 'IKJEFLP0'                                             35000000
+&A       SETA  &SGTSOPA(1)*100                                          35050000
+&B       SETA  &SGTSOPA(2)*100                                          49000000
+&C       SETA  &SGTSOPA(3)                                              56000000
+         COPY  TSASMPAK                                                 63000000
+         PUNCH '         SGIKJ0LP &A,&B,&C'                             70000000
+         PUNCH '         END'                                           77000000
+         PUNCH '/*'                                                     84000000
+         MEND                                                           91000000

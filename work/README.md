@@ -9,7 +9,8 @@ comes off a pristine MVS/CE release on `mvsdev`, over the `dasdpdsu` path in
 | Path | What it is |
 |---|---|
 | `macinv.txt` | Inventory of all 1,888 `++MAC` elements in `MVSSRC.BLD.SMP.LIB`, with TXLIB, SYSLIB, DISTLIB and the `ASSEM(...)` list — a macro → module map for the whole system |
-| `macros/mvsce-2.1.4/` | 1,268 macros from a pristine MVS/CE 2.1.4 — `SYS1.MACLIB` + `SYS1.AMODGEN` + `SYS1.APVTMACS`. The baseline of every measurement, and **known to be incomplete**: 79 of the 554 `AMACLIB` elements in `macinv.txt` are not in it |
+| `macros/mvsce-2.1.4-dlib/` | **The macro set to use.** The distribution libraries off `smp000.3350`, one directory each. `AHELP` and `ASAMPLIB` are in there for completeness but must stay **out of the assembler's search path** — they are help text and samples, and 14 of their names collide with real macros |
+| `macros/mvsce-2.1.4-target/` | The earlier corpus: `SYS1.MACLIB` + `AMODGEN` + `APVTMACS`, a **mix of target and distribution level**. Kept only so the measurements of 2026-09-05 stay reproducible. Do not build on it |
 | `macros/tape/` | 114 private macros out of `MVSSRC.BLD.NEW.ASM`, tape file 3. Provenance: Dave Kreiss' package |
 | `macros/mirror/` | 319 private macros from the two web mirrors. **Maintenance level unverified** — good enough to assemble, not good enough for a byte-identity verdict |
 | `macros/*.lst`, `*.tsv` | the lists behind those two directories |
@@ -19,9 +20,17 @@ comes off a pristine MVS/CE release on `mvsdev`, over the `dasdpdsu` path in
 Reproduce the measurement:
 
 ```sh
-tools/measure-as370.sh C work/measurements/sample.txt /tmp/out \
-    -I work/macros/mvsce-2.1.4 -I work/macros/tape -I work/macros/mirror
+M=work/macros/mvsce-2.1.4-dlib
+tools/measure-as370.sh E2 work/measurements/sample.txt /tmp/out \
+    -I $M/AMACLIB -I $M/AMODGEN -I $M/AGENLIB -I $M/ATSOMAC \
+    -I $M/ATCAMMAC -I $M/APVTMACS \
+    -I work/macros/tape -I work/macros/mirror
 ```
+
+⚠️ In zsh, build that list as an **array** and pass `"${arr[@]}"` if you script
+it. An unquoted `$VAR` holding the whole `-I` chain arrives as one argument and
+as370 silently assembles with no macro path — which looks exactly like a
+catastrophic regression.
 
 The write-up that goes with all of it:
 [`../docs/private-macros.md`](../docs/private-macros.md).

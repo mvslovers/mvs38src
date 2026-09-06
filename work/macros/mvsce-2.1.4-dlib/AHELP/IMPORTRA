@@ -1,0 +1,86 @@
+)F FUNCTION -                                                           00050037
+  THE IMPORTRA COMMAND IS USED TO MOVE A CLUSTER, USER CATALOG,         00100037
+  ALTERNATE INDEX, GDG BASE, NON-VSAM, OR ALIAS                         00110037
+  INTO THE SYSTEM IN WHICH THIS COMMAND IS EXECUTED.                    00150037
+)X SYNTAX -                                                             00200037
+         IMPORTRA                                                       00250037
+                       INFILE('DNAME') | INDATASET('ENTRYNAME')         00300037
+                       OUTFILE('DNAME')                                 00350037
+                       SAVRAC | NOSAVRAC                                00360004
+                   CATALOG('CATNAME/PASSWORD')                          00400037
+                   OBJECTS(('PARMLIST') ...)                            00450037
+                     'PARMLIST' - 'NAME'                                00500037
+                                  VOLUMES('VOLSER' ...)                 00600037
+                                  FILE('DNAME')                         00650037
+                                  DEVICETYPE('DEVTYPE')                 00800037
+  REQUIRED - INFILE|INDATASET                                           00850037
+  ABBREVIATIONS -                                                       01050037
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 01100037
+             IMPORTRA             MPRA                                  01150037
+             INFILE               IFILE                                 01200037
+             INDATASET            IDS                                   01250037
+             OUTFILE              OFILE                                 01300037
+             OUTDATASET           ODS                                   01350037
+             DEVICETYPE           DEVT                                  01400037
+)O OPERANDS -                                                           01550037
+))INFILE('DNAME')                                                       01650037
+           - SPECIFIES THE NAME OF A DD STATEMENT THAT IDENTIFIES THE   01700037
+             PORTABILITY DATA SET TO BE IMPORTED.                       01750037
+  'DNAME'  - NAME OF A DD STATEMENT THAT IDENTIFIES THE PORTABILITY     01800037
+             DATA SET TO BE IMPORTED.                                   01850037
+))INDATASET('ENTRYNAME')                                                01900037
+           - SPECIFIES THE NAME OF THE ENTRY TO BE IMPORTED.            01950037
+  'ENTRYNAME'                                                           02000037
+           - NAME OF THE ENTRY TO BE IMPORTED.                          02050037
+))OUTFILE('DNAME')                                                      02100037
+           - SPECIFIES THE NAME OF A DD STATEMENT THAT IDENTIFIES THE   02150037
+             VOLUMES THAT ARE TO RECEIVE THE OBJECTS THAT ARE TO BE     02200037
+             IMPORTED.                                                  02250037
+  'DNAME'  - NAME OF A DD STATEMENT THAT IDENTIFIES THE VOLUMES THAT    02300037
+             ARE TO RECEIVE THE OBJECTS THAT ARE TO BE IMPORTED.        02350037
+))SAVRAC                                                                02400004
+           - ASSOCIATES EXISTING RACF PROFILES WITH DATA SETS           02450004
+             BEING IMPORTED.                                            02500004
+))NOSAVRAC                                                              02550004
+         - DEFAULT PARAMETER IF NEITHER SAVRAC NOR NOSAVRAC ARE         02600004
+           SPECIFIED.  INDICATES THAT THE DATASETS BEING IMPORTED       02650004
+           ARE NOT TO BE ASSOCIATED WITH EXISTING PROFILES.             02660004
+))CATALOG('CATNAME/PASSWORD')                                           02700037
+           - SPECIFIES THE NAME OF THE CATALOG IN WHICH THE IMPORTED    02750037
+             ENTRIES ARE TO BE DEFINED.                                 02800037
+  'CATNAME'                                                             02850037
+           - NAME OF THE CATALOG IN WHICH THE ENTRIES TO BE IMPORTED    02900037
+             ARE TO BE DEFINED.                                         02950037
+  'PASSWORD'                                                            03000037
+           - THE UPDATE OR HIGHER LEVEL PASSWORD OF THE CATALOG IN      03050037
+             WHICH THE IMPORTED ENTRIES ARE TO BE DEFINED.              03100037
+  REQUIRED - 'CATNAME'                                                  03150037
+))OBJECTS(('PARMLIST') ...)                                             03200037
+           - SPECIFIES THE ATTRIBUTES FOR THE ENTRIES                   03250037
+             TO BE IMPORTED.                                            03300037
+  'PARMLIST' IS DEFINED UNDER SYNTAX.                                   03350037
+  'NAME'   - 'PARMLIST' REQUIRED VALUE WHICH SPECIFIES THE NAME OF THE  03400037
+             DATA COMPONENT, INDEX COMPONENT, CLUSTER, USER CATALOG,    03450037
+             ALTERNATE INDEX, PATH, OR NONVSAM                          03460037
+             WHOSE ATTRIBUTES ARE BEING SPECIFIED.                      03500037
+))VOLUMES('VOLSER' ...)                                                 03750037
+           - SPECIFIES THE VOLUMES ON WHICH THE OBJECT                  03800037
+             IS TO RESIDE.                                              03850037
+  'VOLSER' - VOLUME ON WHICH THE OBJECT IS TO RESIDE.                   03900037
+))FILE('DNAME')                                                         03950037
+           - SPECIFIES THE NAME OF A DD STATEMENT THAT IDENTIFIES THE   04000037
+             VOLUMES ALLOCATED TO THE DATA AND INDEX COMPONENTS OF A    04050037
+             KEY-SEQUENCED CLUSTER OR AN ALTERNATE INDEX,               04100037
+             OR THAT IDENTIFIES THE PRIME CRA VOLUME FOR AN             04110037
+             ALTERNATE INDEX.                                           04120037
+  'DNAME'  - NAME OF A DD STATEMENT THAT IDENTIFIES THE VOLUMES         04150037
+             ALLOCATED TO THE DATA AND INDEX COMPONENTS OF A KEY-       04200037
+             SEQUENCED CLUSTER OR AN ALTERNATE INDEX,                   04250037
+             OR THAT IDENTIFIES THE PRIME CRA VOLUME FOR AN             04300037
+             ALTERNATE INDEX.                                           04350037
+))DEVICETYPE('DEVTYPE')                                                 04850037
+           - SPECIFIES THE DEVICE TYPE OF THE VOLUME THAT CONTAINS A    04900037
+             USER CATALOG OR NONVSAM DATA SET THAT IS TO BE IMPORTED.   04950037
+  'DEVTYPE'                                                             05000037
+           - DEVICE TYPE OF THE VOLUME THAT CONTAINS A USER CATALOG     05050037
+             OR NONVSAM DATA SET THAT IS TO BE IMPORTED.                05100037

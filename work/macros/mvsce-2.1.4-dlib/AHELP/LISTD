@@ -1,0 +1,26 @@
+)F FUNCTION -                                                           06000020
+  THE LISTDS COMMAND DISPLAYS BASIC ATTRIBUTES OF DATA SETS SPECIFIED.  12000020
+)X SYNTAX -                                                             18000020
+         LISTDS   'DSLIST'  STATUS  HISTORY  MEMBERS  LABEL             24000020
+                  CATALOG('CAT.NAME') LEVEL                             24050000
+  REQUIRED - 'DSLIST'                                                   30000020
+  DEFAULTS - NONE                                                       36000020
+)O OPERANDS -                                                           42000020
+  'DSLIST' - NAMES OF DATA SETS FOR WHICH INFORMATION IS REQUESTED.     48000020
+))STATUS   - DDNAME AND DATA SET DISPOSITION ARE DISPLAYED.             54000020
+))HISTORY  - CREATION AND EXPIRATION DATES, DATA SET ORGANIZATION AND   60000020
+             SECURITY STATUS ARE DISPLAYED.                             66000020
+))MEMBERS  - MEMBER AND ALIAS NAMES OF PARTITIONED DATA SETS ARE        72000020
+             DISPLAYED.                                                 78000020
+))LABEL    - THE CHAIN OF DSCB'S FOR THE DATA SET ON A DIRECT ACCESS    84000020
+             DEVICE ARE LISTED.                                         90000020
+))CATALOG('CAT.NAME')                                                   90050000
+           - CATALOG IS REQUIRED ONLY IF THE NAMES ARE IN A CATALOG     90100000
+             OTHER THAN STEPCAT OR THE CATALOG IMPLIED BY THE FIRST     90150000
+             LEVEL QUALIFIER OF THE NAME.                               90200000
+    ('CAT.NAME')                                                        90250000
+           - SPECIFIES THE USER CATALOG THAT CONTAINS THE NAMES IN      90300000
+             THE DATA SET LIST.                                         90350000
+))LEVEL    - CATALOGED DATA SETS WITH NAMES BEGINNING WITH SPECIFIED    90400000
+             QUALIFIER ARE LISTED. WHEN LEVEL SPECIFIED, NAMES CANNOT   90450000
+             CONTAIN ASTERISKS.                                         90500000

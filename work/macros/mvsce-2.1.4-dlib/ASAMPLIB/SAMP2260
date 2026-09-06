@@ -1,0 +1,158 @@
+//JOBBIE JOB   XXX,NAME,MSGLEVEL=1                                      00020000
+//       EXEC  ASMFCLG,PARM.LKED=(XREF,LET,LIST)                        00040000
+//ASM.SYSIN DD *                                                        00140000
+SAMP2260 CSECT                                                          00240017
+* 012400,018400,079400,100400,109400,120400,121400,132400        A26961 00270019
+* 134400                                                         A26961 00300019
+         SAVE  (14,12)                 SAVE REGISTERS                   00340017
+         BALR  5,0                     INITIALIZE BASE REGISTER         00440017
+         USING *,5                     DEFINE BASE REGISTER             00540017
+         ST    13,SAVE2+4              CHAIN SAVEAREAS                  00640017
+         LA    13,SAVE2                ESTABLISH NEW SAVE AREA          00740017
+         OPEN  (DCB1)                  OPEN 2260                        00840017
+         SPAR  (GACB1),PRTY=1          SPAR FOR 2260 ATTENTION          00940017
+         LTR   15,15                   TEST SPAR RETURN CODE            01040017
+         BNZ   ERTN1                   BRANCH IF NOT SUCCESSFUL SPAR    01140017
+         GWRITE DECB1,EBW,DCB1,39,OPNMSG,1   WRITE START MSG     A26961 01240019
+         LTR   15,15                   TEST FOR PARAMETERS ACCEPTED     01340017
+         BNZ   ERTN2                   NO, BRANCH TO I/O ERROR          01440017
+         WAIT  ECB=DECB1               WAIT FOR I/O OPERATION           01540017
+         CLI   DECB1,X'7F'             WAS I/O SUCCESSFUL               01640017
+         BNE   ERTN2                   BRANCH IF NOT                    01740017
+         GWRITE DECB5,EBW,DCB1,39,OPNMSG,2    WRITE START MSG    A26961 01840019
+         LTR   15,15                   TEST FOR PARAMETERS ACCEPTED     01940017
+         BNZ   ERTN2                   NO, BRANCH TO I/O ERROR          02040017
+         WAIT  ECB=DECB5               WAIT FOR I/O OPERATION           02140017
+         CLI   DECB5,X'7F'             WAS I/O SUCCESSFUL               02240017
+         BNE   ERTN2                   BRANCH IF NOT                    02340017
+         WAIT  ECB=COMSAVE+16          FOR END OF ATTENT. PROCESS       02440017
+OUT      EQU   *                                                        02540017
+         DAR   (GACB1)                 DELETE 2260 ATTENTION ROUTINE    02640017
+         LTR   15,15                   TEST DAR RETURN CODE             02740017
+         BNZ   ERTN1                   BRANCH IF NOT SUCCESSFUL DAR     02840017
+OUT1     EQU   *                                                        02940017
+         CLOSE (DCB1)                  CLOSE 2260                       03040017
+         L     13,SAVE2+4              LOAD RETURN ADDRESS              03140017
+         RETURN (14,12)                RETURN TO SUPERVISOR             03240017
+*                                                                       03340017
+* USER SPAR/DAR ERROR HANDLING ROUTINE                                  03440017
+*                                                                       03540017
+ERTN1    B     OUT1                    DUMMY ERROR GANDLING SPAR/DAR    03640017
+*                                                                       03740017
+* USER I/O ERROR HANDLING ROUTINE                                       03840017
+*                                                                       03940017
+ERTN2    B     OUT                     DUMMY ERROR HANDLING I/O ROUTINE 04040017
+*                                                                       04140017
+* KEYBOARD ROUTINE TO SERVICE KEYBOARD ATTENTIONS                       04240017
+*                                                                       04340017
+KEYBDRTN SAVE  (14,12)                 SAVE REGISTERS                   04440017
+         DROP  5                                                        04540017
+         BALR  6,0                     INTIALIZE BASE REGISTER          04640017
+         USING *,6                     DEFINE BASE REGISTER             04740017
+         ST 13,SAVE3+4                 CHAIN SA E AREAS                 04840017
+         LA 13,SAVE3                   STABLISH NEW SAVE AREAS          04940017
+READMI   CLI   COMSAVE,X'02'           IS ATTENTION FROM DEVICE 2       05040017
+         BE    READ2                   YES, BRANCH TO READ DEVICE 2     05140017
+* THIS SECTION HANDLES AN ATTENTION FROM DEVICE 1                       05240017
+READ1    EQU   *                                                        05340017
+         XC    DECB2(4),DECB2          CLEAR ECB (IN BYTES 0-4 OF DECB) 05440017
+         GREAD DECB2,DSM,DCB1,960,INPUT,1   READ DEVICE INTO "INPUT"    05540017
+* THE 2260 KEYBOARD CAUSING THE ATTENTION IS NOW UNLOCKED               05640017
+         LTR   15,15                   TEST FOR PARAMETERS ACCEPTED     05740017
+         BNZ   ERTN3                   NO, BRANCH TO I/O ERROR          05840017
+         WAIT  ECB=DECB2               WAIT FOR I/OOPERATION (ECB=+)    05940017
+         CLI   DECB2,X'7F'             CHAECK FOR SUCCESSFUL I/O (/7F)  06040017
+         BE    COMMON                  BRANCH IF GOOD I/O               06140017
+         CLI   DECB2+16,X'45'          CHECK FOR PERMANENT ERROR        06240017
+         BE    ERTN3                   ERROR EXISTS, USER I/O ERROR     06340017
+         B     COMMON                                                   06440017
+*                                                                       06540017
+* THIS SECTION HANDLES AN ATTENTION FROM DEVICE 2                       06640017
+READ2    EQU   *                                                        06740017
+         XC    DECB6(4),DECB6          CLEAR ECB                        06840017
+         GREAD DECB6,DSM,DCB1,960,INPUT,2   READ DEVICE INTO "INPUT"    06940017
+* THE 2260 KEYBOARD CAUSING THE ATTENTION IS NOW UNLOCKED               07040017
+         LTR   15,15                   TEST FOR PARAMETERS ACCEPTED     07140017
+         BNZ   ERTN3                   NO, BRANCH TO I/O ERROR          07240017
+         WAIT  ECB=DECB6               WAIT FOR I/O OPEATION            07340017
+         CLI   DECB6,X'7F'             CHECK FOR SUCCESSFUL I/O (/7F)   07440017
+         BE    COMMON                  BRANCH IF GOOD I/O               07540017
+         CLI   DECB6+16,X'45'          CHECK FOR PERMANENT ERROR        07640017
+         BE    ERTN3                   ERROR EXISTS, USE I/O ERROR      07740017
+COMMON   CLC   INPUT(7),PRC            CHECK CONTINUE CODE              07840017
+         BNE   CONTIN                                            A26961 07940019
+         GWRITE DECB3,EBW,DCB1,10,TERMSG,1                              08040017
+         LTR   15,15                   TEST FOR PARAMETERS ACCEPTED     08140017
+         BNZ   ERTN3                   NO, BRANCH TO I/O ERROR          08240017
+         WAIT  ECB=DECB3               WAIT FOR I/O                     08340017
+         CLI   DECB3,X'7F'             WAS I/O SUCCESSFUL               08440017
+         BNE   ERTN3                   ERROR EXISTS, USE I/O ERROR      08540017
+         GWRITE DECB7,EBW,DCB1,10,TERMSG,2  WRITE END OF JOB MESSAGE    08640017
+         LTR   15,15                   TEST FOR PARAMETERS ACCEPTED     08740017
+         BNZ   ERTN3                   NO, BRANCH TO I/O ERROR          08840017
+         WAIT  ECB=DECB7               WAIT FOR I/O                     08940017
+         CLI   DECB7,X'7F'             CHECK FOR SUCCESSFUL I/O         09040017
+         BNE   ERTN3                   ERROR EXITS, USE I/O ERROR       09140017
+OUT3     POST  COMSAVE+16              USE POST TO GET THRU WAIT TO DAR 09240017
+         L     13,SAVE3+4              LOAD RETURN ADDRESS              09340017
+         RETURN (14,12)                RETURN TO MAINLINE               09440017
+* CONTINUE PORCESSING OF GREAD                                          09540017
+CONTIN   EQU   *                       USER ROIUTINE WOULD GO HERE      09640017
+         CLI   COMSAVE,X'02'           IS ATTENTION FROM DEVICE 2       09740017
+         BE    DEV2                    YES, BRANCH TO WRITE ON DEVICE 2 09840017
+         XC    DECB4(4),DECB4          CLAER ECB                        09940017
+         GWRITE DECB4,EBW,DCB1,107,PRCMSG,1                      A26961 10040019
+         LTR   15,15                   TEST FOR PARAMETERS ACCEPTED     10140017
+         BNZ   ERTN3                   NO, BRANCH TO I/O ERROR          10240017
+         WAIT ECB=DECB4                WAIT FOR I/O                     10340017
+         CLI   DECB4,X'7F'             CHECK FOR SUCCESSFUL I/O         10440017
+         BE    COM1                    GOOD I/O                         10540017
+         B     ERTN3                   ERROR EXISTS, USE I/O ERROR      10640017
+DEV2     EQU   *                                                        10740017
+         XC    DECB8(4),DECB8          CLEAR ECB                        10840017
+         GWRITE DECB8,EBW,DCB1,107,PRCMSG,2                      A26961 10940019
+         LTR   15,15                   TEST FOR PARAMETERS ACCEPTED     11040017
+         BNZ   ERTN3                   NO, BRANCH TO I/O ERROR          11140017
+         WAIT  ECB=DECB8               WAIT FOR I/O                     11240017
+         CLI   DECB8,X'7F'             WAS I/ON SUCCESSFUL              11340017
+         BNE   ERTN3                                                    11440017
+COM1     ATTNINQ GACB1,MODE=(C,READ1),UNIT=1   AY ATTENTION FROM DEVICE 11540017
+         ATTNINQ GACB1,MODE=(C,READ2),UNIT=2   AY ATTENTION FROM DEV.2  11640017
+         TM    COMSAVE+20,X'01'        HAS WAIT BEEN USED               11740017
+         BC    1,COM2                  BRANCH IF YEA                    11840017
+         OI    COMSAVE+20,X'01'        SET WAIT USED BIT                11940017
+         ATTNINQ  GACB1,MODE=W,UNIT=ALL    WAIT FOR ATTN         A26961 12040019
+         B     READMI                   GO READ DEVICE           A26961 12140019
+COM2     EQU   *                                                        12240017
+         ATTNINQ GACB1,MODE=R          RELINQUISH CONTROL TO MAINLINE   12340017
+         BC    15,READMI               BRANCHTO READMIT                 12440017
+*                                                                       12540017
+* USER I/O ERROR HANDLING ROUTINE                                       12640017
+*                                                                       12740017
+ERTN3    B     OUT3                    DUMMY ERROR HANDLING ROUTINE     12840017
+*                                                                       12940017
+* MESSAGE AREA                                                          13040017
+*                                                                       13140017
+OPNMSG   DC    CL39'DISPLAY OPEN - DEPRESS SHIFT/ENTER KEYS'     A26961 13240019
+TERMSG   DC    CL10'END OF JOB'                                         13340017
+PRCMSG   DC    CL20'PROCESSING COMPLETE '                        A26961 13360019
+         DC    X'15'                                             A26961 13380019
+         DC    CL32'     DEPRESS SHIFT/START KEYS   '            A26961 13400019
+         DC    X'15'                                             A26961 13420019
+         DC    CL22'     ENTER "PROCESS"  '                      A26961 13440019
+         DC    X'15'                                             A26961 13460019
+         DC    CL30'     DEPRESS SHIFT/ENTER KEYS '              A26961 13480019
+* CONSTANT AREA                                                         13540017
+DCB1     DCB   DSORG=GS,MACRF=(R,W),DDNAME=GRAPHIC,GNCP=4,             *13640017
+               GTYPE=BASIC                                              13740017
+GACB1    SAEC  EP=KEYBDRTN,DCB=DCB1,COMAREA=COMSAVE,ATTNTYP=(R,2260)    13840017
+         DS    0F                                                       13940017
+SAVE1    DC    18F'0'                                                   14040017
+SAVE2    DC    18F'0'                                                   14140017
+SAVE3    DC    18F'0'                                                   14240017
+COMSAVE  DC    6F'0'                                                    14340017
+PRC      DC    CL7'PROCESS'            PROCESS ACTION CODE              14440017
+INPUT    DC    240F'0'                 DEFINE INPUT AREA                14540017
+         END   SAMP2260                                                 14640017
+//LKED.SYSLIB  DD DSNAME=SYS1.LINKLIB,DISP=OLD                     3842 32840015
+//GO.GRAPHIC   DD UNIT=(2260-1,2)                                  3842 42840015

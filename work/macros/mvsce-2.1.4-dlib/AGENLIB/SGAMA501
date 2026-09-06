@@ -1,0 +1,20 @@
+         MACRO                                                          00050002
+         SGAMA501                                                       00100002
+.*C 003500-005000,005500,006500                                  Y02006 00110002
+.*A 005100-005200                                                Y02006 00120002
+.*D 006000,007000-009500                                         Y02006 00130002
+.*C 006000                                                      YA00869 00140002
+.*C 000000-999999                                                Y01987 00150002
+ PUNCH ' COPY OUTDD=LINKLIB,INDD=AOS12'                                 00200002
+ PUNCH ' SELECT MEMBER=(AMAPTFLE,HMAPTFLE,IMAPTFLE,AMAPTF01,AMAPTF02)'  00250002
+ PUNCH ' SELECT MEMBER=(AMASPZAP,IMASPZAP)'                    @YM30903 00300003
+ PUNCH ' SELECT MEMBER=(AMDPRLPA,AMDPRQCB,AMDPRDPS)'             Y02006 00350002
+ PUNCH ' SELECT MEMBER=(AMDPRFDS)'                             @Y30DI3C 00351003
+ PUNCH ' SELECT MEMBER=(AMDPRFXT,AMDPRPMS,AMDPRNUC)'             Y02006 00400002
+ PUNCH ' SELECT MEMBER=(AMDPRFUB,AMDPRPCR)'                      Y02006 00450002
+ PUNCH ' SELECT MEMBER=(AMDPRPJB,AMDPRMST,AMDPRLOD)'             Y02006 00500002
+ PUNCH ' SELECT MEMBER=(AMDPRCVT,AMDPRECT)'                    @ZA63814 00510000
+ PUNCH ' SELECT MEMBER=(AMDPRFAR,AMDPRGCD,AMDPRSUM)'             Y02006 00520002
+ PUNCH ' SELECT MEMBER=(AMDPROOT)'                               Y02006 00550002
+ PUNCH ' SELECT MEMBER=(AMDSAPRO)'                               Y02006 00650002
+         MEND                                                           01000002

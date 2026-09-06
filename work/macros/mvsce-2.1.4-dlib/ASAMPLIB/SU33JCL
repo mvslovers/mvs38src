@@ -1,0 +1,25 @@
+//LMDELETE JOB MSGLEVEL=(1,1)                                           00050033
+//STEP1    EXEC PGM=IEHPROGM                /* LAST UPDATED 02/08/77 */ 00070033
+//********************************************************************* 00150033
+//*  INSTALLATION JCL FOR SU 33                                     *** 00200033
+//*  --------------------------                                     *** 00210033
+//*    THIS JOB CAN BE RUN TO DELETE THE SPACE FOR AN UNUSED        *** 00250033
+//*    LOAD MODULE (IEAVTSDT) FROM SYS1.LPALIB.                     *** 00300033
+//*                                                                 *** 00320033
+//*    IEAVTSDT IS CHANGED TO AN ALIAS ENTRY IN LOAD MODULE         *** 00350033
+//*    IGC0005A IN SYS1.LPALIB FOR SU 33.                           *** 00400033
+//*                                                                 *** 00406033
+//*  NOTES                                                          *** 00412033
+//*  -----                                                          *** 00414033
+//*    THIS JOB SHOULD ONLY BE RUN BEFORE SU 33 IS INSTALLED.       *** 00418033
+//*                                                                 *** 00424033
+//*    'UUUU' AND 'VVVVVV' MUST BE CHANGED TO THE UNIT AND VOLUME   *** 00430033
+//*    FOR THE 'SYS1.LPALIB' DATA SET THAT WILL BE UPDATED FOR      *** 00436033
+//*    SU 33.                                                       *** 00442033
+//********************************************************************* 00450033
+//SYSUDUMP   DD SYSOUT=A                                                00500033
+//SYSPRINT   DD SYSOUT=A                                                00510033
+//VOLDD      DD UNIT=UUUU,VOL=SER=VVVVVV,DISP=OLD  ***CHANGE THIS DD*** 00520033
+//SYSIN      DD *          ***CHANGE THE FOLLOWING CONTROL STATEMENT*** 00526033
+   SCRATCH DSNAME=SYS1.LPALIB,VOL=UUUU=VVVVVV,MEMBER=IEAVTSDT           00540033
+/*                                                                      00550033

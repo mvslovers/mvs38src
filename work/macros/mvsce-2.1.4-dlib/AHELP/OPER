@@ -1,0 +1,696 @@
+)S SUBCOMMANDS -                                                        00500002
+  CANCEL,DISPLAY,END,HELP,MONITOR,SEND,STOPMN,SLIP                      01000064
+)F FUNCTION -                                                           01500002
+  TO ALLOW USERS TO ENTER A SUBSET OF OPERATOR COMMANDS.                02000002
+)X SYNTAX  -                                                            02500002
+         OPERATOR                                                       03000002
+  REQUIRED - NONE                                                       03500002
+  DEFAULTS - NONE                                                       04000002
+  ALIAS    - OPER                                                       04500002
+  NOTE     - DATA IN OPERAND FIELD IGNORED. USER MUST BE DEFINED WITH   05000020
+             OPERATOR ABILITY IN UADS TO USE OPERATOR COMMAND. TO       05500002
+             TERMINATE OPERATOR MODE ENTER END.                         06000002
+             WHEN ENTERING COMMANDS IN OPERATOR MODE, THE BASIC         06050000
+             FORMAT OF THE COMMANDS IS:                                 06060002
+                 COMMAND    OPERAND1,OPERAND2,...,OPERANDN              06070000
+             BLANKS ARE THE ONLY ACCEPTABLE SEPARATOR CHARACTER         06080000
+             BETWEEN THE COMMAND AND OPERAND. A COMMA IS THE ONLY       06090000
+             ACCEPTABLE SEPARATOR CHARACTER BETWEEN OPERANDS.           06092000
+             THE STOPMN CMD HAS REPLACED THE STOP CMD TO STOP           06094002
+             AN ACTIVE MONITOR.                                         06096002
+             THE D TS,LIST HAS REPLACED THE D USER CMD.                 06098002
+)O OPERANDS                                                             06100020
+           - NONE                                                       06200020
+=DISPLAY=D                                                              06500056
+)F FUNCTION -                                                           07000056
+  TO PROVIDE INFORMATION ABOUT REGIONS, SESSIONS, JOBS AND SLIP TRAPS.  07500064
+)X SYNTAX  -                                                            07550064
+        DISPLAY/D T/TS,LIST/TS,L/R,LIST/R,L/JOBS,LIST/JOBS,L/J,LIST/J,L/07600064
+        SLIP/SLIP=XXXX                                                  07650064
+  REQUIRED - ONE OF THE ABOVE OPERANDS                                  09000000
+  DEFAULTS - NONE                                                       09500056
+  ALIAS    - D                                                          10000056
+  NOTE     - 'LIST' OR 'L' IS AN OPTIONAL SUBPARAMETER IN OPERATOR      10500002
+             COMMAND SYNTAX, BLANKS ARE THE ONLY SEPARATORS ALLOWED     10600002
+             BETWEEN THE COMMAND AND OPERAND.                           10700002
+)O OPERAND -                                                            11000056
+))T        - SPECIFIES THAT THE TIME OF DAY AND THE DATE ARE TO BE      21500056
+             DISPLAYED                                                  22000056
+))TS       - THE NUMBER OF ACTIVE TIME-SHARING USERS                    22010002
+))LIST OR L- THE NUMBER OF, PLUS THE USER IDENTIFICATION OF EACH ACTIVE 22020002
+             TIME-SHARING USER                                          22040002
+))R        - SPECIFIES THAT THE ID OF EACH MESSAGE AND THE UNIT         22050000
+             ADDRESS OF EACH DEVICE REQUIRING OPERATOR ACTION           22100000
+             ARE TO BE DISPLAYED.                                       22150000
+))LIST OR L- THE IDENTIFICATION FOR EACH MESSAGE, PLUS THE FIRST PART   22160002
+             OF EACH MESSAGE IS PROVIDED TO THE USER                    22170002
+))JOBS OR J- THE NUMBER OF ACTIVE BATCH JOBS AND STARTED TASKS (OTHER   22180002
+             THAN INITIATORS)                                           22190002
+))LIST OR L- THE NUMBER OF, PLUS FOR EACH JOB OR STARTED TASK: JOBNAME, 22192002
+             V=R REGION BOUNDARIES                                      22194002
+))SLIP     - PROVIDES A SUMMARY DISPLAY OF ALL SLIP TRAPS SET.          48050064
+))SLIP=XXXX- PROVIDES A DETAILED DISPLAY OF A PARTICULAR TRAP           48052064
+             IDENTIFIED BY THE TRAP ID(XXXX).                           48061064
+=STOPMN=PM                                                              48080064
+)F FUNCTION -                                                           48100001
+  TO STOP A MONITOR FUNCTION. THE STOPMN COMMAND TERMINATES OUTPUT FOR  48150001
+  RESPECTIVE OPERANDS ON THE MONITOR COMMAND.                           48200001
+)X SYNTAX  -                                                            48250001
+         STOPMN/PM   JOBNAMES/SESS/STATUS                               48300002
+  REQUIRED - ONE OF THE OPERANDS                                        48350001
+  DEFAULTS - NONE                                                       48400001
+  ALIAS    - PM                                                         48450001
+  NOTE     - IN OPERATOR COMMAND SYNTAX, BLANKS ARE THE ONLY            48460001
+             SEPARATORS ALLOWED BETWEEN THE COMMAND AND OPERAND.        48470001
+)O OPERANDS-                                                            48480001
+))JOBNAMES - TERMINATES OUTPUT THAT WAS INITIATED BY A MONITOR JOBNAMES 48490001
+             COMMAND.                                                   48492001
+))SESS     - TERMINATES OUTPUT THAT WAS INITIATED BY A MONITOR SESS     48498801
+             COMMAND.                                                   48499202
+))STATUS   - TERMINATES OUTPUT THAT WAS INITIATED BY A MONITOR STATUS   48499601
+             COMMAND.                                                   48499702
+=CANCEL=C                                                               48500056
+)F FUNCTION -                                                           49000056
+  CANCEL IS USED TO TERMINATE USER SESSIONS.                            49500002
+)X SYNTAX  -                                                            50000000
+         CANCEL/C   U='USERID',DUMP                                     50500002
+  REQUIRED - U='USERID'                                                 52550002
+  OPTIONAL - DUMP                                                       53000002
+  DEFAULTS - NONE                                                       53500002
+  ALIAS    - C                                                          55500056
+  NOTE     - IN OPERATOR COMMAND SYNTAX, BLANKS ARE THE ONLY            57100002
+             SEPARATORS ALLOWED BETWEEN THE COMMAND AND OPERAND.        57200020
+)O OPERANDS-                                                            57500000
+))U        - INDICATES A TERMINAL SESSION IS TO BE CANCELLED.           61550000
+  ='USERID'- NAME OF FOREGROUND JOB (TERMINAL USER) TO BE TERMINATED.   61600000
+))DUMP     - AN ABNORMAL-END-OF-TASK STORAGE DUMP IS TO BE TAKEN.       63500002
+=MONITOR=MN                                                             70000056
+)F FUNCTION- TO MONITOR TERMINAL AND JOB ACTIVITY                       70500056
+)X SYNTAX  - MONITOR/MN SESS,T/STATUS/JOBNAMES,T                        71000002
+  REQUIRED - ONE OF THE OPERANDS.                                       71050000
+  OPTIONAL - T                                                          71500056
+  ALIAS    - MN                                                         72000020
+  DEFAULTS - NONE                                                       72500056
+  NOTE     - IN OPERATOR COMMAND SYNTAX, BLANKS ARE THE ONLY            72600020
+             SEPARATORS ALLOWED BETWEEN THE COMMAND AND OPERAND.        72700020
+)O OPERANDS-                                                            73000056
+))SESS     - INDICATES THE STARTING AND ENDING OF TERMINAL SESSIONS.    73500056
+             'T' INDICATES THE ASSOCIATED START AND END TIME OF EACH    74000056
+             SESSION.                                                   74500002
+))STATUS   - INDICATES DATA SET KEEP, CATLG, OR UNCATLG DISPOSITIONS    75000002
+             AT STEP END AND JOB END.                                   75500002
+))JOBNAMES - INDICATES THE START AND END OF EACH JOB. 'T' INDICATES     76000056
+             THE ASSOCIATED START AND END TIME OF EACH JOB.             76500020
+=SEND=SE                                                                79500000
+)F FUNCTION-                                                            80000056
+  TO COMMUNICATE FROM OPERATOR TO USER(S), EITHER DIRECTLY OR VIA THE   80500000
+  BROADCAST DATA SET.                                                   80550000
+)X SYNTAX  -                                                            81000056
+         SEND/SE ''TEXT''/'MSGNO',USER=('USERID LIST')/ALL/BRDCST/      81500002
+              CN='CONSOLE ID'/OPERATOR='ROUTING CODE',NOW/LOGON/SAVE    82000002
+              OR 'MSGNO',DELETE/LIST OR LIST                            82500002
+  REQUIRED - ''TEXT'','MSGNO', OR LIST                                  83000000
+  DEFAULTS - ALL,NOW                                                    83500001
+  ALIAS    - SE                                                         84000000
+  NOTE     - IN OPERATOR COMMAND SYNTAX, BLANKS ARE THE ONLY            84100020
+             SEPARATORS ALLOWED BETWEEN THE COMMAND AND OPERAND.        84200020
+             OPERANDS MUST BE SEPARATED BY 1 COMMA.                     84250000
+)O OPERAND -                                                            84500056
+  ''TEXT'' - IS THE MESSAGE TO BE SENT ENCLOSED IN QUOTES               85000000
+  'MSGNO'  - INDICATES THE MESSAGE IDENTIFIER ASSIGNED BY THE SYSTEM    85050000
+             TO THE MESSAGE WHEN IT WAS ENTERED.                        85100000
+))USER     - THE MESSAGE IS TO BE SENT TO TSO TERMINAL USER(S)          85500000
+    'USERID LIST'                                                       86050000
+           - LIST OF USER IDENTIFICATIONS TO WHOM MESSAGE IS TO BE SENT 86100000
+))ALL      - SPECIFIES THAT THE MESSAGE IS TO BE SENT TO ALL USERS      86500056
+))BRDCST   - SPECIFIES THAT THE MESSAGE IS TO BE QUEUED TO ALL ACTIVE   86550002
+             CONSOLES                                                   86600002
+))CN       - SPECIFIES THAT THE MESSAGE IS TO BE QUEUED TO INDICATED    86650002
+             OPERATOR CONSOLE                                           86660002
+  ='CONSOLE ID'                                                         86670002
+           - A VALUE BETWEEN 0 AND 64 WHICH INDICATES THE OPERATOR      86680002
+             CONSOLE TO RECEIVE THE MESSAGE                             86690002
+))OPERATOR - SPECIFIES THAT THE MESSAGE IS TO BE ROUTED TO THE OPERATOR 86692002
+  ='ROUTING CODE'                                                       86694002
+           - INTEGER SPECIFYING THE FUNCTIONAL CONSOLE TO WHICH THE     86696002
+             MESSAGE IS TO BE ROUTED USING INTEGER AS A ROUTING CODE    86698002
+))NOW      - INDICATES THAT THE MESSAGE IS TO BE SENT TO THE USER(S)    86700020
+             SPECIFIED NOW                                              86900020
+))LOGON    - INDICATES THAT THE MESSAGE IS TO BE SENT TO THE USER(S)    86950001
+             SPECIFIED NOW, AND THAT THE MESSAGE IS TO BE SAVED FOR     87000001
+             THE USER(S) UNABLE TO RECEIVE THE MESSAGE NOW AND SENT     87050001
+             AS THE USER LOGS ON                                        87060002
+))SAVE     - INDICATES THAT THE MESSAGE IS TO BE SENT TO THE USER(S)    87100001
+             SPECIFIED AS THE USER LOGS ON                              87500002
+))DELETE   - INDICATES THAT THE SPECIFIED MESSAGE IS TO BE DELETED FROM 89000056
+             THE BROADCAST DATA SET                                     89500000
+))LIST     - INDICATES THAT THE SPECIFIED MESSAGE IS TO BE WRITTEN TO   90000056
+             THE TERMINAL OPERATOR. IF LIST IS SPECIFIED WITHOUT        90500056
+             'MSGNO', ALL MESSAGES IN THE NOTICES SECTION OF THE        91000000
+             BROADCAST DATA SET WILL BE LISTED.                         91500000
+=END                                                                    91550000
+)F FUNCTION -                                                           91600000
+  THE END SUBCOMMAND PROCESSOR MUST BE ENTERED IN ORDER TO TERMINATE    91650000
+  OPERATOR ACTIVITY AND RETURN CONTROL TO THE SYSTEM.                   91700000
+)X SYNTAX -                                                             91750000
+         END                                                            91800000
+  REQUIRED - NONE                                                       91850000
+  DEFAULTS - NONE                                                       91900000
+  NOTE     - WHEN A USER TERMINATES OPERATOR MODE  ALL ACTIVE           91910000
+             MONITOR FUNCTIONS ARE STOPPED.                             91920000
+)O OPERANDS                                                             91950000
+           - NONE                                                       92000000
+=SLIP=SL                                                                92020064
+)F FUNCTION -                                                           92040064
+  TO ESTABLISH TRAPS USED TO SELECTIVELY INTERCEPT SOFTWARE ERRORS      92060064
+  OR PROCESS PER INTERRUPTS. IF ALL CONDITIONS SPECIFIED IN THE         92080064
+  TRAP MATCH THE SYSTEM CONDITIONS AT THE TIME THE TRAP IS CHECKED,     92090064
+  THE ACTION SPECIFIED IN THE TRAP IS TAKEN.                            92100064
+)X SYNTAX -                                                             92110064
+  THE FOLLOWING THREE FORMS OF THE SLIP COMMAND SHOW THE SYNTAX         92120064
+  OF THE SLIP COMMAND WHEN SETTING A NON-PER TRAP, A SLIP INSTRUCTION   92130064
+  FETCH OR SUCCESSFUL BRANCH PER TRAP, OR A STORAGE ALTERATION PER      92140064
+  TRAP.                                                                 92147064
+                                                                        92154064
+  SYNTAX FOR SETTING A NON-PER SLIP TRAP:                               92155064
+                                                                        92161064
+         SLIP/SL SET,ENABLE/DISABLE,ID='XXXX',                          92167064
+              ACTION=SVCD/TRDUMP/TRACE/IGNORE/NODUMP,                   92173064
+              ASIDLST=('N'<,'N'<,...>>),                                92179064
+              LIST=('START','END'<,'START','END'<,...>>),               92189064
+              SDATA=('OPTIONS'),                                        92199064
+              SUMLIST=('START','END'<,'START','END'<,...>>),            92209064
+              TRDATA=('OPTIONS'),                                       92219064
+              ADDRESS=('START'<,'END'>),                                92229064
+              LPAMOD=('NAME'<,'START'<,'END'>>)/                        92239064
+              PVTMOD=('NAME'<,'START'<,'END'>>)/                        92249064
+              ASID=('N'<,'N'<,...>>),                                   92259064
+              COMP='OPTION',                                            92269064
+              DATA=('TARGET'<('B')>,'OPERATOR','VALUE'                  92279064
+                  <,'TARGET'<('B')>,'OPERATOR','VALUE'<,...>>),         92289064
+              ERRTYP=('OPTIONS'),                                       92299064
+              JOBNAME='NAME',                                           92309064
+              JSPGM='NAME',                                             92319064
+              MODE=('OPTIONS'),                                         92329064
+              RBLEVEL=ERROR/PREVIOUS/NOTSVRB,                           92339064
+              MATCHLIM='N',                                             92520064
+              DEBUG,                                                    92530064
+              END                                                       92532064
+                                                                        92534064
+  SYNTAX FOR SETTING A SLIP INSTRUCTION FETCH OR SUCCESSFUL             92536064
+  BRANCH PER TRAP:                                                      92538064
+                                                                        92540064
+         SLIP/SL SET,IF/SB,ENABLE/DISABLE,ID='XXXX',                    92544064
+              ACTION=(SVCD<,RECOVERY>/                                  92545064
+                      TRDUMP<,RECOVERY>/                                92546064
+                      TRACE<,RECOVERY>/                                 92547064
+                      IGNORE<,RECOVERY>),                               92548064
+              ASIDLST=('N'<,'N'<,...>>),                                92549064
+              LIST=('START','END'<,'START','END'<,...>>),               92549564
+              SDATA=('OPTIONS'),                                        92550064
+              SUMLIST=('START','END'<,'START','END'<,...>>),            92550564
+              TRDATA=('OPTIONS'),                                       92551064
+              ASID=('N'<,'N'<,...>>),                                   92551564
+              DATA=('TARGET'<('B')>,'OPERATOR','VALUE'                  92552064
+                  <,'TARGET'<('B')>,'OPERATOR','VALUE'<,...>>),         92552564
+              JOBNAME='NAME',                                           92553064
+              JSPGM='NAME',                                             92553564
+              LPAMOD=('NAME'<,'START'<,'END'>>),                        92554064
+              RANGE=('START'<,'END'>)/                                  92554564
+              MODE=('OPTIONS'),                                         92555064
+              MATCHLIM='N',                                             92556064
+              PRCNTLIM='N',                                             92557064
+              DEBUG,                                                    92557464
+              END                                                       92557864
+                                                                        92558264
+  SYNTAX FOR SETTING A SLIP STORAGE ALTERATION PER TRAP:                92558664
+                                                                        92559064
+         SLIP/SL SET,SA,ENABLE/DISABLE,ID='XXXX',                       92560064
+              ACTION=(SVCD<,RECOVERY>/                                  92561064
+                      TRDUMP<,RECOVERY>/                                92562064
+                      TRACE<,RECOVERY>/                                 92563064
+                      IGNORE<,RECOVERY>),                               92564064
+              ASIDLST=('N'<,'N'<,...>>),                                92565064
+              LIST=('START','END'<,'START','END'<,...>>),               92566064
+              SDATA=('OPTIONS'),                                        92567064
+              SUMLIST=('START','END'<,'START','END'<,...>>),            92568064
+              TRDATA=('OPTIONS'),                                       92569064
+              ADDRESS=('START'<,'END'>),                                92571064
+              ASID=('N'<,'N'<,...>>),                                   92571664
+              DATA=('TARGET'<('B')>,'OPERATOR','VALUE'                  92572264
+                  <,'TARGET'<('B')>,'OPERATOR','VALUE'<,...>>),         92572864
+              JOBNAME='NAME',                                           92572964
+              JSPGM='NAME',                                             92573064
+              LPAMOD=('NAME'<,'START'<,'END'>>),                        92573164
+              MODE=('OPTIONS'),                                         92573264
+              PVTMOD=('NAME'<,'START'<,'END'>>),                        92573364
+              RANGE=('START'<,'END'>),                                  92573464
+              MATCHLIM='N',                                             92574064
+              PRCNTLIM='N',                                             92575064
+              DEBUG,                                                    92576064
+              END                                                       92577064
+                                                                        92578064
+  THE FOLLOWING SHOW THE SYNTAX FOR THE SLIP MODIFY AND                 92584064
+  DELETE COMMANDS:                                                      92590064
+                                                                        92596064
+         SLIP/SL MOD,ENABLE/DISABLE,ALL/ID='XXXX'                       92602064
+                                                                        92608064
+         SLIP/SL DEL,ALL/ID='XXXX'                                      92614064
+                                                                        92620064
+  REQUIRED - SET, MOD, OR DEL.                                          92640064
+           - ID OR ALL (WHEN MOD OR DEL IS SPECIFIED).                  92660064
+           - ENABLE OR DISABLE (WHEN MOD IS SPECIFIED).                 92680064
+           - RANGE OR LPAMOD (WHEN SETTING AN IF OR SB PER TRAP).       92690064
+           - RANGE (WHEN SETTING AN SA PER TRAP UNLESS                  92700064
+             ACTION=IGNORE IS USED).                                    92703064
+           - END (COMPLETES THE SLIP SET COMMAND).                      92710064
+                                                                        92720064
+  OPTIONAL - ALL OTHER KEYWORDS.                                        92724064
+           - ALL PARAMETERS SHOWN BETWEEN < AND >.                      92726064
+                                                                        92732064
+  DEFAULTS - FOR PER TRAPS (IF,SB, OR SA SPECIFIED):                    92740064
+             ENABLE,ACTION=SVCD,                                        92750064
+             PRCNTLIM=10 (IF ACTION IS OTHER THAN IGNORE)               92752064
+           - FOR NON-PER TRAPS (IF,SB, OR SA NOT SPECIFIED):            92756064
+             ENABLE,ACTION=SVCD,RBLEVEL=ERROR                           92770064
+           - IF SVC DUMP (SVCD) IS CHOSEN (OR DEFAULTED) AS AN          92780064
+             ACTION:                                                    92790064
+                SDATA=(SQA,RGN,TRT,LPA,CSA,NUC,ALLPSA,SUM),             92800064
+                MATCHLIM=1(FOR PER TRAPS ONLY)                          92810064
+           - IF TRACE IS CHOSEN AS AN ACTION, TRDATA=STD IS THE         92840064
+             DEFAULT TRACE RECORD REQUESTED.                            92860064
+           - IF TRDUMP IS CHOSEN AS AN ACTION, TRDATA=STD IS THE        92880064
+             DEFAULT TRACE RECORD REQUESTED AND SDATA=TRT IS THE        92900064
+             DEFAULT DUMP REQUESTED.                                    92920064
+                                                                        92930064
+  ALIASES  - ACTION=A,ADDRESS=AD,ASID=AS,ASIDLST=AL,COMP=C,             92940064
+             DATA=DA,DISABLE=D,ENABLE=EN,END=E,ERRTYP=ER,JOBNAME=J,     92950064
+             JSPGM=JS,LIST=LS,LPAMOD=L,MATCHLIM=ML,MODE=M,              92960064
+             PRCNTLIM=PL,PVTMOD=P,RANGE=RA,RBLEVEL=RB,SDATA=SD,         92970064
+             SLIP=SL,SUMLIST=SL,TRDATA=TD                               92980064
+                                                                        92990064
+  NOTES    - THE SLIP USER MUST SUPPLY INFORMATION FOR ITEMS ENCLOSED   93000064
+             IN SINGLE QUOTES ('). THE QUOTES ARE NOT PART OF THE       93001064
+             COMMAND SYNTAX.                                            93002064
+           - IF THE USER HAS A CHOICE, THIS IS INDICATED BY A SLASH     93002864
+             (/) BETWEEN THE ITEMS THAT MAY BE CHOSEN. THE SLASH IS     93003664
+             NOT PART OF THE COMMAND SYNTAX.                            93004464
+           - PROMPTING WILL OCCUR FOR MISSING REQUIRED                  93006064
+             PARAMETERS, INVALIDLY SPECIFIED PARAMETERS, AND            93010064
+             INCOMPLETE (END NOT SPECIFIED) TRAPS.                      93060064
+           - IN OPERATOR COMMAND SYNTAX, BLANKS ARE THE ONLY            93080064
+             SEPARATORS ALLOWED BETWEEN THE COMMAND AND OPERAND.        93100064
+           - OPERANDS MUST BE SEPARATED BY ONE COMMA.                   93120064
+           - SB,IF, OR SA MUST IMMEDIATELY FOLLOW SET WHEN SPECIFIED.   93140064
+           - THE FOLLOWING KEYWORDS AND OPTIONS ARE INVALID FOR         93160064
+             NON-PER TRAPS:                                             93170064
+             RANGE, PRCNTLIM, RECOVERY.                                 93180064
+           - THE FOLLOWING KEYWORDS AND OPTIONS ARE INVALID FOR         93190064
+             PER TRAPS:                                                 93200064
+             NODUMP, ERRTYP, COMP, RBLEVEL.                             93210064
+           - ACTION=WAIT IS NOT AVAILABLE TO A TSO USER OF SLIP.        93220064
+           - GTF MUST BE ACTIVE WITH THE GTF SLIP OPTION TO COLLECT     93230064
+             SLIP RECORDS WITH THE TRACE, TRDUMP OR DEBUG OPTION.       93261064
+           - FOR IF AND SB PER TRAPS, THE STORAGE RANGE MONITORED BY    93262064
+             THE PER HARDWARE SHOULD INCLUDE EXECUTABLE INSTRUCTIONS.   93263064
+           - FOR SA PER TRAPS, THE STORAGE RANGE MONITORED BY THE PER   93264064
+             HARDWARE SHOULD USUALLY BE CONTROL BLOCK OR DATA AREAS.    93265064
+           - FOR SA PER TRAPS THAT HAVE ACTION=IGNORE, RANGE            93265364
+             CANNOT BE SPECIFIED.                                       93265664
+           - THE SLIP COMMAND ACCEPTS ONLY ONE LINE AT A TIME FOR       93266064
+             INPUT BUT ALLOWS THE USER TO ENTER AS MANY LINES AS        93267064
+             NEEDED USING THE FOLLOWING MECHANISM:                      93268064
+             1) A BLANK (EXCEPT BETWEEN SLIP AND SET, MOD, OR DEL)      93269064
+                SIGNIFIES THE END OF THAT LINE OF INPUT.                93270064
+             2) THE LINE OF INPUT CAN END ANYWHERE A COMMA OR           93271064
+                PARENTHESIS EXISTS WITHIN THE COMMAND (THE              93272064
+                PARENTHESIS AROUND THE BINARY INDICATOR OF THE TARGET   93273064
+                IN THE DATA KEYWORD IS THE ONLY EXCEPTION).             93274064
+             3) THE END KEYWORD ON THE SET COMMAND SIGNIFIES THE        93275064
+                DEFINITION OF THE TRAP IS COMPLETE.                     93276064
+             4) WHEN PROMPTING THE USER FOR THE NEXT LINE ON AN         93277064
+                INCOMPLETE SET COMMAND, THE PARAMETERS SPECIFIED        93278064
+                AND DEFAULTED TO WILL BE DISPLAYED.                     93279064
+           - ONLY ONE NON-IGNORE PER TRAP MAY BE ENABLED AT ONE TIME.   93320064
+                                                                        93330064
+)O OPERANDS                                                             93340064
+))SET      - CAUSES A SLIP TRAP TO BE CREATED.                          93360064
+))MOD      - ALLOWS AN EXISTING SLIP TRAP TO BE ENABLED OR DISABLED.    93370064
+))DEL      - CAUSES AN EXISTING SLIP TRAP TO BE DELETED.                93380064
+))IF       - SPECIFIES A PER INSTRUCTION FETCH TRAP.                    93390064
+))SB       - SPECIFIES A PER SUCCESSFUL BRANCH TRAP.                    93400064
+))SA       - SPECIFIES A PER STORAGE ALTERATION TRAP.                   93410064
+                                                                        93480064
+))ENABLE   - SPECIFIES THAT THE TRAP IS TO BE ACTIVE (CHECKED FOR       93490064
+             MATCH). THIS IS THE DEFAULT WHEN A TRAP IS INITIALLY       93500064
+             SET.                                                       93510064
+                                                                        93520064
+))DISABLE  - SPECIFIES THAT THE TRAP IS TO BE INACTIVE (NEVER CHECKED   93530064
+             FOR MATCH).                                                93540064
+                                                                        93550064
+))ALL      - SPECIFIES THAT ALL EXISTING SLIP TRAPS ARE TO BE AFFECTED. 93560064
+                                                                        93570064
+))ID       - SPECIFIES A 1 TO 4 CHARACTER ALPHANUMERIC STRING USED TO   93580064
+             IDENTIFY THE TRAP. WHEN A TRAP IS INITIALLY SET, IF THIS   93590064
+             OPERAND IS OMITTED, THE SYSTEM WILL ASSIGN AN ID.          93600064
+                                                                        93610064
+    ID KEYWORD EXAMPLE:   ID=PER1                                       93620064
+                                                                        93630064
+))ACTION   - DEFINES WHAT ACTION IS TO BE TAKEN WHEN THE TRAP           93670064
+             CONDITIONS ARE MATCHED.                                    93680064
+    SVCD     - INDICATES AN SVC DUMP WILL BE SCHEDULED FOR THE CURRENT  93690064
+               (OR FAILING) ADDRESS SPACE. THIS IS THE DEFAULT.         93710064
+    TRACE    - PROVIDES FOR THE COLLECTION OF GTF TRACE RECORDS FOR     93720064
+               EACH MATCHING EVENT PROVIDED GTF IS ACTIVE AND THE GTF   93730064
+               SLIP OPTION HAS BEEN CHOSEN.                             93738064
+    TRDUMP   - PROVIDES FOR THE COLLECTION OF GTF TRACE RECORDS FOR     93746064
+               EACH MATCHING EVENT PROVIDED GTF IS ACTIVE AND THE GTF   93754064
+               SLIP OPTION HAS BEEN CHOSEN. WHEN THE TRAP IS            93770064
+               DISABLED OR DELETED, AN SVC DUMP WILL BE SCHEDULED.      93780064
+    IGNORE   - CAUSES THE SYSTEM TO PROCEED WITH NORMAL PROCESSING WHEN 93840064
+               THE SPECIFIED EVENT OCCURS. THIS OPTION IS NORMALLY      93860064
+               USED TO EXCLUDE A SUBSET OF EVENTS FROM BEING TRAPPED    93880064
+               BY A DIFFERENT, MORE GENERAL, SLIP TRAP.                 93900064
+    NODUMP   - CAUSES DUMPS TO BE SUPPRESSED WHEN THE CONDITIONS        93920064
+               DEFINED IN THE TRAP OCCUR. THIS ACTION IS NOT VALID      93940064
+               FOR PER TRAPS.                                           93960064
+    RECOVERY - FORCES PER TRAPS TO INITIATE RECOVERY FOR THE            93980064
+               INTERRUPTED PROCESS AFTER THE ACTION IS PERFORMED.       94000064
+               THIS KEYWORD IS VALID ONLY FOR PER TRAPS.                94020064
+                                                                        94030064
+    ACTION KEYWORD EXAMPLE:   ACTION=SVCD                               94080064
+                                                                        94130064
+))TRDATA   - SPECIFIES THE TYPE AND CONTENT OF THE GTF TRACE RECORDS    94840064
+             COLLECTED WHEN USED WITH ACTION=TRACE AND ACTION=TRDUMP.   94860064
+             THE SYNTAX FOR TRDATA IS:                                  94880064
+             TRDATA=(STD<,REGS><,'LIST'>/'LIST'/REGS<,LIST>)            94890064
+    STD      - SPECIFIES THAT THE TRACE RECORDS WILL CONTAIN THE        94900064
+               INFORMATION IN THE STANDARD SLIP RECORD.                 94910064
+    REGS     - SPECIFIES THAT THE TRACE RECORDS WILL CONTAIN THE 16     94920064
+               GENERAL PURPOSE REGISTERS AT THE TIME OF THE INTERRUPT   94930064
+               OR ERROR.                                                94940064
+    'LIST'   - SPECIFIES ONE OR MORE PAIRS OF ADDRESSES TO BE DUMPED.   94950064
+               ADDRESSES MAY BE EITHER DIRECT OR INDIRECT (SEE LIST     94960064
+               KEYWORD).                                                94970064
+                                                                        95080064
+             IF ONLY STD IS SPECIFIED WITH 'LIST', THE 'LIST' MAY       95090064
+             REQUEST UP TO 136 BYTES OF USER DEFINED DATA (INCLUDING    95100064
+             A ONE BYTE LENGTH FIELD FOR EACH ADDRESS PAIR REQUESTED).  95110064
+                                                                        95120064
+             IF STD AND REGS ARE SPECIFIED WITH 'LIST', THE 'LIST' MAY  95130064
+             REQUEST UP TO 71 BYTES OF USER DEFINED DATA (INCLUDING     95140064
+             A ONE BYTE LENGTH FIELD FOR EACH ADDRESS PAIR REQUESTED).  95150064
+                                                                        95160064
+             IF ONLY REGS IS SPECIFIED WITH 'LIST', THE 'LIST' MAY      95170064
+             REQUEST UP TO 191 BYTES OF USER DEFINED DATA (INCLUDING    95180064
+             A ONE BYTE LENGTH FIELD FOR EACH ADDRESS PAIR REQUESTED).  95190064
+                                                                        95200064
+             IF ONLY 'LIST' IS SPECIFIED, THE 'LIST' MAY                95210064
+             REQUEST UP TO 256 BYTES OF USER DEFINED DATA (INCLUDING    95220064
+             A ONE BYTE LENGTH FIELD FOR EACH ADDRESS PAIR REQUESTED).  95230064
+                                                                        95240064
+             IF THE ABOVE LIMITS ARE EXCEEDED, THE TRACE RECORD DATA    95320064
+             WILL BE TRUNCATED.                                         95340064
+                                                                        95350064
+    TRDATA KEYWORD EXAMPLE:    TRDATA=(STD,REGS,152,155)                95400064
+                                                                        95450064
+))ERRTYP   - SPECIFIES ONE OR MORE CONDITIONS TO BE CHECKED FOR THE     95630064
+             TRAP. IF ANY OF THE CONDITIONS EXIST, THE ERRTYP           95640064
+             KEYWORD MATCH TEST IS SATISFIED. THIS KEYWORD IS           95650064
+             NOT VALID FOR PER TRAPS.                                   95660064
+    PROG     - PROGRAM CHECK INTERRUPT.                                 95670064
+    REST     - RESTART INTERRUPT.                                       95680064
+    SVCERR   - SVC ERROR (SVC ISSUED WHILE LOCKED, DISABLED OR IN       95690064
+               SRB MODE).                                               95700064
+    ABEND    - TASK ISSUED SVC 13.                                      95760064
+    PGIO     - PAGING I/O ERROR.                                        95780064
+    DAT      - DYNAMIC ADDRESS TRANSLATION ERROR.                       95800064
+    MACH     - SOFTWARE ERROR CAUSED BY A MACHINE CHECK.                95820064
+    MEMTERM  - ABNORMAL ADDRESS SPACE TERMINATION.                      95840064
+    ALL      - ALL OF THE ABOVE ERROR CONDITIONS.                       95850064
+                                                                        95860064
+    ERRTYP KEYWORD EXAMPLE:   ERRTYP=(MACH,DAT)                         95862064
+                                                                        95864064
+))MODE     - DEFINES THE MODE THE SYSTEM MUST BE IN TO SATISFY THE      95870064
+             TRAP CONDITION.                                            95880064
+    SUPR     - SUPERVISOR CONTROL MODE (ANY BIT SET IN PSASUPER).       95890064
+    DIS      - PHYSICALLY DISABLED FOR I/O AND EXTERNAL INTERRUPTS.     95940064
+    GLOC     - ANY GLOBAL LOCK IS HELD.                                 95960064
+    GLOCSP   - A GLOBAL SPIN LOCK IS HELD.                              95980064
+    GLOCSD   - A GLOBAL SUSPEND LOCK IS HELD.                           96000064
+    LLOC     - A LOCAL LOCK IS HELD.                                    96020064
+    LOCK     - ANY LOCK IS HELD.                                        96040064
+    TYP1     - TYPE ONE SVC IS IN CONTROL.                              96060064
+    SRB      - SRB MODE.                                                96080064
+    TCB      - TCB MODE.                                                96100064
+    PP       - PROBLEM PROGRAM STATE.                                   96120064
+    SUPER    - SUPERVISOR STATE.                                        96140064
+    SKEY     - SYSTEM KEY (7 OR LESS).                                  96160064
+    PKEY     - PROBLEM PROGRAM KEY (8 OR MORE).                         96180064
+    RECV     - A RECOVERY ROUTINE IS IN CONTROL.                        96200064
+    ALL      - ALL OF THE ABOVE MODES.                                  96220064
+    EVERY    - EVERY MODE CONDITON SPECIFIED MUST EXIST FOR             96240064
+               THE TRAP TO MATCH (LOGICAL 'AND' OF MODES SPECIFIED).    96260064
+    ANY      - ANY MODE CONDITION SPECIFIED WILL ALLOW                  96280064
+               THE TRAP TO MATCH (LOGICAL 'OR' OF MODES SPECIFIED).     96300064
+               "ANY" IS THE DEFAULT IF "EVERY" IS NOT SPECIFIED WITH    96306064
+               ONE OF THE MODES.                                        96310064
+                                                                        96320064
+    MODE KEYWORD EXAMPLE:  MODE=(LLOC,SRB,EVERY)                        96322064
+                                                                        96324064
+))COMP     - PERMITS THE CHECKING OF COMPLETION CODES.                  96326064
+    U'DDDD'  - DEFINES USER COMPLETION CODES (DECIMAL).                 96328064
+    'HHH'    - DEFINES SYSTEM COMPLETION CODES (HEXADECIMAL).           96331064
+             THE CHARACTER "X" CAN BE USED IN PLACE OF                  96334064
+             A HEXADECIMAL OR DECIMAL DIGIT(S) TO INDICATE THAT         96337064
+             THE DIGIT POSITION SHOULD NOT AFFECT THE COMPLETION        96340064
+             CODE MATCH TEST. FOR EXAMPLE, COMP=X22                     96343064
+             INDICATES THAT COMPLETION CODES 022,122,222,322,           96346064
+             422,522,622,722,822,922,A22,B22,C22,D22,E22, AND F22       96355064
+             WILL CAUSE THE COMP KEYWORD TO MATCH. A SYSTEM COMPLETION  96370064
+             CODE IS ALWAYS SPECIFIED AS THREE CHARACTERS AND A USER    96374064
+             COMPLETION CODE IS ALWAYS SPECIFIED AS FIVE CHARACTERS.    96378064
+             THIS KEYWORD IS NOT VALID FOR PER TRAPS.                   96382064
+                                                                        96394064
+    COMP KEYWORD EXAMPLE: COMP=U123X                                    96398064
+                                                                        96402064
+))JOBNAME  - FOR ALL TRAPS, INDICATES THE NAME OF THE JOB THAT          96406064
+             MUST BE IN CONTROL (I.E. WHOSE ADDRESS SPACE MUST BE       96410064
+             CURRENT) FOR THE JOBNAME MATCH TEST TO BE SATISFIED.       96421064
+             THE NAME OF A BATCH JOB, TSO USER ID OR STARTED TASK       96430064
+             MAY BE SPECIFIED.                                          96439064
+           - FOR PER TRAPS, LIMITS THE SCOPE OF PER MONITORING          96460064
+             TO THE ADDRESS SPACE IN WHICH THE SPECIFIED                96480064
+             JOB RUNS. IF JOBNAME OR ASID IS NOT SPECIFIED              96500064
+             FOR A PER TRAP, PER MONITORING WILL BE ACTIVE IN ALL       96540064
+             ADDRESS SPACES IN THE SYSTEM.                              96560064
+                                                                        96580064
+    JOBNAME KEYWORD EXAMPLE: JOBNAME=D10AXX3                            96584064
+                                                                        96588064
+))JSPGM    - INDICATES THE JOB STEP PROGRAM THAT MUST BE IN CONTROL     96592064
+             TO SATISFY THE JOB STEP PROGRAM NAME MATCH TEST.           96596064
+                                                                        96600064
+    JSPGM KEYWORD EXAMPLE: JSPGM=IFOX00                                 96604064
+                                                                        96608064
+))RBLEVEL  - SPECIFIES WHICH RB TO USE TO OBTAIN THE PSW AND            96620064
+             REGISTERS TO BE USED IN CONJUNCTION WITH THE LPAMOD,       96640064
+             PVTMOD, ADDRESS, MODE, DATA, TRDATA, LIST, AND SUMLIST     96660064
+             KEYWORDS. THIS KEYWORD IS NOT VALID FOR PER TRAPS.         96680064
+             THIS KEYWORD ONLY APPLIES TO ERRORS IN UNLOCKED TASK       96686064
+             MODE ROUTINES.                                             96692064
+    ERROR    - THE PSW USED FOR THE COMPARISON IS OBTAINED FROM THE     96700064
+               RB PRIOR TO THE SVC 13 (ABEND) RB. THE REGISTERS ARE     96720064
+               OBTAINED FROM THE SVC 13 RB.                             96740064
+    PREVIOUS - THE INFORMATION IS OBTAINED FROM ONE RB PRIOR TO THOSE   96760064
+               USED IN ERROR.                                           96780064
+    NOTSVRB  - THE PSW IS OBTAINED FROM THE MOST RECENT NON-SVRB AND    96800064
+               THE REGISTERS ARE OBTAINED FROM THE ASSOCIATED SVRB.     96810064
+                                                                        96820064
+    RBLEVEL KEYWORD EXAMPLE: RBLEVEL=NOTSVRB                            96825064
+                                                                        96830064
+))PVTMOD   - FOR A NON-PER TRAP, SPECIFIES THE NAME OF THE PRIVATE      96840064
+             AREA LOAD MODULE WITHIN WHICH THE ERROR MUST OCCUR.        96860064
+             IF 'START' AND 'END' OFFSETS ARE SUPPLIED, THE ERROR       96880064
+             MUST OCCUR WITHIN THE SPECIFIED OFFSET RANGE WITHIN        96890064
+             THE PRIVATE MODULE. IF JUST A START OFFSET IS SUPPLIED,    96900064
+             THE ERROR MUST OCCUR AT THAT OFFSET WITHIN THE PRIVATE     96940064
+             MODULE. IF START AND END ARE NOT SPECIFIED, THE ERROR      96960064
+             CAN OCCUR ANYWHERE WITHIN THE PRIVATE MODULE.              96980064
+           - FOR AN SA PER TRAP, SPECIFYING PVTMOD INDICATES THAT THE   97000064
+             STORAGE ALTERATION BEING MONITORED MUST BE CAUSED BY AN    97020064
+             INSTRUCTION WITHIN THE PRIVATE MODULE OR WITHIN THE        97040064
+             RANGE OF OFFSETS WITHIN THE PRIVATE AREA MODULE            97060064
+             SPECIFIED BY 'START' AND 'END'.                            97070064
+           - PVTMOD IS NOT VALID FOR AN IF OR SB PER TRAP.              97080064
+                                                                        97090064
+    PVTMOD KEYWORD EXAMPLE: PVTMOD=(MYMOD,1C,1F)                        97097064
+                                                                        97104064
+))RANGE    - SPECIFIES IN HEXADECIMAL, THE VIRTUAL STORAGE ADDRESS      97120064
+             RANGE TO BE MONITORED FOR PER TRAPS. IF ONLY ONE           97140064
+             ADDRESS IS SPECIFIED, A ONE BYTE RANGE IS ASSUMED.         97160064
+             THIS KEYWORD IS INVALID FOR NON-PER TRAPS.                 97180064
+                                                                        97190064
+    RANGE KEYWORD EXAMPLE: RANGE=(3000,301F)                            97192064
+                                                                        97202064
+))LPAMOD   - FOR A NON-PER TRAP, SPECIFIES THE NAME OF THE LINK         97212064
+             PACK AREA MODULE WITHIN WHICH THE ERROR MUST OCCUR.        97222064
+             IF 'START' AND 'END' OFFSETS ARE SUPPLIED, THE ERROR       97232064
+             MUST OCCUR WITHIN THE SPECIFIED OFFSET RANGE WITHIN        97242064
+             THE LPA MODULE. IF JUST A START OFFSET IS SUPPLIED,        97252064
+             THE ERROR MUST OCCUR AT THAT OFFSET WITHIN THE LPA         97262064
+             MODULE. IF 'START' AND 'END' ARE NOT SPECIFIED, THE ERROR  97320064
+             CAN OCCUR ANYWHERE WITHIN THE LPA MODULE.                  97340064
+           - FOR AN IF OR SB PER TRAP, SPECIFYING LPAMOD ESTABLISHES    97360064
+             THE RANGE OF ADDRESSES TO BE MONITORED.                    97380064
+           - FOR AN SA PER TRAP, SPECIFYING LPAMOD INDICATES            97400064
+             THAT THE STORAGE ALTERATION MUST BE CAUSED BY AN           97420064
+             INSTRUCTION WITHIN THE LPAMOD OR WITHIN THE RANGE          97440064
+             OF OFFSETS IN THE LPAMOD SPECIFIED BY 'START' AND 'END'    97460064
+             ADDRESSES.                                                 97480064
+                                                                        97490064
+    LPAMOD KEYWORD EXAMPLE: LPAMOD=(IEAVTXYZ,2C)                        97492064
+                                                                        97494064
+))ADDRESS  - FOR A NON-PER TRAP, SPECIFIES THE RANGE OF ADDRESSES       97500064
+             WITHIN WHICH THE ERROR MUST OCCUR.                         97520064
+           - FOR AN SA PER TRAP, SPECIFYING ADDRESS INDICATES           97540064
+             THAT THE STORAGE ALTERATION BEING MONITORED MUST           97560064
+             BE CAUSED BY AN INSTRUCTION WITHIN THE ADDRESS RANGE       97580064
+             SPECIFIED.                                                 97600064
+           - THIS KEYWORD IS INVALID FOR AN IF OR SB PER TRAP.          97620064
+                                                                        97640064
+    ADDRESS KEYWORD EXAMPLE: ADDRESS=(CD000,CD300)                      97642064
+                                                                        97644064
+))ASID     - SPECIFIES THE ADDRESS SPACE WHICH MUST BE IN CONTROL       97650064
+             WHEN THE ERROR OR INTERRUPT OCCURS.                        97660064
+           - FOR A PER TRAP, SPECIFYING ASID INDICATES WHICH ADDRESS    97680064
+             SPACE IS TO HAVE PER MONITORING ACTIVE. UP TO SIXTEEN      97700064
+             ADDRESS SPACES MAY BE SPECIFIED. IF NO ASID OR JOBNAME     97720064
+             IS SPECIFIED, PER MONITORING WILL BE ACTIVE IN ALL         97740064
+             ADDRESS SPACES IN THE SYSTEM.                              97760064
+                                                                        97780064
+    ASID KEYWORD EXAMPLE: ASID=(3,7,12A)                                97780164
+                                                                        97780264
+))SDATA   - SPECIFIES THE SYSTEM CONTROL PROGRAM INFORMATION TO         97780364
+            BE DUMPED. SDATA IS VALID ONLY IF THE SVCD OR TRDUMP        97780464
+            ACTION IS SPECIFIED OR DEFAULTED. THE OPTION(S)             97780564
+            SPECIFIED FOR SDATA COMPLETELY REPLACE THE DEFAULT          97783664
+            SDATA DUMP OPTIONS.                                         97783764
+    SQA      - THE SYSTEM QUEUE AREA.                                   97783864
+    ALLPSA   - ALL OF THE PREFIX SAVE AREAS IN THE SYSTEM.              97783964
+    PSA      - THE PREFIX SAVE AREA FOR THE CURRENT CPU.                97784064
+    NUC      - THE NUCLEUS.                                             97784164
+    LSQA     - THE LSQA FOR EACH ADDRESS SPACE BEING DUMPED.            97784264
+    RGN      - THE ALLOCATED PAGES IN THE PRIVATE AREA OF EACH ADDRESS  97784364
+               SPACE BEING DUMPED. THIS INCLUDES LSQA AND SWA.          97784464
+    LPA      - THE ACTIVE LINK PACK AREA MODULES AND SVC'S FOR EACH     97784564
+               ADDRESS SPACE BEING DUMPED.                              97784664
+    TRT      - THE GTF TRACE BUFFERS IF GTF TRACING IS ACTIVE, OR THE   97784764
+               SUPERVISOR TRACE TABLE IF GTF IS NOT ACTIVE AND          97784864
+               SUPERVISOR TRACE IS ACTIVE.                              97784964
+    CSA      - THE COMMON SERVICE AREA SUBPOOLS.                        97785064
+    SWA      - THE SCHEDULER WORK AREA SUBPOOLS FOR EACH ADDRESS SPACE  97785164
+               BEING DUMPED.                                            97785264
+    NOALLPSA - ONLY THE PSA FOR THE CURRENT CPU WILL BE DUMPED.         97785364
+    NOSQA    - THE SYSTEM QUEUE AREA WILL NOT BE DUMPED.                97785464
+    NOSUM    - A SUMMARY DUMP WILL NOT BE INCLUDED IN THE SVC DUMP.     97785564
+    SUMDUMP  - REQUESTS A SUMMARY DUMP.                                 97785664
+                                                                        97785764
+    SDATA KEYWORD EXAMPLE:    SDATA=(SQA,PSA,SUM)                       97785864
+                                                                        97785964
+))LIST     - SPECIFIES ONE OR MORE PAIRS OF STARTING AND ENDING         97786064
+             ADDRESSES TO BE DUMPED. THE STARTING ADDRESS MUST BE       97786164
+             LESS THAN OR EQUAL TO THE ENDING ADDRESS. THE STARTING     97786264
+             AND ENDING ADDRESS MAY BE EITHER A DIRECT ADDRESS OR       97786364
+             AN INDIRECT ADDRESS. A DIRECT ADDRESS IS A VIRTUAL         97786464
+             HEXADECIMAL STORAGE LOCATION. AN INDIRECT ADDRESS IS       97786564
+             RESOLVED WHEN IT IS TO BE USED AND MAY CONTAIN: A          97786664
+             DIRECT ADDRESS, A REGISTER (IN THE FORM 'N'R), AN          97786764
+             INDIRECTION (OR POINTER) INDICATOR (A PERCENT SIGN),       97786864
+             AND HEXADECIMAL DISPLACEMENTS. FOR EXAMPLE,                97786964
+             5R%+4 SPECIFIES THE LOCATION FOUR BYTES BEYOND (+4)        97787064
+             THE LOCATION POINTED TO (%) BY REGISTER FIVE (5R).         97787164
+             LIST IS VALID ONLY IF THE SVCD OR TRDUMP ACTION IS         97787264
+             SPECIFIED OR DEFAULTED.                                    97787364
+                                                                        97789264
+    LIST KEYWORD EXAMPLE:    LIST=(152,155,10%+2C%%,+3F)                97789664
+                                                                        97790064
+))SUMLIST  - SPECIFIES ONE OR MORE STORAGE ADDRESS PAIRS REPRESENTING   97790464
+             STORAGE ADDRESS RANGES TO BE INCLUDED IN THE SUMMARY       97790864
+             DUMP. THE ADDRESSES ENTERED WITH THIS PARAMETER MAY        97791264
+             BE DIRECT OR INDIRECT. A DIRECT ADDRESS IS A VIRTUAL       97791664
+             HEXADECIMAL STORAGE LOCATION. AN INDIRECT ADDRESS IS       97792064
+             RESOLVED WHEN IT IS TO BE USED AND MAY CONTAIN: A          97792464
+             DIRECT ADDRESS, A REGISTER (IN THE FORM 'N'R), AN          97792864
+             INDIRECTION (OR POINTER) INDICATOR (A PERCENT SIGN),       97793264
+             AND HEXADECIMAL DISPLACEMENTS. FOR EXAMPLE,                97793664
+             5R%+4 SPECIFIES THE LOCATION FOUR BYTES BEYOND (+4)        97794064
+             THE LOCATION POINTED TO (%) BY REGISTER FIVE (5R).         97794464
+             SUMLIST IS VALID ONLY IF THE SVCD OR TRDUMP ACTION IS      97794864
+             SPECIFIED OR DEFAULTED.                                    97795264
+                                                                        97795664
+    SUMLIST KEYWORD EXAMPLE:  SUMLIST=(2000,3000,10%,10%+3F) .          97796064
+                                                                        97796464
+))ASIDLST -  SPECIFIES IDENTIFIERS OF 1 TO 15 ADDRESS SPACES            97796864
+             TO BE DUMPED. ASIDLST IS VALID ONLY IF THE SVCD OR         97797264
+             TRDUMP ACTION IS SPECIFIED (OR DEFAULTED). ZERO            97797664
+             INDICATES CURRENT ADDRESS SPACE.                           97798064
+                                                                        97798464
+    ASIDLST KEYWORD EXAMPLE:   ASIDLST=(0,1,7,12A)                      97798864
+                                                                        97799264
+))DATA     - PROVIDES THE CAPABILITY TO SPECIFY ONE OR MORE LOGICAL     97799664
+             COMPARISONS OF UP TO FOUR BYTES OF MAIN STORAGE OR         97800064
+             ANY GENERAL PURPOSE REGISTER (GPR) THAT MUST BE            97810064
+             SATISFIED IN ORDER FOR THE TRAP TO MATCH.                  97820064
+    'TARGET' - SPECIFIES THE MAIN STORAGE LOCATION (DIRECT OR           97830064
+               INDIRECT) OR GPR TO BE COMPARED WITH THE VALUE           97840064
+               SPECIFIED. THIS PARAMETER MAY SPECIFY A HEXADECIMAL      97850064
+               STORAGE LOCATION OR A GPR IN THE FORM 'N'R, WHERE 'N'    97860064
+               IS THE DECIMAL REGISTER NUMBER.                          97870064
+    ('B')    - INDICATES THAT A BINARY (AS OPPOSED TO A HEXADECIMAL)    97940064
+               COMPARISON IS TO BE MADE BETWEEN TARGET AND VALUE AND    97960064
+               THE COMPARISON IS TO START 'B' BITS INTO THE TARGET.     97980064
+               IF THE COMPARISON INVOLVES A STORAGE LOCATION,           98000064
+               VALUES FROM 0 TO 7 MAY BE SPECIFIED. IF THE COMPARISON   98010064
+               INVOLVES A REGISTER, VALUES FROM 0 TO 31 MAY BE          98020064
+               SPECIFIED.                                               98060064
+    'OPERATOR'-SPECIFIES THE RELATIONSHIP THAT MUST EXIST BETWEEN       98080064
+               TARGET AND VALUE. VALID OPERATOR VALUES ARE EQ, NE,      98100064
+               GT, LT, NG, AND NL.                                      98110064
+    'VALUE'  - SPECIFIES 1 TO 8 HEXADECIMAL DIGITS OR 1 TO 8            98120064
+               BINARY DIGITS TO USE IN THE COMPARISON. THE              98128064
+               LENGTH OF THIS VALUE IMPLIES THE LENGTH OF THE           98136064
+               COMPARISON.                                              98144064
+                                                                        98152064
+    DATA KEYWORD EXAMPLE:                                               98157064
+         DATA=(2R,EQ,80,10,NE,00000000,5R%+8,EQ,1234,3R(20),EQ,01)      98162064
+                                                                        98167064
+))MATCHLIM - SPECIFIES THAT THE SLIP TRAP SHOULD AUTOMATICALLY BE       98180064
+             DISABLED AFTER THE SPECIFIED NUMBER OF SUCCESSFUL MATCHES. 98190064
+             THIS PARAMETER MUST BE IN THE RANGE 1 TO 65535. FOR PER    98200064
+             TRAPS WITH ACTION=SVCD, THIS PARAMETER DEFAULTS TO ONE;    98210064
+             IN ALL OTHER CASES, THE DEFAULT IS TO ALLOW THE TRAP       98216064
+             TO MATCH AN UNLIMITED NUMBER OF TIMES.                     98222064
+                                                                        98237064
+    MATCHLIM EXAMPLE:   MATCHLIM=50                                     98244064
+                                                                        98251064
+))PRCNTLIM - AN INTEGER SPECIFIES THE PERCENTAGE OF SOFTWARE            98260064
+             DEGRADATION IN HANDLING PER INTERRUPTS ALLOWED BEFORE      98280064
+             THE PER TRAP WILL BE AUTOMATICALLY DISABLED. THE           98300064
+             MINIMUM VALUE THAT CAN BE SUPPLIED IS 1. THE MAXIMUM       98320064
+             VALUE THAT CAN BE SPECIFIED IS 99. IF 99 IS SPECIFIED,     98340064
+             NO PRCNTLIM CHECKING WILL BE DONE. THIS KEYWORD IS         98360064
+             INVALID FOR NON-PER TRAPS. THE DEFAULT FOR PRCNTLIM        98380064
+             IS 10 IF AN ACTION OTHER THAN IGNORE IS CHOSEN.            98400064
+                                                                        98450064
+    PRCNTLIM EXAMPLE:   PRCNTLIM=15                                     98460064
+                                                                        98470064
+))DEBUG    - THE DEBUG KEYWORD ALLOWS THE SLIP TRAP USER TO PUT A       98490064
+             SLIP TRAP IN DEBUG MODE. THIS WILL CAUSE A GTF TRACE       98540064
+             RECORD TO BE WRITTEN EACH TIME THE TRAP IS CHECKED         98590064
+             PROVIDED THAT GTF IS ACTIVE AND THE GTF SLIP OPTION HAS    98640064
+             BEEN CHOSEN. THE RECORD WRITTEN CONTAINS INFORMATION       98690064
+             THAT ALLOWS THE SLIP USER TO DETERMINE WHICH KEYWORD,      98740064
+             IF ANY, IS CAUSING THE TRAP TO NOT MATCH.                  98790064
+                                                                        98840064
+))END      - SPECIFIES THAT NO ADDITIONAL SLIP PARAMETERS WILL BE       98890064
+             ENTERED.                                                   98940064

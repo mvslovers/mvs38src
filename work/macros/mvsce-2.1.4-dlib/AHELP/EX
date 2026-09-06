@@ -1,0 +1,32 @@
+)F FUNCTION -                                                           03000020
+  THE EXEC COMMAND INITIATES EXECUTION OF A COMMAND PROCEDURE.          06000020
+)X SYNTAX -                                                             09000020
+         EXEC   'DSNAME' ''PARAMETER LIST'' LIST/NOLIST PROMPT/NOPROMPT 12000001
+                                                                        15000020
+  REQUIRED - DSNAME                                                     18000020
+  DEFAULTS - NOLIST,NOPROMPT                                            21000001
+  ALIAS    - EX                                                         24000020
+  NOTE     - THE PARAMETER LIST MUST BE ENCLOSED IN APOSTROPHIES WHEN   27000020
+             IT IS INCLUDED ON THE INVOCATION STATEMENT.                30000020
+             MEMBERS OF THE PARAMETER LIST MUST BE SEPARATED BY THE     33000020
+             STANDARD TSO DELIMITERS.                                   36000020
+             IF DSNAME IS NOT FULLY QUALIFIED, IT IS PREFIXED BY THE    39000020
+             USERID AND SUFFIXED BY 'CLIST'.                            42000020
+)O OPERANDS -                                                           45000020
+  'DSNAME' - THE NAME OF THE DATA SET WHICH CONTAINS THE COMMAND        48000020
+             PROCEDURE TO BE EXECUTED.                                  51000020
+  ''PARAMETER LIST''                                                    54000000
+           - THE LIST OF VALUES WHICH ARE TO BE SUBSTITUTED FOR THE     57000020
+             SYMBOLIC PARAMETERS DEFINED WHEN THE COMMAND PROCEDURE WAS 60000020
+             CREATED.                                                   63000020
+))LIST     - THE COMMANDS AND SUBCOMMANDS IN THE COMMAND PROCEDURE ARE  66000020
+             TO BE LISTED AT THE TERMINAL AS THEY ARE EXECUTED.         69000020
+))NOLIST   - THE COMMANDS AND SUBCOMMANDS IN THE COMMAND PROCEDURE ARE  72000020
+             NOT TO BE LISTED AT THE TERMINAL.                          75000020
+))PROMPT   - PROMPTING TO THE TERMINAL FOR INPUT IS TO BE ALLOWED       75050001
+             DURING THE EXECUTION OF THE COMMAND PROCEDURE.  ALL        75100001
+             COMMANDS AND SUBCOMMANDS IN THE COMMAND PROCEDURE WILL     75150001
+             BE LISTED AT THE TERMINAL AS THEY ARE EXECUTED, UNLESS     75200001
+             THE NOLIST OPTION IS EXPLICITLY SPECIFIED.                 75250001
+))NOPROMPT - PROMPTING TO THE TERMINAL FOR INPUT IS NOT TO BE ALLOWED   75300001
+             DURING THE EXECUTION OF THE COMMAND PROCEDURE.             75350001

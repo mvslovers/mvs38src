@@ -1,0 +1,17 @@
+//CLEANJOB JOB MSGLEVEL=(1,1)                                           06050000
+//SMP24CL PROC S24U=3330,S24V=SYSRES                                    06100000
+//*  THIS PROCEDURE IS USED TO REMOVE CSECT ICBDAMSG                    09000000
+//*  FROM THE LOAD MODULE ICB2MSG ,WHICH WILL BE REBUILT                12000000
+//*  WHEN APPLYING THE COMPLETE SU 24 PACKAGE                           15000000
+//*                                                                     18000000
+//* SYMBLOIC PARAMETER FOR THIS PROCEDURE ARE:                          21000000
+//*   S24U=    (3330) IS THE DEFAULT FOR THE SYSRES UNIT                24000000
+//*                                                                     27000000
+//*   S24V=  (SYSRES) THE DEFAULT FOR THE SYSRES VOLUME                 30000000
+// EXEC PGM=IEHPROGM                                                    33000000
+//SYSPRINT DD SYSOUT=A                                                  36000000
+//SYSRES DD UNIT=&S24U,VOL=SER=&S24V,DISP=OLD                           39000000
+//SYSIN DD *                                                            42000000
+ SCRATCH DSNAME=SYS1.LINKLIB,VOL=&S24U=&S24V,MEMBER=ICB2MSG             45000000
+// PEND                                                                 48000000
+//CLNSTEP EXEC   SMP24CL                                                54000000

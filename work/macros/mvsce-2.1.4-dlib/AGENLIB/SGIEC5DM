@@ -1,0 +1,91 @@
+         MACRO                                                          05000013
+         SGIEC5DM                                                       10000013
+.*                                                                      10050002
+.********************************************************************** 10100002
+.*                                                                      10150002
+.* MODULE NAME = SGIEC5DM (OS/VS2)                                      10200002
+.*               NOTE - TABLE OF CONTENTS = SEQUENCE NO. 132500         10250002
+.*                                                                      10300002
+.* DESCRIPTIVE NAME = DADSM AND CATALOG SYSGEN TYPE 5 MACRO             10350002
+.*                                                                      10400002
+.* COPYRIGHT = NONE                                                     10450002
+.*                                                                      10500002
+.* STATUS = CHANGE LEVEL 000                                            10550002
+.*                                                                      10600002
+.* FUNCTION = THIS MACRO IS CALLED AT SYSGEN TO COPY DADSM AND          10650002
+.*            CATALOG CSECTS FROM AOSD0 TO SYS1.LPALIB.                 10700002
+.*                                                                      10750002
+.* NOTES = NONE.                                                        10800002
+.*                                                                      10850002
+.*      DEPENDENCIES = OS/VS2 DEPENDENT                                 10900002
+.*                                                                      10950002
+.*      RESTRICTIONS = NONE                                             11000002
+.*                                                                      11050002
+.*      REGISTER CONVENTIONS = NOT APPLICABLE.                          11100002
+.*                                                                      11150002
+.* PATCH LABEL = NOT APPLICABLE.                                        11200002
+.*                                                                      11250002
+.* MODULE TYPE = MACRO                                                  11300002
+.*                                                                      11350002
+.*      PROCESSOR = ASSEMBLER LANGUAGE                                  11400002
+.*                                                                      11450002
+.*      MODULE SIZE = NOT APPLICABLE.                                   11500002
+.*                                                                      11550002
+.*      ATTRIBUTES = NOT APPLICABLE.                                    11600002
+.*                                                                      11650002
+.* ENTRY POINT = SGIEC5DM                                               11700002
+.*                                                                      11750002
+.*      PURPOSE = THIS MACRO WILL PUNCH IEBCOPY CONTROL CARDS           11800002
+.*                TO COPY DADSM AND CATALOG CSECTS INTO LPALIB.         11850002
+.*                                                                      11900002
+.*      LINKAGE = SGIEC5DM                                              11950002
+.*                                                                      12000002
+.*      INPUT = SGGLBPAK                                                12050002
+.*                                                                      12100002
+.*      OUTPUT = IEBCOPY CONTROL CARDS.                                 12150002
+.*                                                                      12200002
+.* EXIT NORMAL = MEND STATEMENT                                         12250002
+.*                                                                      12300002
+.* EXIT ERROR = NONE.                                                   12350002
+.*                                                                      12400002
+.* EXTERNAL REFERENCES = SGGLBPAK.                                      12450002
+.*                                                                      12500002
+.*      ROUTINES = NONE.                                                12550002
+.*                                                                      12600002
+.*      DATA AREAS = AOSD0                                              12650002
+.*                                                                      12700002
+.*      CONTROL BLOCKS = NONE.                                          12750002
+.*                                                                      12800002
+.* TABLES = NONE.                                                       12850002
+.*                                                                      12900002
+.* MACROS = NONE.                                                       12950002
+.*                                                                      13000002
+.* CHANGE ACTIVITY =                                                    13050002
+.*                CHANGES/DELETEIONS FOR SU60                  @G60ASBJ 13060060
+.*D 270000-290000                                              @G60ASBJ 13070060
+.*                                                                      13100002
+.********************************************************************** 13150002
+.*                                                                      13200002
+.* TABLE OF CONTENTS: *****************  PAGE FORWARD TO BEGIN MACRO ** 13250002
+.*                                                                      13300002
+.* PROTECT            = 175000                                          13350002
+.*                                                                      13900002
+.********************************************************************** 14400002
+.*                                                                      14900002
+         COPY  SGGBLPAK                                                 15000013
+         PUNCH ' COPY OUTDD=LPALIB,INDD=AOSD0'                          15500002
+.*                                                                      16000002
+.********************************************************************** 16500002
+.*                                                                      17000002
+.* ASSOCIATED MACRO =                   PROTECT                         17500002
+.* DESCRIPTIVE NAME =                   PROTECT ROUTINE                 18000002
+.* FIRST CSECT NAME =                   IGC0009H                        18500002
+.* LIBRARY          =                   SYS1.LPALIB                     19000002
+.* NUMBER OF CSECTS =                   03                              19500002
+.*                                                                      20000002
+.********************************************************************** 20500002
+.*                                                                      21000002
+         PUNCH ' SELECT MEMBER=(IGC0009H,IGC0109H,IGC0209H)'            21500002
+.*                                                                      22000002
+.********************************************************************** 22500002
+         MEND                                                           23000060

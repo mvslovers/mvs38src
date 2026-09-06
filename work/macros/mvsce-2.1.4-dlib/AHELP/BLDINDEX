@@ -1,0 +1,108 @@
+)F FUNCTION -                                                           00050003
+  THE BLDINDEX COMMAND IS USED TO BUILD ONE OR MORE VSAM ALTERNATE      00100003
+  INDEXES OVER A VSAM BASE CLUSTER.  BOTH THE BASE CLUSTER AND          00150003
+  ALTERNATE INDEX MUST HAVE BEEN PREVIOUSLY DEFINED.  THE BASE          00200003
+  CLUSTER MUST NOT BE EMPTY AND THE ALTERNATE INDEX MUST EITHER         00250003
+  BE EMPTY OR HAVE BEEN DEFINED WITH THE REUSABLE ATTRIBUTE.            00300003
+  THE BASE CLUSTER MAY EITHER BE A KEY-SEQUENCED DATA SET OR AN         00350003
+  ENTRY-SEQUENCED DATA SET.                                             00400003
+)X SYNTAX -                                                             00450003
+         BLDINDEX INFILE('DNAME/PASSWORD') |                            00500003
+                  INDATASET('ENTRYNAME/PASSWORD')                       00550003
+                  OUTFILE('DNAME/PASSWORD' ...) |                       00600003
+                  OUTDATASET('ENTRYNAME/PASSWORD' ...)                  00650003
+                  EXTERNALSORT | INTERNALSORT                           00700003
+                  WORKFILES('DNAME' 'DNAME')                            00750003
+                  CATALOG('CATNAME/PASSWORD')                           00800003
+  REQUIRED - INFILE OR INDATASET                                        00850003
+             OUTFILE OR OUTDATASET                                      00900003
+  DEFAULTS - INTERNALSORT                                               00950003
+  ABBREVIATIONS -                                                       01000003
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED: 01050003
+             BLDINDEX              BIX                                  01100003
+             INFILE                IFILE                                01150003
+             INDATASET             IDS                                  01200003
+             OUTFILE               OFILE                                01250003
+             OUTDATASET            ODS                                  01300003
+             EXTERNALSORT          ESORT                                01350003
+             INTERNALSORT          ISORT                                01400003
+             WORKFILES             WFILE,WFILES,WORKFILE                01450003
+)O OPERANDS -                                                           01550003
+))INFILE('DNAME/PASSWORD')                                              01600003
+           - IDENTIFIES THE BASE CLUSTER VIA DDNAME                     01650003
+  'DNAME'  - NAMES THE DD STATEMENT THAT IDENTIFIES THE BASE            01700003
+             CLUSTER OR A PATH THAT POINTS TO THE BASE CLUSTER.         01750003
+  'PASSWORD'                                                            01800003
+           - READ (OR HIGHER LEVEL) PASSWORD OF THE OBJECT IDENTIFIED   01850003
+             VIA 'DNAME'; I.E., THE BASE CLUSTER OR PATH OVER THE       01900003
+             BASE CLUSTER.                                              01950003
+  REQUIRED - 'DNAME'                                                    02000003
+))INDATASET('ENTRYNAME/PASSWORD')                                       02050003
+           - IDENTIFIES THE BASE CLUSTER VIA DSNAME                     02100003
+  'ENTRYNAME'                                                           02150003
+           - NAMES THE BASE CLUSTER OR A PATH THAT POINTS TO            02200003
+             THE BASE CLUSTER.  WHEN YOU SPECIFY INDATASET, THE BASE    02250003
+             CLUSTER'S VOLUME IS DYNAMICALLY ALLOCATED.                 02260003
+  'PASSWORD'                                                            02300003
+           - READ (OR HIGHER LEVEL) PASSWORD OF THE OBJECT IDENTIFIED   02350003
+             VIA 'ENTRYNAME'; I.E., THE BASE CLUSTER OR PATH OVER THE   02400003
+             BASE CLUSTER.                                              02450003
+  REQUIRED - 'ENTRYNAME'                                                02500003
+))OUTFILE('DNAME/PASSWORD' ...)                                         02550003
+           - IDENTIFIES THE ALTERNATE INDEX VIA DDNAME                  02600003
+  'DNAME'  - NAMES THE DD STATEMENT THAT IDENTIFIES THE ALTERNATE       02650003
+             INDEX OR A PATH THAT POINTS TO THE ALTERNATE INDEX.        02700003
+  'PASSWORD'                                                            02750003
+           - UPDATE (OR HIGHER LEVEL) PASSWORD OF THE OBJECT            02800003
+             IDENTIFIED VIA 'DNAME'; I.E., THE ALTERNATE INDEX          02850003
+             OR A PATH OVER THE ALTERNATE INDEX.                        02900003
+  REQUIRED - 'DNAME'                                                    02950003
+))OUTDATASET('ENTRYNAME/PASSWORD' ...)                                  03000003
+           - IDENTIFIES THE ALTERNATE INDEX VIA DSNAME                  03050003
+  'ENTRYNAME'                                                           03100003
+           - NAMES THE ALTERNATE INDEX OR A PATH THAT POINTS TO         03150003
+             THE ALTERNATE INDEX.  WHEN YOU SPECIFY OUTDATASET,         03200003
+             THE ALTERNATE INDEX'S VOLUME IS DYNAMICALLY ALLOCATED.     03250003
+  'PASSWORD'                                                            03300003
+           - UPDATE (OR HIGHER LEVEL) PASSWORD OF THE OBJECT            03350003
+             IDENTIFIED VIA 'ENTRYNAME'; I.E., THE ALTERNATE            03400003
+             INDEX OR A PATH OVER THE ALTERNATE INDEX.                  03450003
+  REQUIRED - 'ENTRYNAME'                                                03500003
+))INTERNALSORT                                                          03550003
+           - SPECIFIES THAT THE KEY-POINTER PAIRS CREATED BY            03600003
+             BLDINDEX ARE TO BE SORTED ENTIRELY WITHIN USER-            03650003
+             PROVIDED VIRTUAL STORAGE IF ENOUGH IS AVAILABLE.           03700003
+             IF THE REQUIRED AMOUNT OF VIRTUAL STORAGE IS NOT           03750003
+             AVAILABLE, BLDINDEX WILL ATTEMPT TO PERFORM AN             03800003
+             EXTERNAL SORT.                                             03850003
+))EXTERNALSORT                                                          03900003
+           - SPECIFIES THAT THE KEY-POINTER PAIRS CREATED BY            03950003
+             BLDINDEX ARE TO BE SORTED USING TWO EXTERNAL               04000003
+             SORT WORKFILES THAT ARE DYNAMICALLY DEFINED AS             04050003
+             TWO VSAM ENTRY-SEQUENCED DATA SETS.  IF AN                 04100003
+             EXTERNAL SORT IS TO BE PERFORMED, TWO DD STATEMENTS        04150003
+             THAT DESCRIBE THE EXTERNAL SORT WORKFILES MUST             04200003
+             BE PROVIDED.                                               04250003
+))WORKFILES('DNAME' 'DNAME')                                            04300003
+           - NAMES THE DD STATEMENTS THAT IDENTIFY THE WORKFILES        04350003
+             TO BE USED BY BLDINDEX IF AN EXTERNAL SORT OF THE          04400003
+             KEY-POINTER PAIRS IS REQUIRED.  IF THE DD STATEMENTS       04450003
+             ARE IDENTIFIED WITH THE STANDARD DNAMES OF IDCUT1          04500003
+             AND IDCUT2, THE WORKFILES PARAMETER IS NOT REQUIRED.       04550003
+             REQUIRED PARAMETERS ON THE DD STATEMENTS ARE:  DATA SET    04600003
+             NAME, VOLUME CONTAINING VSAM DATA SPACE, UNIT, DISP=OLD,   04650003
+             AND AMP='AMORG'.                                           04660003
+))CATALOG('CATNAME/PASSWORD')                                           04700003
+           - SPECIFIES THE NAME OF THE CATALOG IN WHICH THE TWO SORT    04750003
+             WORKFILES ARE TO BE DEFINED AS VSAM ENTRY-SEQUENCED        04800003
+             DATA SETS IN THE EVENT AN EXTERNAL SORT IS PERFORMED       04850003
+             BY BLDINDEX.                                               04860003
+  'CATNAME'                                                             04900003
+           - NAME OF THE CATALOG IN WHICH THE TWO SORT WORKFILES        04950003
+             ARE TO BE DEFINED.                                         05000003
+  'PASSWORD'                                                            05050003
+           - MASTER LEVEL PASSWORD OF THE CATALOG.                      05100003
+  REQUIRED - REQUIRED IF AN EXTERNAL SORT IS TO BE PERFORMED AND THE    05150003
+             DEFINE OF THE SORT WORKFILES IS TO BE DIRECTED TO A        05200003
+             SPECIFIC CATALOG AND/OR THE CATALOG TO BE USED             05250003
+             IS PASSWORD PROTECTED.                                     05300003

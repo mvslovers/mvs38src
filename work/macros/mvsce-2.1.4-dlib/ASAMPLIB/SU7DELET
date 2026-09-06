@@ -1,0 +1,172 @@
+//JOB1   JOB                                                            00050000
+//*  THIS JOB DELETES UNUSED CSECTS AND LOAD MODULES FROM SYSTEM        00100000
+//*  LIBRARIES.                                                         00150000
+//STEP1  EXEC PGM=IEHPROGM                                              00200000
+//SYSPRINT DD SYSOUT=A                                                  00250000
+//VOLUME   DD UNIT=****,VOL=SER=******,DISP=OLD                         00300000
+//*  VOLUME DEFINES THE VOLUME(S) CONTAINING SYS1.NUCLEUS,              00350000
+//*  SYS1.LPALIB, AND SYS1.LINKLIB                                      00400000
+//SYSIN    DD *                                                         00450000
+  SCRATCH DSNAME=SYS1.NUCLEUS,VOL=****=******,MEMBER=ILRRIM01           00500000
+  SCRATCH DSNAME=SYS1.NUCLEUS,VOL=****=******,MEMBER=IEAVNPA4           00550000
+  SCRATCH DSNAME=SYS1.NUCLEUS,VOL=****=******,MEMBER=ILRRIM02           00600000
+  SCRATCH DSNAME=SYS1.NUCLEUS,VOL=****=******,MEMBER=ILRRIM03           00650000
+  SCRATCH DSNAME=SYS1.NUCLEUS,VOL=****=******,MEMBER=IEAVNPB4           00700000
+  SCRATCH DSNAME=SYS1.NUCLEUS,VOL=****=******,MEMBER=IEAVNPB5           00750000
+  SCRATCH DSNAME=SYS1.NUCLEUS,VOL=****=******,MEMBER=IEAVNP14           00800000
+  SCRATCH DSNAME=SYS1.LPALIB,VOL=****=******,MEMBER=IDAVBPS2            00850000
+  SCRATCH DSNAME=SYS1.LINKLIB,VOL=****=******,MEMBER=ILRTSK00           00900000
+  SCRATCH DSNAME=SYS1.LINKLIB,VOL=****=******,MEMBER=ILRTMC00           00950000
+  SCRATCH DSNAME=SYS1.LINKLIB,VOL=****=******,MEMBER=ILRSAV00           01000000
+  SCRATCH DSNAME=SYS1.LINKLIB,VOL=****=******,MEMBER=ILRACT00           01050000
+  SCRATCH DSNAME=SYS1.LINKLIB,VOL=****=******,MEMBER=ILRRLG00           01100000
+  SCRATCH DSNAME=SYS1.LINKLIB,VOL=****=******,MEMBER=ILRASN00           01150000
+  SCRATCH DSNAME=SYS1.LINKLIB,VOL=****=******,MEMBER=ILRTRP00           01200000
+  SCRATCH DSNAME=SYS1.LINKLIB,VOL=****=******,MEMBER=ILRTMR00           01250000
+  SCRATCH DSNAME=SYS1.LINKLIB,VOL=****=******,MEMBER=ILRTMR01           01300000
+/*                                                                      01350000
+//STEP2  EXEC PGM=IEWL,REGION=750K,                                     01400000
+//            PARM='LIST,XREF,LET,NCAL,SCTR,SIZE=(600K,100K)'           01450000
+//SYSLMOD  DD DSN=SYS1.NUCLEUS,DISP=OLD,UNIT=****,VOL=SER=******        01500000
+//SYSPRINT DD SYSOUT=A                                                  01550000
+//SYSUT1   DD UNIT=SYSDA,SPACE=(CYL,(5,1))                              01600000
+//SYSLIN   DD *                                                         01650000
+  INSERT IEAVNIP0                                                       01700000
+  INSERT IEAVFX00                                                       01750000
+  INSERT IGFPMCIH,IGFRWAC                                               01800000
+  INSERT IGFPMPFX,IGFPMSCA,IGFPMHCA                                     01850000
+  INSERT IGFPMRTM,IGFPMTHA,IGFPMFRS                                     01900000
+  INSERT IGFPMMSG,IGFPMKTA,IGFPKREF                                     01950000
+  INSERT IGFPTERM,IGFPTSIG                                              02000000
+  INSERT IGFPXMFA,IGFPTAIM                                              02050000
+  INSERT IGFPBUCR,IGFPEXIT                                              02100000
+  INSERT IGFPTCON,IGFPTREC                                              02150000
+  REPLACE ILRAAL00,ILREOT00,ILRFRR00,ILRINT00                           02200000
+  REPLACE ILRINT01,ILRIOC00,ILRIOC01,ILRLXT00                           02250000
+  REPLACE ILRMON00,ILRMON01,ILRPEX00,ILRPTM00                           02300000
+  REPLACE ILRRLP00,ILRSRT00,ILRSSX00,ILRVCN00                           02350000
+  INCLUDE SYSLMOD(IEANUC01)                                             02400000
+  NAME IEANUC01(R)                                                      02450000
+  ENTRY ILRASRIM                                                        02500000
+  REPLACE IEAVNP04,ILRIMM00                                             02550000
+  INCLUDE SYSLMOD(IEAVNP04)                                             02600000
+  NAME IEAVNP04(R)                                                      02650000
+/*                                                                      02700000
+//STEP3  EXEC PGM=IEWL,PARM='NCAL,LET,LIST,RENT,XREF'                   02750000
+//SYSLMOD  DD DSN=SYS1.LPALIB,DISP=OLD,UNIT=****,VOL=SER=******         02800000
+//SYSPRINT DD SYSOUT=A                                                  02850000
+//SYSUT1   DD UNIT=SYSDA,SPACE=(CYL,(20,10))                            02900000
+//SYSLIN   DD *                                                         02950000
+  ORDER IDDWIAPP,IDDWITRM,IDAVBPP1,IDDWICPI,IDAVBPO1                    03000000
+  ORDER IDAVBPR2,IDDWICLS,IDAVBPC1,IDDWIJRN                             03050000
+  ORDER IDAVBPS1,IDDWIFRR,IDAVBPR1                                      03100000
+  ALIAS IDAVBPP1                                                        03150000
+  ENTRY IDDWIAPP                                                        03200000
+  REPLACE IDAVBPJ1,IDAVBPS2                                             03250000
+  INCLUDE SYSLMOD(IDDWI)                                                03300000
+  NAME IDDWI(R)                                                         03350000
+/*                                                                      03400000
+//STEP4  EXEC PGM=IEBCOPY                                               03450000
+//SYSPRINT DD SYSOUT=A                                                  03500000
+//NUCLEUS  DD DSN=SYS1.NUCLEUS,DISP=OLD,UNIT=****,VOL=SER=******        03550000
+//LPALIB   DD DSN=SYS1.LPALIB,DISP=OLD,UNIT=****,VOL=SER=******         03600000
+//SYSIN    DD *                                                         03650000
+  COPY OUTDD=NUCLEUS,INDD=NUCLEUS                                       03700000
+  COPY OUTDD=LPALIB,INDD=LPALIB                                         03750000
+/*                                                                      03800000
+//                                                                      03850000
+//JOB2   JOB                                                            03900000
+//*  THIS JOB DELETES ENTRIES IN THE CDS FOR UNUSED LOAD MODULES        03950000
+//*  AND CSECTS.                                                        04000000
+//STEP1  EXEC PGM=HMASMP                                                04050000
+//SMPOUT   DD SYSOUT=A                                                  04100000
+//SMPLOG   DD DSN=SYS1.SMPLOG,DISP=OLD,UNIT=****,VOL=SER=******         04150000
+//SMPCDS   DD DSN=SYS1.SMPCDS,DISP=OLD,UNIT=****,VOL=SER=******         04200000
+//SMPCNTL  DD *                                                         04250000
+  UCLIN.                                                                04300000
+  DEL LMOD(ILRASN00).                                                   04350000
+  DEL LMOD(ILRRIM03).                                                   04400000
+  DEL LMOD(ILRTMR00).                                                   04450000
+  DEL LMOD(ILRTSK00).                                                   04500000
+  DEL LMOD(IEAVNPA4).                                                   04550000
+  DEL LMOD(IEAVNPB5).                                                   04600000
+  DEL LMOD(IEAVNP14).                                                   04650000
+  DEL MOD(AMDSAAMR).                                                    04700000
+  DEL MOD(IDAVBPJ1).                                                    04750000
+  DEL MOD(IDAVBPS2).                                                    04800000
+  DEL MOD(IEAVNP14).                                                    04850000
+  DEL MOD(IEAVNPB5) LMOD(IEAVNPB5).                                     04860000
+  DEL MOD(IEWFTMIN).                                                    04870000
+  DEL MOD(ILRAAL00).                                                    04900000
+  DEL MOD(ILRACT00).                                                    04950000
+  DEL MOD(ILRACT01).                                                    05000000
+  DEL MOD(ILRASN00).                                                    05050000
+  DEL MOD(ILREOT00).                                                    05100000
+  DEL MOD(ILRFRR00).                                                    05150000
+  DEL MOD(ILRIMM00).                                                    05200000
+  DEL MOD(ILRINT00).                                                    05250000
+  DEL MOD(ILRINT01).                                                    05300000
+  DEL MOD(ILRIOC00).                                                    05350000
+  DEL MOD(ILRIOC01).                                                    05400000
+  DEL MOD(ILRLXT00).                                                    05450000
+  DEL MOD(ILRMON00).                                                    05500000
+  DEL MOD(ILRMON01).                                                    05550000
+  DEL MOD(ILRPEX00).                                                    05600000
+  DEL MOD(ILRPTM00).                                                    05650000
+  DEL MOD(ILRRIM01).                                                    05700000
+  DEL MOD(ILRRIM02).                                                    05750000
+  DEL MOD(ILRRIM03).                                                    05800000
+  DEL MOD(ILRRLG00).                                                    05850000
+  DEL MOD(ILRRLP00).                                                    05900000
+  DEL MOD(ILRSAV00).                                                    05950000
+  DEL MOD(ILRSRT00).                                                    06000000
+  DEL MOD(ILRSSX00).                                                    06050000
+  DEL MOD(ILRTMC00).                                                    06100000
+  DEL MOD(ILRTMR00).                                                    06150000
+  DEL MOD(ILRTMR01).                                                    06200000
+  DEL MOD(ILRTRP00).                                                    06250000
+  DEL MOD(ILRVCN00).                                                    06300000
+  ENDUCL.                                                               06350000
+/*                                                                      06400000
+//                                                                      06450000
+//JOB3   JOB                                                            06500000
+//*  THIS JOB DELETES UNUSED CSECTS FROM THE DISTRIBUTION LIBRARIES     06550000
+//STEP1  EXEC PGM=IEHPROGM                                              06600000
+//SYSPRINT DD SYSOUT=A                                                  06650000
+//DLIB     DD UNIT=****,VOL=SER=******,DISP=OLD                         06700000
+//*  DLIB DEFINES THE VOLUME CONTAINING SYS1.AOSA0, SYS1.AOSC2,         06750000
+//*  SYS1.AOSC5, AND SYS1.AOS12.                                        06800000
+  SCRATCH DSNAME=SYS1.AOSA0,VOL=****=******,MEMBER=IDAVBPJ1             06850000
+  SCRATCH DSNAME=SYS1.AOSA0,VOL=****=******,MEMBER=IDAVBPS2             06900000
+  SCRATCH DSNAME=SYS1.AOSC2,VOL=****=******,MEMBER=IEWFTMIN             06920000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRAAL00             06950000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRACT00             07000000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRACT01             07050000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRASN00             07100000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILREOT00             07150000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRFRR00             07200000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRIMM00             07250000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRINT00             07300000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRINT01             07350000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRIOC00             07400000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRIOC01             07450000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRLXT00             07500000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRMON00             07550000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRMON01             07600000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRPEX00             07650000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRPTM00             07700000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRRIM01             07750000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRRIM02             07800000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRRIM03             07850000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRRLG00             07900000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRRLP00             07950000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRSAV00             08000000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRSRT00             08050000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRSSX00             08100000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRTMC00             08150000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRTMR00             08200000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRTMR01             08250000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRTRP00             08300000
+  SCRATCH DSNAME=SYS1.AOSC5,VOL=****=******,MEMBER=ILRVCN00             08350000
+  SCRATCH DSNAME=SYS1.AOS12,VOL=****=******,MEMBER=AMDSAAMR             08400000
+/*                                                                      08450000

@@ -1,0 +1,211 @@
+         MACRO                                                          00050064
+         SGDFTGBL &UCBFL5=,&UCBFLP1=,&CCWPFIX=0,&ATNTABX=0,&ERPFXWA=0, X00100064
+               &DSEGLEN=0,&DPNDSEG=,&DPNDEXT=,&DEVTYPE=,&ERRTAB=,      X00120064
+               &UNMOVBL=YES                                             00140064
+         COPY  SGGBLPAK                                                 00160064
+         LCLA  &I,&A                                                    00180064
+         LCLC  &O                                                       00200064
+.***START OF SPECIFICATIONS******************************************** 00300064
+.* MODULE NAME - SGDFTGBL                                             * 00350064
+.* DESCRIPTIVE NAME - SET THE SPECIFIED DFT GLOBALS                   * 00400064
+.*                                                                    * 00450064
+.* COPYRIGHT - NONE                                                   * 00500064
+.*                                                                    * 00550064
+.* STATUS - CHANGE LEVEL 00                                           * 00600064
+.*                                                                    * 00650064
+.* FUNCTION -                                                         * 00700064
+.*    THE FUNCTION OF THIS MACRO SET THE DFT GLOBALS THAT ARE         * 00750064
+.* SPECIFIED. THIS MACRO PRESENTS A UNIFORM METHOD TO BE USED TO      * 00800064
+.* TO SET GLOBALS FOR A DFT ENTRY.                                    * 00850064
+.*                                                                    * 00900064
+.* NOTES - N/A                                                        * 00950064
+.*                                                                    * 01000064
+.* MODULE TYPE - MACRO                                                * 01050064
+.* ENTRY POINT - N/A                                                  * 01100064
+.*                                                                    * 01150064
+.* INPUT _                                                            * 01200064
+.*    MACRO SPECIFICATION PARAMETERS:                                 * 01250064
+.*                                                                    * 01300064
+.*    &UCBFL5  -   UCB UCBFL5 SPECIFICATIONS -THE FOLLOWING FLAGS     * 01350064
+.*                 ARE DEFINED.                                       * 01360064
+.*       :                   :                                        * 01400064
+.*    DISCONCC (0)..DISCONNECT COMMAND CHAIN DEVICE                   * 01450064
+.*    ...      (1)..DEFINED FOR OTHER USES - MUST BE ZERO             * 01500064
+.*    LONESEEK (2)..DEVICE REQUIRES STAND ALONE SEEK                  * 01550064
+.*    VARSDR   (3)..DEVICE HAS VARIABLE LENGTH SDRS                   * 01600064
+.*    ENVRTNS  (4)..DEVICE RETURNS ENVIRONMENTAL DATA                 * 01650064
+.*    LASTPATH (5)..LAST PATH/CHANL/CPU TO DEVICE MUST NOT BE         * 01700064
+.*                  VARIED OFFLINE                                    * 01750064
+.*    ACTLUNIT (6)..DEVICE HAS ALTERNATE CONTROL UNIT                 * 01800064
+.*    ALTPATH  (7)..DEVICE HAS ALTERNATE CONTROL PATH(OPTCHAN)        * 01850064
+.*                                                                    * 01900064
+.*    &UCBFLP1 -   UCB UCBFLP1 SPECIFICATION                          * 01950064
+.*    THIS ONE BYTE FIELD CONTAINS THE FOLLOWING FLAGS:               * 02000064
+.*    UPSHARBL (1)..DEVICE IS SHARABLE WHEN IN UP MODE                * 02050064
+.*    DDRSWAP  (4)..DEVICE IS ABLE TO BE SWAPPED BY DDR               * 02100064
+.*    ERRLOG   (5)..ERRLOG PRESENT IN THIS DEVICE                     * 02150064
+.*                              ***                                   * 02200064
+.*                                                                    * 02230064
+.*    &CCWPFIX-    NO. OF CCWS REQUIRED FOR CHANL.PROG. PREFIX        * 02260064
+.*                                                                    * 02290064
+.*    &ATNTABX-    ATTENTION TABLE INDEX TO BE PLACED IN UCB          * 02320064
+.*                                                                    * 02350064
+.*    &ERPFXWA-    NO. OF BYTES OF ERP/PREFIX WORK AREA(VS1.ONLY)     * 02380064
+.*                                                                    * 02410064
+.*    &DSEGLEN-    NO. OF BYTES FOR THE DEVICE DEPENDENT SEGMENT      * 02440064
+.*                                                                    * 02470064
+.*    &DPNDSEG-    ENTIRE DEVICE DEPENDENT SEGMENT APPENDED TO UCB    * 02500064
+.*                                                                    * 02530064
+.*    &DPNDEXT-    ENTIRE DEVICE DEPENDENT EXTENTION OT UCB           * 02560064
+.*                                                                    * 02590064
+.*    &DEVTYPE-    DEVICE TYPE                                        * 02620064
+.*                                                                    * 02650064
+.*    &ERRTAB -    ERROR TAB INDEX                                    * 02680064
+.*                                                                    * 02710064
+.*    &UNMOVBL-    DEVICE IS PHYSICALLY NON REMOVABLE                 * 02740064
+.*                                                                    * 02900064
+.* OTHER INPUT:                                                       * 02950064
+.*                                                                    * 03000064
+.*    &SGCNTRA(3) DEVICE NUMBER/POINTER                               * 03050064
+.*                                                                    * 03100064
+.* OUTPUT -                                                           * 03150064
+.*         THE FOLLOWING GLOBALS ARE SET, DEPENDING UPON THE          * 03200064
+.*         MACRO SPECIFICATIONS:                                      * 03250064
+.*                                                                    * 03300064
+.*   &SGUF50B - DISCONNECT COMMAND CHAIN DEVICE                       * 03350064
+.*                                                                    * 03400064
+.*   &SGUF51B - UNUSED CURRENTLY SET TO ZERO                          * 03450064
+.*                                                                    * 03500064
+.*   &SGUF52B - STAND ALONE SEEK REQUIRED                             * 03550064
+.*                                                                    * 03600064
+.*   &SGUF53B - DEVICE HAS VARIABLE LENGTH SDR'S                      * 03650064
+.*                                                                    * 03700064
+.*   &SGUF54B - ENVIRONMENTAL DATA RETURNED                           * 03750064
+.*                                                                    * 03800064
+.*   &SGUF55B - LAST PATH TO DEVICE MUST NOT BE VARIED OFFLINE        * 03850064
+.*                                                                    * 03900064
+.*   &SGUF56B - DEVICE HAS ALTERNATE CONTROL UNIT                     * 03950064
+.*                                                                    * 04000064
+.*   &SGUF57B - DEVICE HAS ALTERNATE CONTROL PATH(OPTCHAN)            * 04050064
+.*                                                                    * 04100064
+.*   &SGUFP1B - DEVICE IS SHARABLE WHEN IN UP MODE                    * 04150064
+.*                                                                    * 04200064
+.*   &SGUFP4B - DEVICE IS ABLE TO BE SWAPPED BY DDR                   * 04250064
+.*                                                                    * 04300064
+.*   &SGUFP5B - ERRLOG IS PRESENT IN THIS DEVICE                      * 04350064
+.*                                                                    * 04400064
+.*   &SGUCCWA - NO. OF CCWS REQUIRED FOR CHANL.PROG. PREFIX           * 04450064
+.*                                                                    * 04500064
+.*   &SGUATIA - ATTENTION TABLE INDEX                                 * 04550064
+.*                                                                    * 04600064
+.*   &SGUDSGA - DEVICE DEPENDENT SEGMENT LENGTH                       * 04650064
+.*                                                                    * 04700064
+.*   &SGUDSGC - ENTIRE DEVICE DEPENDENT SEGMENT                       * 04750064
+.*                                                                    * 04800064
+.*   &SGUDXTC - ENTIRE DEVICE DEPENDENT EXTENTION                     * 04850064
+.*                                                                    * 04900064
+.* LOCAL SYMBOLS USED:                                                * 04950064
+.*                                                                    * 05000064
+.*       &I -           DEVICE POINTER                                * 05050064
+.*                                                                    * 05100064
+.*       &A -           LOOP COUNTER                                  * 05150064
+.*                                                                    * 05200064
+.* EXIT, NORMAL - N/A                                                 * 05250064
+.*                                                                    * 05300064
+.* EXIT, ERROR - N/A                                                  * 05350064
+.*                                                                    * 05400064
+.* EXTERNAL REFERENCES - NONE                                         * 05450064
+.*                                                                    * 05500064
+.* MACROS - DSP MACROS(SGIDSP01 - SGIDSP10)                           * 05550064
+.*                                                                    * 05600064
+.* CHANGE ACTIVITY -@ZA40915                                          * 05650064
+.*                                                                    * 05700064
+.********************************************************************** 05750064
+.*     GET DEVICE POINTER                                               05800064
+&I       SETA &SGCNTRA(3)        GET DEVICE POINTER                     05850064
+         AIF   (T'&UCBFL5 EQ 'O').FINFL5                                05900064
+.MORE1   AIF   (N'&UCBFL5 EQ &A).FINFL5                                 05950064
+&A       SETA  &A+1                                                     06000064
+         AIF   ('&UCBFL5(&A)' EQ 'DISCONCC').UBIT0                      06050064
+         AIF   ('&UCBFL5(&A)' EQ 'LONESEEK').UBIT2                      06100064
+         AIF   ('&UCBFL5(&A)' EQ 'VARSDR').UBIT3                        06150064
+         AIF   ('&UCBFL5(&A)' EQ 'ENVRTNS').UBIT4                       06200064
+         AIF   ('&UCBFL5(&A)' EQ 'LASTPATH').UBIT5                      06250064
+         AIF   ('&UCBFL5(&A)' EQ 'ACTLUNIT').UBIT6                      06300064
+         AIF   ('&UCBFL5(&A)' EQ 'ALTPATH').UBIT7                       06350064
+         AGO  .MORE1                                                    06400064
+.UBIT0   ANOP                                                           06450064
+&SGUF50B(&I)   SETB 1                                                   06500064
+         AGO  .MORE1                                                    06550064
+.UBIT2   ANOP                                                           06600064
+&SGUF52B(&I)   SETB 1                                                   06650064
+         AGO  .MORE1                                                    06700064
+.UBIT3   ANOP                                                           06750064
+&SGUF53B(&I)   SETB 1                                                   06800064
+         AGO  .MORE1                                                    06850064
+.UBIT4   ANOP                                                           06900064
+&SGUF54B(&I)   SETB 1                                                   06950064
+         AGO  .MORE1                                                    07000064
+.UBIT5   ANOP                                                           07050064
+&SGUF55B(&I)   SETB 1                                                   07100064
+         AGO  .MORE1                                                    07150064
+.UBIT6   ANOP                                                           07200064
+&SGUF56B(&I)   SETB 1                                                   07250064
+         AGO  .MORE1                                                    07300064
+.UBIT7   ANOP                                                           07350064
+&SGUF57B(&I)   SETB 1                                                   07400064
+         AGO  .MORE1                                                    07450064
+.FINFL5  ANOP                                                           07500064
+         AIF   (T'&UCBFLP1 EQ 'O').FINFLP1                              07550064
+&A       SETA  0                                                        07600064
+.MORE2   ANOP                                                           07650064
+         AIF   (N'&UCBFLP1 EQ &A).FINFLP1                               07700064
+&A       SETA  &A+1                                                     07750064
+         AIF   ('&UCBFLP1(&A)' EQ 'UPSHARBL').FBIT1                     07800064
+         AIF   ('&UCBFLP1(&A)' EQ 'DDRSWAP').FBIT4                      07850064
+         AIF   ('&UCBFLP1(&A)' EQ 'ERRLOG').FBIT5                       07900064
+         AGO  .MORE2                                                    07950064
+.FBIT1   ANOP                                                           08000064
+&SGUFP1B(&I)   SETB 1                                                   08050064
+         AGO  .MORE2                                                    08100064
+.FBIT4   ANOP                                                           08150064
+&SGUFP4B(&I)   SETB 1                                                   08200064
+         AGO  .MORE2                                                    08250064
+.FBIT5   ANOP                                                           08300064
+&SGUFP5B(&I)   SETB 1                                                   08350064
+         AGO  .MORE2                                                    08400064
+.FINFLP1 ANOP                                                           08450064
+&SGUPRMB(&I)   SETB 1                  THIS DEVICE IS NON-REMOVEABLE    08500064
+         AIF   ('&UNMOVBL' EQ 'NO').NOTMOVE                             08550064
+&SGUPRMB(&I)   SETB 0                  THIS DEVICE IS REMOVEABLE        08600064
+.NOTMOVE ANOP                                                           08650064
+&SGUCCWA(&I)   SETA &CCWPFIX                                            08700064
+&SGUATIA(&I)   SETA &ATNTABX                                            08750064
+&SGERPWA(&I)   SETA &ERPFXWA                                            08800064
+&SGUDSGA(&I)   SETA &DSEGLEN                                            08850064
+&SGUDSGC(&I)   SETC '&DPNDSEG'                                          08900064
+&SGUDXTC(&I)   SETC '&DPNDEXT'                                          08950064
+.*                           SET DEVICE TYPE IF NOT OVERIDDEN BY USER   09000064
+                AIF  ('&SGDVTPC' NE '').NOSET1  DEVTYPE OVERIDE?        09050064
+&O             SETC '&DEVTYPE'(1,6)       1ST 6 CHARS OF DEVICE TYPE    09100064
+               CONVERT TO=HEX,VALUE=&O,DIGITS=6                         09150064
+&SGDEVTP(&I)   SETA  &HEX                                               09200064
+&O             SETC  '&DEVTYPE'(7,2)            LAST TWO CHARS          09250064
+               CONVERT TO=HEX,VALUE=&O,DIGITS=2                         09300064
+&SGETABA(&I)   SETA  &HEX                                               09350064
+               AGO   .NOSET1A                                  @ZA40915 09400064
+.NOSET1        ANOP          SET USER SPECIFIED DEVICE TYPE             09450064
+&O             SETC '&SGDVTPC'(1,6) 1ST 6 CHARS OF DEVICE TYPE @ZA40915 09500064
+               CONVERT TO=HEX,VALUE=&O,DIGITS=6                         09550064
+&SGDEVTP(&I)   SETA  &HEX                                      @ZA40915 09600064
+&O             SETC  '&SGDVTPC'(7,2)            LAST TWO CHARS @ZA40915 09650064
+               CONVERT TO=HEX,VALUE=&O,DIGITS=2                @ZA40915 09700064
+&SGETABA(&I)   SETA  &HEX                                               09750064
+.NOSET1A       ANOP                                            @ZA40915 09800064
+.*                    SET ERROR TAB IF NOT OVERIDDEN BY USER            09850064
+               AIF   ('&SGERTPC' NE '').NOSET2   ERRTAB OVERIDE?        09900064
+&SGETABA(&I)   SETA  (&ERRTAB+1)*256+&SGETABA(&I) DEFAULT TAB  @ZA40915 09950064
+               AGO   .NOSET2A                                  @ZA40915 10000064
+.NOSET2        ANOP                                            @ZA40915 10050064
+&SGETABA(&I)   SETA  (&SGERTPC+1)*256+&SGETABA(&I) USER ERR TAB@ZA40915 10100064
+.NOSET2A       MEND                                                     10150000

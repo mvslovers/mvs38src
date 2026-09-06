@@ -1,0 +1,8 @@
+         MACRO                                                          00050001
+         SGIFB300                                                       00100001
+         COPY  SGGBLPAK                                                 00150001
+.*                                                                      00200001
+.*       AOS ONLY MACRO TO INCLUDE CHANNEL TYPE ASSGNMENT TABLE         00250001
+.*                                                                      00300001
+         PUNCH  ' INCLUDE SYSPUNCH(IFBCTA00)'                           00350001
+         MEND                                                           00400001

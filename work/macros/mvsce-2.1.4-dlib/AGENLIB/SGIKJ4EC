@@ -1,0 +1,75 @@
+         MACRO                                                          04000020
+         SGIKJ4EC                                                       08000020
+.*A480000,841000                                               @OZ72316 08025036
+.*A842500,849000                                               @OZ77958 08033336
+.*C842000,846500                                               @OZ77958 08041636
+         GBLB  &SGIHASU(100)                                    ZA25904 08050000
+         GBLC  &CI555                                           ZA25904 08100000
+         IHASETSU CSECT=NO                                      ZA25904 08150000
+&CI555   SETC  'AOST3'                                                  08200000
+         COPY  SGGBLPAK                                                 12000020
+&SGCTRLC(6)    SETC ''                  MULTIPLE LINKEDIT INTO LPALIB   12050000
+&SGCTRLC(7)    SETC '&SGCTRLC(20)'      SET VOLUME NO. FOR LPALIB       16000000
+&SGCTRLC(8)    SETC '&SGCTRLC(19)'      SET UNIT NAME FOR LPALIB        20000000
+&SGCTRLC(9)    SETC 'LPALIB'            SET DATA SET NAME               24000000
+&SGCTRLC(10)   SETC ',LET'              SET PARM FIELD                  32000020
+&SGCTRLC(11)   SETC ',RENT'             SET PARM FIELD                  36000020
+&SGCTRLC(12)   SETC ',REFR'             LKED PARM                       36050000
+         COPY  SGLEDPK1                                                 40000020
+ PUNCH '//&CI555 DD DISP=SHR,VOLUME=(,RETAIN),DSNAME=SYS1.&CI555'       40050000
+         COPY  SGLEDPK2                                                 48000020
+         AIF   (&SGDMGTB(5) EQ 0).NOTCAM                       @OZ72316 48025036
+.*                                                                      48050000
+ PUNCH ' ORDER IEDAYQT(P),IEDAYGP,IEDAYII,IEDAYOO,IEDAYAA'              48100000
+ PUNCH ' ORDER IEDAYLL,IEDAY88,IEDAYHH'                                 48150000
+ PUNCH ' INCLUDE &CI555.(IEDAYQT)'                                      48200000
+ PUNCH ' INCLUDE &CI555.(IEDAY88)'                                      52000000
+ PUNCH ' INCLUDE &CI555.(IEDAYAA)'                                      52050000
+ PUNCH ' INCLUDE &CI555.(IEDAYHH)'                                      56000000
+ PUNCH ' INCLUDE &CI555.(IEDAYII)'                                      56050000
+ PUNCH ' INCLUDE &CI555.(IEDAYLL)'                                      60000000
+ PUNCH ' INCLUDE &CI555.(IEDAYOO)'                                      60050000
+ PUNCH ' INCLUDE &CI555.(IEDAYGP)'                                      64000000
+ PUNCH ' ENTRY   IEDAYQT           FIRST ENTRY POINT '                  68000000
+ PUNCH ' ALIAS   IEDAYQT           FIRST ENTRY POINT '                  74000000
+ PUNCH ' ALIAS   IEDAYQT1          SECOND ENTRY POINT '                 74050000
+ PUNCH ' ALIAS   IEDAYTPQ          THIRD ENTRY POINT '          VS43007 74400000
+ PUNCH ' NAME    IGC0010A(R)       ALL 8 MODULES IN THIS MEMBER NAME '  74450000
+.*                                                                      78400000
+ PUNCH ' INCLUDE &CI555.(IEDAY1,IEDAY2)'                                84000000
+ PUNCH ' ENTRY IEDAY1'                                                  84050000
+ PUNCH ' NAME  IGCMC10D(R)'                                             84100000
+.NOTCAM  ANOP                                                  @OZ72316 84125036
+.*                                                                      84150000
+ PUNCH ' INCLUDE &CI555.(IGC0009C)'                            @OZ77958 84175036
+         AIF (NOT &SGDMGTB(5)).NOTCAM2                         @OZ77958 84200036
+ PUNCH ' INCLUDE &CI555.(IGG09300,IGG09301)'                   @OZ77958 84225036
+ PUNCH ' INCLUDE &CI555.(IGG09302,IGG09303)'                            84250000
+.NOTCAM2 ANOP                                                  @OZ77958 84300036
+ AIF (&SGIHASU(13) EQ 0).NOTSO9C                                ZA25904 84350000
+ SGIKT49C                                                       ZA25904 84400000
+.NOTSO9C ANOP                                                   ZA25904 84450000
+ PUNCH ' ENTRY IGC0009C'                                                84500000
+ PUNCH ' NAME IGC0009C(R)'                                              84550000
+.*                                                                      84600000
+ PUNCH ' INCLUDE &CI555.(IGC0009D)'                            @OZ77958 84625036
+         AIF (NOT &SGDMGTB(5)).NOTCAM3                         @OZ77958 84650036
+ PUNCH ' INCLUDE &CI555.(IGG0940A,IGG0940B,IGG0940C)'          @OZ77958 84675036
+ PUNCH ' INCLUDE &CI555.(IGG0940D,IGG0940E,IGG0940G,IGG09400)'          84700000
+ PUNCH ' INCLUDE &CI555.(IGG09402,IGG09403,IGG09404,IGG09405)'          84750000
+ PUNCH ' INCLUDE &CI555.(IGG09406,IGG09407,IGG09408,IGG09409)'          84800000
+ PUNCH ' INCLUDE &CI555.(IGG0940H,IGG09411)'                   @ZA27085 84850000
+ PUNCH ' INCLUDE &CI555.(IGG09414)'                             ZA24646 84900000
+.NOTCAM3 ANOP                                                  @OZ77958 84925036
+ AIF (&SGIHASU(13) EQ 0).NOTSO9D                                ZA25904 84950000
+ SGIKT49D                                                       ZA25904 85000000
+.NOTSO9D ANOP                                                   ZA25904 85050000
+ PUNCH ' ENTRY IGC0009D'                                                85100000
+ PUNCH ' NAME IGC0009D(R)'                                              85150000
+.*                                                                      85200000
+ AIF (&SGIHASU(13) EQ 0).NOTSOIO                                ZA25904 85250000
+ SGIKT410                                                       ZA25904 85300000
+.NOTSOIO ANOP                                                   ZA25904 85350000
+.*                                                                      85400000
+ PUNCH '/*'                                                             85450000
+         MEND                                                           85500000

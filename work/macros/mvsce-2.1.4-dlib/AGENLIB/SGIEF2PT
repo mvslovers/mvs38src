@@ -1,0 +1,206 @@
+         MACRO                                                          00400002
+         SGIEF2PT                                                       00800002
+.*A000000-999999                                                 Y02651 01200002
+.********************************************************************** 01600002
+.*                                                                      02000002
+.*  MACRO NAME - SGIEF2PT                                               02400002
+.*                                                                      02800002
+.*  FUNCTION - GENERATES THE ASSEMBLY JCL AND GROUP 0 CALL TO SGIEF0PT  03200002
+.*                TO GENERATE THE PROGRAM PROPERTIES AND PROGRAM        03600002
+.*                AFFINITY MASK TABLE - IEFSDPPT                        04000002
+.*                                                                      04400002
+.*  OPERATION - THE NUMBER OF ENTRIES IS CALCULATED BY INDEXING         04800002
+.*              THROUGH THE NAME ARRAY &SGAFFNC UNTIL A NULL ENTRY      05200002
+.*              IS FOUND.                                               05600002
+.*                                                                      06000002
+.*              THE ASSEMBLY JCL IS COPIED AFTER SETTING THE PROGRAM    06400002
+.*              NAME TO IEFSDPPT.                                       06800002
+.*                                                                      07200002
+.*              IF NO AFFINITY WAS REQUESTED, ONLY THE MACRO CALL IS    07600002
+.*              PUNCHED WITH NO PARAMETERS. THE FORMAT IS:              08000002
+.*                                                                      08400002
+.*                     SGIEF0PT                                         08800002
+.*                                                                      09200002
+.*              IF AFFINITY IS REQUESTED, THE REQUESTS ARE INSERTED     09600002
+.*              INTO GLOBAL ARRAYS. THE PROGRAM NAMES ARE IN ARRAY      10000002
+.*              &SGAFFNC(64); THE CPU AFFINTY MASK VALUE IS IN DECIMAL  10400002
+.*              IN THE ARRAY &SGAFFNA(64). THE MACRO CALL IS PUNCHED    10800002
+.*              WITH TWO KEYWORD PARAMETERS- PGM FOR THE PROGRAM NAMES  11200002
+.*              AND CPU FOR THE AFFINITY MASKS. THIS VALUE IS IN        11600002
+.*              DECIMAL; IT CONSISTS OF THE SUM OF THE CPU ID'S HEX     12000002
+.*              DISPLACEMENT VALUE AS CALCULATED BY:                    12400002
+.*                                                                      12800002
+.*                      ID = N                                          13200002
+.*                      CPU VALUE = 2**N                                13600002
+.*                                                                      14000002
+.*              THE FORMAT OF THE CALL IS:                              14400002
+.*                                                                      14800002
+.*                   SGIEF0PT                              X            15200002
+.*                            PGM=(NAME1,                  X            15600002
+.*                             .....                                    16000002
+.*                            NAMEJ,                       X            16400002
+.*                             ....                                     16800002
+.*                            NAMEN),                      X            17200002
+.*                            CPU=(MASK1,                  X            17600002
+.*                             ....                                     18000002
+.*                            MASKJ,                       X            18400002
+.*                             ....                                     18800002
+.*                            MASKN)                                    19200002
+.*                                                                      19600002
+.*  EXECUTION STAGE - STAGE I                                           20000002
+.*                                                                      20400002
+.*  ENTRY - SGIEF2PT FROM GENERATE                                      20800002
+.*                                                                      21200002
+.*  INPUT - GLOBAL ARRAYS                                               21600002
+.*             1) &SGAFFNC(64)  -  PROGRAM NAMES NEEDING AFFINITY       22000002
+.*             2) &SGAFFNA(64)  -  AFFINITY MASK FOR CORRESPONDING      22400002
+.*                                 PROGRAM NAME                         22800002
+.*                                                                      23200002
+.*  INTERNAL CALLS - SGGBLPAK - FOR GLOBAL INPUT REFERENCE              23600002
+.*                   SGASMPAK - FOR ASSEMBLY JCL                        24000002
+.*                                                                      24400002
+.*  OUTPUT - ASSEMBLY JCL FOR STAGE II FOR IEFSDPPT                     24800002
+.*                                                                      25200002
+.*  EXIT - MEND TO GENERATE                                             25600002
+.*                                                                      26000002
+.*  MESSAGES - NONE                                                     26400002
+.*                                                                      26800002
+.*  DISTRIBUTION LIBRARY - SYS1.AGENLIB                                 27200002
+.*                                                                      27600002
+.********************************************************************** 28000002
+          COPY  SGGBLPAK                                                28050002
+.*                                                                      28400002
+.*   LOCAL VARIABLES                                                    28800002
+.*                                                                      29200002
+         LCLA  &CNT                    COUNT OF AFFINITY REQUESTS       29600002
+         LCLA  &INDEX                  INDEX FOR ARRAYS                 30000002
+         LCLA  &LENGTH                 LENGTH OF PARAMETER              30400002
+         LCLC  &MASK                   CONSTANT FOR CONTINUATION MASK   30800002
+         LCLC  &CONT                   CONTINUATION MASK FOR PUNCH      31200002
+         LCLC  &CPUSYN                 VARIABLE FOR CPU KEYWORD SYNTAX  31600002
+.*                                                                      32000002
+.********************************************************************** 32400002
+.*                                                                      32800002
+.*       THIS SECTION OF CODE CALULATES THE NUMBER OF ENTRIES           33200002
+.*       IN THE NAME GLOBAL  &SGAFFC(64) BY INDEXING UNTIL A            33600002
+.*       NULL ENTRY IS FOUND                                            34000002
+.*                                                                      34400002
+.********************************************************************** 34800002
+&CNT     SETA  1                       INITIALIZE COUNTER               35200002
+.CNTLOOP ANOP                          LOOP LABEL                       35600002
+         AIF   (&CNT GT 64).CNTOUT     MAXIMUM ENTRIES FOUND - EXIT     36000002
+         AIF   ('&SGAFFNC(&CNT)'EQ '').CNTOUT  TEST FOR NULL ENTRY      36400002
+&CNT     SETA  &CNT+1                  INCREMENT COUNTER FOR NEXT TEST  36800002
+         AGO   .CNTLOOP                BRANCH TO TEST NEXT ENTRY        37200002
+.CNTOUT  ANOP                          LOOP EXIT FROM CNTLOOP           37600002
+&CNT     SETA  &CNT-1                  DECREMENT COUNTER TO ACTUAL      38000002
+.*                                     NUMBER OF ENTRIES                38400002
+.********************************************************************** 38800002
+.*                                                                      39200002
+.*  THIS SECTION COPIES THE ASSEMBLY JCL FOR IEFSDPPT. THE CALL FOR     39600002
+.*  SGIEF0PT IS PUNCHED ACCORDING TO THE FOLLOWING FORMAT:              40000002
+.*       1) NO AFFINITY NAMES  -  &CNT=0                                40400002
+.*             SGIEF0PT                                                 40800002
+.*       2) ONE AFFINITY NAME S  -  &CNT=1                              41200002
+.*             SGIEF0PT                        X                        41600002
+.*                   PGM=(NAME),               X                        42000002
+.*                   CPU=(MASK)                                         42400002
+.*       3) UP TO 64 AFFINITY NAMES  -  1<&CNT<65                       42800002
+.*             SGIEF0PT                        X                        43200002
+.*                   PGM=(NAME1,               X                        43600002
+.*                    ....                                              44000002
+.*                   NAMEJ,                    X                        44400002
+.*                    ....                                              44800002
+.*                   NAMEN),                   X                        45200002
+.*                   CPU=(MASK1,               X                        45600002
+.*                    ....                                              46000002
+.*                   MASKJ,                    X                        46400002
+.*                    ....                                              46800002
+.*                   MASKN)                                             47200002
+.*                                                                      47600002
+.********************************************************************** 48000002
+&SGCTRLC(6)  SETC  'IEFSDPPT'          SET PROGRAM NAME                 48400002
+         COPY  SGASMPAK                COPY ASSEMBLY JCL                48800002
+         AIF   (&CNT NE 0).PARAM       IF THERE ARE PARAMETERS - BRANCH 49200002
+         PUNCH '         SGIEF0PT'     PUNCH MACRO CALL WITHOUT PARAMS  49600002
+.*                                     SINCE NO AFFINITY IS REQUESTED   50000002
+         AGO   .MEND                   TERMINATE ASSEMBLY JCL AND EXIT  50400002
+.PARAM   ANOP                          PARAM EXIT LABEL                 50800002
+         PUNCH '         SGIEF0PT                                      X51200002
+                               X'     PUNCH MACRO CALL WITH PARAM CONT  51600002
+.*                                                                      52000002
+.*  PGM KEYWORD PROCESSOR                                               52400002
+.*                                                                      52800002
+&INDEX   SETA  1                       INITIALIZE INDEX                 53200002
+&MASK    SETC  '            X'         INITIALIZE CONTINUATION MASK     53600002
+&SGAFFNC(1)  SETC  'PGM=(&SGAFFNC(1)'  APPEND KEYWORD TO FIRST NAME     54000002
+.PGMLOOP ANOP                          PGM KEYWORD LOOP                 54400002
+&LENGTH  SETA  K'&SGAFFNC(&INDEX)      FIND LENGTH OF CURRENT PARAM.    54800002
+&CONT    SETC  '&MASK'(&LENGTH,14-&LENGTH)   SET CONT. MARK FOR PARAM.  55200002
+         AIF   (&INDEX GE &CNT).PGMOUT EXIT FOR FINAL NAME PARAM PUNCH  55600002
+         PUNCH '               &SGAFFNC(&INDEX),                       X56000002
+                                  &CONT'                                56400002
+.*                                     PUNCH THIS NAME PARAM            56800002
+&INDEX   SETA  &INDEX+1                INCREMENT INDEX FOR NEXT NAME    57200002
+         AGO   .PGMLOOP                PROCESS NEXT NAME                57600002
+.PGMOUT  ANOP                          LAST PGM PARAM FOUND LABEL       58000002
+         PUNCH '               &SGAFFNC(&INDEX)),                      X58400002
+                                  &CONT'                                58800002
+.*                                     PUNCH FINAL NAME PARAM           59200002
+.*                                                                      60400002
+.*  CPU KEYWORD PROCESSOR                                               60800002
+.*                                                                      61200002
+&INDEX   SETA  1                       INITIALIZE INDEX                 61600002
+&MASK    SETC  '         X'            INITIALIZE CONTINUATION MASK     62000002
+&CPUSYN  SETC  'CPU=('                 INITIALIZE CPU KEYWORD SYNTAX    62400002
+.CPULOOP ANOP                          CPU KEYWORD LOOP                 62800002
+.*  CALCULATE LENGTH OF ARITHMETIC VALUE                                63200002
+         AIF   (&SGAFFNA(&INDEX) LT 10000).LGTH10  LENGTH = 5 IF CPU    63600002
+.*                                                 MASK GE 10000        64000002
+&LENGTH  SETA  5                                                        64400002
+         AGO   .LGTHFND                LENGTH FOUND - EXIT              64800002
+.LGTH10  ANOP                                                           65200002
+         AIF   (&SGAFFNA(&INDEX) LT 1000).LGTH20   LENGTH = 4 IF CPU    65600002
+.*                                                 MASK GE 1000         66000002
+&LENGTH  SETA  4                                                        66400002
+         AGO   .LGTHFND                LENGTH FOUND - EXIT              66800002
+.LGTH20  ANOP                                                           67200002
+         AIF   (&SGAFFNA(&INDEX) LT 100).LGTH30    LENGTH = 3 IF CPU    67600002
+.*                                                 MASK GE 100          68000002
+&LENGTH  SETA  3                                                        68400002
+         AGO   .LGTHFND                                                 68800002
+.LGTH30  ANOP                                                           69200002
+         AIF   (&SGAFFNA(&INDEX) LT 10).LGTH40     LENGTH = 2 IF CPU    69600002
+.*                                                 MASK GE 10           70000002
+&LENGTH  SETA  2                                                        70100002
+         AGO   .LGTHFND                                                 70200002
+.LGTH40  ANOP                                                           70400002
+&LENGTH  SETA  1                       THIS THE LEAST POSSIBLE VALUE    70800002
+.*                                     LEFT AFTER SEARCH                71200002
+.LGTHFND ANOP                          LENGTH FOUND EXIT LABEL          71600002
+.*  END  LENGTH CALCULATION                                             72000002
+         AIF   (&INDEX NE 1).NOTFST    IF THE FIRST ENTY, ADD LENGTH    72400002
+.*                                     OF KEYWORD + SYNTAX              72800002
+&LENGTH  SETA  &LENGTH+5                                                73200002
+.NOTFST  ANOP                                                           73600002
+&CONT    SETC  '&MASK'(&LENGTH,11-&LENGTH)  SET CONT. MARK FOR PARAM.   74000002
+         AIF   (&INDEX GE &CNT).CPUOUT EXIT FOR FINAL MASK PARAM PUNCH  74400002
+         PUNCH '               &CPUSYN&SGAFFNA(&INDEX),                X74800002
+                                            &CONT'                      75200002
+.*                                     PUNCH THIS CPU AFFINITY MASK     75600002
+&CPUSYN  SETC  ''                      NULL CPUSYN FOR SUBSEQUENT PUNCH 76000002
+&INDEX   SETA  &INDEX+1                INCREMENT INDEX FOR NEXT MASK    76400002
+         AGO   .CPULOOP                PROCESS NEXT MASK                76800002
+.CPUOUT  ANOP                          LAST MASK FOUND LABEL            77200002
+         PUNCH '               &CPUSYN&SGAFFNA(&INDEX))'                77600002
+.*                                     PUNCH LAST MASK PARAM            78000002
+.*                                     NOTE THAT THE LENGTH IS          78400002
+.*                                     CALCULATED FOR THIS IN CASE      78800002
+.*                                     ADDITIONAL  KEYWORDS ARE ADDED   79200002
+.*                                                                      79600002
+.*  TERMINATE ASSEMBLY JCL                                              80000002
+.*                                                                      80400002
+.MEND    ANOP                          EXIT LABEL FOR NO PARAMETERS     80800002
+         PUNCH '         END'          PUNCH END CARD                   81200002
+         PUNCH '/*'                    PUNCH TERMINATOR                 81600002
+          MEND                                                          81650002

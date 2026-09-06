@@ -1,0 +1,20 @@
+//SMFSORT  JOB MSGLEVEL=1                                               00050000
+//SORTSTEP EXEC PGM=SORT,REGION=100K                                    00100000
+//SYSOUT DD SYSOUT=A                                                    00150000
+//SORTLIB DD DSNAME=SYS1.SORTLIB,DISP=SHR                               00200000
+//EXITLIB DD DSNAME=SMF1.EXITS,DISP=(OLD,KEEP),UNIT=2314,VOL=SER=231400 00250000
+//SORTIN  DD UNIT=2400,VOLUME=SER=SYSMAN,DISP=OLD,                     C00300000
+//             LABEL=(,NL),DCB=(RECFM=VBS,LRECL=600,BLKSIZE=200)        00350000
+//SORTWK01 DD UNIT=2314,SPACE=(TRK,(50),,CONTIG)                        00400000
+//SORTWK02 DD UNIT=2314,SPACE=(TRK,(50),,CONTIG)                        00450000
+//SORTWK03 DD UNIT=2314,SPACE=(TRK,(50),,CONTIG)                        00500000
+//SORTOUT  DD UNIT=2400,DSNAME=SMF1.SORTOUT,LABEL=(,NL),               C00550000
+//             DISP=(,KEEP),DCB=(RECFM=VBS,LRECL=600,BLKSIZE=200)       00600000
+//SORDATA  DD  UNIT=SYSDA,SPACE=(CYL,(1,1)),                           C00650000
+//             DCB=(RECFM=VBS,LRECL=600,BLKSIZE=200)                    00700000
+//HDRDATA  DD  UNIT=SYSDA,SPACE=(TRK,(5,5)),                           C00750000
+//             DCB=(RECFM=VBS,LRECL=600,BLKSIZE=200)                    00800000
+//SYSIN  DD  *                                                          00850000
+ SORT  FIELDS=(19,16,A,11,4,A,7,4,A),FORMAT=BI,SIZE=E4000               00900000
+ MODS  E15=(E15,700,EXITLIB,N),E35=(E35,1500,EXITLIB,N)                 00950000
+ END                                                                    01000000

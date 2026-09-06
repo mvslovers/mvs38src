@@ -1,0 +1,1597 @@
+         MACRO                                                          00050064
+         SGSETDIT &UNIT=,&ID=                                           00100064
+         COPY SGGBLPAK                                                  00150064
+         LCLA &I                                                        00200064
+.***** START OF SPECIFICATIONS **************************************** 00250064
+.*                                                                    * 00300064
+.* MODULE NAME - SGSETDIT                                             * 00340064
+.*                                                                    * 00380064
+.* DESCRIPTIVE NAME - DIT SUPPORT FOR OLD DEVICES                     * 00420064
+.*                                                                    * 00460064
+.* COPYRIGHT - NONE                                                   * 00500064
+.*                                                                    * 00540064
+.* STATUS - CHANGE LEVEL @G64HSPD                                     * 00580064
+.* A309100,A788600-788617                                     @ZA42772* 00593364
+.* C775500                                                    @ZA43571* 00606664
+.* D309100,D788600-788617                                     @ZA45362* 00613264
+.*                                                                    * 00620064
+.* FUNCTION -                                                         * 00660064
+.*   THIS MACRO SETS UP THE DIT ENTRY AND DITX FOR 'OLD' DEVICES.     * 00700064
+.*   'OLD DEVICES' ARE THOSE DEVICES THAT HAD SYSGEN SUPPORT PRIOR TO * 00740064
+.*   SU 64.                                                           * 00780064
+.*   IT IS CALLED BY IODEVICE FOR EACH DEVICE ADDRESS BEING GENERATED.* 00820064
+.*   TESTS FOR SOME DEVICES MUST BE PERFORMED IN A STRICT ORDER       * 00860064
+.*   DUE TO OVERLAP IN DEFINITIONS OF EXISTING GLOBALS.               * 00900064
+.*   THE ORDER IS TAKEN FROM PRE-RESTRUCTURE SGIEF213.                * 00940064
+.*                                                                    * 00980064
+.* NOTES - N/A                                                        * 01020064
+.*                                                                    * 01060064
+.* MODULE TYPE - MACRO                                                * 01100064
+.*                                                                    * 01140064
+.* ENTRY POINT - N/A                                                  * 01180064
+.*                                                                    * 01220064
+.* INPUT - THE FOLLOWING PARAMETERS ARE PASSED FROM IODEVICE.         * 01260064
+.*           &UNIT   --UNIT VALUE SPECIFIED ON IODEVICE STATEMENT     * 01300064
+.*           &ID     --ID VALUE USED BY IODEVICE FOR ERROR MESSAGES   * 01340064
+.*                                                                    * 01380064
+.*         THE FOLLOWING GLOBALS SET BY IODEVICE ARE USED -           * 01420064
+.*           &SGCNTRA(3)      - DEVICE COUNT-USED TO GET ADDR BOX     * 01460064
+.*                              ENTRY.                                * 01500064
+.*           &SGCPRGB(8)      - SYSTEM BEING GENERATED(VS1 OR VS2)    * 01540064
+.*           &SGDADRA(1-1917) - DEVICE ADDRESS AND RELATED SUBSCRIPTS * 01580064
+.*           &SGDASPA(1-1917) - DEVICE SWITCHES POINTER               * 01620064
+.*           &SGDFXXB(1-1917) - FEATURE SWITCHES USED TO DETERMINE    * 01660064
+.*                              PROPER TAPE GENERIC.                  * 01700064
+.*                              XX=01- 7-TRACK    02- 9-TRACK         * 01740064
+.*                                 04- DUALDENS   05- 3420 MODEL 4,5,6* 01780064
+.*                                 06- OPT1600                        * 01820064
+.*                                                                    * 01860064
+.*           &SGDTXXB(1-1917) - DEVICE TYPE USED TO DIFFERENTIATE     * 01900064
+.*                              BETWEEN LOCAL/REMOTE 2260.            * 01940064
+.*                              XX=05- LOCAL      08- REMOTE          * 01980064
+.*                                                                    * 02020064
+.*           &SGDM01B(1-1917) - MODEL 1                               * 02060064
+.*           &SGDM02B(1-1917) - MODEL 2                               * 02100064
+.*           &SGDM03B(1-1917) - MODEL 3                               * 02140064
+.*           &SGDM04B(1-1917) - MODEL 4                               * 02180064
+.*           &SGDM05B(1-1917) - MODEL 5                               * 02220064
+.*           &SGDM06B(1-1917) - MODEL 6                               * 02260064
+.*           &SGDM11B(1-1917) - 3330 MODEL 11                         * 02300064
+.*                                                                    * 02340064
+.*           &SGUNF2B(1-1917) - DATACONV (FOR TAPES)                  * 02380064
+.*                                                                    * 02420064
+.* OUTPUT -                                                           * 02460064
+.*       THE FOLLOWING GLOBALS ARE SET FOR THE RESTRUCTURE -          * 02500064
+.*           &SGQUITB         - QUIT SWITCH                           * 02540064
+.*           &SGDITXA(1-1917) - INDEX INTO DEVICE INFORMATION TABLE   * 02580064
+.*                                                                    * 02620064
+.*           &SGDDTMC(1-200)  - DDT CSECT NAME                        * 02660064
+.*           &SGDTYPC(1-200)  - UCB TYPE INFORMATION FOR ALLOCATION   * 02700064
+.*           &SGERPDC(1-200)  - DLIB NAME FOR ERP MODULES             * 02740064
+.*           &SGERPMC(1-200)  - ERP MODULE NAMES TO BE INCLUDED       * 02780064
+.*           &SGGCTXC(1-200)  - GENERIC COMPATIBILITY INDICES         * 02820064
+.*           &SGGENDB(1-200)  - DEVICE OF THIS GENERIC HAS BEEN GENNED* 02860064
+.*           &SGGNRIC(1-200)  - GENERIC NAME FOR THIS DEVICE          * 02900064
+.*           &SGLPADC(1-200)  - DLIB NAME FOR LPA MODULES             * 02940064
+.*           &SGLPAMC(1-200)  - LPA MODULE NAMES TO BE INCLUDED       * 02980064
+.*           &SGNUCDC(1-200)  - DLIB NAME FOR NUCLEUS MODULES AND DDT * 03020064
+.*           &SGNUCMC(1-200)  - NUCLEUS MODULE NAMES TO BE INCLUDED   * 03060064
+.*           &SGUNSTA(1-200)  - NUMBER OF STATISTICS TABLE ENTRIES    * 03100064
+.*           &SGUSNSA(1-200)  - NUMBER OF SENSE BYTES FOR THIS DEVICE * 03140064
+.*                                                                    * 03180064
+.*                                                                    * 03220064
+.*       LOCALS USED ARE -                                            * 03260064
+.*           &I    - DEVICE SWITCHES POINTER FOR CURRENT DEVICE       * 03300064
+.*                                                                    * 03340064
+.*                                                                    * 03380064
+.*                                                                    * 03420064
+.* EXIT, NORMAL - N/A                                                 * 03460064
+.*                                                                    * 03500064
+.* EXIT, ERROR - N/A                                                  * 03540064
+.*                                                                    * 03580064
+.* EXTERNAL REFERENCES - N/A                                          * 03620064
+.*                                                                    * 03660064
+.* TABLES - DEVICE INFORMATION TABLE (DIT)                            * 03700064
+.*  ASSEMBLER DEFAULT VALUES CORRESPONDING TO THE PARTICULAR DATA TYPE* 03740064
+.*  ARE TAKEN FOR ALL DIT GLOBALS NOT REFERENCED FOR A DEVICE.       *  03780064
+.*                                                                    * 03820064
+.* MACROS - N/A                                                       * 03860064
+.*                                                                    * 03900064
+.* CHANGE ACTIVITY - @ZA38705                                         * 03940064
+.*                                                                    * 03980064
+.***** END OF SPECIFICATIONS ****************************************** 04020064
+.*                                                                      04060064
+.*     FIRST TIME CALL FROM IODEVICE, INITIALIZE DASD ENTRIES           04100064
+.*                                                                      04140064
+         AIF  (NOT &SGMENTB(4)).IDASD                                   04180064
+.*                                                                      04220064
+&I       SETA &SGCNTRA(3)                GET CURRENT DEVICE POINTER     04850064
+.********************************************************************** 04900064
+.********************************************************************** 04950064
+.**                                                                  ** 05000064
+.**                DEVICES SUPPORTED PRIOR TO RESTRUCTURE            ** 05050064
+.**                                                                  ** 05100064
+.********************************************************************** 05150064
+.********************************************************************** 05200064
+         AIF   ('&UNIT' EQ '2305').U2305                                05250064
+         AIF   ('&UNIT' EQ '3350').U3350                                05300064
+         AIF   ('&UNIT' EQ '3330').U3330                                05350064
+         AIF   ('&UNIT' EQ '3340').U3340                                05400064
+         AIF   ('&UNIT' EQ '2314').U2314                                05450064
+         AIF   ('&UNIT' EQ '2319').U2314                                05500064
+         AIF   ('&UNIT' EQ '2401').U24XX                                05550064
+         AIF   ('&UNIT' EQ '2402').U24XX      VS1 NAMES                 05600064
+         AIF   ('&UNIT' EQ '2403').U24XX      VS1 NAMES                 05650064
+         AIF   ('&UNIT' EQ '2420').U24XX                                05700064
+         AIF   ('&UNIT' EQ '3410').U24XX                                05750064
+         AIF   ('&UNIT' EQ '3420').U24XX                                05800064
+         AIF   ('&UNIT' EQ '3800').U3800                                05850064
+         AIF   ('&UNIT' EQ '3211').U3211                                05900064
+         AIF   ('&UNIT' EQ '1403').U1403                                05950064
+         AIF   ('&UNIT' EQ '1443').U1443                                06000064
+         AIF   ('&UNIT' EQ '2501').U2501                                06050064
+         AIF   ('&UNIT' EQ '3505').U3505                                06100064
+         AIF   ('&UNIT' EQ '3525').U3525                                06150064
+         AIF   ('&UNIT' EQ '2671').U2671                                06200064
+         AIF   ('&UNIT' EQ '2520').U2520                                06250064
+         AIF   ('&UNIT' EQ '2540R').U2540                               06300064
+         AIF   ('&UNIT' EQ '2540P').U2540P                              06350064
+         AIF   ('&UNIT' EQ '1053').U1053                                06400064
+         AIF   ('&UNIT' EQ '3210').U3210                                06450064
+         AIF   ('&UNIT' EQ '3215').U3215                                06500064
+         AIF   ('&UNIT' EQ '3213').U3213                                06550064
+         AIF   ('&UNIT' EQ '2250').U2250                                06600064
+         AIF   ('&UNIT' EQ '1052').U1052                                06650064
+         AIF   ('&UNIT' EQ '3277').U3277                                06700064
+         AIF   ('&UNIT' EQ '3158').U3158                                06750064
+         AIF   ('&UNIT' EQ '3284').U3284                                06800064
+         AIF   ('&UNIT' EQ '3286').U3286                                06850064
+         AIF   ('&UNIT' EQ '3066').U3066                                06900064
+         AIF   ('&UNIT' EQ '2260').U2260    CHECK LATER FOR TP/GRAPHICS 06950064
+         AIF   ('&UNIT' EQ '3890').U3890                                07000064
+         AIF   ('&UNIT' EQ '3886').U3886                                07050064
+         AIF   ('&UNIT' EQ '1287').U1287                                07100064
+         AIF   ('&UNIT' EQ '1288').U1288                                07150064
+         AIF   ('&UNIT' EQ '1419').U1419                                07200064
+         AIF   ('&UNIT' EQ '3895').U3895                                07250064
+         AIF   ('&UNIT' EQ '2495').U2495                                07300064
+         AIF   ('&UNIT' EQ '3540').U3540                                07350064
+         AIF   ('&UNIT' EQ '3851').U3851                                07400064
+         AIF   ('&UNIT' EQ '3330V').U3330V                              07450064
+         AIF   ('&UNIT' EQ '3838').U3838                                07500064
+         AIF   ('&UNIT' EQ '1275').U1275                                07550064
+         AIF   ('&UNIT' EQ '1030').U1030                                07600064
+         AIF   ('&UNIT' EQ '1050').U1050                                07650064
+         AIF   ('&UNIT' EQ '1060').U1060                                07700064
+         AIF   ('&UNIT' EQ '115A').U115A                                07750064
+         AIF   ('&UNIT' EQ '83B3').U83B3                                07800064
+         AIF   ('&UNIT' EQ 'TWX').UTWX                                  07850064
+         AIF   ('&UNIT' EQ '2740').U2740                                07900064
+         AIF   ('&UNIT' EQ 'BSC1').UBSC1                                07950064
+         AIF   ('&UNIT' EQ 'BSC2').UBSC2                                08000064
+         AIF   ('&UNIT' EQ 'BSC3').UBSC3                                08050064
+         AIF   ('&UNIT' EQ '7770').U7770                                08100064
+         AIF   ('&UNIT' EQ 'WTTA').UWTTA                                08150064
+         AIF   ('&UNIT' EQ '2741P').U2741P                              08200064
+         AIF   ('&UNIT' EQ '2741C').U2741C                              08250064
+         AIF   ('&UNIT' EQ '3705').U3705                                08300064
+         AIF   ('&UNIT' EQ '3791L').U3791L                              08350064
+         AIF   ('&UNIT' EQ '3704').U3704                                08400064
+         AIF   ('&UNIT' EQ 'DUMMY').DUMMY                               08450064
+         AIF   ('&UNIT' EQ '3036').U3036                                08500064
+         AIF   ('&UNIT' EQ '7443').U7443                                08550064
+         AIF   ('&UNIT' EQ '1050X').U1050X                              08600064
+         AIF   ('&UNIT' EQ '2265').U2265                                08650064
+         AIF   ('&UNIT' EQ '2740C').U2740C                              08700064
+         AIF   ('&UNIT' EQ '2740X').U2740X                              08750064
+         AIF   ('&UNIT' EQ '2955').U2955                                08800064
+         AIF   ('&UNIT' EQ 'CTC').UCTC                                  08850064
+.*****   ADD VS1 DEVICES ????????                                       08900064
+         MEXIT                     RETURN--NOT AN OLD DEVICE            08950064
+         SPACE 2                                                        09000064
+.*                                                                      09002064
+.*  FIRST IODEVICE CALL - INITIALIZE THE DASD ENTRIES                   09004064
+.*                                                                      09006064
+.IDASD      ANOP                                                        09008064
+&SGGNRIC(1) SETC '2305-1'                                               09010064
+&SGDTYPC(1) SETC '30502006'                                             09012064
+&SGGNRIC(2) SETC '2305-2'                                               09014064
+&SGDTYPC(2) SETC '30502007'                                             09016064
+&SGGNRIC(3) SETC '3350'                                                 09018064
+&SGDTYPC(3) SETC '3050200B'                                             09020064
+&SGGNRIC(4) SETC '3330-1'                                               09022064
+&SGDTYPC(4) SETC '3050200D'                                             09024064
+&SGGNRIC(5) SETC '3330'                                                 09026064
+&SGDTYPC(5) SETC '30502009'                                             09028064
+&SGGNRIC(6) SETC '3340'                                                 09030064
+&SGDTYPC(6) SETC '3040200A'                                             09032064
+&SGGNRIC(7) SETC '2314'                                                 09034064
+&SGDTYPC(7) SETC '30C02008'                                             09036064
+            MEXIT                                                       09038064
+.*                                                                      09040064
+.*                                                                      09042064
+.*                                                                      09044064
+.U2305   ANOP                                                           09050064
+         AIF   (&SGDM02B(&I)).U23052        2305 MODEL 2 ?              09100064
+         AIF   (NOT &SGDM01B(&I)).DITERR1   2305 MODEL 1 ?              09150064
+&SGDITXA(&I) SETA  1                        2305 MODEL 1                09200064
+         AIF   (&SGGENDB(1)).MEND ENTRY ALREADY INITIALIZED             09250064
+&SGDDTMC(1) SETC 'IECVDDTH'   *** 2305 DDT                              09400064
+&SGNUCMC(1) SETC 'IECVDDT0,IECVXDRS,IECVXDRT,IECVOTBL'                  09450064
+&SGLPAMC(1) SETC 'IECLMSGD'                                             09480064
+&SGLPADC(1) SETC 'AOSC5'                                                09510064
+&SGNUCDC(1) SETC 'AOSC5'                                                09600064
+&SGUSNSA(1) SETA 24                                                     09650064
+&SGGENDB(1) SETB 1                                                      09700064
+         MEXIT                                                          09750064
+.U23052  ANOP                                                           09800064
+&SGDITXA(&I) SETA  2                        2305 MODEL 2                09850064
+         AIF   (&SGGENDB(2)).MEND ENTRY ALREADY INITIALIZED             09900064
+&SGDDTMC(2) SETC 'IECVDDT3'   *** 2305 DDT                              10050064
+&SGNUCMC(2) SETC 'IECVDDT0,IECVXDRS,IECVXDRT,IECVOTBL'                  10090064
+&SGNUCDC(2) SETC 'AOSC5'                                                10130064
+&SGLPAMC(2) SETC 'IECLMSGD'                                             10170064
+&SGLPADC(2) SETC 'AOSC5'                                                10210064
+&SGUSNSA(2) SETA 24                                                     10300064
+&SGGENDB(2) SETB 1                                                      10350064
+         MEXIT                                                          10400064
+.U3350   ANOP                                                           10450064
+&SGDITXA(&I) SETA  3                        3350                        10500064
+         AIF   (&SGGENDB(3)).MEND ENTRY ALREADY INITIALIZED             10550064
+&SGDDTMC(3) SETC 'IECVDDTN'  *** DASD DDT                               10700064
+&SGNUCMC(3) SETC 'IECVDDT0,IECVXDAT,IECVXDAS,IECVXDAU,IECVOTBL'         10750064
+&SGNUCDC(3) SETC 'AOSC5'                                                10800064
+&SGLPAMC(3) SETC 'IECLMSGD'                                             10850064
+&SGLPADC(3) SETC 'AOSC5'                                                10900064
+&SGUSNSA(3) SETA 24                                                     11000064
+&SGGENDB(3) SETB 1                                                      11050064
+         MEXIT                                                          11100064
+.U3330   ANOP                                                           11150064
+         AIF   (NOT &SGDM11B(&I)).U33301    3330 MODEL 11 ?             11200064
+&SGDITXA(&I) SETA  4                        3330 MODEL 11               11250064
+         AIF   (&SGGENDB(4)).MEND ENTRY ALREADY INITIALIZED             11300064
+&SGDDTMC(4) SETC 'IECVDDTL'   *** DASD DDT                              11450064
+&SGNUCMC(4) SETC 'IECVDDT0,IECVXDAS,IECVXDAT,IECVXDAU,IECVOTBL'         11500064
+&SGNUCDC(4) SETC 'AOSC5'                                                11550064
+&SGLPAMC(4) SETC 'IECLMSGD'                                             11600064
+&SGLPADC(4) SETC 'AOSC5'                                                11650064
+&SGUSNSA(4) SETA 24                                                     11750064
+&SGGENDB(4) SETB 1                                                      11800064
+         MEXIT                                                          11850064
+.U33301  ANOP                                                           11900064
+&SGDITXA(&I) SETA  5                        3330 MODEL 1                11950064
+         AIF   (&SGGENDB(5)).MEND ENTRY ALREADY INITIALIZED             12000064
+&SGDDTMC(5) SETC 'IECVDDTL'   *** DASD DDT                              12150064
+&SGNUCMC(5) SETC 'IECVDDT0,IECVXDAS,IECVXDAT,IECVXDAU,IECVOTBL'         12200064
+&SGNUCDC(5) SETC 'AOSC5'                                                12250064
+&SGLPAMC(5) SETC 'IECLMSGD'                                             12300064
+&SGLPADC(5) SETC 'AOSC5'                                                12350064
+&SGUSNSA(5) SETA 24                                                     12450064
+&SGGENDB(5) SETB 1                                                      12500064
+         MEXIT                                                          12550064
+.U3340   ANOP                                                           12600064
+&SGDITXA(&I) SETA  6                        3340                        12650064
+         AIF   (&SGGENDB(6)).MEND ENTRY ALREADY INITIALIZED             12700064
+&SGDDTMC(6) SETC 'IECVDDTM'   *** DASD DDT                              12850064
+&SGNUCMC(6) SETC 'IECVDDT0,IECVXDAS,IECVXDAT,IECVXDAU,IECVOTBL'         12900064
+&SGNUCDC(6) SETC 'AOSC5'                                                12950064
+&SGLPAMC(6) SETC 'IECLMSGD'                                             13000064
+&SGLPADC(6) SETC 'AOSC5'                                                13050064
+&SGUSNSA(6) SETA 24                                                     13150064
+&SGGENDB(6) SETB 1                                                      13200064
+         MEXIT                                                          13250064
+.U2314   ANOP                                                           13300064
+&SGDITXA(&I) SETA  7                        2314                        13350064
+         AIF   (&SGGENDB(7)).MEND ENTRY ALREADY INITIALIZED             13400064
+&SGDDTMC(7) SETC 'IECVDDTJ'   *** 2314 DDT                              13550064
+&SGNUCMC(7) SETC 'IECVDDT0,IECVXSKS,IECVXDAT,IECVXDAU,IECVOTBL,IECVXSKN*13600064
+               ,IECVXSKE'                                               13640064
+&SGNUCDC(7) SETC 'AOSC5'                                                13680064
+&SGLPAMC(7) SETC 'IECLMSGD'                                             13720064
+&SGLPADC(7) SETC 'AOSC5'                                                13760064
+&SGUSNSA(7) SETA 6                                                      13850064
+&SGGENDB(7) SETB 1                                                      13900064
+         MEXIT                                                          13950064
+.U24XX   ANOP                               TAPE DRIVES                 14000064
+.*  ALL GENERICS, UCB TYPES, AND COMPATIBILITY INDICES MUST BE          14050064
+.*  GENERATED TO ALLOW PROPER COMPATIBILITY PROCESSING.                 14100064
+&SGGNRIC(8) SETC '2400'                                                 14150064
+&SGDTYPC(8) SETC '30008001'                                             14200064
+&SGGCTXC(8) SETC '010012'                                               14250064
+&SGGNRIC(9) SETC '2400-3'                                               14300064
+&SGDTYPC(9) SETC '34008001'                                             14350064
+&SGGCTXC(9) SETC '010011012017'                                         14400064
+&SGGNRIC(10) SETC '2400-4'                                              14450064
+&SGDTYPC(10) SETC '34208001'                                            14500064
+&SGGCTXC(10) SETC '012'                                                 14550064
+&SGGNRIC(11) SETC '3400-3'                                              14600064
+&SGDTYPC(11) SETC '34008003'                                            14650064
+&SGGCTXC(11) SETC '012017'                                              14700064
+&SGGNRIC(12) SETC '3400-4'                                              14750064
+&SGDTYPC(12) SETC '34208003'                                            14800064
+&SGGCTXC(12) SETC ''                                                    14850064
+&SGGNRIC(13) SETC '2400-1'                                              14900064
+&SGDTYPC(13) SETC '30808001'                                            14950064
+&SGGCTXC(13) SETC '014015'                                              15000064
+&SGGNRIC(14) SETC '2400-2'                                              15050064
+&SGDTYPC(14) SETC '30C08001'                                            15100064
+&SGGCTXC(14) SETC '015'                                                 15150064
+&SGGNRIC(15) SETC '3400-2'                                              15200064
+&SGDTYPC(15) SETC '30C08003'                                            15250064
+&SGGCTXC(15) SETC ''                                                    15300064
+&SGGNRIC(16) SETC '3400-5'                                              15350064
+&SGDTYPC(16) SETC '32008003'                                            15400064
+&SGGCTXC(16) SETC '017'                                                 15450064
+&SGGNRIC(17) SETC '3400-6'                                              15500064
+&SGDTYPC(17) SETC '32108003'                                            15550064
+&SGGCTXC(17) SETC ''                                                    15600064
+         AIF   ('&UNIT' EQ '3410').U34XX     SKIP TO 3400 SERIES        15650064
+         AIF   ('&UNIT' EQ '3420').U34XX                                15700064
+.* TESTS MUST BE DONE IS A SPECIFIC ORDER FOR FEATURES AND MODELS       15750064
+.* TO SELECT PROPER GENERIC                                             15800064
+         AIF   (NOT (&SGDF01B(&I) AND &SGUNF2B(&I))).U24XXA             15850064
+.* DEVICE IS 2400-2 (7-TRACK WITH DATA CONVERTSION).                    15900064
+&SGDITXA(&I) SETA  14                                                   15950064
+             AIF   (&SGGENDB(14)).MEND                                  16000064
+&SGDDTMC(14) SETC 'IECVDDTQ'                                            16050064
+&SGNUCMC(14) SETC 'IECVDDT0,IECVXT2S,IECVXTAT,IECVOTBL'                 16090064
+&SGNUCDC(14) SETC 'AOSC5'                                               16130064
+&SGERPMC(14) SETC 'IGE0000I,IGE0100I'                                   16170064
+&SGERPDC(14) SETC 'AOSCA'                                               16210064
+&SGLPAMC(14) SETC 'IECLMSGT'                                            16300064
+&SGLPADC(14) SETC 'AOSC5'                                               16350064
+&SGUNSTA(14) SETA 1                         STATISTICS TABLE ENTRY      16400064
+&SGUSNSA(14) SETA 6                                                     16450064
+&SGGENDB(14) SETB 1                                                     16500064
+         MEXIT                                                          16550064
+.U24XXA  ANOP                                                           16600064
+         AIF   (NOT &SGDF01B(&I)).U24XXB                                16650064
+.* DEVICE IS 2400-1 (7-TRACK WITHOUT DATA CONVERSION).                  16700064
+&SGDITXA(&I) SETA  13                                                   16750064
+             AIF   (&SGGENDB(13)).MEND                                  16800064
+&SGDDTMC(13) SETC 'IECVDDTQ'                                            16850064
+&SGNUCMC(13) SETC 'IECVDDT0,IECVXT2S,IECVXTAT,IECVOTBL'                 16890064
+&SGNUCDC(13) SETC 'AOSC5'                                               16930064
+&SGERPMC(13) SETC 'IGE0000I,IGE0100I'                                   16970064
+&SGERPDC(13) SETC 'AOSCA'                                               17010064
+&SGLPAMC(13) SETC 'IECLMSGT'                                            17100064
+&SGLPADC(13) SETC 'AOSC5'                                               17150064
+&SGUNSTA(13) SETA 1                                                     17200064
+&SGUSNSA(13) SETA 6                                                     17250064
+&SGGENDB(13) SETB 1                                                     17300064
+         MEXIT                                                          17350064
+.U24XXB  ANOP                                                           17400064
+         AIF (NOT &SGDF04B(&I)).U24XXC                                  17450064
+.* DEVICE IS 2400-4 (9-TRACK DUAL DENSITY (800/1600 BPI)).              17500064
+&SGDITXA(&I) SETA  10                                                   17550064
+             AIF   (&SGGENDB(10)).MEND                                  17600064
+&SGDDTMC(10) SETC 'IECVDDTQ'                                            17650064
+&SGNUCMC(10) SETC 'IECVDDT0,IECVXT2S,IECVXTAT,IECVOTBL'                 17690064
+&SGNUCDC(10) SETC 'AOSC5'                                               17730064
+&SGERPMC(10) SETC 'IGE0000I,IGE0100I'                                   17770064
+&SGERPDC(10) SETC 'AOSCA'                                               17810064
+&SGLPAMC(10) SETC 'IECLMSGT'                                            17900064
+&SGLPADC(10) SETC 'AOSC5'                                               17950064
+&SGUNSTA(10) SETA 1                                                     18000064
+&SGUSNSA(10) SETA 6                                                     18050064
+&SGGENDB(10) SETB 1                                                     18100064
+         MEXIT                                                          18150064
+.U24XXC  ANOP                                                           18200064
+         AIF (NOT &SGDF02B(&I)).DITERR1                                 18250064
+         AIF (NOT (&SGDM04B(&I) OR &SGDM05B(&I) OR &SGDM06B(&I))).U2400 18300064
+.* DEVICE IS 2400-3 (9-TRACK, 1600 BPI ONLY, AND MODEL IS 4,5, OR 6).   18350064
+&SGDITXA(&I) SETA  9                                                    18400064
+             AIF   (&SGGENDB(9)).MEND                                   18450064
+&SGDDTMC(9) SETC 'IECVDDTQ'                                             18500064
+&SGNUCMC(9) SETC 'IECVDDT0,IECVXT2S,IECVXTAT,IECVOTBL'                  18540064
+&SGNUCDC(9) SETC 'AOSC5'                                                18580064
+&SGERPMC(9) SETC 'IGE0000I,IGE0100I'                                    18620064
+&SGERPDC(9) SETC 'AOSCA'                                                18660064
+&SGLPAMC(9) SETC 'IECLMSGT'                                             18750064
+&SGLPADC(9) SETC 'AOSC5'                                                18800064
+&SGUNSTA(9) SETA 1                                                      18850064
+&SGUSNSA(9) SETA 6                                                      18900064
+&SGGENDB(9) SETB 1                                                      18950064
+         MEXIT                                                          19000064
+.U2400   ANOP                                                           19050064
+         AIF   (NOT &SGDF02B(&I)).DITERR1                               19100064
+.* DEVICE IS 2400 (9-TRACK).                                            19150064
+&SGDITXA(&I) SETA  8                                                    19200064
+             AIF   (&SGGENDB(8)).MEND                                   19250064
+&SGDDTMC(8) SETC 'IECVDDTQ'                                             19300064
+&SGNUCMC(8) SETC 'IECVDDT0,IECVXT2S,IECVXTAT,IECVOTBL'                  19340064
+&SGNUCDC(8) SETC 'AOSC5'                                                19380064
+&SGERPMC(8) SETC 'IGE0000I,IGE0100I'                                    19420064
+&SGERPDC(8) SETC 'AOSCA'                                                19460064
+&SGLPAMC(8) SETC 'IECLMSGT'                                             19550064
+&SGLPADC(8) SETC 'AOSC5'                                                19600064
+&SGUNSTA(8) SETA 1                                                      19650064
+&SGUSNSA(8) SETA 6                                                      19700064
+&SGGENDB(8) SETB 1                                                      19750064
+         MEXIT                                                          19800064
+.U34XX   ANOP                                                           19850064
+.* TESTS MUST BE DONE IS A SPECIFIC ORDER FOR FEATURES AND MODELS       19900064
+.* TO SELECT PROPER GENERIC                                             19950064
+         AIF (NOT &SGDF01B(&I)).U34XXA                                  20000064
+.* DEVICE IS 3400-2 (7-TRACK WITH DATA CONVERSION).                     20050064
+&SGDITXA(&I) SETA  15                                                   20100064
+             AIF   (&SGGENDB(15)).MEND                                  20150064
+&SGDDTMC(15) SETC 'IECVDDTG'                                            20200064
+&SGNUCMC(15) SETC 'IECVDDT0,IECVXT3S,IECVXTAT,IECVOTBL'                 20250064
+&SGNUCDC(15) SETC 'AOSC5'                                               20300064
+&SGERPMC(15) SETC 'IGE0000I,IGE0100I'                                   20350064
+&SGERPDC(15) SETC 'AOSCA'                                               20400064
+&SGLPAMC(15) SETC 'IECLMSGT'                                            20450064
+&SGLPADC(15) SETC 'AOSC5'                                               20500064
+&SGUNSTA(15) SETA 2                                                     20550064
+&SGUSNSA(15) SETA 24                                                    20600064
+&SGGENDB(15) SETB 1                                                     20650064
+         MEXIT                                                          20700064
+.U34XXA  ANOP                                                           20750064
+         AIF (NOT &SGDF04B(&I)).U34XXB                                  20800064
+.* DEVICE IS 3400-4 (9-TRACK DUAL DENSITY (800/1600 BPI)).              20850064
+&SGDITXA(&I) SETA  12                                                   20900064
+             AIF   (&SGGENDB(12)).MEND                                  20950064
+&SGDDTMC(12) SETC 'IECVDDTG'                                            21000064
+&SGNUCMC(12) SETC 'IECVDDT0,IECVXT3S,IECVXTAT,IECVOTBL'                 21050064
+&SGNUCDC(12) SETC 'AOSC5'                                               21100064
+&SGERPMC(12) SETC 'IGE0000I,IGE0100I'                                   21150064
+&SGERPDC(12) SETC 'AOSCA'                                               21200064
+&SGLPAMC(12) SETC 'IECLMSGT'                                            21250064
+&SGLPADC(12) SETC 'AOSC5'                                               21300064
+&SGUNSTA(12) SETA 2                                                     21350064
+&SGUSNSA(12) SETA 24                                                    21400064
+&SGGENDB(12) SETB 1                                                     21450064
+         MEXIT                                                          21500064
+.U34XXB  ANOP                                                           21550064
+         AIF (NOT &SGDF06B(&I)).U34XXC                                  21600064
+.* DEVICE IS 3400-6 (9-TRACK DUAL DENSITY (1600/6250 BPI)).             21650064
+&SGDITXA(&I) SETA  17                                                   21700064
+             AIF   (&SGGENDB(17)).MEND                                  21750064
+&SGDDTMC(17) SETC 'IECVDDTG'                                            21800064
+&SGNUCMC(17) SETC 'IECVDDT0,IECVXT3S,IECVXTAT,IECVOTBL'                 21850064
+&SGNUCDC(17) SETC 'AOSC5'                                               21900064
+&SGERPMC(17) SETC 'IGE0000I,IGE0100I'                                   21950064
+&SGERPDC(17) SETC 'AOSCA'                                               22000064
+&SGLPAMC(17) SETC 'IECLMSGT'                                            22050064
+&SGLPADC(17) SETC 'AOSC5'                                               22100064
+&SGUNSTA(17) SETA 2                                                     22150064
+&SGUSNSA(17) SETA 24                                                    22200064
+&SGGENDB(17) SETB 1                                                     22250064
+         MEXIT                                                          22300064
+.U34XXC  ANOP                                                           22350064
+         AIF (NOT &SGDF05B(&I)).U34XXD                                  22400064
+.* DEVICE IS 3400-5 (9-TRACK 6250 BPI ONLY).                            22450064
+&SGDITXA(&I) SETA  16                                                   22500064
+             AIF   (&SGGENDB(16)).MEND                                  22550064
+&SGDDTMC(16) SETC 'IECVDDTG'                                            22600064
+&SGNUCMC(16) SETC 'IECVDDT0,IECVXT3S,IECVXTAT,IECVOTBL'                 22650064
+&SGNUCDC(16) SETC 'AOSC5'                                               22700064
+&SGERPMC(16) SETC 'IGE0000I,IGE0100I'                                   22750064
+&SGERPDC(16) SETC 'AOSCA'                                               22800064
+&SGLPAMC(16) SETC 'IECLMSGT'                                            22850064
+&SGLPADC(16) SETC 'AOSC5'                                               22900064
+&SGUNSTA(16) SETA 2                                                     22950064
+&SGUSNSA(16) SETA 24                                                    23000064
+&SGGENDB(16) SETB 1                                                     23050064
+         MEXIT                                                          23100064
+.U34XXD  ANOP                                                           23150064
+         AIF (NOT &SGDF02B(&I)).DITERR1                                 23200064
+.* DEVICE IS 3400-3 (9-TRACK 1600 BPI ONLY).                            23250064
+&SGDITXA(&I) SETA  11                                                   23300064
+             AIF   (&SGGENDB(11)).MEND                                  23350064
+&SGDDTMC(11) SETC 'IECVDDTG'                                            23400064
+&SGNUCMC(11) SETC 'IECVDDT0,IECVXT3S,IECVXTAT,IECVOTBL'                 23450064
+&SGNUCDC(11) SETC 'AOSC5'                                               23500064
+&SGERPMC(11) SETC 'IGE0000I,IGE0100I'                                   23550064
+&SGERPDC(11) SETC 'AOSCA'                                               23600064
+&SGLPAMC(11) SETC 'IECLMSGT'                                            23650064
+&SGLPADC(11) SETC 'AOSC5'                                               23700064
+&SGUNSTA(11) SETA 2                                                     23750064
+&SGUSNSA(11) SETA 24                                                    23800064
+&SGGENDB(11) SETB 1                                                     23850064
+         MEXIT                                                          23900064
+.U3800   ANOP                                                           23950064
+.* DEVICE IS 3800.                                                      24000064
+&SGDITXA(&I) SETA  18                                                   24050064
+             AIF   (&SGGENDB(18)).MEND                                  24100064
+&SGGNRIC(18) SETC '3800'                                                24150064
+&SGDTYPC(18) SETC '1000080E'                                            24200064
+&SGDDTMC(18) SETC 'IECVDDT9'                                            24250064
+&SGNUCMC(18) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVXPRE,IECVOTBL'        24300064
+&SGNUCDC(18) SETC 'AOSC5'                                               24350064
+&SGERPMC(18) SETC 'IGE0000G'                                            24400064
+&SGERPDC(18) SETC 'AOSCA'                                               24450064
+&SGLPAMC(18) SETC 'IECLMSGU'                                            24500064
+&SGLPADC(18) SETC 'AOSC5'                                               24550064
+&SGUNSTA(18) SETA 1                                                     24600064
+&SGUSNSA(18) SETA 24                                                    24650064
+&SGGENDB(18) SETB 1                                                     24700064
+         MEXIT                                                          24750064
+.U3211   ANOP                                                           24800064
+.* DEVICE IS 3211.                                                      24850064
+&SGDITXA(&I) SETA  19                                                   24900064
+             AIF   (&SGGENDB(19)).MEND                                  24950064
+&SGGNRIC(19) SETC '3211'                                                25000064
+&SGDTYPC(19) SETC '10800809'                                            25050064
+&SGDDTMC(19) SETC 'IECVDDT8'                                            25100064
+&SGNUCMC(19) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVXPRE,IECVOTBL'        25150064
+&SGNUCDC(19) SETC 'AOSC5'                                               25200064
+&SGERPMC(19) SETC 'IGE0000G'                                            25250064
+&SGERPDC(19) SETC 'AOSCA'                                               25300064
+&SGLPAMC(19) SETC 'IECLMSGU'                                   @ZA38705 25350064
+&SGLPADC(19) SETC 'AOSC5'                                               25400064
+&SGUNSTA(19) SETA 1                                                     25450064
+&SGUSNSA(19) SETA 6                                                     25500064
+&SGGENDB(19) SETB 1                                                     25550064
+         MEXIT                                                          25600064
+.U1403   ANOP                                                           25650064
+.* DEVICE IS 1403.                                                      25700064
+&SGDITXA(&I) SETA  20                                                   25750064
+             AIF   (&SGGENDB(20)).MEND                                  25800064
+&SGGNRIC(20) SETC '1403'                                                25850064
+&SGDTYPC(20) SETC '10000808'                                            25900064
+&SGDDTMC(20) SETC 'IECVDDT5'                                            25950064
+&SGNUCMC(20) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 26000064
+&SGNUCDC(20) SETC 'AOSC5'                                               26050064
+&SGERPMC(20) SETC 'IGE0000G'                                            26100064
+&SGERPDC(20) SETC 'AOSCA'                                               26150064
+&SGLPAMC(20) SETC 'IECLMSGU'                                            26200064
+&SGLPADC(20) SETC 'AOSC5'                                               26250064
+&SGUNSTA(20) SETA 1                                                     26300064
+&SGUSNSA(20) SETA 2                                                     26350064
+&SGGENDB(20) SETB 1                                                     26400064
+         MEXIT                                                          26450064
+.U1443   ANOP                                                           26500064
+.* DEVICE IS 1443.                                                      26550064
+&SGDITXA(&I) SETA  21                                                   26600064
+             AIF   (&SGGENDB(21)).MEND                                  26650064
+&SGGNRIC(21) SETC '1443'                                                26700064
+&SGDTYPC(21) SETC '1000080A'                                            26750064
+&SGDDTMC(21) SETC 'IECVDDT5'                                            26800064
+&SGNUCMC(21) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 26850064
+&SGNUCDC(21) SETC 'AOSC5'                                               26900064
+&SGERPMC(21) SETC 'IGE0000G'                                            26950064
+&SGERPDC(21) SETC 'AOSCA'                                               27000064
+&SGLPAMC(21) SETC 'IECLMSGU'                                            27050064
+&SGLPADC(21) SETC 'AOSC5'                                               27100064
+&SGUNSTA(21) SETA 1                                                     27150064
+&SGUSNSA(21) SETA 2                                                     27200064
+&SGGENDB(21) SETB 1                                                     27250064
+         MEXIT                                                          27300064
+.U2501   ANOP                                                           27350064
+.* DEVICE IS 2501.                                                      27400064
+&SGDITXA(&I) SETA  22                                                   27450064
+             AIF   (&SGGENDB(22)).MEND                                  27500064
+&SGGNRIC(22) SETC '2501'                                                27550064
+&SGDTYPC(22) SETC '50000804'                                            27600064
+&SGDDTMC(22) SETC 'IECVDDT5'                                            27650064
+&SGNUCMC(22) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 27700064
+&SGNUCDC(22) SETC 'AOSC5'                                               27750064
+&SGERPMC(22) SETC 'IGE0001C'                                            27800064
+&SGERPDC(22) SETC 'AOSCA'                                               27850064
+&SGLPAMC(22) SETC 'IECLMSGU'                                            27900064
+&SGLPADC(22) SETC 'AOSC5'                                               27950064
+&SGUNSTA(22) SETA 1                                                     28000064
+&SGUSNSA(22) SETA 2                                                     28050064
+&SGGENDB(22) SETB 1                                                     28100064
+         MEXIT                                                          28150064
+.U3505   ANOP                                                           28200064
+.* DEVICE IS 3505.                                                      28250064
+&SGDITXA(&I) SETA  23                                                   28300064
+             AIF   (&SGGENDB(23)).MEND                                  28350064
+&SGGNRIC(23) SETC '3505'                                                28400064
+&SGDTYPC(23) SETC '10000806'                                            28450064
+&SGDDTMC(23) SETC 'IECVDDT5'                                            28500064
+&SGNUCMC(23) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 28550064
+&SGNUCDC(23) SETC 'AOSC5'                                               28600064
+&SGERPMC(23) SETC 'IGE0001A'                                            28650064
+&SGERPDC(23) SETC 'AOSCA'                                               28700064
+&SGLPAMC(23) SETC 'IECLMSGU'                                            28750064
+&SGLPADC(23) SETC 'AOSC5'                                               28800064
+&SGUNSTA(23) SETA 1                                                     28850064
+&SGUSNSA(23) SETA 4                                                     28900064
+&SGGENDB(23) SETB 1                                                     28950064
+         MEXIT                                                          29000064
+.U3525   ANOP                                                           29050064
+.* DEVICE IS 3525.                                                      29100064
+&SGDITXA(&I) SETA  24                                                   29150064
+             AIF   (&SGGENDB(24)).MEND                                  29200064
+&SGGNRIC(24) SETC '3525'                                                29250064
+&SGDTYPC(24) SETC '1000080C'                                            29300064
+&SGDDTMC(24) SETC 'IECVDDT5'                                            29350064
+&SGNUCMC(24) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 29400064
+&SGNUCDC(24) SETC 'AOSC5'                                               29450064
+&SGERPMC(24) SETC 'IGE0001A'                                            29500064
+&SGERPDC(24) SETC 'AOSCA'                                               29550064
+&SGLPAMC(24) SETC 'IECLMSGU'                                            29600064
+&SGLPADC(24) SETC 'AOSC5'                                               29650064
+&SGUNSTA(24) SETA 1                                                     29700064
+&SGUSNSA(24) SETA 4                                                     29750064
+&SGGENDB(24) SETB 1                                                     29800064
+         MEXIT                                                          29850064
+.U2671   ANOP                                                           29900064
+.* DEVICE IS 2671.                                                      29950064
+&SGDITXA(&I) SETA  25                                                   30000064
+             AIF   (&SGGENDB(25)).MEND                                  30050064
+&SGGNRIC(25) SETC '2671'                                                30100064
+&SGDTYPC(25) SETC '10000810'                                            30150064
+&SGDDTMC(25) SETC 'IECVDDT5'                                            30200064
+&SGNUCMC(25) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 30250064
+&SGNUCDC(25) SETC 'AOSC5'                                               30300064
+&SGERPMC(25) SETC 'IGE0002A'                                            30350064
+&SGERPDC(25) SETC 'AOSCA'                                               30400064
+&SGLPAMC(25) SETC 'IECLMSGU'                                            30450064
+&SGLPADC(25) SETC 'AOSC5'                                               30500064
+&SGUNSTA(25) SETA 1                                                     30550064
+&SGUSNSA(25) SETA 2                                                     30600064
+&SGGENDB(25) SETB 1                                                     30650064
+         MEXIT                                                          30700064
+.U2520   ANOP                                                           30750064
+.* DEVICE IS 2520.                                                      30800064
+&SGDITXA(&I) SETA  26                                                   30850064
+             AIF   (&SGGENDB(26)).MEND                                  30900064
+&SGGNRIC(26) SETC '2520'                                                30950064
+&SGDTYPC(26) SETC '50000805'                                            31000064
+&SGDDTMC(26) SETC 'IECVDDT5'                                            31050064
+&SGNUCMC(26) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 31100064
+&SGNUCDC(26) SETC 'AOSC5'                                               31150064
+&SGERPMC(26) SETC 'IGE0001C'                                            31200064
+&SGERPDC(26) SETC 'AOSCA'                                               31250064
+&SGLPAMC(26) SETC 'IECLMSGU'                                            31300064
+&SGLPADC(26) SETC 'AOSC5'                                               31350064
+&SGUNSTA(26) SETA 1                                                     31400064
+&SGUSNSA(26) SETA 2                                                     31450064
+&SGGENDB(26) SETB 1                                                     31500064
+         MEXIT                                                          31550064
+.U2540   ANOP                                                           31600064
+.* DEVICE IS 2540R.                                                     31650064
+&SGDITXA(&I) SETA  27                                                   31700064
+             AIF   (&SGGENDB(27)).MEND                                  31750064
+&SGGNRIC(27) SETC '2540'                                                31800064
+&SGDTYPC(27) SETC '10000801'                                            31850064
+&SGDDTMC(27) SETC 'IECVDDT5'                                            31900064
+&SGNUCMC(27) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 31950064
+&SGNUCDC(27) SETC 'AOSC5'                                               32000064
+&SGERPMC(27) SETC 'IGE0001C'                                            32050064
+&SGERPDC(27) SETC 'AOSCA'                                               32100064
+&SGLPAMC(27) SETC 'IECLMSGU'                                            32150064
+&SGLPADC(27) SETC 'AOSC5'                                               32200064
+&SGUNSTA(27) SETA 1                                                     32250064
+&SGUSNSA(27) SETA 2                                                     32300064
+&SGGENDB(27) SETB 1                                                     32350064
+         MEXIT                                                          32400064
+.U2540P  ANOP                                                           32450064
+.* DEVICE IS 2540P.                                                     32500064
+&SGDITXA(&I) SETA  28                                                   32550064
+             AIF   (&SGGENDB(28)).MEND                                  32600064
+&SGGNRIC(28) SETC '2540-2'                                              32650064
+&SGDTYPC(28) SETC '10000802'                                            32700064
+&SGDDTMC(28) SETC 'IECVDDT5'                                            32750064
+&SGNUCMC(28) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 32800064
+&SGNUCDC(28) SETC 'AOSC5'                                               32850064
+&SGERPMC(28) SETC 'IGE0001C'                                            32900064
+&SGERPDC(28) SETC 'AOSCA'                                               32950064
+&SGLPAMC(28) SETC 'IECLMSGU'                                            33000064
+&SGLPADC(28) SETC 'AOSC5'                                               33050064
+&SGUNSTA(28) SETA 1                                                     33100064
+&SGUSNSA(28) SETA 2                                                     33150064
+&SGGENDB(28) SETB 1                                                     33200064
+         MEXIT                                                          33250064
+.U1053   ANOP                                                           33300064
+.* DEVICE IS 1053.                                                      33350064
+&SGDITXA(&I) SETA  29                                                   33400064
+             AIF   (&SGGENDB(29)).MEND                                  33450064
+&SGGNRIC(29) SETC '1053'                                                33500064
+&SGDTYPC(29) SETC '14001004'                                            33550064
+&SGDDTMC(29) SETC 'IECVDDT4'                                            33600064
+&SGNUCMC(29) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 33640064
+&SGNUCDC(29) SETC 'AOSC5'                                               33670064
+&SGERPMC(29) SETC 'IGE0010B'                                            33700064
+&SGERPDC(29) SETC 'AOSG0'                                               33730064
+&SGLPAMC(29) SETC 'IECLMSGG'                                            33800064
+&SGLPADC(29) SETC 'AOSC5'                                               33900064
+&SGUNSTA(29) SETA 1                                                     33950064
+&SGUSNSA(29) SETA 6                                                     34000064
+&SGGENDB(29) SETB 1                                                     34050064
+         MEXIT                                                          34100064
+.U3210   ANOP                                                           34150064
+.* DEVICE IS 3210.                                                      34200064
+&SGDITXA(&I) SETA  30                                                   34250064
+             AIF   (&SGGENDB(30)).MEND                                  34300064
+&SGGNRIC(30) SETC '3210'                                                34350064
+&SGDTYPC(30) SETC '10000822'                                            34400064
+&SGDDTMC(30) SETC 'IECVDDT5'                                            34450064
+&SGNUCMC(30) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 34490064
+&SGNUCDC(30) SETC 'AOSC5'                                               34530064
+&SGERPMC(30) SETC 'IGE0000D'                                            34570064
+&SGERPDC(30) SETC 'AOSCA'                                               34610064
+&SGLPAMC(30) SETC 'IECLMSGU'                                            34650064
+&SGLPADC(30) SETC 'AOSC5'                                               34750064
+&SGUNSTA(30) SETA 1                                                     34800064
+&SGUSNSA(30) SETA 2                                                     34850064
+&SGGENDB(30) SETB 1                                                     34900064
+         MEXIT                                                          34950064
+.U3215   ANOP                                                           35000064
+.* DEVICE IS 3215.                                                      35050064
+&SGDITXA(&I) SETA  31                                                   35100064
+             AIF   (&SGGENDB(31)).MEND                                  35150064
+&SGGNRIC(31) SETC '3215'                                                35200064
+&SGDTYPC(31) SETC '10000823'                                            35250064
+&SGDDTMC(31) SETC 'IECVDDT5'                                            35300064
+&SGNUCMC(31) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 35340064
+&SGNUCDC(31) SETC 'AOSC5'                                               35380064
+&SGERPMC(31) SETC 'IGE0000D'                                            35420064
+&SGERPDC(31) SETC 'AOSCA'                                               35460064
+&SGLPAMC(31) SETC 'IECLMSGU'                                            35500064
+&SGLPADC(31) SETC 'AOSC5'                                               35600064
+&SGUNSTA(31) SETA 1                                                     35650064
+&SGUSNSA(31) SETA 2                                                     35700064
+&SGGENDB(31) SETB 1                                                     35750064
+         MEXIT                                                          35800064
+.U3213   ANOP                                                           35850064
+.* DEVICE IS 3213.                                                      35900064
+&SGDITXA(&I) SETA  32                                                   35950064
+             AIF   (&SGGENDB(32)).MEND                                  36000064
+&SGGNRIC(32) SETC '3213'                                                36050064
+&SGDTYPC(32) SETC '10000830'                                            36100064
+&SGDDTMC(32) SETC 'IECVDDT5'                                            36150064
+&SGNUCMC(32) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 36190064
+&SGNUCDC(32) SETC 'AOSC5'                                               36230064
+&SGERPMC(32) SETC 'IGE0000D'                                            36270064
+&SGERPDC(32) SETC 'AOSCA'                                               36310064
+&SGLPAMC(32) SETC 'IECLMSGU'                                            36350064
+&SGLPADC(32) SETC 'AOSC5'                                               36450064
+&SGUNSTA(32) SETA 1                                                     36500064
+&SGUSNSA(32) SETA 2                                                     36550064
+&SGGENDB(32) SETB 1                                                     36600064
+         MEXIT                                                          36650064
+.U2250   ANOP                                                           36700064
+.* DEVICE IS 2250. CHECK MODEL NUMBER.                                  36750064
+         AIF   (&SGDM03B(&I)).U22503     MODEL 3 ?                      36800064
+         AIF   (NOT &SGDM01B(&I)).DITERR1                               36850064
+&SGDITXA(&I) SETA  33                    2250 MODEL 1                   36900064
+             AIF   (&SGGENDB(33)).MEND                                  36950064
+&SGGNRIC(33) SETC '2250-1'                                              37000064
+&SGDTYPC(33) SETC '31001002'                                            37050064
+&SGDDTMC(33) SETC 'IECVDDT4'                                            37100064
+&SGNUCMC(33) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 37150064
+&SGNUCDC(33) SETC 'AOSC5'                                               37200064
+&SGERPMC(33) SETC 'IGE0010A'                                            37250064
+&SGERPDC(33) SETC 'AOSG0'                                               37300064
+&SGLPAMC(33) SETC 'IECLMSGG'                                            37350064
+&SGLPADC(33) SETC 'AOSC5'                                               37400064
+&SGUNSTA(33) SETA 1                                                     37450064
+&SGUSNSA(33) SETA 6                                                     37500064
+&SGGENDB(33) SETB 1                                                     37550064
+         MEXIT                                                          37600064
+.U22503  ANOP                                                           37650064
+.* DEVICE IS 2250 MODEL 3.                                              37700064
+&SGDITXA(&I) SETA  34                    2250 MODEL 3                   37750064
+             AIF   (&SGGENDB(34)).MEND                                  37800064
+&SGGNRIC(34) SETC '2250-3'                                              37850064
+&SGDTYPC(34) SETC '33001002'                                            37900064
+&SGDDTMC(34) SETC 'IECVDDT4'                                            37950064
+&SGNUCMC(34) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 38000064
+&SGNUCDC(34) SETC 'AOSC5'                                               38050064
+&SGERPMC(34) SETC 'IGE0010A'                                            38100064
+&SGERPDC(34) SETC 'AOSG0'                                               38150064
+&SGLPAMC(34) SETC 'IECLMSGG'                                            38200064
+&SGLPADC(34) SETC 'AOSC5'                                               38250064
+&SGUNSTA(34) SETA 1                                                     38300064
+&SGUSNSA(34) SETA 6                                                     38350064
+&SGGENDB(34) SETB 1                                                     38400064
+         MEXIT                                                          38450064
+.U1052   ANOP                                                           38500064
+.* DEVICE IS 1052.                                                      38550064
+&SGDITXA(&I) SETA  35                                                   38600064
+             AIF   (&SGGENDB(35)).MEND                                  38650064
+&SGGNRIC(35) SETC '1052'                                                38700064
+&SGDTYPC(35) SETC '10000820'                                            38750064
+&SGDDTMC(35) SETC 'IECVDDT5'                                            38800064
+&SGNUCMC(35) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 38850064
+&SGNUCDC(35) SETC 'AOSC5'                                               38900064
+&SGERPMC(35) SETC 'IGE0000D'                                            38950064
+&SGERPDC(35) SETC 'AOSCA'                                               39000064
+&SGLPAMC(35) SETC 'IECLMSGG'                                            39030064
+&SGLPADC(35) SETC 'AOSC5'                                               39060064
+&SGUNSTA(35) SETA 1                                                     39150064
+&SGUSNSA(35) SETA 6                                                     39200064
+&SGGENDB(35) SETB 1                                                     39250064
+         MEXIT                                                          39300064
+.U3277   ANOP                                                           39350064
+.* DEVICE IS 3277. CHECK MODEL NUMBER.                                  39400064
+         AIF   (&SGDM02B(&I)).U32772     MODEL 2 ?                      39450064
+         AIF   (NOT &SGDM01B(&I)).DITERR1                               39500064
+&SGDITXA(&I) SETA  36                    3277 MODEL 1                   39550064
+             AIF   (&SGGENDB(36)).MEND                                  39600064
+&SGGNRIC(36) SETC '3277-1'                                              39650064
+&SGDTYPC(36) SETC '11001009'                                            39700064
+&SGDDTMC(36) SETC 'IECVDDT4'                                            39750064
+&SGNUCMC(36) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 39800064
+&SGNUCDC(36) SETC 'AOSC5'                                               39850064
+&SGERPMC(36) SETC 'IGE0010E'                                            39900064
+&SGERPDC(36) SETC 'AOSG0'                                               39950064
+&SGLPAMC(36) SETC 'IECLMSGG'                                            40000064
+&SGLPADC(36) SETC 'AOSC5'                                               40050064
+&SGUNSTA(36) SETA 1                                                     40100064
+&SGUSNSA(36) SETA 6                                                     40150064
+&SGGENDB(36) SETB 1                                                     40200064
+         MEXIT                                                          40250064
+.U32772  ANOP                                                           40300064
+.* DEVICE IS 3277 MODEL 2.                                              40350064
+&SGDITXA(&I) SETA  37                    3277 MODEL 2                   40400064
+             AIF   (&SGGENDB(37)).MEND                                  40450064
+&SGGNRIC(37) SETC '3277-2'                                              40500064
+&SGDTYPC(37) SETC '12001009'                                            40550064
+&SGDDTMC(37) SETC 'IECVDDT4'                                            40600064
+&SGNUCMC(37) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 40650064
+&SGNUCDC(37) SETC 'AOSC5'                                               40700064
+&SGERPMC(37) SETC 'IGE0010E'                                            40750064
+&SGERPDC(37) SETC 'AOSG0'                                               40800064
+&SGLPAMC(37) SETC 'IECLMSGG'                                            40850064
+&SGLPADC(37) SETC 'AOSC5'                                               40900064
+&SGUNSTA(37) SETA 1                                                     40950064
+&SGUSNSA(37) SETA 6                                                     41000064
+&SGGENDB(37) SETB 1                                                     41050064
+         MEXIT                                                          41100064
+.U3158   ANOP                                                           41150064
+.* DEVICE IS 3158.                                                      41200064
+&SGDITXA(&I) SETA  38                                                   41250064
+             AIF   (&SGGENDB(38)).MEND                                  41300064
+&SGGNRIC(38) SETC '3158'                                                41350064
+&SGDTYPC(38) SETC '1200100C'                                            41400064
+&SGDDTMC(38) SETC 'IECVDDT4'                                            41450064
+&SGNUCMC(38) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 41500064
+&SGNUCDC(38) SETC 'AOSC5'                                               41550064
+&SGERPMC(38) SETC 'IGE0010E'                                            41600064
+&SGERPDC(38) SETC 'AOSG0'                                               41650064
+&SGLPAMC(38) SETC 'IECLMSGG'                                            41700064
+&SGLPADC(38) SETC 'AOSC5'                                               41750064
+&SGUNSTA(38) SETA 1                                                     41800064
+&SGUSNSA(38) SETA 6                                                     41850064
+&SGGENDB(38) SETB 1                                                     41900064
+         MEXIT                                                          41950064
+.U3284   ANOP                                                           42000064
+.* DEVICE IS 3284. CHECK MODEL NUMBER.                                  42050064
+         AIF   (&SGDM02B(&I)).U32842     MODEL 2 ?                      42100064
+         AIF   (NOT &SGDM01B(&I)).DITERR1                               42150064
+&SGDITXA(&I) SETA  39                    3284 MODEL 1                   42200064
+             AIF   (&SGGENDB(39)).MEND                                  42250064
+&SGGNRIC(39) SETC '3284-1'                                              42300064
+&SGDTYPC(39) SETC '1100100A'                                            42350064
+&SGDDTMC(39) SETC 'IECVDDT4'                                            42400064
+&SGNUCMC(39) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 42450064
+&SGNUCDC(39) SETC 'AOSC5'                                               42500064
+&SGERPMC(39) SETC 'IGE0010E'                                            42550064
+&SGERPDC(39) SETC 'AOSG0'                                               42600064
+&SGLPAMC(39) SETC 'IECLMSGG'                                            42650064
+&SGLPADC(39) SETC 'AOSC5'                                               42700064
+&SGUNSTA(39) SETA 1                                                     42750064
+&SGUSNSA(39) SETA 6                                                     42800064
+&SGGENDB(39) SETB 1                                                     42850064
+         MEXIT                                                          42900064
+.U32842  ANOP                                                           42950064
+.* DEVICE IS 3284 MODEL 2.                                              43000064
+&SGDITXA(&I) SETA  40                    3284 MODEL 2                   43050064
+             AIF   (&SGGENDB(40)).MEND                                  43100064
+&SGGNRIC(40) SETC '3284-2'                                              43150064
+&SGDTYPC(40) SETC '1200100A'                                            43200064
+&SGDDTMC(40) SETC 'IECVDDT4'                                            43250064
+&SGNUCMC(40) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 43300064
+&SGNUCDC(40) SETC 'AOSC5'                                               43350064
+&SGERPMC(40) SETC 'IGE0010E'                                            43400064
+&SGERPDC(40) SETC 'AOSG0'                                               43450064
+&SGLPAMC(40) SETC 'IECLMSGG'                                            43500064
+&SGLPADC(40) SETC 'AOSC5'                                               43550064
+&SGUNSTA(40) SETA 1                                                     43600064
+&SGUSNSA(40) SETA 6                                                     43650064
+&SGGENDB(40) SETB 1                                                     43700064
+         MEXIT                                                          43750064
+.U3286   ANOP                                                           43800064
+.* DEVICE IS 3286. CHECK MODEL NUMBER.                                  43850064
+         AIF   (&SGDM02B(&I)).U32862     MODEL 2 ?                      43900064
+         AIF   (NOT &SGDM01B(&I)).DITERR1                               43950064
+&SGDITXA(&I) SETA  41                    3286 MODEL 1                   44000064
+             AIF   (&SGGENDB(41)).MEND                                  44050064
+&SGGNRIC(41) SETC '3286-1'                                              44100064
+&SGDTYPC(41) SETC '1100100B'                                            44150064
+&SGDDTMC(41) SETC 'IECVDDT4'                                            44200064
+&SGNUCMC(41) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 44250064
+&SGNUCDC(41) SETC 'AOSC5'                                               44300064
+&SGERPMC(41) SETC 'IGE0010E'                                            44350064
+&SGERPDC(41) SETC 'AOSG0'                                               44400064
+&SGLPAMC(41) SETC 'IECLMSGG'                                            44450064
+&SGLPADC(41) SETC 'AOSC5'                                               44500064
+&SGUNSTA(41) SETA 1                                                     44550064
+&SGUSNSA(41) SETA 6                                                     44600064
+&SGGENDB(41) SETB 1                                                     44650064
+         MEXIT                                                          44700064
+.U32862  ANOP                                                           44750064
+.* DEVICE IS 3286 MODEL 2.                                              44800064
+&SGDITXA(&I) SETA  42                    3286 MODEL 2                   44850064
+             AIF   (&SGGENDB(42)).MEND                                  44900064
+&SGGNRIC(42) SETC '3286-2'                                              44950064
+&SGDTYPC(42) SETC '1200100B'                                            45000064
+&SGDDTMC(42) SETC 'IECVDDT4'                                            45050064
+&SGNUCMC(42) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 45100064
+&SGNUCDC(42) SETC 'AOSC5'                                               45150064
+&SGERPMC(42) SETC 'IGE0010E'                                            45200064
+&SGERPDC(42) SETC 'AOSG0'                                               45250064
+&SGLPAMC(42) SETC 'IECLMSGG'                                            45300064
+&SGLPADC(42) SETC 'AOSC5'                                               45350064
+&SGUNSTA(42) SETA 1                                                     45400064
+&SGUSNSA(42) SETA 6                                                     45450064
+&SGGENDB(42) SETB 1                                                     45500064
+         MEXIT                                                          45550064
+.U3066   ANOP                                                           45600064
+.* DEVICE IS 3066.                                                      45650064
+&SGDITXA(&I) SETA  43                                                   45700064
+             AIF   (&SGGENDB(43)).MEND                                  45750064
+&SGGNRIC(43) SETC '3066'                                                45800064
+&SGDTYPC(43) SETC '10001008'                                            45850064
+&SGDDTMC(43) SETC 'IECVDDT4'                                            45900064
+&SGNUCMC(43) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 45950064
+&SGNUCDC(43) SETC 'AOSC5'                                               46000064
+&SGERPMC(43) SETC 'IGE0010D'                                            46050064
+&SGERPDC(43) SETC 'AOSG0'                                               46100064
+&SGLPAMC(43) SETC 'IECLMSGG'                                            46150064
+&SGLPADC(43) SETC 'AOSC5'                                               46200064
+&SGUNSTA(43) SETA 1                                                     46250064
+&SGUSNSA(43) SETA 6                                                     46300064
+&SGGENDB(43) SETB 1                                                     46350064
+         MEXIT                                                          46400064
+.U2260   ANOP                                                           46450064
+.* DEVICE IS 2260. CHECK IF REMOTE OR LOCALLY ATTACHED.                 46500064
+         AIF   (&SGDT08B(&I)).U2260TP    REMOTE DEVICE ?                46550064
+         AIF   (NOT &SGDT05B(&I)).DITERR1 LOCAL 2260 ?                  46600064
+.*  LOCALLY ATTACHED 2260. CHECK MODEL NUMBER.                          46650064
+         AIF   (&SGDM02B(&I)).U22602     MODEL 2 ?                      46700064
+         AIF   (NOT &SGDM01B(&I)).DITERR1                               46750064
+&SGDITXA(&I) SETA  44                    2260 MODEL 1                   46800064
+             AIF   (&SGGENDB(44)).MEND                                  46850064
+&SGGNRIC(44) SETC '2260-1'                                              46900064
+&SGDTYPC(44) SETC '11001003'                                            46950064
+&SGDDTMC(44) SETC 'IECVDDT4'                                            47000064
+&SGNUCMC(44) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 47050064
+&SGNUCDC(44) SETC 'AOSC5'                                               47100064
+&SGERPMC(44) SETC 'IGE0010B'                                            47150064
+&SGERPDC(44) SETC 'AOSG0'                                               47200064
+&SGLPAMC(44) SETC 'IECLMSGG'                                            47250064
+&SGLPADC(44) SETC 'AOSC5'                                               47300064
+&SGUNSTA(44) SETA 1                                                     47350064
+&SGUSNSA(44) SETA 6                                                     47400064
+&SGGENDB(44) SETB 1                                                     47450064
+         MEXIT                                                          47500064
+.U22602  ANOP                                                           47550064
+.* DEVICE IS 2260 MODEL 2.                                              47600064
+&SGDITXA(&I) SETA  45                    2260 MODEL 2                   47650064
+             AIF   (&SGGENDB(45)).MEND                                  47700064
+&SGGNRIC(45) SETC '2260-2'                                              47750064
+&SGDTYPC(45) SETC '12001003'                                            47800064
+&SGDDTMC(45) SETC 'IECVDDT4'                                            47850064
+&SGNUCMC(45) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 47900064
+&SGNUCDC(45) SETC 'AOSC5'                                               47950064
+&SGERPMC(45) SETC 'IGE0010B'                                            48000064
+&SGERPDC(45) SETC 'AOSG0'                                               48050064
+&SGLPAMC(45) SETC 'IECLMSGG'                                            48100064
+&SGLPADC(45) SETC 'AOSC5'                                               48150064
+&SGUNSTA(45) SETA 1                                                     48200064
+&SGUSNSA(45) SETA 6                                                     48250064
+&SGGENDB(45) SETB 1                                                     48300064
+         MEXIT                                                          48350064
+.U2260TP ANOP                                                           48400064
+.* DEVICE IS REMOTE 2260.                                               48450064
+&SGDITXA(&I) SETA  61                                                   48500064
+             AIF   (&SGGENDB(61)).MEND                                  48550064
+&SGGNRIC(61) SETC 'AAA4'                                                48600064
+&SGDTYPC(61) SETC '00004004'                                            48650064
+&SGDDTMC(61) SETC 'IECVDDT2'                                            48700064
+&SGNUCMC(61) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 48750064
+&SGNUCDC(61) SETC 'AOSC5'                                               48800064
+&SGLPAMC(61) SETC 'IECLMSGC'                                            48850064
+&SGLPADC(61) SETC 'AOSC5'                                               48900064
+&SGUNSTA(61) SETA 1                                                     48950064
+&SGUSNSA(61) SETA 2                                                     49000064
+&SGGENDB(61) SETB 1                                                     49050064
+         MEXIT                                                          49100064
+.U3890   ANOP                                                           49150064
+.* DEVICE IS 3890.                                                      49200064
+&SGDITXA(&I) SETA  46                                                   49250064
+             AIF   (&SGGENDB(46)).MEND                                  49300064
+&SGGNRIC(46) SETC '3890'                                                49350064
+&SGDTYPC(46) SETC '10000816'                                            49400064
+&SGDDTMC(46) SETC 'IECVDDTA'                                            49450064
+&SGNUCMC(46) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 49500064
+&SGNUCDC(46) SETC 'AOSC5'                                               49550064
+&SGERPMC(46) SETC 'IGE0001G'                                            49600064
+&SGERPDC(46) SETC 'AOSD0'                                               49650064
+&SGLPAMC(46) SETC 'IECLMSGU'                                            49700064
+&SGLPADC(46) SETC 'AOSC5'                                               49750064
+&SGUNSTA(46) SETA 1                                                     49800064
+&SGUSNSA(46) SETA 2                                                     49850064
+&SGGENDB(46) SETB 1                                                     49900064
+         MEXIT                                                          49950064
+.U3886   ANOP                                                           50000064
+.* DEVICE IS 3886.                                                      50050064
+&SGDITXA(&I) SETA  47                                                   50100064
+             AIF   (&SGGENDB(47)).MEND                                  50150064
+&SGGNRIC(47) SETC '3886'                                                50200064
+&SGDTYPC(47) SETC '10000817'                                            50250064
+&SGDDTMC(47) SETC 'IECVDDTB'                                            50300064
+&SGNUCMC(47) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 50350064
+&SGNUCDC(47) SETC 'AOSC5'                                               50400064
+&SGERPMC(47) SETC 'IGE0001F,IGE0101F'                                   50450064
+&SGERPDC(47) SETC 'AOSCA'                                               50500064
+&SGLPAMC(47) SETC 'IECLMSGU'                                            50550064
+&SGLPADC(47) SETC 'AOSC5'                                               50600064
+&SGUNSTA(47) SETA 3                                                     50650064
+&SGUSNSA(47) SETA 2                                                     50700064
+&SGGENDB(47) SETB 1                                                     50750064
+         MEXIT                                                          50800064
+.U1287   ANOP                                                           50850064
+.* DEVICE IS 1287.                                                      50900064
+&SGDITXA(&I) SETA  48                                                   50950064
+             AIF   (&SGGENDB(48)).MEND                                  51000064
+&SGGNRIC(48) SETC '1287'                                                51050064
+&SGDTYPC(48) SETC '4000081B'                                            51100064
+&SGDDTMC(48) SETC 'IECVDDTD'                                            51150064
+&SGNUCMC(48) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 51200064
+&SGNUCDC(48) SETC 'AOSC5'                                               51250064
+&SGERPMC(48) SETC 'IGE0011C'                                            51300064
+&SGERPDC(48) SETC 'AOSD0'                                               51350064
+&SGLPAMC(48) SETC 'IECLMSGU'                                            51400064
+&SGLPADC(48) SETC 'AOSC5'                                               51450064
+&SGUNSTA(48) SETA 1                                                     51500064
+&SGUSNSA(48) SETA 2                                                     51550064
+&SGGENDB(48) SETB 1                                                     51600064
+         MEXIT                                                          51650064
+.U1288   ANOP                                                           51700064
+.* DEVICE IS 1288.                                                      51750064
+&SGDITXA(&I) SETA  49                                                   51800064
+             AIF   (&SGGENDB(49)).MEND                                  51850064
+&SGGNRIC(49) SETC '1288'                                                51900064
+&SGDTYPC(49) SETC '4000081C'                                            51950064
+&SGDDTMC(49) SETC 'IECVDDTD'                                            52000064
+&SGNUCMC(49) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 52050064
+&SGNUCDC(49) SETC 'AOSC5'                                               52100064
+&SGERPMC(49) SETC 'IGE0011D'                                            52150064
+&SGERPDC(49) SETC 'AOSD0'                                               52200064
+&SGLPAMC(49) SETC 'IECLMSGU'                                            52250064
+&SGLPADC(49) SETC 'AOSC5'                                               52300064
+&SGUNSTA(49) SETA 1                                                     52350064
+&SGUSNSA(49) SETA 2                                                     52400064
+&SGGENDB(49) SETB 1                                                     52450064
+         MEXIT                                                          52500064
+.U1419   ANOP                                                           52550064
+.* DEVICE IS 1419.                                                      52600064
+&SGDITXA(&I) SETA  50                                                   52650064
+             AIF   (&SGGENDB(50)).MEND                                  52700064
+&SGGNRIC(50) SETC '1419'                                                52750064
+&SGDTYPC(50) SETC '4000081D'                                            52800064
+&SGDDTMC(50) SETC 'IECVDDT5'                                            52850064
+&SGNUCMC(50) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 52900064
+&SGNUCDC(50) SETC 'AOSC5'                                               52950064
+&SGERPMC(50) SETC 'IGE0011E'                                            53000064
+&SGERPDC(50) SETC 'AOSD0'                                               53050064
+&SGLPAMC(50) SETC 'IECLMSGU'                                            53100064
+&SGLPADC(50) SETC 'AOSC5'                                               53150064
+&SGUNSTA(50) SETA 1                                                     53200064
+&SGUSNSA(50) SETA 2                                                     53250064
+&SGGENDB(50) SETB 1                                                     53300064
+         MEXIT                                                          53350064
+.U3895   ANOP                                                           53400064
+.* DEVICE IS 3895.                                                      53450064
+&SGDITXA(&I) SETA  51                                                   53500064
+             AIF   (&SGGENDB(51)).MEND                                  53550064
+&SGGNRIC(51) SETC '3895'                                                53600064
+&SGDTYPC(51) SETC '00000819'                                            53650064
+&SGDDTMC(51) SETC 'IECVDDTC'                                            53700064
+&SGNUCMC(51) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 53750064
+&SGNUCDC(51) SETC 'AOSC5'                                               53800064
+&SGERPMC(51) SETC 'IGE0002B'                                            53850064
+&SGERPDC(51) SETC 'AOSD0'                                               53900064
+&SGLPAMC(51) SETC 'IECLMSGU'                                            53950064
+&SGLPADC(51) SETC 'AOSC5'                                               54000064
+&SGUNSTA(51) SETA 1                                                     54050064
+&SGUSNSA(51) SETA 4                                                     54100064
+&SGGENDB(51) SETB 1                                                     54150064
+         MEXIT                                                          54200064
+.U2495   ANOP                                                           54250064
+.* DEVICE IS 2495.                                                      54300064
+&SGDITXA(&I) SETA  52                                                   54350064
+             AIF   (&SGGENDB(52)).MEND                                  54400064
+&SGGNRIC(52) SETC '2495'                                                54450064
+&SGDTYPC(52) SETC '00000818'                                            54500064
+&SGDDTMC(52) SETC 'IECVDDT5'                                            54550064
+&SGNUCMC(52) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 54600064
+&SGNUCDC(52) SETC 'AOSC5'                                               54650064
+&SGERPMC(52) SETC 'IGE0011A'                                            54700064
+&SGERPDC(52) SETC 'AOSU0'                                               54750064
+&SGLPAMC(52) SETC 'IECLMSGU'                                            54800064
+&SGLPADC(52) SETC 'AOSC5'                                               54850064
+&SGUNSTA(52) SETA 1                                                     54900064
+&SGUSNSA(52) SETA 2                                                     54950064
+&SGGENDB(52) SETB 1                                                     55000064
+         MEXIT                                                          55050064
+.U3540   ANOP                                                           55100064
+.* DEVICE IS 3540.                                                      55150064
+&SGDITXA(&I) SETA  53                                                   55200064
+             AIF   (&SGGENDB(53)).MEND                                  55250064
+&SGGNRIC(53) SETC '3540'                                                55300064
+&SGDTYPC(53) SETC '00000844'                                            55350064
+&SGDDTMC(53) SETC 'IECVDDTF'                                            55400064
+&SGNUCMC(53) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 55450064
+&SGNUCDC(53) SETC 'AOSC5'                                               55500064
+&SGERPMC(53) SETC 'IGE0002C'                                            55550064
+&SGERPDC(53) SETC 'AOSD0'                                               55600064
+&SGLPAMC(53) SETC 'IECLMSGU'                                            55650064
+&SGLPADC(53) SETC 'AOSC5'                                               55700064
+&SGUNSTA(53) SETA 1                                                     55750064
+&SGUSNSA(53) SETA 6                                                     55800064
+&SGGENDB(53) SETB 1                                                     55850064
+         MEXIT                                                          55900064
+.U3851   ANOP                                                           55950064
+.* DEVICE IS 3851.                                                      56000064
+&SGDITXA(&I) SETA  54                                                   56050064
+             AIF   (&SGGENDB(54)).MEND                                  56100064
+&SGGNRIC(54) SETC '3851'                                                56150064
+&SGDTYPC(54) SETC '00000842'                                            56200064
+&SGDDTMC(54) SETC 'IECVDDTE'                                            56250064
+&SGNUCMC(54) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVXMGN,IECVOTBL'        56300064
+&SGNUCDC(54) SETC 'AOSC5'                                               56350064
+&SGERPMC(54) SETC 'IGE0001H,IGE0301H'                                   56400064
+&SGERPDC(54) SETC 'AOSCA'                                               56450064
+&SGLPAMC(54) SETC 'IECLMSGM'                                            56500064
+&SGLPADC(54) SETC 'AOSC5'                                               56550064
+&SGUSNSA(54) SETA 32                                                    56600064
+&SGGENDB(54) SETB 1                                                     56650064
+         MEXIT                                                          56700064
+.U3330V  ANOP                                                           56750064
+.* DEVICE IS 3330V.                                                     56800064
+&SGDITXA(&I) SETA  55                                                   56850064
+             AIF   (&SGGENDB(55)).MEND                                  56900064
+&SGGNRIC(55) SETC '3330V'                                               56950064
+&SGDTYPC(55) SETC '30582009'                                            57000064
+&SGDDTMC(55) SETC 'IECVDDTK'                                            57050064
+&SGNUCMC(55) SETC 'IECVDDT0,IECVXVRS,IECVXVRT,IECVXVRU,IECVOTBL'        57100064
+&SGNUCDC(55) SETC 'AOSC5'                                               57150064
+&SGLPAMC(55) SETC 'IECLMSGD'        MSS SUPPORT                         57200064
+&SGLPADC(55) SETC 'AOSC5'                                               57250064
+&SGUSNSA(55) SETA 28                                                    57300064
+&SGGENDB(55) SETB 1                                                     57350064
+         MEXIT                                                          57400064
+.U3838   ANOP                                                           57450064
+.* DEVICE IS 3838.                                                      57500064
+&SGDITXA(&I) SETA  56                                                   57550064
+             AIF   (&SGGENDB(56)).MEND                                  57600064
+&SGGNRIC(56) SETC '3838'                                                57650064
+&SGDTYPC(56) SETC '3000084C'                                            57700064
+&SGDDTMC(56) SETC 'IECVDDTP'                                            57750064
+&SGNUCMC(56) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVXMGN,IECVOTBL'        57800064
+&SGNUCDC(56) SETC 'AOSC5'                                               57850064
+&SGERPMC(56) SETC 'IGE0003C'                                            57900064
+&SGERPDC(56) SETC 'AOSCA'                                               57950064
+&SGLPAMC(56) SETC 'IECLMSGU'                                            58000064
+&SGLPADC(56) SETC 'AOSC5'                                               58050064
+&SGUNSTA(56) SETA 1                                                     58100064
+&SGUSNSA(56) SETA 32                                                    58150064
+&SGGENDB(56) SETB 1                                                     58200064
+         MEXIT                                                          58250064
+.U1275   ANOP                                                           58300064
+.* DEVICE IS 1275.                                                      58350064
+&SGDITXA(&I) SETA  57                                                   58400064
+             AIF   (&SGGENDB(57)).MEND                                  58450064
+&SGGNRIC(57) SETC '1275'                                                58500064
+&SGDTYPC(57) SETC '4000081F'                                            58550064
+&SGDDTMC(57) SETC 'IECVDDT5'                                            58600064
+&SGNUCMC(57) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 58650064
+&SGNUCDC(57) SETC 'AOSC5'                                               58700064
+&SGERPMC(57) SETC 'IGE0011E'                                            58750064
+&SGERPDC(57) SETC 'AOSD0'                                               58800064
+&SGLPAMC(57) SETC 'IECLMSGU'                                            58850064
+&SGLPADC(57) SETC 'AOSC5'                                               58900064
+&SGUNSTA(57) SETA 1                                                     58950064
+&SGUSNSA(57) SETA 2                                                     59000064
+&SGGENDB(57) SETB 1                                                     59050064
+         MEXIT                                                          59100064
+.U1030   ANOP                                                           59150064
+.* DEVICE IS 1030.                                                      59200064
+&SGDITXA(&I) SETA  58                                                   59250064
+             AIF   (&SGGENDB(58)).MEND                                  59300064
+&SGGNRIC(58) SETC 'AAA1'                                                59350064
+&SGDTYPC(58) SETC '00004001'                                            59400064
+&SGDDTMC(58) SETC 'IECVDDT2'                                            59450064
+&SGNUCMC(58) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 59500064
+&SGNUCDC(58) SETC 'AOSC5'                                               59550064
+&SGLPAMC(58) SETC 'IECLMSGC'                                            59600064
+&SGLPADC(58) SETC 'AOSC5'                                               59650064
+&SGUNSTA(58) SETA 1                                                     59700064
+&SGUSNSA(58) SETA 2                                                     59750064
+&SGGENDB(58) SETB 1                                                     59800064
+         MEXIT                                                          59850064
+.U1050   ANOP                                                           59900064
+.* DEVICE IS 1050.                                                      59950064
+&SGDITXA(&I) SETA  59                                                   60000064
+             AIF   (&SGGENDB(59)).MEND                                  60050064
+&SGGNRIC(59) SETC 'AAA2'                                                60100064
+&SGDTYPC(59) SETC '00004002'                                            60150064
+&SGDDTMC(59) SETC 'IECVDDT2'                                            60200064
+&SGNUCMC(59) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 60250064
+&SGNUCDC(59) SETC 'AOSC5'                                               60300064
+&SGLPAMC(59) SETC 'IECLMSGU'                                            60350064
+&SGLPADC(59) SETC 'AOSC5'                                               60400064
+&SGUNSTA(59) SETA 1                                                     60450064
+&SGUSNSA(59) SETA 2                                                     60500064
+&SGGENDB(59) SETB 1                                                     60550064
+         MEXIT                                                          60600064
+.U1060   ANOP                                                           60650064
+.* DEVICE IS 1060.                                                      60700064
+&SGDITXA(&I) SETA  60                                                   60750064
+             AIF   (&SGGENDB(60)).MEND                                  60800064
+&SGGNRIC(60) SETC 'AAA3'                                                60850064
+&SGDTYPC(60) SETC '00004003'                                            60900064
+&SGDDTMC(60) SETC 'IECVDDT2'                                            60950064
+&SGNUCMC(60) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 61000064
+&SGNUCDC(60) SETC 'AOSC5'                                               61050064
+&SGLPAMC(60) SETC 'IECLMSGC'                                            61100064
+&SGLPADC(60) SETC 'AOSC5'                                               61150064
+&SGUNSTA(60) SETA 1                                                     61200064
+&SGUSNSA(60) SETA 2                                                     61250064
+&SGGENDB(60) SETB 1                                                     61300064
+         MEXIT                                                          61350064
+.U115A   ANOP                                                           61400064
+.* DEVICE IS 115A.                                                      61450064
+&SGDITXA(&I) SETA  62                                                   61500064
+             AIF   (&SGGENDB(62)).MEND                                  61550064
+&SGGNRIC(62) SETC 'AAA5'                                                61600064
+&SGDTYPC(62) SETC '00004005'                                            61650064
+&SGDDTMC(62) SETC 'IECVDDT2'                                            61700064
+&SGNUCMC(62) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 61750064
+&SGNUCDC(62) SETC 'AOSC5'                                               61800064
+&SGLPAMC(62) SETC 'IECLMSGC'                                            61850064
+&SGLPADC(62) SETC 'AOSC5'                                               61900064
+&SGUNSTA(62) SETA 1                                                     61950064
+&SGUSNSA(62) SETA 2                                                     62000064
+&SGGENDB(62) SETB 1                                                     62050064
+         MEXIT                                                          62100064
+.U83B3   ANOP                                                           62150064
+.* DEVICE IS 83B3.                                                      62200064
+&SGDITXA(&I) SETA  63                                                   62250064
+             AIF   (&SGGENDB(63)).MEND                                  62300064
+&SGGNRIC(63) SETC 'AAA6'                                                62350064
+&SGDTYPC(63) SETC '00004006'                                            62400064
+&SGDDTMC(63) SETC 'IECVDDT2'                                            62450064
+&SGNUCMC(63) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 62500064
+&SGNUCDC(63) SETC 'AOSC5'                                               62550064
+&SGLPAMC(63) SETC 'IECLMSGC'                                            62600064
+&SGLPADC(63) SETC 'AOSC5'                                               62650064
+&SGUNSTA(63) SETA 1                                                     62700064
+&SGUSNSA(63) SETA 2                                                     62750064
+&SGGENDB(63) SETB 1                                                     62800064
+         MEXIT                                                          62850064
+.UTWX    ANOP                                                           62900064
+.* DEVICE IS TWX.                                                       62950064
+&SGDITXA(&I) SETA  64                                                   63000064
+             AIF   (&SGGENDB(64)).MEND                                  63050064
+&SGGNRIC(64) SETC 'AAA7'                                                63100064
+&SGDTYPC(64) SETC '00004007'                                            63150064
+&SGDDTMC(64) SETC 'IECVDDT2'                                            63200064
+&SGNUCMC(64) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 63250064
+&SGNUCDC(64) SETC 'AOSC5'                                               63300064
+&SGLPAMC(64) SETC 'IECLMSGC'                                            63350064
+&SGLPADC(64) SETC 'AOSC5'                                               63400064
+&SGUNSTA(64) SETA 1                                                     63450064
+&SGUSNSA(64) SETA 2                                                     63500064
+&SGGENDB(64) SETB 1                                                     63550064
+         MEXIT                                                          63600064
+.U2740   ANOP                                                           63650064
+.* DEVICE IS 2740.                                                      63700064
+&SGDITXA(&I) SETA  65                                                   63750064
+             AIF   (&SGGENDB(65)).MEND                                  63800064
+&SGGNRIC(65) SETC 'AAA8'                                                63850064
+&SGDTYPC(65) SETC '40004008'                                            63900064
+&SGDDTMC(65) SETC 'IECVDDT2'                                            63950064
+&SGNUCMC(65) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 64000064
+&SGNUCDC(65) SETC 'AOSC5'                                               64050064
+&SGLPAMC(65) SETC 'IECLMSGC'                                            64100064
+&SGLPADC(65) SETC 'AOSC5'                                               64150064
+&SGUNSTA(65) SETA 1                                                     64200064
+&SGUSNSA(65) SETA 2                                                     64250064
+&SGGENDB(65) SETB 1                                                     64300064
+         MEXIT                                                          64350064
+.UBSC1   ANOP                                                           64400064
+.* DEVICE IS BSC1. GENERIC IS AAA9.                                     64450064
+&SGDITXA(&I) SETA  66                                                   64500064
+             AIF   (&SGGENDB(66)).MEND                                  64550064
+&SGGNRIC(66) SETC 'AAA9'                                                64600064
+&SGDTYPC(66) SETC '40004009'                                            64650064
+&SGDDTMC(66) SETC 'IECVDDT2'                                            64700064
+&SGNUCMC(66) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 64750064
+&SGNUCDC(66) SETC 'AOSC5'                                               64800064
+&SGLPAMC(66) SETC 'IECLMSGC'                                            64850064
+&SGLPADC(66) SETC 'AOSC5'                                               64900064
+&SGUNSTA(66) SETA 1                                                     64950064
+&SGUSNSA(66) SETA 2                                                     65000064
+&SGGENDB(66) SETB 1                                                     65050064
+         MEXIT                                                          65100064
+.UBSC2   ANOP                                                           65150064
+.* DEVICE IS BSC2. GENERIC IS AAAA.                                     65200064
+&SGDITXA(&I) SETA  67                                                   65250064
+             AIF   (&SGGENDB(67)).MEND                                  65300064
+&SGGNRIC(67) SETC 'AAAA'                                                65350064
+&SGDTYPC(67) SETC '4000400A'                                            65400064
+&SGDDTMC(67) SETC 'IECVDDT2'                                            65450064
+&SGNUCMC(67) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 65500064
+&SGNUCDC(67) SETC 'AOSC5'                                               65550064
+&SGLPAMC(67) SETC 'IECLMSGC'                                            65600064
+&SGLPADC(67) SETC 'AOSC5'                                               65650064
+&SGUNSTA(67) SETA 1                                                     65700064
+&SGUSNSA(67) SETA 2                                                     65750064
+&SGGENDB(67) SETB 1                                                     65800064
+         MEXIT                                                          65850064
+.UBSC3   ANOP                                                           65900064
+.* DEVICE IS BSC3. GENERIC IS AAAB                                      65950064
+&SGDITXA(&I) SETA  68                                                   66000064
+             AIF   (&SGGENDB(68)).MEND                                  66050064
+&SGGNRIC(68) SETC 'AAAB'                                                66100064
+&SGDTYPC(68) SETC '4000400B'                                            66150064
+&SGDDTMC(68) SETC 'IECVDDT2'                                            66200064
+&SGNUCMC(68) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 66250064
+&SGNUCDC(68) SETC 'AOSC5'                                               66300064
+&SGLPAMC(68) SETC 'IECLMSGC'                                            66350064
+&SGLPADC(68) SETC 'AOSC5'                                               66400064
+&SGUNSTA(68) SETA 1                                                     66450064
+&SGUSNSA(68) SETA 2                                                     66500064
+&SGGENDB(68) SETB 1                                                     66550064
+         MEXIT                                                          66600064
+.U7770   ANOP                                                           66650064
+.* DEVICE IS 7770.                                                      66700064
+&SGDITXA(&I) SETA  69                                                   66750064
+             AIF   (&SGGENDB(69)).MEND                                  66800064
+&SGGNRIC(69) SETC 'AAAC'                                                66850064
+&SGDTYPC(69) SETC '50004000'                                            66900064
+&SGDDTMC(69) SETC 'IECVDDT2'                                            66950064
+&SGNUCMC(69) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 67000064
+&SGNUCDC(69) SETC 'AOSC5'                                               67050064
+&SGLPAMC(69) SETC 'IECLMSGC'                                            67100064
+&SGLPADC(69) SETC 'AOSC5'                                               67150064
+&SGUNSTA(69) SETA 1                                                     67200064
+&SGUSNSA(69) SETA 2                                                     67250064
+&SGGENDB(69) SETB 1                                                     67300064
+         MEXIT                                                          67350064
+.UWTTA   ANOP                                                           67400064
+.* DEVICE IS WTTA. GENERIC IS AAAD.                                     67450064
+&SGDITXA(&I) SETA  70                                                   67500064
+             AIF   (&SGGENDB(70)).MEND                                  67550064
+&SGGNRIC(70) SETC 'AAAD'                                                67600064
+&SGDTYPC(70) SETC '4000400D'                                            67650064
+&SGDDTMC(70) SETC 'IECVDDT2'                                            67700064
+&SGNUCMC(70) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 67750064
+&SGNUCDC(70) SETC 'AOSC5'                                               67800064
+&SGLPAMC(70) SETC 'IECLMSGC'                                            67850064
+&SGLPADC(70) SETC 'AOSC5'                                               67900064
+&SGUNSTA(70) SETA 1                                                     67950064
+&SGUSNSA(70) SETA 2                                                     68000064
+&SGGENDB(70) SETB 1                                                     68050064
+         MEXIT                                                          68100064
+.U2741P  ANOP                                                           68150064
+.* DEVICE IS 2741P. GENERIC IS AAAE.                                    68200064
+&SGDITXA(&I) SETA  71                                                   68250064
+             AIF   (&SGGENDB(71)).MEND                                  68300064
+&SGGNRIC(71) SETC 'AAAE'                                                68350064
+&SGDTYPC(71) SETC '4000400E'                                            68400064
+&SGDDTMC(71) SETC 'IECVDDT2'                                            68450064
+&SGNUCMC(71) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 68500064
+&SGNUCDC(71) SETC 'AOSC5'                                               68550064
+&SGLPAMC(71) SETC 'IECLMSGC'                                            68600064
+&SGLPADC(71) SETC 'AOSC5'                                               68650064
+&SGUNSTA(71) SETA 1                                                     68700064
+&SGUSNSA(71) SETA 2                                                     68750064
+&SGGENDB(71) SETB 1                                                     68800064
+         MEXIT                                                          68850064
+.U2741C  ANOP                                                           68900064
+.* DEVICE IS 2741C. GENERIC IS AAAF.                                    68950064
+&SGDITXA(&I) SETA  72                                                   69000064
+             AIF   (&SGGENDB(72)).MEND                                  69050064
+&SGGNRIC(72) SETC 'AAAF'                                                69100064
+&SGDTYPC(72) SETC '4000400F'                                            69150064
+&SGDDTMC(72) SETC 'IECVDDT2'                                            69200064
+&SGNUCMC(72) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 69250064
+&SGNUCDC(72) SETC 'AOSC5'                                               69300064
+&SGLPAMC(72) SETC 'IECLMSGC'                                            69350064
+&SGLPADC(72) SETC 'AOSC5'                                               69400064
+&SGUNSTA(72) SETA 1                                                     69450064
+&SGUSNSA(72) SETA 2                                                     69500064
+&SGGENDB(72) SETB 1                                                     69550064
+         MEXIT                                                          69600064
+.U3705   ANOP                                                           69650064
+.* DEVICE IS 3705.                                                      69700064
+&SGDITXA(&I) SETA  73                                                   69750064
+             AIF   (&SGGENDB(73)).MEND                                  69800064
+&SGGNRIC(73) SETC '3705'                                                69850064
+&SGDTYPC(73) SETC '50004015'                                            69900064
+&SGDDTMC(73) SETC 'IECVDDT7'                                            69950064
+&SGNUCMC(73) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 70000064
+&SGNUCDC(73) SETC 'AOSC5'                                               70050064
+&SGLPAMC(73) SETC 'IECLMSGC'                                            70100064
+&SGLPADC(73) SETC 'AOSC5'                                               70150064
+&SGUNSTA(73) SETA 1                                                     70200064
+&SGUSNSA(73) SETA 2                                                     70250064
+&SGGENDB(73) SETB 1                                                     70300064
+         MEXIT                                                          70350064
+.U3791L  ANOP                                                           70400064
+.* DEVICE IS 3791L.                                                     70450064
+&SGDITXA(&I) SETA  74                                                   70500064
+             AIF   (&SGGENDB(74)).MEND                                  70550064
+&SGGNRIC(74) SETC '3791L'                                               70600064
+&SGDTYPC(74) SETC '500040F1'                                            70650064
+&SGDDTMC(74) SETC 'IECVDDT2'                                            70700064
+&SGNUCMC(74) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 70750064
+&SGNUCDC(74) SETC 'AOSC5'                                               70800064
+&SGLPAMC(74) SETC 'IECLMSGC'                                            70850064
+&SGLPADC(74) SETC 'AOSC5'                                               70900064
+&SGUNSTA(74) SETA 1                                                     70950064
+&SGUSNSA(74) SETA 2                                                     71000064
+&SGGENDB(74) SETB 1                                                     71050064
+         MEXIT                                                          71100064
+.U3704   ANOP                                                           71150064
+.* DEVICE IS 3704.                                                      71200064
+&SGDITXA(&I) SETA  75                                                   71250064
+             AIF   (&SGGENDB(75)).MEND                                  71300064
+&SGGNRIC(75) SETC '3704'                                                71350064
+&SGDTYPC(75) SETC '50004015'                                            71400064
+&SGDDTMC(75) SETC 'IECVDDT7'                                            71450064
+&SGNUCMC(75) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 71500064
+&SGNUCDC(75) SETC 'AOSC5'                                               71550064
+&SGLPAMC(75) SETC 'IECLMSGC'                                            71600064
+&SGLPADC(75) SETC 'AOSC5'                                               71650064
+&SGUNSTA(75) SETA 1                                                     71700064
+&SGUSNSA(75) SETA 2                                                     71750064
+&SGGENDB(75) SETB 1                                                     71800064
+         MEXIT                                                          71850064
+.* DEVICE IS DUMMY.                                                     71900064
+.DUMMY   ANOP                                                           71950064
+&SGDITXA(&I) SETA  76                                                   72000064
+             AIF   (&SGGENDB(76)).MEND                                  72050064
+&SGGNRIC(76) SETC 'DUMMY'                                               72100064
+&SGDTYPC(76) SETC '00000800'                                            72150064
+&SGDDTMC(76) SETC 'IECVDDT5'                                            72200064
+&SGNUCMC(76) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECVOTBL'                 72250064
+&SGNUCDC(76) SETC 'AOSC5'                                               72300064
+&SGLPAMC(76) SETC 'IECLMSGU'                                            72350064
+&SGLPADC(76) SETC 'AOSC5'                                               72400064
+&SGUNSTA(76) SETA 1                                                     72450064
+&SGUSNSA(76) SETA 2                                                     72500064
+.* THE GENED SWITHC IS  NOT SET FOR DUMMY (&SGGENDB(76) SETB 1)         72550064
+         MEXIT                                                          72600064
+.U3036   ANOP                                                           72650064
+.* DEVICE IS 3036.                                                      72700064
+&SGDITXA(&I) SETA  77                                                   72750064
+             AIF   (&SGGENDB(77)).MEND                                  72800064
+&SGGNRIC(77) SETC '3036'                                                72850064
+&SGDTYPC(77) SETC '1200100D'                                            72900064
+&SGDDTMC(77) SETC 'IECVDDT4'                                            72950064
+&SGNUCMC(77) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 73000064
+&SGNUCDC(77) SETC 'AOSC5'                                               73050064
+&SGERPMC(77) SETC 'IGE0010E'                                            73100064
+&SGERPDC(77) SETC 'AOSG0'                                               73150064
+&SGLPAMC(77) SETC 'IECLMSGG'                                            73200064
+&SGLPADC(77) SETC 'AOSC5'                                               73250064
+&SGUNSTA(77) SETA 1                                                     73300064
+&SGUSNSA(77) SETA 6                                                     73350064
+&SGGENDB(77) SETB 1                                                     73400064
+         MEXIT                                                          73450064
+.U7443   ANOP                                                           73500064
+.* DEVICE IS 7443.                                                      73550064
+&SGDITXA(&I) SETA  78                                                   73600064
+             AIF   (&SGGENDB(78)).MEND                                  73650064
+&SGGNRIC(78) SETC '7443'                                                73700064
+&SGDTYPC(78) SETC '1100083D'                                            73750064
+&SGDDTMC(78) SETC 'IECVDDT4'                                            73800064
+&SGNUCMC(78) SETC 'IECVDDT0,IECVXURS,IECVXGRT,IECVOTBL'                 73850064
+&SGNUCDC(78) SETC 'AOSC5'                                               73900064
+&SGLPAMC(78) SETC 'IECLMSGG'                                            73950064
+&SGLPADC(78) SETC 'AOSC5'                                               74000064
+&SGUNSTA(78) SETA 1                                                     74050064
+&SGUSNSA(78) SETA 2                                                     74100064
+&SGGENDB(78) SETB 1                                                     74150064
+         MEXIT                                                          74200064
+.U1050X  ANOP                                                           74250064
+.* DEVICE IS 1050X.                                                     74300064
+&SGDITXA(&I) SETA  79                                                   74350064
+             AIF   (&SGGENDB(79)).MEND                                  74400064
+&SGGNRIC(79) SETC 'AAAG'                                                74450064
+&SGDTYPC(79) SETC '07004010'                                            74500064
+&SGDDTMC(79) SETC 'IECVDDT2'                                            74550064
+&SGNUCMC(79) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 74600064
+&SGNUCDC(79) SETC 'AOSC5'                                               74650064
+&SGLPAMC(79) SETC 'IECLMSGC'                                            74700064
+&SGLPADC(79) SETC 'AOSC5'                                               74750064
+&SGUNSTA(79) SETA 1                                                     74800064
+&SGUSNSA(79) SETA 2                                                     74850064
+&SGGENDB(79) SETB 1                                                     74900064
+         MEXIT                                                          74950064
+.U2740X  ANOP                                                           75000064
+.* DEVICE IS 2740X.                                                     75050064
+&SGDITXA(&I) SETA  80                                                   75100064
+             AIF   (&SGGENDB(80)).MEND                                  75150064
+&SGGNRIC(80) SETC 'AAAH'                                                75200064
+&SGDTYPC(80) SETC '08004011'                                            75250064
+&SGDDTMC(80) SETC 'IECVDDT2'                                            75300064
+&SGNUCMC(80) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 75350064
+&SGNUCDC(80) SETC 'AOSC5'                                               75400064
+&SGLPAMC(80) SETC 'IECLMSGC'                                            75450064
+&SGLPADC(80) SETC 'AOSC5'                                               75500064
+&SGUNSTA(80) SETA 1                                                     75550064
+&SGUSNSA(80) SETA 2                                                     75600064
+&SGGENDB(80) SETB 1                                                     75650064
+         MEXIT                                                          75700064
+.U2740C  ANOP                                                           75750064
+.* DEVICE IS 2740C.                                                     75800064
+&SGDITXA(&I) SETA  81                                                   75850064
+             AIF   (&SGGENDB(81)).MEND                                  75900064
+&SGGNRIC(81) SETC 'AAAI'                                                75950064
+&SGDTYPC(81) SETC '03004012'                                            76000064
+&SGDDTMC(81) SETC 'IECVDDT2'                                            76050064
+&SGNUCMC(81) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 76100064
+&SGNUCDC(81) SETC 'AOSC5'                                               76150064
+&SGLPAMC(81) SETC 'IECLMSGC'                                            76200064
+&SGLPADC(81) SETC 'AOSC5'                                               76250064
+&SGUNSTA(81) SETA 1                                                     76300064
+&SGUSNSA(81) SETA 2                                                     76350064
+&SGGENDB(81) SETB 1                                                     76400064
+         MEXIT                                                          76450064
+.U2265   ANOP                                                           76500064
+.* DEVICE IS 2265.                                                      76550064
+&SGDITXA(&I) SETA  82                                                   76600064
+             AIF   (&SGGENDB(82)).MEND                                  76650064
+&SGGNRIC(82) SETC 'AAAJ'                                                76700064
+&SGDTYPC(82) SETC '51004013'                                            76750064
+&SGDDTMC(82) SETC 'IECVDDT2'                                            76800064
+&SGNUCMC(82) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 76850064
+&SGNUCDC(82) SETC 'AOSC5'                                               76900064
+&SGLPAMC(82) SETC 'IECLMSGC'                                            76950064
+&SGLPADC(82) SETC 'AOSC5'                                               77000064
+&SGUNSTA(82) SETA 1                                                     77050064
+&SGUSNSA(82) SETA 2                                                     77100064
+&SGGENDB(82) SETB 1                                                     77150064
+         MEXIT                                                          77200064
+.U2955   ANOP                                                           77250064
+.* DEVICE IS 2955.                                                      77300064
+&SGDITXA(&I) SETA  83                                                   77350064
+             AIF   (&SGGENDB(83)).MEND                                  77400064
+&SGGNRIC(83) SETC 'AAAK'                                                77450064
+&SGDTYPC(83) SETC '50004014'                                            77500064
+&SGDDTMC(83) SETC 'IECVDDT6'                                   @ZA43571 77550064
+&SGNUCMC(83) SETC 'IECVDDT0,IECVXURS,IECVXTPT,IECVOTBL'                 77600064
+&SGNUCDC(83) SETC 'AOSC5'                                               77650064
+&SGLPAMC(83) SETC 'IECLMSGC'                                            77700064
+&SGLPADC(83) SETC 'AOSC5'                                               77750064
+&SGUNSTA(83) SETA 1                                                     77800064
+&SGUSNSA(83) SETA 2                                                     77850064
+&SGGENDB(83) SETB 1                                                     77900064
+         MEXIT                                                          77950064
+.UCTC    ANOP                                                           78000064
+.* DEVICE IS CTC.                                                       78050064
+&SGDITXA(&I) SETA  84                                                   78100064
+             AIF   (&SGGENDB(84)).MEND                                  78150064
+&SGGNRIC(84) SETC 'CTC'                                                 78200064
+&SGDTYPC(84) SETC '00004100'                                            78250064
+&SGDDTMC(84) SETC 'IECVDDT5'                                            78300064
+&SGNUCMC(84) SETC 'IECVDDT0,IECVXURS,IECVXURT,IECTCATN'                 78350064
+&SGNUCDC(84) SETC 'AOSC5'                                               78400064
+&SGERPMC(84) SETC 'IGE0002E'                                            78450064
+&SGERPDC(84) SETC 'AOSC5'                                               78500064
+&SGLPAMC(84) SETC 'IECLMSGU'                                            78550064
+&SGLPADC(84) SETC 'AOSC5'                                               78600064
+&SGUNSTA(84) SETA 1                                                     78650064
+&SGUSNSA(84) SETA 1                                                     78700064
+&SGGENDB(84) SETB 1                                                     78750064
+         MEXIT                                                          78800064
+.DITERR1 ANOP                                                           78850064
+.*   ERROR -- UNSUPPORTED COMBINATION                                   78900064
+         MNOTE 8,'* * * IEIDIT101 &ID-INVALID BIT COMBINATION'          78950064
+&SGQUITB  SETB   1                                                      79000064
+          MEXIT                                                         79050064
+.MEND    MEND                                                           79100064

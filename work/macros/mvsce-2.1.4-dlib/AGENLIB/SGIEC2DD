@@ -1,0 +1,109 @@
+         MACRO                                                          00050064
+&LABEL   SGIEC2DD &DATA,&LB2                                            00100064
+         COPY  SGGBLPAK                                                 00150064
+         LCLC  &C,&L                   WORK VARIABLE,LABEL              00200064
+         LCLA  &X,&Y,&Z                WORK VARIABLES                   00250064
+.***** START OF SPECIFICATIONS **************************************   00300064
+.*                                                                      00350064
+.* MODULE NAME - SGIEC2DD                                               00400064
+.*                                                                      00450064
+.* DESCRIPTIVE NAME - SCAN AND PUNCH FOR ASSEMBLER DATA                 00500064
+.*                                                                      00550064
+.* COPYRIGHT - NONE                                                     00600064
+.*                                                                      00650064
+.* STATUS - CHANGE LEVEL 00                                             00700064
+.*                                                                      00750064
+.* FUNCTION -                                                           00800064
+.*   THIS MACRO PUNCHES DC'S FOR ASSEMBLER DATA PASSED TO IT. THE       00850064
+.*   DATA IT PUNCHES IS DETERMINED FROM THE DATA WHICH IS INPUT TO      00900064
+.*   TO THIS MACRO. THE INPUT DATA IS SCANNED AND BROKEN UP AT          00950064
+.*   COMMAS SO AS TO ALLOW VALID ASSEMBLER DC'S TO BE GENERATED.        01000064
+.*   THE MACRO LABEL ON THE INVOCATION OF THIS MACRO IS PUNCHED AT THE  01050064
+.*   START. IN ADDITION, ANOTHER LABEL MAY BE SPECIFIED WHICH ALSO      01100064
+.*   WILL BE EQUATED TO THE START. IF A SECOND LABEL IS GIVEN           01150064
+.*   BUT NO FIRST LABEL, THE SECOND LABEL WILL BE USED.                 01200064
+.*                                                                      01250064
+.*   THIS MACRO IS INVOKED BY SGIEC202.                                 01300064
+.*                                                                      01350064
+.* NOTES - N/A                                                          01400064
+.*                                                                      01450064
+.* MODULE TYPE - MACRO                                                  01500064
+.*                                                                      01550064
+.* ENTRY POINT - N/A                                                    01600064
+.*                                                                      01650064
+.* INPUT -                                                              01700064
+.*         THE FOLLOWING POSITIONAL PARAMETERS ARE PASSED -             01750064
+.*           &DATA - CHARACTER STRING TO BE SCANNED AND PUNCHED.        01800064
+.*                   NO SINGLE ITEM MAY BE LONGER THAN 56 CHARACTERS,   01850064
+.*                   I.E. A COMMA MUST APPEAR AT LEAST AFTER EACH       01900064
+.*                   56 CHARACTERS; IF NOT, THE REMAINDER OF THE        01950064
+.*                   DATA IS IGNORED, AN MNOTE ISSUED, AND THE          02000064
+.*                   QUIT SWITCH IS SET.                                02050064
+.*           &LB2  - SECOND LABEL TO BE GENERATED                       02100064
+.*                                                                      02150064
+.*                                                                      02200064
+.* OUTPUT -                                                             02250064
+.*       OUTPUT CONSISTS OF PUNCH STATEMENTS FOR THE DATA AND LABELS.   02300064
+.*       IF NO DATA IS GIVEN (I.E. 1ST POSITIONAL PARAMETER IS NULL),   02350064
+.*       THERE IS NO OUTPUT.                                            02400064
+.*                                                                      02450064
+.*                                                                      02500064
+.*       GLOBALS USED ARE -                                             02550064
+.*          &SGQUITB - TERMINATE SYSGEN IF ERROR IN DATA STRING         02600064
+.*                                                                      02650064
+.*       LOCALS USED ARE -                                              02700064
+.*          &C - WORK VARIABLE. USED TO OBTAIN CHARACTER STRING         02750064
+.*               DATA FOR CURRENT PUNCH.                                02800064
+.*          &L - VALUE OF LABEL FOR FIRST PUNCH STATEMENT.              02850064
+.*          &X - CURRENT POSITION WITHIN INPUT DATA.                    02900064
+.*          &Y - LENGTH FOR CURRENT PUNCH. THIS VALUE IS                02950064
+.*               DECREMENTED AS PART OF SCAN BACKWARDS FOR A COMMA.     03000064
+.*                                                                      03050064
+.*                                                                      03100064
+.*                                                                      03150064
+.* EXIT, NORMAL - N/A                                                   03200064
+.*                                                                      03250064
+.* EXIT, ERROR - N/A                                                    03300064
+.*                                                                      03350064
+.* EXTERNAL REFERENCES - N/A                                            03400064
+.*                                                                      03450064
+.* TABLES - N/A                                                         03500064
+.*                                                                      03550064
+.* MACROS - N/A                                                         03600064
+.*                                                                      03650064
+.* CHANGE ACTIVITY - N/A                                                03700064
+.*A-000000-999999                                              @G64HPLP 03750064
+.***** END OF SPECIFICATIONS ****************************************   03800064
+         AIF   (K'&DATA EQ 0).MEND     IGNORE IF NO DATA                03850064
+&X       SETA  1                       STARTING COLUMN                  03900064
+&L       SETC  '&LABEL'.'        '     GET MACRO LABEL                  03950064
+         AIF   (K'&LABEL NE 0).LABT    ANY MACRO LABEL ?                04000064
+&L       SETC  '&LB2'.'        '       NO--USE SECOND LABEL             04050064
+.LABT    ANOP                                                           04100064
+&L       SETC  '&L'(1,8)               GET 8 CHARACTERS FOR LABEL       04150064
+.DDLP    ANOP                                                           04200064
+.* COMPUTE DEFAULT LENGTH AS FOLLOWS :                                  04250064
+.*   71-(LENGTH OF LABEL+2 FOR DC+4 BLANKS)=65-LENGTH OF LABEL          04300064
+&Y       SETA  65-K'&L                 DEFAULT DATA LENGTH              04350064
+         AIF   (&X GT K'&DATA).LB2     START COL. WITHIN DATA ?         04400064
+         AIF   (&X+&Y-1 LT K'&DATA).FCOMMA YES-COMMA SCAN NEEDED ?      04450064
+&Y       SETA  K'&DATA-&X+2            NO--GET REMAINING LENGTH+1       04500064
+         AGO   .PUNCH                  PUNCH REMAINING DATA             04550064
+.FCOMMA  ANOP                          SCAN BACKWARDS FOR COMMA         04600064
+         AIF   ('&DATA'(&X+&Y-1,1) EQ  ',').PUNCH FOUND COMMA ?         04650064
+&Y       SETA  &Y-1                    NO-MOVE BACKWARDS                04700064
+         AIF   (&Y GT 1).FCOMMA        OK TO CONTINUE                   04750064
+         MNOTE 5,'SGIEC2DD--INVALID DATA FORMAT. LABEL=&LABEL, LB2=&LB2X04800064
+               , DATA='                                                 04850064
+         MNOTE 0,'&DATA'                                                04900064
+&SGQUITB SETB  1                       SET QUIT SWITCH                  04950064
+         MEXIT                         ERROR-NO COMMA WITHIN RANGE      05000064
+.PUNCH   ANOP                                                           05050064
+&C       SETC  '&DATA'(&X,&Y-1)        GET DATA                         05100064
+         PUNCH '&L DC   &C'            PUNCH DATA                       05150064
+&X       SETA  &X+&Y                   POINT TO NEW START COL.          05200064
+&L       SETC  '        '              SET LABEL=8 BLANKS               05250064
+         AGO   .DDLP                   CONTINUE SCAN OF CARD            05300064
+.LB2     AIF   (K'&LB2 EQ 0 OR K'&LABEL EQ 0).MEND NEED 2ND LABEL?      05350064
+         PUNCH '&LB2     EQU   &LABEL'                                  05400064
+.MEND    MEND                                                           05450064

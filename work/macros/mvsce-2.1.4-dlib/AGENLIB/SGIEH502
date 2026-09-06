@@ -1,0 +1,9 @@
+          MACRO                                                         00050000
+          SGIEH502                                                      00100000
+.* THIS IS THE VS2 ABNORMAL END APPENDAGE FOR                           00150000
+.* DEVICE SUPPORT FACILITIES                                            00200000
+.* COPY FROM AOSU0 TO SVCLIB                                            00250000
+         COPY  SGGBLPAK                                                 00300000
+ PUNCH ' COPY OUTDD=SVCLIB,INDD=AOSU0 '                                 00350000
+ PUNCH ' SELECT MEMBER=(IGG019P2)'                                      00400000
+          MEND                                                          00450000

@@ -1,0 +1,839 @@
+ /*  SMFFRMT - SMF RECORD PRINT ROUTINE  */                             00092002
+* /* START OF SPECIFICATIONS ****                                       00100002
+*                                                                       00150002
+*01*  MODULE-NAME = SMFFRMT                                             00200002
+*01*  STATUS = CHANGE LEVEL 03                               @ZA05513*/ 00250003
+ /*    A207418-207465                                          Y01018*/ 00300002
+ /*    C055000,055100,060000,061500,207373,207799,208047       Y01018*/ 00350002
+ /*    D207947                                                 Y01018*/ 00400002
+ /*    C056500,266000                                          Y02034*/ 00470002
+ /*    A265600-265960,072600-072640,182000-184500,186600-186800Y02034*/ 00480002
+ /*    C263333,263500                                          Y02113*/ 00490002
+ /*    A068999-069331,253700-253996,266000-266420              Y02113*/ 00492002
+ /*    C045000,051500                                          Y02150*/ 00494002
+ /*    A069332-069442,266440-266831                            Y02150*/ 00496002
+ /*    C010500-011500,028000,030000,044000,052000,060500-062500Y02120*/ 00498002
+ /*    C067500-068000,108500,110000,114000,115500,127500,131000Y02120*/ 00498402
+ /*    C158500,173000,182000,254500-255000                     Y02120*/ 00498802
+ /*    A030100-030300,068520-068998,253504-253604              Y02120*/ 00499202
+ /*    D109000-109500,114500-115000,128000,131500,182500-185000Y02120*/ 00499602
+ /*    C048500,058500                                          Y02120*/ 00499702
+ /*    A058600                                                 Y02120*/ 00499802
+ /*    C046500-048000,063000-064500,243600,244600,250600,251600Y02133*/ 00499902
+ /*    A244000,245000-245400,251000,252000-252400              Y02133*/ 00516602
+ /*    D265500                                                 Y02113*/ 00528602
+ /*    A253728-253799                                        @YM04143*/ 00532602
+ /*    D242500-243000,243520,244500-245300,245500            @YM04143*/ 00533002
+ /*    D249500-250000,250520,251500,252400                   @YM04143*/ 00533102
+ /*    C011100,048500-048600,058500-058700,067000,068560     @YM04143*/ 00533202
+ /*    C061500,068600-068700,069332-069432,246100            @YM04143*/ 00538802
+ /*    C253569-253708                                        @YM04143*/ 00539202
+ /*    A129200,132600,132700,147100                          @ZA01928*/ 00540800
+ /*    C002500,026500,027000,027000,132500                   @ZA01928*/ 00541800
+ /*                                                                     00542800
+*01*  DESCRIPTIVE-NAME = SMF RECORD PRINT ROUTINE                       00544402
+*01*  FUNCTION = THIS PROGRAM READS THE SMF RECORDS FROM TAPE AND       00550002
+*     PRINTS                                                            00600002
+*     THEM IN THE FOLLOWING MANNER. THE SMF HEADER IS SEPARATED INTO    00650002
+*     ITS                                                               00700002
+*     FOUR BIT HEXIDECIMAL VALUES.  EACH VALUE IS THEN CONVERTED INTO   00750002
+*     EBCDIC NOTATION FOR PRINTING. EACH FIELD OF THE HEADER IS */ /*   00800002
+*     SEPARATED FROM THE NEXT BY BLANKS FOR EASY REFERENCE. THE HEADER  00850002
+*     IS THEN SCANNED FOR NON-ALPHANUMERIC CHARACTERS AND THESE ARE     00900002
+*     REPLACED BY '.'.  THE ALPANUMERIC TRANSLATION IS THEN PRINTED TO  00950002
+*     THE SIDE OF THE HEXIDECIMAL PRINT LINE.  THE FOLLOWING            00960003
+*     SMF RECORDS MAY BE PRINTED.  RECORD TYPES 0, 2, 3, 7, 9, 10, 11,  00970003
+*     17-22.  SMF RECORD                                                00980003
+*     TYPES MAY BE PRINTED SELECTIVELY.  BY PASSING THE RECORD TYPES    01200002
+*     DESIRED, SEPARATED BY COMMAS, TO THE PROGRAM AS PARAMETERS THE    01250002
+*     PROGRAM WILL PRINT ONLY THOSE RECORD TYPES SPECIFIED.  IF NO      01300002
+*     PARAMETERS ARE SPECIFIED THEN ALL VALID TYPES ARE PRINTED.  IF AN 01350002
+*     INVALID RECORD TYPE IS SELECTED THE PROGRAM WILL PRINT A WARNING  01400002
+*     MESSAGE,'RECORD TYPE XX IS NOT SUPPORTED BY THIS SAMPLE ROUTINE'  01410003
+*                                                                       01420003
+*     THE PROGRAM WILL CONTINUE WITH OTHER RECORD TYPES AS SELECTED.    01550002
+*02*    RESTRICTIONS = PL/I RESTRICTS PROGRAM PARAMETERS TO 100         01600002
+*       CHARACTERS.  THE INPUT RECORD LENGTH OF ALL SMF RECORDS HAS     01650002
+*       BEEN                                                            01700002
+*       SET TO 4000 CHARACTERS.  IF THIS LENGTH IS NOT LONG ENOUGH TO   01750003
+*       HANDLE ALL TYPES THEN THE FOLLOWING CHANGES MUST BE MADE WHEN   01800002
+*       THE LENGTH IS INCREASED.  VARIABLES RECORD, BUFFER, AND HEX     01850002
+*       MUST                                                            01900002
+*       BE INCREASED PROPORTIONATELY.                                   01950002
+*02*    PROCESSOR = PL/1                                                02000002
+*02*    MODULE-SIZE = 29818 BYTES                                       02050002
+*02*    ATTRIBUTES = REUSABLE                                           02100002
+*01*  ENTRY = SMFFRMT                                                   02150002
+*02*    INPUT = PARAMETER LIST OF SELECTED SMF RECORD TYPES             02200002
+*02*    OUTPUT = HEXIDECIMAL AND EBCDIC RECORD PRINTOUT OF SELECTED SMF 02250002
+*       RECORDS                                                         02300002
+**** END OF SPECIFICATIONS ***/                                         02350002
+ SMFFRMT:  PROCEDURE (PARM_STRING) OPTIONS (MAIN);                      02400002
+                                                                        02450002
+   DECLARE                                                              02500002
+       PARM_STRING CHAR (100) VARYING,  /* THIS CHARACTER STRING        02550002
+           CONTAINS THE RECORD TYPES TO BE SELECTED FROM THE SMF DATA   02600002
+           TAPE.  IT IS RESTRICTED TO 100 CHARACTERS BY THE PL/1        02650000
+           COMPILER. EACH TYPE MUST BE SEPARATED BY A COMMA. @ZA01928*/ 02700000
+                                                                        02750002
+       PARM_NUMBER (0:74) CHAR (2) VARYING INIT                         02800002
+          ('0','1','2','3','4','5','6',                                 02850002
+           '7','8','9','10','11','12','13','14','15','16','17','18',    02900002
+          '19','20','21','22','23','24','25','26','27','28','29','30',  02950002
+          '31','32','33','34','35','36','37','38','39','40','41','42',  03000002
+          '43','44','45','46','47','48','49','50','51','52','53','54',  03010002
+          '55','56','57','58','59','60','61','62','63','64','65','66',  03020002
+          '67','68','69','70','71','72','73','74'),                     03030002
+    /*   THIS TABLE CONTAINS ALL OF THE RECORD TYPES ACCEPTED BY     */ 03050002
+    /*    THIS PROGRAM                                               */ 03100002
+                                                                        03150002
+       START FIXED BINARY (15,0),  /* PARAMETER STRING POINTER       */ 03200002
+                                                                        03250002
+       PARM_LENGTH FIXED BINARY (15,0),  /* LENGTH OF PARAMETER      */ 03300002
+                                                                        03350002
+       REPORT FILE RECORD OUTPUT,    /* OUTPUT FILE FOR SMF RECORDS  */ 03400002
+                                                                        03450002
+       VALUE CHAR (3) VARYING,            /* PARAMETER ITEM -  THIS     03500002
+          LENGTH SHOULD BE 1 MORE THAN THE LENGTH OF PARM_LENGTH        03550002
+          TO PROTECT AGAINST TRUNCATION MATCHES  */                     03600002
+                                                                        03650002
+       PLACE FIXED BINARY (15,0),  /* POSITION VALUE RETURNED FROM      03700002
+           THE BUILT-IN FUNCTION INDEX  */                              03750002
+                                                                        03800002
+       TYPE_TABLE (0:74) FIXED BINARY (15,0),  /*  THIS TABLE CONTAINS  03850002
+           SWITCHES FOR EACH OF THE RECORD TYPES.  A VALUE OF ONE       03900002
+           INDICATES THAT TYPE IS TO BE PROCESSED AND A VALUE OF ZERO   03950002
+           INDICATES THAT TYPE IS TO BE IGNORED.  */                    04000002
+                                                                        04050002
+    /*  FIELD_TABLE CONTAINS THE BYTE LENGTHS OF THE VARIOUS FIELDS  */ 04100002
+    /*  FOR EACH RECORD TYPE.  6666 OR 7777 IS USED TO INDICATE A    */ 04150002
+    /*  VARIABLE LENGTH FIELD AND IS PROCESSED EXCEPTIONALLY         */ 04200002
+    /*  DEPENDING ON RECORD TYPE    8888 IS USED TO                  */ 04250002
+    /*  INDICATE THAT THE PARTICULAR RECORD TYPE IS UNDEFINED.       */ 04300002
+    /*  9999 TERMINATES TABLE ENTRIES FOR THAT TYPE RECORD           */ 04350002
+    /*  NOTE - IN EXCEPTIONAL PROCESSING SOME RECORDS HAVE A         */ 04360002
+    /*  VARIABLE NUMBER OF FIXED LENGTH FIELDS TO PRINT.  THE        */ 04370002
+    /*  LIMIT ON THE NUMBER OF PRINTABLE FOR ANY RECORD IS 32 DUE    */ 04380002
+    /*  TO THE TABLE DEFINITION.  THEREFORE A RECORD HAVING ENOUGH   */ 04390002
+    /*  OF THESE FIELDS TO CAUSE AN OVERRUN INTO THE NEXT ENTRY      */ 04392002
+    /*  WILL NOT HAVE THOSE FIELDS PRINTED THAT WOULD CAUSE AN       */ 04394002
+    /*  OVERRUN.                                                     */ 04396002
+       FIELD_TABLE (0:74,32) FIXED BINARY (15,0) INIT (                 04400002
+              4,4,4,1,4,9999,(26)*,                        /* REC 0  */ 04450002
+              8888,(31)*,                                  /* REC 1  */ 04500002
+              9999,(31)*,                                  /* REC 2  */ 04550002
+              9999,(31)*,                                  /* REC 3  */ 04600002
+              8888,(31)*,                                  /* REC 4  */ 04610003
+              8888,(31)*,                                  /* REC 5  */ 04620003
+              8888,(31)*,                                  /* REC 6  */ 04630003
+              2,4,4,9999,(28)*,                            /* REC 7  */ 04900002
+              8888,(31)*,                                  /* REC 8  */ 04920003
+              2,7777,9999,(29)*,                           /* REC 9  */ 05000002
+              8,4,4,8,2,7777,9999,(25)*,                   /* REC 10 */ 05050002
+              2,7777,9999,(29)*,                           /* REC 11 */ 05100002
+              8888,(31)*,                                  /* REC 12 */ 05150002
+              8888,(31)*,                                  /* REC 13 */ 05200002
+              8888,(31)*,                                  /* REC 14 */ 05210003
+              8888,(31)*,                                  /* REC 15 */ 05220003
+              8888,(31)*,                                  /* REC 16 */ 05350002
+              8,4,4,8,2,44,3,1,7777,9999,(22)*,            /* REC 17 */ 05400002
+              8,4,4,8,2,44,44,3,1,7777,9999,(21)*,         /* REC 18 */ 05450002
+              2,6,10,4,5,1,2,2,2,4,4,2,2,2,2,9999,(16)*,   /* REC 19 */ 05500002
+              8,4,4,8,2,20,1,7777,9999,(23)*,              /* REC 20 */ 05550002
+              2,6,2,4,1,1,2,1,1,1,2,2,1,2,2,9999,(16)*,    /* REC 21 */ 05600002
+              2,2,7777,9999,(28)*,                         /* REC 22 */ 05650002
+              8888,(31)*,                                  /* REC 23 */ 05700002
+              8888,(31)*,                                  /* REC 24 */ 05750002
+              8888,(31)*,                                  /* REC 25 */ 05800002
+              8888,(31)*,                                  /* REC 26 */ 05820003
+              8888,(31)*,                                  /* REC 27 */ 05900002
+              8888,(31)*,                                  /* REC 28 */ 05950002
+              8888,(31)*,                                  /* REC 29 */ 06000002
+              8888,(31)*,                                  /* REC 30 */ 06050002
+              8888,(31)*,                                  /* REC 31 */ 06100003
+              8888,(31)*,                                  /* REC 32 */ 06200002
+              8888,(31)*,                                  /* REC 33 */ 06250002
+              8888,(31)*,                                  /* REC 34 */ 06260003
+              8888,(31)*,                                  /* REC 35 */ 06270003
+              8888,(31)*,                                  /* REC 36 */ 06500002
+              8888,(31)*,                                  /* REC 37 */ 06550002
+              8888,(31)*,                           /* REC 38  Y01018*/ 06600002
+              8888,(31)*,                                  /* REC 39 */ 06650002
+              8888,(31)*,                                  /* REC 40 */ 06670003
+              8888,(31)*,                                  /* REC 41 */ 06750002
+              8888,(31)*,                                  /* REC 42 */ 06800002
+              8888,(31)*,                                  /* REC 43 */ 06820003
+              8888,(31)*,                                  /* REC 44 */ 06854002
+              8888,(31)*,                                  /* REC 45 */ 06855003
+              8888,(31)*,                                  /* REC 46 */ 06858002
+              8888,(31)*,                                  /* REC 47 */ 06858103
+              8888,(31)*,                                  /* REC 48 */ 06858203
+              8888,(31)*,                                  /* REC 49 */ 06858303
+              8888,(31)*,                                  /* REC 50 */ 06880002
+              8888,(31)*,                                  /* REC 51 */ 06890002
+              8888,(31)*,                                  /* REC 52 */ 06892002
+              8888,(31)*,                                  /* REC 53 */ 06894002
+              8888,(31)*,                                  /* REC 54 */ 06896002
+              8888,(31)*,                                  /* REC 55 */ 06898002
+              8888,(31)*,                                  /* REC 56 */ 06898402
+              8888,(31)*,                                  /* REC 57 */ 06898802
+              8888,(31)*,                                  /* REC 58 */ 06899202
+              8888,(31)*,                                  /* REC 59 */ 06899602
+              8888,(31)*,                                  /* REC 60 */ 06899702
+              8888,(31)*,                                  /* REC 61 */ 06899802
+              8888,(31)*,                                  /* REC 62 */ 06904803
+              8888,(31)*,                                  /* REC 63 */ 06916602
+              8888,(31)*,                                  /* REC 64 */ 06921603
+              8888,(31)*,                                  /* REC 65 */ 06928602
+              8888,(31)*,                                  /* REC 66 */ 06930602
+              8888,(31)*,                                  /* REC 67 */ 06932602
+              8888,(31)*,                                  /* REC 68 */ 06932803
+              8888,(31)*,                                  /* REC 69 */ 06933003
+              8888,(31)*,                                  /* REC 70 */ 06933203
+              8888,(31)*,                                  /* REC 71 */ 06933403
+              8888,(31)*,                                  /* REC 72 */ 06933603
+              8888,(31)*,                                  /* REC 73 */ 06933803
+              8888,(31)*),                                 /* REC 74 */ 06934003
+    01 ERROR_MESSAGE,                   /* THIS STRUCTURE IS PRINTED    06977802
+                      TO INFORM THE USER THAT THE RECORD TYPE           06988902
+                      REQUESTED IS NOT DEFINED BY THIS PROGRAM       */ 07000002
+       02 SEGMENT1 CHAR (13) INIT ('0RECORD TYPE '),                    07050002
+       02 TYPE PIC '99',                                                07100002
+       02 SEGMENT2 CHAR (41) INIT                                       07150003
+             (' IS NOT SUPPORTED BY THIS SAMPLE ROUTINE.'),             07180003
+                                                                        07250002
+       ERROR2_MESSAGE CHAR (97) INIT                                    07260002
+       ('0PROGRAM TERMINATED - SMF RECORD NOT GENERATED BY A VS2 SYSTEM 07262002
+ (SYSTEM INDICATOR IS AT OFFSET 0).'),                                  07264002
+                                                                        07270002
+                                                                        07300002
+    /*****************************************************************/ 07350002
+    /*                                                               */ 07400002
+    /*  THE FOLLOWING DATA DECLARATIONS PERTAIN TO THE BASIC READ    */ 07450002
+    /*  LOOP.  RECORD_TYPE IS SET IN THE BASIC READ LOOP, HOWEVER    */ 07500002
+    /*  IT IS DECLARED IN SMF_HEADER BECAUSE IT IS PART OF THAT      */ 07550002
+    /*  PRINT LINE.                                                  */ 07600002
+    /*                                                               */ 07650002
+    /*****************************************************************/ 07700002
+                                                                        07750002
+       SMFDATA FILE RECORD INPUT,  /* SMF INPUT DATA                 */ 07800002
+                                                                        07850002
+       EOF FIXED BINARY (15,0),    /* END OF FILE SWITCH             */ 07900002
+                                                                        07950002
+       RECORD CHAR (4000) VARYING, /* THIS STRING CONTAINS THE          08000003
+          INPUT RECORD.  IT IS ARBITRARILY SET AT 4000 BYTES AS THE     08030003
+          MAXIMUM SIZE OF CURRENT SMF RECORDS.  IF THIS SIZE NEEDS      08100002
+          TO BE INCREASED THEN CORRESPONDING INCREASES MUST BE MADE     08150002
+          TO 'HEX' AND 'BUFFER'.               */                       08200003
+                                                                        08250002
+       01 SUBFIELD BASED (RECORD_ADDR), /*SUBSTRUCTURE TO OBTAIN TYPE*/ 08300002
+          02 SUBLEN CHAR (2),           /*LENGTH FIELD       @ZA01928*/ 08320000
+          02 SUB1  BIT (8),             /* IGNORE FIRST BYTE         */ 08350002
+          02 RTYPE BIT (8),             /*DECLARE TYPE FOR CONVERSION*/ 08400002
+                                                                        08450002
+    /*****************************************************************/ 08500002
+    /*                                                               */ 08550002
+    /*  THE FOLLOWING DATA DECLARATIONS PERTAIN TO THE PRINTING      */ 08600002
+    /*  OF THE REPORT HEADER                                         */ 08650002
+    /*                                                               */ 08700002
+    /*****************************************************************/ 08750002
+                                                                        08800002
+       01 HEADER1,                      /* THIS STRUCTURE REPRESENTS */ 08850002
+                                     /* THE FIRST LINE OF THE REPORT */ 08900002
+          02 HDR1 CHAR (7) INIT ('1RECORD'),                            08950002
+          02 SPACE1 CHAR (13) INIT ((13)' '),                           09000002
+          02 HDR2 CHAR (13) INIT ('HEADER/RECORD'),                     09050002
+          02 SPACE2 CHAR (74) INIT ((74)' '),                           09100002
+          02 HDR3 CHAR (5) INIT ('DATE '),                              09150002
+          02 CALENDAR PIC 'Z999999',                                    09200002
+                                                                        09250002
+       01 HEADER2,                      /* THIS STRUCTURE REPRESENTS */ 09300002
+                                    /* THE SECOND LINE OF THE REPORT */ 09350002
+          02 HDR1 CHAR (6) INIT ('  TYPE'),                             09400002
+          02 SPACE1 CHAR (101) INIT ((101)' '),                         09450002
+          02 HDR2 CHAR (5) INIT ('PAGE '),                              09500002
+          02 PAGE_NUMBER PIC 'ZZZZZZ9',                                 09550002
+                                                                        09600002
+       01 HEADER3,                        /* TRIPLE SPACE FOR REPORT */ 09650002
+          02 HDR1 CHAR (1) INIT ('-'),                                  09700002
+          02 SPACE1 CHAR (19) INIT ((19)' '),                           09750002
+       LINE_COUNT FIXED BINARY (15,0),   /* LINE COUNT PER PAGE      */ 09800002
+                                                                        09850002
+    /*****************************************************************/ 09900002
+    /*                                                               */ 09950002
+    /*  THE FOLLOWING DATA DECLARATIONS PERTAIN TO THE TRANSLATION   */ 10000002
+    /*  AND OUTPUT PROCESSES.                                        */ 10050002
+    /*                                                               */ 10100002
+    /*****************************************************************/ 10150002
+                                                                        10200002
+       01 SMF_HEADER,                   /* THIS STRUCTURE REPRESENTS */ 10250002
+                                        /* THE OUTPUT FORMAT OF THE  */ 10300002
+                                        /* STANDARD SMF HEADER       */ 10350002
+          02 SPACE1 CHAR (2) INIT ('0 '),                               10400002
+          02 RECORD_TYPE PIC '99',                                      10450002
+          02 SPACE2 CHAR (6) INIT ((6)' '),                             10500002
+          02 TYPE CHAR (4),                                             10550002
+          02 SPACE3 CHAR (2) INIT ('  '),                               10600002
+          02 TIME CHAR (8),                                             10650002
+          02 SPACE4 CHAR (2) INIT ('  '),                               10700002
+          02 DATE2 CHAR (8),                                            10750002
+          02 SPACE5 CHAR (2) INIT ('  '),                               10800002
+          02 ID CHAR (8),                                  /* Y02120 */ 10850002
+          02 SPACE7 CHAR (41) INIT ((41)' '),                           11000002
+          02 MARK1 CHAR (1) INIT ('*'),                                 11050002
+          02 TYPE1 CHAR (2),                                            11100002
+          02 SPACE8 CHAR (1) INIT (' '),                                11150002
+          02 TIME1 CHAR (4),                                            11200002
+          02 SPACE9 CHAR (1) INIT (' '),                                11250002
+          02 DATE1 CHAR (4),                                            11300002
+          02 SPACE10 CHAR (1) INIT (' '),                               11350002
+          02 ID1 CHAR (4),                                 /* Y02120 */ 11400002
+          02 SPACE12 CHAR (13) INIT ((13)' '),                          11550002
+          02 MARK2 CHAR (1) INIT ('*'),                                 11600002
+                                                                        11650002
+       PRINT CHAR (18) DEF SMF_HEADER POS (87), /*GROUP FOR TRANSLATE*/ 11700002
+                                                                        11750002
+       01 SMF_FIELDS,                   /* THIS STRUCTURE REPRESENTS */ 11800002
+                                        /* THE OUTPUT FORMAT OF THE  */ 11850002
+                                        /* SMF DATA FIELDS           */ 11900002
+          02 SPACE1 CHAR (10) INIT ((10)' '),                           11950002
+          02 SIDE1 CHAR (60),                                           12000002
+          02 SPACE2 CHAR (15) INIT ((15)' '),                           12050002
+          02 MARK1 CHAR (1) INIT ('*'),                                 12100002
+          02 SIDE2 CHAR (30),                                           12150002
+          02 MARK2 CHAR (1) INIT ('*'),                                 12200002
+                                                                        12250002
+       BUFFER CHAR (4000),             /* THIS STRING CONTAINS THE   */ 12300002
+                                       /* HEXIDECIMAL REPRESENTATION */ 12350002
+                                       /* OF THE SMF INPUT RECORD IN */ 12400002
+                                       /* PRINTABLE CHARACTER FORMAT */ 12450002
+                                                                        12500002
+       01 HDR_SEGMENT DEF BUFFER POS (1), /* SMF HEADER STRUCTURE    */ 12550002
+          02 TYPE CHAR (4),                                             12600002
+          02 TIME CHAR (8),                                             12650002
+          02 DATE2 CHAR (8),                               /* Y02120 */ 12700002
+          02 ID CHAR (8),                                               12750002
+                                                                        12850002
+       01 HDR_PORTION BASED (RECORD_ADDR), /* SMF HEADER STRUCTURE   */ 12900002
+          02 HEADLEN CHAR (2),             /* LENGTH FIELD   @ZA01928*/ 12920000
+          02 TYPE1 CHAR (2),                                            12950002
+          02 TIME1 CHAR (4),                                            13000002
+          02 DATE1 CHAR (4),                                            13050002
+          02 ID1 CHAR (4),                                 /* Y02120 */ 13100002
+                                                                        13200002
+       01 HEX1  BASED (RECORD_ADDR),     /* SMF INPUT IN HEX @ZA01928*/ 13250000
+          02 HEXLEN CHAR (2),            /* LENGTH           @ZA01928*/ 13260000
+          02 HEX (4000) BIT (4),         /*                  @ZA01928*/ 13270000
+                                                                        13300002
+       TABLE (0:15) CHAR (1) INIT ('0','1','2','3','4','5','6','7','8', 13350002
+                                 '9','A','B','C','D','E','F'),          13400002
+                                        /* THIS TABLE IS USED TO     */ 13450002
+                                        /* TRANSLATE HEX TO DECIMAL  */ 13500002
+                                                                        13550002
+       COUNTFIELD  FIXED BINARY (15,0) INIT (0), /* BYTE OR FIELD CNT*/ 13600002
+       COUNT_CHAR CHAR (2) BASED (R),   /* CHAR DEF FOR FIELD */        13650002
+       ZERO FIXED BINARY (15,0) INIT (0),  /* ZERO FIELD FOR */         13700002
+       ZERO_CHAR CHAR (2) BASED (T),       /* FIELD ALIGNMENT */        13750002
+       LENGTH_CHAR CHAR (2) BASED (P), /* CHARACTER FIELD FOR LENGTH */ 13800002
+       LENGTHFIELD FIXED BINARY (15,0), /* FIELD LENGTH */              13850002
+                                                                        13900002
+       RECORD_SIZE FIXED BINARY (15,0), /*SAVE LENGTH OF INPUT RECORD*/ 13950002
+                                                                        14000002
+       RECORD_POINTER FIXED BINARY (15,0), /* POINTER TO RECORD DATA */ 14050002
+                                                                        14100002
+       BUFFER_POINTER FIXED BINARY (15,0), /* POINTER TO HEX BUFFER  */ 14150002
+                                                                        14200002
+       SIDE1_POINTER FIXED BINARY (15,0),  /* POINTER TO HEX OUTPUT  */ 14250002
+                                                                        14300002
+       SIDE2_POINTER FIXED BINARY (15,0),  /* POINTER TO CHAR OUTPUT */ 14350002
+                                                                        14400002
+       FIELD_INDEX FIXED BINARY (15,0),  /* POINTER TO DATA FIELD    */ 14450002
+                                                                        14500002
+       LENGTH_SAVE FIXED BINARY (15,0),  /* EXCESS LENGTH SAVE AREA  */ 14550002
+                                                                        14600002
+       FIELD_LENGTH FIXED BINARY (15,0), /* LENGTH OF SMF DATA FIELD */ 14650002
+                                                                        14700002
+       DATE BUILTIN,                    /*                   @ZA01928*/ 14710000
+                                                                        14720000
+       TRANSLATE_TABLE CHAR (37) INIT                                   14750002
+          ('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '),                    14800002
+                                        /* THIS TABLE IS USED TO     */ 14850002
+                                        /* ELIMINATE NON-ALPHANUMERIC*/ 14900002
+                                                                        14950002
+         DUMMY CHAR (1);        /* THIS CHARACTER IS THE DECLARATION */ 15000002
+                           /*TERMINATOR AND MUST ALWAYS REMAIN LAST  */ 15050002
+                                                                        15150002
+    ON ENDFILE (SMFDATA) EOF = 1; /* SET END OF FILE SWITCH FOR LOOP */ 15200002
+    OPEN FILE (SMFDATA);          /* OPEN SMF INPUT DATA SET         */ 15250002
+    EOF = 0;                      /* INITIALIZE EOF SWITCH TO OFF    */ 15300002
+    P = ADDR(LENGTHFIELD);              /* ADDRESSES OF BINARY       */ 15350002
+    T = ADDR(ZERO);                     /* FIELDS FOR BASED CHARACTER*/ 15400002
+    R = ADDR(COUNTFIELD);               /* FIELD ALIGNMENT           */ 15450002
+    TYPE_TABLE = 0;                     /* INITIALIZE TYPE SWITCHES  */ 15500002
+    PAGE_NUMBER = 0;                    /* INITIALIZE PAGE COUNT     */ 15550002
+    CALENDAR = DATE;                    /* GET DATE FROM SYSTEM      */ 15600002
+    RECORD_ADDR = ADDR(RECORD);         /*SET POINTER TO INPUT RECORD*/ 15650002
+    PARM_LENGTH = LENGTH(PARM_STRING);  /* SAVE PARAMETER LENGTH     */ 15700002
+    IF PARM_LENGTH = 0  THEN            /* TEST FOR NULL PARAMETER   */ 15750002
+                                        /* IF NULL, PROCESS ALL TYPES*/ 15800002
+      DO I = 0 TO 74;                                      /* Y02120 */ 15850002
+        IF FIELD_TABLE(I,1) ¬= 8888 THEN /* TEST FOR UNDEF TYPE      */ 15900002
+                                        /* IF DEFINED,               */ 15950002
+          TYPE_TABLE(I) = 1;            /*       SET TYPE SWITCH ON  */ 16000002
+        ELSE                            /* IF UNDEFINED              */ 16050002
+          DO;                           /* SELECT TYPE IN ERROR      */ 16100002
+            ERROR_MESSAGE.TYPE = I;                                     16150002
+            WRITE FILE (REPORT) FROM (ERROR_MESSAGE);                   16200002
+                                        /*       PRINT ERROR MESSAGE */ 16250002
+          END;                          /* END OF DO FOR = 8888      */ 16300002
+      END;                              /* END FOR DO I = 74         */ 16350002
+    ELSE                                /* IF TYPE PARAMETER VALUES  */ 16400002
+      DO;                               /* PRESENT, SET SELECT SWITCH*/ 16450002
+        START = 1;                      /* SET PARAMETER POINTER     */ 16500002
+        DO WHILE (START ¬> PARM_LENGTH); /* SET LOOP FOR STRING      */ 16550002
+          PLACE = INDEX(SUBSTR(PARM_STRING,START),',');                 16600002
+                                        /* SEARCH PARAMETER FOR COMMA*/ 16650002
+          IF PLACE ¬= 0  THEN           /* TEST FOR END OF PARAMETER */ 16700002
+                                        /* IF NOT THE END THEN       */ 16750002
+            DO;                         /* PROCESS CURRENT VALUE     */ 16800002
+                                        /* EXTRACT TYPE VALUE        */ 16850002
+              VALUE = SUBSTR(PARM_STRING,START,PLACE-1);                16900002
+              START = START + PLACE;    /* INCREMENT POINTER         */ 16950002
+            END;                        /* END OF DO FOR PLACE ¬= 0  */ 17000002
+          ELSE                          /* IF END OF PARAMETER       */ 17050002
+            DO;                         /* PROCESS LAST VALUE        */ 17100002
+              VALUE = SUBSTR(PARM_STRING,START);                        17150002
+              START = PARM_LENGTH + 1;  /* SET LOOP TO END           */ 17200002
+            END;                        /* END OF DO FOR PLACE = 0   */ 17250002
+                                                           /* Y02120 */ 17260002
+          DO I = 0 TO 74;               /* SET TYPE_TABLE LOOP       */ 17300002
+            IF VALUE = PARM_NUMBER(I) THEN /* SEARCH FOR VALUE       */ 17350002
+                                        /* IF VALUE FOUND            */ 17400002
+                                        /* TEST FOR UNDEFINED TYPE   */ 17450002
+              IF FIELD_TABLE(I,1) = 8888  THEN                          17500002
+                                        /* IF TYPE UNDEFINED         */ 17550002
+                DO;                     /* WRITE ERROR MESSAGE       */ 17600002
+                  ERROR_MESSAGE.TYPE = I;                               17650002
+                  WRITE FILE (REPORT) FROM (ERROR_MESSAGE);             17700002
+                END;                    /* END OF DO FOR = 8888      */ 17750002
+              ELSE                      /* IF TYPE DEFINED           */ 17800002
+                TYPE_TABLE(I) = 1;      /* SET TYPE SWITCH           */ 17850002
+            ELSE;                       /* CONTINUE SEARCH IF UNEQUAL*/ 17900002
+          END;                          /* END OF DO FOR I = 74      */ 17950002
+        END;                            /* END OF DO FOR START < PARM*/ 18000002
+      END;                              /* END OF DO FOR LENGTH ¬= 0 */ 18050002
+  CALL HEADER;                          /* PRINT REPORT HEADER       */ 18100002
+  READ FILE (SMFDATA) INTO (RECORD);    /* READ SMF INPUT DATA       */ 18150002
+  IF SUB1 ¬= '00000010' THEN                                            18200002
+    DO;                                                                 18250002
+      WRITE FILE (REPORT) FROM (ERROR2_MESSAGE);                        18300002
+      GO TO SMFEND;                                                     18350002
+    END;                                                                18400002
+  ELSE;                            /* NULL ELSE FOR NONE VS2 RECORDS */ 18450002
+  DO WHILE (EOF = 0);              /* SET READ LOOP FOR ENTIRE FILE  */ 18600002
+    RECORD_TYPE = RTYPE;                /* CONVERT TYPE TO DECIMAL   */ 18650002
+    IF RECORD_TYPE > 74 THEN                                            18660002
+      GO TO LOOP;                                                       18670002
+    ELSE;                                                               18680002
+    IF TYPE_TABLE(RECORD_TYPE) = 1 THEN /* TEST TYPE SWITCH          */ 18700002
+      DO;                               /* PROCESS THIS RECORD       */ 18800002
+                                                                        18850002
+    /*  DETERMINE THE LENGTH OF THE VARIABLE RECORD AND CONVERT      */ 18900002
+    /*  EACH FOUR BIT HEXIDECIMAL VALUE INTO CHARACTER FORM          */ 18950002
+                                                                        19000002
+        RECORD_SIZE = LENGTH(RECORD);                                   19050002
+        DO I = 1 TO (RECORD_SIZE * 2);                                  19100002
+          PLACE = HEX(I);                                               19150002
+          SUBSTR(BUFFER,I,1) = TABLE(PLACE);                            19200002
+        END;                                                            19250002
+                                                                        19300002
+    /*  ASSIGN THE PRINTABLE HEXIDECIMAL SMF RECORD TO THE OUTPUT    */ 19350002
+    /*  BUFFER IN THE STANDARD SMF HEADER RECORD FORMAT              */ 19400002
+                                                                        19450002
+        SMF_HEADER = HDR_SEGMENT, BY NAME;                              19500002
+        SMF_HEADER = HDR_PORTION, BY NAME;                              19550002
+                                                                        19600002
+    /*  TEST THE SMF INPUT RECORD FOR NON-ALPHANUMERIC CHARACTERS    */ 19650002
+    /*  AND INSERT  A BULLET IN THE EBCDIC SIDE OF THE REPORT        */ 19700002
+                                                                        19750002
+        DO I = 1 TO 18;                                                 19800002
+          PLACE = INDEX(TRANSLATE_TABLE,SUBSTR(PRINT,I,1));             19850002
+          IF PLACE = 0  THEN                                            19950002
+            SUBSTR(PRINT,I,1) = '.';                                    20050002
+          ELSE;                                                         20100002
+        END;                                                            20150002
+                                                                        20200002
+    /*  INCREMENT LINE COUNT PER PAGE.  IF COMPLETE RECORD WILL NOT  */ 20250002
+    /*  FIT ON CURRENT PAGE THEN SKIP TO NEW PAGE.  WRITE SMF HEADER */ 20300002
+                                                                        20350002
+        LINE_COUNT = LINE_COUNT + (RECORD_SIZE/30) + 5;                 20400002
+        IF LINE_COUNT > 50  THEN                                        20450002
+          CALL HEADER;                                                  20550002
+        ELSE;                                                           20600002
+        WRITE FILE (REPORT) FROM (SMF_HEADER);                          20650002
+                                                                        20700002
+    /*  FORMAT OUTPUT BUFFER FOR SMF DATA FIELDS.  INSERT FIELDS     */ 20750002
+    /*  CHARACTER BY CHARACTER UNTIL THE BUFFER IS FULL.  THEN       */ 20800002
+    /*  TEST SIDE2 FOR NON-ALPHANUMERIC CHARACTERS BEFORE PRINTING   */ 20850002
+                                                                        20900002
+    /*  BEGIN FIELD LOOP INITIALIZATION.                             */ 20950002
+                                                                        21000002
+        SIDE1 = ' ';                    /* CLEAR CHARACTER BUFFER    */ 21050002
+        SIDE2 = ' ';                    /* CLEAR HEX PRINT BUFFER    */ 21100002
+        RECORD_POINTER = 15;            /* SET TO FIRST DATA         */ 21150002
+        BUFFER_POINTER = 29;            /* SET TO FIRST DATA         */ 21200002
+        SIDE1_POINTER = 1;              /* SET TO START OF BUFFER    */ 21250002
+        SIDE2_POINTER = 1;              /* SET TO START OF BUFFER    */ 21300002
+        FIELD_INDEX = 1;                /* POINT TO FIRST DATA LNG   */ 21350002
+        LENGTH_SAVE = 0;                /* INITIALIZE SAVE AREA      */ 21400002
+        FIELD_LENGTH = FIELD_TABLE(RECORD_TYPE,FIELD_INDEX);            21450002
+                                        /* ASSIGN FIRST DATA LENGTH  */ 21500002
+                                                                        21550002
+    /*  BEGIN FIELD LOOP.  9999 MARKS THE END OF FIELDS FOR THAT     */ 21600002
+    /*  TYPE. 6666 OR 7777 INDICATES THAT THE REST OF THE SMF DATA   */ 21650002
+    /*  IS VARIABLE LENGTH AND IS TO BE PROCESSED EXCEPTIONALLY      */ 21700002
+    /*  DEPENDING ON RECORD TYPE.                                    */ 21750002
+                                                                        21800002
+        DO WHILE (FIELD_LENGTH ¬= 9999);                                21850002
+          IF FIELD_LENGTH = 6666 THEN                                   21900002
+    /*   6666 INDICATES REMAINDER OF RECORD IS VARIABLE LENGTH       */ 21910002
+            IF RECORD_TYPE = 5 | RECORD_TYPE = 35 THEN                  21950002
+              DO;                       /* GET # OF ACCT FIELDS      */ 22000002
+                                                                        22010002
+                COUNT_CHAR = SUBSTR(RECORD,RECORD_POINTER - 1,1);       22050002
+                COUNT_CHAR = SUBSTR(ZERO_CHAR,1,1) || COUNT_CHAR;       22100002
+                IF COUNTFIELD = 0 THEN                                  22150002
+                  FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 1) = 9999;      22200002
+                ELSE                                                    22250002
+                  DO;                                                   22260002
+                    FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 1) = 7777;    22300002
+                    FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 2) = 9999;    22350002
+                  END;                                                  22400002
+                GO TO VAR;                                              22450002
+              END;                      /* END OF 5 & 35 PROCESSING  */ 22500002
+            ELSE                    /* ELSE FOR RECORD_TYPE = 5 | 35 */ 22510002
+              IF RECORD_TYPE = 14 | RECORD_TYPE = 15 THEN               22550002
+                DO;                     /* GET # OF UCB'S            */ 22600002
+                  COUNT_CHAR = SUBSTR(RECORD,RECORD_POINTER - 223,1);   22650002
+                  COUNT_CHAR = SUBSTR(ZERO_CHAR,1,1) || COUNT_CHAR;     22700002
+                  LENGTHFIELD = COUNTFIELD; /* GET LENGTH OF UCB'S   */ 22750002
+                  COUNT_CHAR = SUBSTR(RECORD,RECORD_POINTER - 222,1);   22800002
+                  COUNT_CHAR = SUBSTR(ZERO_CHAR,1,1) || COUNT_CHAR;     22850002
+                  START = COUNTFIELD;                                   22900002
+                  IF LENGTHFIELD > 20 THEN                              22910002
+                    LENGTHFIELD = 20;                                   22920002
+                  ELSE;                                                 22930002
+                  DO I = 1 TO LENGTHFIELD;                              22950002
+                    FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + I) = START;   23000002
+                  END;                                                  23050002
+                  FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + I) = 7777;      23100002
+                  FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + I + 1) = 9999;  23150002
+                  GO TO VAR;                                            23200002
+                END;                    /* END 14 & 15 PROCESSING    */ 23250002
+              ELSE;      /* NULL ELSE FOR 14 & 15 AND END FOR 5 & 35 */ 23300002
+          ELSE                       /* ELSE FOR FIELD_LENGTH = 6666 */ 23350002
+            IF FIELD_LENGTH = 7777  THEN                                23400002
+              IF RECORD_TYPE = 4 | RECORD_TYPE = 34 THEN                23450002
+                DO;                                                     23500002
+    /* THESE RECORDS HAVE BOTH VARIABLE & FIXED FIELDS WITH LENGTH OF*/ 23550002
+    /* VARIABLE FIELDS CONTAINED WITHIN                              */ 23600002
+                  LENGTH_CHAR = SUBSTR(RECORD,RECORD_POINTER - 2,2);    23650002
+                                     /* GET LENGTH OF DEVICE SECTION */ 23660002
+                  FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 1) =            23700002
+                  LENGTHFIELD - 2;                                      23750002
+                  FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 2) = 1;         23800002
+                  FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 3) = 3;         23850002
+                  FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 4) = 1;         23900002
+                  COUNT_CHAR = SUBSTR(RECORD,RECORD_POINTER +           23950002
+                  LENGTHFIELD + 2,1);   /* GET # STEP ACCT FIELDS    */ 24000002
+                  COUNT_CHAR = SUBSTR(ZERO_CHAR,1,1) || COUNT_CHAR;     24050002
+                  IF COUNTFIELD = 0 THEN /*TEST # OF ACCT FIELDS = 0 */ 24100002
+                    DO;                                    /* Y02133 */ 24150002
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 5) = 8;     24200002
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 6) = 12;    24350002
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 7) = 8;     24360002
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 8) = 9999;  24400002
+                    END;              /* END FOR NO STEP ACCT FIELDS */ 24540002
+                  ELSE                  /* ELSE FOR COUNTFIELD = 0   */ 24590002
+                    DO;    /* INSERT LENGTH OF VAR LENGTH ACCT FIELD */ 24600002
+    /* GET LENGTH OF ACCT SECT & SUBTRACT CPU & #-OF-STEP ACCT FIELDS*/ 24610002
+                      COUNT_CHAR = SUBSTR(RECORD,RECORD_POINTER +       24650002
+                      LENGTHFIELD - 2,1);                               24700002
+                      COUNT_CHAR = SUBSTR(ZERO_CHAR,1,1) || COUNT_CHAR; 24750002
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 5) =        24800002
+                      COUNTFIELD - 4;                                   24850002
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 6) = 8;     24900002
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 7) = 12;    25050002
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 8) = 8;     25060002
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 9) = 9999;  25100002
+                    END;          /* END FOR HAVING SOME ACCT FIELDS */ 25250002
+                  GO TO VAR;    /* PICK UP NEXT FIELD FOR PROCESSING */ 25300002
+                END;                 /* END FOR RECORD_TYPE = 4 | 34 */ 25350002
+                                                                        25350402
+              ELSE                  /* ELSE FOR RECORD_TYPE = 4 | 34 */ 25356802
+                IF RECORD_TYPE = 47 | RECORD_TYPE = 6 THEN /*@YM04143*/ 25356902
+    /* THESE RECORDS HAVE OPTIONAL ADDITIONAL FIELDS BASED ON        */ 25357002
+    /* INDICATORS CONTAINED IN RECORD.                       @YM04143*/ 25357302
+                  IF RECORD_TYPE = 47  THEN                /*@YM04143*/ 25357402
+                    DO;                 /* GET EVENT TYPE            */ 25357802
+                      COUNT_CHAR = SUBSTR(RECORD,RECORD_POINTER         25358402
+                      - 28,2);                             /*@YM04143*/ 25358802
+                      IF COUNTFIELD = 1 THEN /* CHECK FOR SIGNON     */ 25359302
+                        FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 1) = 2;   25361602
+                      ELSE                                 /*@YM04143*/ 25363902
+                        FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 1) =      25366202
+                        9999;                              /*@YM04143*/ 25368202
+                      GO TO VAR;                           /*@YM04143*/ 25368502
+                    END;                /* END FOR RECORD_TYPE = 47  */ 25370802
+                  ELSE                                     /*@YM04143*/ 25372802
+                    IF RECORD_TYPE = 6  THEN               /*@YM04143*/ 25372902
+                      DO;               /* GET SUBSYSTEM ID          */ 25373002
+                        COUNT_CHAR = SUBSTR(RECORD,RECORD_POINTER       25375102
+                        - 26,2);                           /*@YM04143*/ 25377102
+                        IF COUNTFIELD = 0 THEN             /*@YM04143*/ 25379102
+                          FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 1) =    25379202
+                          9999;                            /*@YM04143*/ 25379302
+                        ELSE                               /*@YM04143*/ 25379402
+                          FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 1) = 4; 25379602
+                        GO TO VAR;                         /*@YM04143*/ 25379702
+                      END;              /* END 6 PROCESSING          */ 25379802
+                    ELSE;  /* NULL ELSE FOR RECORD_TYPE = 6 & END 47 */ 25379902
+                                                                        25380002
+                ELSE                /* ELSE FOR RECORD_TYPE = 47 | 6 */ 25381602
+                  IF RECORD_TYPE = 64 THEN                 /* Y02113 */ 25383702
+                    DO;                                                 25385802
+    /* THIS RECORD HAS A VAR LENGTH FIELD FOLLOWED BY FIXED FIELDS   */ 25387902
+    /* GET LENGTH OF EXTENT SECTION                                  */ 25390002
+                      LENGTH_CHAR = SUBSTR(RECORD,RECORD_POINTER        25392002
+                      - 2,2);                                           25392402
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 1) =        25394002
+                      LENGTHFIELD;                                      25394402
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 2) = 4;     25396002
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 3) = 44;    25398002
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 4) = 44;    25398402
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 5) = 22;    25398503
+ /*                                                          @ZA05513*/ 25398603
+                      FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + 6) = 9999;  25398703
+ /*                                                          @ZA05513*/ 25398803
+                      GO TO VAR; /* PICKUP NEXT FIELD FOR PROCESSING */ 25399202
+                    END;                /* END FOR RECORD_TYPE = 64  */ 25399602
+                  ELSE                  /* ELSE FOR RECORD_TYPE = 64 */ 25400002
+                    IF RECORD_TYPE = 40 THEN               /* Y02120 */ 25450002
+                      DO;                                               25500002
+    /* THIS HAS VAR NUMBER OF FIXED FIELDS WITH # OBTAINED WITHIN BY */ 25510002
+    /* LENGTH FIELD.                   GET LENGTH OF DEVICE SECTION  */ 25520002
+                        LENGTH_CHAR = SUBSTR(RECORD,RECORD_POINTER      25600002
+                        - 2,2);                                         25650002
+                        START = 8;                                      25900002
+                        LENGTHFIELD = (LENGTHFIELD - 2) / START;        25950002
+                        IF LENGTHFIELD > 21  THEN                       25960002
+                          LENGTHFIELD = 21;                             25970002
+                        ELSE;                                           25980002
+  FIXED:                DO I = 1 TO LENGTHFIELD;                        26000002
+                          FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + I) =    26050002
+                          START;                                        26060002
+                        END;                                            26100002
+                        FIELD_TABLE(RECORD_TYPE,FIELD_INDEX + I) =      26150002
+                        9999;                                           26160002
+                        GO TO VAR; /* PICK UP NEXT FLD FOR PROCESSING*/ 26200002
+                      END;                                              26250002
+                                                                        26252002
+                    ELSE        /* ELSE FOR RECORD_TYPE = 40, Y02113 */ 26333302
+                      IF RECORD_TYPE = 62 | RECORD_TYPE = 22  |         26350002
+                      RECORD_TYPE = 70 | RECORD_TYPE = 72 |             26352002
+                      RECORD_TYPE = 73 | RECORD_TYPE = 74 THEN          26360002
+                        DO;                                             26400002
+    /* THESE HAVE VAR # OF FIXED FIELDS WITH # OBTAINED WITHIN BY    */ 26410002
+    /* # OF ENTRIES FIELD.                                           */ 26420002
+                                                                        26552002
+                          IF RECORD_TYPE = 22  THEN        /* Y02034 */ 26560002
+                            DO;         /* GET # OF ELEMENTS         */ 26570002
+                              COUNT_CHAR = SUBSTR(RECORD,               26572002
+                              RECORD_POINTER- 2,2);                     26574002
+                              START=6;                                  26580002
+                              IF COUNTFIELD > 28  THEN                  26590002
+                                COUNTFIELD = 28;                        26592002
+                              ELSE;                                     26594002
+                            END;        /* END OF 22 PROCESSING      */ 26596002
+                          ELSE          /* ELSE FOR RECORD_TYPE = 22 */ 26596402
+                            IF RECORD_TYPE = 62  THEN                   26598002
+                              DO;       /* GET # OF VOLUMES   Y02113 */ 26600002
+                                COUNT_CHAR = SUBSTR(RECORD,             26602002
+                                RECORD_POINTER- 2,2);                   26604002
+                                START = 10;                             26610002
+                                IF COUNTFIELD > 21  THEN                26620002
+                                  COUNTFIELD = 21;                      26630002
+                                ELSE;                                   26640002
+                              END;      /* END FOR 62 PROCESSING     */ 26642002
+                                                           /* Y02150 */ 26644002
+                            ELSE        /* ELSE FOR RECORD_TYPE = 62 */ 26644402
+                              IF RECORD_TYPE = 70 | RECORD_TYPE = 73    26646002
+                              THEN                                      26646402
+                                DO;     /* GET # OF CPU'S            */ 26648002
+                                  COUNT_CHAR = SUBSTR(RECORD,           26648402
+                                  RECORD_POINTER - 6,2);                26649802
+                                  START = 16;                           26654802
+                                  IF RECORD_TYPE = 70 THEN              26656202
+                                    DO;                                 26657602
+                                      IF COUNTFIELD > 17  THEN          26659002
+                                        COUNTFIELD = 17;                26660402
+                                      ELSE;                             26661802
+                                    END; /* END OF 70 PROCESSING     */ 26663202
+                                  ELSE  /* ELSE FOR RECORD_TYPE = 70 */ 26664602
+                                    DO;                                 26666202
+                                      IF COUNTFIELD > 16  THEN          26666602
+                                        COUNTFIELD = 16;                26667002
+                                      ELSE;                             26667402
+                                    END; /* END OF 73 PROCESSING     */ 26670102
+                                END; /*END FOR RECORD_TYPE = 70 | 73 */ 26673002
+                              ELSE /* ELSE FOR RECORD_TYPE = 70 | 73 */ 26675002
+                                IF RECORD_TYPE = 72  THEN               26676602
+                                  DO;   /* GET # OF PERF GROUPS      */ 26678602
+                                    COUNT_CHAR = SUBSTR(RECORD,         26683802
+                                    RECORD_POINTER - 14,2);             26684202
+                                    START = 20;                         26685802
+                                    IF COUNTFIELD > 15  THEN            26686202
+                                      COUNTFIELD = 15;                  26686302
+                                    ELSE;                               26686402
+                                  END;  /* END FOR 72 PROCESSING     */ 26687302
+                                ELSE    /* ELSE FOR RECORD_TYPE = 72 */ 26687702
+                                  DO;                                   26688102
+                                    IF RECORD_TYPE = 74  THEN           26688502
+                                      DO;                               26688902
+                                        START = 28;                     26689002
+                                        COUNT_CHAR = SUBSTR(RECORD,     26689102
+                                        RECORD_POINTER - 6,2);          26689702
+                                        IF COUNTFIELD > 16  THEN        26691102
+                                          COUNTFIELD = 16;              26691702
+                                        ELSE;                           26699902
+                                      END; /* END FOR 74 PROCESSING  */ 26711202
+                                    ELSE; /*NULL ELSE FOR REC_TYPE=74*/ 26720902
+                                  END;  /* END ELSE'S FOR 22,62,70|73,  26722902
+                                                   72 AND END FOR 74 */ 26724902
+                          LENGTHFIELD = COUNTFIELD;                     26730602
+                          GO TO FIXED;  /* INSERT AS FOR RECORD 40   */ 26740302
+                        END; /* END PROCESSING FOR 22,62,70,72,73,74 */ 26750002
+                      ELSE /*ELSE FOR RECORD_TYPE = 22|62|70|72|73|74*/ 26800002
+                        FIELD_LENGTH = RECORD_SIZE - RECORD_POINTER     26850002
+                        + 1;                                            26860002
+                        /* END ELSE'S FOR RECORD_TYPE =4|34,47,64,40 */ 26870002
+            ELSE;  /* NULL ELSE FOR FIELD_LENGTH = 7777  & ENDS 6666 */ 26900002
+                                                                        26950002
+    /*  IF THE LENGTH OF THE DATA FIELD IS TOO LONG TO FIT ON THE    */ 27000002
+    /*  CURRENT LINE THEN IT IS BROKEN INTO TWO SEGMENTS WITH THE    */ 27050002
+    /*  SECOND SEGMENT HELD UNTIL THE NEXT LINE.                     */ 27100002
+                                                                        27150002
+          IF FIELD_LENGTH + SIDE2_POINTER > 31  THEN                    27200002
+            DO;                                                         27300002
+              LENGTH_SAVE = FIELD_LENGTH - (31 - SIDE2_POINTER);        27350002
+              FIELD_LENGTH = 31 - SIDE2_POINTER;                        27450002
+            END;                                                        27500002
+          ELSE;                                                         27550002
+                                                                        27600002
+    /*  ASSIGN THE SMF CHARACTER AND THE HEX REPRESENTATION TO THE   */ 27650002
+    /*  OUTPUT BUFFERS.  PROCESS THE HEX BUFFER TWO AT A TIME        */ 27700002
+    /*  IN ORDER TO MAINTAIN ALIGNMENT.  INCREMENT THE OUTPUT BUFFER */ 27750002
+    /*  BETWEEN FIELDS FOR DATA SPACING.                             */ 27800002
+                                                                        27850002
+          DO I = 1 TO FIELD_LENGTH;                                     27900002
+            SUBSTR(SIDE1,SIDE1_POINTER,1) =                             27950002
+                                  SUBSTR(BUFFER,BUFFER_POINTER,1);      28000002
+            SUBSTR(SIDE1,SIDE1_POINTER+1,1) =                           28050002
+                                  SUBSTR(BUFFER,BUFFER_POINTER+1,1);    28100002
+            SUBSTR(SIDE2,SIDE2_POINTER,1) =                             28150002
+                                  SUBSTR(RECORD,RECORD_POINTER,1);      28200002
+            RECORD_POINTER = RECORD_POINTER + 1;                        28250002
+            BUFFER_POINTER = BUFFER_POINTER + 2;                        28300002
+            SIDE1_POINTER = SIDE1_POINTER + 2;                          28350002
+            SIDE2_POINTER = SIDE2_POINTER + 1;                          28400002
+          END;                                                          28450002
+          SIDE1_POINTER = SIDE1_POINTER + 2;                            28500002
+          SIDE2_POINTER = SIDE2_POINTER + 1;                            28550002
+                                                                        28600002
+    /*  IF THE OUTPUT BUFFER IS FULL THEN TEST THE SMF CHARACTERS    */ 28650002
+    /*  FOR NON-ALPHANUMERIC CHARACTERS AND REPLACE ALL OF THEM      */ 28700002
+    /*  WITH '.'.  WRITE SMF DATA AND CLEAR OUTPUT BUFFERS FOR THE   */ 28750002
+    /*  NEXT LINE.                                                   */ 28800002
+                                                                        28850002
+          IF SIDE2_POINTER > 30  THEN                                   28900002
+            DO;                                                         29000002
+              DO I = 1 TO 30;                                           29050002
+                PLACE = INDEX(TRANSLATE_TABLE,SUBSTR(SIDE2,I,1));       29100002
+                IF PLACE = 0  THEN                                      29200002
+                  SUBSTR(SIDE2,I,1) = '.';                              29300002
+                ELSE;                                                   29350002
+              END;                                                      29400002
+              WRITE FILE (REPORT) FROM (SMF_FIELDS);                    29450002
+              SIDE1 = ' ';                                              29550002
+              SIDE2 = ' ';                                              29600002
+                                                                        29650002
+    /*  IF THE OUTPUT BUFFER EQUALS 31 THEN THIS IMPLIES THAT THE    */ 29700002
+    /*  LAST DATA FIELD IS TO BE CONTINUED IN THE FIRST POSITION     */ 29750002
+    /*  OF THE NEXT LINE.  IF THE OUTPUT BUFFER EQUALS 32 THEN       */ 29800002
+    /*  THIS IMPLIES THAT A NEW DATA FIELD WILL BEGIN THE NEXT LINE  */ 29850002
+    /*  AND THAT THE LINE SHOULD BE INDENTED BY ONE.                 */ 29900002
+                                                                        29950002
+              IF SIDE2_POINTER = 31  THEN                               30000002
+                DO;                                                     30100002
+                  SIDE1_POINTER = 1;                                    30150002
+                  SIDE2_POINTER = 1;                                    30200002
+                END;                                                    30250002
+              ELSE                    /* ELSE FOR SIDE2_POINTER = 31 */ 30300002
+                DO;                                                     30350002
+                  SIDE1_POINTER = 3;                                    30400002
+                  SIDE2_POINTER = 2;                                    30450002
+                END;              /* ENDS SIDE2_POINTER = 31 & ¬= 31 */ 30500002
+            END;                        /* ENDS SIDE2_POINTER > 30   */ 30550002
+          ELSE;                       /* ELSE FOR SIDE2_POINTER > 30 */ 30600002
+                                                                        30650002
+    /*  TEST FIELD DATA LENGTH SAVE AREA FOR EXCESS LENGTH.  IF      */ 30700002
+    /*  PRESENT THEN PICK UP EXCESS LENGTH AND RESET BUFFER POINTERS */ 30750002
+    /*  OTHERWISE GET NEXT FIELD DATA LENGTH.                        */ 30800002
+                                                                        30850002
+          IF LENGTH_SAVE ¬= 0  THEN                                     30900002
+            DO;                                                         31000002
+              FIELD_LENGTH = LENGTH_SAVE;                               31050002
+              LENGTH_SAVE = 0;                                          31100002
+              SIDE1_POINTER = 1;                                        31150002
+              SIDE2_POINTER = 1;                                        31200002
+            END;                                                        31250002
+          ELSE                          /* ELSE FOR LENGTH_SAVE ¬= 0 */ 31300002
+            DO;                                                         31350002
+  VAR:        FIELD_INDEX = FIELD_INDEX + 1;                            31400002
+              FIELD_LENGTH = FIELD_TABLE(RECORD_TYPE,FIELD_INDEX);      31450002
+              IF FIELD_LENGTH = 0 THEN                                  31550002
+                GO TO VAR;                                              31600002
+            END;                   /* END FOR LENGTH_SAVE ¬= 0 & = 0 */ 31650002
+        END;                            /* END FOR FIELD ¬= 9999     */ 31700002
+                                                                        31750002
+    /*  IF NO MORE FIELDS THEN TEST THE SMF CHARACTERS FOR           */ 31800002
+    /*  NON-ALPHANUMERIC CHARACTERS AND REPLACE THEM WITH '.'.       */ 31850002
+    /*  WRITE SMF DATA LEFT IN OUTPUT BUFFER                         */ 31900002
+                                                                        31950002
+        IF FIELD_INDEX = 1 | SIDE1_POINTER < 5 THEN                     32000002
+          GO TO LOOP;                                                   32050002
+        DO I = 1 TO 30;                                                 32100002
+          PLACE = INDEX(TRANSLATE_TABLE,SUBSTR(SIDE2,I,1));             32150002
+          IF PLACE = 0  THEN                                            32250002
+            SUBSTR(SIDE2,I,1) = '.';                                    32350002
+          ELSE;                                                         32400002
+        END;                                                            32450002
+        WRITE FILE (REPORT) FROM (SMF_FIELDS);                          32500002
+      END;                              /* END FOR TYPE_TABLE = 1    */ 32550002
+                                                                        32600002
+    ELSE;                            /* NULL ELSE FOR TYPE_TABLE = 1 */ 32650002
+                                                                        32700002
+  LOOP: READ FILE (SMFDATA) INTO (RECORD);                              32750002
+  END;                                  /* END FOR WHILE (EOF = 0)   */ 32800002
+  SMFEND: ;                                                             32810002
+  CLOSE FILE (SMFDATA);                                                 32850002
+                                                                        32900002
+  HEADER: PROC;                   /* PROCEDURE TO PRINT REPORT HEADER*/ 32950002
+    PAGE_NUMBER = PAGE_NUMBER + 1;      /* INCREMENT PAGE COUNT      */ 33000002
+    WRITE FILE (REPORT) FROM (HEADER1); /* PRINT FIRST LINE OF HEADER*/ 33050002
+    WRITE FILE (REPORT) FROM (HEADER2); /* PRINT SECOND HEADER LINE  */ 33100002
+    WRITE FILE (REPORT) FROM (HEADER3); /* SPACE FOR REPORT DATA     */ 33150002
+    LINE_COUNT = 0;                     /* RESET LINE COUNT PER PAGE */ 33200002
+  END HEADER;                           /* END FOR HEADER ROUTINE    */ 33250002
+                                                                        33300002
+ END SMFFRMT;                           /* END OF PROGRAM            */ 33350002

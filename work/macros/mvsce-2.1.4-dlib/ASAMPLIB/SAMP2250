@@ -1,0 +1,374 @@
+//JOBBIE JOB   XXX,NAME,MSGLEVEL=1                                      00020000
+//       EXEC  ASMFCLG,PARM.LKED=(XREF,LET,LIST)                        00040000
+//ASM.SYSIN DD *                                                        00140000
+SAMP2250 CSECT                                                          00210017
+*3625,060200-060900                                                3575 00240018
+START    SAVE  (14,12)                                                  00280017
+         BALR  3,0                                                      00350017
+         USING HERE,3,4                INITIALIZE BASE REGISTER         00420017
+HERE     L     4,BASEADDR                                               00490017
+         BC    15,SVREGS                                                00560017
+BASEADDR DC    A(HERE+4096)                                             00630017
+SVREGS   ST    13,SVAREA2+4            CHAIN SAVE AREAS                 00700017
+         LA    13,SVAREA2              ESTABLISH NEW SAVE AREA          00770017
+         OPEN  (SMPLDCB)               OPEN DCB FOR GRAPHIC DEVICE      00840017
+         SPAR  (GACB1),PRTY=1          SPAR FOR ASYNC ERROR ROUTINE     00910017
+         LA    6,0                     LOAD ZERO                        00980017
+         CLR   15,6                    TEST SPAR RETURN CODE            01050017
+         BNE   ERTN1                   BRANCH IF SPAR UNSUCCESSFUL      01120017
+         SPAR  (GACB3),PRTY=3          SPAR FOR END KEY ATTN ROUTINE    01190017
+         LA    6,0                     LOAD ZERO                        01260017
+         CLR   15,6                    TEST SPAR RETURN CODE            01330017
+         BNE   ERTN1                   BRANCH IF SPAR UNSUCCESSFUL      01400017
+*GET BUFFER STORAGE                                                     01470017
+*                                                                       01540017
+GETBUF   ASGNBFR SMPLDCB,BUFSIZE        REQUEST BUFFER STORAGE          01610017
+         CH    15,BUFCHK                WAS BUFFER ALLOCATED            01680017
+         BC    8,BUFTBL                 IF=,BUFFER WAS ALLOCATED        01750017
+         LH    6,BUFSIZE                LOAD REQUESTED BUFFER SIZE      01820017
+         SH    6,BLKSIZE                DECREMENT SIZE BY 256 BYTES     01890017
+         CH    6,BLKSIZE               HAS MINIMUM SIZE BEEN PASSED     01960017
+         BC    8,ABEND                  IF=, MINIMUM NOT AVAILABLE      02030017
+         STH   6,BUFSIZE                STORE NEW REQUESTED BFR SIZE    02100017
+         BC    15,GETBUF                BRANCH TO REQUEST BUFFER        02170017
+BUFTBL   BUFINQ SMPLDCB,BUFTABLE,16     REQUEST ADDR OF ASSIGNED BFR    02240017
+         LTR   15,15                   TEST RETURN CODE                 02310017
+         BNE   BUFFERR                 IF NOT ZERO, GO TO ERROR RTN     02380017
+*                                                                       02450017
+*INITIALIZE OACB WITH STARTING ADDRESS AND LENGTH OF BUFFER             02520017
+*                                                                       02590017
+         LH    0,BUFTABLE+4             BUFFER START ADDRESS            02660017
+         ST    0,BLP                    PUT BUFFER START ADDRESS INTO   02730017
+*                                       OACB                            02800017
+         AH    0,TRANSFR+2              INCREMENT START ADDR BY GTRU    02870017
+*                                       BRANCH ADDRESS                  02940017
+         STH   0,TRANSFR+2              STORE UPDATED BFR ADDR IN GTRU  03010017
+         LH    0,BUFTABLE+6             STORE LENGTH OF BUFFER ASSIGNED 03080017
+         ST    0,LOA                    LENGTH OF OUTPUT AREA           03150017
+         GETMAIN R,LV=(0)               GET MAIN STORAGE AT LEAST AS    03220017
+*                                       LONG AS BUFFER SIZE ALLOCATED.  03290017
+*                                       ADDRESS OF ALLOCATED STORAGE    03360017
+*                                       RETURNED IN REGISTER 1          03430017
+         ST    1,SLOA                   INITIALIZE OTHER FIELDS IN      03500017
+         ST    1,CRSA                   OACB WITH ADDRESS OF GRAPHIC    03570017
+         ST    1,OLP                    DATA OUTPUT AREA (GDOA)         03640017
+*                                                                       03710017
+*SET OVERFLOW ROUTINE TO GO TO SUPERVISOR                               03780017
+*                                                                       03850017
+         LA    1,ABEND3                                                 03920017
+         ST    1,AORP                                                   03990017
+*                                                                       04060017
+*OACB INITIALIZATION COMPLETE                                           04130017
+*                                                                       04200017
+*FIRST DISPLAY                                                          04270017
+*                                                                       04340017
+         GUSTOR OUTCB,ORDSEQ,2          STORE GSRT ORDER                04410017
+         CALL  GCPRNT,(OCBP,PAR1)       STORE TEXT (TITLE)              04480017
+         GUSTOR OUTCB,TRANSFR,4         STORE GTRU ORDER                04550017
+*                                                                       04620017
+*WRITE OUT FIRST TITLE DISPLAY                                          04690017
+*                                                                       04760017
+         GWRITE DECB1,STR,SMPLDCB,OCBP                                  04830017
+         LTR   15,15                   TEST RETURN CODE                 04900017
+         BNE   ERTN2                   IF NOT ZERO, GO TO ERROR ROUTINE 04970017
+         WAIT  ECB=DECB1                                                05040017
+         CLI   DECB1,X'7F'              TEST FOR SUCCESSFUL I/O         05110017
+         BNE   ERTN2                    BRANCH IF NOT                   05180017
+         GREADR DECB2,MIP,SMPLDCB,INPUTM  UNLOCK KEYBOARD               05250017
+         LTR   15,15                   TEST RETURN CODE                 05320017
+         BNE   ERTN2                   IF NOT ZERO, GO TO ERROR ROUTINE 05390017
+         WAIT  ECB=DECB2                                                05460017
+         CLI   DECB2,X'7F'              TEST FOR SUCCESSFUL I/O         05530017
+         BNE   ERTN2                    BRANCH IF NOT                   05600017
+         WAIT  ECB=COMSAVE+16                                           05670017
+*                                                                       05740017
+*END OF TASK                                                            05810017
+*                                                                       05880017
+         RLSEBFR SMPLDCB,ALL            RELEASE ALL ASSIGNED BUFFER     05950017
+NXTEND   DAR   (GACB1,GACB3)              DAR ALL ATTN RTNS             06160017
+         LA    6,0                      LOAD ZERO                       06230017
+         CLR   15,6                     TEST DAR RETURN CODE            06300017
+         BNE   ERTN1A                   BRANCH IF DAR UNSUCCESSFUL      06370017
+OUT      L     0,LOA                    LOAD NUMBER OF BYTES TO FREE    06440017
+         L     1,SLOA                   LOAD STARTING LOCATION          06510017
+         FREEMAIN R,LV=(0),A=(1)        FREE GDOA                       06580017
+OUT1     CLOSE SMPLDCB                  CLOSE DCB FOR GRAPHIC DEVICE    06650017
+         L     13,SVAREA2+4             LOAD SAVE AREA ADDRESS          06720017
+         RETURN (14,12)                 RETURN TO SUPERVISOR            06790017
+ERTN1    EQU   *                                                        06860017
+*                                                                       06930017
+*USER SPAR ERROR HANDLER WOULD GO HERE                                  07000017
+         WTO   'SPAR ERROR'                                             07070017
+         B     OUT1                                                     07140017
+*                                                                       07210017
+ERTN1A   EQU   *                                                        07280017
+*USER DAR HANDLER WOULD GO HERE                                         07350017
+         WTO   'DAR ERROR'                                              07420017
+         B     OUT                                                      07490017
+ERTN2    EQU   *                                                        07560017
+*USER I/O ERROR HANDLER WOULD GO HERE                                   07630017
+*                                                                       07700017
+         WTO   'I/O ERROR 1'                                            07770017
+         B     NXTEND                   DUMMY I/O ERROR HANDLER         07840017
+*                                                                       07910017
+*ABEND DUE TO NO BUFFER AVAILABLE                                       07980017
+*                                                                       08050017
+ABEND    WTO   '512 BYTES, THE MINIMUM CONTIGUOUS BUFFER STORAGE NECESS*08120017
+               ARY, IS NOT AVAILABLE'                                   08190017
+         BC    15,NXTEND                                                08260017
+ABEND3   WTO   'BUFFER STORAGE OVERFLOW'                                08330017
+         BC    15,RETURN1                                               08400017
+*                                                                       08470017
+BUFFERR  EQU   *                                                        08540017
+BUFFERR1 EQU   *                                                        08610017
+*USER BUFFER MANAGEMENT ERROR ROUTINE WOULD GO HRRE                     08680017
+*                                                                       08750017
+*ASYNCHRONOUS ATTENTION HANDLING ROUTINES                               08820017
+*                                                                       08890017
+*ASYNCHRONOUS ERROR ROUTINE                                             08960017
+*                                                                       09030017
+ASYNERR  SAVE  (14,12)                  SAVE REGISTERS                  09100017
+         DROP  3,4                                                      09170017
+         BALR  5,0                                                      09240017
+         USING *,5                      INITIALIZE BASE REGISTER        09310017
+         ST    13,SVAREA4+4             CHAIN SAVE AREAS                09380017
+         LA    13,SVAREA4               ESTABLISH NEW SAVE AREA         09450017
+         WTO   'ASYNCHRONOUS ERROR OCCURRED'                            09520017
+         L     13,SVAREA4+4             LOAD SAVE AREA ADDRESS          09590017
+         RETURN (14,12)                 RETURN TO NEXT SEQ INSTRUCTION  09660017
+*                                                                       09870017
+*END KEY                                                                09940017
+*                                                                       10010017
+GRAPHRTN SAVE  (14,12)                  SAVE REGISTERS                  10080017
+         BALR  7,0                                                      10220017
+         USING *,7                      INITIALIZE BASE REGISTER        10290017
+         ST    13,SVAREA3+4             CHAIN SAVE AREAS                10360017
+         LA    13,SVAREA3               ESTABLISH NEW SAVE AREA         10430017
+*                                                                       10500017
+*SECOND DISPLAY                                                         10570017
+*                                                                       10640017
+         MVC   OLP,SLOA                RESET OLP=SLOA                   10710017
+         CALL  GSTOR,(OCBP,PAR2)        STORE ORDERS FOR SECOND DISPLAY 10780017
+         L     1,OLP                                                    10850017
+         S     1,SLOA                   TOTAL BYTES STORED              10920017
+         S     1,EIGHT                  BUFFER LOCATION TO INSERT       10990017
+*                                       CURSOR                          11060017
+         A     1,BLP                                                    11130017
+         STH   1,ICADDR                 INSERT CURSOR ADDRESS (USED BY  11200017
+*                                       GCNTRL MACRO BELOW)             11270017
+*WRITE OUT SECOND DISPLAY                                               11340017
+*                                                                       11410017
+WRITEBUF EQU   *                                                        11480017
+         XC    DECB3(4),DECB3           CLEAR ECB                       11550017
+         GWRITE DECB3,BUF,SMPLDCB,OCBP  WRITE DISPLAY TO BFR            11620017
+         LTR   15,15                   TEST RETURN CODE                 11690017
+         BNE   ERTN3                   IF NOT ZERO, GO TO ERROR ROUTINE 11760017
+         WAIT  ECB=DECB3                                                11830017
+         CLI   DECB3,X'7F'              I/O SUCCESSFUL                  11900017
+         BNE   ERTN3                    BRANCH IF NOT                   11970017
+         XC    DECB4(4),DECB4           CLEAR ECB                       12040017
+         GCNTRL DECB4,INS,SMPLDCB,ICADDR  INSERT CURSOR                 12110017
+         LTR   15,15                   TEST RETURN CODE                 12180017
+         BNE   ERTN3                   IF NOT ZERO, GO TO ERROR ROUTINE 12250017
+         WAIT  ECB=DECB4                                                12320017
+         CLI   DECB4,X'7F'              I/O SUCCESSFUL                  12390017
+         BNE   ERTN3                    BRANCH IF NOT                   12460017
+STRDISP  EQU   *                                                        12530017
+         XC    DECB5(4),DECB5           CLEAR ECB                       12600017
+         GCNTRL DECB5,STR,SMPLDCB,BLP+2                                 12670017
+         LTR   15,15                   TEST RETURN CODE                 12740017
+         BNE   ERTN3                   IF NOT ZERO, GO TO ERROR ROUTINE 12810017
+         WAIT  ECB=DECB5                                                12880017
+         CLI   DECB5,X'7F'              I/O SUCCESSFUL                  12950017
+         BNE   ERTN3                    BRANCH IF NOT                   13020017
+NEXT     ATTNINQ GACB3,MODE=R           RELINQUISH CONTROL              13090017
+         CLI   COMSAVE+3,X'01'          CHECK FOR END KEY               13300017
+         BC    7,STRDISP                IF UNEQUAL,RESTART DISPLAY      13370017
+*                                                                       13440017
+*SECOND KEYBOARD ATTENTION                                              13510017
+*                                                                       13580017
+         XC    DECB7(4),DECB7           CLEAR ECB                       13650017
+         GREAD DECB7,CUR,SMPLDCB,1,IPAREA,ICADDR  READ BUFFER TO CURSOR 13720017
+         LTR   15,15                   TEST RETURN CODE                 13790017
+         BNE   ERTN3                   IF NOT ZERO, GO TO ERROR ROUTINE 13860017
+         WAIT  ECB=DECB7                                                13930017
+         CLI   DECB7,X'7F'              SUCCESSFUL I/O                  14000017
+         BE    NEXT1                    BRANCH IF YES                   14070017
+         CLI   DECB7+16,X'43'           INCORR. LENGTH ON READ CURSOR   14140017
+         BNE   ERTN3                    BRANCH IF NOT                   14210017
+NEXT1    EQU   *                                                        14280017
+         CLI   IPAREA,C'D'              TEST FOR THIRD DISPLAY          14350017
+         BC    8,NXTDISP1               GO TO NEXT DISPLAY IF EQUAL     14420017
+         CLI   IPAREA,C'E'              TEST FOR END OF JOB             14490017
+         BC    8,RETURN1                GO TO EOJ IF EQUAL              14560017
+         B     NEXT                     RELINQUISH CNTRL-UNWANTED INPUT 14630017
+*                                                                       14700017
+*THIRD DISPLAY                                                          14770017
+*                                                                       14840017
+NXTDISP1 MVC   OLP,SLOA                 RESET OLP=SLOA                  14910017
+         GUSTOR OUTCB,ORDSEQ,2         STORE GSRT ORDER                 14980017
+         CALL  GCGRID,(OCBP,PTAB1)      CREATE ORDERS TO DRAW GRID      15050017
+         CALL  GARC,(OCBP,PTAB2)        CREATE ORDERS TO DRAW ARC       15120017
+         CALL  GCPRNT,(OCBP,PTAB3)      CREATE ORDERS TO PRINT MESSAGE  15190017
+         GUSTOR OUTCB,TRANSFR,4         STORE GTRU ORDER                15260017
+         L     1,OLP                                                    15330017
+         S     1,SLOA                   TOTAL BYTES STORED              15400017
+         S     1,EIGHT                 BUFFER LOCATION TO INSERT        15470017
+*                                       CURSOR                          15540017
+         A     1,BLP                                                    15610017
+         STH   1,ICADDR                INSERT CURSOR ADDRESS (USED BY   15680017
+*                                       GCNTRL MACRO BELOW)             15750017
+*WRITE OUT THIRD DISPLAY                                                15820017
+*                                                                       15890017
+         NI    DECB3,X'BF'              ZERO COMPLETION BIT IN ECB      15960017
+         NI    DECB4,X'BF'              ZERO COMPLETION BIT IN ECB      16030017
+         NI    DECB5,X'BF'              ZERO COMPLETION BIT IN ECB      16100017
+         BC    15,WRITEBUF                                              16170017
+*                                                                       16240017
+*THIRD KEYBOARD ATTENTION                                               16310017
+*                                                                       16380017
+RETURN1  L     13,SVAREA3+4             LOAD SAVE AREA ADDRESS          16450017
+         POST  COMSAVE+16                                               16520017
+         RETURN (14,12)                 RETURN TO NEXT SEQ INSTRUCTION  16590017
+ERTN3    EQU   *                                                        16660017
+*                                                                       16730017
+*USER I/O ERROR HANDLING ROUTINE WOULD GO HERE                          16800017
+*                                                                       16870017
+         WTO   'I/O ERROR 2'                                            16940017
+         B     RETURN1                  DUMMY I/O ERROR HANDLER         17010017
+*                                                                       17080017
+ATTNERR  EQU   *                                                        17150017
+* USER ATTNINQ ERROR ROUTINE WOULD BE HERE                              17220017
+*                                                                       17290017
+*FIRST DISPLAY PARAMETER TABLES                                         17360017
+*                                                                       17430017
+PAR1     DC    A(XYL1M1)                                                17500017
+         DC    1F'816'                  X-COORDINATE                    17570017
+         DC    1F'2000'                 Y-COORDINATE                    17640017
+         DC    C'BNBP'                  FIXED,NO SCALE, BASIC, PROTECT  17710017
+         DC    A(TITLE)                 ADDRESS OF FIRST CHARACTER      17780017
+         DC    1H'44'                                                   17850017
+         DC    C'U'                                                     17920017
+TITLE    DC    C'2250 SAMPLE PROGRAM - END ATTENTION TO BEGIN'          17990017
+*                                                                       18060017
+*SECOND DISPLAY PARAMETER TABLE                                         18130017
+*                                                                       18200017
+PAR2     DC    2F'0'                    ADDRESS OF GRAPHIC ORDERS AND   18270017
+*                                       LENGTH IN BYTES SUPPLIED BY     18340017
+*                                       GODEL MACRO BELOW               18410017
+*THIRD DISPLAY PARAMETER TABLES                                         18480017
+*                                                                       18550017
+PTAB1    DC    A(XYL1M1)                                                18620017
+         DC    1F'200'                  INCREMENT ON X-AXIS             18690017
+         DC    1F'200'                  INCREMENT ON Y-AXIS             18720017
+         DC    C'BNA'                   FIXED,NO SCALE, A OPTION        18760017
+PTAB2    DC    A(XYL1M1)                                                18830017
+         DC    1F'2400'                X COORDINATE                     18900017
+         DC    1F'2400'                Y COORDINATE                     18970017
+         DC    C'BNAD'                  FIXED, NO SCALE, ALPHA, D OPTN  19040017
+         DC    1F'1200'                RADIUS                           19110017
+         DC    1H'0'                    THETA (RIGHT HORIZONTAL 0)      19180017
+         DC    1H'1'                    ALPHA                           19250017
+         DC    1H'90'                   GAMMA                           19320017
+PTAB3    DC    A(XYL1M1)                X-COORDINATE                    19390017
+         DC    1F'0'                   X COORDINATE                     19430017
+         DC    1F'1800'                Y COORDINATE                     19470017
+         DC    C'BNBP'                  FIXED, NO SCALE, BASIC, PROTECT 19530017
+         DC    A(DISPLAY)               ADDRESS OF FIRST CHARACTER      19600017
+         DC    1H'197'                      INCLUDE SPACE FOR CURSOR    19670017
+         DC    C'U'                                                     19740017
+*                                                                       19810017
+*POR AREAS AND CONTROL CONSTANTS                                        19880017
+*                                                                       19950017
+OCBP     DC    A(OUTCB)                 OUTPUT CONTROL BLOCK POINTER    20090017
+         DC    A(WORKAREA)                                              20230017
+XYL1M1   DC    1H'2400,2400'            X1,Y1                           20300017
+         DC    1H'4000,4000'            X2,Y2                           20370017
+*                                                                       20440017
+*OUTPUT AREA CONTROL BLOCK AND WORKAREAS                                20510017
+*                                                                       20580017
+OUTCB    OACB  OUTCB,1,ABEND3           DUMMY OACB FOR GETMAIN          20650017
+WORKAREA DS    100F                                                     20720017
+*                                                                       20790017
+*THE FOLLOWING MACROS AND DATA ARE FOR THE SECOND DISPLAY AND           20860017
+*ILLUSTRATE USE OF GSRT,GECP AND GTRU ORDER MACROS.                     20930017
+*                                                                       21000017
+         GINIT BLIM=4096               INITIALUZE GRAPHIC COUNTERS      21070017
+ORDSEQ   GSRT                          START REGENERATION TIMER         21140017
+         GEPM                                                           21210017
+         GDV   0,2000,B                POSITION BEAM FOR TITLE LILE     21280017
+         GECP  B                       BASIC CHARACTER SIZE             21350017
+         GTXT  'THIS PROGRAM WILL PLOT A GRID WITH CORNERS AT 2400,2400X21420017
+               -2400,4000-'                                             21490017
+         GCNL  1                       NEW LINE CONTROL CHARACTER       21560017
+         GTXT  '4000,4000-4000,2400. IT WILL PLOT 90 DEGREES OF ARC WHOX21630017
+               SE RADIUS IS'                                            21700017
+         GCNL  1                                                        21770017
+         GTXT  '1200 RASTER UNITS. IT ILLUSTRATES THE USE OF ORDER MACRX21840017
+               OS TO CREATE'                                            21910017
+         GCNL  1                                                        21980017
+         GTXT  'THIS DISPLAY AND PORS TO CREATE THE NEXT DISPLAY.'      22050017
+         GCNL  2                                                        22120017
+         GTXT  'DEPRESS KEY D AND THEN THE END KEY ON THE ALPHAMERIC KEX22190017
+               YBOARD TO'                                               22260017
+         GCNL  1                                                        22330017
+         GTXT  'INITIATE THE NEXT DISPLAY'                              22400017
+         GECF  B                                                        22470017
+         GTXT  '    '                  LOCATION TO INSERT CURSOR        22540017
+TRANSFR  GTRU  ORDSEQ                                                   22610017
+         GODEL ORDSEQ,PAR2             BUILD PARAMETER TABLE FOR GSTOR  22680017
+*                                                                       22750017
+*THE FOLLOWING ARE FOR THE THIRD DISPLAY                                22820017
+*                                                                       22890017
+DISPLAY  GTXT  'THIS DISPLAY ILLUSTRATES THE OUTPUT OF THE GCGRID,'     22960017
+         GCNL  1                                                        23030017
+         GTXT  'GARC, AND GCPRNT PROBLEM ORIENTED POUTINES.'            23100017
+         GCNL  2                                                        23170017
+         GTXT  'DEPRESS KEY E AND THEN THE END KEY ON THE ALPHAMERIC KEX23240017
+               YBOARD TO'                                               23310017
+         GCNL  1                                                        23380017
+         GTXT  'TERMINATE THIS SAMPLE PROGRAM.'                         23450017
+         GECF  B                                                        23520017
+         GTXT  '    '                  LOCATION TO INSERT CURSOR        23590017
+*                                                                       23660017
+*DCB AND SAEC MACROS                                                    23730017
+*                                                                       23800017
+         DS    0F                                                       23870017
+SMPLDCB  DCB   DSORG=GS,MACRF=(RC,WC),DDNAME=GRAPHIC,GTYPE=BASIC        23940017
+GACB1    SAEC  EP=ASYNERR,DCB=SMPLDCB,COMAREA=COMSAVE,ATTNTYP=(R,AE),  X24010017
+               PFKMSK=NULL                                              24080017
+GACB3    SAEC  EP=GRAPHRTN,DCB=SMPLDCB,COMAREA=COMSAVE,                X24150017
+               ATTNTYP=(R,END),PFKMSK=NULL                              24220017
+*                                                                       24290017
+*                                                                       24360017
+*DEFINED CONSTANTS AND WORKAREAS                                        24430017
+*                                                                       24500017
+SVAREA1  DC    18F'0'                                                   24570017
+SVAREA2  DC    18F'0'                                                   24640017
+SVAREA3  DC    18F'0'                                                   24710017
+SVAREA4  DC    18F'0'                                                   24780017
+SVAREA5  DC    18F'0'                                                   24850017
+SVAREA6  DC    18F'0'                                                   24920017
+COMSAVE  DC    5F'0'                                                    24990017
+BUFTABLE DC    4F'0'                                                    25060017
+INPUTM   DC    1F'0'                                                    25130017
+ICADDR   DC    1F'0'                                                    25200017
+IPAREA   DC    1F'0'                                                    25270017
+EIGHT    DC    1F'8'                                                    25340017
+BUFSIZE  DC    1H'4096'                                                 25410017
+BUFCHK   DC    1H'0'                                                    25480017
+BLKSIZE  DC    1H'256'                                                  25550017
+         LTORG                                                          25620017
+*                                                                       25690017
+*OUTPUT AREA CONTROL BLOCK                                              25760017
+*                                                                       25830017
+         ORG   OUTCB                                                    25900017
+SLOA     DS    1F                                                       25970017
+LOA      DS    1F                                                       26040017
+AORP     DS    1F                                                       26110017
+CRSA     DS    1F                                                       26180017
+OLP      DS    1F                                                       26250017
+BLP      DS    1F                                                       26320017
+         END   START                                                    26390017
+//LKED.SYSLIB  DD  DSNAME=SYS1.LINKLIB,DISP=OLD                    3842 37340015
+//GO.GRAPHIC   DD  UNIT=(2250-1)                                   3842 47340015

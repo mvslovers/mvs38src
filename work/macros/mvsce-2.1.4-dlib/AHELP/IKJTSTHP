@@ -1,0 +1,766 @@
+)S SUBCOMMANDS -                                                        00100000
+  ASSIGN,AT,CALL,COPY,DELETE,DROP,END,EQUATE,FREEMAIN,GETMAIN,GO,LIST,  00150000
+  LISTDEB,LISTDCB,LISTMAP,LISTPSW,LISTTCB,LOAD,OFF,QUALIFY,RUN,WHERE    00200000
+)F FUNCTION -                                                           00250000
+  THE TEST COMMAND IS USED TO DEBUG AND VERIFY THE PROPER EXECUTION OF  00300000
+  A PROGRAM.  THE TEST COMMAND IS MOST READILY USED TO TEST PROGRAMS    00350000
+  WRITTEN IN BASIC ASSEMBLER LANGUAGE.  A KNOWLEDGE OF THE BASIC        00400000
+  ASSEMBLER LANGUAGE IS REQUIRED TO USE THE TEST COMMAND.               00450000
+  THE TEST COMMAND ALLOWS YOU TO TEST PROGRAMS IN THE FOLLOWING FORMS-  00500000
+  - PROGRAMS CURRENTLY EXECUTING WITHIN THE SYSTEM.                     00550000
+  - PROGRAMS WHICH HAVE ABNORMALLY TERMINATED (ABEND) AND ARE STILL IN  00600000
+  MAIN STORAGE.                                                         00650000
+  - PROGRAMS IN OBJECT OR LOAD MODULE FORMS WHICH MUST BE LOADED FROM   00700000
+  SEQUENTIAL OR PARTITIONED DATASETS.                                   00750000
+  THE TEST COMMAND ALLOWS YOU TO TEST PROGRAMS BY ENABLING YOU TO-      00800000
+  - SUPPLY INITIAL VALUES (TEST DATA) TO THE PROGRAM UNDER TEST.        00850000
+  - ESTABLISH BREAKPOINTS WITHIN A PROGRAM WHERE EXECUTION WILL BE      00900000
+  INTERRUPTED FOR YOU TO EXAMINE INTERIM RESULTS.                       00950000
+  - DISPLAY REGISTER AND MAIN STORAGE CONTENTS AT SUCH A BREAKPOINT.    01000000
+  - MODIFY REGISTER AND MAIN STORAGE CONTENTS.                          01050000
+  - DISPLAY THE PROGRAM STATUS WORD (PSW).                              01100000
+  - LIST THE CONTENTS OF CONTROL BLOCKS, THESE ARE DEB, DCB AND TCB.    01150000
+  - STEP THROUGH A SECTION OF THE PROGRAM EXECUTING ONE INSTRUCTION AT  01200000
+  A TIME.                                                               01250000
+  THE TEST COMMAND ALLOWS YOU TO USE ABSOLUTE AND REGISTER ADDRESSING   01300000
+  AS WELL AS ADDRESSING RELATIVE TO THE FIRST BYTE OF THE PROGRAM.      01350000
+  SYMBOLIC ADDRESSING CAN BE USED IN THE FOLLOWING INSTANCES-           01400000
+  - IF THE PROGRAM WAS BOTH ASSEMBLED AND LINK EDITED USING THE 'TEST'  01450000
+  OPTION, THE SYMBOLS IN THE ASSEMBLY CAN BE USED UNDER THE TEST        01500000
+  COMMAND.  EXCEPTIONS INCLUDE SYMBOLS ON EQU, LTORG, AND ORG           01550000
+  STATEMENTS.                                                           01600000
+  - IF THE PROGRAM WAS ONLY LINK EDITED WITH THE 'TEST' OPTION, ONLY    01650000
+  SYMBOLS IN THE EXTERNAL SYMBOL DICTIONARY CAN BE USED UNDER TEST      01700000
+  - ANY SYMBOL DEFINED BY THE USE OF THE EQUATE SUBCOMMAND CAN BE USED. 01750000
+)X SYNTAX -                                                             01800000
+         TEST   'PROGNAME'  'PARAMETERS'  LOAD/OBJECT  CP/NOCP          01850000
+  REQUIRED - NONE                                                       01900000
+  DEFAULTS - LOAD,NOCP                                                  01950000
+  NOTE     - ALL OPERANDS AND KEYWORDS OF THE TEST COMMAND ARE ONLY     02000000
+             VALID FOR PROGRAMS WHICH MUST BE LOADED INTO MAIN STORAGE. 02050000
+             ACTIVE OR ABENDED PROGRAMS REQUIRE ONLY THE COMMAND        02100000
+             'TEST' WITHOUT OPERANDS OR KEYWORDS.                       02150000
+)O OPERANDS -                                                           02200000
+  'PROGNAME'                                                            02250000
+           - SPECIFIES THE NAME OF THE DATASET CONTAINING THE PROGRAM   02300000
+             TO BE LOADED AND TESTED.                                   02350000
+  'PARAMETERS'                                                          02400000
+           - SPECIFIES A LIST OF PARAMETERS TO BE PASSED TO THE         02450000
+             LOADED PROGRAM.  THIS LIST CANNOT EXCEED 100 CHARACTERS    02500000
+))LOAD     - SPECIFIES THAT THE NAMED PROGRAM IS A LOAD MODULE AND IS   02550000
+             A MEMBER OF A PARTITIONED DATASET.                         02600000
+))OBJECT   - SPECIFIES THAT THE NAMED PROGRAM IS AN OBJECT MODULE AND   02650000
+             IS IN A SEQUENTIAL DATASET OR A PARTITIONED DATASET.       02700000
+))CP       - SPECIFIES THAT THE NAMED PROGRAM IS A COMMAND PROCESSOR.   02750000
+))NOCP     - SPECIFIES THAT THE NAMED PROGRAM IS NOT A COMMAND PROCESSOR02800000
+=ASSIGN                                                                 02850000
+)F FUNCTION -                                                           02900000
+  THIS FUNCTION IS IMPLICIT, DO NOT ENTER A COMMAND NAME. WITH          02950000
+  THIS FUNCTION VALUES CAN BE MODIFIED IN MAIN STORAGE AND REGISTERS    03000000
+  WHEN PROCESSING IS HALTED AT A BREAKPOINT OR BEFORE EXECUTION OF      03050000
+  PROGRAM BEGINS. THE SYSTEM PERFORMS THIS FUNCTION IN RESPONSE TO      03100000
+  THE OPERANDS THAT ARE ENTERED.                                        03150000
+)X SYNTAX -                                                             03200000
+         'ADDRESS'=TYPE'VALUE'                                          03250000
+  REQUIRED - ALL OPERANDS ARE REQUIRED.                                 03300000
+  DEFAULTS - NONE                                                       03350000
+  NOTE     - THIS FUNCTION IS INDICATED BY THE USE OF THE '=' OPERATOR  03400000
+             AND A TYPE CODE AND VALUE AFTER AN ADDRESS.                03450000
+)O OPERANDS -                                                           03500000
+  'ADDRESS'                                                             03550000
+           - SPECIFIES THE LOCATION THAT IS TO CONTAIN THE NEW VALUE.   03600000
+             THE ADDRESS MAY BE A SYMBOLIC ADDRESS, A RELATIVE ADDRESS, 03650000
+             AN ABSOLUTE ADDRESS OR AN INDIRECT ADDRESS. IN ADDITION    03700000
+             VALUES IN GENERAL AND FLOATING POINT REGISTERS MAY BE      03750000
+             MODIFIED.                                                  03800000
+             - GENERAL REGISTERS ARE SPECIFIED AS A DECIMAL INTEGER     03850000
+             WITHIN THE RANGE OF 0 THROUGH 15 TO INDICATE THE REGISTER  03900000
+             NUMBER FOLLOWED BY AN R.  IE. 1R OR 14R                    03950000
+             - FLOATING POINT REGISTERS ARE SPECIFIED BY A DECIMAL      04000000
+             INTEGER FOLLOWED BY AN E FOR REGISTER WITH SINGLE          04050000
+             PRECISION OR A D FOR REGISTER WITH DOUBLE PRECISION.       04100000
+             THE DECIMAL INTEGER MUST BE 0,2,4, OR 6.  IE. 0D OR 2E     04150000
+             - FOR A MORE DETAILED DISCUSSION OF THE OTHER TYPES OF     04200000
+             ADDRESSES ENTER - HELP GO OPERANDS                         04250000
+  TYPE''VALUE''                                                         04300000
+           - SPECIFIES THE TYPE AND VALUE OF THE DATA TO BE PLACED IN   04350000
+             THE SPECIFIED LOCATION.  INCLUDE THE DATA, ENCLOSED        04400000
+             WITHIN APOSTROPHES, FOLLOWING THE TYPE CODE. INDICATE      04450000
+             THE TYPE OF DATA BY ONE OF THE FOLLOWING CODES-            04500000
+                CODE     TYPE OF DATA    MAX LENGTH(INPUT CHARACTERS)   04550000
+                ----     ------------    ------------------------------ 04600000
+                 C        CHARACTER                         SEE NOTE    04650000
+                 X        HEXADECIMAL                       64          04700000
+                 B        BINARY                            64          04750000
+                 H        FIXED POINT BINARY (HALFWORD)      6          04800000
+                 F        FIXED POINT BINARY (FULLWORD)     11          04850000
+                 E        FLOATING POINT (SINGLE)           13          04900000
+                 D        FLOATING POINT (DOUBLE)           22          04950000
+                 P        PACKED DECIMAL                    32          05000000
+                 Z        ZONED DECIMAL                     17          05050000
+                 A        ADDRESS CONSTANT                  10          05100000
+                 S        ADDRESS (BASE+DISPLACEMENT)        8          05150000
+                 Y        ADDRESS CONSTANT (HALFWORD)        5          05200000
+                 NOTE - THE MAXIMUM POSSIBLE LENGTH FOR A CHARACTER     05250000
+                        VALUE IN THIS FUNCTION WILL BE THE MAXIMUM      05300000
+                        LEGAL LINE LENGTH MINUS FIVE.  CONTINUATION OF  05350000
+                        LINES IS PERMITTED.                             05400000
+=AT                                                                     05450000
+)F FUNCTION -                                                           05500000
+  THE AT COMMAND ESTABLISHES A BREAKPOINT AT THE ADDRESS/ADDRESSES      05550000
+  SPECIFIED IN THE PROGRAM BEING TESTED.                                05600000
+)X SYNTAX -                                                             05650000
+         AT   'ADDR'/'ADDR1' COLON 'ADDR2'/'ADDR-LIST'                  05700000
+              ('SUBCOMMAND CHAIN')                                      05750000
+             COUNT('INTEGER')  NODEFER/DEFER  NOTIFY/NONOTIFY           05800000
+  REQUIRED - 'ADDR' OR 'ADDR1' COLON 'ADDR2' OR 'ADDR-LIST'             05850000
+  DEFAULTS - NODEFER AND NOTIFY                                         05900000
+)O OPERANDS -                                                           05950000
+  'ADDR'   - A HALFWORD BOUNDARY ADDRESS AT WHICH A BREAKPOINT IS TO BE 06000000
+             ESTABLISHED.                                               06050000
+  'ADDR1'  - THE FIRST ADDRESS OF A RANGE IN WHICH BREAKPOINTS ARE TO   06100000
+             BE ESTABLISHED.  THIS ADDRESS MUST BE ON A HALFWORD        06150000
+             BOUNDARY.                                                  06200000
+  'ADDR2'  - THE FINAL ADDRESS OF A RANGE IN WHICH BREAKPOINTS ARE TO   06250000
+             BE ESTABLISHED.                                            06300000
+  'ADDR-LIST'                                                           06350000
+           - ONE OR MORE HALFWORD BOUNDARY ADDRESSES OR ADDRESS         06400000
+             RANGES ENCLOSED IN PARENTHESIS AND SEPARATED BY ONE        06450000
+             OF THE STANDARD DELIMITERS AT WHICH A BREAKPOINT           06500000
+             IS TO BE ESTABLISHED.                                      06550000
+             - FOR A MORE DETAILED DISCUSSION OF THE DIFFERENT TYPES OF 06600000
+             ADDRESSES ENTER - HELP GO OPERANDS                         06650000
+  'SUBCOMMAND CHAIN'                                                    06700000
+           - ONE OR MORE TEST SUBCOMMANDS SEPARATED BY SEMI-COLONS TO   06750000
+             BE EXECUTED WHEN THE PROGRAM IS INTERRUPTED AT THE INDI-   06800000
+             CATED LOCATION.  THE CHAIN MAY NOT EXCEED 255 BYTES.       06850000
+))COUNT('INTEGER')                                                      06900000
+           - THE PROGRAM IS TO BE HALTED AND THE TEST MODE ENTERED      06950000
+             EVERY 'INTEGER' TIME THE BREAKPOINT IS ENCOUNTERED.        07000000
+             THE COUNT MUST BE BETWEEN 0 AND 65535.                     07050000
+))NODEFER  - THE BREAKPOINT IS TO BE ESTABLISHED IN A PROGRAM IN MAIN   07100000
+             STORAGE.                                                   07150000
+))DEFER    - THE BREAKPOINT REQUEST IS TO BE SAVED UNTIL THE PROGRAM IS 07200000
+             SUBSEQUENTLY BROUGHT INTO STORAGE VIA A LINK, LOAD,        07250000
+             ATTACH, OR XCTL.  WHEN DEFER IS SPECIFIED THE ADDRESS      07300000
+             MUST BE FULLY QUALIFIED. (I.E. LOADNAME.CSECTNAME.XXX)     07350000
+))NOTIFY   - A MESSAGE IS TO BE PRINTED TO INFORM THE PROGRAMMER EACH   07400000
+             TIME THE BREAKPOINT IS ENCOUNTERED.                        07450000
+))NONOTIFY - NO MESSAGE IS TO BE PRINTED TO INFORM THE PROGRAMMER THAT  07500000
+             THE BREAKPOINT HAS BEEN ENCOUNTERED.                       07550000
+=CALL                                                                   07600000
+)F FUNCTION -                                                           07650000
+  THE CALL COMMAND RESULTS IN A CHANGE FROM COMMAND MODE TO PROBLEM     07700000
+  PROGRAM MODE.  CALL INITIALIZES REGISTERS 1, 14, AND 15 OF THE        07750000
+  PROBLEM PROGRAM AT THE TIME EXECUTION BEGINS AND IT PROVIDES FOR      07800000
+  PASSING OF A PARAMETER LIST TO THE PROBLEM PROGRAM.                   07850000
+)X SYNTAX -                                                             07900000
+         CALL   'ADDR'  PARM('ADDR'/'ADDR-LIST')  VL  RETURN('ADDR')    07950000
+  REQUIRED - 'ADDR'                                                     08000000
+  DEFAULTS -(CALL 'ADDR') WILL RESULT IN INITIALIZING REGISTER 15       08050000
+             TO CONTAIN THE ADDRESS SPECIFIED FOR ENTRY.  REGISTER 14   08100000
+             WILL CONTAIN A RETURN ADDRESS WHICH WILL CAUSE A CHANGE    08150000
+             TO COMMAND MODE.  REGISTER 1 IS SET TO POINT TO A NULL     08200000
+             PARAMETER LIST.                                            08250000
+)O OPERANDS -                                                           08300000
+  'ADDR'   - THE ADDRESS WHERE EXECUTION SHOULD BEGIN IN THE            08350000
+             PROBLEM PROGRAM.                                           08400000
+))PARM('ADDR')                                                          08450000
+           - A ONE WORD PARAMETER LIST IN THE FORM OF AN ADDRESS TO BE  08500000
+             PASSED TO THE PROBLEM PROGRAM.  FOR A MORE DETAILED        08550000
+             DISCUSSION OF THE DIFFERENT TYPES OF ADDRESSES ENTER -     08600000
+             HELP GO OPERANDS                                           08650000
+))PARM('ADDR-LIST')                                                     08700000
+           - A LIST OF PARAMETERS IN THE FORM OF ADDRESSES SEPARATED    08750000
+             BY ONE OF THE STANDARD DELIMITERS TO BE PASSED TO THE      08800000
+             PROBLEM PROGRAM. FOR A MORE DETAILED DISCUSSION OF THE     08850000
+             DIFFERENT TYPES OF ADDRESSES ENTER - HELP GO OPERANDS      08900000
+))VL       - CAUSES THE HIGH-ORDER BIT OF THE LAST PARAMETER TO BE SET  08950000
+             TO 1                                                       09000000
+))RETURN('ADDR')                                                        09050000
+           - CAUSES REGISTER 14 TO BE SET TO THE ADDRESS SPECIFIED.     09100000
+             AFTER EXECUTION CONTROL WILL BE RETURNED TO THIS ADDRESS.  09150000
+             FOR A MORE DETAILED DISCUSSION OF THE DIFFERENT TYPES OF   09200000
+             ADDRESSES ENTER - HELP GO OPERANDS                         09250000
+=COPY=C                                                                 09300000
+)F FUNCTION -                                                           09350000
+  THE COPY SUBCOMMAND COPIES FROM STORAGE TO STORAGE, STORAGE TO        09400000
+  REGISTERS,REGISTERS TO STORAGE AND ALSO FROM REGISTERS TO REGISTERS.  09450000
+  IT ALSO OBTAINS ADDRESSES AND PLACES THESE IN STORAGE OR A REGISTER.  09500000
+)X SYNTAX -                                                             09550000
+         COPY   'ADDR1'  'ADDR2'  LENGTH('INTEGER')  POINTER/NOPOINT    09600000
+  REQUIRED - 'ADDR1'  'ADDR2'                                           09650000
+  DEFAULTS - 'INTEGER' HAS A MAXIMUM DEFAULT VALUE OF DECIMAL 64 IF     09700000
+             A GENERAL REGISTER IS SPECIFIED AS 'ADDR1' OR 'ADDR2' AND  09750000
+             NOPOINT IS USED. IF POINTER IS SPECIFIED A MAXIMUM LENGTH  09800000
+             OF 4 WILL BE THE DEFAULT. 'NOPOINT' IS ALSO A DEFAULT.     09850000
+)O OPERANDS -                                                           09900000
+  'ADDR1'  - THIS IS THE ADDRESS OR THE REGISTER IN WHICH THE DATA      09950000
+             TO BE COPIED IS CONTAINED.                                 10000000
+  'ADDR2'  - THIS IS THE ADDRESS OR REGISTER WHICH WILL RECEIVE THE     10050000
+             COPY.                                                      10100000
+  LENGTH('INTEGER')                                                     10150000
+           - THIS SPECIFIES, IN DECIMAL, THE LENGTH OF THE FIELD TO     10200000
+             BE COPIED.                                                 10250000
+  POINTER  - THIS KEYWORD CHANGES THE MEANING OF 'ADDR1'. ALSO, IN THIS 10300000
+             CASE 'ADDR1' CAN NOT BE A GENERAL REGISTER. 'ADDR1' WILL   10350000
+             BE TREATED AS DATA AND PUT IN REGISTER OR ADDRESS          10400000
+             SPECIFIED BY 'ADDR2'.                                      10450000
+=DELETE                                                                 10500000
+)F FUNCTION -                                                           10550000
+  THE DELETE COMMAND CAUSES THE SPECIFIED PROGRAM AND ITS SYMBOL        10600000
+  TABLE TO BE DELETED FROM MAIN STORAGE.                                10650000
+)X SYNTAX -                                                             10700000
+         DELETE   'DSNAME'                                              10750000
+  REQUIRED - 'DSNAME'                                                   10800000
+  DEFAULTS - NONE                                                       10850000
+)O OPERANDS -                                                           10900000
+  'DSNAME' - THE NAME OF THE PROGRAM TO BE DELETED                      10950000
+=DROP                                                                   11000000
+)F FUNCTION -                                                           11050000
+  THE DROP COMMAND WILL DELETE THE NAMED SYMBOL FROM THE SYMBOL TABLE   11100000
+  CREATED BY THE EQUATE COMMAND.                                        11150000
+)X SYNTAX -                                                             11200000
+         DROP   'SYMBOL'/'SYMBOL-LIST'                                  11250000
+  REQUIRED - NONE                                                       11300000
+  DEFAULTS - (DROP) WILL CAUSE ALL THE ENTRIES IN THE SYMBOL TABLE      11350000
+             CREATED BY THE EQUATE COMMAND TO BE DELETED.               11400000
+  NOTE     - IF THE PROGRAM BEING TESTED WAS ASSEMBLED WITH THE TEST    11450000
+             OPTION AND THE EQUATE COMMAND WAS USED TO OVERRIDE THE     11500000
+             LOCATION OF THE SYMBOL WITHIN THE PROGRAM AND THE DROP     11550000
+             COMMAND IS THEN USED TO DELETE THAT SYMBOL FROM THE SYMBOL 11600000
+             TABLE, THEN THE SYMBOL WILL REFLECT THE ORIGINAL LOCATION  11650000
+             WITHIN THE PROGRAM.                                        11700000
+)O OPERANDS -                                                           11750000
+  'SYMBOL' - THE SYMBOL TO BE DELETED FROM THE SYMBOL TABLE.            11800000
+  'SYMBOL-LIST'                                                         11850000
+           - A LIST OF SYMBOLS ENCLOSED IN PARENTHESIS AND SEPARATED    11900000
+             BY ONE OF THE STANDARD DELIMITERS TO BE DELETED FROM THE   11950000
+             SYMBOL TABLE.                                              12000000
+=END                                                                    12050000
+)F FUNCTION -                                                           12100000
+  THE END COMMAND TERMINATES THE TEST SESSION.                          12150000
+)X SYNTAX -                                                             12200000
+         END                                                            12250000
+  REQUIRED - NONE                                                       12300000
+  DEFAULTS - NONE                                                       12350000
+)O OPERANDS -                                                           12400000
+  NONE                                                                  12450000
+=EQUATE=EQ                                                              12500000
+)F FUNCTION -                                                           12550000
+  THE EQUATE COMMAND WILL ADD THE NAMED SYMBOL TO THE SYMBOL TABLE FOR  12600000
+  THE MODULE BEING TESTED.                                              12650000
+)X SYNTAX -                                                             12700000
+         EQUATE   'SYMBOL'  'ADDRESS'  'TYPE'  LENGTH('INTEGER')        12750000
+                  MULTIPLE('INTEGER')                                   12800000
+  REQUIRED - 'SYMBOL', 'ADDRESS'                                        12850000
+  DEFAULTS - TYPE, LENGTH('INTEGER'), MULTIPLE('INTEGER')               12900000
+             (EQUATE 'SYMBOL' 'ADDRESS') WILL CAUSE THE SYMBOL          12950000
+             SPECIFIED TO BE ADDED TO THE SYMBOL TABLE WITH TYPE        13000000
+             DEFAULTING TO HEX, LENGTH DEFAULTING TO 4, AND             13050000
+             MULTIPLICITY DEFAULTING TO 1.                              13100000
+  ALIAS    - EQ                                                         13150000
+  NOTES    - WHEN AN ENTRY ALREADY EXISTS FOR A 'SYMBOL' THE EXISTING   13200000
+             ENTRY IS OVERRIDDEN WITH THE NEW CHANGES. IE. 'ADDR'       13250000
+             WHEN THE TYPE ATTRIBUTE IS CHANGED FOR AN EXISTING ENTRY   13300000
+             THE MULTIPLICITY AND LENGTH ATTRIBUTES WILL BE ALSO        13350000
+             CHANGED TO REFLECT THE NEW TYPE.                           13400000
+             WHEN THE ADDRESS IS CHANGED FOR AN EXISTING ENTRY THE      13450000
+             TYPE AND ATTRIBUTES WILL DEFAULT TO HEX, 4, 1 AS           13500000
+             DISCUSSED UNDER 'DEFAULTS' UNLESS OTHERWISE SPECIFIED.     13550000
+)O OPERANDS -                                                           13600000
+  'SYMBOL' - THE SYMBOL TO BE ADDED TO THE SYMBOL TABLE.  THE SYMBOL    13650000
+             CAN BE FROM ONE TO EIGHT CHARACTERS LONG, THE FIRST OF     13700000
+             WHICH MUST BE AN ALPHABETIC OR NATIONAL CHARACTER AND THE  13750000
+             REST ALPHANUMERIC.                                         13800000
+  'ADDRESS'                                                             13850000
+           - ADDRESS TO WHICH 'SYMBOL' IS TO BE ASSOCIATED.  FOR A MORE 13900000
+             DETAILED DISCUSSION OF THE DIFFERENT TYPES OF ADDRESSES    13950000
+             ENTER - HELP GO OPERANDS                                   14000000
+  'TYPE'   - THE TYPE ATTRIBUTE TO BE ASSOCIATED WITH 'SYMBOL'.  VALID  14050000
+             TYPE ATTRIBUTES ARE-                                       14100000
+             C - CHARACTER                   X - HEXADECIMAL            14150000
+             B - BINARY                      I - INSTRUCTION            14200000
+             F - FIXED POINT, FULLWORD       H - FIXED POINT, HALFWORD  14250000
+             E - FLOATING POINT, FULLWORD    A - A OR Q ADDR CONSTANT   14300000
+             D - FLOATING POINT, DOUBLEWORD                             14350000
+             Y - Y ADDRESS CONSTANT          S - S ADDRESS CONSTANT     14400000
+             P - PACKED DECIMAL              Z - ZONED DECIMAL          14450000
+))LENGTH('INTEGER')                                                     14500000
+             - THE LENGTH ATTRIBUTE TO BE ASSOCIATED WITH 'SYMBOL'.  THE14550000
+             VALID RANGE OF LENGTHS FOR DIFFERENT TYPES ARE             14600000
+             TYPE   MINIMUM  MAXIMUM    TYPE   MINIMUM MAXIMUM          14650000
+              C        1       256       X        1      256            14700000
+              B        1       256       I        1      256            14750000
+              F        1         8       H        1        8            14800000
+              E        1         8       D        1        8            14850000
+              A        1         4       Y        1        2            14900000
+              S        2         2       P        1       16            14950000
+              Z        1        16                                      15000000
+))MULTIPLE('INTEGER')                                                   15050000
+           - THE MULTIPLICITY ATTRIBUTE TO BE ASSOCIATED WITH 'SYMBOL'. 15100000
+             THE INTEGER MUST BE IN A RANGE FROM 1 TO 256.              15150000
+=FREEMAIN=FREE                                                          15200000
+)F FUNCTION -                                                           15250000
+  THE FREEMAIN COMMAND WILL FREE CORE PREVIOUSLY ACCESSED BY A GETMAIN  15300000
+  COMMAND.                                                              15350000
+)X SYNTAX                                                               15400000
+         FREEMAIN   'INTEGER1'  'ADDR'  SP('INTEGER2')                  15450000
+  REQUIRED - 'INTEGER1','ADDR'                                          15500000
+  DEFAULTS - IF SUBPOOL (SP) IS NOT SPECIFIED, SUBPOOL ZERO IS ASSUMED. 15550000
+  ALIAS    - FREE                                                       15600000
+)O OPERANDS -                                                           15650000
+  'INTEGER1'                                                            15700000
+           - THE NUMBER OF BYTES OF STORAGE TO BE FREED.                15750000
+  'ADDR'   - THE ADDRESS OF THE FIRST BYTE TO BE FREED.  FOR A MORE     15800000
+             DETAILED DISCUSSION OF THE DIFFERENT TYPES OF ADDRESSES    15850000
+             ENTER - HELP GO OPERANDS                                   15900000
+))SP('INTEGER2')                                                        15950000
+           - 'INTEGER' IS THE NUMBER OF THE SUBPOOL IN WHICH CORE IS TO 16000000
+             BE FREED.                                                  16050000
+=GETMAIN=GET                                                            16100000
+)F FUNCTION -                                                           16150000
+  THE GETMAIN COMMAND RESULTS IN AN ATTEMPT TO ACQUIRE THE SPECIFIED    16200000
+  NUMBER OF BYTES OF STORAGE.                                           16250000
+)X SYNTAX -                                                             16300000
+         GETMAIN   'INTEGER1'  SP('INTEGER2')  EQUATE('SYMBOL')         16350000
+  REQUIRED - 'INTEGER1'                                                 16400000
+  DEFAULTS - IF SUBPOOL (SP) IS NOT SPECIFIED, SUBPOOL ZERO IS ASSUMED. 16450000
+  ALIAS    - GET                                                        16500000
+)O OPERANDS -                                                           16550000
+  'INTEGER1'                                                            16600000
+           - THE NUMBER OF BYTES OF STORAGE DESIRED                     16650000
+))SP('INTEGER2')                                                        16700000
+           - 'INTEGER2' IS THE NUMBER OF THE SUBPOOL IN WHICH STORAGE   16750000
+             IS TO BE OBTAINED.                                         16800000
+))EQUATE('SYMBOL')                                                      16850000
+           - NAME OF SYMBOL TO BE EQUATED TO GETMAIN AREA ADDRESS       16900000
+             ALL ATTRIBUTES FOR THIS SYMBOL WILL BE DEFAULTED.          16950000
+=GO                                                                     17000000
+)F FUNCTION -                                                           17050000
+  THE GO COMMAND RESULTS IN A CHANGE FROM COMMAND MODE TO PROBLEM       17100000
+  PROGRAM MODE.  EXECUTION OF THE PROBLEM PROGRAM PROCEEDS FROM THE     17150000
+  POINT OF LAST INTERRUPTION, OR FROM THE INITIAL ENTRY POINT OF THE    17200000
+  PROGRAM IF IT WAS LOADED BY TEST AND THIS IS THE FIRST EXECUTION,     17250000
+  OR FROM THE SPECIFIED ADDRESS.                                        17300000
+)X SYNTAX -                                                             17350000
+         GO   'ADDR'                                                    17400000
+  REQUIRED - NONE                                                       17450000
+  DEFAULTS - (GO) WILL CAUSE EXECUTION IN THE PROBLEM PROGRAM TO        17500000
+             PROCEED FROM THE POINT OF LAST INTERRUPTION, OR FROM THE   17550000
+             INITIAL ENTRY POINT OF THE PROGRAM IF IT WAS LOADED        17600000
+             BY TEST AND THIS IS THE FIRST EXECUTION.                   17650000
+)O OPERANDS -                                                           17700000
+  'ADDRESS'                                                             17750000
+           - FOR GO THIS ADDRESS SPECIFIES WHERE EXECUTION SHOULD       17800000
+             BEGIN IN THE PROBLEM PROGRAM.                              17850000
+             THE ADDRESS MAY BE A SYMBOLIC ADDRESS, A RELATIVE ADDRESS, 17900000
+             AN ABSOLUTE ADDRESS OR AN INDIRECT ADDRESS.                17950000
+             - A SYMBOLIC ADDRESS CONSISTS OF ONE THROUGH EIGHT         18000000
+             ALPHAMERIC CHARACTERS, THE FIRST OF WHICH IS AN ALPHABETIC 18050000
+             OR NATIONAL CHARACTER.  THE ADDRESS MUST CORRESPOND TO A   18100000
+             SYMBOL IN THE PROGRAM THAT IS BEING TESTED.                18150000
+             IE. A123DCV OR AAA                                         18200000
+             - A RELATIVE ADDRESS IS A HEXADECIMAL NUMBER PRECEDED BY   18250000
+             A PLUS SIGN (+).   IE. +4                                  18300000
+             - AN ABSOLUTE ADDRESS IS A HEXADECIMAL NUMBER FOLLOWED BY  18350000
+             A PERIOD (.).  IE. 7EDF8.                                  18400000
+             - AN INDIRECT ADDRESS IS AN ADDRESS OF A LOCATION OR       18450000
+             GENERAL REGISTER THAT CONTAINS ANOTHER ADDRESS.  AN        18500000
+             INDIRECT ADDRESS MUST BE FOLLOWED BY A PERCENT SIGN (%).   18550000
+             FLOATING POINT REGISTERS MAY NOT BE USED FOR INDIRECT      18600000
+             ADDRESSING.   IE. 7EDF8.% OR 5R%                           18650000
+             - QUALIFIED ADDRESSES-YOU CAN QUALIFY SYMBOLIC AND         18700000
+             RELATIVE ADDRESSES TO INDICATE THAT THEY APPLY TO A        18750000
+             PARTICULAR CONTROL SECTION (CSECT).  TO DO THIS, YOU       18800000
+             PRECEDE THE ADDRESS BY EITHER THE NAME OF THE LOAD MODULE  18850000
+             AND THE NAME OF AN ENTRY POINT OR JUST THE NAME OF AN      18900000
+             ENTRY POINT.  THE QUALIFIED ADDRESS MUST BE IN THE FORM-   18950000
+             .ENTRYNAME.ADDRESS  OR  LOADNAME.ENTRYNAME.ADDRESS         19000000
+=LIST=L                                                                 19050000
+)F FUNCTION -                                                           19100000
+  THE LIST COMMAND ALLOWS YOU TO HAVE THE CONTENTS OF A SPECIFIED       19150000
+  AREA OF MAIN STORAGE, OR THE CONTENTS OF REGISTERS, DISPLAYED AT YOUR 19200000
+  TERMINAL OR PLACED INTO A DATASET.                                    19250000
+)X SYNTAX -                                                             19300000
+         LIST   'ADDRESS'/'ADDRESS COLON ADDRESS'/'ADDRESS LIST'        19350000
+                'TYPE'  LENGTH('INTEGER')  MULTIPLE('INTEGER')          19400000
+                PRINT('DATASET NAME')                                   19450000
+  REQUIRED - 'ADDRESS'/'ADDRESS COLON ADDRESS'/'ADDRESS LIST'           19500000
+  DEFAULTS - X FOR TYPE, MULTIPLE(1), TERMINAL DISPLAY AND THE          19550000
+             FOLLOWING DEFAULTS APPLY FOR LENGTH('INTEGER') ACCORDING   19600000
+             TO DATA TYPE.                                              19650000
+             DATA TYPE       DEFAULT LENGTH IN BYTES                    19700000
+             C,B,P,Z         1                                          19750000
+             H,S,Y           2                                          19800000
+             F,E,A,X         4                                          19850000
+             D               8                                          19900000
+             I               VARIABLE                                   19950000
+  ALIAS - L                                                             20000000
+  NOTE     - ALL ADDRESSES REFERRED TO IN THE OPERAND DEFINITIONS MAY   20050000
+             REFER TO MAIN STORAGE LOCATIONS, GENERAL REGISTERS, OR     20100000
+             FLOATING POINT REGISTERS.                                  20150000
+             - GENERAL REGISTERS ARE SPECIFIED AS A DECIMAL INTEGER     20200000
+             WITHIN THE RANGE OF 0 THROUGH 15 TO INDICATE THE REGISTER  20250000
+             NUMBER FOLLOWED BY AN R.  IE. 1R OR 14R                    20300000
+             - FLOATING POINT REGISTERS ARE SPECIFIED BY A DECIMAL      20350000
+             INTEGER FOLLOWED BY AN E FOR REGISTER WITH SINGLE          20400000
+             PRECISION OR A D FOR REGISTER WITH DOUBLE PRECISION.       20450000
+             THE DECIMAL INTEGER MUST BE 0,2,4, OR 6.  IE. 0D OR 2E     20500000
+)O OPERANDS -                                                           20550000
+  'ADDRESS'                                                             20600000
+           - SPECIFIES THE LOCATION OF DATA THAT IS TO BE DISPLAYED AT  20650000
+             YOUR TERMINAL OR PLACED INTO A DATASET.                    20700000
+  'ADDRESS COLON ADDRESS'                                               20750000
+           - SPECIFIES THAT THE DATA LOCATED BETWEEN THE SPECIFIED      20800000
+             ADDRESSES IS TO BE DISPLAYED TO THE TERMINAL OR PLACED     20850000
+             INTO A DATASET.                                            20900000
+  'ADDRESS LIST'                                                        20950000
+           - SPECIFIES SEVERAL ADDRESSES OF DATA THAT ARE TO BE         21000000
+             DISPLAYED TO THE TERMINAL OR PLACED INTO A DATASET.        21050000
+             THE DATA AT EACH LOCATION WILL BE RETRIEVED. THE LIST OF   21100000
+             ADDRESSES MUST BE ENCLOSED WITHIN PARENTHESIS AND THE      21150000
+             ADDRESSES MUST BE SEPARATED BY STANDARD DELIMITERS.        21200000
+             - FOR A MORE DETAILED DISCUSSION OF THE DIFFERENT TYPES    21250000
+             OF ADDRESSES ENTER - HELP GO OPERANDS AND HELP LIST SYNTAX 21300000
+  'TYPE'   - SPECIFIY ONE OR MORE OF THE FOLLOWING DATA ATTRIBUTE CODES 21350000
+             TO INDICATE THE TYPE OF THE DATA.  EACH ATTRIBUTE IS       21400000
+             ENTERED AS IF IT WERE A KEYWORD.                           21450000
+             CODE   DATA TYPE           CODE    DATA TYPE               21500000
+              C     CHARACTER             P     PACKED DECIMAL          21550000
+              X     HEXADECIMAL           Z     ZONED DECIMAL           21600000
+              B     BINARY                I     INSTRUCTION             21650000
+              H     FIXED POINT (HALF     A     ADDRESS CONSTANT        21700000
+              F     FIXED POINT (FULL)    S     ADDRESS (BASE+          21750000
+              E     FLOATING POINT (SINGLE)              DISPLACEMENT)  21800000
+              D     FLOATING POINT (DOUBLE)                             21850000
+              Y     TWO BYTE ADDRESS CONSTANT                           21900000
+))LENGTH('INTEGER')                                                     21950000
+           - SPECIFIES THE LENGTH OF THE DATA.  THE MAXIMUM VALUE OF    22000000
+             THE INTEGER IS 256.  SEE SYNTAX FOR DEFAULT VALUES.        22050000
+))MULTIPLE('INTEGER')                                                   22100000
+           - SPECIFIES THE MULTIPLICITY ATTRIBUTE OF THE SPECIFIED      22150000
+             DATA.  THE INTEGER MUST BE IN THE RANGE OF 1 TO 256.       22200000
+))PRINT('DATASET NAME')                                                 22250000
+           - SPECIFIES THE NAME OF A DATASET TO WHICH THE DATA IS       22300000
+             DIRECTED.  IF THIS OPERAND IS OMITTED, THE DATA WILL GO TO 22350000
+             THE TERMINAL.  IF THE DATASET IS OLD THE ATTRIBUTES ARE    22400000
+             EXAMINED.  IF THE RECORD FORMAT IS NOT A VARIABLE TYPE,    22450000
+             THE ATTRIBUTES OF THE DATASET ARE CHANGED TO VB, LRECL=125,22500000
+             BLKSIZE=1629.  IF THE DATASET IS A VARIABLE TYPE, THE      22550000
+             LRECL MUST BE AT LEAST 125 AND THE BLKSIZE 129.  IF NOT    22600000
+             THEY WILL BE CHANGED TO THOSE VARIABLES.  IF THE DATASET   22650000
+             DOES NOT EXIST IT IS ALLOCATED WITH VB, LRECL=125,         22700000
+             BLKSIZE=1629 WITH A DISPOSITION OF NEW,CATALOG,CATALOG.    22750000
+             THE SPECIFIED DATASET IS KEPT OPEN UNTIL THE TEST          22800000
+             SESSION IS ENDED BY A RUN OR END COMMAND OR A LIST         22850000
+             COMMAND IS ENTERED SPECIFYING A DIFFERENT PRINT DATASET.   22900000
+             IN THIS CASE, THE PREVIOUS DATASET IS CLOSED AND THE       22950000
+             CURRENT ONE IS OPENED.                                     23000000
+=LISTDEB                                                                23050000
+)F FUNCTION -                                                           23100000
+  THE LISTDEB COMMAND WILL CAUSE THE PRINT OUT OF THE DATA EXTENT       23150000
+  BLOCK AT THE SPECIFIED ADDRESS.  THE 32 BYTE BASIC SECTION AND EACH   23200000
+  16 BYTE DIRECT ACCESS SECTION CAN BE PRINTED.  THE SPECIFIED ADDRESS  23250000
+  MUST BE THE BEGINNING OF A VALID DATA EXTENT BLOCK.                   23300000
+)X SYNTAX -                                                             23350000
+         LISTDEB   'ADDRESS'  FIELD('FIELD'/'FIELD-LIST')               23400000
+                   PRINT('DATASET NAME')                                23450000
+  REQUIRED - 'ADDRESS'                                                  23500000
+  DEFAULTS - (LISTDEB 'ADDRESS') WILL CAUSE THE BASIC SECTION AND EACH  23550000
+             DIRECT ACCESS SECTION TO BE PRINTED OUT TO THE TERMINAL    23600000
+  NOTE     - IF FIELD('FIELD-LIST'/'FIELD') IS SPECIFIED THE SECTION    23650000
+             HEADERS IE. BASIC SECTION, ARE NOT OUTPUTTED.              23700000
+)O OPERANDS -                                                           23750000
+  'ADDRESS'                                                             23800000
+           - ADDRESS OF A VALID DATA EXTENT BLOCK.  FOR A MORE DETAILED 23850000
+             DISCUSSION OF THE DIFFERENT TYPES OF ADDRESSES             23900000
+             ENTER - HELP GO OPERANDS                                   23950000
+))FIELD('FIELD')                                                        24000000
+           - A VALID DEB FIELD NAME                                     24050000
+))FIELD('FIELD-LIST')                                                   24100000
+           - A LIST OF VALID DEB FIELD NAMES IN ANY ORDER ENCLOSED IN   24150000
+             PARENTHESIS AND SEPARATED BY ONE OF THE STANDARD           24200000
+             DELIMITERS.  THE FIELD NAME IS THE NAME GIVEN IN THE       24250000
+             LATEST LEVEL OF THE SYSTEM CONTROL BLOCKS SRL. FOR         24300000
+             EXAMPLE - FIELD(DEBUCBAD,DEBNMENT) WILL PRINT OUT THE      24350000
+             FIELDS IN THE SPECIFIED DEB CONTAINING THE ADDRESS OF THE  24400000
+             UCB AND THE NUMBER OF EXTENTS.                             24450000
+))PRINT('DATASET NAME')                                                 24500000
+           - SPECIFIES THE NAME OF A DATASET TO WHICH THE DATA IS       24550000
+             DIRECTED.  IF THIS OPERAND IS OMITTED, THE DATA WILL GO TO 24600000
+             YOUR TERMINAL.  IF THE DATASET IS OLD THE ATTRIBUTES ARE   24650000
+             EXAMINED.  IF THE RECORD FORMAT IS NOT A VARIABLE          24700000
+             TYPE, THE ATTRIBUTES OF THE DATASET ARE CHANGED TO VB,     24750000
+             LRECL=125, BLKSIZE=1629.  IF THE DATASET IS A VARIABLE     24800000
+             TYPE, THE LRECL MUST BE AT LEAST 125 AND THE BLKSIZE 129.  24850000
+             IF NOT THEY WILL BE CHANGED TO THOSE VARIABLES.  IF THE    24900000
+             DATASET DOES NOT EXIST IT IS ALLOCATED WITH VB, LRECL=125, 24950000
+             BLKSIZE=1629 WITH A DISPOSITION OF NEW,CATALOG,CATALOG.    25000000
+             THE SPECIFIED DATASET IS KEPT OPEN UNTIL THE               25050000
+             TEST SESSION IS ENDED BY A RUN OR END COMMAND OR A LIST    25100000
+             COMMAND IS ENTERED SPECIFYING A DIFFERENT PRINT DATASET.   25150000
+             IN THIS CASE, THE PREVIOUS DATASET IS CLOSED AND THE       25200000
+             CURRENT ONE IS OPENED.                                     25250000
+=LISTDCB                                                                25300000
+)F FUNCTION -                                                           25350000
+  THE LISTDCB COMMAND WILL CAUSE THE PRINT OUT OF THE DATA              25400000
+  CONTROL BLOCK AT THE SPECIFIED ADDRESS                                25450000
+)X SYNTAX -                                                             25500000
+         LISTDCB   'ADDRESS'  FIELD('FIELD'/'FIELD-LIST')               25550000
+                   PRINT('DATASET NAME')                                25600000
+  REQUIRED - 'ADDRESS'                                                  25650000
+  DEFAULTS - (LISTDCB 'ADDRESS') WILL CAUSE THE DEVICE INTERFACE        25700000
+             SEGMENT FOR DIRECT-ACCESS STORAGE DEVICES, THE COMMON      25750000
+             INTERFACE SEGMENT, THE FOUNDATION EXTENSION SEGMENT, AND   25800000
+             THE FOUNDATION EXTENSION SECTIONS TO BE OUTPUTTED FROM     25850000
+             THE SPECIFIED ADDRESS TO THE TERMINAL.                     25900000
+  NOTE     - IF FIELD('FIELD-LIST'/'FIELD') IS SPECIFIED THE SECTION    25950000
+             HEADERS IE. COMMON INTERFACE, ARE NOT OUTPUTTED.           26000000
+)O OPERANDS -                                                           26050000
+  'ADDRESS'                                                             26100000
+           - ADDRESS OF A DATA CONTROL BLOCK.  MUST BEGIN ON A          26150000
+             FULLWORD BOUNDARY.  FOR A MORE DETAILED DISCUSSION         26200000
+             OF THE DIFFERENT TYPES OF ADDRESSES ENTER - HELP GO        26250000
+             OPERANDS                                                   26300000
+))FIELD('FIELD')                                                        26350000
+           - A VALID DCB FIELD NAME                                     26400000
+))FIELD('FIELD-LIST')                                                   26450000
+           - A LIST OF VALID DCB FIELD NAMES IN ANY ORDER ENCLOSED      26500000
+             IN PARENTHESIS AND SEPARATED BY ONE OF THE STANDARD        26550000
+             DELIMITERS. THE FIELD NAME IS THE NAME GIVEN IN THE        26600000
+             LATEST LEVEL OF THE SYSTEM CONTROL BLOCKS SRL.             26650000
+))PRINT('DATASET NAME')                                                 26700000
+           - SPECIFIES THE NAME OF A DATASET TO WHICH THE DATA IS       26750000
+             DIRECTED.  IF THIS OPERAND IS OMITTED, THE DATA WILL GO TO 26800000
+             THE TERMINAL.  IF THE DATASET IS OLD THE ATTRIBUTES ARE    26850000
+             EXAMINED.  IF THE RECORD FORMAT IS NOT A VARIABLE TYPE,    26900000
+             THE ATTRIBUTES OF THE DATASET ARE CHANGED TO VB, LRECL=125,26950000
+             BLKSIZE=1629.  IF THE DATASET IS A VARIABLE TYPE, THE      27000000
+             LRECL MUST BE AT LEAST 125 AND THE BLKSIZE 129.  IF NOT    27050000
+             THEY WILL BE CHANGED TO THOSE VARIABLES.  IF THE DATASET   27100000
+             DOES NOT EXIST IT IS ALLOCATED WITH VB, LRECL=125,         27150000
+             BLKSIZE=1629 WITH A DISPOSITION OF NEW,CATALOG,CATALOG.    27200000
+             THE SPECIFIED DATASET IS KEPT OPEN UNTIL THE TEST          27250000
+             SESSION IS ENDED BY A RUN OR END COMMAND OR A LIST         27300000
+             COMMAND IS ENTERED SPECIFYING A DIFFERENT PRINT DATASET.   27350000
+             IN THIS CASE, THE PREVIOUS DATASET IS CLOSED AND THE       27400000
+             CURRENT ONE IS OPENED.                                     27450000
+=LISTMAP                                                                27500000
+)F FUNCTION -                                                           27550000
+  THE LISTMAP COMMAND WILL CAUSE A PRINT OUT OF THE STORAGE MAP.        27600000
+)X SYNTAX -                                                             27650000
+         LISTMAP   PRINT('DATASET NAME')                                27700000
+  REQUIRED - NONE                                                       27750000
+  DEFAULTS - (LISTMAP) WILL CAUSE THE STORAGE MAP TO BE PRINTED         27800000
+             AT THE TERMINAL                                            27850000
+)O OPERANDS -                                                           27900000
+))PRINT('DATASET NAME')                                                 27950000
+           - SPECIFIES THE NAME OF A DATASET TO WHICH THE DATA IS       28000000
+             DIRECTED.  IF YOU OMIT THIS OPERAND, THE DATA WILL GO TO   28050000
+             THE TERMINAL.  IF THE DATASET IS OLD THE ATTRIBUTES ARE    28100000
+             EXAMINED.  IF THE RECORD FORMAT IS NOT A VARIABLE TYPE,    28150000
+             THE ATTRIBUTES OF THE DATASET ARE CHANGED TO VB, LRECL=125,28200000
+             BLKSIZE=1629.  IF THE DATASET IS A VARIABLE TYPE, THE      28250000
+             LRECL MUST BE AT LEAST 125 AND THE BLKSIZE 129.  IF NOT    28300000
+             THEY WILL BE CHANGED TO THOSE VARIABLES.  IF THE DATASET   28350000
+             DOES NOT EXIST IT IS ALLOCATED WITH VB, LRECL=125,         28400000
+             BLKSIZE=1629 WITH A DISPOSITION OF NEW,CATALOG,CATALOG.    28450000
+             THE SPECIFIED DATASET IS KEPT OPEN UNTIL THE TEST          28500000
+             SESSION IS ENDED BY A RUN OR END COMMAND OR A LIST         28550000
+             COMMAND IS ENTERED SPECIFYING A DIFFERENT PRINT DATASET.   28600000
+             IN THIS CASE, THE PREVIOUS DATASET IS CLOSED AND THE       28650000
+             CURRENT ONE IS OPENED.                                     28700000
+=LISTPSW                                                                28750000
+)F FUNCTION -                                                           28800000
+  THE LISTPSW COMMAND WILL CAUSE THE PRINT OUT OF A PROGRAM STATUS      28850000
+  WORD.                                                                 28900000
+)X SYNTAX -                                                             28950000
+         LISTPSW   ADDR('ADDRESS')  PRINT('DATASET NAME')               29000000
+  REQUIRED - NONE                                                       29050000
+  DEFAULST - (LISTPSW) WILL CAUSE THE CURRENT PROGRAM STATUS WORD AS OF 29100000
+             THE LAST INTERRUPT TO BE PRINTED AT THE TERMINAL           29150000
+)O OPERANDS -                                                           29200000
+))ADDR('ADDRESS')                                                       29250000
+           - ADDRESS OF A VALID PROGRAM STATUS WORD.  FOR A MORE        29300000
+             DETAILED DISCUSSION OF THE DIFFERENT TYPES OF ADDRESSES    29350000
+             ENTER - HELP GO OPERANDS                                   29400000
+))PRINT('DATASET NAME')                                                 29450000
+           - SPECIFIES THE NAME OF A DATASET TO WHICH THE DATA IS       29500000
+             DIRECTED.  IF THIS OPERAND IS OMITTED, THE DATA WILL GO TO 29550000
+             THE TERMINAL.  IF THE DATASET IS OLD THE ATTRIBUTES ARE    29600000
+             EXAMINED.  IF THE RECORD FORMAT IS NOT A VARIABLE TYPE,    29650000
+             THE ATTRIBUTES OF THE DATASET ARE CHANGED TO VB, LRECL=125,29700000
+             BLKSIZE=1629.  IF THE DATASET IS A VARIABLE TYPE, THE      29750000
+             LRECL MUST BE AT LEAST 125 AND THE BLKSIZE 129.  IF NOT    29800000
+             THEY WILL BE CHANGED TO THOSE VARIABLES.  IF THE DATASET   29850000
+             DOES NOT EXIST IT IS ALLOCATED WITH VB, LRECL=125,         29900000
+             BLKSIZE=1629 WITH A DISPOSITION OF NEW,CATALOG,CATALOG.    29950000
+             THE SPECIFIED DATASET IS KEPT OPEN UNTIL THE TEST          30000000
+             SESSION IS ENDED BY A RUN OR END COMMAND OR A LIST         30050000
+             COMMAND IS ENTERED SPECIFYING A DIFFERENT PRINT DATASET.   30100000
+             IN THIS CASE, THE PREVIOUS DATASET IS CLOSED AND THE       30150000
+             CURRENT ONE IS OPENED.                                     30200000
+=LISTTCB                                                                30250000
+)F FUNCTION -                                                           30300000
+  THE LISTTCB COMMAND WILL CAUSE THE PRINT OUT OF A TASK CONTROL BLOCK. 30350000
+)X SYNTAX -                                                             30400000
+         LISTTCB   ADDR('ADDRESS')  FIELD('FIELD'/'FIELD-LIST')         30450000
+                   PRINT('DATASET NAME')                                30500000
+  REQUIRED - NONE                                                       30550000
+  DEFAULTS - IF ADDR('ADDRESS') IS NOT SPECIFIED, THE PROBLEM PROGRAM   30600000
+             PROGRAM TCB WILL BE USED.                                  30650000
+             IF FIELD('FIELD/'FIELDLIST') IS NOT SPECIFIED, ALL         30700000
+             FIELDS OF THE TCB WILL BE LISTED.                          30750000
+             IF PRINT('DATASET NAME') IS NOT SPECIFIED, THE DATA WILL   30800000
+             BE PRINTED AT THE TERMINAL.                                30850000
+)O OPERANDS -                                                           30900000
+))ADDR('ADDRESS')                                                       30950000
+           - 'ADDRESS' IS THE ADDRESS OF A VALID TASK CONTROL BLOCK.    31000000
+             FOR A MORE DETAILED DISCUSSION ON THE DIFFERENT TYPES OF   31050000
+             ADDRESSES ENTER - HELP GO OPERANDS                         31100000
+))FIELD('FIELD')                                                        31150000
+           - A VALID TCB FIELD NAME.                                    31200000
+))FIELD('FIELD-LIST')                                                   31250000
+           - A LIST OF VALID TCB FIELD NAMES IN ANY ORDER ENCLOSED      31300000
+             IN PARENTHESIS AND SEPARATED BY ONE OF THE STANDARD        31350000
+             DELIMITERS.                                                31400000
+))PRINT('DATASET NAME')                                                 31450000
+           - SPECIFIES THE NAME OF A DATASET TO WHICH THE DATA IS       31500000
+             DIRECTED.  IF THIS OPERAND IS OMITTED, THE DATA WILL GO TO 31550000
+             THE TERMINAL.  IF THE DATASET IS OLD, THE ATTRIBUTES ARE   31600000
+             EXAMINED.  IF THE RECORD FORMAT IS NOT A VARIABLE TYPE,    31650000
+             THE ATTRIBUTES OF THE DATASET ARE CHANGED TO VB, LRECL=125,31700000
+             BLKSIZE=1629.  IF THE DATASET IS A VARIABLE TYPE, THE      31750000
+             LRECL MUST BE AT LEAST 125 AND THE BLKSIZE 129.  IF NOT    31800000
+             THEY WILL BE CHANGED TO THOSE VARIABLES.  IF THE DATASET   31850000
+             DOES NOT EXIST IT IS ALLOCATED WITH VB, LRECL=125,         31900000
+             BLKSIZE=1629 WITH A DISPOSITION OF NEW,CATALOG,CATALOG.    31950000
+             THE SPECIFIED DATASET IS KEPT OPEN UNTIL THE TEST          32000000
+             SESSION IS ENDED BY A RUN OR END COMMAND OR A LIST         32050000
+             COMMAND IS ENTERED SPECIFYING A DIFFERENT PRINT DATASET.   32100000
+             IN THIS CASE, THE PREVIOUS DATASET IS CLOSED AND THE       32150000
+             CURRENT ONE IS OPENED.                                     32200000
+=LOAD                                                                   32250000
+)F FUNCTION -                                                           32300000
+  THE LOAD COMMAND CAUSES THE SPECIFIED PROGRAM TO BE LOADED INTO       32350000
+  MAIN STORAGE.                                                         32400000
+)X SYNTAX -                                                             32450000
+         LOAD   'DSNAME('MEMBER')'/'PASSWORD'                           32500000
+  REQUIRED - 'DSNAME('MEMBER')'                                         32550000
+  DEFAULTS - NONE                                                       32600000
+  NOTE     - A SLASH MUST BE USED BEFORE THE PASSWORD.                  32650000
+)O OPERANDS -                                                           32700000
+  'DSNAME('MEMBER')'                                                    32750000
+           - 'DSNAME' IS THE DATASET WHICH CONTAINS 'MEMBER', THE NAME  32800000
+             OF THE PROGRAM TO BE LOADED.                               32850000
+  'PASSWORD'                                                            32900000
+           - IS THE PASSWORD FOR A PASSWORD PROTECTED DATASET.          32950000
+=OFF                                                                    33000000
+)F FUNCTION -                                                           33050000
+  THE OFF COMMAND WILL REMOVE A BREAKPOINT(S) ESTABLISTHED BY THE AT    33100000
+  COMMAND.                                                              33150000
+)X SYNTAX -                                                             33200000
+         OFF   'ADDR1'/'ADDR-LIST'/'ADDR1' COLON 'ADDR2'                33250000
+  REQUIRED - NONE                                                       33300000
+  DEFAULTS - NONE                                                       33350000
+)O OPERANDS -                                                           33400000
+  'ADDR1'  - AN ADDRESS AT WHICH A BREAKPOINT IS TO BE REMOVED.         33450000
+  'ADDR-LIST'                                                           33500000
+           - THE LIST OF ADDRESSES AT WHICH BREAKPOINTS ARE TO BE       33550000
+             REMOVED.                                                   33600000
+  'ADDR1' COLON 'ADDR2'                                                 33650000
+           - 'ADDR1' IS THE STARTING ADDRESS OF A RANGE IN WHICH        33700000
+             ALL BREAKPOINTS WILL BE REMOVED.                           33750000
+           - 'ADDR2' IS THE FINAL ADDRESS OF A RANGE IN WHICH           33800000
+             BREAKPOINTS WILL BE REMOVED.                               33850000
+           - FOR A MORE DETAILED DISCUSSION OF THE DIFFERENT TYPES      33900000
+             OF ADDRESSES ENTER - HELP GO OPERANDS                      33950000
+=QUALIFY                                                                34000000
+)F FUNCTION -                                                           34050000
+  THE QUALIFY COMMAND ENABLES THE USER TO ACCESS MAIN STORAGE           34100000
+  LOCATIONS WITHIN A PROGRAM BY MEANS OF RELATIVE, SYMBOLIC, OR         34150000
+  ABSOLUTE ADDRESSES.                                                   34200000
+)X SYNTAX -                                                             34250000
+         QUALIFY   'ADDR'/'LOADNAME'/'LOADNAME.ENTRYNAME'/'.ENTRYNAME'/ 34300000
+                   '.ENTRYNAME.SYMBOL'/'LOADNAME.ENTRYNAME.SYMBOL'/     34350000
+                   'SYMBOL'  TCB('ADDR')                                34400000
+  REQUIRED - 'ADDR' OR 'LOADNAME' OR '.ENTRYNAME' OR 'SYMBOL'           34450000
+  DEFAULTS - NONE                                                       34500000
+)O OPERANDS -                                                           34550000
+  'ADDR'   - THE ADDRESS TO BE USED AS A BASE ADDRESS IN TESTING.       34600000
+             FOR A MORE DETAILED DISCUSSION OF THE DIFFERENT TYPES      34650000
+             OF ADDRESSES ENTER - HELP GO OPERANDS                      34700000
+  'LOADNAME'                                                            34750000
+           - THE LOAD MODULE NAME FOR WHICH QUALIFICATION IS TO BE      34800000
+             ESTABLISHED.                                               34850000
+  'LOADNAME.ENTRYNAME'                                                  34900000
+           - THE LOAD MODULE NAME AND ENTRY POINT NAME FOR WHICH        34950000
+             IMPLICIT QUALIFICATION IS TO BE ESTABLISHED.               35000000
+  '.ENTRYNAME'                                                          35050000
+           - THE CSECTNAME OR ENTRYNAME CONTAINED IN THE CURRENTLY      35100000
+             QUALIFIED LOAD MODULE FOR WHICH QUALIFICATION IS TO BE     35150000
+             ESTABLISHED.                                               35200000
+  '.ENTRYNAME.SYMBOL'                                                   35250000
+           - THE SYMBOLIC LABEL NAME CONTAINED IN THE SPECIFIED         35300000
+             CSECT (WHICH IS IN TURN CONTAINED IN THE CURRENTLY         35350000
+             QUALIFIED LOAD MODULE), FOR WHICH QUALIFICATION IS TO      35400000
+             BE ESTABLISHED.                                            35450000
+  'LOADNAME.ENTRYNAME.SYMBOL'                                           35500000
+           - THE SYMBOLIC LABEL NAME CONTAINED IN THE SPECIFIED         35550000
+             CSECT OF THE SPECIFIED LOAD MODULE FOR WHICH               35600000
+             QUALIFICATION IS TO BE ESTABLISHED.                        35650000
+  'SYMBOL' - EITHER A SYMBOLIC NAME WITHIN THE CURRENTLY QUALIFIED      35700000
+             CSECT, OR A RELATIVE DISPLACEMENT FROM THE BEGINNING OF    35750000
+             THE CURRENTLY QUALIFIED CSECT.                             35800000
+))TCB('ADDR')                                                           35850000
+           - EITHER THE ABSOLUTE ADDRESS, OR AN INDIRECT REGISTER       35900000
+             ADDRESS OF THE TASK CONTROL BLOCK TO BE USED IN THE        35950000
+             SEARCH FOR THE SPECIFIED LOAD MODULE.                      36000000
+=RUN                                                                    36050000
+)F FUNCTION -                                                           36100000
+  THE RUN COMMAND RESULTS IN A CHANGE FROM COMMAND MODE TO PROBLEM      36150000
+  PROGRAM MODE.  ALL BREAKPOINTS ESTABLISHED BY THE AT COMMAND ARE      36200000
+  REMOVED.  TEST AND ASSOCIATED WORKAREAS ARE DELETED.  EXECUTION IN    36250000
+  THE PROBLEM PROGRAM PROCEEDS FROM THE POINT OF LAST INTERRUPTION, OR  36300000
+  FROM THE INITIAL ENTRY POINT IF IT WAS LOADED BY TEST AND THIS IS     36350000
+  THE FIRST EXECUTION, OR FROM THE SPECIFIED ADDRESS.                   36400000
+)X SYNTAX -                                                             36450000
+         RUN   'ADDRESS'                                                36500000
+  REQUIRED - NONE                                                       36550000
+  DEFAULTS - (RUN) WILL CAUSE EXECUTION OF THE PROBLEM PROGRAM TO       36600000
+             PROCEED FROM THE POINT OF LAST INTERRUPTION, OR FROM THE   36650000
+             INITIAL ENTRY POINT OF THE PROGRAM IF IT WAS LOADED        36700000
+             BY TEST AND THIS IS THE FIRST EXECUTION.                   36750000
+  NOTE     - RUN TO OVERLAY PROGRAMS IS NOT ALLOWED, USE THE GO         36800000
+             SUBCOMMAND.                                                36850000
+)O OPERANDS -                                                           36900000
+  'ADDRESS'                                                             36950000
+           - THE ADDRESS WHERE EXECUTION SHOULD BEGIN IN THE            37000000
+             PROBLEM PROGRAM.  FOR A MORE DETAILED DISCUSSION OF THE    37050000
+             DIFFERENT TYPES OF ADDRESSES ENTER - HELP GO OPERANDS      37100000
+=WHERE=W                                                                37150000
+)F FUNCTION -                                                           37200000
+  THE WHERE COMMAND IS USED TO FIND LOCATIONS WITHIN THE LOADED         37250000
+  PROGRAM OR THE CONTENTS OF THE INSTRUCTION COUNTER.                   37300000
+)X SYNTAX                                                               37350000
+         WHERE   'LOADNAME'.'CSECTNME'.'RELADDR'/'ADDRESS'              37400000
+  REQUIRED - NONE                                                       37450000
+  DEFAULTS - IF NO PARAMETERS ARE SPECIFIED, THE CURRENT INSTRUCTION    37500000
+             COUNTER IS DISPLAYED.                                      37550000
+  ALIAS    - W                                                          37600000
+)O OPERANDS -                                                           37650000
+  'LOADNAME'                                                            37700000
+           - THE LOAD MODULE NAME FOR WHICH THE ABSOLUTE ADDRESS IS TO  37750000
+             BE PRINTED. 'LOADNAME' MAY BE USED IN COMBINATION WITH     37800000
+             'CSECTNME' OR 'CSECTNME'.'RELADDR'                         37850000
+  'CSECTNME'                                                            37900000
+           - THE ENTRY POINT NAME FOR WHICH THE ABSOLUTE ADDRESS IS TO  37950000
+             BE PRINTED. IT MAY BE SPECIFIED BY ITSELF, OR IN           38000000
+             COMBINATION WITH 'LOADNAME' OR 'RELADDR' OR BOTH           38050000
+  'RELADDR'- THE RELATIVE ADDRESS FOR WHICH THE ABSOLUTE ADDRESS AND    38100000
+             OFFSET IN THE LOADED PROGRAM IS TO BE PRINTED. 'RELADDR'   38150000
+             MAY BE SPECIFIED BY ITSELF, OR IN COMBINATION WITH         38200000
+             'LOADNAME'.'CSECTNME' OR 'CSECTNME'.                       38250000
+  'ADDRESS'- THE LOADNAME.CSECTNAME IN WHICH THIS ADDRESS APPEARS PLUS  38300000
+             THE OFFSET IN THE LOADNAME.CSECTNME WILL BE PRINTED.       38350000

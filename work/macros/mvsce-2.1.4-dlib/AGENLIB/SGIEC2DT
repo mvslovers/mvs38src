@@ -1,0 +1,44 @@
+         MACRO                                                          00020000
+         SGIEC2DT                                                       00040000
+         COPY  SGGBLPAK                                                 00060000
+         LCLC  &DEBTSZ,&DEBTIC,&RPS3340,&T1,&T2,&T3,&T4          MVS38J 00080002
+.*                                                               MVS38J 00085000
+.*  GENERATE JCL TO ASSEMBLE IECZDTAB,                           MVS38J 00086000
+.*  THE MVS DASD DEVICE CHARACTERISTICS TABLE                    MVS38J 00087000
+.*                                                               MVS38J 00088000
+&T1      SETC  '&SGDCLSB(31)'          UCBTBYT4 = 01 2311        MVS38J 00092000
+&T1      SETC  '&T1,0'                 NOT SUPPORTED 2301        MVS38J 00092100
+&T1      SETC  '&T1,&SGDCLSB(42)'      UCBTBYT4 = 03 2303        MVS38J 00092200
+&T1      SETC  '&T1,&SGDCLSB(30),'     UCBTBYT4 = 04 2302        MVS38J 00092300
+.*                                                               MVS38J 00092400
+&T2      SETC  '&SGDCLSB(32)'          UCBTBYT4 = 05 2321        MVS38J 00093100
+&T2      SETC  '&T2,&SGDCLSB(75)'      UCBTBYT4 = 06 2305-1      MVS38J 00093200
+&T2      SETC  '&T2,&SGDCLSB(76)'      UCBTBYT4 = 07 2305-2      MVS38J 00093300
+&T2      SETC  '&T2,&SGDCLSB(41),'     UCBTBYT4 = 08 2314        MVS38J 00093400
+.*                                                               MVS38J 00093500
+&T3      SETC  '&SGDCLSB(69)'          UCBTBYT4 = 09 3330        MVS38J 00094200
+&T3      SETC  '&T3,&SGDCLSB(84)'      UCBTBYT4 = 0A 3340        MVS38J 00094250
+&T3      SETC  '&T3,&SGDCLSB(22)'      UCBTBYT4 = 0B 3350        MVS38J 00094300
+&T3      SETC  '&T3,&SGGENDB(105),'    UCBTBYT4 = 0C 3375        MVS38J 00094350
+.*                                                               MVS38J 00094400
+&T4      SETC  '&SGDCLSB(85)'          UCBTBYT4 = 0D 3330-1      MVS38J 00094450
+&T4      SETC  '&T4,&SGGENDB(103)'     UCBTBYT4 = 0E 3380        MVS38J 00094600
+&T4      SETC  '&T4,&SGGENDB(104)'     UCBTBYT4 = 0F 3390        MVS38J 00094800
+.*                                                               MVS38J 00095000
+.*                                                             @ZA47524 00095300
+.*                                                             @ZM41661 00096430
+*                                                               YL02130 00098002
+&RPS3340 SETC  '&SGDCLSB(88)'                                   YL02130 00098402
+&SGCTRLC(6) SETC 'IECZDTAB'                                      Y02072 00100002
+         COPY  SGASMPAK         GET JCL FOR ASSEMBLY                    00340000
+    PUNCH ' SGIEC0DT &SGSUPRB(32),&RPS3340,TYPE=(&T1&T2&T3&T4)'  MVS38J 00390002
+         PUNCH '         END'                                           00420000
+         PUNCH '/*'                                                     00440000
+&DEBTSZ  SETC  '&SGCPRGA(3)'                                            00450000
+&DEBTIC  SETC  '&SGCPRGA(4)'                                            00460000
+&SGCTRLC(6) SETC 'IFGDEBCK'                                             00470000
+         COPY  SGASMPAK                 GET JCL FOR ASSEMBLY            00490000
+         PUNCH ' SGDEBCHK DEBTSIZ=&DEBTSZ,DEBTINC=&DEBTIC '             00540000
+         PUNCH ' END'                                                   00590000
+         PUNCH '/*'                                                     00640000
+         MEND                                                           00840000

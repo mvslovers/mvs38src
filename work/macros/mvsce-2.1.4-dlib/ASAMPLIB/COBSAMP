@@ -1,0 +1,438 @@
+//COBSAMP  JOB  ,,MSGLEVEL=1,REGION=100K                                00200000
+//STEP  EXEC  COBFCLG,PARM.COB='MAP,LIST,LET'                           00250000
+//COB.SYSIN DD *                                                        00400000
+  001  IDENTIFICATION DIVISION.                                         00600000
+  002  PROGRAM-ID.  'COBSAMP'.                                          00800000
+  003  ENVIRONMENT DIVISION.                                            01000000
+  004  CONFIGURATION SECTION.                                           01200000
+  005  SOURCE-COMPUTER.  IBM-360 F50.                                   01400000
+  006  OBJECT-COMPUTER.  IBM-360 F50.                                   01600000
+  007  DATA DIVISION.                                                   01800000
+                                                                        02000000
+  008  WORKING-STORAGE SECTION.                                         02200000
+  009      77 IGSP  PICTURE S9(5) COMPUTATIONAL.                        02400000
+  010      77 NULL  PICTURE S9(5) COMPUTATIONAL VALUE -5.               02600000
+  011      77 UNUM  PICTURE S9(5) COMPUTATIONAL VALUE 10.               02800000
+  012      77 I2250  PICTURE S9(5) COMPUTATIONAL.                       03000000
+  013      77 IGDS1  PICTURE S9(5) COMPUTATIONAL.                       03200000
+  014      77 IGDS2  PICTURE S9(5) COMPUTATIONAL.                       03400000
+  015      77 IGDS3  PICTURE S9(5) COMPUTATIONAL.                       03600000
+  016      77 DMODE  PICTURE S9(5) COMPUTATIONAL VALUE 3.               03800000
+  017      77 IATL  PICTURE S9(5) COMPUTATIONAL.                        04000000
+  018      77 ATTN1  PICTURE S9(5) COMPUTATIONAL VALUE 1.               04200000
+  019      77 ATTN2  PICTURE S9(5) COMPUTATIONAL VALUE -3.              04400000
+  020      77 ATTN3  PICTURE S9(5) COMPUTATIONAL VALUE 34.              04600000
+  021      77 LSTAT  PICTURE S9(5) COMPUTATIONAL VALUE 3.               04800000
+  022      77 DETECT  PICTURE S9(5) COMPUTATIONAL VALUE 1.              05000000
+  023      77 CHMODE  PICTURE S9(5) COMPUTATIONAL VALUE 2.              05200000
+  024      77 X  PICTURE A VALUE 'X'.                                   05400000
+  025      77 COUNT  PICTURE S9(5) COMPUTATIONAL VALUE 1.               05600000
+  026      77 CORVAL  PICTURE S9(5) COMPUTATIONAL VALUE -1.             05800000
+  027      77 QUAY  PICTURE S9(5) COMPUTATIONAL.                        06000000
+  028      77 GENCDE  PICTURE S9(5) COMPUTATIONAL VALUE 1.              06200000
+  029      77 CX  PICTURE S9(5) COMPUTATIONAL VALUE 2047.               06400000
+  030      77 CY  PICTURE S9(5) COMPUTATIONAL VALUE 2047.               06600000
+  031      77 NUM2  PICTURE XXXX VALUE 'NUM2'.                          06800000
+  032      77 NUM1  PICTURE XXXX VALUE 'NUM1'.                          07000000
+  033      77 NUM8  PICTURE XXXX VALUE 'NUM8'.                          07200000
+  034      77 NUM7  PICTURE XXXX VALUE 'NUM7'.                          07400000
+  035      77 NUM6  PICTURE XXXX VALUE 'NUM6'.                          07600000
+  036      77 NUM5  PICTURE XXXX VALUE 'NUM5'.                          07800000
+  037      77 NUM4  PICTURE XXXX VALUE 'NUM4'.                          08000000
+  038      77 NUM3  PICTURE XXXX VALUE 'NUM3'.                          08200000
+  039      77 NUM  PICTURE S9(5) COMPUTATIONAL.                         08400000
+  040      77 CXNUM  PICTURE S9(5) COMPUTATIONAL.                       08600000
+  041      77 SUB1  PICTURE S9(5) COMPUTATIONAL.                        08800000
+  042      77 SUB2  PICTURE S9(5) COMPUTATIONAL.                        09000000
+  043      77 DISP  PICTURE S9(5) COMPUTATIONAL VALUE 200.              09200000
+  044      77 CIRYDISP  PICTURE S9(5) COMPUTATIONAL.                    09400000
+  045      77 ONE  PICTURE S9(5) COMPUTATIONAL VALUE 1.                 09600000
+  046      77 XINDEX  PICTURE S9(5) COMPUTATIONAL VALUE 1.              09800000
+  047      77 YINDEX  PICTURE S9(5) COMPUTATIONAL VALUE 1.              10000000
+  048      77 INTCD  PICTURE S9(5) COMPUTATIONAL.                       10200000
+  049      77 WAIT  PICTURE S9(5) COMPUTATIONAL VALUE 2.                10400000
+  050      77 ATTNS1  PICTURE S9(5) COMPUTATIONAL VALUE 1.              10600000
+  051      77 ATTNS2  PICTURE S9(5) COMPUTATIONAL VALUE 2.              10800000
+  052      77 ATTNS3  PICTURE S9(5) COMPUTATIONAL VALUE 3.              11000000
+  053      77 ATTNS4  PICTURE S9(5) COMPUTATIONAL VALUE 34.             11200000
+  054      77 INTARYX  PICTURE S9(5) COMPUTATIONAL.                     11400000
+  055      01 CIRX-CIRY-TABLE.                                          11600000
+  056          02 CIRX  OCCURS 8 PICTURE S9(5) COMPUTATIONAL.           11800000
+  057          02 CIRY  OCCURS 8 PICTURE S9(5) COMPUTATIONAL.           12000000
+  058      01 LABEL-TABLE.                                              12200000
+  059          02 LABLE  OCCURS 8 PICTURE XXXX.                         12400000
+  060      01 DISPLACEMENTS-TABLE.                                      12600000
+  061          02 XDISP  OCCURS 24 PICTURE S9(5) COMPUTATIONAL.         12800000
+  062          02 YDISP  OCCURS 24 PICTURE S9(5) COMPUTATIONAL.         13000000
+  063      01 SMALLCIRCLES-TABLE.                                       13200000
+  064          02 XCENTERS  OCCURS 8.                                   13400000
+  065              03 SMALX  OCCURS 24 PICTURE S9(5) COMPUTATIONAL.     13600000
+  066          02 YCENTERS  OCCURS 8.                                   13800000
+  067              03 SMALY  OCCURS 24 PICTURE S9(5) COMPUTATIONAL.     14000000
+  068      01 ATTENTION-TABLE.                                          14200000
+  069          02 INTARY  OCCURS 10 PICTURE S9(5) COMPUTATIONAL.        14400000
+                                                                        14600000
+  075  PROCEDURE DIVISION.                                              14800000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 15000000
+                THIS SAMPLE PROGRAM DRAWS A CIRCLE OF 8 BASIC SIZE X'S  15200000
+                WITH A LARGE SIZE X AS ITS CENTER - DEPENDING ON THE    15400000
+                ATTENTION CREATED, THE PROGRAM WILL DO THE FOLLOWING -  15600000
+                                                                        15800000
+             1) LIGHT PEN ATTENTION ON CENTER X LABELS OUTER X'S FROM   16000000
+                NUM1 THROUGH NUM8 (PARAGRAPH 221)                       16200000
+                                                                        16400000
+             2) LIGHT PEN ATTENTION ON OUTER X GENERATES A CIRCLE       16600000
+                WHOSE CENTER IS THE DETECTED X (PARAGRAPH 222)          16800000
+                                                                        17000000
+             3) LIGHT PEN ATTENTION ON CIRCLE AROUND OUTER X MAKES      17200000
+                THAT CIRCLE INVISIBLE (PARAGRAPH 230)                   17400000
+                                                                        17600000
+             4) LIGHT PEN ATTENTION ON ANY LABEL MAKES ALL LABELS       17800000
+                INVISIBLE (PARAGRAPH 225)                               18000000
+                                                                        18200000
+             5) PROGRAMMED FUNCTION KEY 1 ENDS RUN (PARAGRAPH 240)      18400000
+                                                                        18600000
+             6) PROGRAMMED FUNCTION KEY 2 MAKES ALL CIRCLES INVISIBLE   18800000
+                (PARAGRAPH 250)                                         19000000
+                                                                        19200000
+             7) PROGRAMMED FUNCTION KEY 3 MAKES ALL CIRCLES VISIBLE     19400000
+                (PARAGRAPH 260)                                         19600000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.19800000
+                                                                        20000000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 20200000
+                INITIALIZE THE GRAPHIC SUBROUTINE PACKAGE               20400000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.20600000
+  076      ENTER LINKAGE.                                               20800000
+  077      CALL 'INGSP' USING IGSP, NULL.                               21000000
+  078      ENTER COBOL.                                                 21200000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 21400000
+                INITIALIZE THE 2250 - ASSIGN IT UNIT NUMBER 10          21600000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.21800000
+  079      ENTER LINKAGE.                                               22000000
+  080      CALL 'INDEV' USING IGSP, UNUM, I2250.                        22200000
+  081      ENTER COBOL.                                                 22400000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 22600000
+                INITIALIZE A GRAPHIC DATA SET THAT WILL BE USED TO      22800000
+                DISPLAY THE CIRCLE OF X'S AND ITS CENTER X              23000000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.23200000
+  082      ENTER LINKAGE.                                               23400000
+  083      CALL 'INGDS' USING I2250, IGDS1.                             23600000
+  084      ENTER COBOL.                                                 23800000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 24000000
+                INITIALIZE A GRAPHIC DATA SET THAT WILL BE USED TO      24200000
+                LABEL THE OUTER X'S OF THE CIRCLE                       24400000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.24600000
+  085      ENTER LINKAGE.                                               24800000
+  086      CALL 'INGDS' USING I2250, IGDS2.                             25000000
+  087      ENTER COBOL.                                                 25200000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 25400000
+                INITIALIZE A GRAPHIC DATA SET THAT WILL BE USED TO      25600000
+                DISPLAY A CIRCLE AROUND ANY OF THE OUTER X'S            25800000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.26000000
+  088      ENTER LINKAGE.                                               26200000
+  089      CALL 'INGDS' USING I2250, IGDS3.                             26400000
+  090      ENTER COBOL.                                                 26600000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 26800000
+                SET THE DATA MODE FOR INTEGER, ABSOLUTE DATA            27000000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.27200000
+  091      ENTER LINKAGE.                                               27400000
+  092      CALL 'SDATM' USING IGDS1, DMODE.                             27600000
+  093      ENTER COBOL.                                                 27800000
+  094      ENTER LINKAGE.                                               28000000
+  095      CALL 'SDATM' USING IGDS2, DMODE.                             28200000
+  096      ENTER COBOL.                                                 28400000
+  097      ENTER LINKAGE.                                               28600000
+  098      CALL 'SDATM' USING IGDS3, DMODE.                             28800000
+  099      ENTER COBOL.                                                 29000000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 29200000
+                CREATE AN ATTENTION LEVEL FOR THE 2250                  29400000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.29600000
+  100      ENTER LINKAGE.                                               29800000
+  101      CALL 'CRATL' USING I2250, IATL.                              30000000
+  102      ENTER COBOL.                                                 30200000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 30400000
+                ENABLE PROGRAMMED FUNCTION KEYS 1, 2, AND 3 AND THE     30600000
+                LIGHT PEN                                               30800000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.31000000
+  103      ENTER LINKAGE.                                               31200000
+  104      CALL 'ENATN' USING IATL, ATTN1, ATTN2, ATTN3.                31400000
+  105      ENTER COBOL.                                                 31600000
+  106      ENTER LINKAGE.                                               31800000
+  107      CALL 'MLITS' USING I2250, LSTAT.                             32000000
+  108      ENTER COBOL.                                                 32200000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 32400000
+                ALLOW LIGHT PEN ATTENTIONS FOR EACH GRAPHIC DATA SET    32600000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.32800000
+  109      ENTER LINKAGE.                                               33000000
+  110      CALL 'SLPAT' USING IGDS1, DETECT.                            33200000
+  111      ENTER COBOL.                                                 33400000
+  112      ENTER LINKAGE.                                               33600000
+  113      CALL 'SLPAT' USING IGDS2, DETECT.                            33800000
+  114      ENTER COBOL.                                                 34000000
+  115      ENTER LINKAGE.                                               34200000
+  116      CALL 'SLPAT' USING IGDS3, DETECT.                            34400000
+  117      ENTER COBOL.                                                 34600000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 34800000
+                SET CHARACTER MODE FOR LARGE SIZE, PROTECTED            35000000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.35200000
+  118      ENTER LINKAGE.                                               35400000
+  119      CALL 'SCHAM' USING IGDS1, CHMODE.                            35600000
+  120      ENTER COBOL.                                                 35800000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 36000000
+                DISPLAY CENTER X                                        36200000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.36400000
+  121      ENTER LINKAGE.                                               36600000
+  122      CALL 'PTEXT' USING IGDS1, X, COUNT, CORVAL, QUAY, GENCDE,    36800000
+  123      CX, CY.                                                      37000000
+  124      ENTER COBOL.                                                 37200000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 37400000
+                PLACE X AND Y COORDINATES FOR X'S OF OUTER CIRCLE       37600000
+                IN THE CIRX AND CIRY TABLES                             37800000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.38000000
+  125      COMPUTE CIRX (1) = 2047.  COMPUTE CIRY (1) = 3247.           38200000
+  126      COMPUTE CIRX (2) = 2896.  COMPUTE CIRY (2) = 2896.           38400000
+  127      COMPUTE CIRX (3) = 3247.  COMPUTE CIRY (3) = 2047.           38600000
+  128      COMPUTE CIRX (4) = 2896.  COMPUTE CIRY (4) = 1198.           38800000
+  129      COMPUTE CIRX (5) = 2047.  COMPUTE CIRY (5) = 847.            39000000
+  130      COMPUTE CIRX (6) = 1198.  COMPUTE CIRY (6) = 1198.           39200000
+  131      COMPUTE CIRX (7) = 847.   COMPUTE CIRY (7) = 2047.           39400000
+  132      COMPUTE CIRX (8) = 1198.  COMPUTE CIRY (8) = 2896.           39600000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 39800000
+                PLACE LABELS FOR X'S OF OUTER CIRCLE IN TABLE           40000000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.40200000
+  133      MOVE NUM2 TO LABLE (1).                                      40400000
+  134      MOVE NUM1 TO LABLE (2).                                      40600000
+  135      MOVE NUM8 TO LABLE (3).                                      40800000
+  136      MOVE NUM7 TO LABLE (4).                                      41000000
+  137      MOVE NUM6 TO LABLE (5).                                      41200000
+  138      MOVE NUM5 TO LABLE (6).                                      41400000
+  139      MOVE NUM4 TO LABLE (7).                                      41600000
+  140      MOVE NUM3 TO LABLE (8).                                      41800000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 42000000
+                SET CHARACTER MODE FOR BASIC SIZE, PROTECTED X          42200000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.42400000
+  141      COMPUTE CHMODE = 1.                                          42600000
+  142      ENTER LINKAGE.                                               42800000
+  143      CALL 'SCHAM' USING IGDS1, CHMODE.                            43000000
+  144      ENTER COBOL.                                                 43200000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 43400000
+                GENERATE AN X IN INCLUDE STATUS - CALCULATE X-COORDINATE43600000
+                OF LABEL ASSOCIATED WITH THAT X - GENERATE LABEL IN     43800000
+                INCLUDE STATUS - DO THIS 8 TIMES TO COMPLETE CIRCLE     44000000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.44200000
+  145      PERFORM X-CIRCLE VARYING NUM FROM 1 BY 1 UNTIL NUM > 8.      44400000
+  1451     GO TO NEXT11.                                                44600000
+  146  X-CIRCLE.                                                        44800000
+  147      COMPUTE COUNT = 1.                                           45000000
+  148      COMPUTE CORVAL = NUM.                                        45200000
+  149      ENTER LINKAGE.                                               45400000
+  150      CALL 'PTEXT' USING IGDS1, X, COUNT, CORVAL, QUAY, GENCDE,    45600000
+  151      CIRX (NUM), CIRY (NUM).                                      45800000
+  152      ENTER COBOL.                                                 46000000
+  153      COMPUTE COUNT = 4.                                           46200000
+  154      COMPUTE CXNUM = CIRX (NUM) + 300.                            46400000
+  155      ENTER LINKAGE.                                               46600000
+  156      CALL 'PTEXT' USING IGDS2, LABLE (NUM), COUNT, CORVAL, QUAY,  46800000
+  157      GENCDE, CXNUM, CIRY (NUM).                                   47000000
+  158      ENTER COBOL.                                                 47200000
+  159  NEXT1.                                                           47400000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 47600000
+                PLACE X AND Y DISPLACEMENTS FOR CIRCLE WITH R = 200     47800000
+                IN XDISP AND YDISP TABLES                               48000000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.48200000
+  1591 NEXT11.                                                          48400000
+  161      COMPUTE XDISP (1) = 52.     COMPUTE YDISP (1) = 193.         48600000
+  162      COMPUTE XDISP (2) = 100.    COMPUTE YDISP (2) = 173.         48800000
+  163      COMPUTE XDISP (3) = 141.    COMPUTE YDISP (3) = 141.         49000000
+  164      COMPUTE XDISP (4) = 173.    COMPUTE YDISP (4) = 100.         49200000
+  165      COMPUTE XDISP (5) = 193.    COMPUTE YDISP (5) = 52.          49400000
+  166      COMPUTE XDISP (6) = 200.    COMPUTE YDISP (6) = 0.           49600000
+  167      COMPUTE XDISP (7) = 193.    COMPUTE YDISP (7) = -52.         49800000
+  168      COMPUTE XDISP (8) = 173.    COMPUTE YDISP (8) = -100.        50000000
+  169      COMPUTE XDISP (9) = 141.    COMPUTE YDISP (9) = -141.        50200000
+  170      COMPUTE XDISP (10) = 100.   COMPUTE YDISP (10) = -173.       50400000
+  171      COMPUTE XDISP (11) = 52.    COMPUTE YDISP (11) = -193.       50600000
+  172      COMPUTE XDISP (12) = 0.     COMPUTE YDISP (12) = -200.       50800000
+  173      COMPUTE XDISP (13) = -52.   COMPUTE YDISP (13) = -193.       51000000
+  174      COMPUTE XDISP (14) = -100.  COMPUTE YDISP (14) = -173.       51200000
+  175      COMPUTE XDISP (15) = -141.  COMPUTE YDISP (15) = -141.       51400000
+  176      COMPUTE XDISP (16) = -173.  COMPUTE YDISP (16) = -100.       51600000
+  177      COMPUTE XDISP (17) = -193.  COMPUTE YDISP (17) = -52.        51800000
+  178      COMPUTE XDISP (18) = -200.  COMPUTE YDISP (18) = 0.          52000000
+  179      COMPUTE XDISP (19) = -193.  COMPUTE YDISP (19) = 52.         52200000
+  180      COMPUTE XDISP (20) = -173.  COMPUTE YDISP (20) = 100.        52400000
+  181      COMPUTE XDISP (21) = -141.  COMPUTE YDISP (21) = 141.        52600000
+  182      COMPUTE XDISP (22) = -100.  COMPUTE YDISP (22) = 173.        52800000
+  183      COMPUTE XDISP (23) = -52.   COMPUTE YDISP (23) = 193.        53000000
+  1831     COMPUTE XDISP (24) = 0.     COMPUTE YDISP (24) = 200.        53200000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 53400000
+                COMPUTE COORDINATES FOR CIRCLES AROUND OUTER X'S        53600000
+                AND PLACE THEM IN SMALX AND SMALY TABLES                53800000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.54000000
+  184      PERFORM SMALX-CIRCLES VARYING SUB1 FROM 1 BY 1 UNTIL SUB1 > 854200000
+  185      AFTER SUB2 FROM 1 BY 1 UNTIL SUB2 > 24.                      54400000
+  1851     GO TO NEXT2.                                                 54600000
+  186  SMALX-CIRCLES.                                                   54800000
+  187      COMPUTE SMALX (SUB1, SUB2) = CIRX (SUB1) + XDISP (SUB2).     55000000
+  188  NEXT2.                                                           55200000
+  189      PERFORM SMALY-CIRCLES VARYING SUB1 FROM 1 BY 1 UNTIL SUB1 > 855400000
+  190      AFTER SUB2 FROM 1 BY 1 UNTIL SUB2 > 24.                      55600000
+  1901     GO TO NEXT31.                                                55800000
+  191  SMALY-CIRCLES.                                                   56000000
+  192      COMPUTE SMALY (SUB1, SUB2) = CIRY (SUB1) + YDISP (SUB2).     56200000
+  193  NEXT3.                                                           56400000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 56600000
+                GENERATE CIRCLES AROUND OUTER X'S IN OMIT STATUS        56800000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.57000000
+  1931 NEXT31.                                                          57200000
+  194      COMPUTE GENCDE = 2.                                          57400000
+  195      COMPUTE COUNT = 24.                                          57600000
+  196      PERFORM SMALL-CIRCLES VARYING NUM FROM 1 BY 1 UNTIL NUM > 8. 57800000
+  1961     GO TO NEXT41.                                                58000000
+  197  SMALL-CIRCLES.                                                   58200000
+  198      COMPUTE CORVAL = NUM.                                        58400000
+  1981     COMPUTE CIRYDISP = CIRY (NUM) + DISP.                        58600000
+  199      ENTER LINKAGE.                                               58800000
+  200      CALL 'STPOS' USING IGDS3, CIRX (NUM), CIRYDISP.              59000000
+  201      ENTER COBOL.                                                 59200000
+  202      ENTER LINKAGE.                                               59400000
+  203      CALL 'PLINE' USING IGDS3, SMALX (NUM, ONE), SMALY (NUM, ONE),59600000
+  204      CORVAL, QUAY, GENCDE, COUNT, XINDEX, YINDEX.                 59800000
+  205      ENTER COBOL.                                                 60000000
+  206  NEXT4.                                                           60200000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 60400000
+                OMIT LABELS FROM THE DISPLAY                            60600000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.60800000
+  2061 NEXT41.                                                          61000000
+  207      ENTER LINKAGE.                                               61200000
+  208      CALL 'OMIT' USING IGDS2.                                     61400000
+  209      ENTER COBOL.                                                 61600000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 61800000
+                EXECUTE ALL GRAPHIC DATA PRODUCED                       62000000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.62200000
+  210      ENTER LINKAGE.                                               62400000
+  211      CALL 'EXEC' USING IGDS1.                                     62600000
+  212      ENTER COBOL.                                                 62800000
+  213      ENTER LINKAGE.                                               63000000
+  214      CALL 'EXEC' USING IGDS2.                                     63200000
+  215      ENTER COBOL.                                                 63400000
+  216      ENTER LINKAGE.                                               63600000
+  217      CALL 'EXEC' USING IGDS3.                                     63800000
+  218      ENTER COBOL.                                                 64000000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 64200000
+                REQUEST ATTENTION INFORMATION TO DETERMINE WHETHER      64400000
+                2250 OPERATOR WANTS TO CHANGE OR END DISPLAY -          64600000
+                WAIT FOR AN ATTENTION TO OCCUR                          64800000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.65000000
+  219  200.                                                             65200000
+  220      ENTER LINKAGE.                                               65400000
+  221      CALL 'RQATN' USING IATL, INTCD, WAIT, INTARY (ONE),          65600000
+  222      ATTNS1, ATTNS2, ATTNS3, ATTNS4.                              65800000
+  223      ENTER COBOL.                                                 66000000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 66200000
+                IF LIGHT PEN ATTENTION, GO TO 210 -                     66400000
+                IF PROGRAMMED FUNCTION KEY ATTENTION, GO TO 235         66600000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.66800000
+  224      IF INTCD < 34 GO TO 235.                                     67000000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 67200000
+                IF LIGHT PEN ATTENTION WAS ASSOCIATED WITH IGDS1,       67400000
+                GO TO 220 - IF IGDS2, GO TO 225 - IF IGDS3, GO TO 230   67600000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.67800000
+  225  210.                                                             68000000
+  226      COMPUTE INTARYX = INTARY (1).                                68200000
+  227      IF INTARYX = IGDS1 GO TO 220.                                68400000
+  228  201.                                                             68600000
+  229      IF INTARYX = IGDS2 GO TO 225.                                68800000
+  230  202.                                                             69000000
+  231      IF INTARYX = IGDS3 GO TO 230 OTHERWISE GO TO 200.            69200000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 69400000
+                IF LIGHT PEN ATTENTION WAS ON CENTER OF LARGE CIRCLE,   69600000
+                GO TO 221 - IF ON OUTER CIRCLE, GO TO 222               69800000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.70000000
+  232  220.                                                             70200000
+  233      COMPUTE INTARYX = INTARY (4).                                70400000
+  234      IF INTARYX < 0 GO TO 221 OTHERWISE GO TO 222.                70600000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 70800000
+                DISPLAY LABELS AND WAIT FOR ANOTHER ATTENTION           71000000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.71200000
+  235  221.                                                             71400000
+  236      ENTER LINKAGE.                                               71600000
+  237      CALL 'INCL' USING IGDS2.                                     71800000
+  238      ENTER COBOL.                                                 72000000
+  239      GO TO 200.                                                   72200000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 72400000
+                DISPLAY A CIRCLE AROUND THE OUTER X DETECTED AND WAIT   72600000
+                FOR ANOTHER ATTENTION                                   72800000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.73000000
+  240  222.                                                             73200000
+  241      ENTER LINKAGE.                                               73400000
+  242      CALL 'INCL' USING IGDS3, INTARYX.                            73600000
+  243      ENTER COBOL.                                                 73800000
+  244      GO TO 200.                                                   74000000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 74200000
+                REMOVE LABELS FROM DISPLAY - AWAIT NEW ATTENTION        74400000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.74600000
+  245  225.                                                             74800000
+  246      ENTER LINKAGE.                                               75000000
+  247      CALL 'OMIT' USING IGDS2.                                     75200000
+  248      ENTER COBOL.                                                 75400000
+  249      GO TO 200.                                                   75600000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 75800000
+                REMOVE DETECTED CIRCLE FROM DISPLAY                     76000000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.76200000
+  250  230.                                                             76400000
+  251      COMPUTE INTARYX = INTARY (4).                                76600000
+  252      ENTER LINKAGE.                                               76800000
+  253      CALL 'OMIT' USING IGDS3, INTARYX.                            77000000
+  254      ENTER COBOL.                                                 77200000
+  255      GO TO 200.                                                   77400000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 77600000
+                IF PROGRAMMED FUNCTION KEY 1 DEPRESSED, GO TO 240 -     77800000
+                IF KEY 2, GO TO 250 - IF KEY 3, GO TO 260               78000000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.78200000
+  256  235.                                                             78400000
+  257      IF INTCD = 1 GO TO 240.                                      78600000
+  258  235A.                                                            78800000
+  259      IF INTCD = 2 GO TO 250.                                      79000000
+  260  235B.                                                            79200000
+  261      IF INTCD = 3 GO TO 260.                                      79400000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 79600000
+                TERMINATE THE PROGRAM RUN                               79800000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.80000000
+  262  240.                                                             80200000
+  263      ENTER LINKAGE.                                               80400000
+  264      CALL 'TMGSP' USING IGSP.                                     80600000
+  265      ENTER COBOL.                                                 80800000
+  266      STOP RUN.                                                    81000000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 81200000
+                REMOVE ALL CIRCLES AROUND OUTER X'S - AWAIT ATTENTION   81400000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.81600000
+  267  250.                                                             81800000
+  268      PERFORM 251 VARYING NUM FROM 1 BY 1 UNTIL NUM > 8.           82000000
+  2681     GO TO 251A.                                                  82200000
+  269  251.                                                             82400000
+  270      ENTER LINKAGE.                                               82600000
+  271      CALL 'OMIT' USING IGDS3, NUM.                                82800000
+  272      ENTER COBOL.                                                 83000000
+  273  251A.                                                            83200000
+  274      GO TO 200.                                                   83400000
+           NOTE *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  * 83600000
+                DISPLAY ALL CIRCLES AROUND OUTER X'S - AWAIT ATTENTION  83800000
+             *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *.84000000
+  275  260.                                                             84200000
+  276      PERFORM 261 VARYING NUM FROM 1 BY 1 UNTIL NUM > 8.           84400000
+  2761     GO TO 261A.                                                  84600000
+  277  261.                                                             84800000
+  278      ENTER LINKAGE.                                               85000000
+  279      CALL 'INCL' USING IGDS3, NUM.                                85200000
+  280      ENTER COBOL.                                                 85400000
+  281  261A.                                                            85600000
+  282      GO TO 200.                                                   85800000
+//LKED.SYSLIB  DD  DSNAME=SYS1.COBLIB,DISP=OLD                          86200000
+//             DD  DSNAME=SYS1.LINKLIB,DISP=OLD                         86400000
+//LKED.SYSIN   DD  *                                                    86600000
+       INCLUDE  SYSLIB(IHDGSP01)                                        86800000
+       INCLUDE  SYSLIB(IHDGSP02)                                        87000000
+       INCLUDE  SYSLIB(IHDGSP03)                                        87200000
+//GO.FT10F001  DD  UNIT=2250-1                                          87600000
+//GO.SYSPRINT  DD  SYSOUT=A                                             87800000

@@ -1,0 +1,40 @@
+         MACRO                                                          02000000
+         SGILR300                                                       04000000
+.*A-000000-999999                                              @Z40WPWN 06000040
+.* /* START OF SPECIFICATIONS ****                                      08000000
+.*                                                                      10000000
+.*01  MODULE-NAME = SGILR300                                            12000000
+.*                                                                      14000000
+.*01  DESCRIPTIVE-NAME = ASM NUCLEUS SYSGEN MACRO                       16000000
+.*                                                                      18000000
+.*01  STATUS = OS/VS2 RELEASE 4.1                                       20000040
+.*                                                                      22000000
+.*01  FUNCTION = SGILR300 CAUSES CERTAIN ASM PROGRAM MODULES TO BE      24000000
+.*               LINK-EDITED INTO THE TARGET NUCLEUS LOAD MODULE        26000000
+.*               (IEANUC01) FROM THE SYSGEN DISTRIBUTION LIBRARY        28000000
+.*               SYS1.AOSC5.                                            30000000
+.*                                                                      32000000
+.*01  OPERATION = VIA THE ASSEMBLER PUNCH COMMAND, LINKAGE EDITOR       34000000
+.*                INCLUDE STATEMENTS ARE GENERATED FOR EACH MODULE.     36000000
+.*                                                                      38000000
+.*01  MODULE-TYPE = MACRO                                               40000000
+.*02    PROCESSOR = ASSEMBLER XF                                        42000000
+.*02    MACRO-SIZE = 10 STATEMENTS                                      44000040
+.*                                                                      46000000
+.*01  OUTPUT = LINKAGE EDITOR INCLUDE STATEMENTS                        48000000
+.*                                                                      50000000
+.*01  INNER-MACRO = NONE                                                52000000
+.*                                                                      54000000
+.*01  MESSAGES = NONE                                                   56000000
+.*                                                                      58000000
+.**** END OF SPECIFICATIONS ***/                                        60000000
+ PUNCH ' INCLUDE AOSC5(ILRPAGIO,ILRPTM,ILRGOS)'                         62000040
+ PUNCH ' INCLUDE AOSC5(ILRPAGCM,ILRSRT,ILRPOS)'                         62030040
+ PUNCH ' INCLUDE AOSC5(ILRSWAP,ILRCMP,ILRSRBC)'                         62060040
+ PUNCH ' INCLUDE AOSC5(ILRSWPDR,ILRMSG00,ILRVIOCM)'                     62150040
+ PUNCH ' INCLUDE AOSC5(ILRFRSLT,ILRCMP01,ILRJTERM)'                     62200040
+ PUNCH ' INCLUDE AOSC5(ILRTERMR,ILRSLOTC,ILRPEX)'                       62230040
+ PUNCH ' INCLUDE AOSC5(ILRASM00,ILRIOFRR,ILRGOS01)'                     62300040
+ PUNCH ' INCLUDE AOSC5(ILRSWP01,ILRSRB01,ILRSRT01)'                     62350040
+ PUNCH ' INCLUDE AOSC5(ILRFRR01)'                                       62400040
+         MEND                                                           62450040

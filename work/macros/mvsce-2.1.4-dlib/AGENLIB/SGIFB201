@@ -1,0 +1,16 @@
+         MACRO                                                          00050001
+         SGIFB201                                                       00100001
+         COPY  SGGBLPAK                                                 00150001
+         LCLC  &CHC,&CHD,&TYPEC                                         00200001
+.*                                                                      00250001
+.*       AOS-SET CHANNEL ASSIGNMENT TABLE                               00300001
+.*                                                                      00350001
+&CHC     SETC  '00000000'                                               00400001
+&CHD     SETC  '00000000'                                               00450001
+.*                                                                      00500001
+&SGCTRLC(6) SETC 'IFBCTA00'                                             00550001
+         COPY  SGASMPAK                                                 00600001
+         PUNCH ' SGIFB000  &CHC.&CHD'                                   00650001
+         PUNCH ' END'                                                   00700001
+         PUNCH '/*'                                                     00750001
+         MEND                                                           00800001

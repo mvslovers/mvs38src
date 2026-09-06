@@ -1,0 +1,56 @@
+         MACRO                                                          00050000
+         SGBNG400                                                       00100000
+.*A-000000-9999999                                             @OZ30243 00150000
+.********************************************************************** 00200000
+.*  5752CM100 SU868 SYSGEN FOR LINKLIB                                * 00250000
+.*  CHANGE ACTIVITY FOLLOWS                                           * 00300000
+.*C009500,016500                                               @OZ37101 00300107
+.*                                                                    * 00350000
+.*                                                                    * 00400000
+.********************************************************************** 00450000
+         COPY  SGGBLPAK                                                 00500000
+&SGCTRLC(6)  SETC  ''              NULL                                 00550000
+&SGCTRLC(7)  SETC  '&SGCTRLC(32)'  TARGET SERIAL                        00600000
+&SGCTRLC(8)  SETC  '&SGCTRLC(31)'  TARGET UNIT                          00650000
+&SGCTRLC(9)  SETC  'LINKLIB'       TARGET LIBRARY NAME                  00700000
+&SGCTRLC(10) SETC  ',REUS'         ATTRIBUTE                            00750000
+&SGCTRLC(11) SETC  ',AC=1'         ATTRIBUTE                            00800000
+.*  PUT BNGLOGER INTO SYS1.LINKLIB                                      00850000
+         COPY  SGLEDPK1                                                 00900000
+ PUNCH '//AOS29 DD DSN=SYS1.AOS29,DISP=SHR'                    @OZ37101 00950007
+         COPY  SGLEDPK2                                                 01000000
+ PUNCH ' INCLUDE AOS29(BNGLOGR2)'                                       01050000
+ PUNCH ' ENTRY BNGLOGER'                                                01100000
+ PUNCH ' NAME BNGLOGER(R)'                                              01150000
+ PUNCH '/*'                                                             01200000
+         AIF   (NOT &SGDMGTB(5)).NOTCAM  NO TCAM SPECIFIED, EXIT        01250000
+&SGCTRLC(7)  SETC  '&SGCTRLC(32)'  TARGET SERIAL                        01300000
+&SGCTRLC(8)  SETC  '&SGCTRLC(31)'  TARGET UNIT                          01350000
+&SGCTRLC(9)  SETC  'LINKLIB'       TARGET LIBRARY NAME                  01400000
+&SGCTRLC(10) SETC  ',LET'          ATTRIBUTE                            01450000
+&SGCTRLC(11) SETC  ',AC=1'         ATTRIBUTE                            01500000
+.*  PUT DEMF/TCAM MODULES INTO LINKLIB                                  01550000
+         COPY  SGLEDPK1                                                 01600000
+ PUNCH '//AOS29 DD DSN=SYS1.AOS29,DISP=SHR'                    @OZ37101 01650007
+         COPY  SGLEDPK2                                                 01700000
+ PUNCH ' INCLUDE AOS29(BNGTDISP)'                                       01750000
+ PUNCH ' ENTRY BNGTDISP'                                                01800000
+ PUNCH ' NAME BNGTDISP(R)'                                              01850000
+ PUNCH ' INCLUDE AOS29(BNGT3270)'                                       01900000
+ PUNCH ' ENTRY BNGT3270'                                                01950000
+ PUNCH ' NAME BNGT3270(R)'                                              02000000
+ PUNCH ' INCLUDE AOS29(BNGTLOCL)'                                       02050000
+ PUNCH ' ENTRY BNGTLOCL'                                                02100000
+ PUNCH ' NAME BNGTLOCL(R)'                                              02150000
+ PUNCH ' INCLUDE AOS29(BNGTRMOT)'                                       02200000
+ PUNCH ' ENTRY BNGTRMOT'                                                02250000
+ PUNCH ' NAME BNGTRMOT(R)'                                              02300000
+ PUNCH ' INCLUDE AOS29(BNGTMENU)'                                       02350000
+ PUNCH ' ENTRY BNGTMENU'                                                02400000
+ PUNCH ' NAME BNGTMENU(R)'                                              02450000
+ PUNCH ' INCLUDE AOS29(BNGTQEMF)'                                       02500000
+ PUNCH ' ENTRY BNGTQEMF'                                                02550000
+ PUNCH ' NAME BNGTQEMF(R)'                                              02600000
+ PUNCH '/*'                                                             02650000
+.NOTCAM  ANOP                                                           02700000
+         MEND                                                           02750000

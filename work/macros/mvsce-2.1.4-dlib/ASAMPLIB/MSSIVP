@@ -1,0 +1,124 @@
+//MSSIVP  JOB  MSGLEVEL=(1,1)                                           00050003
+//********************************************************************* 00100003
+//*  MSSIVP REQUIRES THAT FOUR SCRATCH CARTRIDGES BE AVAILABLE IN   *** 00150003
+//*  IN THE 3850 MSS.                                               *** 00200003
+//********************************************************************* 00250003
+//MSSIVPS1 EXEC PGM=IDCAMS                                              00300003
+//********************************************************************* 00350003
+//*  MSSIVPS1 CREATES TWO VIRTUAL VOLUMES FOR THE MSSIVP JOB.       *** 00400003
+//********************************************************************* 00450003
+//SYSPRINT DD SYSOUT=A                                                  00500003
+//IVPS1DS1 DD UNIT=(3330V,,DEFER),DISP=OLD,VOL=(PRIVATE,SER=FE3850)     00550003
+//SYSIN DD *                                                            00600003
+   TRACE ON                                                             00650003
+   TUNE DISPLAY                                                         00700003
+   CREATEV VOL(FE3850) OWNER(FEPSR) FILE(IVPS1DS1) CNT(2) DERAS         00750003
+//MSSIVPS2 EXEC PGM=IEBDG                                               00800003
+//********************************************************************* 00850003
+//*  MSSIVPS2 CREATES THREE DATASETS OF 800 BYTE RECORDS SEQUENTIALLY** 00900003
+//* NUMBERED IN BYTES 791 THRU 800. THESE DATASETS ARE MADE UP OF 800** 00950003
+//* BYTE RECORDS BLOCKED 4 RECORDS TO A BLOCK. TWO DATASETS SPAN TWO*** 01000003
+//* CARTRIDGES.  ONE FROM CYLINDER 199, HEAD 16 TO CYLINDER 231, HEAD 8 01050003
+//*  AND THE OTHER FROM CYLINDER 180, HEAD 0 TO CYLINDER 212, HEAD 19.* 01100003
+//*  THE ISAM DATASET IS TO CAUSE CYLINDER FAULTS TO OCCUR.         *** 01150003
+//********************************************************************* 01200003
+//SYSPRINT DD SYSOUT=A                                                  01250003
+//IVPS2DS1  DD  DSN=MSSIVP2,UNIT=3330V,DISP=(NEW,PASS),                 01300003
+//  DCB=(RECFM=FB,LRECL=800,BLKSIZE=3200,DSORG=IS,OPTCD=MY,             01350003
+//  KEYLEN=10,RKP=790,NTM=4,CYLOFL=10),                                 01400003
+//  SPACE=(ABSTR,(627,3420,38)),                                        01450003
+//  VOL=(PRIVATE,SER=FE3851)                                            01460003
+//IVPS2DS2 DD DSN=MSSIVP1,UNIT=3330V,DISP=(NEW,PASS),                   01500003
+//  DCB=(RECFM=FB,LRECL=800,BLKSIZE=3200),SPACE=(ABSTR,(600,3798)),     01550003
+//  VOL=(PRIVATE,SER=FE3850)                                            01600003
+//IVPS2DS3  DD  DSN=MSSIVP3,UNIT=3330V,DISP=(NEW,PASS),                 01650003
+//  DCB=(RECFM=FB,LRECL=800,BLKSIZE=3200),                              01700003
+//  SPACE=(3200,(3500),RLSE,,ROUND),                                    01750003
+//  VOL=(PRIVATE,SER=FE3851)                                            01800003
+//SYSIN DD *                                                            01850003
+   DSD OUTPUT=(IVPS2DS1)                                                01900003
+   FD  NAME=FIELD1,LENGTH=300,STARTLOC=1,FORMAT=AN,ACTION=RP            01950003
+   FD  NAME=FIELD2,LENGTH=300,STARTLOC=301,FORMAT=RA,ACTION=RP          02000003
+   FD  NAME=FIELD3,LENGTH=10,STARTLOC=791,PICTURE=10,                  C02050003
+   P'0000000001',INDEX=1                                                02100003
+  CREATE QUANTITY=2395,NAME=(FIELD1,FIELD2,FIELD3),FILL=X'FE'           02150003
+   END                                                                  02200003
+  DSD OUTPUT=(IVPS2DS2)                                                 02250003
+   FD  NAME=FIELD4,LENGTH=300,STARTLOC=1,FORMAT=AN,ACTION=RP            02300003
+   FD  NAME=FIELD5,LENGTH=300,STARTLOC=301,FORMAT=BI,ACTION=RP          02350003
+   FD  NAME=FIELD6,LENGTH=10,STARTLOC=791,PICTURE=10,                  C02400003
+   P'0000000001',INDEX=1                                                02450003
+  CREATE QUANTITY=2395,NAME=(FIELD4,FIELD5,FIELD6),FILL=X'FE'           02500003
+  END                                                                   02550003
+  DSD OUTPUT=(IVPS2DS3)                                                 02600003
+   FD  NAME=FIELD7,LENGTH=300,STARTLOC=1,FORMAT=AN,ACTION=RP            02650003
+   FD  NAME=FIELD8,LENGTH=300,STARTLOC=301,FORMAT=BI,ACTION=RP          02700003
+   FD  NAME=FIELD9,LENGTH=10,STARTLOC=791,PICTURE=10,                  C02750003
+   P'0000000001',INDEX=1                                                02800003
+  CREATE QUANTITY=2395,NAME=(FIELD7,FIELD8,FIELD9),FILL=X'FE'           02850003
+  END                                                                   02900003
+//MSSIVPS3 EXEC PGM=IDCAMS,COND=EVEN                                    02950003
+//********************************************************************* 03000003
+//*  STEP MSSIVPS3 USES THE STOREV MACRO TO FORCE DESTAGEING OF THE *** 03050003
+//*  THREE DATASETS CREATED IN MSSIVPS2.                            *** 03100003
+//********************************************************************* 03150003
+//SYSPRINT DD SYSOUT=A                                                  03200003
+//IVPS3DS1 DD UNIT=3330V,DISP=OLD,VOL=(PRIVATE,SER=FE3850)              03250003
+//IVPS3DS2 DD UNIT=3330V,DISP=OLD,VOL=(PRIVATE,SER=FE3851)              03260003
+//SYSIN DD *                                                            03300003
+  STOREV VOL(FE3850) FILE(IVPS3DS1)                                     03350003
+  STOREV VOL(FE3851) FILE(IVPS3DS2)                                     03400003
+//MSSIVPS4 EXEC PGM=IDCAMS,COND=EVEN                                    03450003
+//********************************************************************* 03500003
+//*  STEP MSSIVPS4 ACTIVATES THE VOLUMES DEACTIVATED IN MSSIVPS3.   *** 03550003
+//*  DATA REUSE IS PREVENTED BY THE DERAS ATTRIBUTE ON THE VOLUMES. *** 03600003
+//*  THEREFORE, THE DATA WILL BE RESTAGED DURING MSSIVPS5 & MSSIVPS6*** 03650003
+//********************************************************************* 03700003
+//SYSPRINT DD SYSOUT=A                                                  03750003
+//IVPS4DS1 DD UNIT=(3330V,,DEFER),DISP=OLD,                             03800003
+//  VOL=(PRIVATE,SER=(FE3850,FE3851))                                   03850003
+//SYSIN DD *                                                            03900003
+  ADDV VOL(FE3850)                                                      03950003
+  ADDV  VOL(FE3851)                                                     04000003
+//MSSIVPS5 EXEC PGM=IEBCOMPR                                            04050003
+//********************************************************************* 04100003
+//*  MSSIVPS5 COMPARES THE TWO SEQUENTIAL DATASETS CREATED IN       *** 04150003
+//*  MSSIVPS2.  THE DATASETS ARE DELETED IN THIS STEP.              *** 04200003
+//********************************************************************* 04250003
+//SYSPRINT DD SYSOUT=A                                                  04300003
+//SYSIN DD DUMMY                                                        04350003
+//SYSUT1 DD DSN=MSSIVP1,UNIT=3330V,DISP=(OLD,DELETE)                    04400003
+//SYSUT2 DD DSN=MSSIVP3,UNIT=3330V,DISP=(OLD,DELETE)                    04500003
+//MSSIVPS6  EXEC  PGM=IEBISAM,PARM=UNLOAD                               04600003
+//********************************************************************* 04650003
+//*  MSSIVPS6 UNLOADS THE ISAM DATASET CREATED IN MSSIVPS2.         *** 04700003
+//**  IT DELETES BOTH DATASETS AND IS TO CAUSE CYLINDER FAULTS.     *** 04750003
+//********************************************************************* 04800003
+//SYSPRINT DD SYSOUT=A                                                  04850003
+//SYSUT1  DD  DSN=MSSIVP2,UNIT=3330V,DISP=(OLD,DELETE)                  04900003
+//SYSUT2  DD  DSN=MSSIVP4,UNIT=SDG00,DISP=(NEW,DELETE),                 05000003
+//  VOL=(PRIVATE,SER=FE3850),SPACE=(3200,(3500)),                       05050003
+//  DCB=(RECFM=FB,LRECL=80,BLKSIZE=3200)                                05100003
+//MSSIVPS7 EXEC PGM=IDCAMS,COND=EVEN                                    05150003
+//********************************************************************* 05200003
+//*  MSSIVPS7 SCRATCHES THE TWO VOLUMES CREATED IN MSSIVPS1.        *** 05250003
+//*  THIS STEP ALSO USES COND=EVEN TO ATTEMPT PROPER CLEAN-UP.      *** 05300003
+//********************************************************************* 05350003
+//SYSPRINT DD SYSOUT=A                                                  05400003
+//IVPS7DS1 DD VOL=(PRIVATE,SER=FE3850),UNIT=3330V,DISP=OLD              05450003
+//IVPS7DS2 DD VOL=(PRIVATE,SER=FE3851),UNIT=3330V,DISP=OLD              05460003
+//SYSIN DD *                                                            05500003
+  SCRATCHV VOL(FE3850) FILE(IVPS7DS1)                                   05550003
+  SCRATCHV VOL(FE3851) FILE(IVPS7DS2)                                   05600003
+   TRACE OFF                                                            05650003
+//****************************** NOTE ********************************* 05700003
+//*                                                                 *** 05750003
+//*  PROPER EXECUTION OF THE IVP IS INDICATED BY ALL STEPS EXECUTED *** 05800003
+//*  WITH CONDITION CODES EQUAL TO ZERO AND NO STEPS BYPASSED.      *** 05850003
+//*  NO UNUSUAL CONDITIONS SHOULD OCCUR.  SDA SHOULD BE EXECUTED    *** 05900003
+//*  AFTER THE IVP TO CHECK FOR 3850 ERRORS THAT MAY HAVE BEEN      *** 05950003
+//*  LOGGED IN SYS1.LOGREC.                                         *** 06000003
+//*  TRACE REPORTS SHOULD BE RUN TO RECORD STAGING ACTIVITY FOR     *** 06050003
+//*  FUTURE REFERENCE.                                              *** 06100003
+//*                                                                 *** 06150003
+//********************************************************************* 06200003

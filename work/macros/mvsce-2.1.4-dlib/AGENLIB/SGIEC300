@@ -1,0 +1,26 @@
+         MACRO                                                          00020000
+         SGIEC300                                                       00040000
+         COPY  SGGBLPAK                                                 00060000
+         AIF   (&GETB(3)).NOTO4         TEST FOR IODEVICE SYSGEN        00240002
+         PUNCH ' INCLUDE AOSC5(IECVEXCP,IECVEXPR)'                      00290002
+         PUNCH ' INCLUDE AOSC5(IECVDERP,IECVERPL)'                      00340002
+         PUNCH ' INCLUDE AOSC5(IECIOSAM,IECVPST)'                       00390002
+         PUNCH ' INCLUDE AOSC5(IECVTCCW,IECVGENA)'                      00400002
+         PUNCH ' INCLUDE AOSC5(IECVITRP,IECVSMGR)'                      00410002
+         PUNCH ' INCLUDE AOSC5(IECIHIO,IECVDAVV)'                       00420002
+         PUNCH ' INCLUDE AOSC5(IECVRSTI,IECVPURG)'                      00430002
+         PUNCH ' INCLUDE AOSC5(IECVIRST)'                      @G51BPLM 00431000
+         PUNCH ' INCLUDE AOSC5(IECVOID)'                       @ZM49102 00431364
+         PUNCH ' INCLUDE AOSC5(IECVHDET,IECVHREC)'             @ZA30350 00431664
+         PUNCH ' INCLUDE AOSC5(IECVHIDT)'                      @ZA30350 00432264
+         PUNCH ' INCLUDE AOSC5(IECVMAP)'                       @G64VPLK 00432464
+         PUNCH ' INCLUDE AOSC5(IECVBRSV,IECVESIO)'             @G64VPLK 00432664
+         PUNCH ' INCLUDE AOSC5(IECVRDIO,IECVRRSV)'             @G64VPLK 00432864
+         PUNCH ' INCLUDE AOSC5(IECVURDT,IECVURSV,IECVDURP)'    @ZA35535 00432946
+         AIF   (NOT &SGCPRGB(9) OR NOT &SGCPRGB(12)).NOTO4      Y30CQLB 00433003
+         PUNCH ' INCLUDE AOSC5(IECVCRHH,IECVCINT)'              Y30CQLB 00436003
+.NOTO4   ANOP                                                           00440000
+         AIF   (NOT &SGDCLSB(82)).NOHASP                                00448002
+         PUNCH '    INCLUDE AOSC5(IECHASPE) ' INCLUDE HASP ATTN         00448402
+.NOHASP  ANOP                                                           00448802
+         MEND                                                           00450864

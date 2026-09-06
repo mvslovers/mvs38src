@@ -1,0 +1,47 @@
+          MACRO                                                         00100003
+&NAME    GBLGENER                                                       00150003
+.***** START OF SPECIFICATIONS **************************************   00200003
+.*                                                                      00300003
+.* MODULE NAME - GBLGENER                                               00400003
+.*                                                                      00500003
+.* DESCRIPTIVE NAME - GBLGENER                                          00600003
+.*                                                                      00700003
+.* COPYRIGHT - NONE                                                     00800003
+.*                                                                      00900003
+.* STATUS - CHANGE LEVEL 04                                             01000037
+.*                                                                      01100003
+.* FUNCTION -                                                           01200003
+.*       THE GBLGENER MACRO ALONG WITH THE MACRO SGSYSPAK CONTAIN ALL   01300003
+.*       GLOBALS NEEDED TO GENERATE A SYSTEM. THE ASSEMBLED OUTPUT OF   01400003
+.*       THIS MACRO IS THE MODULE CALLED SGGBLPAK.                      01500003
+.*                                                                      01600003
+.* NOTES - THE GLOBALS ONCE CONTAINED IN GBLGENER AND THUS IN SGGBLPAK  01700037
+.*       HAVE BEEN MOVED TO SGSYSPAK.  THIS WAS DONE TO ELIMINATE THE   01730037
+.*       COMPLICATIONS INVOLVED IN THE INDIRECT MECHANISM.      Z40ASVN 01760037
+.*                                                                      01800003
+.* MODULE TYPE - MACRO                                                  01900003
+.*                                                                      02000003
+.* ENTRY POINT - N/A                                                    02100003
+.*                                                                      02200003
+.* INPUT - A CALL TO THE GBLGENER MACRO.                                02300003
+.*                                                                      02400003
+.* OUTPUT - THE MODULE SGGBLPAK.                                        02500003
+.*                                                                      02600003
+.* EXIT, NORMAL - N/A                                                   02700003
+.*                                                                      02800003
+.* EXIT, ERROR - N/A                                                    02900003
+.*                                                                      03000003
+.* EXTERNAL REFERENCES - N/A                                            03100003
+.*                                                                      03200003
+.* TABLES - N/A                                                         03300003
+.*                                                                      03400003
+.* MACROS - NONE                                                        03500003
+.*                                                                      03600003
+.* CHANGE ACTIVITY - XM5245,Z30AALG,VS42058,Z40ASVN                     03700037
+.*         CHANGE FOR Z30AALG: INCREASE DEVICES FROM  768 TO 1023       03730037
+.*         CHANGE FOR Z40ASVN: INCREASE DEVICES FROM 1023 TO 1917;      03760037
+.*                             MOVE GLOBALS OUT TO SGSYSPAK.            06760037
+.****** END OF SPECIFICATIONS ***************************************   09760037
+         REPRO                                                          12760037
+    COPY SGSYSPAK                                                       15760037
+         MEND                                                           18760037

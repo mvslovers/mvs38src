@@ -1,0 +1,29 @@
+)F FUNCTION -                                                           03000002
+  THE DEFINE COMMAND CAN BE USED TO DEFINE AN ALTERNATE NAME (ALIAS)    06000002
+  FOR A USER CATALOG OR FOR A NONVSAM DATA SET.                         09000002
+)X SYNTAX -                                                             12000002
+         DEFINE    ALIAS                                                15000002
+                   (  NAME('ALIASNAME')                                 15700002
+                      RELATE('ENTRYNAME')  )                            16400002
+                   CATALOG('CATNAME/PASSWORD')                          17100003
+  REQUIRED - ALIAS, NAME, RELATE                                        18000002
+  DEFAULTS - NONE                                                       21000002
+)O OPERANDS -                                                           24000002
+))ALIAS    - SPECIFIES THAT AN ALIAS IS TO BE DEFINED.                  27000002
+))NAME('ALIASNAME')                                                     30000002
+           - SPECIFIES THE ALIAS NAME.                                  33000002
+  'ALIASNAME'                                                           36000002
+           - ALIAS NAME.                                                39000002
+))RELATE('ENTRYNAME')                                                   42000002
+           - SPECIFIES THE NAME OF THE ENTRY FOR WHICH AN ALIAS IS      45000002
+             BEING DEFINED.                                             48000002
+  'ENTRYNAME'                                                           51000002
+           - NAME OF THE ENTRY FOR WHICH AN ALIAS IS BEING DEFINED.     54000002
+))CATALOG('CATNAME/PASSWORD')                                           57000003
+           - IDENTIFIES THE CATALOG IN WHICH THE ALIAS IS TO BE         60000002
+             DEFINED.                                                   63000002
+  'CATNAME'                                                             66000002
+           - NAME OF THE CATALOG IN WHICH THE ENTRY IS TO BE DEFINED.   69000002
+  'PASSWORD'                                                            72000002
+           - PASSWORD OF THE CATALOG.                                   75000002
+  REQUIRED - 'CATNAME'                                                  87000002

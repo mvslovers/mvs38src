@@ -1,0 +1,50 @@
+         MACRO                                                          02000002
+         SGIEF240                                                       04000002
+.*A000000-999999                                               @YM02527 06000002
+.*********************************************************************  08000002
+.*                                                                      10000002
+.* MACRO NAME - SGIEF240                                                12000002
+.*                                                                      14000002
+.* FUNCTION  - GENERATES THE ASSEMBLY JCL AND GROUP 0 MACRO CALL TO     16000002
+.*             SGIEE00V TO GENERATE CSECT IEEMB850                      18000002
+.*                                                                      20000002
+.* OPERATION - THE NUMBER OF 130 BYTE RECORDS THAT WILL BE SET          20300002
+.*             ASIDE FOR BROADCAST MESSAGES IN THE SYS1.BRODCAST        20600002
+.*             DATA SET, AS SPECIFIED ON THE BCLMT PARAMETER OF         20900002
+.*             THE SCHEDULR MACRO, IS PASSED AS A PARAMETER TO          21200002
+.*             SGIEE00V.                                                21500002
+.*                                                                      28000002
+.* EXECUTION STAGE - STAGE I                                            30000002
+.*                                                                      32000002
+.* ENTRY - SGIEF240 FROM GENERATE                                       34000002
+.*                                                                      36000002
+.* INPUT - GLOBAL &SGSCHDA(13) - BROADCAST LIMIT FOR TSO                38000002
+.*                                                                      40000002
+.* INTERNAL CALLS - SGGBLPAK - FOR GLOBAL INPUT REFERENCE               42000002
+.*                  SGASMPAK - FOR ASSEMBLY JCL                         44000002
+.*                                                                      46000002
+.* OUTPUT - ASSEMBLY JCL FOR STAGE II FOR IEEMB850                      48000002
+.*                                                                      50000002
+.* EXIT - MEND TO GENERATE                                              52000002
+.*                                                                      54000002
+.* CHANGE ACTIVITY -                                                    54500002
+.*     PTM 02527                                                        55000002
+.*                                                                      55500002
+.* MESSAGES - NONE                                                      56000002
+.*                                                                      58000002
+.* DISTRIBUTION LIBRARY - SYS1.AGENLIB                                  60000002
+.*                                                                      62000002
+.*********************************************************************  64000002
+         COPY  SGGBLPAK                                                 66000002
+.*                                                                      68000002
+.* LOCAL VARIABLES                                                      70000002
+.*                                                                      72000002
+         LCLA  &BCLMT                                                   74000002
+.*                                                                      76000002
+&BCLMT   SETA  (&SGSCHDA(13))      SET BROADCAST LIMIT FOR TSO          78000002
+&SGCTRLC(6) SETC 'IEEMB850'        SET ASSEMBLY MODULE NAME             80000002
+         COPY  SGASMPAK                                                 82000002
+         PUNCH ' SGIEE00V &BCLMT'                                       84000002
+         PUNCH ' END'                                                   86000002
+         PUNCH '/*'                                                     88000002
+         MEND                                                           90000002

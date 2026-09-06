@@ -1,0 +1,24 @@
+         MACRO                                                          00002000
+         SGIED513                                                       00004000
+.*                                                                      00006000
+.*   THIS SYSGEN MACRO, WHICH COPIES NEW BTAM MODULES INTO              00008000
+.*   SVCLIB, HAS THE FOLLOWING DEPENDENCIES:                            00010000
+.*                                                                      00012000
+.*      1. THE SYSTEM GENERATE MACRO MUST CALL SGIED513                 00014000
+.*         IMMEDIATELY AFTER CALLING SGIED503.                          00016000
+.*                                                                      00018000
+.*      2. THE TCAM SYSGEN MACRO (SGIED503) MUST CONTINUE TO            00020000
+.*         COPY ALL BTAM SVCLIB MODULES NOT COPIED BY                   00022000
+.*         SGIED513.                                                    00024000
+.*                                                                      00026000
+.* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  00026200
+.*                        *** CHANGE ACTIVITY ***                       00026400
+.*                                                                      00026600
+.*      ZA43136    (11/09/79)               ZA46247    (04/18/80)       00026800
+.*                                                                      00027000
+.* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  00027200
+.*                 VERSION DATED 07/01/79                               00028000
+.*                                                                      00030000
+.*  THERE ARE NO NEW BTAM SVCLIB MODULES.                               00032000
+.*                                                                      00034000
+         MEND                                                           00036000

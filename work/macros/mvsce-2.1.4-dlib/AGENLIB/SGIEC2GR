@@ -1,0 +1,502 @@
+         MACRO                                                          00050000
+         SGIEC2GR &UCBNO,&DEVAD,&TYPC,&DEVTAB,&STATAB,&LCHN,&DEVNDX,   *00100000
+               &ALOCCNT,&SYSRES,&SQOPT,&OFF                   LF Y02971 00150000
+.*                                                                      00200000
+.*             FIXES APPLIED:                                           00250000
+.*                                                                      00300000
+.*                   YM0160                                   LF YM0160 00350000
+.*                   Y02971                                   LF Y02971 00400000
+.*                    20066                                       20066 00450000
+.*                    AOS1-2                                     AOS1-2 00500000
+.*                   Y01122                                   LD Y01122 00550000
+.*                   Z30AALG                                 LG Z30AALG 00600000
+.*                   ZA00511                                 LG ZA00511 00650000
+.*                   ZA04890                               D11 @ZA04890 00700000
+.*                   ZA15420                               D11 @ZA15420 00750000
+.*                   @G51AK13                                  @G51AK13 00800000
+.*                PTM VS47675                                   VS47675 00850000
+.*                   ZA32710   09/11/78                     R22 ZA32710 00900000
+.*                   ZA35253                                R22 ZA35253 00950000
+.*                    ZA40139   06/08/79                                01000000
+.*                    ZA41717   08/30/79                                01050000
+.*                    ZA41749   08/30/79                                01100000
+.*                    ZA43140   11/10/79                                01150000
+         COPY  SGGBLPAK                                                 01200000
+         LCLA  &DEVNO,&CUNO,&DEVNDX2,&SCR,&TUCB               LF YM0160 01250000
+         LCLA  &PCU        PHYSICAL CONTROL UNIT            R22 ZA32710 01300000
+         LCLA  &ADDFEAT                                        @ZA41717 01350000
+         LCLC  &TYPE,&ERRTAB,&FTCODE1,&FTCODE2,&FTCODE3,&MODEL,&CLASS   01400000
+         LCLC  &PCUC                                           @ZA41749 01450000
+         LCLC  &C,&D                                        R22 ZA40139 01500000
+         LCLC  &HEXG                                           @ZA43140 01550000
+&DEVNO   SETA  &SGDASPA(&UCBNO)                            D11 @ZA15420 01600000
+&CUNO    SETA  &DEVNO                                            AOS1-2 01650000
+&DEVNDX2 SETA  &DEVNDX                                                  01700000
+&PCU     SETA  0                                            R22 ZA32710 01750000
+&TUCB    SETA  &UCBNO+1    CALC TAG UCB FOR PUNCHED AGO STM   LF YM0160 01800000
+&FTCODE3 SETC  '0000'              SET ADDITIONAL FEATURES TO NONE      01850000
+&HEXG    SETC  '0123456789ABCDEF'                              @ZA43140 01900000
+         AIF   (NOT &SGDCLSB(80)).GR01  ANY 3270 IN SYSTEM              01950000
+         AIF   (&SGDU08B(&DEVNO) AND &SGDM01B(&DEVNO)).GR771 3277 MOD1  02000000
+         AIF   (&SGDU08B(&DEVNO) AND &SGDM02B(&DEVNO)).GR772 3277 MOD2  02050000
+         AIF   (&SGDU09B(&DEVNO) AND &SGDM01B(&DEVNO)).GR841  3284 MOD1 02100000
+         AIF   (&SGDU09B(&DEVNO) AND &SGDM02B(&DEVNO)).GR842  3284 MOD2 02150000
+         AIF   (&SGDU07B(&DEVNO) AND &SGDM01B(&DEVNO)).GR861  3286 MOD1 02200000
+         AIF   (&SGDU07B(&DEVNO) AND &SGDM02B(&DEVNO)).GR862  3286 MOD2 02250000
+         AIF   (&SGDU10B(&DEVNO) AND                                   *02300000
+               &SGDT05B(&DEVNO)).GR3158    CHECK FOR 3158     LD Y01122 02350000
+         AIF   (&SGDU13B(&DEVNO) AND                                   *02400000
+               &SGDT05B(&DEVNO)).GR3036    CHECK FOR 3036      @G51AK13 02450000
+.GR01    AIF   (&SGDU01B(&DEVNO) AND &SGDM01B(&DEVNO)).GR1  CHK 2250-1  02500000
+         AIF   (&SGDU01B(&DEVNO) AND &SGDM03B(&DEVNO)).GR3  CHK 2250-3  02550000
+         AIF   (&SGDU02B(&DEVNO)).GR4        CHK FOR 2260               02600000
+         AIF   (&SGDU03B(&DEVNO)).GR8        CHK FOR 1053-4             02650000
+         AIF   (&SGDU06B(&DEVNO)).GR10A      5450  OP CONSOLE      000A 02700000
+         MEXIT                                                          02750000
+.GR1     ANOP                                                           02800000
+&ERRTAB  SETC  '65'                          SET 2250 ERROR TAB         02850000
+&DEVNDX2 SETA  1                             RESET DEVICE INDEX VALUE   02900000
+&MODEL   SETC  '31'                          SET PARTIAL DEV TYPE FLDS  02950000
+&CLASS   SETC  '1002'                                                   03000000
+         AGO   .GR11                                                    03050000
+.GR3     ANOP                                                           03100000
+&ERRTAB  SETC  '65'                          SET 2250 ERROR TAB         03150000
+&MODEL   SETC  '33'                          SET PARTIAL DEV TYPE FLDS  03200000
+&CLASS   SETC  '1002'                                                   03250000
+         AGO   .GR11A                                                   03300000
+.GR771   ANOP                                                           03350000
+&ERRTAB  SETC  '69'                3270 ERRTAB                          03400000
+&MODEL   SETC  '11'                3277 MOD1                            03450000
+&CLASS   SETC  '1009'              3277 DEVICE TYPE                     03500000
+         AGO   .GR77                                                    03550000
+.GR772   ANOP                                                           03600000
+&ERRTAB  SETC  '69'                3277 ERRTAB                          03650000
+&MODEL   SETC  '12'                3277 MODEL 2                         03700000
+&CLASS   SETC  '1009'              3277 DEVICE TYPE                     03750000
+         AGO   .GR77                                                    03800000
+.GR3036  ANOP                                                  @G51AK13 03850000
+         AIF   (NOT &SGDF02B(&DEVNO)).GR3036A                  @G51AK13 03900000
+         MEXIT                                                 @G51AK13 03950000
+.GR3036A ANOP                                                  @G51AK13 04000000
+&ERRTAB  SETC  '69'                3036 ERRTAB                 @G51AK13 04050000
+&MODEL   SETC  '12'                     MODEL TYPE             @G51AK13 04100000
+&CLASS   SETC  '100D'                   DEVICE TYPE            @G51AK13 04150000
+         AGO   .GR77                                           @G51AK13 04200000
+.GR3158  ANOP                                                 LD Y01122 04250000
+&ERRTAB  SETC  '69'                3158 ERRTAB                LD Y01122 04300000
+&MODEL   SETC  '12'                     MODEL TYPE            LD Y01122 04350000
+&CLASS   SETC  '100C'                   DEVICE TYPE           LD Y01122 04400000
+         AGO   .GR77                                          LD Y01122 04450000
+.GR4     ANOP                                                           04500000
+&ERRTAB  SETC  '66'                                                     04550000
+&CLASS   SETC  '1003'                                                   04600000
+         AIF   (&SGDM01B(&DEVNO)).GR5                                   04650000
+         AIF   (&SGDM02B(&DEVNO)).GR6                                   04700000
+&MODEL   SETC  '00'                                                     04750000
+         AGO   .GR39                                                    04800000
+.GR5     ANOP                                                           04850000
+&MODEL   SETC  '11'                                                     04900000
+         AGO   .GR39                                                    04950000
+.GR6     ANOP                                                           05000000
+&MODEL   SETC  '12'                                                     05050000
+         AGO   .GR39                                                    05100000
+.GR8     ANOP                                                           05150000
+&ERRTAB  SETC  '66'                          SET 1053 ERROR TAB         05200000
+&TYPE    SETC  '14001004'                    SET DEVICE TYPE FIELD      05250000
+         AGO   .GR52                                                    05300000
+.GR10A   AIF   (&SGDF01B(&DEVNO)).GR10B                           20066 05350000
+&ERRTAB  SETC  '68'                          5450 ERRTAB           000A 05400000
+&TYPE    SETC  '10001007'                    5450 TYPE             000A 05450000
+         AGO   .GR52                                               000A 05500000
+.GR10B   ANOP                                                     20066 05550000
+&ERRTAB  SETC  '68'                     553 ERROR TABLE INDEX     20066 05600000
+&TYPE    SETC  '10001008'               553 TYPE FIELD            20066 05650000
+         AGO   .GR52                                              20066 05700000
+.GR841   ANOP                                                           05750000
+&ERRTAB  SETC  '69'                3284 ERRTAB                          05800000
+&TYPE    SETC  '1100100A'          3284 MOD1                            05850000
+         AGO   .GR52                                                    05900000
+.GR842   ANOP                                                           05950000
+&ERRTAB  SETC  '69'                3284 ERRTAB                          06000000
+&TYPE    SETC  '1200100A'          3284 MOD2                            06050000
+         AGO   .GR52                                                    06100000
+.GR861   ANOP                                                           06150000
+&ERRTAB  SETC  '69'                3286 ERRTAB                          06200000
+&TYPE    SETC  '1100100B'          3286 MOD1                            06250000
+         AGO   .GR52                                                    06300000
+.GR862   ANOP                                                           06350000
+&ERRTAB  SETC  '69'                3286 ERRTAB                          06400000
+&TYPE    SETC  '1200100B'          3286 MOD2                            06450000
+         AGO   .GR52                                                    06500000
+.GR11    AIF   (&SGDF01B(&DEVNO) AND &SGDF02B(&DEVNO) AND              *06550000
+               &SGDF03B(&DEVNO) AND &SGDF04B(&DEVNO)).GR26              06600000
+         AIF   (&SGDF01B(&DEVNO) AND &SGDF02B(&DEVNO) AND              *06650000
+               &SGDF03B(&DEVNO)).GR22                                   06700000
+         AIF   (&SGDF01B(&DEVNO) AND &SGDF02B(&DEVNO) AND              *06750000
+               &SGDF04B(&DEVNO)).GR23                                   06800000
+         AIF   (&SGDF01B(&DEVNO) AND &SGDF03B(&DEVNO) AND              *06850000
+               &SGDF04B(&DEVNO)).GR24                                   06900000
+         AIF   (&SGDF02B(&DEVNO) AND &SGDF03B(&DEVNO) AND              *06950000
+               &SGDF04B(&DEVNO)).GR25                                   07000000
+         AIF   (&SGDF01B(&DEVNO) AND &SGDF02B(&DEVNO)).GR16             07050000
+         AIF   (&SGDF01B(&DEVNO) AND &SGDF03B(&DEVNO)).GR17             07100000
+         AIF   (&SGDF01B(&DEVNO) AND &SGDF04B(&DEVNO)).GR18             07150000
+         AIF   (&SGDF02B(&DEVNO) AND &SGDF03B(&DEVNO)).GR19             07200000
+         AIF   (&SGDF02B(&DEVNO) AND &SGDF04B(&DEVNO)).GR20             07250000
+         AIF   (&SGDF03B(&DEVNO) AND &SGDF04B(&DEVNO)).GR21             07300000
+         AIF   (&SGDF01B(&DEVNO)).GR12                                  07350000
+         AIF   (&SGDF02B(&DEVNO)).GR13                                  07400000
+         AIF   (&SGDF03B(&DEVNO)).GR14                                  07450000
+         AIF   (&SGDF04B(&DEVNO)).GR15                                  07500000
+         AGO   .GR11B                                                   07550000
+.GR77    ANOP                                                           07600000
+         AIF   (&SGDF14B(&DEVNO)).GR78K  IS IT 78 KEY                   07650000
+         AIF   (&SGDF10B(&DEVNO)).GR66E  IS IT 66 KEY EBCDIC            07700000
+         AIF   (&SGDF12B(&DEVNO)).GR66D  IS IT 66 KEY DATA ENTRY        07750000
+         AIF   (&SGDF11B(&DEVNO)).GR66A  IS IT 66 KEY ASCII             07800000
+.GR770   ANOP                                                           07850000
+&FTCODE1 SETC  '0'                 NO KEYBOARD                          07900000
+         AIF   (NOT &SGDF01B(&DEVNO)).GR77A                             07950000
+&FTCODE1 SETC  '1'                 HAS AUDIBLE ALARM                    08000000
+         AGO   .GR77A                                                   08050000
+.GR78K   ANOP                                                           08100000
+         AIF   (&SGDF10B(&DEVNO)).GR78E  IS IT 78 KEY EBCDIC            08150000
+         AIF   (&SGDF13B(&DEVNO)).GR78O  IS IT 78 KEY OP CONSOLE        08200000
+         AIF   (&SGDF11B(&DEVNO)).GR78A  IS IT 78 KEY ASCII             08250000
+         AGO   .GR770              IS INVALID                           08300000
+.GR11A   ANOP                                                           08350000
+&PCU     SETA  &SGDADRA(&UCBNO)/4096-(&SGDADRA(&UCBNO)/1048576)*256     08400000
+.* GET PCU NUMBER FOR 2250-3 FOR BUFFER TABLE LABEL SINCE      @ZA41749 08450000
+.* THE THREE DIGIT DEVAD USED IN BUFFER TABLE LABELS FOR       @ZA41749 08500000
+.* 2250-1 WILL NEVER CONFLICT WITH 'P'| |PCU VALUE FOR 2250-3  @ZA41749 08550000
+         AIF   (&SGDF01B(&DEVNO) AND &SGDF02B(&DEVNO) AND              *08600000
+               &SGDF03B(&DEVNO)).GR22                                   08650000
+         AIF   (&SGDF01B(&DEVNO) AND &SGDF02B(&DEVNO)).GR16             08700000
+         AIF   (&SGDF01B(&DEVNO) AND &SGDF03B(&DEVNO)).GR17             08750000
+         AIF   (&SGDF02B(&DEVNO) AND &SGDF03B(&DEVNO)).GR19             08800000
+         AIF   (&SGDF01B(&DEVNO)).GR12                                  08850000
+         AIF   (&SGDF02B(&DEVNO)).GR13                                  08900000
+         AIF   (&SGDF03B(&DEVNO)).GR14                                  08950000
+.GR11B   ANOP                                                           09000000
+&FTCODE1 SETC  '0'                                                      09050000
+         AGO   .GR27                                                    09100000
+.GR12    ANOP                                                           09150000
+&FTCODE1 SETC  '4'                                                      09200000
+         AGO   .GR27                                                    09250000
+.GR13    ANOP                                                           09300000
+&FTCODE1 SETC  '2'                                                      09350000
+         AGO   .GR27                                                    09400000
+.GR14    ANOP                                                           09450000
+&FTCODE1 SETC  '1'                                                      09500000
+         AGO   .GR27                                                    09550000
+.GR15    ANOP                                                           09600000
+&FTCODE1 SETC  '8'                                                      09650000
+         AGO   .GR27                                                    09700000
+.GR16    ANOP                                                           09750000
+&FTCODE1 SETC  '6'                                                      09800000
+         AGO   .GR27                                                    09850000
+.GR17    ANOP                                                           09900000
+&FTCODE1 SETC  '5'                                                      09950000
+         AGO   .GR27                                                    10000000
+.GR18    ANOP                                                           10050000
+&FTCODE1 SETC  'C'                                                      10100000
+         AGO   .GR27                                                    10150000
+.GR19    ANOP                                                           10200000
+&FTCODE1 SETC  '3'                                                      10250000
+         AGO   .GR27                                                    10300000
+.GR20    ANOP                                                           10350000
+&FTCODE1 SETC  'A'                                                      10400000
+         AGO   .GR27                                                    10450000
+.GR21    ANOP                                                           10500000
+&FTCODE1 SETC  '9'                                                      10550000
+         AGO   .GR27                                                    10600000
+.GR22    ANOP                                                           10650000
+&FTCODE1 SETC  '7'                                                      10700000
+         AGO   .GR27                                                    10750000
+.GR23    ANOP                                                           10800000
+&FTCODE1 SETC  'E'                                                      10850000
+         AGO   .GR27                                                    10900000
+.GR24    ANOP                                                           10950000
+&FTCODE1 SETC  'D'                                                      11000000
+         AGO   .GR27                                                    11050000
+.GR25    ANOP                                                           11100000
+&FTCODE1 SETC  'B'                                                      11150000
+         AGO   .GR27                                                    11200000
+.GR66E   ANOP                                                           11250000
+&FTCODE1 SETC  '2'                 SET 66 KEY EBCDIC                    11300000
+         AIF   (NOT &SGDF01B(&DEVNO)).GR77A                             11350000
+&FTCODE1 SETC  '3'                 SET AUDIBLE ALARM BIT                11400000
+         AGO   .GR77A                                                   11450000
+.GR66D   ANOP                                                           11500000
+&FTCODE1 SETC  '6'                 66 KEY DATA ENTRY                    11550000
+         AIF   (NOT &SGDF01B(&DEVNO)).GR77A                             11600000
+&FTCODE1 SETC  '7'                 SET AUDIBLE ALARM                    11650000
+         AGO   .GR77A                                                   11700000
+.GR66A   ANOP                                                           11750000
+&FTCODE1 SETC  'A'                 66 KEY ASCII                         11800000
+         AIF   (NOT &SGDF01B(&DEVNO)).GR77A                             11850000
+&FTCODE1 SETC  'B'                 SET AUDIBLE ALARM                    11900000
+         AGO   .GR77A                                                   11950000
+.GR78E   ANOP                                                           12000000
+&FTCODE1 SETC  '4'                 78 KEY EBCDIC                        12050000
+         AIF   (NOT &SGDF01B(&DEVNO)).GR77A                             12100000
+&FTCODE1 SETC  '5'                 SET AUDIBLE ALARM                    12150000
+         AGO   .GR77A                                                   12200000
+.GR78O   ANOP                                                           12250000
+&FTCODE1 SETC  '8'                 78 KEY OP CONSOLE                    12300000
+         AIF   (NOT &SGDF01B(&DEVNO)).GR77A                             12350000
+&FTCODE1 SETC  '9'                  SET AUDIBLE ALARM BIT               12400000
+         AGO   .GR77A                                                   12450000
+.GR78A   ANOP                                                           12500000
+&FTCODE1 SETC  'C'                 78 KEY ASCII                         12550000
+         AIF   (NOT &SGDF01B(&DEVNO)).GR77A                             12600000
+&FTCODE1 SETC  'D'                 SET AUDIBLE ALARM                    12650000
+.GR77A   ANOP                                                           12700000
+         AIF   (&SGDF05B(&DEVNO)).GRAA      IS IT ASCIIA CHAR GEN       12750000
+         AIF   (&SGDF06B(&DEVNO)).GRAB      IS IT ASCIIB CHAR GEN       12800000
+         AIF   (&SGDF07B(&DEVNO)).GRUK      IS IT UNITED KINGDOM        12850000
+         AIF   (&SGDF08B(&DEVNO)).GRFR      IS IT FRENCH CHAR GEN       12900000
+         AIF   (&SGDF09B(&DEVNO)).GRGR      IS IT GERMAN                12950000
+.GRDO    ANOP                                                           13000000
+&FTCODE2 SETC  '0'                   SET DOMESTIC CHAR GEN              13050000
+         AGO   .GR77X              GO TO CHK FOR ADDITIONAL FEATURES    13100000
+.GRAA    ANOP                                                           13150000
+&FTCODE2 SETC  '2'                 SET ASCIIA FEATURE                   13200000
+         AGO   .GR77X              CHK FOR ADDTIONAL FEATURES           13250000
+.GRAB    ANOP                                                           13300000
+&FTCODE2 SETC  '4'                 SET ASCIIB FEATURE                   13350000
+         AGO   .GR77X              CHK FOR ADDTIONAL FEATURES           13400000
+.GRUK    ANOP                                                           13450000
+&FTCODE2 SETC  '6'                 SET UNITED KINGDOM CHAR GEN          13500000
+         AGO   .GR77X              CHK FOR ADDTIONAL FEATURES           13550000
+.GRFR    ANOP                                                           13600000
+&FTCODE2 SETC  '8'                 SET FRENCH CHAR GEN FEATURE          13650000
+         AGO   .GR77X              CHK FOR ADDTIONAL FEATURES           13700000
+.GRGR    ANOP                                                           13750000
+&FTCODE2 SETC  'A'                 SET GERMAN CHAR GEN FEATURE          13800000
+.GR77X   ANOP                                                           13850000
+&ADDFEAT SETA  (&SGDF03B(&DEVNO)*8)          MAG CARD READER   @ZA41717 13900000
+&ADDFEAT SETA  &ADDFEAT+(&SGDF02B(&DEVNO)*4) SELECTOR PEN      @ZA41717 13950000
+&ADDFEAT SETA  &ADDFEAT+(&SGDF04B(&DEVNO)*2) NUMERIC LOCK      @ZA41717 14000000
+&ADDFEAT SETA  &ADDFEAT+(&SGDF16B(&DEVNO)*1) PREPARE TO READ   @ZA41717 14050000
+&FTCODE3 SETC  '&HEXG'(&ADDFEAT+1,1).'000'                     @ZA43140 14100000
+         AGO   .GR51                                                    14150000
+.GR26    ANOP                                                           14200000
+&FTCODE1 SETC  'F'                                                      14250000
+.GR27    AIF   (&SGDF05B(&DEVNO) AND &SGDF07B(&DEVNO) AND              *14300000
+               &SGDF09B(&DEVNO)).GR37                                   14350000
+         AIF   (&SGDF06B(&DEVNO) AND &SGDF07B(&DEVNO) AND              *14400000
+               &SGDF09B(&DEVNO)).GR38                                   14450000
+         AIF   (&SGDF05B(&DEVNO) AND &SGDF07B(&DEVNO)).GR32             14500000
+         AIF   (&SGDF05B(&DEVNO) AND &SGDF09B(&DEVNO)).GR33             14550000
+         AIF   (&SGDF06B(&DEVNO) AND &SGDF07B(&DEVNO)).GR34             14600000
+         AIF   (&SGDF06B(&DEVNO) AND &SGDF09B(&DEVNO)).GR35             14650000
+         AIF   (&SGDF07B(&DEVNO) AND &SGDF09B(&DEVNO)).GR36             14700000
+         AIF   (&SGDF05B(&DEVNO)).GR28                                  14750000
+         AIF   (&SGDF06B(&DEVNO)).GR29                                  14800000
+         AIF   (&SGDF07B(&DEVNO)).GR30                                  14850000
+         AIF   (&SGDF09B(&DEVNO)).GR31                                  14900000
+&FTCODE2 SETC  '0'                                                      14950000
+         AGO   .GR51                                                    15000000
+.GR28    ANOP                                                           15050000
+&FTCODE2 SETC  '1'                                                      15100000
+         AGO   .GR51                                                    15150000
+.GR29    ANOP                                                           15200000
+&FTCODE2 SETC  '2'                                                      15250000
+         AGO   .GR51                                                    15300000
+.GR30    ANOP                                                           15350000
+&FTCODE2 SETC  '3'                                                      15400000
+         AGO   .GR51                                                    15450000
+.GR31    ANOP                                                           15500000
+&FTCODE2 SETC  '6'                                                      15550000
+         AGO   .GR51                                                    15600000
+.GR32    ANOP                                                           15650000
+&FTCODE2 SETC  '4'                                                      15700000
+         AGO   .GR51                                                    15750000
+.GR33    ANOP                                                           15800000
+&FTCODE2 SETC  '7'                                                      15850000
+         AGO   .GR51                                                    15900000
+.GR34    ANOP                                                           15950000
+&FTCODE2 SETC  '5'                                                      16000000
+         AGO   .GR51                                                    16050000
+.GR35    ANOP                                                           16100000
+&FTCODE2 SETC  '8'                                                      16150000
+         AGO   .GR51                                                    16200000
+.GR36    ANOP                                                           16250000
+&FTCODE2 SETC  '9'                                                      16300000
+         AGO   .GR51                                                    16350000
+.GR37    ANOP                                                           16400000
+&FTCODE2 SETC  'A'                                                      16450000
+         AGO   .GR51                                                    16500000
+.GR38    ANOP                                                           16550000
+&FTCODE2 SETC  'B'                                                      16600000
+         AGO   .GR51                                                    16650000
+.GR39    AIF   (&SGDF01B(&DEVNO) AND &SGUNF1B(&CUNO) AND               *16700000
+               &SGUNF2B(&CUNO)).GR49                                    16750000
+         AIF   (&SGDF02B(&DEVNO) AND &SGUNF1B(&CUNO) AND               *16800000
+               &SGUNF2B(&CUNO)).GR50                                    16850000
+         AIF   (&SGDF03B(&DEVNO) AND &SGUNF1B(&CUNO) AND               *16900000
+               &SGUNF2B(&CUNO)).DEK1                                    16950000
+         AIF   (&SGDF01B(&DEVNO) AND &SGUNF1B(&CUNO)).GR44              17000000
+         AIF   (&SGDF01B(&DEVNO) AND &SGUNF2B(&CUNO)).GR45              17050000
+         AIF   (&SGDF02B(&DEVNO) AND &SGUNF1B(&CUNO)).GR46              17100000
+         AIF   (&SGDF02B(&DEVNO) AND &SGUNF2B(&CUNO)).GR47              17150000
+         AIF   (&SGDF03B(&DEVNO) AND &SGUNF1B(&CUNO)).DEK2              17200000
+         AIF   (&SGDF03B(&DEVNO) AND &SGUNF2B(&CUNO)).DEK3              17250000
+         AIF   (&SGUNF1B(&CUNO) AND &SGUNF2B(&CUNO)).GR48               17300000
+         AIF   (&SGDF01B(&DEVNO)).GR40                                  17350000
+         AIF   (&SGDF02B(&DEVNO)).GR41                                  17400000
+         AIF   (&SGDF03B(&DEVNO)).DEK4                                  17450000
+         AIF   (&SGUNF1B(&CUNO)).GR42                                   17500000
+         AIF   (&SGUNF2B(&CUNO)).GR43                                   17550000
+&FTCODE1 SETC  '0'                                                      17600000
+         AGO   .GR51A                                                   17650000
+.DEK1    ANOP                           DEKYBD + LA +NDC                17700000
+&FTCODE1 SETC  'F'                                                      17750000
+         AGO   .GR51A                                                   17800000
+.DEK2    ANOP                                                           17850000
+&FTCODE1 SETC  'D'                      DEKYBD + LA                     17900000
+         AGO   .GR51A                                                   17950000
+.DEK3    ANOP                                                           18000000
+&FTCODE1 SETC  'E'                      DEKYBD + NDC                    18050000
+         AGO   .GR51A                                                   18100000
+.DEK4    ANOP                                                           18150000
+&FTCODE1 SETC 'C'                       DEKYBD ONLY                     18200000
+         AGO   .GR51A                                                   18250000
+.GR40    ANOP                                                           18300000
+&FTCODE1 SETC  '4'                                                      18350000
+         AGO   .GR51A                                                   18400000
+.GR41    ANOP                                                           18450000
+&FTCODE1 SETC  '2'                                                      18500000
+         AGO   .GR51A                                                   18550000
+.GR42    ANOP                                                           18600000
+&FTCODE1 SETC  '1'                                                      18650000
+         AGO   .GR51A                                                   18700000
+.GR43    ANOP                                                           18750000
+&FTCODE1 SETC  '6'                                                      18800000
+         AGO   .GR51A                                                   18850000
+.GR44    ANOP                                                           18900000
+&FTCODE1 SETC  '5'                                                      18950000
+         AGO   .GR51A                                                   19000000
+.GR45    ANOP                                                           19050000
+&FTCODE1 SETC  'A'                                                      19100000
+         AGO   .GR51A                                                   19150000
+.GR46    ANOP                                                           19200000
+&FTCODE1 SETC  '3'                                                      19250000
+         AGO   .GR51A                                                   19300000
+.GR47    ANOP                                                           19350000
+&FTCODE1 SETC  '8'                                                      19400000
+         AGO   .GR51A                                                   19450000
+.GR48    ANOP                                                           19500000
+&FTCODE1 SETC  '7'                                                      19550000
+         AGO   .GR51A                                                   19600000
+.GR49    ANOP                                                           19650000
+&FTCODE1 SETC  'B'                                                      19700000
+         AGO   .GR51A                                                   19750000
+.GR50    ANOP                                                           19800000
+&FTCODE1 SETC  '9'                                                      19850000
+.GR51A   ANOP                                                           19900000
+         AIF   (&SGUNM1B(&CUNO)).BUF1                                   19950000
+         AIF   (&SGUNM2B(&CUNO)).BUF2                                   20000000
+         AIF   (&SGUNM3B(&CUNO)).BUF3                                   20050000
+         AIF   (&SGUNM4B(&CUNO)).BUF4                                   20100000
+         AIF   (&SGUNM5B(&CUNO)).BUF5                                   20150000
+&FTCODE2 SETC  '0'                                                      20200000
+         AGO   .GR51                                                    20250000
+.BUF1    ANOP                                                           20300000
+&FTCODE2 SETC  'A'                      2848 MOD1                       20350000
+         AGO   .GR51                                                    20400000
+.BUF2    ANOP                                                           20450000
+&FTCODE2 SETC  'B'                      2848 MOD2                       20500000
+         AGO   .GR51                                                    20550000
+.BUF3    ANOP                                                           20600000
+&FTCODE2 SETC  'C'                      2848 MOD3                       20650000
+         AGO   .GR51                                                    20700000
+.BUF4    ANOP                                                           20750000
+&FTCODE2 SETC 'D'                       2848 MOD21                      20800000
+         AGO   .GR51                                                    20850000
+.BUF5    ANOP                                                           20900000
+&FTCODE2 SETC  'E'                      2848 MOD22                      20950000
+.GR51    ANOP                                                           21000000
+&TYPE    SETC  '&MODEL&FTCODE1&FTCODE2&CLASS'                           21050000
+.GR52    ANOP                                                           21100000
+         AIF   (NOT &SGDEVB(1)).GR54                                    21150000
+&SCR     SETA  &SGETABA(&DEVNO)-&SGETABA(&DEVNO)/256*256                21200000
+         AIF   (&SGDEVTP(&DEVNO) EQ 0 AND &SCR EQ 0).GR53               21250000
+         CONVERT TO=EBCDIC,VALUE=&SGDEVTP(&DEVNO),DIGITS=6              21300000
+&TYPE    SETC  '&EBCDIC'                                                21350000
+         CONVERT TO=EBCDIC,VALUE=&SCR,DIGITS=2                          21400000
+&TYPE    SETC  '&TYPE'.'&EBCDIC'                                        21450000
+.GR53    ANOP                                                           21500000
+&SCR     SETA  (&SGETABA(&DEVNO)-&SGETABA(&DEVNO)/65536*65536)/256      21550000
+         AIF   (&SCR EQ 0).GR54                                         21600000
+&SCR     SETA  &SCR-1                                                   21650000
+         CONVERT TO=EBCDIC,VALUE=&SCR,DIGITS=2                          21700000
+&ERRTAB  SETC  '&EBCDIC'                                                21750000
+.GR54    ANOP                                                           21800000
+         PUNCH '.UCB&UCBNO   ANOP       UCB ENTRY'                      21850000
+         AIF   (&PCU NE 0).PUNCH1   2250 MOD 3?             R22 ZA32710 21900000
+&C       SETC  ' IECVUCB &UCBNO,&DEVAD,&TYPC,&DEVTAB,&ERRTAB,&STATAB,&L*21950000
+               CHN,&DEVNDX2,&TYPE,&ALOCCNT,&SYSRES,&SQOPT,&OFF,&SGMENTB*22000000
+               (12),&FTCODE3,0'                             R22 ZA40139 22050000
+         AIF   (K'&C LT 72).OK      IF THE PUNCH STATEMENT  R22 ZA40139 22100000
+&D       SETC  '&C'(1,71)           OVERFLOWS 71, PUNCH     R22 ZA40139 22150000
+         PUNCH '&D.*'               IT INTO TWO CARDS       R22 ZA40139 22200000
+&D       SETC  '&C'(72,K'&C-71)                             R22 ZA40139 22250000
+         PUNCH '               &D' PUNCH THE REMAINDER ON   R22 ZA40139 22300000
+         AGO   .OK1                THE SECOND CARD          R22 ZA40139 22350000
+.OK      ANOP                                               R22 ZA40139 22400000
+         PUNCH ' IECVUCB &UCBNO,&DEVAD,&TYPC,&DEVTAB,&ERRTAB,&STATAB,&L*22450000
+               CHN,&DEVNDX2,&TYPE,&ALOCCNT,&SYSRES,&SQOPT,&OFF,&SGMENTB*22500000
+               (12),&FTCODE3,0'                               LF YM0160 22550000
+.OK1     ANOP                                               R22 ZA40139 22600000
+         PUNCH ' AGO .UCB&TUCB'                               LF YM0160 22650000
+         PUNCH '.UCX&UCBNO    ANOP       UCB ENTRY'          LG Z30AALG 22700000
+&C       SETC  ' IECVUCB &UCBNO,&DEVAD,&TYPC,&DEVTAB,&ERRTAB,&STATAB,&L*22750000
+               CHN,&DEVNDX2,&TYPE,&ALOCCNT,&SYSRES,&SQOPT,&OFF,&SGMENTB*22800000
+               (12),&FTCODE3,1'                             R22 ZA40139 22850000
+         AIF   (K'&C LT 72).OK2     IF THE PUNCH STATEMENT  R22 ZA40139 22900000
+&D       SETC  '&C'(1,71)           OVERFLOWS 71, PUNCH     R22 ZA40139 22950000
+         PUNCH '&D.*'               IT INTO TWO CARDS       R22 ZA40139 23000000
+&D       SETC  '&C'(72,K'&C-71)                             R22 ZA40139 23050000
+         PUNCH '               &D' PUNCH THE REMAINDER ON   R22 ZA40139 23100000
+         AGO   .FINISH             THE SECOND CARD          R22 ZA40139 23150000
+.OK2     ANOP                                               R22 ZA40139 23200000
+         PUNCH ' IECVUCB &UCBNO,&DEVAD,&TYPC,&DEVTAB,&ERRTAB,&STATAB,&L*23250000
+               CHN,&DEVNDX2,&TYPE,&ALOCCNT,&SYSRES,&SQOPT,&OFF,&SGMENTB*23300000
+               (12),&FTCODE3,1'                               LF YM0160 23350000
+         AGO   .FINISH                                         @ZA41749 23400000
+.PUNCH1  ANOP                                                  @ZA41749 23450000
+&PCU     SETA  &PCU+1000        GET LEADING ZEROS IN PCU(2,3)  @ZA41749 23500000
+&PCUC    SETC  '&PCU'(2,3)      VALUE OF '001' THRU '255'      @ZA41749 23550000
+&C       SETC  ' IECVUCB &UCBNO,&DEVAD,&TYPC,&DEVTAB,&ERRTAB,&STATAB,&L*23600000
+               CHN,&DEVNDX2,&TYPE,&ALOCCNT,&SYSRES,&SQOPT,&OFF,&SGMENTB*23650000
+               (12),&FTCODE3,0,P&PCUC'                         @ZA41749 23700000
+         AIF   (K'&C LT 72).OK3     IF THE PUNCH STATEMENT  R22 ZA40139 23750000
+&D       SETC  '&C'(1,71)           OVERFLOWS 71, PUNCH     R22 ZA40139 23800000
+         PUNCH '&D.*'               IT INTO TWO CARDS       R22 ZA40139 23850000
+&D       SETC  '&C'(72,K'&C-71)                             R22 ZA40139 23900000
+         PUNCH '               &D' PUNCH THE REMAINDER ON   R22 ZA40139 23950000
+         AGO   .OK4                THE SECOND CARD          R22 ZA40139 24000000
+.OK3     ANOP                                               R22 ZA40139 24050000
+         PUNCH ' IECVUCB &UCBNO,&DEVAD,&TYPC,&DEVTAB,&ERRTAB,&STATAB,&L*24100000
+               CHN,&DEVNDX2,&TYPE,&ALOCCNT,&SYSRES,&SQOPT,&OFF,&SGMENTB*24150000
+               (12),&FTCODE3,0,P&PCUC'                         @ZA41749 24200000
+.OK4     ANOP                                               R22 ZA40139 24250000
+         PUNCH ' AGO .UCB&TUCB'                               LF YM0160 24300000
+         PUNCH '.UCX&UCBNO    ANOP       UCB ENTRY'          LG Z30AALG 24350000
+&C       SETC  ' IECVUCB &UCBNO,&DEVAD,&TYPC,&DEVTAB,&ERRTAB,&STATAB,&L*24400000
+               CHN,&DEVNDX2,&TYPE,&ALOCCNT,&SYSRES,&SQOPT,&OFF,&SGMENTB*24450000
+               (12),&FTCODE3,1,P&PCUC'                         @ZA41749 24500000
+         AIF   (K'&C LT 72).OK5     IF THE PUNCH STATEMENT  R22 ZA40139 24550000
+&D       SETC  '&C'(1,71)           OVERFLOWS 71, PUNCH     R22 ZA40139 24600000
+         PUNCH '&D.*'               IT INTO TWO CARDS       R22 ZA40139 24650000
+&D       SETC  '&C'(72,K'&C-71)                             R22 ZA40139 24700000
+         PUNCH '               &D' PUNCH THE REMAINDER ON   R22 ZA40139 24750000
+         AGO   .FINISH             THE SECOND CARD          R22 ZA40139 24800000
+.OK5     ANOP                                               R22 ZA40139 24850000
+         PUNCH ' IECVUCB &UCBNO,&DEVAD,&TYPC,&DEVTAB,&ERRTAB,&STATAB,&L*24900000
+               CHN,&DEVNDX2,&TYPE,&ALOCCNT,&SYSRES,&SQOPT,&OFF,&SGMENTB*24950000
+               (12),&FTCODE3,1,P&PCUC'                         @ZA41749 25000000
+.FINISH  ANOP                                               LG @ZA00511 25050000
+         MEND                                                           25100000

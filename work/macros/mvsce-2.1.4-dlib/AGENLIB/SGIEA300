@@ -1,0 +1,158 @@
+         MACRO                                                          00000904
+         SGIEA300                                                       00001804
+.*  CHANGE LEVEL = 12/12/73                                      Y02952 00002704
+.*               = 06/14/74                                    @Z30HPSF 00003604
+.*               = 07/11/74                                    @ZD03005 00004504
+.*               = 03/19/75                                    @Z40EPSF 00005404
+.*               = 05/08/75                                    @Z40WPSF 00006304
+.*               = 08/05/75                                    @Z40FPSM 00006404
+.*               = 11/03/75                                    @Z40WPSM 00007404
+.*               = 11/05/75 (SUSP/RESUME)                      @Z40FPSM 00009404
+.*               = 01/04/77                                    @G33VPXG 00010433
+.*               = 01/17/77                                    @ZM44934 00011433
+.*               = 04/26/78                                    @G64RP2R 00011600
+.*               = 06/15/78                                    @G64UPXR 00011800
+.*               = 09/15/78                                    @G3800XR 00012000
+.*               = 10/25/78                                    @ZM49501 00012200
+.*                                                                      00013104
+.* CHANGE = YM04999,YM04043,YM02441,M03718,M02661,                      00014104
+.*          M02610, R21194, R21214,R20690                               00015104
+.*                                                                      00016104
+         COPY  SGGBLPAK                                                 00017104
+.******* SYSGEN ASSEMBLED MODULES ***************************** YM04999 00018904
+         PUNCH ' INCLUDE SYSPUNCH(IEAASU00,IEASVC00,IEAVBK00,IEECVUCM)' 00019804
+.*                                                              YM04999 00020704
+         AIF   (&GETB(3)).OUT    FINISHED IF AN I/O  SYSGEN     YM04999 00021604
+.*                                                                      00022504
+.******* TEST FOR 3270 AND BTAM *******************************@Z30HPSF 00023404
+         AIF (&SGDCLSB(80) AND &SGDMGTB(4)).INCLDIL            @Z30HPSF 00024304
+.******* ESR CODES FOR 3270 SUPPORT NOT VALID *****************@Z30HPSF 00025204
+         PUNCH ' CHANGE IECTRDIL(IGXERROR)'                    @Z30HPSF 00026104
+         PUNCH ' CHANGE IECTATRL(IGXERROR)'                    @Z30HPSF 00027004
+         PUNCH ' CHANGE IECTCHSL(IGXERROR)'                    @Z30HPSF 00027904
+         PUNCH ' CHANGE IECTCHAL(IGXERROR)'                    @Z30HPSF 00028804
+         PUNCH ' CHANGE IECTRSTL(IGXERROR)'                    @Z30HPSF 00029704
+         AGO .INCLES1                                          @Z30HPSF 00030604
+.INCLDIL PUNCH ' INCLUDE AOS20(IECTSVC)'                       @Z30HPSF 00031504
+.******* EXTENDED SVC ROUTER MODULES **************************@Z30HPSF 00032404
+.INCLES1 PUNCH ' INCLUDE AOSC5(ESRTABLE)'                      @Z30HPSF 00033304
+         PUNCH ' INCLUDE AOSC5(IEAVEVT0)'                      @Z30HPSF 00034204
+.******* VARY STORAGE *****************************************@ZD03005 00035104
+         PUNCH ' INCLUDE AOSC5(IEAVPREF)'                      @ZD03005 00036004
+.******* NIP MODULE *************************************************   00036904
+         PUNCH ' INCLUDE AOSC5(IEAVNIP0)'                        Y02952 00037804
+.*                                                                      00038704
+.******* TASK, PROGRAM AND TIMER MGT. MODULES******************  Y02952 00039604
+         PUNCH ' INCLUDE AOSC5(IEAVSY50,IEAVENQ1,IEAVEVAL)'      Y02952 00040504
+         PUNCH ' INCLUDE AOSC5(IEAVEF00,IEAVRTI0)'               R21194 00041404
+         PUNCH ' INCLUDE AOSC5(IEAVSETS,IEAVMODE,IEAVTEST)'      Y02952 00042304
+         PUNCH ' INCLUDE AOSC5(IEAVLK00,IEAVLK01,IEAVTRCE)'      Y02952 00043204
+         PUNCH ' INCLUDE AOSC5(IEAVELIT,IEAVETCL)'             @Z40FPSM 00043604
+         PUNCH ' INCLUDE AOSC5(IEAVLK02,IEAVESVC,IEAVEIO)'       Y02952 00045004
+         PUNCH ' INCLUDE AOSC5(IEAVEEXT,IEAVEAC0,IEAVEOR)'       Y02952 00050004
+         PUNCH ' INCLUDE AOSC5(IEAVEPC,IEAVERES,IEAVEDS0)'       Y02952 00050904
+         PUNCH ' INCLUDE AOSC5(IEAVEMS0,IEAVEEXP,IEAVEEE0)'      Y02952 00051804
+         PUNCH ' INCLUDE AOSC5(IEAVESC0,IEAVEPD0)'               R21194 00052704
+         PUNCH ' INCLUDE AOSC5(IEAVEED0,IEAVECH0)'               Y02952 00053604
+         PUNCH ' INCLUDE AOSC5(IEAVELK)'                         M02610 00054504
+         PUNCH ' INCLUDE AOSC5(IEAVRTI1,IEAVRT02)'             @Z40FPSM 00055404
+         PUNCH ' INCLUDE AOSC5(IEAVEEEP)'                        Y02952 00056304
+         PUNCH ' INCLUDE AOSC5(IEAVEEE2)'                        Y02952 00057204
+         PUNCH ' INCLUDE AOSC5(IEAVLK03)'                        Y02952 00058104
+.*                                                                      00059004
+.******* COMMUNICATIONS TASK MODULES ********************************   00059904
+         PUNCH ' INCLUDE AOSC5(IEAVVCRA,IEAVVCRX)'               Y02952 00060804
+.*                                                                      00061704
+.******* VIRTURAL STORAGE MGT. MODULES *****                     Y02952 00062604
+         PUNCH ' INCLUDE AOSC5(IEAVPRT0,IEAVGM00)'               Y02952 00063504
+         PUNCH ' INCLUDE AOSC5(IEAVGCAS,IEAVBLDP,IEAVDELP)'      Y02952 00064404
+         PUNCH ' INCLUDE AOSC5(IEAVGTCL,IEAVFRCL)'               Y02952 00065304
+.*                                                             @Z40EPSF 00066204
+.******* CHANGE KEY MODULES - INTERACTIVE PROB. SOLVING ****** @Z40EPSF 00067104
+.******* OPTIONS SUPPORT                                ****** @Z40EPSF 00068004
+         PUNCH ' INCLUDE AOSC5(IEAVCKEY,IEAVCKRR)'             @Z40EPSF 00068904
+.*                                                                      00069804
+.******* DSS MODULES ************************************************   00070704
+         PUNCH ' INCLUDE AOSC5(IQARIH00)'                      @G3800XR 00071600
+.*                                                                      00072504
+.***** GTF **********************************************************   00073404
+         PUNCH ' INCLUDE AOSC5(AHLMCIH)'                         Y02952 00074304
+.*                                                                      00075204
+.*****REGION CONTROL TASK MODULES******************************  Y02952 00076104
+         PUNCH ' INCLUDE AOSC5(IEAVAR02)'               Y02952,@Z30HPSF 00077004
+.*                                                               Y02952 00077904
+.*****RECOVERY/TERMINATION MODULES*****************************  Y02952 00078804
+         PUNCH ' INCLUDE AOSC5(IEAVTRT1,IEAVTRTM,IEAVTRTS)'      Y02952 00079704
+         PUNCH ' INCLUDE AOSC5(IEAVTRTR)'                        Y02952 00080604
+         PUNCH ' INCLUDE AOSC5(IEAVTRTH)'                        Y02952 00081504
+         PUNCH ' INCLUDE AOSC5(IEAVTSDX,IEAVTSBP,IEAVTRER)'      Y02952 00082404
+         PUNCH ' INCLUDE AOSC5(IEAVMSGS)'                        Y02952 00083304
+         PUNCH ' INCLUDE AOSC5(IEAVTPER)'                      @G64RP2R 00083700
+.*                                                               Y02952 00084204
+.*****REAL STORAGE MGT. MODULES*******************************   Y02952 00085104
+         PUNCH ' INCLUDE AOSC5(IEAVPFTE,IEAVPCB,IEAVINV)'        Y02952 00087804
+         PUNCH ' INCLUDE AOSC5(IEAVRFR,IEAVRCV,IEAVRCF)'         Y02952 00088704
+         PUNCH ' INCLUDE AOSC5(IEAVTERM,IEAVSQA,IEAVEQR)'        Y02952 00089604
+         PUNCH ' INCLUDE AOSC5(IEAVPSI,IEAVRELS,IEAVITAS)'       Y02952 00090504
+         PUNCH ' INCLUDE AOSC5(IEAVDLAS,IEAVCSEG,IEAVFP)'        Y02952 00091404
+         PUNCH ' INCLUDE AOSC5(IEAVTRV,IEAVPIX,IEAVGFA)'         Y02952 00092304
+         PUNCH ' INCLUDE AOSC5(IEAVDSEG,IEAVPIOI,IEAVPIOP)'    @Z40WPXG 00093204
+         PUNCH ' INCLUDE AOSC5(IEAVIOCP,IEAVFREE,IEAVOUT)'       Y02952 00143204
+         PUNCH ' INCLUDE AOSC5(IEAVFXLD,IEAVAMSI,IEAVRSM)'       Y02952 00193204
+         PUNCH ' INCLUDE AOSC5(IEAVSWIN,IEAVSOUT)'               Y02952 00243204
+         PUNCH ' INCLUDE AOSC5(IEAVSWPC,IEAVPRSB)'             @ZM44934 00253233
+.*                                                               Y02952 00343204
+.**** MP RECONFIGURATION MODULES***                              Y02952 00393204
+         PUNCH ' INCLUDE AOSC5(IEESTPRS,IEEVSTOP)'               R20690 00443204
+.*                                                             @G64UPXR 00493200
+.**** SPIN LOOP TIMEOUT MODULE***                              @G64UPXR 00495200
+         PUNCH ' INCLUDE AOSC5(IEEVEXSN)'                      @G64UPXR 00497200
+.*                                                             @G64UPXR 00499200
+.**** DISABLED CONSOLE COMMUNICATION MODULE***                 @G64UPXR 00501200
+         PUNCH ' INCLUDE AOSC5(IEEVDCCR)'                      @G64UPXR 00503200
+         PUNCH ' INCLUDE AOSC5(IEEVLDWT)'                      @ZM49501 00504200
+.*                                                             @G64UPXR 00505200
+.****SRM MODULES*****                                          @Z40WPSM 00513204
+         PUNCH ' INCLUDE AOSC5(IRARMINT,IRARMEVT,IRARMERR)'      Y02952 00593204
+         PUNCH ' INCLUDE AOSC5(IRARMCTL,IRARMIOM,IRARMCPM)'      Y02952 00643204
+         PUNCH ' INCLUDE AOSC5(IRARMSTM,IRARMWLM,IRARMMSG)'      Y02952 00693204
+         PUNCH ' INCLUDE AOSC5(IRARMCNS,IRARMRMR)'             @Z40WPXG 00713204
+         PUNCH ' INCLUDE AOSC5(IRARMSRV)'                        Y02952 00793204
+.*                                                                      00843204
+.**** SMF MODULES ******                                         Y02952 00893204
+.*                                                               Y02952 00943204
+         PUNCH ' INCLUDE AOS00(IEASMFEX,IEATLEXT,IEAQWAIT)'      Y02952 00993204
+.*                                                               Y02952 01043204
+.**** FRR MODULES ******                                         Y02952 01093204
+.*                                                               Y02952 01143204
+         PUNCH ' INCLUDE AOSC5(IEAVGPRR,IEAVCARR)'               Y02952 01193204
+         PUNCH ' INCLUDE AOSC5(IEAVGFRR)'                        Y02952 01243204
+.*                                                               Y02952 01293204
+.**** RECOVERY MODULES FOR SUPERVISOR CONTROL****                Y02952 01343204
+.*                                                               Y02952 01393204
+         PUNCH ' INCLUDE AOSC5(IEAVESPR,IEAVEQV0)'               M02661 01443204
+         PUNCH ' INCLUDE AOSC5(IEAVEADV,IEAVECBV,IEAVEVRR)'      Y02952 01493204
+         PUNCH ' INCLUDE AOSC5(IEAVELCR,IEAVEDSR,IEAVESVR)'      Y02952 01543204
+         PUNCH ' INCLUDE AOSC5(IEAVEIOR,IEAVEE1R,IEAVEE2R)'      Y02952 01593204
+         PUNCH ' INCLUDE AOSC5(IEAVEE3R,IEAVEPCR,IEAVERER)'      Y02952 01643204
+         PUNCH ' INCLUDE AOSC5(IEAVEPDR,IEAVESCR,IEAVEEER)'      Y02952 01693204
+         PUNCH ' INCLUDE AOSC5(IEAVELKR,IEAVEIPR)'               Y02952 01743204
+.*                                                               Y02952 01793204
+.* OLTEP MODULE                                                 YM04043 01843204
+.*                                                              YM04043 01893204
+         PUNCH ' INCLUDE AOS06(IFDOLT0A)'                       YM04043 01943204
+.*                                                              YM04043 01993204
+.**** MP GENERATION MODULES ****                                 R20690 02043204
+.*                                                               R20690 02093204
+         AIF   (&SGCPRGB(9) EQ 0).NOTMP      IS THIS MP SYSTEM?  R20690 02143204
+         PUNCH ' INCLUDE AOSC5(IEAVTACR)'                        R20690 02193204
+         PUNCH ' INCLUDE AOSC5(IEAVTCR1)'                        R20690 02243204
+         PUNCH ' INCLUDE AOSC5(IEAVERI,IEAVERP,IEAVEDR)'        YM02441 02293204
+         PUNCH ' INCLUDE AOSC5(IEAVEES,IEAVEXS)'                YM02441 02343204
+         AGO   .OUT                                              R20690 02393204
+.NOTMP   ANOP                                NO,INCLUDE DUMMY    R20690 02443204
+.*                                           MODULE              R20690 02493204
+         PUNCH ' INCLUDE AOSC5(IEEVDUMY)'                        R20690 02543204
+         PUNCH ' INCLUDE AOSC5(IEAVEUPC)'                       YM02441 02593204
+.OUT     ANOP                                                    R20690 02643204
+         MEND                                                           02693204

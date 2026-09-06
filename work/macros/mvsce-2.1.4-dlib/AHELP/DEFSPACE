@@ -1,0 +1,77 @@
+)F FUNCTION -                                                           01000002
+  THE DEFINE COMMAND CAN BE USED TO DEFINE VSAM DATA SPACES OR TO       02000002
+  RESERVE VOLUMES FOR FUTURE USE BY VSAM.                               03000002
+)X SYNTAX -                                                             04000002
+         DEFINE    SPACE                                                05000002
+                   (  VOLUMES('VOLSER' ...)                             06000002
+                      TRACKS('PRIMARY' 'SECONDARY') |                   07000002
+                         CYLINDERS('PRIMARY' 'SECONDARY') |             08000002
+                         RECORDS('PRIMARY' 'SECONDARY')                 09000002
+                            RECORDSIZE('AVERAGE' 'MAXIMUM') |           10000002
+                         CANDIDATE                                      11000002
+                      FILE('DNAME')  )                                  12000002
+                   CATALOG('CATNAME/PASSWORD')                          13000003
+  REQUIRED - SPACE, VOLUMES AND TRACKS|CYLINDERS|RECORDS                14000003
+  DEFAULTS - NONE                                                       16000002
+  ABBREVIATIONS -                                                       17000002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 18000002
+             SPACE                SPC                                   19000002
+             TRACKS               TRK                                   20000002
+             RECORDSIZE           RECSZ                                 21000002
+)O OPERANDS -                                                           22000002
+))SPACE    - SPECIFIES THAT A DATA SPACE IS TO BE DEFINED.              23000002
+))VOLUMES('VOLSER' ...)                                                 24000002
+           - SPECIFIES THE VOLUMES ON WHICH DATA SPACES ARE TO BE       25000002
+             DEFINED.                                                   26000002
+  'VOLSER' - VOLUME SERIAL NUMBER OF A VOLUME ON WHICH DATA SPACES ARE  27000002
+             TO BE DEFINED.                                             28000002
+))TRACKS('PRIMARY' 'SECONDARY')                                         29000002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  30000002
+             TRACKS.                                                    31000002
+  'PRIMARY'                                                             32000002
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                33000002
+  'SECONDARY'                                                           34000002
+           - SIZE OF THE SECONDARY EXTENT TO BE ALLOCATED.              35000002
+  REQUIRED - 'PRIMARY'                                                  36000002
+))CYLINDERS('PRIMARY' 'SECONDARY')                                      37000002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  38000002
+             CYLINDERS.                                                 39000002
+  'PRIMARY'                                                             40000002
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                41000002
+  'SECONDARY'                                                           42000002
+           - SIZE OF THE SECONDARY EXTENT TO BE ALLOCATED.              43000002
+  REQUIRED - 'PRIMARY'                                                  44000002
+))RECORDS('PRIMARY' 'SECONDARY')                                        45000002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  46000002
+             RECORDS.                                                   47000002
+  'PRIMARY'                                                             48000002
+           - SIZE OF THE PRIMARY EXTENT TO BE ALLOCATED.                49000002
+  'SECONDARY'                                                           50000002
+           - SIZE OF THE SECONDARY EXTENT TO BE ALLOCATED.              51000002
+  REQUIRED - 'PRIMARY'                                                  52000002
+))RECORDSIZE('AVERAGE' 'MAXIMUM')                                       53000002
+           - SPECIFIES THE AVERAGE AND MAXIMUM LENGTHS, IN BYTES, OF    54000002
+             THE RECORDS IN THE DATA SPACE.                             55000003
+  'AVERAGE'                                                             56000002
+           - AVERAGE LENGTH OF THE RECORDS IN THE DATA SPACE.           57000003
+  'MAXIMUM'                                                             58000002
+           - MAXIMUM LENGTH OF THE RECORDS IN THE DATA SPACE.           59000003
+  REQUIRED - 'AVERAGE' AND 'MAXIMUM'                                    59500002
+))CANDIDATE                                                             60000002
+           - SPECIFIES THAT THE VOLUMES LISTED IN THE VOLUMES PARAMETER 61000002
+             ARE RESERVED FOR FUTURE USE BY VSAM.  SPACE IS NOT         62000002
+             ALLOCATED.                                                 62500002
+))FILE('DNAME')                                                         63000002
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES THE 64000002
+             DEVICES AND VOLUMES TO BE USED FOR SPACE ALLOCATION.       65000002
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE DEVICES AND   66000002
+             VOLUMES TO BE USED FOR SPACE ALLOCATION.                   67000002
+))CATALOG('CATNAME/PASSWORD')                                           68000003
+           - IDENTIFIES THE CATALOG IN WHICH THE DATA SPACE IS TO BE    69000002
+             DEFINED.                                                   70000002
+  'CATNAME'                                                             71000002
+           - NAME OF THE CATALOG IN WHICH THE DATA SPACE IS TO BE       72000002
+             DEFINED.                                                   73000002
+  'PASSWORD'                                                            74000002
+           - PASSWORD OF THE CATALOG.                                   75000002
+  REQUIRED - 'CATNAME'                                                  80000002

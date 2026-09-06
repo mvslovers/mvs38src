@@ -1,0 +1,93 @@
+)F FUNCTION -                                                           00050000
+  THE TERMINAL COMMAND IS USED TO DEFINE THE PHYSICAL TERMINAL          00100000
+  CHARACTERSTICS TO THE TSO SYSTEM. THESE CHARACTERISTICS APPLY TO      00150000
+  THE TERMINAL CURRENTLY IN USE AND ARE VALID FOR ONLY ONE SESSION      00200000
+  OR UNTIL THE TERMINAL COMMAND IS REISSUED DURING THE SESSION.         00250000
+)X SYNTAX -                                                             00300000
+         TERMINAL   LINES('INTEGER')/NOLINES                            00350000
+                    SECONDS('INTEGER')/NOSECONDS                        00352000
+                    INPUT('CHARACTER STRING')/NOINPUT                   00400000
+                    LINESIZE('INTEGER')/SCRSIZE('N','M')                00450020
+                    BREAK/NOBREAK  TIMEOUT/NOTIMEOUT                    00460000
+                    CLEAR('CHARACTER STRING')/NOCLEAR                   00500000
+                    TRAN('NAME')/NOTRAN                                 00530003
+                    CHAR((X'HEXCHAR',C'CHAR'),...)/NOCHAR               00560003
+  REQUIRED - NONE                                                       00600000
+  DEFAULTS - NONE                                                       00650000
+  ALIAS    - TERM                                                       00660000
+  NOTE     - IF THE TERMINAL COMMAND IS ENTERED WITH NO OPERANDS, THE   00700000
+             COMMAND IS IGNORED.                                        00750000
+  NOTE     - SOME OF THE TERMINAL COMMAND KEYWORDS ARE NOT SUPPORTED    00760003
+             ON ALL TERMINAL TYPES.                                     00770003
+)O OPERANDS-                                                            00800000
+))LINES('INTEGER')                                                      00850000
+           - SPECIFIES THE MAXIMUM NUMBER OF CONTINUOUS OUTPUT WHICH    00900020
+             IS TO OCCUR BETWEEN PROMPTS FOR A SIMULATED ATTENTION.     00950000
+    'INTEGER'                                                           01000000
+           - MUST BE A VALUE FROM 1-255.                                01050000
+))NOLINES  - SPECIFIES THAT PROMPTING FOR SIMULATED ATTENTIONS TO       01100020
+             INTERRUPT OUTPUT WILL BE TERMINATED.                       01150000
+))SECONDS('INTEGER')                                                    01200000
+           - SPECIFIES THE MAXIMUM AMOUNT OF 'LOCKED KEYBOARD' TIME     01250020
+             (ALL NUMBERS ARE ROUNDED TO THE NEAREST TEN SECONDS)       01300000
+             WHICH IS TO OCCUR BETWEEN PROMPTS FOR SIMULATED            01350000
+             ATTENTIONS.                                                01400000
+    'INTEGER'                                                           01450000
+           - MUST BE A VALUE FROM 10 TO 2550.                           01500000
+))NOSECONDS- SPECIFIES THAT THE USER IS NOT TO BE PROMPTED FOR          01550020
+             SIMULATED ATTENTIONS WHEN HIS KEYBOARD WOULD               01600000
+             ORDINARILY BE LOCKED AND HIS TERMINAL INACTIVE.            01650000
+))INPUT('CHARACTER STRING')                                             01700000
+           - SPECIFIES A CHARACTER STRING WHICH IS TO BE RECOGNIZED     01750000
+             DURING INPUT OPERATIONS AS AN ATTENTION.                   01800000
+    'CHARACTER STRING'                                                  01850000
+           - IS ANY COMBINATION OF 4 OR LESS VALID CHARACTERS.          01900000
+))NOINPUT  - SPECIFIES THAT NO CHARACTER STRING WILL BE USED FOR        01950000
+             ATTENTION ON INPUT.                                        02000000
+))LINESIZE('INTEGER')                                                   02050000
+           - SPECIFIES THE MAXIMUM NUMBER OF CHARACTERS THAT ARE TO     02100000
+             BE PRINTED ON A LINE AT A KEYBOARD TYPE TERMINAL.          02150000
+    'INTEGER'                                                           02200000
+           - IS A VALUE FROM 1 TO 255.                                  02250020
+))SCRSIZE('N','M')                                                      02300020
+           - SPECIFIES THE DIMENSION OF THE DISPLAY STATION.            02350000
+    'N'    - SPECIFIES THE NUMBER OF ROWS ON THE SCREEN.                02400000
+    'M'    - SPECIFIES THE LENGTH OF EACH ROW.                          02450000
+))BREAK    - SPECIFIES THAT THE TERMINAL HAS THE REVERSE BREAK FEATURE. 02500000
+))NOBREAK  - SPECIFIES THAT THE TERMINAL DOES NOT HAVE THE REVERSE      02550000
+             BREAK FEATURE.                                             02600000
+))TIMEOUT  - SPECIFIES THAT THE TERMINAL DOES NOT HAVE THE TIMEOUT      02650000
+             SUPPRESSION FEATURE: WHEN IN TRANSMIT MODE, THE KEYBOARD   02700000
+             WILL LOCK IF THE USER DOES NOT STRIKE A KEY WITHIN         02750000
+             APPROXIMATELY 9-18 SECONDS. OF THE TERMINALS SUPPORTED     02800000
+             FOR FIRST RELEASE, THIS OPERAND IS APPLICABLE ONLY TO      02850000
+             1050 AND NEED BE USED ONLY IF THE INSTALLATION HAS         02900000
+             DEFINED THE TERMINAL OR THE LINE ON WHICH IT MAY CALL      02950000
+             THE CPU AS HAVING THE TEXT TIMEOUT SUPPRESSION FEATURE.    03000000
+))NOTIMEOUT- SPECIFIES THAT THE TERMINAL DOES HAVE THE TIMEOUT          03050000
+             SUPPRESSION FEATURE.                                       03100000
+))CLEAR('CHARACTER STRING')                                             03150000
+           - SPECIFIES A CHARACTER STRING TO BE USED TO CLEAR THE       03200000
+             SCREEN OF THE DISPLAY STATION.                             03250000
+    'CHARACTER STRING'                                                  03300000
+           - IS A COMBINATION OF 4 OR LESS VALID CHARACTERS.            03330003
+))NOCLEAR  - SPECIFIES THAT A CHARACTER STRING WILL NOT BE USED         03400000
+             TO ERASE THE SCREEN OF A DISPLAY STATION.                  03450000
+))TRAN('NAME')                                                          03500003
+           - CHARACTER CODE TRANSLATION IS IN EFFECT USING THE          03550003
+             TABLES CONTAINED IN THE LOAD MODULE SPECIFIED.             03580003
+    'NAME' - THE LOAD MODULE NAME THAT CONTAINS THE TRANSLATE TABLE.    03610003
+))NOTRAN   - SPECIFIES THAT NO CHARACTER TRANSLATION IS TO TAKE PLACE.  03700003
+))CHAR((X'HEXCHAR',C'CHAR'),(C'CHAR',X'HEXCHAR'),...)                   03750003
+           - SPECIFIES ONE OR MORE PAIRS OF CHARACTERS, IN EITHER       03800003
+             HEXADECIMAL OR CHARACTER NOTATION, THAT REPLACE            03850003
+             CHARACTERS IN THE TRANSLATE TABLE.                         03900003
+    '(X'HEXCHAR',C'CHAR'),(C'CHAR',X'HEXCHAR'),...'                     03906003
+           - THE FIRST CHARACTER OF THE PAIR IS THE CURRENT             03912003
+             CHARACTER THAT IS DEFINED. THE SECOND CHARACTER            03918003
+             IS THE NEW CHARACTER THAT IS TO REPLACE THE                03924003
+             FIRST ONE.                                                 03930003
+             EITHER THE FIRST OR THE SECOND CHARACTER MAY BE            03936003
+             EXPRESSED IN HEXADECIMAL OR CHARACTER NOTATION.            03942003
+))NOCHAR   - SPECIFIES THAT ALL CHARACTER TRANSLATIONS PREVIOUSLY       03950003
+             SPECIFIED ARE NO LONGER IN EFFECT.                         04000003

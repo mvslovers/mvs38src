@@ -1,0 +1,148 @@
+)F FUNCTION -                                                           00700002
+  THE DEFINE COMMAND CAN BE USED TO DEFINE AN ENTRY FOR A PAGE SPACE.   01400002
+)X SYNTAX -                                                             02100002
+         DEFINE    PAGESPACE                                            02800002
+                   (  NAME('ENTRYNAME')                                 03500002
+                      FILE('DNAME')                                     03900002
+                      VOLUME('VOLSER')                                  04300002
+                      TRACKS('PRIMARY') | CYLINDERS('PRIMARY') |        04900002
+                         RECORDS('PRIMARY')                             05600002
+                      UNIQUE | SUBALLOCATION                            06300002
+                      SWAP | NOSWAP                                     06350004
+                      MASTERPW('PASSWORD')                              07000002
+                      CONTROLPW('PASSWORD')                             07700002
+                      UPDATEPW('PASSWORD')                              08400002
+                      READPW('PASSWORD')                                09100002
+                      CODE('CODE')                                      09800002
+                      ATTEMPTS('NUMBER')                                10500002
+                      AUTHORIZATION('ENTRYPOINT' 'STRING')              11200002
+                      OWNER('OWNERID')                                  11900002
+                      TO('DATE') | FOR('DAYS')                          12600002
+                      MODEL('ENTRYNAME/PASSWORD' 'CATNAME/PASSWORD'))   13300003
+                   CATALOG('MASTERCATNAME/PASSWORD')                    14700002
+  REQUIRED - PAGESPACE, NAME, VOLUME AND TRACKS|CYLINDERS|RECORDS       15400002
+  DEFAULTS - UNIQUE, NOSWAP                                             16100004
+  ABBREVIATIONS -                                                       17500002
+      NOTE - IN ADDITION TO NORMAL TSO SHORT FORMS, THESE ARE ACCEPTED. 18200002
+             PAGESPACE            PGSPC                                 18900002
+             TRACKS               TRK                                   19600002
+             UNIQUE               UNQ                                   20300002
+             NOSWAP               NSWAP                                 20350004
+             MASTERPW             MRPW                                  21000002
+             CONTROLPW            CTLPW                                 21700002
+             UPDATEPW             UPDPW                                 22400002
+             READPW               RDPW                                  23100002
+)O OPERANDS -                                                           23800002
+))PAGESPACE                                                             24500002
+           - SPECIFIES THAT A PAGE SPACE ENTRY IS TO BE DEFINED.        25200002
+))NAME('ENTRYNAME')                                                     25900002
+           - SPECIFIES THE NAME OF THE ENTRY BEING DEFINED.             26600002
+  'ENTRYNAME'                                                           27300002
+           - NAME OF THE ENTRY BEING DEFINED.                           28000002
+))FILE('DNAME')                                                         28700002
+           - SPECIFIES THE NAME OF THE DD STATEMENT THAT IDENTIFIES THE 29400002
+             DEVICES AND VOLUMES TO BE USED FOR SPACE ALLOCATION.       30100002
+  'DNAME'  - NAME OF THE DD STATEMENT THAT IDENTIFIES THE DEVICES AND   30800002
+             VOLUMES TO BE USED FOR SPACE ALLOCATION.                   31500002
+))VOLUME('VOLSER')                                                      31600002
+           - SPECIFIES THE VOLUME THAT IS TO CONTAIN THE PAGE SPACE.    31700002
+  'VOLSER' - VOLUME SERIAL NUMBER OF THE VOLUME THAT IS TO CONTAIN THE  31800002
+             PAGE SPACE.                                                31900002
+))TRACKS('PRIMARY')                                                     32200002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  32900002
+             TRACKS.                                                    33600002
+  'PRIMARY'                                                             34300002
+           - SIZE OF THE EXTENT TO BE ALLOCATED.                        35000002
+))CYLINDERS('PRIMARY')                                                  35700002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  36400002
+             CYLINDERS.                                                 37100002
+  'PRIMARY'                                                             37800002
+           - SIZE OF THE EXTENT TO BE ALLOCATED.                        38500002
+))RECORDS('PRIMARY')                                                    39200002
+           - SPECIFIES THE AMOUNT OF SPACE TO BE ALLOCATED IN TERMS OF  39900002
+             RECORDS.                                                   40600002
+  'PRIMARY'                                                             41300002
+           - SIZE OF THE EXTENT TO BE ALLOCATED.                        42000002
+))UNIQUE   - THE PAGE SPACE IS ALLOCATED SPACE OF ITS OWN.              42700002
+))SUBALLOCATION                                                         43400002
+           - A PORTION OF A PREVIOUSLY DEFINED VSAM DATA SPACE IS       44100002
+             SUBALLOCATED FOR THIS PAGE SPACE.                          44800002
+))SWAP     - INDICATES THE PAGESPACE IS A SPECIAL SYSTEM DATA SET       44850004
+             TO BE USED FOR STORAGE PURPOSES.                           44900004
+))NOSWAP   - INDICATES THE PAGESPACE IS A CONVENTIONAL PAGESPACE        44950004
+             TO BE USED FOR PAGING OPERATIONS.                          45000004
+))MASTERPW('PASSWORD')                                                  45500002
+           - SPECIFIES A MASTER LEVEL PASSWORD FOR THE ENTRY BEING      46200002
+             DEFINED.                                                   46900002
+  'PASSWORD'                                                            47600002
+           - MASTER LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.         48300002
+))CONTROLPW('PASSWORD')                                                 49000002
+           - SPECIFIES A CONTROL LEVEL PASSWORD FOR THE ENTRY BEING     49700002
+             DEFINED.                                                   50400002
+  'PASSWORD'                                                            51100002
+           - CONTROL LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.        51800002
+))UPDATEPW('PASSWORD')                                                  52500002
+           - SPECIFIES AN UPDATE LEVEL PASSWORD FOR THE ENTRY BEING     53200002
+             DEFINED.                                                   53900002
+  'PASSWORD'                                                            54600002
+           - UPDATE LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.         55300002
+))READPW('PASSWORD')                                                    56000002
+           - SPECIFIES A READ LEVEL PASSWORD FOR THE ENTRY BEING        56700002
+             DEFINED.                                                   57400002
+  'PASSWORD'                                                            58100002
+           - READ LEVEL PASSWORD FOR THE ENTRY BEING DEFINED.           58800002
+))CODE('CODE')                                                          59500002
+           - SPECIFIES A CODE NAME FOR THE ENTRY BEING DEFINED.         60200002
+  'CODE'   - CODE NAME FOR THE ENTRY BEING DEFINED.                     60900002
+))ATTEMPTS('NUMBER')                                                    61600002
+           - SPECIFIES THE MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY 62300002
+             TO ENTER A CORRECT PASSWORD IN RESPONSE TO A PROMPTING     63000002
+             MESSAGE.                                                   63700002
+  'NUMBER' - MAXIMUM NUMBER OF TIMES THE OPERATOR CAN TRY TO ENTER A    64400002
+             CORRECT PASSWORD IN RESPONSE TO A PROMPTING MESSAGE.       65100002
+))AUTHORIZATION('ENTRYPOINT' 'STRING')                                  65800002
+           - SPECIFIES THAT A USER-SECURITY-VERIFICATION ROUTINE (USVR) 66500002
+             IS AVAILABLE FOR ADDITIONAL SECURITY VERIFICATION.         67200002
+  'ENTRYPOINT'                                                          67900002
+           - ENTRY POINT OF THE USVR.                                   68600002
+  'STRING' - SPECIFIES INFORMATION TO BE PASSED TO THE USVR WHEN IT     69300002
+             RECEIVES CONTROL TO VERIFY AUTHORIZATION.                  70000002
+  REQUIRED - 'ENTRYPOINT'                                               70700002
+))OWNER('OWNERID')                                                      71400002
+           - SPECIFIES THE IDENTIFICATION OF THE OWNER OF THE ENTRY     72100002
+             BEING DEFINED.                                             72800002
+  'OWNERID'                                                             73500002
+           - IDENTIFICATION OF THE OWNER OF ENTRY BEING DEFINED.        74200002
+))TO('DATE')                                                            74900002
+           - SPECIFIES THE RETENTION PERIOD FOR THE PAGE SPACE BEING    75600002
+             DEFINED.                                                   76300002
+  'DATE'   - DATE (YYDDD) THROUGH WHICH THE PAGE SPACE BEING DEFINED    77000002
+             IS TO BE KEPT.                                             77700002
+))FOR('DAYS')                                                           78400002
+           - SPECIFIES THE RETENTION PERIOD FOR THE PAGE SPACE BEING    79100002
+             DEFINED.                                                   79800002
+  'DAYS'   - NUMBER OF DAYS FOR WHICH THE PAGE SPACE BEING DEFINED IS   80500002
+             TO BE KEPT.                                                81200002
+))MODEL('ENTRYNAME/PASSWORD' 'CATNAME/PASSWORD')                        81900003
+           - SPECIFIES THAT AN EXISTING ENTRY IS TO BE USED AS A MODEL  82600002
+             FOR THE ENTRY BEING DEFINED.                               83300002
+  'ENTRYNAME'                                                           84000002
+           - NAME OF THE ENTRY TO BE USED AS A MODEL.                   84700002
+  'PASSWORD'                                                            85400002
+           - PASSWORD OF ENTRY TO BE USED AS A MODEL.                   86100002
+  'CATNAME'                                                             86800002
+           - NAME OF THE CATALOG IN WHICH THE ENTRY TO BE USED AS A     87500002
+             MODEL IS DEFINED.                                          88200002
+  'PASSWORD'                                                            88900002
+           - PASSWORD OF CATALOG.                                       89600002
+  REQUIRED - 'ENTRYNAME'                                                91700002
+))CATALOG('MASTERCATNAME/PASSWORD')                                     92400002
+           - SPECIFIES THE NAME AND PASSWORD OF THE CATALOG IN WHICH    93100002
+             THE PAGE SPACE IS TO BE DEFINED.                           93800002
+  'MASTERCATNAME'                                                       94500002
+           - NAME OF THE CATALOG IN WHICH THE PAGE SPACE IS TO BE       95200002
+             DEFINED.                                                   95900002
+  'PASSWORD'                                                            96600002
+           - PASSWORD OF THE CATALOG IN WHICH THE PAGE SPACE IS TO BE   97300002
+             DEFINED.                                                   98000002
+  REQUIRED - 'MASTERCATNAME'                                            98700002

@@ -1,6 +1,6 @@
 # TODO — MVS 3.8j source recovery
 
-As of 2026-09-06. The working list for [`docs/workplan.md`](docs/workplan.md).
+As of 2026-09-06 (evening). The working list for [`docs/workplan.md`](docs/workplan.md).
 The plan says *why* and *where to*; this list says *what next*.
 
 **Key:** 🔒 blocks other work · ⚡ runs in parallel, blocks nothing ·
@@ -10,32 +10,26 @@ The plan says *why* and *where to*; this list says *what next*.
 
 ## Start here tomorrow
 
-**Re-extract `SYS1.MACLIB` and `SYS1.AMODGEN` from MVS/CE.** Dave Kreiss'
-inventory lists 554 `++MAC` elements with `DISTLIB(AMACLIB)`; our extract has
-475 of them. 79 are missing, and two of them (`IHADECB`, `IEZCTGPL`) are among
-the 40 modules that still do not assemble. Before anything is read into the
-73 %, that extraction has to be known-good — it is our own pipeline, not MVS/CE.
+**1. The fixture promised in [cc370#110](https://github.com/mvslovers/cc370/issues/110).**
+An `as370` object deck plus the matching DLIB element, so whoever implements
+`cmplmd370` can test without an MVS system. It is also the first end-to-end run
+of our own chain — item 5 — and it needs object decks out of the `AOS*`
+libraries, which we have never extracted.
 
-Then the two open ends of the macro work, both small:
+**2. Which sysmods were ACCEPTed?** The macro side of the usermod question is
+settled — `SYS1.UMODMAC` is empty, so no usermod macros exist in MVS/CE. What is
+still open is whether usermods were ACCEPTed into the DLIBs, which would move
+the object decks themselves. It is recorded in the SMP CDS on `smp000` and it is
+a lookup, not a guess.
 
-1. `IHANVT`, `UCBDADVC`, `IECDCST` have **no `++MAC` element at all** in the
-   inventory. Find out what they are — members of another library, or COPY code
-   that only exists inline somewhere.
-2. Three of the 623 private macros are nowhere on this machine: **`ACCESS`**
-   (`TXLIB(COBOLMAC)`) and **`IQAMOD`**, **`IQAQAL`** — the latter two carry
-   `TXLIB(DISASM)` but are not in `NEW.ASM`'s directory. Three names, park
-   them.
+**3. The macro remainder, small and named:** 14 of the 554 `AMACLIB` elements are
+not in `SYS1.AMACLIB`; `IHANVT`, `UCBDADVC` and `IECDCST` have no `++MAC` element
+at all; `ACCESS`, `IQAMOD` and `IQAQAL` are nowhere on this machine.
 
-**Then `cmplmd370` ([cc370#110](https://github.com/mvslovers/cc370/issues/110))
-becomes the critical path again** — no comparison runs without it. Read
-`COMPLMD` first; `tools/pdsunload.py` now gets it out of `MVSSRC.BLD.UTILITY.ASM`
-(tape file 5, 64 members) without needing cc370#113.
-
-Yesterday's lever is spent, and the answer is written up in
-[`docs/private-macros.md`](docs/private-macros.md): `SYM20104` is a **DD name**
-for an IBM RELFILE Dave Kreiss had locally, not a library on the tape. Loading
-the tape under MVS would not have produced those macros either — **no reason to
-touch `MVSCE-EXP`'s config for this.**
+Waiting on other people, nothing to do here: `libobj370`
+([cc370#109](https://github.com/mvslovers/cc370/issues/109)) — the adoption half
+landed in #116 on 2026-09-06 — and Dave Kreiss' rebuilt install tape, which was
+asked to carry his built `PVTMAC`/`APVTMAC`.
 
 ---
 
@@ -53,9 +47,9 @@ desired."* The same goes for the utility source on the install tape.
 - [ ] **Keep `UTL31` out of publication.** It descends from the CBT file 217
       disassembler (R. Thornton) and he does not know its terms either. He
       distributes it but does not assemble it, so nothing depends on it
-- [ ] Reply — draft ready in
-      `~/repos/MVSSRC/WORK/doc/mail-kreiss-2026-09-antwort.md`, waiting to be
-      sent. It asks for his built `PVTMAC`/`APVTMAC` on the new install tape
+- [x] **Replied on 2026-09-06.** It asks for his built `PVTMAC`/`APVTMAC` on the
+      new install tape — and that request has since turned out to be the *only*
+      route to those macros, see [`docs/private-macros.md`](docs/private-macros.md)
 
 **What else his mail says:**
 
@@ -447,10 +441,12 @@ form, so re-appliable. In no case do we have to redo his work.
 - [x] **Extracted the private macros** — 114 from `NEW.ASM` on the tape, 319 from
       the web mirrors; 433 of 436. In `work/macros/`, kept apart by provenance
 - [x] **Re-measured: 49 % → 73 %**, no regressions
-- [ ] **Re-extract `SYS1.MACLIB`/`AMODGEN`** — 79 of 554 `AMACLIB` elements are
-      missing from our copy
-- [ ] Replace the mirror macros with DLIB-level ones before the first
-      byte-identity comparison, or make the comparator able to name them
+- [x] **Corpus moved to DLIB level** (2026-09-06). The old one mixed target and
+      distribution libraries. 111 of 150 now, no regressions; the `AMACLIB` gap
+      went from 79 to 14
+- [ ] The mirror macros **cannot** be replaced from any MVS/CE — the private
+      macros are not in the DLIBs (3 of 623). Only Dave Kreiss' built `APVTMAC`
+      or the IBM RELFILEs can settle their level
 - [ ] Re-measure again after cc370#115
 - [ ] Implement `DC/DS` type `S` in as370 — the only gap reported by name in the
       pre-measurement

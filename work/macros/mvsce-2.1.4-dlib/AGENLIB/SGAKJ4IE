@@ -1,0 +1,17 @@
+         MACRO                                                          05000021
+         SGAKJ4IE                                                       10000000
+         COPY  SGGBLPAK                                                 15000021
+&SGCTRLC(8) SETC '&SGCTRLC(24)'        SET CMDLIB DEVICE                20000021
+&SGCTRLC(7) SETC '&SGCTRLC(23)'        SET CMDLIB VOLID                 25000021
+&SGCTRLC(9) SETC 'CMDLIB'             SET SYSLMOD NAME                  30000000
+&SGCTRLC(10) SETC ',RENT'              SET LINKAGE EDITOR ATTRIBUTES    35000021
+&SGCTRLC(11) SETC ',REFR'                                               40000021
+         COPY  SGLEDPK1                                                 45000021
+ PUNCH '//ACMDLIB DD DSNAME=SYS1.ACMDLIB,DISP=SHR,VOLUME=(,RETAIN)'     50000000
+         COPY  SGLEDPK2                                                 55000021
+ PUNCH ' INCLUDE ACMDLIB(AKJLKL01,AKJLKMSG)'                            60000000
+ PUNCH ' ENTRY AKJLKL01'                                                65000000
+ PUNCH ' ALIAS IKJLKL01'                                                65050000
+ PUNCH ' NAME AKJLKL01(R)'                                              70000000
+ PUNCH '/*'                                                             75000021
+         MEND                                                           80000021

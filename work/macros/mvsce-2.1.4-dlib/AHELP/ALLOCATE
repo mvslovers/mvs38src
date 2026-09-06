@@ -1,0 +1,93 @@
+)F FUNCTION -                                                           03000000
+  THE ALLOCATE COMMAND DYNAMICALLY DEFINES AND ALLOCATES A DATA SET     06000000
+  WITH OR WITHOUT AN ATTRIBUTE LIST OF DCB PARAMETERS, OR               06050002
+  CONCATENATES A LIST OF DATA SETS.                                     06100002
+)X SYNTAX  -                                                            09000000
+         ALLOCATE   DATASET('DSNAME'/'LIST OF DSNAMES'/*)               12000002
+                       OR                                               12050002
+                    DUMMY                                               12100002
+                    FILE('DDNAME') DEST('USERID')                       12150002
+                    NEW/OLD/MOD/SHR/SYSOUT('CLASS')                     15000002
+                    VOLUME('SERIAL'/SERIAL LIST)/MSVGP('IDENTIFIER')    15050003
+                    SPACE('QUANTITY','INCREMENT') DIR('INTEGER')        18000000
+                    BLOCK('VALUE')/AVBLOCK('VALUE')/TRACKS/CYLINDERS    21000002
+                    USING('ATTR-LIST-NAME')  HOLD/NOHOLD                21050002
+                    UNIT('UNIT-TYPE')  UCOUNT('COUNT')/PARALLEL         21100002
+                    LABEL('LABEL-TYPE') POSITION('SEQUENCE-NUMBER')     21150002
+                    MAXVOL('VOL-COUNT') PRIVATE RELEASE                 21200002
+                    VSEQ('VOL-SEQ-NUMBER') ROUND                        21250002
+                    KEEP/DELETE/CATALOG/UNCATALOG                       21300002
+  REQUIRED - NONE                                                       24000000
+  DEFAULT  - NONE                                                       27000002
+  ALIAS    - ALLOC                                                      30000000
+  NOTE     - DATA SETS ALLOCATED REMAIN ALLOCATED UNTIL LOGOFF OR       33000000
+             FREED BY FREE COMMAND. NO PERMANENT CONNECTION EXISTS      36000001
+             BETWEEN THE ATTRIBUTE LIST AND DATA SET.                   36050001
+           - THE OPERAND 'DATASET' MAY ALSO BE SPECIFIED AS 'DSNAME'.   36750003
+             THE OPERAND 'FILE' MAY ALSO BE SPECIFIED AS 'DDNAME'.      37450003
+             THE OPERAND 'BLOCK' MAY ALSO BE SPECIFIED AS 'BLKSIZE'.    38150003
+)O OPERANDS -                                                           39000000
+))DATASET('DSNAME(S)'/*) OR                                             42000003
+  DSNAME('DSNAME(S)'/*) - DSNAME IS NAME OF DATA SET TO BE ALLOCATED.   42500003
+                  LIST OF DSNAMES SPECIFIES THE DATA SETS ARE           43000002
+                  TO BE CONCATENATED.                                   44000002
+                  * INDICATES TERMINAL TO BE ALLOCATED                  45000002
+))DSNAME('DSNAME(S)'/*) OR                                              45008300
+  DATASET('DSNAME(S)'/*) - DSNAME IS THE NAME OF DASE TO BE ALLOCATED.  45016600
+                   LIST OF DANAMES SPECIFIES THE DATA SETS ARE          45024900
+                   TO BE CONCATENATED.                                  45033200
+                   * INDICATES TERMINAL TO BE ALLOCATED.                45041500
+))DUMMY    -      DUMMY DATA SET TO BE ALLOCATED                        45050002
+))FILE('DDNAME') OR                                                     48000003
+  DDNAME('DDNAME') - DDNAME TO BE ASSOCIATED WITH DATA SET              48020003
+))DDNAME('DDNAME') OR                                                   48030000
+  FILE('DDNAME') - DDNAME TO BE ASSOCIATED WITH DATA SET                48040000
+))DEST('USERID') - REMOTE USER TO WHICH SYSOUT DATA SETS ARE TO         48050002
+                  BE ROUTED.                                            48100002
+))OLD      -      DATA SET EXISTS AND EXCLUSIVE CONTROL IS REQUIRED     51000002
+))SHR      -      DATA SET EXISTS BUT EXCLUSIVE CONTROL IS NOT REQUIRED 54000002
+))MOD      -      ADDITIONS ARE TO BE MADE TO DATA SET                  57000002
+))NEW      -      DATA SET IS TO BE CREATED                             60000002
+))SYSOUT('CLASS')   - DATA SET IS TO BE SYSTEM OUTPUT DATA SET          63000002
+))VOLUME('SERIAL(S)') - VOLUME(S) ON WHICH DATA SET RESIDES OR IS TO    66000002
+                  RESIDE.                                               66050002
+))MSVGP('IDENTIFIER') - IDENTIFIER OF THE MASS STORAGE GROUP ON         66950003
+                        WHICH THE DATA SET RESIDES.                     67850003
+))BLOCK('VALUE') OR                                                     69000003
+  BLKSIZE('VALUE') - BLOCK SIZE AND AVERAGE RECORD LENGTH               69020003
+))AVBLOCK('VALUE') - AVERAGE RECORD LENGTH                              69050002
+))TRACKS    -     SPACE IS TO BE ALLOCATED BY TRACKS                    69100002
+))CYLINDERS -     SPACE IS TO BE ALLOCATED BY CYLINDERS                 69150002
+))SPACE('QUANTITY','INCREMENT') - THE NUMBER OF UNITS OF SPACE          72000002
+                  AND INCREMENT                                         73000002
+))DIR('INTEGER') - INTEGER IS NUMBER OF DIRECTORY BLOCKS REQUIRED       75000000
+))USING('ATTR-LIST-NAME') - ATTR-LIST-NAME IS NAME OF ATTRIBUTE         75050001
+                  LIST OF DCB PARAMETERS TO BE MERGED WITH A DATA SET   75100002
+                  AT DYNAMIC ALLOCATION TIME.                           75150002
+))HOLD      -     DATA SET IS TO BE PLACED ON A HOLD QUEUE UPON         75250002
+                  UNALLOCATION.                                         75300002
+))NOHOLD    -     DATA SET IS NOT TO BE PLACED ON A HOLD QUEUE          75350002
+                  UPON UNALLOCATION.                                    75400002
+))UNIT('UNIT-TYPE') - DEVICE TYPE TO WHICH A FILE OR DATA SET IS        75450002
+                  TO BE ALLOCATED.                                      75500002
+))UCOUNT('COUNT') - MAXIMUM NUMBER OF DEVICES TO WHICH A FILE OR        75550002
+                  DATA SET MAY BE ALLOCATED.                            75600002
+))PARALLEL  -     ONE DEVICE MOUNTED FOR EACH VOLUME SPECIFIED ON       75650002
+                  THE VOLUME PARAMETER                                  75700002
+))LABEL('LABEL-TYPE') - LABEL PROCESSING TO BE DONE FOR TAPE VOLUMES.   75750002
+))POSITION('SEQUENCE-NUMBER') - RELATIVE POSITION OF THE DATA SET ON    75800002
+                  A MULTI-DATA SET TAPE.                                75850002
+))MAXVOL('VOL-COUNT') - MAXIMUM NUMBER OF VOLUMES A DATA SET MAY USE    75900002
+))PRIVATE   -     A VOLUME WHICH IS NOT PERMANENTLY RESIDENT OR         75950002
+                  RESERVED IS TO BE ASSIGNED THE PRIVATE VOLUME USE     76000002
+                  ATTRIBUTE.                                            76050002
+))RELEASE   -     UNUSED SPACE IS TO BE DELETED WHEN THE DATA SET IS    76060002
+                  CLOSED.                                               76070002
+))VSEQ('VOL-SEQ-NUM') - WHICH VOLUME OF A MULTI-VOLUME DATA SET TO      76100002
+                  BEGIN PROCESSING WITH.                                76150002
+))ROUND     -     ALLOCATED SPACE SHOULD BE EQUAL TO ONE OR MORE        76200002
+                  CYLINDERS.                                            76250002
+))KEEP      -     DATA SET IS TO BE KEPT WHEN FREED.                    76300002
+))DELETE    -     DATA SET IS TO BE DELETED WHEN FREED.                 76302002
+))CATALOG   -     DATA SET IS TO BE CATALOGED.                          76310002
+))UNCATALOG -     DATA SET IS TO BE UNCATALOGED.                        76320002

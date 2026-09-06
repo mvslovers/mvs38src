@@ -1,0 +1,56 @@
+.***** START OF SPECIFICATIONS **************************************   00100000
+.*                                                                      00200000
+.* MODULE NAME - SGUPDPAK                                               00300000
+.*                                                                      00400000
+.* DESCRIPTIVE NAME - SGUPDPAK                                          00500000
+.*                                                                      00600000
+.* COPYRIGHT - NONE                                                     00700000
+.*                                                                      00800000
+.* STATUS - CHANGE LEVEL 02                                             00900000
+.*                                                                      01000000
+.* FUNCTION -                                                           01100000
+.*       THE SGUPDPAK MACRO IS USED TO SUPPLY JCL FOR THE IEBUPDTE      01200000
+.*       UTILITY. THIS IS DONE BY SETTING GLOBALS AND CALLING THIS      01300000
+.*       MACRO.                                                         01400000
+.*                                                                      01500000
+.* NOTES - N/A                                                          01600000
+.*                                                                      01700000
+.* MODULE TYPE - MACRO                                                  01800000
+.*                                                                      01900000
+.* ENTRY POINT - N/A                                                    02000000
+.*                                                                      02100000
+.* INPUT - THE FOLLOWING GLOBALS ARE PASSED TO THE SGUPDPAK MACRO       02200000
+.*       GLOBALS USED ARE -                                             02300000
+.*             &SGCTRLA(1)  - JOB STEP COUNTER                          02400000
+.*             &SGCTRLC(6)  - END OF QUALIFIED DATASET NAME             02500000
+.*             &SGCTRLC(7)  - DEVICE TYPE                               02600000
+.*             &SGCTRLC(9)  - VOLUME SERIAL NUMBER                      02700000
+.*             &SGCTRLC(40) - BEGINNING OF DSNAME, USUALLY SYS1         02800000
+.*             &SGCTRLC(41) - OUTPUT CLASS, USUALLY A                   02900000
+.*                                                                      03000000
+.* OUTPUT - THE JCL FOR THE IEBUPDTE UTILITY.                           03100000
+.*                                                                      03200000
+.*       LOCALS USED ARE - NONE                                         03300000
+.*                                                                      03400000
+.* EXIT, NORMAL - N/A                                                   03500000
+.*                                                                      03600000
+.* EXIT, ERROR - N/A                                                    03700000
+.*                                                                      03800000
+.* EXTERNAL REFERENCES - N/A                                            03900000
+.*                                                                      04000000
+.* TABLES - N/A                                                         04100000
+.*                                                                      04200000
+.* MACROS - NONE                                                        04300000
+.*                                                                      04400000
+.* CHANGE ACTIVITY -                                                    04500000
+.*                                                                      04600000
+.****** END OF SPECIFICATIONS ***************************************   04700000
+&SGCTRLA(1)    SETA  &SGCTRLA(1)+1        INCREMENT STEP COUNTER        04800000
+ PUNCH '//SG&SGCTRLA(1) EXEC PGM=IEBUPDTE,PARM=NEW,COND=(4,LT)'         04900000
+ PUNCH '//SYSPRINT  DD  SYSOUT=&SGCTRLC(41)'                            05000000
+ PUNCH '//SYSUT2 DD DISP=OLD,DSN=&SGCTRLC(40)..&SGCTRLC(6),UNIT=&SGCTRLX05100000
+               C(7),VOL=SER=&SGCTRLC(9)'                                05200000
+ PUNCH '//SYSIN DD DATA'                                                05300000
+&SGCTRLC(6)    SETC  ''                                                 05400000
+&SGCTRLC(7)    SETC  ''                                                 05500000
+&SGCTRLC(9)    SETC  ''                                                 05600000
