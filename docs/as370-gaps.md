@@ -162,8 +162,45 @@ family, which uses `&SYSECT`. Those macros come from `SYS1.ATSOMAC`, the
 distribution library, so the mirror-provenance question does not apply here.
 
 If IFOX00 resolves `&SYSECT` the way the fix now does, IBM's shipped module
-should match the **new** output. It matches the old one. One of the assumptions
-in between is wrong and it is not yet known which. Handed to cc370 as a case.
+should match the **new** output. It matches the old one.
+
+**Resolved by the cc370 session, and it is two defects stacked.** `as370` runs
+**one location counter for the whole assembly**; IFOX00 gives every control
+section its own counter from zero and concatenates the sections afterwards. The
+two models agree exactly as long as no section is ever *resumed* — and cc370's
+own corpus never resumes one, in 853 assembler sources. So the byte-identity
+gate could not see it.
+
+The `&SYSECT` fix did not cause this. It **exposed** it: with an empty
+`&SYSECT` those modules effectively ran in a single section, where the single
+counter is harmless. The TSO parse macros swing out and back once per call —
+`&IKJCSNM CSECT` then `&SYSECT CSECT` — so `IDCCDAL` is not a two-section
+assembly but dozens of switches. Filed as
+[cc370#136](https://github.com/mvslovers/cc370/issues/136); the origins turn out
+to come from the sections' **final** lengths, so there is no in-place repair.
+
+### How large that class is
+
+| | Modules |
+|---|---:|
+| resume a section, via one of 15 macros or literally | **157** of 5,526 |
+| of those, assemble today | 49 |
+| of those, fail today | 108 |
+| **of those, byte-identical today** | **0** |
+
+The last row is the one that matters: **not one of the 572 byte-identical
+modules resumes a section.** The two counter models only diverge on resumption,
+so #136 cannot break anything that currently holds — and the sixteen lost
+`IDCCD*` identities are inside those 157.
+
+> ⚠️ The first version of this measurement said **2,608** modules, 47 % of the
+> tree. It counted every repeated section name, including `X CSECT` immediately
+> followed by `X CSECT`. A resumption means the name returns **after an
+> intervening different section**. The control that caught it: almost all of the
+> byte-identical modules came out as "resuming" too, which cannot be true. 47 %
+> against 3 % is the difference between "this must be rebuilt now" and "this is a
+> bounded, named set".
+
 
 ### And a correction to how this was checked
 
