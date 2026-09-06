@@ -222,3 +222,36 @@ not one cause, and the byte counts are not comparable across the groups:
 
 The sample material — the module list and the IFOX00 decks — is in
 [`../work/measurements/ifox-sample/`](../work/measurements/ifox-sample).
+
+### One of the eleven reduced to a single statement
+
+`IEAVDSEG` differs from IFOX00 by 16 bytes, and they are all one macro
+expansion. The source line is:
+
+```
+RECDERR  DS    0H
+         ABEND X'C0D',,,SYSTEM
+```
+
+`as370` expands it to 24 bytes — `CNOP`, `B *+8`, `DC AL4`, `L 1,*-4`, `SLL`,
+`SRL`, `SVC 13`. IFOX00 does it in 8. The macro is the same on both sides,
+`ABEND` from `SYS1.AMACLIB`, so conditional assembly *inside* the macro decides
+differently.
+
+It is not the shared cause of its group: of the six modules that differ in
+length, only this one uses `ABEND` at all. What they share is a direction —
+`as370` always emits more.
+
+### And a control that belongs in every deck comparison
+
+**Two of the thirty decks did not belong to their module.** `IEFAB4M5`'s member
+held `IEDQWAA`'s deck and `IGG019OK`'s held `IGG01945`'s — stale content from an
+earlier run, because `SYSPUNCH ... DISP=SHR` only replaces a member if the step
+actually punches. A step that fails leaves the previous deck in place, and
+nothing says so.
+
+The check is one line: **does the first section name in the deck match the module
+name?** It caught both. Without it, `IGG01945`'s deck would have been cited as
+evidence about `IGG019OK` — and it had already produced one false finding, an
+empty `PC` section that looked like an `as370` quirk. With the correct deck,
+IFOX00 emits that same empty `PC` section.
