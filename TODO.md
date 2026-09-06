@@ -1,6 +1,6 @@
 # TODO — MVS 3.8j source recovery
 
-As of 2026-09-06 (late). The working list for [`docs/workplan.md`](docs/workplan.md).
+As of 2026-09-06, end of day. The working list for [`docs/workplan.md`](docs/workplan.md).
 The plan says *why* and *where to*; this list says *what next*.
 
 **Key:** 🔒 blocks other work · ⚡ runs in parallel, blocks nothing ·
@@ -10,39 +10,79 @@ The plan says *why* and *where to*; this list says *what next*.
 
 ## Start here tomorrow
 
-**832 modules are byte-identical to the shipped object code**, 431 more differ
-only in `DS` holes — **1,263 of 4,107**, measured tree-wide with the current
-tools. [`docs/tree-wide-run.md`](docs/tree-wide-run.md).
+*Written as a handover: a fresh session should be able to start from this section
+alone.*
 
-The assembler is no longer a suspect. Six `as370` defects were closed today,
-every one of them against IFOX00 running under MVS/CE, and the direct
-`as370`-against-IFOX comparison now runs per module
-([`docs/ifox-oracle.md`](docs/ifox-oracle.md)). **What remains is project work,
-not tool work.**
+### Where the project stands
 
-**1. Rule out our own macro provenance.** 319 of our macros come from web mirrors
-with an unestablished maintenance level, and a macro one PTF behind produces a
-different length from perfectly correct source. It is the one variable we
-introduced ourselves, and until it is closed every length difference has two
-explanations. The route is Dave Kreiss' built `PVTMAC`/`APVTMAC` on his rebuilt
-install tape, asked for on 2026-09-06. **1,360 of the 2,147 length differences
-use no mirror macro at all** and can be worked on regardless —
-[`docs/what-is-not-blocked.md`](docs/what-is-not-blocked.md).
+**837 of 4,107 modules assemble byte-identical to the object code MVS/CE ships**,
+and 432 more differ only in `DS` holes — **1,269, or 31 %**. Of 5,528 modules,
+4,511 assemble at all. [`docs/tree-wide-run.md`](docs/tree-wide-run.md).
 
-**2. The 433 that differ only inside generated text.** Right length, real
-differences, no hole excuse — the recovery work proper. Smallest cluster count
-first, and now attributable with certainty: run the module through IFOX as well,
-and if `as370` == IFOX the difference belongs to the source.
+What remains: **2,128 length differences** and **441 text differences**.
 
-**3. Extend the direct IFOX comparison** from five modules to the whole
-assembling tree. That is what turns "the assembler is probably fine" into a
-measurement, and the pipeline exists: macros are uploaded to
-`IBMUSER.PVTMAC` on `MVSCE-EXP`, `SYSPUNCH` comes back byte-exact over FTP.
+### What changed today, in one paragraph
 
-Small and named, still open: the 14 `AMACLIB` elements missing from
-`SYS1.AMACLIB`; `IHANVT`, `UCBDADVC`, `IECDCST` with no `++MAC` element;
-`ACCESS`, `IQAMOD`, `IQAQAL` nowhere on this machine; and the 22 members whose
-`X'10'` scatter record is now read but never verified against a rebuild.
+The comparison used to run only against the distribution libraries, which
+conflates two questions — *does `as370` assemble like IFOX00* and *does Dave
+Kreiss' source match IBM's object*. Those are now separable: the same source is
+assembled here and by the real Assembler XF under MVS/CE, and the decks compared
+([`docs/ifox-oracle.md`](docs/ifox-oracle.md)). Seven `as370` defects were closed
+that way, **four of them silent** — the assembler reported success and produced
+different code. Details in [`docs/as370-gaps.md`](docs/as370-gaps.md).
+
+### The three things to do next
+
+**1. Extend the direct IFOX comparison from 30 modules to all 4,511.** This is
+the biggest single step available and it needs no one else. On a sample of 30 the
+split was **14 source, 11 tool, 5 where IFOX00 flags and `as370` is silent**; the
+population figure will rank everything that follows. Upload the sources once as a
+PDS to `MVSCE-EXP` so the assembly jobs stay small, then assemble both ways and
+compare columns 1–72 excluding the `END` card.
+
+**2. Measure what cc370 lands.** They are building #144 (`T'` of a defined
+symbol), then mapping #141 (SETC not substituted in open code), then #140. After
+each: full tree run, and report **both** numbers — new identities *and* how many
+modules moved out of the length bucket. On #142 the second number was five times
+the first.
+
+**3. The source work proper.** The 441 text differences are right-length, real
+differences with no hole excuse — and now attributable with certainty. The 1,360
+length differences that use no mirror macro
+([`docs/what-is-not-blocked.md`](docs/what-is-not-blocked.md)) do not wait on
+anything either.
+
+### Waiting on other people
+
+- **Dave Kreiss' rebuilt install tape** with his built `PVTMAC`/`APVTMAC`. That
+  is the only route to settling the maintenance level of 319 of our macros, and
+  until it is settled every length difference has two explanations.
+- **mainframed767** on an MVS/CE 3.0.1 — sent 2026-09-06, follow up in ~4 weeks.
+
+### Controls that must not be dropped
+
+Every one of these caught a wrong finding today:
+
+- **Pass all 80 columns** when feeding assembler source anywhere. Column 72 is
+  the continuation; cutting at 71 produces `IFO035` everywhere and looks like a
+  source defect.
+- **Both sides must see the same macro libraries.** Local `-I` uses
+  `SYS1.AMACLIB` (566 members); `SYS1.MACLIB` on MVS is the *target* library with
+  742. The matched `SYSLIB` is in [`docs/ifox-oracle.md`](docs/ifox-oracle.md).
+- **Check that a deck belongs to its module** — first section name against member
+  name. `SYSPUNCH ... DISP=SHR` leaves the previous deck in place when a step
+  fails, silently.
+- **Never `SYSPRINT DD DUMMY`.** The diagnostics decide whether a deck is an
+  authority at all.
+- **In zsh, build flag lists as arrays** and pass `"${arr[@]}"`. An unquoted
+  variable arrives as one argument.
+
+### Small and named, still open
+
+14 `AMACLIB` elements missing from `SYS1.AMACLIB`; `IHANVT`, `UCBDADVC`,
+`IECDCST` with no `++MAC` element; `ACCESS`, `IQAMOD`, `IQAQAL` nowhere on this
+machine; the 22 members carrying an `X'10'` scatter record, now readable but
+never verified against a rebuild.
 
 ---
 
