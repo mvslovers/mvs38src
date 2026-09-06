@@ -15,9 +15,9 @@ alone.*
 
 ### Where the project stands
 
-**837 of 4,107 modules assemble byte-identical to the object code MVS/CE ships**,
+**837 of 4,108 modules assemble byte-identical to the object code MVS/CE ships**,
 and 432 more differ only in `DS` holes — **1,269, or 31 %**. Of 5,528 modules,
-4,511 assemble at all. [`docs/tree-wide-run.md`](docs/tree-wide-run.md).
+**4,533** assemble at all. [`docs/tree-wide-run.md`](docs/tree-wide-run.md).
 
 What remains: **2,128 length differences** and **441 text differences**.
 
@@ -46,12 +46,19 @@ On #142 the second number was five times the first.
 
 Queue, with what is known about each:
 
-- **#144**, `T'` of a *defined* symbol: `as370` says `U` for every symbol, IFOX00
-  gives the `DS`/`DC` type letter. Approved in its **forward-scan form only** — a
-  pass over the raw lines before `macro_pass()`, no change to the phase ordering.
-  IFOX00 resolves even a **later**-defined symbol, so a forward scan is the right
-  model; whether it sees macro-generated symbols is **unmeasured**. Same 225
-  macros as #142, so the acceptance is the tree run, not cc370's corpus.
+- **#144 — landed, and it moved nothing measurable.** `T'` of a defined symbol
+  now answers from an open-code look-ahead. **22 more modules assemble** (4,511 →
+  4,533) and **not one comparison figure changed**: identical stays 837, length
+  differences stay 2,128. All 22 are `IKJEG*` and `IGC000*` modules with **no
+  DLIB counterpart**, so they never enter the comparison. The fix is real; its
+  yield is outside the yardstick.
+
+  **And it kills a prediction.** #142 was expected to be only half the story,
+  with #144 completing it — the 121 `T'` candidates stay at 8 identical and 86
+  length cases, unmoved. The eight-fold depletion in that set has a **third
+  cause**, and nobody knows what it is. Either the set is special for another
+  reason (`DCB` and `MODESET` sit in more complex modules), or something else
+  lives in the same macros.
 - **#141**, `SETA`/`SETB`/`SETC` not substituted in open code: **52 modules, 13
   of them assembling, and 0 byte-identical** against a tree rate of 20.4 %. Small
   and completely depleted — [`../work/measurements/opencond2.txt`](work/measurements/opencond2.txt).
