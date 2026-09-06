@@ -275,17 +275,14 @@ measured, 49 of them matching. [`docs/dlib-distance.md`](docs/dlib-distance.md).
 The one correction it forced: the `AOS*` libraries hold **load modules**, not
 object decks. Everything downstream follows from that.
 
-### 5-old. 🚪 The original wording, for the record
+The original checklist, with what actually happened:
 
-- [ ] Pull one load module out of `mvsres.3350` with `dasdpdsu` — **with no MVS
-      running**
-- [ ] `file370 -v` shows its ESD dictionary
-- [ ] Read out CSECTs, IDR records and eyecatcher
-- [ ] Check the result by hand against the same module on the running system
-
-**The most important early item on this list.** It answers whether host-side
-extraction holds up at all. If it does, much of what follows is legwork. If it
-does not, we replan before effort has gone in.
+- [x] Pull a module out with **no MVS running** — `dasdcat`, not `dasdpdsu`;
+      the latter cannot read a RECFM=U library at all
+- [x] `file370 -v` shows the record structure — CESD, IDR, control, text, MODEND
+- [x] Read out sections and IDR records — done for 102 members
+- [ ] Check one by hand against the same module on the running system — still
+      worth doing once, as an independent check on the whole host-side chain
 
 ---
 
