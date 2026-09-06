@@ -22,9 +22,12 @@ member, **49 already match in section names and lengths** — see
 [`docs/dlib-distance.md`](docs/dlib-distance.md). Those are the first candidates
 for a real verdict, and the first thing to point `cmplmd370` at.
 
-**3. Which sysmods were ACCEPTed?** Still open, still a lookup in the SMP CDS on
-`smp000`, and it decides how much of the 52 length differences is distribution
-rather than source.
+**3. ✅ Which sysmods were ACCEPTed — answered.** The distribution libraries carry
+essentially the full IBM maintenance: 5,529 `UZ` PTFs against 5,655 in the target
+zone, so **139 PTFs (2.5 %) were APPLYed but not ACCEPTed**. See
+[`docs/accept-status.md`](docs/accept-status.md). Two consequences: the DLIB
+yardstick is sound, and the 52 length differences can **not** be hoped away as
+distribution effects — they are more likely genuine source gaps.
 
 **4. The macro remainder:** 14 of the 554 `AMACLIB` elements are not in
 `SYS1.AMACLIB`; `IHANVT`, `UCBDADVC` and `IECDCST` have no `++MAC` element at
@@ -238,7 +241,8 @@ without Hercules at all.
 - [ ] Immutable snapshot with checksums → `baseline/checksums.txt`
 - [ ] Inventory the baseline → `baseline/mvsce-*.md`: usermods, MVP packages,
       sysgen parameters, I/O gen
-- [ ] Evaluate the SMP CDS: which sysmods are ACCEPTed?
+- [x] **Evaluate the SMP CDS: which sysmods are ACCEPTed?** — done, 2026-09-06,
+      [`docs/accept-status.md`](docs/accept-status.md)
 - [ ] Verify the runbook on a first full pass, raising 📄 to ✅
 
 ### 4b. ⚡ Set up the instances on `mvsdev.lan`
@@ -309,6 +313,7 @@ Both sides are available locally:
       same Morrison usermods? (see the plan, section 5)
 - [ ] Extract the object decks and compare CSECT by CSECT
 - [ ] Hold divergences against both systems' SMP CDS — are they ACCEPTed sysmods?
+      (our side is measured now, see [`docs/accept-status.md`](docs/accept-status.md))
 - [ ] Record the outcome in `baseline/dlib-comparison.md`
 
 **If the hypothesis holds**, our output is source for **MVS 3.8j**, not for our
