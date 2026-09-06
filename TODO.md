@@ -53,12 +53,16 @@ Queue, with what is known about each:
   DLIB counterpart**, so they never enter the comparison. The fix is real; its
   yield is outside the yardstick.
 
-  **And it kills a prediction.** #142 was expected to be only half the story,
-  with #144 completing it — the 121 `T'` candidates stay at 8 identical and 86
-  length cases, unmoved. The eight-fold depletion in that set has a **third
-  cause**, and nobody knows what it is. Either the set is special for another
-  reason (`DCB` and `MODESET` sit in more complex modules), or something else
-  lives in the same macros.
+  **#147 followed** — `T'` written out rather than through a macro parameter was
+  still answered as an omitted operand — and moved nothing either. **The `T'`
+  family is closed.**
+
+  **The depletion is explained, and not by a further defect.** Of the 184
+  candidates, **77 had their object deck corrected** by the three fixes and 5
+  became identical. The fixes reach them; those modules simply carry other
+  differences as well. A module calling `DCB` with a self-defining term is a
+  module with more going on — the set selected for complexity, not for one cause.
+  Do not go looking for a fourth `T'` gap.
 - **#141**, `SETA`/`SETB`/`SETC` not substituted in open code: **52 modules, 13
   of them assembling, and 0 byte-identical** against a tree rate of 20.4 %. Small
   and completely depleted — [`../work/measurements/opencond2.txt`](work/measurements/opencond2.txt).

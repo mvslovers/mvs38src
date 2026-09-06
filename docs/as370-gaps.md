@@ -308,3 +308,46 @@ cc370#144 is the first suspect: `T'` of a *defined symbol* is `U` in `as370`
 where IFOX00 gives the `DS`/`DC` type letter. The same 225 macros branch on that
 too — `DCB`, `MODESET` and `IODEVICE` test `T'&AREA EQ 'C'` and the like. Same
 macros, same evaluation, other operand form.
+
+### The `T'` family, closed out
+
+Three fixes — #142 (self-defining terms), #144 (defined symbols, via an
+open-code look-ahead), #147 (`T'` written out rather than through a macro
+parameter). Together, over the whole tree:
+
+| | before #142 | after #147 |
+|---|---:|---:|
+| modules assembling | 4,511 | **4,533** |
+| byte-identical | 832 | **837** |
+| length differs | 2,147 | 2,128 |
+| **object decks changed among the 184 candidates** | — | **77** |
+
+**Seventy-seven decks corrected, five completed.** The same shape as `&SYSECT`:
+the fixes reach the modules and produce different — correct — object code, but
+those modules carry other differences as well.
+
+That answers the eight-fold depletion, and the answer is not a third defect. **A
+module calling `DCB` or `MODESET` with a self-defining term is simply a module
+with more going on**; the candidate set selected for complexity, not for a single
+cause. It is not one fix away from being recovered, and nothing suggests a
+further `T'`-shaped gap.
+
+The 22 modules #144 unlocked are `IKJEG*` and `IGC000*` with no DLIB
+counterpart, so they never enter the comparison at all.
+
+### And the other session's own account of its blind spot
+
+Worth recording next to our own corrections, because the balance is not "one side
+measures and the other builds". Three fixtures this week could not decide the
+question they were written for:
+
+```
+csect_resume.s   align8(4) and align8(6) are both 8
+basereg.s        USING declared ascending — both rules pick the same register
+tattr_symbol.s   all 17 cases go through a macro parameter, none written out
+```
+
+The first two were caught before release. **The third shipped**: #145 was green
+while `T'SYM` written literally still answered `O`, and #147 had to follow. The
+gap sat exactly between two forms the fixture did not distinguish — which is the
+same failure as a control case whose two hypotheses give the same answer.
