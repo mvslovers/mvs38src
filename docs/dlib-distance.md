@@ -51,16 +51,23 @@ anything useful about it.
 
 | Difference | Sections |
 |---|---:|
-| 1–8 bytes | 0 |
-| 9–64 bytes | 7 |
-| 65–256 bytes | 3 |
-| 257–1024 bytes | 3 |
-| over 1024 | 0 |
+| 1–8 bytes | 6 |
+| 9–64 bytes | 15 |
+| 65–256 bytes | 18 |
+| 257–1024 bytes | 12 |
+| over 1024 | 1 |
 
-Median 60 bytes, maximum 709. Our deck is smaller in 9 cases and larger in 4.
+Minimum 4 bytes, median 81, maximum 1,028. **The DLIB member is the larger side
+in 39 of 52 cases** — our source is more often short than long, which is what one
+would expect if maintenance reached the object code and not the source.
 
-**Nothing differs by less than 9 bytes**, which is worth noting: these are not
-near misses. A missing or extra instruction sequence, not a single field.
+> An earlier version of this section reported "nothing differs by less than 9
+> bytes, median 60, maximum 709". That was computed over 13 of the 52 cases: the
+> evaluation ran against a listing that had been truncated for display. The
+> table above is over all 52.
+
+The smallest differences are the interesting ones, and there are six of them at
+8 bytes or less.
 
 ## One trap, and it does not apply
 
@@ -91,11 +98,34 @@ not divisible by 8**. The field carries the raw assembled length.
 
 ## What it is good for
 
-Three things, immediately:
+**The 52 are worth more than the 49**, and that is worth stating plainly because
+the instinct runs the other way.
 
-1. **A worklist with a real ordering.** The 49 go first: they are the ones where
-   `cmplmd370` will produce a meaningful verdict on its first run.
-2. **A test set for the comparator itself.** 49 plausible-identity cases and 52
-   certain-difference cases, real IBM material, before the tool exists.
-3. **A baseline.** Re-run it after the macro provenance is settled and the number
+`cmplmd370`'s load-bearing property is *exit 0 only on identity*. A comparator's
+failure mode is not inventing differences — it is returning 0 too easily: a
+`--difin` that masks too generously, a `--clearrld` that zeros too much, a
+section-pairing bug that quietly compares nothing at all. Every one of those ends
+in a green zero. The 52 catch exactly that class, and they catch it **before the
+tool exists**.
+
+The 49 are **not** a positive control. Their answer is unknown; using them as
+"must exit 0" would be the same tautology this document warns about above.
+
+Ordered by sharpness — a comparator that misses 1,028 bytes is broken, one that
+misses 4 is plausibly broken:
+
+| Δ | Module | Section | DLIB | ours |
+|---:|---|---|---:|---:|
+| 4 | `IEBUPDTE` | `IEBUPDTE` | 776 | 772 |
+| 4 | `IEE4303D` | `IEE4303D` | 662 | 666 |
+| 8 | `IEAVAD11` | `IEAVAD11` | 518 | 526 |
+| 8 | `IEDQB7` | `IEDQB7` | 284 | 276 |
+| 8 | `IGCAD10D` | `IGCAD10D` | 953 | 945 |
+| 8 | `IKTQMIN` | `IKTQMIN` | 4044 | 4052 |
+
+And two more things:
+
+1. **A worklist with a real ordering.** The 49 go first for *recovery* work:
+   they are where a verdict is worth asking for.
+2. **A baseline.** Re-run it after the macro provenance is settled and the number
    moves — or it does not, which is also an answer.
