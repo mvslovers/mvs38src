@@ -61,13 +61,18 @@ its job. Nothing in those 1,673 records reaches a module it was not written for.
   is measured against a known unknown, not against a clean baseline.
 - **1,256 modules do not assemble at all** and are outside this measurement
   entirely. They are, on average, the harder ones.
-- **Sixteen modules could not be compared at all.** Their members carry a record
-  of type `X'10'` directly behind the IDR records, which neither `cmplmd370` nor
-  `file370` recognises; both stop there. Counted across all 5,252 members, the
-  first record after the CESD and the IDRs is `X'01'` 3,151 times, `X'0D'` 2,079
-  times and `X'10'` **22** times — almost all of them `ICK*`, plus `ESRTABLE`,
-  `IECTATEN` and `IECTSVC`. One module family, 0.4 %, reported to cc370 with the
-  case rather than a diagnosis.
+- **Sixteen modules could not be compared** when this was first run. Their
+  members carry a record of type `X'10'` directly behind the IDR records, which
+  neither `cmplmd370` nor `file370` recognised; both stopped there. Counted
+  across all 5,252 members, the first record after the CESD and the IDRs is
+  `X'01'` 3,151 times, `X'0D'` 2,079 times and `X'10'` **22** times — almost all
+  `ICK*`, plus `ESRTABLE`, `IECTATEN` and `IECTSVC`. **Resolved the same day:**
+  `X'10'` is the scatter/translation record, documented in cc370's own
+  `docs/load-module-format.md` and never implemented because neither cc370 nor
+  as370 ever binds `SCTR` or `OVLY` — the corpus had never contained the input
+  that triggers it. With the fix all sixteen produce a verdict: 13 `text`,
+  2 `length`, and **`IECTSVC` identical**. So the counts are one better than the
+  table above: **573 identical of 3,904 compared.**
 - **71 % of the distribution-library members carry an SPZAP record.** Where IBM
   patched shipped object and never changed source, no source assembles to it. How
   many of the 589 that is, is not known — see
