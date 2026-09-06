@@ -35,8 +35,17 @@ automatable.
 
 Recovery runs **on the host**; MVS is only an oracle and a runtime. Assembly is
 done with `as370` from [cc370](https://github.com/mvslovers/cc370), comparison
-with `cmplmd370` (to be built). An agent works through a module list; SMP only
-comes in at the end of the chain.
+with `cmplmd370` from the same toolchain. An agent works through a module list;
+SMP only comes in at the end of the chain.
+
+**The traffic goes both ways.** cc370's own test corpora are, without exception,
+cc370 output — necessary, and unable to find a gap in cc370's own format
+readers. The material here is not: 5,252 distribution-library members bound by
+IBM's linkage editor, and 3,904 compared pairs in
+[`work/measurements/tree-run.jsonl.gz`](work/measurements/tree-run.jsonl.gz).
+Running it against the tools found four real defects on 2026-09-06 alone. When
+something breaks, **send the case, not the diagnosis** — twice that day the
+diagnosis was wrong and the case was not.
 
 ## Layout
 
