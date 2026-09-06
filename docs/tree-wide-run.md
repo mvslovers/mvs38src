@@ -142,7 +142,7 @@ The full result, one JSON record per module with every cluster, is in
 |---|---:|---:|
 | modules assembling | 4,270 | **4,510** |
 | paired against a DLIB member | 3,888 | **4,107** |
-| **byte-identical** | 572 | **829** |
+| **byte-identical** | 572 | **832** |
 | only `DS` holes differ | 281 | **430** |
 | **identical or holes-only** | 853 (21.9 %) | **1,259 (30.7 %)** |
 | length differs | 2,079 | 2,147 |
@@ -171,6 +171,26 @@ The five together took assembling modules from 4,270 to 4,510 and byte-identical
 ones from 572 to 829. **The largest single contribution came from a fix that
 unlocked nothing** — `&SYSECT` corrected object code that was already being
 produced, silently and wrongly, in 80 modules.
+
+## And the base-register tie, cc370#138/#139
+
+| | before | after |
+|---|---:|---:|
+| byte-identical | 829 | **832** |
+| only generated text differs | 436 | 433 |
+| length differs | 2,147 | 2,147 |
+| lost | — | **0** |
+
+Three modules, and **all three came out of the text-difference bucket while the
+length count did not move at all** — which is what a base-register difference
+must do: choosing register 11 instead of 10 for the same displacement changes a
+byte, never a length.
+
+A small yield for a fix that is free — the byte-identity corpus does not move,
+because no C-ecosystem module has two `USING` ranges tied on one address. It is
+the silent class again: **both forms are correct programs, so no test finds it.**
+It was visible only because the same source was assembled by both assemblers and
+the decks compared.
 
 ## Where the remaining work is
 
