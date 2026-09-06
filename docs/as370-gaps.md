@@ -241,3 +241,44 @@ was produced with the **older** comparator, before cc370#125 and #126.
 The release was not wrong; the check was. **It measured against a stale baseline
 and was taken for complete.** Which means the figure of 589 identical modules
 has to be recomputed with the current comparator before it is quoted again.
+
+---
+
+## The type attribute of a self-defining term, cc370#142
+
+The `ABEND` case above was reduced further by the cc370 session, and the cause is
+one line inside the macro:
+
+```
+AIF   (T'&CC NE 'N').AA
+```
+
+Measured against the oracle:
+
+| argument | IFOX00 | `as370` |
+|---|---|---|
+| `X'C0D'` | `[NUMERIC]` | `[OTHER]` |
+| `4095` | `[NUMERIC]` | `[NUMERIC]` |
+
+**`T'` of a hexadecimal self-defining term is not `N` in `as370`.** Every macro
+that branches on it takes the wrong path — silently, at `rc=0`.
+
+### How large that is
+
+| | |
+|---|---:|
+| macros branching on a type attribute | **225** — including `DCB`, `MODESET`, `IODEVICE`, `TERMINAL` |
+| modules calling one with a self-defining term (`X'..'`, `B'..'`, `C'..'`) | **184** |
+| of those, assembling today | **121** |
+| **of those, byte-identical today** | **3** |
+
+The tree-wide rate is 832 of 4,107 — **20 %**. Among these 121 one would expect
+about 24 identical. There are three: an **eight-fold depletion**.
+
+That is not proof that #142 explains all of them; a module writing
+`DCB MACRF=X'..'` can differ for ten other reasons. But a set that is eight times
+less often identical than the average, and a defect that strikes exactly inside
+that set, is the strongest candidate the day produced. For comparison, `&SYSECT`
+had 597 modules reaching it and unlocked 39.
+
+The list is in [`../work/measurements/tattr_mods.txt`](../work/measurements/tattr_mods.txt).
