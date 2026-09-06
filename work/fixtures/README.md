@@ -103,6 +103,35 @@ as370 -I $M/AMACLIB -I $M/AMODGEN -I $M/AGENLIB -I $M/ATSOMAC \
       -o IGG026DU.obj "$MVSBLD/IGG026DU.ASM"
 ```
 
+## What the material has already been good for
+
+`cc370`'s `refactor/libobj370-readers` (`6bf8019`, the object-record reader
+extracted into `common/obj370`) was checked against it: `file370 -v` built from
+`main` and from the branch, run over **111 object decks assembled from IBM
+source plus the three DLIB members** — **114 of 114 byte-identical**. That is an
+independent check, because cc370's own byte-identity corpus is entirely
+self-produced material.
+
+What the same 111 decks say about the record types in real IBM object code:
+
+| ESD entry type | Count |
+|---|---:|
+| `ER` | 226 |
+| `SD` | 112 |
+| `LD` | 65 |
+| `PC` | 11 |
+
+**25 of 111 decks carry `LD` entries and 64 carry `RLD` cards.** That matters for
+one specific reason: `LD` entries get no ESDID and must not advance the counter,
+and it is exactly that numbering the `R` and `P` fields of an `RLD` point at. Get
+it wrong and relocation silently targets the wrong section while the deck still
+parses cleanly.
+
+`file370` also already walks a DLIB member end to end — `CESD`, three `IDR`
+records, control, text, `MODEND`. Those IDR records are real maintenance levels
+on distribution-library material, which is what
+[cc370#111](https://github.com/mvslovers/cc370/issues/111) is after.
+
 ## There are 99 more pairs where these came from
 
 Of the 111 modules in the sample that assemble, **102 have a member of the same
