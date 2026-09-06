@@ -1,5 +1,13 @@
 # The tree-wide run
 
+> **Superseded by the second run, 2026-09-06 evening.** After five `as370`
+> defects were closed — `START`, `ISEQ`, `DC/DS` type `S`, `&SYSECT`, the
+> cross-section duplication factor — and the per-section location counter
+> (cc370#136/#137), the whole tree was measured again. **829 modules are
+> byte-identical, up from 572, with none lost.** The section below is the first
+> run and is kept for the record; the current figures are at the end.
+
+
 2026-09-06. The whole of Dave Kreiss' source tree against the whole of MVS/CE's
 distribution libraries, measured by `cmplmd370`. This is the number the project
 has been working towards: not a sample, the population.
@@ -123,3 +131,53 @@ The full result, one JSON record per module with every cluster, is in
 [`asm_ok.txt`](../work/measurements/asm_ok.txt),
 [`asm_fail.txt`](../work/measurements/asm_fail.txt) and
 [`asm_hang.txt`](../work/measurements/asm_hang.txt).
+
+---
+
+# The second run, after the assembler was fixed
+
+2026-09-06, evening. Same corpus, same method, current tools.
+
+| | first run | **second run** |
+|---|---:|---:|
+| modules assembling | 4,270 | **4,510** |
+| paired against a DLIB member | 3,888 | **4,107** |
+| **byte-identical** | 572 | **829** |
+| only `DS` holes differ | 281 | **430** |
+| **identical or holes-only** | 853 (21.9 %) | **1,259 (30.7 %)** |
+| length differs | 2,079 | 2,147 |
+| only generated text differs | 589 | 436 |
+| mixed | 331 | 231 |
+
+**257 modules gained byte-identity and not one lost it.** That is the acceptance
+for the whole assembler campaign, measured on IBM material rather than inferred
+from first-cause counts.
+
+The hole list was regenerated and verified in both directions, as before:
+**2,660 records for 430 modules**; with it those 430 compare identical, and of
+the 436 modules that differ inside generated text, **none** is wrongly masked.
+
+## What the campaign was worth, in one line each
+
+| | modules unlocked | identity gained |
+|---|---:|---:|
+| `START`, `ISEQ` | 75 | 15 |
+| `DC/DS` type `S` | 44 | 1 |
+| `&SYSECT` | 39 | — and it corrected 80 decks that were already assembling |
+| cross-section duplication factor | 0 | — it changes a return code, not bytes |
+| per-section location counter | ~80 | the `IDCCD*` family and more |
+
+The five together took assembling modules from 4,270 to 4,510 and byte-identical
+ones from 572 to 829. **The largest single contribution came from a fix that
+unlocked nothing** — `&SYSECT` corrected object code that was already being
+produced, silently and wrongly, in 80 modules.
+
+## Where the remaining work is
+
+`2,147` length differences remain the bulk, and the next question about them is
+unchanged: **319 of our macros come from web mirrors with an unestablished
+maintenance level.** That is still the one variable we introduced ourselves, and
+Dave Kreiss' rebuilt install tape is the route to closing it.
+
+The `436` that differ only inside generated text are the recovery work proper —
+right length, real differences, no hole excuse.
