@@ -104,3 +104,74 @@ not a wrong byte but a wrong category.
 **Measure the expansion, not the source.** That changes how the 2,079 length
 differences should be approached, and it is the most transferable thing learned
 today.
+
+---
+
+## The wider sample, and an open case
+
+The cc370 session asked for the twelve silently-wrong modules to be chased
+across the whole corpus rather than the next gap being opened. That was the right
+call.
+
+**All 4,270 previously-assembling modules re-assembled**, timestamp-bearing ones
+excluded:
+
+| | Modules |
+|---|---:|
+| unchanged | 3,881 |
+| **different object bytes** | **80** |
+| no longer assemble | 0 |
+
+So 80 modules — 2 % — had been producing wrong object code and passing. That is
+the cost of a silent substitution, measured.
+
+### The part that is not resolved
+
+Comparing those 80 against the distribution libraries, same comparator on both
+sides:
+
+| | Modules |
+|---|---:|
+| verdict unchanged | 25 |
+| **now identical** | 11 |
+| **identity lost** | **16** |
+
+The sixteen are the `IDCCD*` family, and it is `&SYSECT` (#132/#134) that moved
+them, not the cross-section fix.
+
+```
+IDCCDAL, section against its DLIB member
+  before &SYSECT   3372 against 3372   identical
+  after            4959 against 3372   length
+```
+
+**And the oracle sides with the fix.** What `&SYSECT` is before any section has
+been opened:
+
+```
+          PC  0001 000000 000004
+000000 BABB          DC  C'[]'          before any section: empty
+000008 BAD5C1D4C5C4BB DC C'[NAMED]'     after NAMED CSECT
+000002 BABB          DC  C'[]'          after an unnamed CSECT: empty again
+```
+
+`as370` now does exactly that; before the fix it produced `[]` in both places.
+
+`IDCCDAL` has **no `CSECT` statement at all** — it only calls the `IKJPARM`
+family, which uses `&SYSECT`. Those macros come from `SYS1.ATSOMAC`, the
+distribution library, so the mirror-provenance question does not apply here.
+
+If IFOX00 resolves `&SYSECT` the way the fix now does, IBM's shipped module
+should match the **new** output. It matches the old one. One of the assumptions
+in between is wrong and it is not yet known which. Handed to cc370 as a case.
+
+### And a correction to how this was checked
+
+`#134` was released on the finding that "all 572 previously identical modules are
+still identical". That check ran against the list from the tree-wide run — which
+was produced with the **older** comparator, before cc370#125 and #126.
+`IDCCDAL` was not in it, because that comparator did not call it identical.
+
+The release was not wrong; the check was. **It measured against a stale baseline
+and was taken for complete.** Which means the figure of 589 identical modules
+has to be recomputed with the current comparator before it is quoted again.
