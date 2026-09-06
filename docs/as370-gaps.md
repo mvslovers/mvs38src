@@ -184,6 +184,8 @@ to come from the sections' **final** lengths, so there is no in-place repair.
 | | Modules |
 |---|---:|
 | resume a section, via one of 15 macros or literally | **157** of 5,526 |
+| — of those, via a macro | 130 |
+| — of those, literally in their own source | 40 † |
 | of those, assemble today | 49 |
 | of those, fail today | 108 |
 | **of those, byte-identical today** | **0** |
@@ -192,6 +194,23 @@ The last row is the one that matters: **not one of the 572 byte-identical
 modules resumes a section.** The two counter models only diverge on resumption,
 so #136 cannot break anything that currently holds — and the sixteen lost
 `IDCCD*` identities are inside those 157.
+
+† **The literal count is disputed and is left that way.** An independent
+detector on the cc370 side arrives at **23** for the same definition. The
+evidence for these 40 is in
+[`../work/measurements/literal-resumers.txt`](../work/measurements/literal-resumers.txt)
+— one line per module naming the intervening section, spot-checked by hand
+(`AHLMCER` runs over `AHLMCMSG` and comes back). The two enumerations differ and
+nobody has found out why. It changes nothing that matters: the number carrying
+#136 is the **0** among the byte-identical modules, measured twice
+independently, and both detectors agree there.
+
+A related null result, and it took someone to measure rather than assume: a
+`COM` section occupies address space, so `A CSECT … B COM … A CSECT` would be a
+real resumption invisible to a pattern that only looks at `CSECT`/`START`.
+Counted both ways over the whole tree: 23 either way, **0 separated only by a
+COM**. The construction that saved this measurement on DSECTs costs nothing on
+COM, because the case does not occur here.
 
 **Scope, sharpened by cc370 afterwards:** only a resumption across a *real*,
 address-occupying section counts. A **DSECT round-trip** — `A CSECT` … `@DATD
