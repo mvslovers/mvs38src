@@ -10,26 +10,29 @@ The plan says *why* and *where to*; this list says *what next*.
 
 ## Start here tomorrow
 
-**1. The fixture promised in [cc370#110](https://github.com/mvslovers/cc370/issues/110).**
-An `as370` object deck plus the matching DLIB element, so whoever implements
-`cmplmd370` can test without an MVS system. It is also the first end-to-end run
-of our own chain — item 5 — and it needs object decks out of the `AOS*`
-libraries, which we have never extracted.
+**1. Merge decision on cc370.** `refactor/libobj370-readers` (`6bf8019`) is
+pushed and validated — `file370 -v` byte-identical over 114 real files, 111 IBM
+object decks plus 3 DLIB members. The cc370 session is holding for two decisions
+that are the user's: merge it, and whether the **load-module record walk** comes
+next. It does need to come next — the DLIB members are load modules, so that walk
+is the primary path for `cmplmd370`.
 
-**2. Which sysmods were ACCEPTed?** The macro side of the usermod question is
-settled — `SYS1.UMODMAC` is empty, so no usermod macros exist in MVS/CE. What is
-still open is whether usermods were ACCEPTed into the DLIBs, which would move
-the object decks themselves. It is recorded in the SMP CDS on `smp000` and it is
-a lookup, not a guess.
+**2. The 49.** Of 102 modules that assemble and have a distribution-library
+member, **49 already match in section names and lengths** — see
+[`docs/dlib-distance.md`](docs/dlib-distance.md). Those are the first candidates
+for a real verdict, and the first thing to point `cmplmd370` at.
 
-**3. The macro remainder, small and named:** 14 of the 554 `AMACLIB` elements are
-not in `SYS1.AMACLIB`; `IHANVT`, `UCBDADVC` and `IECDCST` have no `++MAC` element
-at all; `ACCESS`, `IQAMOD` and `IQAQAL` are nowhere on this machine.
+**3. Which sysmods were ACCEPTed?** Still open, still a lookup in the SMP CDS on
+`smp000`, and it decides how much of the 52 length differences is distribution
+rather than source.
 
-Waiting on other people, nothing to do here: `libobj370`
-([cc370#109](https://github.com/mvslovers/cc370/issues/109)) — the adoption half
-landed in #116 on 2026-09-06 — and Dave Kreiss' rebuilt install tape, which was
-asked to carry his built `PVTMAC`/`APVTMAC`.
+**4. The macro remainder:** 14 of the 554 `AMACLIB` elements are not in
+`SYS1.AMACLIB`; `IHANVT`, `UCBDADVC` and `IECDCST` have no `++MAC` element at
+all; `ACCESS`, `IQAMOD` and `IQAQAL` are nowhere on this machine.
+
+Waiting on other people: Dave Kreiss' rebuilt install tape, which was asked to
+carry his built `PVTMAC`/`APVTMAC` — the only route to settling the provenance of
+319 of our macros.
 
 ---
 
@@ -261,7 +264,18 @@ rationale in [`docs/runbook.md`](docs/runbook.md), section 6):
 need the volume files, not a running system — so the end-to-end test in item 5
 works with the local 2.1.4 already.
 
-### 5. 🚪 End-to-end test: a single load module
+### 5. ✅ End-to-end test: done, and it went further than one module
+
+Host-side extraction holds up. `dasdcat` reads distribution-library members with
+no MVS running; `file370` walks them (CESD, IDR, control, text, MODEND); `as370`
+produces object decks from Dave Kreiss' source; and the two sides can be compared
+on section names and lengths **without a comparator existing yet**. 102 pairs
+measured, 49 of them matching. [`docs/dlib-distance.md`](docs/dlib-distance.md).
+
+The one correction it forced: the `AOS*` libraries hold **load modules**, not
+object decks. Everything downstream follows from that.
+
+### 5-old. 🚪 The original wording, for the record
 
 - [ ] Pull one load module out of `mvsres.3350` with `dasdpdsu` — **with no MVS
       running**
