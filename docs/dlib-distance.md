@@ -274,3 +274,52 @@ apart from documented holes**: the 18 already byte-identical plus these nine.
 That is the point of the whole `DIFIN` mechanism, arrived at independently: the
 holes are unavoidable, they are not defects, and the only honest way to handle
 them is to name each one and carry the list forward.
+
+---
+
+## Would another source copy fit better?
+
+2026-09-06, evening. The cc370 session found, while chasing a counting
+discrepancy, that the same module exists in several of our source pools with
+**structurally different** section layouts:
+
+```
+www.stben.net       ICFBDE00 ICFBDE00 ICFCVTOR ICFBDE00   ICFCVTOR is a DSECT
+Dave Kreiss/MVSBLD  ICFBDE00 ICFBDE00 ICFBDE50 ICFBDE00   ICFBDE50 is a CSECT
+mainframe.eu        ICFBDE00 ICFBDE00 ICFCVTOR ICFBDE00   as stben
+```
+
+Different maintenance levels, different structure. Measured over the index:
+
+| | Modules |
+|---|---:|
+| indexed | 5,252 |
+| exist in more than one pool | 1,209 |
+| **copies structurally unequal** | **29** |
+
+That raises an obvious question, since 3,118 of the 3,316 differing modules have
+a copy in a mirror: **would the other copy match the shipped object where Dave
+Kreiss' does not?**
+
+### Measured on 300 of them: almost never
+
+| | Modules |
+|---|---:|
+| mirror copy assembles | 294 |
+| does not assemble | 6 |
+| **byte-identical to the DLIB member** | **2** |
+
+`HMASMVLU` and `ISTYSSCP`. Extrapolated over all 3,118 that is on the order of
+twenty modules — real, cheap to harvest, and not a lever.
+
+**The negative result is the more useful half.** The web mirrors are not a better
+basis than Dave Kreiss' reconstruction; where his source does not match, theirs
+almost never does either. That validates the project's premise — build on his
+work — with a measurement rather than an assumption, and it retires the idea that
+the mirrors might be a shortcut.
+
+It also means the **29 structurally divergent modules** are the ones to watch: a
+byte-identity verdict there can be measured against the wrong copy, and it would
+look exactly like an assembler defect. The README already warns that
+`macros/mirror/` has an unverified maintenance level. This is the same problem on
+the source side, and it now has an upper bound.
