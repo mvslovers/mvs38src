@@ -179,3 +179,46 @@ Cutting at 71 looks harmless and is not.
   cc370#133 in a wider form, and it is worth measuring on its own: **where
   `as370` returns 0 and IFOX00 does not, our pipeline records a clean assembly
   that is not one.**
+
+## The eleven tool gaps, sorted by what they share
+
+`as370` produces a different deck from IFOX00 for eleven of the thirty. They are
+not one cause, and the byte counts are not comparable across the groups:
+
+| Module | differing bytes | of those, base-register nibble | IFOX00 uses base 0 |
+|---|---:|---:|---:|
+| `IKJTTRM0` | **1** | 0 | 0 |
+| `IGFPMRTM` | 5 | **5** | **5** |
+| `IGFPTSIG` | 5 | **5** | **5** |
+| `BLSRCOHD` | 31 | 0 | 0 |
+| `IGG3HN` | 164 | 0 | 0 |
+| `IEAVDSEG` | 35 | 5 | 2 |
+| `IFDMSG61` | 12 | 2 | 2 |
+| `IFFANA` | 213 | 37 | 13 |
+| `IFDMSG03` | 548 | 53 | 22 |
+| `IEFAB4M5` | 390 | 88 | 53 |
+| `IGG019OK` | 566 | 96 | 21 |
+
+**Four groups:**
+
+1. **`IKJTTRM0` — one byte in 752**, same length, not a base register. The
+   smallest isolated case in the whole set.
+2. **`IGFPMRTM` and `IGFPTSIG` — five bytes each, every one a base-register
+   nibble, and IFOX00 writes base 0 every time.** `D2 03 03 94` against
+   `D2 03 43 94`: same displacement, but IFOX00 does not resolve through the
+   `USING` at all. This is cc370#108's `S(0)` finding generalised from
+   constants to instruction operands — only a *relocatable* expression goes
+   through a `USING`; an absolute one is the displacement with base 0.
+3. **`BLSRCOHD` and `IGG3HN`** — same length, no base nibbles, cause unknown.
+4. **The six with a length difference**, where `as370` always emits **more**.
+   `IGG019OK` has one section on IFOX00's side and **two** on ours — that is not
+   a byte, it is a section too many.
+
+> ⚠️ **The byte counts for group 4 are meaningless.** Once the lengths differ,
+> everything after the first insertion is shifted and compares unequal; 566
+> differing bytes is not 566 defects. Those need an analysis of the *first*
+> divergence, not of the total. The counts are kept in the table only to show
+> that they cannot be ranked against groups 1–3.
+
+The sample material — the module list and the IFOX00 decks — is in
+[`../work/measurements/ifox-sample/`](../work/measurements/ifox-sample).
