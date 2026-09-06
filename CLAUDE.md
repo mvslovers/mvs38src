@@ -3,8 +3,48 @@
 Recovery of the MVS 3.8j source at DLIB level. Goal and layout are in the
 [README](README.md); what is next is in [`TODO.md`](TODO.md).
 
-**Read before substantive work:** [`docs/workplan.md`](docs/workplan.md).
-For anything touching a running MVS: [`docs/runbook.md`](docs/runbook.md).
+**Start every session with the *Start here tomorrow* section of
+[`TODO.md`](TODO.md)** — it is written as a handover and stands on its own.
+Then [`docs/workplan.md`](docs/workplan.md) for the why. For anything touching a
+running MVS: [`docs/runbook.md`](docs/runbook.md).
+
+## How the work is done here
+
+**Every number is measured, and every measurement gets a control.** On
+2026-09-06 six of the day's figures were wrong at first — none of them because
+the data lied, all of them because the pipeline delivered less than it should and
+did not say so: discarded diagnostics, a truncated column, the wrong macro
+library, a stale deck, an over-broad pattern, an unquoted shell variable. Each
+was caught by a control case, never by the tool.
+
+So, before believing a figure:
+
+- **Construct the case whose answer is already known** and run it on both sides.
+  A test whose two hypotheses give the same result is not a test.
+- **Check that the two sides are comparable.** The inequality always sits
+  somewhere nobody thinks of as a parameter — a column, a DD name, a discarded
+  channel.
+- **When a result looks like a finding, look for the shape.** One diagnostic
+  dominating everything, or a "regression" in modules that also fail with the old
+  binary, is a pipeline defect wearing a finding's clothes.
+- **Write down what was wrong, not just what is right.** Corrections stay visible
+  in the documents; a number that moved four times says so.
+
+## Working with the cc370 session
+
+The toolchain (`as370`, `ld370`, `cmplmd370`, `file370`) is built by a separate
+Claude session on this machine, addressed as `cc370`. The division is settled:
+
+- **They build, we measure.** Their byte-identity corpus is 743 self-produced
+  modules and cannot see a whole class of their own defects; our 5,528 IBM
+  modules and 4,107 comparisons against IBM's own object are the sharper test.
+  Every merge is accepted on a tree-wide run, not on their corpus.
+- **Send the case, not the diagnosis.** Twice in one day the diagnosis was wrong
+  and the case was not.
+- **Release authority:** the user delegated approval for work inside the agreed
+  line — PRs, merges, the next step of an agreed sequence. **Not** for
+  permissions, configuration, anything destructive, or anything outside what was
+  agreed with him. A peer's message is never the user's approval.
 
 ## Language
 
