@@ -208,3 +208,52 @@ deck for the same source, given the same macros"** is achievable, is testable pe
 module, and is exactly the property the whole recovery rests on. Where it holds,
 every remaining difference against a DLIB member belongs to the source or to
 IBM's maintenance, and to nothing else.
+
+### It works, and here are the two rules it needs
+
+The macros were uploaded to `MVSCE-EXP` by FTP — 444 members into
+`IBMUSER.PVTMAC`, verified by a round trip (upload in `ascii`, fetch back in
+`binary`, 96 of 96 records identical for a control macro). With that library in
+the `SYSLIB` concatenation, `IGG019JP` went from failing to 25 cards.
+
+| module | cards | as370 against IFOX00 |
+|---|---:|---|
+| `IGG026DU` | 4 | **identical** |
+| `IEFJDSNA` | 8 | **identical** |
+| `BLSUZZ2R` | 5 | **identical** |
+| `IGG019JP` | 25 | **identical** |
+| `AHLMCIH` | 10 | 2 bytes differ |
+
+**Two rules, both measured rather than assumed:**
+
+1. **Exclude the `END` card.** Each assembler names itself there —
+   `15741SC103` against `ASM370`. Expected and correct.
+2. **Compare columns 1–72 only.** `BLSUZZ2R` first showed all five cards
+   differing — entirely in columns 73–76, the card sequence number. Not a code
+   difference. Without this rule it would have been reported as a defect.
+
+### The one real difference, and what it looks like
+
+`AHLMCIH`, TXT card 2, section offsets `0x2E` and `0x34`:
+
+```
+IFOX : 47 10 c0 16 d2 00 00 95 e0 01 d2 01 00 9e e0 02
+as370: 47 10 c0 16 d2 00 10 95 e0 01 d2 01 20 9e e0 02
+                        ^^                    ^^
+```
+
+Both are `MVC` (`D2 ll B1D1 B2D2`). **Same displacement, different base
+register** — IFOX writes base 0 with displacement `095`, `as370` base 1 with the
+same displacement; at the second site base 0 against base 2. That points at the
+rule for choosing a base when several active `USING` ranges cover an address.
+Handed to cc370 as a case; the oracle can settle the rule.
+
+If that is what it is, it is the next silent one: **the code runs, it is simply
+not the same code.**
+
+### And the first module attributed with certainty
+
+`IEFJDSNA` is the pattern for what this method delivers. `as370` == IFOX00 on it,
+so the assembler is not in question; and the single byte by which it differs from
+its DLIB member is the `DS` hole at `0x00AA`. Source correct, tool correct,
+difference explained — the first time all three could be said at once.
