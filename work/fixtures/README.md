@@ -132,10 +132,23 @@ records, control, text, `MODEND`. Those IDR records are real maintenance levels
 on distribution-library material, which is what
 [cc370#111](https://github.com/mvslovers/cc370/issues/111) is after.
 
-## There are 99 more pairs where these came from
+## All 102 pairs are here
 
-Of the 111 modules in the sample that assemble, **102 have a member of the same
-name in a distribution library**. The full index — module, library, member size —
-is in [`../measurements/aos-index.txt`](../measurements/aos-index.txt), 5,252
-members across all 34 `AOS*` libraries. Say if a different shape of pair would be
-more useful and it can be cut from that.
+[`dlib-102/`](dlib-102) holds both sides of every pair: `NAME.dlib` is the
+distribution-library member as `dasdcat` delivers it, `NAME.obj` the object deck
+`as370` produces from Dave Kreiss' source with the DLIB-level macro corpus.
+
+Three groups worth keeping apart:
+
+| | Modules | list |
+|---|---:|---|
+| lengths agree **and** no SPZAP record | 21 | [`../measurements/first-candidates.txt`](../measurements/first-candidates.txt) |
+| lengths agree, but the member was zapped | 28 | |
+| lengths differ — **must not compare equal** | 52 | `LEN_DIFF` in [`../measurements/section-lengths.tsv`](../measurements/section-lengths.tsv) |
+
+The 52 are the negative controls and the sharpest are `IEBUPDTE` and `IEE4303D`,
+differing by 4 bytes in 776.
+
+The wider index — module, library, member size for all 5,252 members across the
+34 `AOS*` libraries — is in
+[`../measurements/aos-index.txt`](../measurements/aos-index.txt).
