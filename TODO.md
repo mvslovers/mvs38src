@@ -1,6 +1,6 @@
 # TODO — MVS 3.8j source recovery
 
-As of 2026-09-05. The working list for [`docs/workplan.md`](docs/workplan.md).
+As of 2026-09-06. The working list for [`docs/workplan.md`](docs/workplan.md).
 The plan says *why* and *where to*; this list says *what next*.
 
 **Key:** 🔒 blocks other work · ⚡ runs in parallel, blocks nothing ·
@@ -41,18 +41,30 @@ touch `MVSCE-EXP`'s config for this.**
 
 ## Immediate
 
-### 1. ✅ Asked Dave about licensing — awaiting reply
+### 1. ✅ Licensing settled — Dave Kreiss answered on 2026-09-06
 
-- [x] Review and adjust the draft
-- [x] **Sent** (2026-09-04)
-- [ ] Follow up once after ~4 weeks, then let it rest
+**Freeware, no copyright, no terms.** His words: *"it is ok to release it as
+freeware with no copyright or terms — that is it is open to anyone to use as
+desired."* The same goes for the utility source on the install tape.
 
-Blocks **publication only**, not the work.
+- [x] Sent (2026-09-04), answered (2026-09-06)
+- [x] **Publication is unblocked** — the repository may go public
+- [ ] Credit him **by name and email** on the material and in the repo
+- [ ] **Keep `UTL31` out of publication.** It descends from the CBT file 217
+      disassembler (R. Thornton) and he does not know its terms either. He
+      distributes it but does not assemble it, so nothing depends on it
+- [ ] Reply — draft in `~/repos/MVSSRC/WORK/doc/mail-kreiss-2026-09-antwort.md`
 
-**A data point on licensing, from an earlier mail:** Dave distributes
-`BLDMVS.7z` publicly himself, through the turnkey-mvs group's file area, and
-calls it *"freely downloadable"*. That is not a grant of licence, but it does
-show an intent to share freely — useful if no answer comes.
+**What else his mail says:**
+
+- All target libraries assemble to match TK3 **except `SYS1.LINKLIB` and
+  `SYS1.LPALIB`**, the two largest. He has IPLed and run a system with the
+  rebuilt libraries.
+- **He is rebuilding the install tape**: current documentation, utility source,
+  Tom Armstrong's SORT put into SMP format, and source for some compilers
+  (COBOL and FORTRAN). Worth waiting for before any large re-baselining.
+- The ask that goes with it: **`MVSSRC.BLD.PVTMAC` / `APVTMAC` on the new tape**,
+  which would replace our 320 mirror macros with ones at a known level.
 
 ### 1a. ✅ Current BLDMVS package reconciled
 
@@ -557,6 +569,13 @@ unchanged.
 
 ⚡ Blocks nothing until M7 and needs no running MVS. Can run alongside at any
 time.
+
+> ⚠️ **Downgraded 2026-09-06 — this may not be an SMP defect at all.** Dave
+> Kreiss writes that he and Fish diagnosed the intermittent I/O errors with
+> Hercules traces and diagnostic builds, and that **Fish changed Hercules to
+> eliminate them**. He believes the issue is history but wants to verify it on
+> his rebuild. **Do not start the SMP source analysis** until that verification
+> comes back — the whole strand may be chasing a fixed emulator bug.
 
 The finding from Dave's mail of 2022-06-08: SMP resets the `SMPWRK3` directory
 in the middle of APPLY/ACCEPT, does not notice, and carries on assembling; the
