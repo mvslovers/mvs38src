@@ -152,3 +152,51 @@ differing by 4 bytes in 776.
 The wider index — module, library, member size for all 5,252 members across the
 34 `AOS*` libraries — is in
 [`../measurements/aos-index.txt`](../measurements/aos-index.txt).
+
+## The first verdicts, 2026-09-06
+
+`cmplmd370`'s first run over the three original pairs:
+
+| | |
+|---|---|
+| `BLSUZZ2R` | **identical**, 96 bytes — and neither side carries an RLD element, so `--clearrld` masked nothing. An unvarnished byte-for-byte hit across the whole section |
+| `IGG026DU` | **identical**, 12 bytes |
+| `IEFJDSNA` | **one byte of 211**, at `0x00AA`: ours `00`, the member `04` |
+
+### And that one byte is not a source defect
+
+It is alignment fill. From the assembly listing:
+
+```
+0000A8  07FE                    BR    @14
+0000AA          @DATA    DS    0H
+0000AA                   DS    0F
+0000AC  00000014  @CF00046 DC   F'20'
+```
+
+`BR @14` ends at `0x00AA`. The next constant is fullword-aligned at `0x00AC`, so
+`0x00AA` and `0x00AB` are padding. Byte for byte:
+
+```
+        A6  A7  A8  A9  AA  AB  AC  AD  AE  AF
+ours    D0  14  07  FE  00  00  00  00  00  14
+member  D0  14  07  FE  04  00  00  00  00  14
+```
+
+`as370` pads with zero; IBM's assembler left `04` behind. **This is exactly the
+class Dave Kreiss built the tolerance machinery for** — his own words: *"there
+were spots in the code which contained holes caused by assembler DS statements.
+What was in these holes is purely random."*
+
+So the first genuine difference the new comparator found is the one his `DIFIN`
+mechanism exists to absorb. The record that does it, in his format — six hex
+digits of offset, two of length:
+
+```
+>IEFJDSNA
+0000AA01
+```
+
+Which makes `IEFJDSNA` a better `--difin` test case than a constructed one: a
+real difference, of the intended kind, at a known offset, with the rest of the
+211 bytes identical.
