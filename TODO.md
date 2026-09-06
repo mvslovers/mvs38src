@@ -53,7 +53,9 @@ desired."* The same goes for the utility source on the install tape.
 - [ ] **Keep `UTL31` out of publication.** It descends from the CBT file 217
       disassembler (R. Thornton) and he does not know its terms either. He
       distributes it but does not assemble it, so nothing depends on it
-- [ ] Reply — draft in `~/repos/MVSSRC/WORK/doc/mail-kreiss-2026-09-antwort.md`
+- [ ] Reply — draft ready in
+      `~/repos/MVSSRC/WORK/doc/mail-kreiss-2026-09-antwort.md`, waiting to be
+      sent. It asks for his built `PVTMAC`/`APVTMAC` on the new install tape
 
 **What else his mail says:**
 
