@@ -121,3 +121,90 @@ the stamp. Two ways out, neither taken yet:
 The second is the better fit for this project. Neither is worth building before
 the 229 length differences in the class are understood, because a stamp cannot
 explain those.
+
+## The direct comparison: as370 against IFOX00 on the same source
+
+2026-09-06, later. Everything above compares `as370` output against the
+**distribution libraries** — IBM's object as shipped, decades of maintenance
+later. That conflates two questions:
+
+1. **Does `as370` assemble like IFOX00?** — a tool question
+2. **Does Dave Kreiss' source match IBM's shipped object?** — the project question
+
+A difference against a DLIB member could be either. **They can be separated**:
+assemble the same source with both assemblers and compare the two decks. Any
+difference there is purely `as370` — no maintenance levels, no `DS` holes, no
+source questions.
+
+### The route, and it works
+
+`SYSPUNCH` does not come back byte-exact through the REST API. **FTP does.**
+
+```sh
+# 1. assemble on MVS, punch to a catalogued data set
+//S1      EXEC PGM=IFOX00,PARM='DECK,NOLOAD,NOLIST',REGION=512K
+//SYSLIB   DD  DSN=SYS1.MACLIB,DISP=SHR
+//         DD  DSN=SYS1.AMODGEN,DISP=SHR
+//SYSUT1   DD  UNIT=SYSDA,SPACE=(CYL,(5,2))          … also SYSUT2, SYSUT3
+//SYSPUNCH DD  DSN=IBMUSER.IFOXOBJ.membername,DISP=(,CATLG),
+//             UNIT=SYSDA,SPACE=(TRK,(5,2)),
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+//SYSIN    DD  *          … the source, columns 1-71
+
+# 2. fetch it byte-exact
+printf "user IBMUSER SYS1\nbinary\nget 'IBMUSER.IFOXOBJ.MEMBER' ifox.obj\nquit\n" \
+  | ftp -n mvsdev 2123
+```
+
+### First result
+
+`IGG026DU`, 320 bytes on both sides:
+
+```
+Karte 0  ESD   identical
+Karte 1  TXT   identical
+Karte 2  RLD   identical
+Karte 3  END   IFOX : ...15741SC103 020126249...
+               as370: ...ASM370     010026249...
+```
+
+**Only the END card differs, and only in the field where the assembler names
+itself.** That is expected and correct.
+
+### And the condition the method imposes on itself
+
+Four further modules, and the pattern breaks immediately:
+
+| | differing cards | |
+|---|---|---|
+| `IEFJDSNA` | 1 of 8 | `END` only — `as370` == IFOX00 |
+| `AHLMCIH` | 2 of 10 | `END` and one `TXT` |
+| `BLSUZZ2R` | 5 of 5 | `ESD`, `TXT`, `END` |
+| `IGG019JP` | IFOX 160 B against 2,000 B | the IFOX assembly failed |
+
+**The cause is almost certainly not `as370`.** The `SYSLIB` in that job is
+`SYS1.MACLIB` plus `SYS1.AMODGEN`; locally we assemble against **eight**
+libraries, including `SYS1.APVTMACS`, `ATSOMAC`, `ATCAMMAC`, `AGENLIB` and the
+433 private macros recovered from Dave Kreiss' tape and the web mirrors — which
+do not exist on that system at all.
+
+**For a comparison to attribute anything, both sides must see the same macros.**
+Two steps follow, in this order:
+
+1. Add the remaining distribution macro libraries to the job's `SYSLIB`.
+2. Upload the 433 recovered private macros to a data set on `MVSCE-EXP` — FTP
+   writes as well as it reads — and put that library in the concatenation.
+
+Until then, no difference found this way may be called an `as370` defect. What
+`IEFJDSNA` already shows is the shape of the answer when it is done: the source
+and the tool agree, and the one byte that differs from the DLIB member is the
+`DS` hole, attributable with certainty.
+
+### Why this is the right acceptance criterion
+
+"All 5,528 modules assemble" is neither achievable nor meaningful — some of that
+tree is CICS, some is scaffolding. **"`as370` and IFOX00 produce the same object
+deck for the same source, given the same macros"** is achievable, is testable per
+module, and is exactly the property the whole recovery rests on. Where it holds,
+every remaining difference against a DLIB member belongs to the source or to
+IBM's maintenance, and to nothing else.
