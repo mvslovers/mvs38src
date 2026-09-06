@@ -91,56 +91,65 @@ The discriminator is the direct comparison: assemble the same source with
 the difference against the DLIB member belongs to the source or to IBM's
 maintenance. Where they disagree, it is ours.
 
-### Sample of 30, and the first answer was wrong
+### Sample of 30, and it took three readings to get right
 
 Thirty differing modules under 400 lines — twenty from the length bucket, ten
-from the text bucket — assembled both ways:
+from the text bucket — assembled both ways.
 
-| | Modules |
+**First reading: 16 of 30 differ**, so half the remainder is the assembler.
+
+**Second reading**, after repeating twelve of the sixteen with `SYSPRINT` kept
+instead of `DUMMY`: eight of them do not assemble cleanly on IFOX00 either, some
+with 25 to 33 flagged statements. So most of the difference was neither source
+nor tool but modules that fail on both.
+
+**Third reading, and this one is right.** The dominant diagnostic was
+`IFO035 QUOTES NOT PAIRED`, in almost every flagged module. The JCL that fed the
+source to IFOX00 cut it with `cut -c1-71` — **which drops column 72, the
+continuation column.** Every continued statement lost its continuation, and a
+quoted string spanning two cards came apart. The correlation is exact:
+
+| continuation cards | 0 | 1 | 2 | 4 | 5 | 8 | 10 | 16 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| diagnostics | 0–3 | 2 | 7 | 13 | 15 | 27 | 32 | 34 |
+
+Repeated with the full 80-column record, **ten of the twelve assemble cleanly**.
+`IFDMSG03` went from 34 diagnostics to none.
+
+### The corrected attribution
+
+| | Modules of 30 |
 |---|---:|
-| `as370` == IFOX00 | 14 |
-| `as370` differs | 16 |
+| **`as370` == IFOX00** — the difference belongs to the source | **16** |
+| **`as370` differs** — a genuine tool gap | **6** |
+| IFOX00 flags it too — `IEFAB4M5`, `IEDQE2` | 2 |
+| not re-checked after the column fix | 6 |
 
-Read naively that says **half the remainder is still the assembler**, and an
-eighth round is clearly worth it.
+So the assembler accounts for roughly **a fifth** of what remains, and the class
+of modules that fail on both is **two**, not eight. An eighth round of assembler
+work is worth something, but the source is the larger share.
 
-**That reading is wrong**, and the run that produced it had `SYSPRINT DD DUMMY` —
-the diagnostics were thrown away. Repeating twelve of the sixteen with the
-listing kept:
+### What this cost, and it is the lesson
 
-| module | statements IFOX00 flagged |
-|---|---:|
-| `IFDMSG03` | 33 |
-| `IEFAB4M5` | 30 |
-| `IGG019OK` | 25 |
-| `IFDMSG61` | 14 |
-| `IFFANA` | 11 |
-| `IEECVETE` | 6 |
-| `IEAVDSEG`, `IEDQE2` | 2 |
-| `IKJTTRM0`, `IEFVGM2`, `HEWLFAPT`, `IGG019BC` | **0** |
+Two of the three readings were wrong, and both times **my own pipeline delivered
+less than it should and did not say so** — first the discarded diagnostics, then
+the truncated column. The second was the more dangerous: it produced a coherent,
+plausible finding ("a third category nobody had counted") that would have sent
+the other session to open eight modules that have nothing wrong with them.
 
-**Eight of twelve did not assemble cleanly on the real assembler either.** Their
-decks are not an authority on anything, and a difference against them attributes
-nothing. Only the four with a clean IFOX00 run and a differing deck are genuine
-`as370` gaps.
+What caught it was noticing that one diagnostic, `IFO035`, dominated everything —
+a *shape* in the data that no single measurement would have shown.
 
-### So the honest figure
-
-Of thirty sampled differences: **14 belong to the source, roughly 4 to `as370`,
-and 8 are modules that fail on both assemblers** — which is a third category
-nobody had counted. Extrapolated, the assembler accounts for something like a
-sixth of what remains, not a half.
-
-**An eighth round is worth less than the naive number suggested, and the third
-category is worth more.** A module IFOX00 flags 33 times is not waiting for a
-better assembler; its source is wrong, or its macros are, and it should be in the
-recovery queue rather than the tool queue.
+**When feeding fixed-format assembler anywhere, pass all 80 columns.** Column 72
+is the continuation; 73–80 the sequence number, which the assembler ignores.
+Cutting at 71 looks harmless and is not.
 
 ### Caveats on this measurement
 
 - Only modules under 400 lines were sampled, so it is biased towards the simple.
-- Twelve of the sixteen differing modules were checked for diagnostics, not all
-  sixteen.
+- Twelve of the sixteen differing modules were re-run after the column fix; four
+  were not, and two of the sixteen "equal" results had continuation cards and are
+  equally unconfirmed. Six of the thirty are therefore still open.
 - `as370` accepts what IFOX00 flags in at least some of these cases — that is
   cc370#133 in a wider form, and it is worth measuring on its own: **where
   `as370` returns 0 and IFOX00 does not, our pipeline records a clean assembly
