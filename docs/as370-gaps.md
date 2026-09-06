@@ -282,3 +282,29 @@ that set, is the strongest candidate the day produced. For comparison, `&SYSECT`
 had 597 modules reaching it and unlocked 39.
 
 The list is in [`../work/measurements/tattr_mods.txt`](../work/measurements/tattr_mods.txt).
+
+### What #142 actually moved
+
+| | before | after |
+|---|---:|---:|
+| byte-identical | 832 | **837** |
+| length differs | 2,147 | **2,128** |
+| only generated text differs | 433 | 441 |
+| mixed | 231 | 270 |
+| lost | — | **0** |
+
+Five new identities, and **all five are inside the 121 candidates** — the
+prediction hit exactly, which is worth as much as the number.
+
+**But the identity count hides the larger effect.** Among the 121 candidates the
+length differences went from **105 to 86**: nineteen modules stopped differing in
+*layout* and now differ only in content. They are not recovered, but they moved
+from "the assembler laid it out differently" to "the bytes disagree" — a
+different and much smaller problem.
+
+So #142 corrected the layout of nineteen modules and completed five, against an
+eight-fold depletion that predicted more. **The remainder is not explained**, and
+cc370#144 is the first suspect: `T'` of a *defined symbol* is `U` in `as370`
+where IFOX00 gives the `DS`/`DC` type letter. The same 225 macros branch on that
+too — `DCB`, `MODESET` and `IODEVICE` test `T'&AREA EQ 'C'` and the like. Same
+macros, same evaluation, other operand form.
