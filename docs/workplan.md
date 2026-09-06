@@ -506,6 +506,17 @@ likelihood it is already present in MVS/CE. No sysgen needed.
 > the strategy is not lost: the distribution tapes (`zdlib1.het`) are publicly
 > available and can be loaded separately.
 
+> ⚠️ **Corrected 2026-09-06.** The sentence "the distribution libraries hold the
+> object decks as IBM shipped them — before any sysgen, before any link-edit" is
+> wrong. All 34 `SYS1.AOS*` libraries are **RECFM=U and hold load modules**; a
+> member starts with a X'20' CESD record. The binder has run. The DLIBs remain
+> the better yardstick, but for a different reason than stated below: bound
+> before sysgen and usermods, one module per member, uniformly, with nothing
+> packed in beside it. Reason 2 below ("no linkage editor in between") does not
+> hold; reasons 1 and 3 do. Evidence and consequences in
+> [`private-macros.md`](private-macros.md) and
+> [`../work/fixtures/README.md`](../work/fixtures/README.md).
+
 It is the better yardstick for three reasons:
 
 1. **No usermod layer** — provided the usermods were only APPLYed and not

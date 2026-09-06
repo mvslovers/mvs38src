@@ -28,7 +28,7 @@ carries maintenance levels the source never received. Closing that gap is the
 task.
 
 The success criterion is objective: **the assembled CSECT is byte-identical to
-the DLIB object deck, or it is not.** That is precisely what makes the work
+its counterpart in the distribution library, or it is not.** That is precisely what makes the work
 automatable.
 
 ## How it works
