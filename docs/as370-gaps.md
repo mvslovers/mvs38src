@@ -193,6 +193,16 @@ modules resumes a section.** The two counter models only diverge on resumption,
 so #136 cannot break anything that currently holds — and the sixteen lost
 `IDCCD*` identities are inside those 157.
 
+**Scope, sharpened by cc370 afterwards:** only a resumption across a *real*,
+address-occupying section counts. A **DSECT round-trip** — `A CSECT` … `@DATD
+DSECT` … `A CSECT` — costs nothing, because a DSECT occupies no address space and
+`as370` already saves and restores the location counter across one. Those are the
+more common shape in this tree. The detector used here only ever looked at
+`CSECT`/`START` statements, so it excluded them by construction; cc370's own
+detector counted them at first and reported 173 before the exclusion, then 0
+after. **Two independent detectors, both wrong at first in different directions,
+both landing on 0.**
+
 > ⚠️ The first version of this measurement said **2,608** modules, 47 % of the
 > tree. It counted every repeated section name, including `X CSECT` immediately
 > followed by `X CSECT`. A resumption means the name returns **after an
