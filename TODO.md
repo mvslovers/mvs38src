@@ -40,11 +40,31 @@ population figure will rank everything that follows. Upload the sources once as 
 PDS to `MVSCE-EXP` so the assembly jobs stay small, then assemble both ways and
 compare columns 1–72 excluding the `END` card.
 
-**2. Measure what cc370 lands.** They are building #144 (`T'` of a defined
-symbol), then mapping #141 (SETC not substituted in open code), then #140. After
-each: full tree run, and report **both** numbers — new identities *and* how many
-modules moved out of the length bucket. On #142 the second number was five times
-the first.
+**2. Measure what cc370 lands.** After each: full tree run, and report **both**
+numbers — new identities *and* how many modules moved out of the length bucket.
+On #142 the second number was five times the first.
+
+Queue, with what is known about each:
+
+- **#144**, `T'` of a *defined* symbol: `as370` says `U` for every symbol, IFOX00
+  gives the `DS`/`DC` type letter. Approved in its **forward-scan form only** — a
+  pass over the raw lines before `macro_pass()`, no change to the phase ordering.
+  IFOX00 resolves even a **later**-defined symbol, so a forward scan is the right
+  model; whether it sees macro-generated symbols is **unmeasured**. Same 225
+  macros as #142, so the acceptance is the tree run, not cc370's corpus.
+- **#141**, `SETA`/`SETB`/`SETC` not substituted in open code: **52 modules, 13
+  of them assembling, and 0 byte-identical** against a tree rate of 20.4 %. Small
+  and completely depleted — [`../work/measurements/opencond2.txt`](work/measurements/opencond2.txt).
+- **#140**, `as370` silent where IFOX00 flags: 5 modules.
+
+> ⚠️ **One measurement deliberately not reported.** Counting `AIF`/`AGO`/`MEXIT`
+> in open code gives 1,738 modules, of which **247 are byte-identical**. That
+> contradicts the premise: if open-code `AIF` were ignored and both branches
+> emitted, those modules would carry too much code and could not be identical.
+> Either the `MACRO`/`MEND` depth counting is too crude and it is counting
+> statements inside macro definitions, or `as370` handles most of these
+> correctly and the minimal case hits a narrower condition. **Check one of the
+> 247 by hand before this number is used for anything.**
 
 **3. The source work proper.** The 441 text differences are right-length, real
 differences with no hole excuse — and now attributable with certainty. The 1,360
