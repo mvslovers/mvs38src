@@ -129,3 +129,65 @@ And two more things:
    they are where a verdict is worth asking for.
 2. **A baseline.** Re-run it after the macro provenance is settled and the number
    moves — or it does not, which is also an answer.
+
+---
+
+## Addendum: what the IDR records say
+
+The cc370 session ran the new load-module walk over all 102 members and counted
+their IDR records — three in 34 of them, four in 68. Decoding the subtype byte
+answers what the fourth is.
+
+| IDR subtype | Meaning | Members carrying one |
+|---|---|---:|
+| `X'01'` | translator | 102 |
+| `X'02'` | linkage editor (all `5752SC104`) | 102 |
+| **`X'04'`** | **IMASPZAP** | **73 (71 %)** |
+| `X'08'` | user, written by `IDENTIFY` | 97 |
+
+**71 % of the distribution-library members were touched by SPZAP after
+link-edit.** Whether every one of them had instructions changed, as opposed to
+only having IDR data stamped, does not follow from the count — that needs the
+zap data itself. But an SPZAP record means the object was modified after it was
+assembled and bound, which is by construction something no source carries.
+
+The user IDR carries a maintenance identifier per module: 77 of the 102 have a
+readable one, 29 of them PTF numbers (`UZ79011`, `UZ24221`, `UZ60057`, …) and 48
+IBM `RSI` stamps. That is a **per-module maintenance level, machine-readable**,
+which is what the inventory in item 6 wants and what
+[cc370#111](https://github.com/mvslovers/cc370/issues/111) is for.
+
+### The correlation, and it is the interesting part
+
+| | Modules | of those, zapped |
+|---|---:|---:|
+| section lengths agree | 49 | 28 (57 %) |
+| section lengths differ | 52 | 45 (86 %) |
+
+A zap patches in place and does not change a section's length, so this is not a
+mechanical effect. The reading that fits: an SPZAP record is a **proxy for "this
+module received maintenance after the base release"**, and the modules that
+received maintenance are exactly the ones where our source lags. That is the
+project's thesis again — measured a second time, on a different quantity than
+section lengths, and pointing the same way.
+
+Both readings rest on 102 modules drawn from the ones that already assemble, so
+treat the rates as indicative rather than as the population.
+
+### The 21 that should go first
+
+Of the 49 whose lengths agree, **21 carry no SPZAP record at all**. Those are the
+cleanest candidates for a first byte-identity verdict: the right size, and
+nothing patched into the object behind the source's back.
+
+They are in
+[`../work/measurements/first-candidates.txt`](../work/measurements/first-candidates.txt):
+
+```
+AMDSAGTF IEAVEUPC IEDQ27   IEDQWID  IEFAB49C IEFDB450 IEFDB4FA
+IEFJDSNA IGG0192V IGG019JP IGG019UO IGG026DU IGG0940D IGG0CLB3
+IGG0CLBR IRBMFDPP ISTESC02 ISTINCDT ISTINCR1 ISTZBFAM ISTZGFAB
+```
+
+`IGG026DU` and `IEFJDSNA` are among them and are already committed as fixture
+pairs.
