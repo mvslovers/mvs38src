@@ -116,18 +116,43 @@ quoted string spanning two cards came apart. The correlation is exact:
 Repeated with the full 80-column record, **ten of the twelve assemble cleanly**.
 `IFDMSG03` went from 34 diagnostics to none.
 
-### The corrected attribution
+### The fourth reading, and the first one measured on equal footing
+
+The third reading still compared unequal things. Locally `as370` sees eight
+libraries; the MVS job saw four — and one of them was `SYS1.MACLIB`, the
+**target** library with 742 members, where the local run uses `SYS1.AMACLIB`,
+the **distribution** library with 566. Different macros on the two sides means
+the comparison attributes nothing, exactly as it did for the truncated column.
+
+All six distribution macro libraries exist on `MVSCE-EXP`. The matching
+concatenation is:
+
+```
+//SYSLIB   DD  DSN=SYS1.AMACLIB,DISP=SHR
+//         DD  DSN=SYS1.AMODGEN,DISP=SHR
+//         DD  DSN=SYS1.AGENLIB,DISP=SHR
+//         DD  DSN=SYS1.ATSOMAC,DISP=SHR
+//         DD  DSN=SYS1.ATCAMMAC,DISP=SHR
+//         DD  DSN=SYS1.APVTMACS,DISP=SHR
+//         DD  DSN=IBMUSER.PVTMAC,DISP=SHR
+```
+
+`IBMUSER.PVTMAC` holds the 444 recovered macros, uploaded by FTP. With that, and
+with the full 80-column record:
 
 | | Modules of 30 |
 |---|---:|
-| **`as370` == IFOX00** — the difference belongs to the source | **16** |
-| **`as370` differs** — a genuine tool gap | **6** |
-| IFOX00 flags it too — `IEFAB4M5`, `IEDQE2` | 2 |
-| not re-checked after the column fix | 6 |
+| **`as370` == IFOX00** — the difference belongs to the source | **14** |
+| **`as370` differs** — a genuine tool gap | **11** |
+| **IFOX00 flags it too, `as370` is silent** | **5** |
 
-So the assembler accounts for roughly **a fifth** of what remains, and the class
-of modules that fail on both is **two**, not eight. An eighth round of assembler
-work is worth something, but the source is the larger share.
+So the assembler still accounts for about **a third** of what remains, the source
+for about half, and five modules of thirty are the class where **`as370` returns
+0 on something the real assembler refuses** — cc370#140.
+
+`IKJTTRM0 IEAVDSEG IEFAB4M5 IFDMSG03 IGG019OK IFDMSG61 IFFANA IGFPMRTM
+BLSRCOHD IGFPTSIG IGG3HN` are the tool gaps; `IGG01945 IGCM510D IEDAYD IEDQWAA
+IEDQE2` the silent-acceptance class, three to four diagnostics each.
 
 ### What this cost, and it is the lesson
 
@@ -147,9 +172,9 @@ Cutting at 71 looks harmless and is not.
 ### Caveats on this measurement
 
 - Only modules under 400 lines were sampled, so it is biased towards the simple.
-- Twelve of the sixteen differing modules were re-run after the column fix; four
-  were not, and two of the sixteen "equal" results had continuation cards and are
-  equally unconfirmed. Six of the thirty are therefore still open.
+- All thirty were re-run on equal footing for the fourth reading, so no module
+  is left unconfirmed — but it took four readings to get there, and three were
+  wrong.
 - `as370` accepts what IFOX00 flags in at least some of these cases — that is
   cc370#133 in a wider form, and it is worth measuring on its own: **where
   `as370` returns 0 and IFOX00 does not, our pipeline records a clean assembly
