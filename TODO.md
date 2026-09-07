@@ -82,17 +82,25 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
   Kreiss' tape — but no difference in this run can be blamed on the two sides
   reading different macros.
 
-### Five fixes in — 62.7 % to 65.9 % in one afternoon
+### Six fixes in — 62.7 % to 67.6 % in one afternoon
 
-Baseline `e502f71`. **as370 == IFOX00: 3,641 of 5,528 (65.9 %)**, recovered
-against IBM's shipped object **893**, hand-over list **1,936** (from 2,107).
+Baseline `126d8d3`. **as370 == IFOX00: 3,737 of 5,528 (67.6 %)**, recovered
+against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 
 | merge | identical | lost | closer | further |
 |---|---:|---:|---:|---:|
 | #164 + #165 | +93 | 0 | — | — |
 | #166 (diagnostics order) | 0 | 0 | 0 | 0 |
 | #168 (parenthesised adcon) | +24 | 0 | 69 | 9 |
-| #170 (index subscript, grouping parens) | +58 | 0 | 172 | 6 |
+| #170 (index subscript, grouping parens) | +58 | 0 | **178** | **1** |
+| #171 (`L'` of a value-length constant) | **+95** | 0 | 229 | 1 |
+
+**#170's row is corrected**, and by cc370 finding the fault in a measure I had
+built from their idea. The distance in `retest.py` walked the deck's *cards* and
+charged a whole card for a card-count difference — so a fix that gives a section
+its **correct** length read as a regression. `IFNX4S` went to exactly IFOX00's
+length and scored +71. Measured on the address-keyed section image instead, #170
+moved 178 decks closer and **one** further, not six.
 
 **Nothing has been lost in any of them.** The "further" columns were weighed,
 not netted: every one lands inside a TXT card already carrying 8 to 799 wrong

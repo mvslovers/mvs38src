@@ -30,21 +30,63 @@ def body(path):
             if d[i + 1:i + 4] != b"\xc5\xd5\xc4"]          # END excluded
 
 
+def _image(path):
+    """{address: byte} per control section, rebuilt from the TXT cards.
+
+    Keyed by address and by section name, not by card: a deck's cards are an
+    encoding, not the object. Two decks can hold the same bytes in a different
+    number of cards, and a hole is an absence rather than a zero.
+    """
+    import collections
+    names, img = {}, collections.defaultdict(dict)
+    d = open(path, "rb").read()
+    for i in range(0, len(d), 80):
+        c = d[i:i + 80]
+        if c[1:4] == b"\xc5\xe2\xc4":                   # ESD
+            esdid = int.from_bytes(c[14:16], "big")
+            n = int.from_bytes(c[10:12], "big") or 16
+            for k in range(16, 16 + n, 16):
+                item = c[k:k + 16]
+                if len(item) < 16:
+                    break
+                if item[8] == 0x01:                        # LD carries no ESDID
+                    continue
+                nm = item[:8].decode("cp037").strip()
+                if nm:
+                    names[esdid] = nm
+                esdid += 1
+        elif c[1:4] == b"\xe3\xe7\xe3":                  # TXT
+            adr = int.from_bytes(c[5:8], "big")
+            ln = int.from_bytes(c[10:12], "big")
+            esdid = int.from_bytes(c[14:16], "big")
+            for j in range(ln):
+                img[esdid][adr + j] = c[16 + j]
+    return {names.get(e, f"#{e}"): v for e, v in img.items()}
+
+
 def distance(a, b):
-    """How many bytes of the deck are wrong, not merely whether any are.
+    """How many bytes of the object are wrong, not merely whether any are.
 
     A verdict count cannot see a change that leaves a module non-identical and
     moves it closer to -- or further from -- IFOX00. cc370 measured exactly that
-    on #168: 69 decks closer, 9 one byte further, and no verdict moved. Anything
-    claiming to improve wrong code has to be judged on this.
+    on #168 and the idea is theirs.
 
-    Cards beyond the shorter deck count as wholly different.
+    Measured on the section image, after their correction on #171: a card-based
+    walk charges a whole card for a card-count difference, so a fix that gives a
+    section its CORRECT length reads as a large regression. IFNX4S went 0x196 ->
+    0x1ad, which is IFOX00's own length, and the card measure scored it +71 while
+    the image shows 402 wrong bytes falling to 382.
     """
     if not (os.path.exists(a) and os.path.exists(b)):
         return None
-    x, y = body(a), body(b)
-    n = sum(1 for p, q in zip(b"".join(x), b"".join(y)) if p != q)
-    return n + abs(len(x) - len(y)) * 72
+    x, y = _image(a), _image(b)
+    n = 0
+    for sec in set(x) | set(y):
+        p, q = x.get(sec, {}), y.get(sec, {})
+        for off in set(p) | set(q):
+            if p.get(off) != q.get(off):
+                n += 1
+    return n
 
 
 def verdict(a, b):
