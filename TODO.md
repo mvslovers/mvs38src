@@ -238,6 +238,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #178 (a `USING` replaces the domain of its base register) | **+108** | 0 | 167 | **0** |
 | #180 (a continued operand must also close its parentheses) | +24 | 0 | 90 | 5 |
 | #182 (an attribute apostrophe is not a quote) | +23 | 0 | 50 | 1 |
+| #183 (the same guard in the second splitter) | 0 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
@@ -319,6 +320,26 @@ the one where a fix had succeeded completely. It is the stale-class failure the
 tool exists to prevent, arriving through the case where the news is good, and it
 is the second time today a container's shape decided what a measurement could
 say. Every class is seeded now and an emptied one prints `EMPTY`.
+
+**#183 changes no deck and was still worth taking, and the gate found something
+of its own while proving it.** 0 of 5,518 decks differ, verified by hash rather
+than by verdict count. The second splitter feeds the listing and the
+substitution, so its operand boundary decides whether a *remark* is substituted
+— and IFOX00 leaves remarks alone. 2,030 bare `&` sit in open-code remarks
+across 716 modules, and every one behind a string ending in `L T K N I S E` was
+exposed the moment substitution becomes field-aware.
+
+**And the run that proved it produced a phantom.** The gate reported one deck
+more than the previous run, on a change that alters nothing: `IFCEE155` assembles
+in **11.4 s** and the worker's alarm was 20 s, so under `-P 8` it finished
+sometimes and was killed sometimes. Its deck is byte-identical either way.
+
+That corrects cc370#163 by half. Of its *two* modules that "never terminate",
+one terminates and races the gate's own timeout; `HEWLDIOC` alone is real, and it
+does not finish in **300 s**. The alarm is 90 s now — it costs one module's wall
+clock and buys a run that repeats. **A gate that reports a difference no code
+produced is worse than a slow one**, and this one had been doing it since the
+first tree-wide run.
 
 **cc370's own suite stayed green through a version that cost 96 identities.**
 The obvious fix reused a purely lexical predicate, which reads the *closing*
