@@ -146,6 +146,14 @@ a way that decides who does what:
   tree: he left markers, and 44 of them carry `???` where he could not
   reconstruct what the code does. 142 differ in text, 107 in length.
 
+**And inside it, a hard core of 25.** The `mvssrc` sessions list 116 modules
+whose text matches no variant on any tape. 91 of them carry no marker of Dave's
+and score 28.6 % — the tree's ordinary rate for unmarked modules, so their
+provenance is open but their quality is not a problem. The other **25 carry his
+marker and reach the object in 1 case out of 25** — against 14.5 % for marked
+modules generally. Those are the hardest thing he touched: worked on, matching no
+distribution text, and still not reaching the object.
+
 `classes/kreiss-source-unfinished.txt` is that list. It is the most concrete
 source-side work item this project has: modules with a known repair history, a
 known author, and a measured gap.
