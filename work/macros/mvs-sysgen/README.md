@@ -4,7 +4,7 @@
 
 | Macro | Source | Verdict |
 |---|---|---|
-| `ISDAFSPC` | [MVS-sysgen/SOFTWARE, `PVTMACS/macros/ISDAFSPC.MAC`](https://raw.githubusercontent.com/MVS-sysgen/SOFTWARE/4c35feacee951943adbc38aa8c05888fca741372/PVTMACS/macros/ISDAFSPC.MAC) | **a stub — do not install.** |
+| `ISDAFSPC` | [MVS-sysgen/SOFTWARE, `PVTMACS/macros/ISDAFSPC.MAC`](https://raw.githubusercontent.com/MVS-sysgen/SOFTWARE/4c35feacee951943adbc38aa8c05888fca741372/PVTMACS/macros/ISDAFSPC.MAC) | **genuine — my first verdict was wrong.** |
 
 `ISDAFSPC.MAC` is three cards: `MACRO`, the prototype
 `ISDAFSPC &OP,&LV=,&A=`, `MEND`. It generates nothing.

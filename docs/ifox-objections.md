@@ -118,7 +118,7 @@ before spending effort here.
 
 ## Two macros tried, 2026-09-07 — and what they taught
 
-### `ISDAFSPC` — a stub, and measurably harmful
+### `ISDAFSPC` — I called it a stub, and IBM's tape says otherwise
 
 Found in the MVS-sysgen collection. Three cards: `MACRO`, the prototype
 `ISDAFSPC &OP,&LV=,&A=`, `MEND`. It generates nothing.
@@ -131,15 +131,14 @@ object:
 | without | 2 | 2,191 B against IBM's 2,217 |
 | **with the stub** | **0** | **2,191 B against IBM's 2,217** |
 
-**The stub silences the diagnostic and leaves the object 26 bytes short — 13
-bytes for each of the two calls.** Installed, it would have produced exactly what
-this document warns about: `rc 0` from Assembler XF and a *clean reference deck
-for code that is not there*. Rejected;
-[`work/macros/mvs-sysgen/README.md`](../work/macros/mvs-sysgen/README.md) keeps
-it and the measurement.
+**Corrected.** IBM's own distribution tape carries `ISDAFSPC` as the same three
+cards. It is genuine and it really does generate nothing, so the 26 missing bytes
+have another cause — the measurement was right and my reading of it was not. I
+inferred "not genuine" from "generates nothing", and the shape of a macro says
+nothing about where it came from.
 
-**A macro is usable here when its expansion is right, not when the assembly falls
-silent.**
+The rule that survives: a macro is usable when its expansion is right. The one
+that does not: that a macro which emits nothing must be a placeholder.
 
 ### `IHANVT` — real, partial, and not adopted
 

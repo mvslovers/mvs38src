@@ -34,6 +34,12 @@ Found by the `mvssrc-20` session, measured here.
 
 ## Sixteen more, from IBM's own tape
 
+> ⚠️ **The tape tree is still being built** (`mvssrc` sessions, 2026-09-07). These
+> sixteen are safe against that: each was taken from a module name occurring
+> **exactly once** across all tapes, so the pending resolution of the 738
+> duplicates by SSI cannot change which text they came from. Nothing further is
+> taken from it until it is finished.
+
 The `mvssrc-20` session extracted the IBM distribution tapes byte-exact
 (`~/repos/mvs/mvs38-ibmsrc`, 7,206 members). For 1,023 modules where the two
 assemblers agree, the object still differs from the DLIB member, and IBM's
