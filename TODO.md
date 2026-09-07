@@ -220,7 +220,7 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
-### Six fixes in — 62.7 % to 67.6 % in one afternoon
+### Seven fixes in — 62.7 % to 69.2 % in one day
 
 Baseline `126d8d3`. **as370 == IFOX00: 3,737 of 5,528 (67.6 %)**, recovered
 against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
@@ -232,6 +232,29 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #168 (parenthesised adcon) | +24 | 0 | 69 | 9 |
 | #170 (index subscript, grouping parens) | +58 | 0 | **178** | **1** |
 | #171 (`L'` of a value-length constant) | **+95** | 0 | 229 | 1 |
+| #172 (three more call sites of the same guard) | **+86** | 0 | 177 | 5 |
+
+Baseline `517161c`: **as370 == IFOX00 3,823 of 5,528 (69.2 %)**, recovered **915**,
+silent divergences 1,169 -> 977, hand-over list 2,107 -> **1,756**.
+
+#172's five are the same shape as before but at a larger scale, and were weighed
+individually: `IEBVMS` 77 % wrong -> 80 %, `IGC0M05B` 90.5 % -> 94 %,
+`IFG0191Y` 4.9 % -> 7.6 %. Every one is dominated by another defect; the fix
+changes bytes inside a region that is wrong either way.
+
+**Two defect classes neither instrument here can see**, reported by cc370's sweep
+and worth keeping because the reason is structural:
+
+- `set_canon()` takes the first `)` of a subscripted SET label. **Zero modules in
+  our 5,528** — but twelve damaging labels in real IBM macro source
+  (`ATCAMMAC/LINEGRP`, `INVLIST`, `INVLIST1..6`). No module in the corpus loads
+  those members, so no deck can point at it. A TCAM-generation module added later
+  would hit it silently at `rc 0`.
+- The eight `IFC*` modules die on a fixed 4,096-entry global SET-symbol table
+  ([cc370#173](https://github.com/mvslovers/cc370/issues/173)). They produce no
+  deck, so they are invisible to every deck comparison — ours — and absent from
+  every scan of as370 output — theirs. They sat in this table for a day as
+  "aborts at rc 2" with no cause. IFOX00 assembles all eight at `rc 0`.
 
 **#170's row is corrected**, and by cc370 finding the fault in a measure I had
 built from their idea. The distance in `retest.py` walked the deck's *cards* and
