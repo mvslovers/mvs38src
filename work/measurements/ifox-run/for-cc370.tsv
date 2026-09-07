@@ -3,7 +3,6 @@ IDCCDDE	0				0000				cards	0x03d58	42880	25457	length	silent divergence	cc370
 IEFXB609	0				0000				bytes	0x023da	15336	15336	length	silent divergence	cc370	
 IRBMFINP	0				0000				bytes	0x0324f	15281	15277	length	silent divergence	cc370	
 HMASMTMD	0				0000				cards	0x03021	14704	14704	text	silent divergence	cc370	
-ICBVIN00	0				0000				bytes	0x03254	12992	12992	length	silent divergence	cc370	
 IDCTSLV0	0				0000				cards	0x00005	12321	11621	length	silent divergence	cc370	
 BNGTRMOT	0				0000				bytes	0x00094	11982	11991	length	silent divergence	cc370	
 IFCETUL1	0				0000				cards	0x00098	11656	10386	length	silent divergence	cc370	
@@ -50,7 +49,6 @@ IEEMPVST	0				0000				cards	0x00023	6605	6613	length	silent divergence	cc370
 IDA0192V	0				0000				bytes	0x00972	6577	6577	length	silent divergence	cc370	
 ISTRAMA2	0				0000				cards	0x00022	6492	6748	length	silent divergence	cc370	
 ICBVMG00	0				0000				bytes	0x00bc9	6413	6413	length	silent divergence	cc370	
-IEFAB421	0				0000				bytes	0x000ff	6356	6320	length	silent divergence	cc370	
 IEAVAD00	0				0000				cards	0x00021	6288	6296	length	silent divergence	cc370	
 IEAVRTOD	0				0000				cards	0x00023	6284	6308	length	silent divergence	cc370	
 AHLGTFI	0				0000				cards	0x00023	6268	6402	length	silent divergence	cc370	
@@ -58,14 +56,13 @@ ILRPGEXP	0				0000				cards	0x000ec	6233	6157	length	silent divergence	cc370
 IDCTSCM0	0				0000				cards	0x00005	6185	5759	length	silent divergence	cc370	
 IFCST008	0				0000				cards	0x00006	5985	5169	length	silent divergence	cc370	
 IFCEXXXB	0				0000				cards	0x001fa	5826	4794	length	silent divergence	cc370	
-IGARPT01	12	45	12	Undefined operation code | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol | IFO231 Duplication factor uses a symbol not previously defined  - IGAFS80 | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0004	8	4	IFO026 CHARACTERS APPEAR BETWEEN THE BEGIN AND CONTINUE COLUMNS ON CONTINUATION CARD	cards	0x00003	5756	5740	length	silent divergence	cc370	
+IGARPT01	12	22	12	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol | IFO231 Duplication factor uses a symbol not previously defined  - IGAFS80 | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0004	8	4	IFO026 CHARACTERS APPEAR BETWEEN THE BEGIN AND CONTINUE COLUMNS ON CONTINUATION CARD	cards	0x00003	5756	5740	length	silent divergence	cc370	
 IKJEFATT	0				0000				cards	0x00e88	5644	4557	no-pair	silent divergence	cc370	
 IFCEI155	0				0000				cards	0x0022f	5611	5151	length	silent divergence	cc370	
 IEAVVWTO	0				0000				bytes	0x00020	5422	5422	length	silent divergence	cc370	
 IFCSXXXA	0				0000				cards	0x00006	5388	4426	length	silent divergence	cc370	
 IFCSI145	0				0000				cards	0x00006	5364	4397	length	silent divergence	cc370	
 IKJEFT02	0				0000				cards	0x00023	5316	5300	length	silent divergence	cc370	
-ILRTMI00	0				0000				cards	0x00022	5285	4973	length	silent divergence	cc370	
 AMASPZAP	0				0000				cards	0x000ea	5257	5257	length	silent divergence	cc370	
 IEAVTGLB	0				0000				bytes	0x000c7	5110	5109	length	silent divergence	cc370	
 ICFBDF00	0				0000				bytes	0x00042	5088	5088	length	silent divergence	cc370	
@@ -78,10 +75,13 @@ IDCTSAU0	0				0000				bytes	0x00045	4944	4938	length	silent divergence	cc370
 IEAVTRTM	0				0000				bytes	0x00082	4928	4928	text	silent divergence	cc370	
 IECVSMGR	0				0000				cards	0x0001e	4884	5012	length	silent divergence	cc370	
 IGG019IZ	0				0000				bytes	0x003db	4821	4821	length	silent divergence	cc370	
+IFG0TC0A	0				0000				bytes	0x00086	4800	4768	length	silent divergence	cc370	
 IFCEXXXD	0				0000				cards	0x0004e	4740	4130	length	silent divergence	cc370	
 IKJEFLI	0				0000				cards	0x00022	4727	4752	length	silent divergence	cc370	
 AMDPRAPP	0				0000				cards	0x00026	4628	4452	length	silent divergence	cc370	
+IFG0194F	0				0000				cards	0x00011	4624	4664	length	silent divergence	cc370	
 IGG0CLCC	0				0000				bytes	0x0017b	4568	4568	length	silent divergence	cc370	
+IFG0194A	0				0000				bytes	0x0019e	4560	4560	length	silent divergence	cc370	
 IFCSXXX4	0				0000				cards	0x00006	4555	3595	length	silent divergence	cc370	
 IKJEBERU	0				0000				cards	0x000b7	4528	4528	no-pair	silent divergence	cc370	
 IKJEBESC	0				0000				cards	0x00337	4499	4499	no-pair	silent divergence	cc370	
@@ -109,7 +109,7 @@ IEFAB436	0				0000				cards	0x00027	3858	3883	length	silent divergence	cc370
 IKJEFT08	0				0000				cards	0x00ec1	3857	3783	length	silent divergence	cc370	
 IEAVRTI1	0				0000				cards	0x00062	3848	3968	length	silent divergence	cc370	
 IFFPIAPG	0				0000				cards	0x0001f	3844	3692	length	silent divergence	cc370	
-AHLTSYSM	0				0000				bytes	0x0004d	3842	3842	length	silent divergence	cc370	
+AHLTSYSM	0				0000				bytes	0x001cc	3842	3842	length	silent divergence	cc370	
 IEEVSTAR	0				0000				bytes	0x00643	3797	3797	text	silent divergence	cc370	
 IFCSAXXX	0				0000				cards	0x00006	3783	3195	length	silent divergence	cc370	
 IGC121	0				0000				bytes	0x00ab9	3736	3736	length	silent divergence	cc370	
@@ -129,10 +129,9 @@ IFCSXXXE	0				0000				cards	0x00007	3591	3131	length	silent divergence	cc370
 IKJEFT82	0				0000				cards	0x000c2	3524	3524	no-pair	silent divergence	cc370	
 IFCEXXX7	0				0000				cards	0x0005b	3517	3165	length	silent divergence	cc370	
 IFCEXXX8	0				0000				cards	0x0005b	3515	3143	length	silent divergence	cc370	
-IECVEXPR	0				0000				cards	0x007d2	3512	3639	length	silent divergence	cc370	
+IECVEXPR	0				0000				cards	0x009f1	3512	3639	length	silent divergence	cc370	
 IDCCDPR	0				0000				cards	0x00588	3496	2182	length	silent divergence	cc370	
 IGC0005I	0				0000				cards	0x0003b	3422	3438	length	silent divergence	cc370	
-BLSCAMOD	0				0000				bytes	0x00d16	3420	3427	length	silent divergence	cc370	
 IFFPJAPV	0				0000				cards	0x0001f	3366	3214	length	silent divergence	cc370	
 IFCEXXXE	0				0000				cards	0x0004c	3357	2973	length	silent divergence	cc370	
 IEEZA03D	0				0000				bytes	0x00005	3340	3316	no-pair	silent divergence	cc370	
@@ -147,13 +146,12 @@ IFCSXXX8	0				0000				cards	0x00006	3248	2692	length	silent divergence	cc370
 IFCEXXXX	0				0000				cards	0x000a8	3247	3023	length	silent divergence	cc370	
 IFFPDAPL	0				0000				bytes	0x00027	3194	3194	text	silent divergence	cc370	
 IEFAB478	0				0000				cards	0x00027	3182	3207	length	silent divergence	cc370	
-IDA019R1	0				0000				bytes	0x000d7	3180	3180	length	silent divergence	cc370	
+IDA019R1	0				0000				bytes	0x003d0	3180	3180	length	silent divergence	cc370	
 IDCTSLM0	0				0000				cards	0x0000a	3179	2561	length	silent divergence	cc370	
 IFCEWIN1	0				0000				cards	0x001fe	3137	2674	length	silent divergence	cc370	
 BLSRFMOD	0				0000				cards	0x00081	3136	3136	length	silent divergence	cc370	
 IFCSXXX7	0				0000				cards	0x00007	3124	2648	length	silent divergence	cc370	
 IEAVTSDH	0				0000				bytes	0x00027	3108	3099	length	silent divergence	cc370	
-IEE3603D	0				0000				bytes	0x0003d	3104	3096	length	silent divergence	cc370	
 IFCEXXX5	0				0000				cards	0x0008f	3103	2619	length	silent divergence	cc370	
 IEESD03D	0				0000				cards	0x00005	3101	3093	no-pair	silent divergence	cc370	
 IFCEXXX0	0				0000				cards	0x00061	3097	2737	length	silent divergence	cc370	
@@ -172,7 +170,7 @@ IFCEE155	0				0000				cards	0x00002	2967	1616	length	silent divergence	cc370
 IEESF03D	0				0000				bytes	0x00005	2962	2954	no-pair	silent divergence	cc370	
 AHLTPID	0				0000				bytes	0x00058	2960	2960	length	silent divergence	cc370	
 IDCTSSS0	0				0000				bytes	0x00b35	2929	2923	length	silent divergence	cc370	
-IDA019SE	0				0000				bytes	0x0011c	2928	2928	length	silent divergence	cc370	
+IDA019SE	0				0000				bytes	0x0035a	2928	2928	length	silent divergence	cc370	
 IEESI03D	0				0000				cards	0x00005	2912	2876	no-pair	silent divergence	cc370	
 IEBTCR04	0				0000				bytes	0x006db	2901	2901	mixed	silent divergence	cc370	
 IGG0CLCE	0				0000				bytes	0x0016d	2892	2892	length	silent divergence	cc370	
@@ -182,6 +180,7 @@ IGC0007A	0				0000				cards	0x0002a	2872	3128	length	silent divergence	cc370
 IECVIOPM	0				0000				cards	0x0003b	2840	2880	no-pair	silent divergence	cc370	
 IFCE0155	0				0000				cards	0x00025	2832	2550	length	silent divergence	cc370	
 IFCET002	0				0000				cards	0x00198	2828	2004	length	silent divergence	cc370	
+IFG0553F	0				0000				bytes	0x00127	2824	2784	length	silent divergence	cc370	
 IKJEBERN	0				0000				bytes	0x00028	2822	2822	no-pair	silent divergence	cc370	
 IERRCH	0				0000				bytes	0x000b3	2816	2816	no-pair	silent divergence	cc370	
 IFCS2880	0				0000				cards	0x00006	2812	2140	length	silent divergence	cc370	
@@ -218,7 +217,6 @@ IKJEFE01	0				0000				bytes	0x0006e	2492	2492	no-pair	silent divergence	cc370
 IFDOLT55	0				0000				bytes	0x00039	2462	2462	length	silent divergence	cc370	
 IEFAB4F5	0				0000				bytes	0x00909	2456	2456	mixed	silent divergence	cc370	
 IFDOLT15	0				0000				bytes	0x00091	2456	2456	text	silent divergence	cc370	
-IFDOLT98	0				0000				cards	0x0001f	2454	2446	length	silent divergence	cc370	
 IDCTSTU0	0				0000				cards	0x0001d	2452	2236	length	silent divergence	cc370	
 IGC0K05B	0				0000				cards	0x00035	2442	2482	length	silent divergence	cc370	
 IKJEGPCH	0				0000				bytes	0x00971	2433	2433	no-pair	silent divergence	cc370	
@@ -232,9 +230,10 @@ IGC0003C	0				0000				bytes	0x00618	2335	2335	no-pair	silent divergence	cc370
 IKJEGGO	0				0000				bytes	0x004ef	2318	2318	no-pair	silent divergence	cc370	
 IECVURDT	0				0000				bytes	0x00148	2296	2296	text	silent divergence	cc370	
 IEEDISPD	0				0000				cards	0x00025	2294	2310	no-pair	silent divergence	cc370	
-IGX00013	0				0000				bytes	0x000a5	2292	2292	length	silent divergence	cc370	
+IGX00013	0				0000				bytes	0x008d5	2292	2292	length	silent divergence	cc370	
 IFCSXXX0	0				0000				cards	0x00007	2289	1821	length	silent divergence	cc370	
 IFFPCAAR	0				0000				cards	0x00031	2288	2150	length	silent divergence	cc370	
+IFG0555H	0				0000				bytes	0x0075c	2288	2288	length	silent divergence	cc370	
 IFDOLT33	0				0000				bytes	0x0002f	2282	2282	text	silent divergence	cc370	
 IEE8603D	0				0000				cards	0x0001f	2280	2288	length	silent divergence	cc370	
 IFCEMER2	0				0000				cards	0x001ca	2278	1942	length	silent divergence	cc370	
@@ -245,7 +244,6 @@ IEDTEDIT	0				0000				bytes	0x0033c	2250	2250	mixed	silent divergence	cc370
 IKJEGCPY	0				0000				cards	0x00839	2237	2207	no-pair	silent divergence	cc370	
 IFDOLT31	0				0000				bytes	0x00035	2224	2224	mixed	silent divergence	cc370	
 IRBMFDWP	0				0000				bytes	0x0001f	2216	2248	length	silent divergence	cc370	
-IGG019V6	0				0000				bytes	0x0003f	2215	2215	length	silent divergence	cc370	
 IFCEMER1	0				0000				cards	0x001ca	2206	1867	length	silent divergence	cc370	
 IEFSDTTE	0				0000				cards	0x00341	2190	2318	length	silent divergence	cc370	
 IGC0S05B	0				0000				bytes	0x0063d	2156	2156	length	silent divergence	cc370	
@@ -253,9 +251,10 @@ IDCCDLC	0				0000				cards	0x003d0	2119	1772	length	silent divergence	cc370
 IEAVTSLR	0				0000				bytes	0x0029a	2118	2118	length	silent divergence	cc370	
 IEE4903D	0				0000				cards	0x00746	2108	2000	length	silent divergence	cc370	
 IKJEGASN	0				0000				bytes	0x0049f	2108	2108	no-pair	silent divergence	cc370	
+IGC0003A	0				0000				bytes	0x001e4	2104	2104	length	silent divergence	cc370	
 IEEVEXSN	0				0000				bytes	0x002c2	2102	2102	length	silent divergence	cc370	
 BLSDIFP0	0				0000				cards	0x002bd	2088	2088	length	silent divergence	cc370	
-IGC0N05B	0				0000				bytes	0x0023b	2074	2074	length	silent divergence	cc370	
+IGC0N05B	0				0000				bytes	0x004e7	2074	2074	length	silent divergence	cc370	
 IEHMVESM	0				0000				bytes	0x00726	2066	2066	holes	silent divergence	cc370	
 BLSRDUSC	0				0000				bytes	0x007e9	2061	2031	length	silent divergence	cc370	
 IEAVAX00	0				0000				bytes	0x0008c	2056	2056	length	silent divergence	cc370	
@@ -267,15 +266,16 @@ IFDOLT22	0				0000				bytes	0x0003d	2046	2046	mixed	silent divergence	cc370
 IFDOLT49	0				0000				bytes	0x0002f	2032	2032	mixed	silent divergence	cc370	
 IEESK03D	0				0000				cards	0x00005	2025	2017	no-pair	silent divergence	cc370	
 IDCCDXP	0				0000				cards	0x00400	2010	1618	length	silent divergence	cc370	
+IFG0195B	0				0000				bytes	0x00047	2008	2000	length	silent divergence	cc370	
 IGG019GD	0				0000				bytes	0x0000b	1995	1995	text	silent divergence	cc370	
 IGG019BN	0				0000				cards	0x007c7	1992	2119	length	silent divergence	cc370	
-IKJEFF03	0				0000				cards	0x000d9	1988	1925	no-pair	silent divergence	cc370	
 IEFVFB	0				0000				bytes	0x0012d	1984	1984	mixed	silent divergence	cc370	
 IDACAT11	0				0000				bytes	0x00134	1968	1968	length	silent divergence	cc370	
 IGC0M05B	0				0000				cards	0x00041	1959	1945	length	silent divergence	cc370	
 IFDOLT61	0				0000				bytes	0x00035	1958	1958	text	silent divergence	cc370	
 IEESE03D	0				0000				cards	0x00005	1946	1934	no-pair	silent divergence	cc370	
 IFG0202K	0				0000				bytes	0x00417	1944	1944	length	silent divergence	cc370	
+IGC0005E	0				0000				bytes	0x00058	1928	1912	length	silent divergence	cc370	
 BLSEDEL0	0				0000				cards	0x000c4	1912	1912	length	silent divergence	cc370	
 IFG0191X	0				0000				bytes	0x004fa	1912	1912	length	silent divergence	cc370	
 IGC0009C	0				0000				bytes	0x0004f	1908	1924	length	silent divergence	cc370	
@@ -303,6 +303,8 @@ IEEVLDWT	0				0000				cards	0x00096	1758	1886	length	silent divergence	cc370
 IDCTSVS0	0				0000				cards	0x00007	1746	1644	length	silent divergence	cc370	
 IFDOLT14	0				0000				bytes	0x0001f	1737	2457	length	silent divergence	cc370	
 BLSR3270	8	192	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | IFO117 first expression in substring notation exceeds the length of the string	0004	20	4	IFO197 *** MNOTE ***	cards	0x00513	1736	1736	length	silent divergence	cc370	
+IFG0552F	0				0000				bytes	0x00240	1736	1736	text	silent divergence	cc370	
+IGC00020	0				0000				bytes	0x00045	1736	1736	length	silent divergence	cc370	
 IFDOLT03	0				0000				bytes	0x0005b	1730	1730	length	silent divergence	cc370	
 IFCST005	0				0000				bytes	0x00006	1721	1631	length	silent divergence	cc370	
 IDCCDPM	0				0000				cards	0x00408	1716	1327	length	silent divergence	cc370	
@@ -310,9 +312,9 @@ IEEZJ03D	0				0000				bytes	0x00005	1710	1702	no-pair	silent divergence	cc370
 IEHMVESQ	0				0000				bytes	0x00009	1706	1690	length	silent divergence	cc370	
 IEHMVSTC	0				0000				bytes	0x006a3	1706	1706	length	silent divergence	cc370	
 IEAVAR02	0				0000				cards	0x00043	1704	1760	length	silent divergence	cc370	
-IEE4603D	0				0000				cards	0x00239	1686	1674	length	silent divergence	cc370	
 IFDOLT54	0				0000				bytes	0x0002f	1678	1678	mixed	silent divergence	cc370	
 IFFPHALA	0				0000				bytes	0x00029	1678	1678	text	silent divergence	cc370	
+IFG0552B	0				0000				bytes	0x0009e	1664	1656	length	silent divergence	cc370	
 IFDOLT32	0				0000				bytes	0x00033	1660	1660	text	silent divergence	cc370	
 IFCET004	0				0000				cards	0x00074	1647	1279	length	silent divergence	cc370	
 IFCEUKNO	0				0000				cards	0x000e9	1642	1478	length	silent divergence	cc370	
@@ -320,6 +322,7 @@ AHLTEXT	0				0000				bytes	0x00064	1638	1638	mixed	silent divergence	cc370
 IEESR03D	0				0000				cards	0x00005	1638	1614	no-pair	silent divergence	cc370	
 IGG019GC	0				0000				bytes	0x0000b	1638	1638	text	silent divergence	cc370	
 IFNX5F	0				0000				bytes	0x005d4	1630	1630	text	silent divergence	cc370	
+IGC0002C	0				0000				bytes	0x0003e	1608	1592	mixed	silent divergence	cc370	
 IEFAB4EF	0				0000				bytes	0x005ed	1604	1604	length	silent divergence	cc370	
 ISTAPC61	0				0000				bytes	0x0012a	1596	1596	length	silent divergence	cc370	
 IDCCDRM	0				0000				cards	0x002e0	1592	1279	length	silent divergence	cc370	
@@ -338,21 +341,24 @@ IEFSD089	0				0000				bytes	0x005f0	1541	1533	length	silent divergence	cc370
 IDCCDRC	0				0000				cards	0x00310	1530	1052	length	silent divergence	cc370	
 IEESG03D	0				0000				bytes	0x00005	1530	1526	no-pair	silent divergence	cc370	
 IGC00030	0				0000				bytes	0x003b1	1528	1528	length	silent divergence	cc370	
+IFG0552X	0				0000				bytes	0x00297	1520	1520	length	silent divergence	cc370	
 IFCST006	0				0000				cards	0x00007	1508	1452	length	silent divergence	cc370	
 IFDOLT73	0				0000				bytes	0x00033	1508	1508	mixed	silent divergence	cc370	
+IFG0193D	0				0000				bytes	0x0057b	1504	1504	length	silent divergence	cc370	
 IEESA03D	0				0000				bytes	0x0024d	1500	1492	no-pair	silent divergence	cc370	
 IKJEFXSR	0				0000				bytes	0x00294	1496	1496	length	silent divergence	cc370	
+IFG0196T	0				0000				bytes	0x0031a	1488	1472	length	silent divergence	cc370	
 IKT0940F	0				0000				bytes	0x000be	1480	1480	length	silent divergence	cc370	
 IEAVESPR	0				0000				bytes	0x000a0	1475	1475	text	silent divergence	cc370	
 IDCCDRS	0				0000				cards	0x002f1	1467	1311	length	silent divergence	cc370	
+IFG0552R	0				0000				bytes	0x00235	1448	1448	length	silent divergence	cc370	
 IFCEMER3	0				0000				cards	0x001cb	1445	1239	length	silent divergence	cc370	
 IFCSI155	0				0000				bytes	0x00007	1444	1228	length	silent divergence	cc370	
 IFG0200N	0				0000				bytes	0x00396	1432	1432	length	silent divergence	cc370	
 IRBMFLPV	0				0000				bytes	0x0019b	1416	1444	length	silent divergence	cc370	
 IFCETRN4	0				0000				cards	0x0002e	1409	1233	length	silent divergence	cc370	
-IEE3103D	0				0000				bytes	0x0006f	1407	1395	length	silent divergence	cc370	
 IDCTSSA6	0				0000				cards	0x00005	1405	1297	length	silent divergence	cc370	
-IDA019S6	0				0000				bytes	0x0006d	1404	1404	length	silent divergence	cc370	
+IDA019S6	0				0000				bytes	0x000b1	1404	1404	length	silent divergence	cc370	
 IKJEFD31	0				0000				cards	0x000d5	1385	1533	length	silent divergence	cc370	
 IKJEFF50	0				0000				cards	0x00468	1385	1286	no-pair	silent divergence	cc370	
 IFDOLT38	0				0000				bytes	0x0002f	1382	1382	mixed	silent divergence	cc370	
@@ -361,7 +367,6 @@ IFDOLT67	0				0000				bytes	0x00050	1358	1358	length	silent divergence	cc370
 AHLMCER	0				0004	2	4	IFO026 CHARACTERS APPEAR BETWEEN THE BEGIN AND CONTINUE COLUMNS ON CONTINUATION CARD	cards	0x00007	1348	1268	length	silent divergence	cc370	
 IDCCDBI	0				0000				cards	0x00208	1343	1139	length	silent divergence	cc370	
 IKJEFF16	0				0000				bytes	0x004d7	1338	1338	no-pair	silent divergence	cc370	
-IEE4403D	0				0000				cards	0x00047	1332	1320	length	silent divergence	cc370	
 IDCCDLR	0				0000				cards	0x00208	1329	837	length	silent divergence	cc370	
 IFCEC155	0				0000				cards	0x00074	1322	1068	length	silent divergence	cc370	
 IGG0193Q	0				0000				bytes	0x00147	1312	1304	length	silent divergence	cc370	
@@ -370,11 +375,12 @@ IFFPEAGR	0				0000				bytes	0x00029	1302	1302	text	silent divergence	cc370
 IKTVTPUT	0				0000				cards	0x0003d	1296	1312	length	silent divergence	cc370	
 IRBMFTMA	0				0000				cards	0x0001f	1290	1314	length	silent divergence	cc370	
 IEFNB903	0				0000				bytes	0x0005b	1276	1276	length	silent divergence	cc370	
+IFG0196W	0				0000				bytes	0x0002a	1272	1272	mixed	silent divergence	cc370	
 IFCSUKNO	0				0000				cards	0x00007	1254	1078	length	silent divergence	cc370	
 IFDOLT24	0				0000				bytes	0x0004b	1244	1244	length	silent divergence	cc370	
+IFG0551F	0				0000				bytes	0x000bc	1232	1224	length	silent divergence	cc370	
 IKJEBEAE	0				0000				bytes	0x00225	1232	1232	no-pair	silent divergence	cc370	
 IFCEDDR0	0				0000				cards	0x00023	1229	1133	length	silent divergence	cc370	
-IEE4203D	0				0000				bytes	0x00055	1226	1214	length	silent divergence	cc370	
 IKJEFF49	0				0000				cards	0x00390	1220	1109	length	silent divergence	cc370	
 IDACAT12	0				0000				bytes	0x00294	1218	1218	length	silent divergence	cc370	
 IKTMSGS	0				0000				cards	0x00027	1207	1875	length	silent divergence	cc370	
@@ -383,7 +389,6 @@ IKTCAS40	0				0000				cards	0x0001f	1202	1194	length	silent divergence	cc370
 IGC0506C	0				0000				bytes	0x00035	1201	1201	length	silent divergence	cc370	
 IEAVXDOM	0				0000				bytes	0x00020	1196	1196	length	silent divergence	cc370	
 IEFSD166	0				0000				bytes	0x0001f	1194	1210	length	silent divergence	cc370	
-IGG0201A	0				0000				bytes	0x000f5	1192	1192	length	silent divergence	cc370	
 IEAVEMDL	0				0000				cards	0x0001f	1186	1203	length	silent divergence	cc370	
 IFG0195N	0				0000				bytes	0x001d3	1184	1184	text	silent divergence	cc370	
 IGG09301	0				0000				bytes	0x00025	1180	1196	length	silent divergence	cc370	
@@ -391,6 +396,7 @@ IEAXPDXR	0				0000				cards	0x001ed	1160	1160	holes	silent divergence	cc370
 ISTSC029	0				0000				bytes	0x00438	1160	1160	length	silent divergence	cc370	
 IFDOLT07	0				0000				cards	0x0003b	1158	1158	mixed	silent divergence	cc370	
 BLSRVRBX	0				0000				cards	0x00075	1152	1152	length	silent divergence	cc370	
+IFG0195K	0				0000				bytes	0x00055	1152	1152	length	silent divergence	cc370	
 IDCCDCC	0				0000				cards	0x00210	1145	1016	length	silent divergence	cc370	
 IRBMFIWK	0				0000				cards	0x0001f	1132	1156	length	silent divergence	cc370	
 IHJACP01	0				0000				bytes	0x0022b	1126	1126	length	silent divergence	cc370	
@@ -406,12 +412,15 @@ IFDOLT06	0				0000				bytes	0x00031	1102	1102	text	silent divergence	cc370
 IFFPBAPR	0				0000				bytes	0x00029	1102	1102	text	silent divergence	cc370	
 IECVCRHH	0				0000				bytes	0x002d4	1100	1100	length	silent divergence	cc370	
 IHJQRS24	0				0000				bytes	0x00029	1092	1092	text	silent divergence	cc370	
-IEE1603D	0				0000				bytes	0x00140	1088	1088	length	silent divergence	cc370	
+IEE1603D	0				0000				bytes	0x001e1	1088	1088	length	silent divergence	cc370	
+IFG0196X	0				0000				bytes	0x00384	1088	1088	length	silent divergence	cc370	
 IFG0199D	0				0000				bytes	0x00207	1088	1088	length	silent divergence	cc370	
 IEE0803D	0				0000				cards	0x00049	1085	1125	length	silent divergence	cc370	
 IERRCJ	0				0000				bytes	0x00010	1082	1082	no-pair	silent divergence	cc370	
 IFCET006	0				0000				cards	0x0015d	1081	989	length	silent divergence	cc370	
+IFG0553P	0				0000				bytes	0x00200	1072	1064	length	silent divergence	cc370	
 IECVBRSV	0				0000				cards	0x00072	1071	1205	length	silent divergence	cc370	
+IFG0200V	0				0000				bytes	0x0004c	1064	1048	length	silent divergence	cc370	
 IGG03002	0				0000				bytes	0x000bb	1040	1040	length	silent divergence	cc370	
 IGG0196Q	0				0000				bytes	0x00290	1038	1038	text	silent divergence	cc370	
 IGC0002A	0				0000				bytes	0x00285	1032	1032	length	silent divergence	cc370	
@@ -429,30 +438,31 @@ IKJEBEDC	0				0000				bytes	0x00028	984	984	no-pair	silent divergence	cc370
 IEESQ03D	0				0000				bytes	0x00005	978	970	no-pair	silent divergence	cc370	
 IEE3703D	0				0000				cards	0x00063	977	1033	length	silent divergence	cc370	
 IGG0197B	0				0000				cards	0x000a0	976	1096	length	silent divergence	cc370	
+IFG0195H	0				0000				bytes	0x00044	968	968	length	silent divergence	cc370	
 IKTXMTPT	0				0000				cards	0x0001d	964	972	length	silent divergence	cc370	
 IFCEMER0	0				0000				cards	0x0019e	962	782	length	silent divergence	cc370	
 AMDSAPGI	0				0000				bytes	0x0020a	956	956	mixed	silent divergence	cc370	
 AMDSAWAT	0				0000				bytes	0x000b2	952	952	mixed	silent divergence	cc370	
 IDCTSSA7	0				0000				bytes	0x00005	949	899	length	silent divergence	cc370	
 IFDOLT53	0				0000				bytes	0x00035	944	944	length	silent divergence	cc370	
+IFG0193E	0				0000				bytes	0x002d4	944	944	length	silent divergence	cc370	
 IEEVWKUP	0				0000				bytes	0x0006c	936	936	length	silent divergence	cc370	
 IFDOLT56	0				0000				bytes	0x00037	936	936	mixed	silent divergence	cc370	
 IFDOLT26	0				0000				bytes	0x00037	926	926	mixed	silent divergence	cc370	
 IDCTSCV0	0				0000				cards	0x00005	919	859	length	silent divergence	cc370	
 IEAVEMIN	0				0000				cards	0x0001f	914	931	length	silent divergence	cc370	
-IEE4803D	0				0000				bytes	0x00059	914	902	length	silent divergence	cc370	
 IFCST00B	0				0000				cards	0x00007	913	839	length	silent divergence	cc370	
+IFG0202F	0				0000				bytes	0x0003e	912	904	mixed	silent divergence	cc370	
 IFDOLT16	0				0000				bytes	0x0005b	906	906	mixed	silent divergence	cc370	
 IFDOLT21	0				0000				bytes	0x00033	906	906	mixed	silent divergence	cc370	
 IFCSXXXG	0				0000				cards	0x00007	905	853	length	silent divergence	cc370	
 IEEMB825	0				0000				bytes	0x0001d	900	892	length	silent divergence	cc370	
+IFG0196N	0				0000				bytes	0x00165	896	888	mixed	silent divergence	cc370	
 IKJEFP40	0				0000				cards	0x00269	890	890	length	silent divergence	cc370	
 IKJEFLK	0				0000				bytes	0x00021	888	904	length	silent divergence	cc370	
 IKTCAS52	0				0000				cards	0x0001e	876	996	length	silent divergence	cc370	
 BLSUNOTE	0				0000				cards	0x0011c	864	864	length	silent divergence	cc370	
 IEFIB620	0				0000				bytes	0x00325	863	863	length	silent divergence	cc370	
-IEE7303D	0				0000				bytes	0x0009e	858	846	length	silent divergence	cc370	
-IEE3303D	0				0000				bytes	0x00070	856	844	length	silent divergence	cc370	
 IGG0193K	0				0000				bytes	0x00136	856	856	length	silent divergence	cc370	
 IFDOLT52	0				0000				bytes	0x0002f	850	850	length	silent divergence	cc370	
 IEE5403D	0				0000				bytes	0x00244	836	836	length	silent divergence	cc370	
@@ -471,6 +481,7 @@ IGG019VG	0				0000				bytes	0x0000d	752	744	length	silent divergence	cc370
 ISTAPC58	0				0000				cards	0x00018	752	752	mixed	silent divergence	cc370	
 IEDBITN	0				0000				cards	0x00120	747	588	length	silent divergence	cc370	
 IFCET005	0				0000				cards	0x001aa	740	704	length	silent divergence	cc370	
+IFG0196Q	0				0000				bytes	0x0006b	736	728	text	silent divergence	cc370	
 IFCETRN2	0				0000				cards	0x0001a	729	665	length	silent divergence	cc370	
 BLSRFUCB	0				0000				cards	0x00071	720	720	length	silent divergence	cc370	
 IEESC03D	0				0000				bytes	0x0007f	714	717	no-pair	silent divergence	cc370	
@@ -478,6 +489,8 @@ IFDOLT28	0				0000				bytes	0x00052	702	702	mixed	silent divergence	cc370
 BLSRASCX	0				0000				cards	0x0006f	672	672	length	silent divergence	cc370	
 IDCTSIO5	0				0000				cards	0x00005	667	597	length	silent divergence	cc370	
 IFDOLT37	0				0000				bytes	0x00106	666	666	mixed	silent divergence	cc370	
+IFG0196O	0				0000				bytes	0x00080	664	656	length	silent divergence	cc370	
+IFG0551T	0				0000				bytes	0x00061	664	664	length	silent divergence	cc370	
 IDCTSAV0	0				0000				bytes	0x00007	660	630	length	silent divergence	cc370	
 IGFPTSIG	0				0000				bytes	0x000a6	640	640	text	silent divergence	cc370	
 IEFNB9CR	0				0000				cards	0x00020	636	892	length	silent divergence	cc370	
@@ -489,12 +502,13 @@ IFDOLT13	0				0000				bytes	0x000d5	622	622	mixed	silent divergence	cc370
 IFDOLT05	0				0000				bytes	0x0003d	582	582	mixed	silent divergence	cc370	
 IEFIB621	0				0000				bytes	0x0001e	570	612	length	silent divergence	cc370	
 IFDOLT04	0				0000				bytes	0x00033	546	546	mixed	silent divergence	cc370	
-IFOX0G	0				0000				bytes	0x0000b	536	536	text	silent divergence	cc370	
 IGFPTCON	0				0000				bytes	0x00144	536	536	text	silent divergence	cc370	
+SECLOADA	0				0000				bytes	0x00157	536	528	length	silent divergence	cc370	
 IDCCDCK	0				0000				cards	0x000b0	533	272	length	silent divergence	cc370	
 IDCTSRR0	0				0000				cards	0x00005	522	486	length	silent divergence	cc370	
 IEE7803D	0				0000				bytes	0x00037	516	508	length	silent divergence	cc370	
 IFDOLT74	0				0000				bytes	0x0002f	490	490	mixed	silent divergence	cc370	
+IFG0195D	0				0000				bytes	0x00068	472	456	text	silent divergence	cc370	
 AMDSATAP	0				0000				bytes	0x00106	466	466	length	silent divergence	cc370	
 IGFPEXIT	0				0000				bytes	0x00040	458	458	text	silent divergence	cc370	
 IFCS0135	0				0000				bytes	0x0002b	448	424	length	silent divergence	cc370	
@@ -525,6 +539,7 @@ IKJEBEBO	0				0000				bytes	0x00026	224	224	no-pair	silent divergence	cc370
 IGG019MY	0				0000				cards	0x000d7	216	343	length	silent divergence	cc370	
 IRBMFTCH	0				0000				bytes	0x00084	216	216	no-pair	silent divergence	cc370	
 IDCTSRL0	0				0000				bytes	0x00005	210	176	length	silent divergence	cc370	
+IFG0195G	0				0000				bytes	0x00054	208	208	text	silent divergence	cc370	
 IGG019ME	0				0000				cards	0x000cb	208	331	length	silent divergence	cc370	
 IEFICPUA	0				0000				bytes	0x000a5	201	201	mixed	silent divergence	cc370	
 IGG019MW	0				0000				cards	0x000b9	192	313	length	silent divergence	cc370	
@@ -656,6 +671,8 @@ IGG01994	0				0000				bytes				identical	silent divergence	cc370
 IGG0199K	0				0000				bytes				identical	silent divergence	cc370	
 IGG0199O	0				0000				bytes				identical	silent divergence	cc370	
 IGG019MC	0				0000				bytes				length	silent divergence	cc370	
+IGG019V6	0				0000				bytes				length	silent divergence	cc370	
+IGG0201A	0				0000				bytes				length	silent divergence	cc370	
 IGG0201B	0				0000				bytes				length	silent divergence	cc370	
 IGG0201Z	0				0000				bytes				length	silent divergence	cc370	
 IGG08108	0				0000				cards				length	silent divergence	cc370	
@@ -695,57 +712,52 @@ IFCEI145	8	8	8	Addressability error - no active USING covers the operand's secti
 BNGIDISP	8	496	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00080	10319	10329	length	as370 alone flags	cc370	
 BNGI3270	8	166	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00088	10301	10288	length	as370 alone flags	cc370	
 IFCDIP00	8	368	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards	0x0001f	10250	10378	length	as370 alone flags	cc370	
-IEFVDA	8	256	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards	0x0006c	9594	9504	length	as370 alone flags	cc370	
-IEFVFA	8	308	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0000				cards	0x00074	9360	9269	length	as370 alone flags	cc370	
+IEFVDA	8	257	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0000				cards	0x0006c	9594	9504	length	as370 alone flags	cc370	
+IEFVFA	8	288	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0000				cards	0x00074	9360	9269	length	as370 alone flags	cc370	
 IFCSXXXD	8	4	8	Undefined symbol	0000				cards	0x00006	9091	7612	length	as370 alone flags	cc370	
 AMAPTFLE	8	592	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0000a	8476	8476	mixed	as370 alone flags	cc370	
 BNGT3270	8	139	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards	0x00036	8337	8327	length	as370 alone flags	cc370	
-IFG0RR0B	8	15	8	Undefined symbol | Undefined operation code	0000				cards	0x001ec	8272	8152	length	as370 alone flags	cc370	
+IFG0RR0B	8	9	8	Undefined symbol	0000				cards	0x001ec	8272	8152	length	as370 alone flags	cc370	
 IEBPPCH1	8	847	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00026	8228	8228	length	as370 alone flags	cc370	
 IEBCMAIN	8	771	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards	0x0000a	8140	8268	length	as370 alone flags	cc370	
 IFCE0135	8	1	8	Undefined symbol	0000				cards	0x00106	8017	6975	length	as370 alone flags	cc370	
 ICFBIF00	8	80	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0008c	7630	7630	length	as370 alone flags	cc370	
 IFCSXXXB	8	6	8	Undefined symbol	0000				cards	0x00006	7526	5362	length	as370 alone flags	cc370	
-IDA019ST	8	308	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00028	7236	7236	length	as370 alone flags	cc370	
+IDA019ST	8	308	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00176	7236	7236	length	as370 alone flags	cc370	
 IGG019MB	8	446	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0014e	6912	6912	length	as370 alone flags	cc370	
 IFCEOAK3	8	32	8	Undefined symbol	0000				cards	0x0001a	6738	5519	length	as370 alone flags	cc370	
 IEBUPDT2	8	270	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00022	6670	6670	length	as370 alone flags	cc370	
-ILRVSAMI	8	1	8	Undefined symbol	0000				cards	0x000c6	6400	5808	length	as370 alone flags	cc370	
-IFG0194C	8	14	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | Undefined operation code	0000				bytes	0x00011	6144	6184	length	as370 alone flags	cc370	
+IEFAB421	8	1	8	Undefined symbol	0000				bytes	0x000ff	6356	6320	length	as370 alone flags	cc370	
+IFG0194C	8	13	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0000				bytes	0x00011	6144	6184	length	as370 alone flags	cc370	
 IGC0001F	8	81	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0001a	6088	6088	no-pair	as370 alone flags	cc370	
-IFG019RA	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x00169	6056	6056	length	as370 alone flags	cc370	
 IFCET008	8	4	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards	0x0008c	6044	5480	length	as370 alone flags	cc370	
 IFNX5A	8	45	8	Undefined symbol	0000				cards	0x00022	5853	5853	mixed	as370 alone flags	cc370	
 IFCEAXXX	8	30	8	Undefined symbol	0000				cards	0x000ba	5768	5268	length	as370 alone flags	cc370	
 IFCEA155	8	124	8	Undefined symbol	0000				cards	0x00003	5669	4691	length	as370 alone flags	cc370	
 IFCEGUS1	8	6	8	Undefined symbol	0000				cards	0x00016	5606	4870	length	as370 alone flags	cc370	
-IDA019R4	8	14	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00083	5512	5512	length	as370 alone flags	cc370	
-IDA019RY	8	6	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00170	5424	5424	length	as370 alone flags	cc370	
+IDA019R4	8	14	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00080	5512	5512	length	as370 alone flags	cc370	
+IDA019RY	8	6	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0016e	5424	5424	length	as370 alone flags	cc370	
 IEBPPAL1	8	427	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00030	5401	5401	length	as370 alone flags	cc370	
 BLSEADPR	8	4	8	Undefined symbol	0000				cards	0x00308	5360	5360	length	as370 alone flags	cc370	
 IEFVEA	8	112	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00040	5304	5324	length	as370 alone flags	cc370	
-IDA019RU	8	2	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00092	5231	5231	length	as370 alone flags	cc370	
+IDA019RU	8	2	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00090	5231	5231	length	as370 alone flags	cc370	
 AMDPRRDC	8	1	8	Undefined symbol	0000				bytes	0x000b0	5196	5196	length	as370 alone flags	cc370	
 IKJEBEMC	8	1	8	Undefined symbol	0000				cards	0x01341	5159	4962	length	as370 alone flags	cc370	
 ISTZGF0A	8	143	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0005a	5085	5085	length	as370 alone flags	cc370	
-IEECB800	8	2	8	Undefined symbol	0000				cards	0x002f9	5025	5043	length	as370 alone flags	cc370	
 IEAVEAT0	8	62	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0002c	5024	5024	length	as370 alone flags	cc370	
 HEWLFSCN	8	51	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x002ad	4848	4848	length	as370 alone flags	cc370	
 ICAPRTBL	8	197	8	Undefined operation code | Symbol longer than 8 characters in name field (name rejected; MVS symbols are limited to 8) | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards	0x001d2	4824	4824	no-pair	as370 alone flags	cc370	
-IFG0TC0A	8	9	8	Undefined symbol | Undefined operation code	0000				cards	0x00086	4800	4768	length	as370 alone flags	cc370	
 IEEC2740	8	2	8	Undefined symbol	0000				cards	0x000c0	4780	4484	length	as370 alone flags	cc370	
 IFCE0165	8	113	8	IFO158 DSECT symbol CHADR used in a relocatable address constant | Undefined symbol | IFO158 DSECT symbol CHADRP used in a relocatable address constant | IFO158 DSECT symbol CHNID used in a relocatable address constant | IFO158 DSECT symbol ADRARY0 used in a relocatable address constant | IFO158 DSECT symbol ADRARY0P used in a relocatable address constant	0000				cards	0x00112	4757	4174	length	as370 alone flags	cc370	
 IKJEHPRO	8	14	8	Undefined symbol	0000				cards	0x00b90	4626	4146	no-pair	as370 alone flags	cc370	
-IFG0194F	8	2	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0000				cards	0x00011	4624	4664	length	as370 alone flags	cc370	
 IFCEC165	8	156	8	IFO158 DSECT symbol CHADR used in a relocatable address constant | Undefined symbol | IFO158 DSECT symbol CHADRP used in a relocatable address constant | IFO158 DSECT symbol CHNID used in a relocatable address constant | IFO158 DSECT symbol ADRARY0 used in a relocatable address constant | IFO158 DSECT symbol ADRARY0P used in a relocatable address constant	0000				cards	0x000cf	4576	4126	length	as370 alone flags	cc370	
-IDCRC04	8	34	8	Undefined symbol	0000				cards	0x00039	4560	4544	length	as370 alone flags	cc370	
-IFG0194A	8	3	8	Undefined symbol | Undefined operation code	0000				bytes	0x0019e	4560	4560	length	as370 alone flags	cc370	
+IDCRC04	8	29	8	Undefined symbol	0000				cards	0x00039	4560	4544	length	as370 alone flags	cc370	
 IEBGENR3	8	169	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00032	4540	4540	length	as370 alone flags	cc370	
 BLSEMDPR	8	1	8	Undefined symbol	0000				cards	0x0009e	4456	4456	length	as370 alone flags	cc370	
 IKJEFLEA	8	5	8	Undefined symbol	0000				cards	0x00f30	4358	4109	length	as370 alone flags	cc370	
 IFCET00D	8	15	8	Undefined symbol	0000				bytes	0x001ca	4275	3837	length	as370 alone flags	cc370	
 IFNX6B	8	4	8	Relocatable displacement in machine instruction (explicit base requires an absolute displacement) | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol	0000				bytes	0x0001b	4231	4231	length	as370 alone flags	cc370	
-IEHPROG2	8	2	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00031	4120	4120	length	as370 alone flags	cc370	
+IEHPROG2	8	2	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00516	4120	4120	length	as370 alone flags	cc370	
 IGE0000I	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - PATCH | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x00e32	4096	3634	length	as370 alone flags	cc370	
 IGG019MA	8	5	8	Undefined symbol	0000				cards	0x000fd	4096	4104	mixed	as370 alone flags	cc370	
 IFCEXXXC	8	15	8	Undefined symbol	0000				cards	0x0021e	3907	3477	length	as370 alone flags	cc370	
@@ -754,7 +766,7 @@ IEHINITT	8	1	8	Undefined symbol	0000				bytes	0x00c48	3778	3578	length	as370 alo
 IFCEOAK2	8	16	8	Undefined symbol	0000				cards	0x00016	3777	3053	length	as370 alone flags	cc370	
 BNGLOGR2	8	18	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0064a	3757	3757	length	as370 alone flags	cc370	
 BLSRSUMM	8	7	8	Undefined symbol	0000				cards	0x00226	3656	3656	length	as370 alone flags	cc370	
-IKJEHAL1	8	2	8	Undefined symbol	0000				cards	0x00095	3653	3637	no-pair	as370 alone flags	cc370	
+IKJEHAL1	8	2	8	Undefined symbol	0000				bytes	0x00095	3653	3637	no-pair	as370 alone flags	cc370	
 IKJCT469	8	3	8	Undefined symbol	0000				cards	0x005a7	3652	3652	length	as370 alone flags	cc370	
 IFDOLT18	8	1	8	Undefined symbol	0000				bytes	0x00033	3584	3584	length	as370 alone flags	cc370	
 IFNX4T	8	100	8	Undefined symbol | Undefined operation code	0000				cards	0x00045	3582	3574	mixed	as370 alone flags	cc370	
@@ -776,7 +788,6 @@ IFCEF155	8	2	8	Undefined symbol	0000				cards	0x00002	2976	1639	length	as370 alo
 IFNX6A	8	2	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0000				bytes	0x00021	2964	2964	length	as370 alone flags	cc370	
 BLSRCOMP	8	12	8	Undefined symbol	0000				cards	0x00165	2864	2864	length	as370 alone flags	cc370	
 IFNX2A	8	27	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0000				bytes	0x0001d	2846	2846	mixed	as370 alone flags	cc370	
-IFG0553F	8	11	8	Undefined symbol | Undefined operation code	0000				cards	0x00127	2824	2784	length	as370 alone flags	cc370	
 IFCEMER4	8	1	8	Undefined symbol	0000				cards	0x0017a	2711	2244	length	as370 alone flags	cc370	
 BLSRSALI	12	7	12	Undefined symbol | IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x00025	2680	2656	length	as370 alone flags	cc370	
 BLSRLSYM	12	4	12	Undefined symbol | IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x0001f	2672	2648	length	as370 alone flags	cc370	
@@ -785,112 +796,79 @@ BLSRSCAN	12	7	12	Undefined symbol | IFO231 Duplication factor uses a symbol not 
 BLSFMD00	8	3	8	Undefined symbol	0000				cards	0x000f5	2440	2440	length	as370 alone flags	cc370	
 IFNX5P	8	2	8	Undefined symbol	0000				bytes	0x0005d	2344	2344	mixed	as370 alone flags	cc370	
 IFNX1K	8	44	8	Undefined symbol	0000				cards	0x0000a	2342	1814	length	as370 alone flags	cc370	
-IGG03001	8	3	8	Undefined symbol | Undefined operation code	0000				bytes	0x00354	2336	2328	length	as370 alone flags	cc370	
+IGG03001	8	1	8	Undefined symbol	0000				bytes	0x00354	2336	2328	mixed	as370 alone flags	cc370	
 IFNX4N	8	13	8	Undefined symbol	0000				cards	0x00008	2332	2332	text	as370 alone flags	cc370	
 IFCETRN0	8	1	8	Undefined symbol	0000				cards	0x0001a	2289	2065	length	as370 alone flags	cc370	
-IFG0555H	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x0075c	2288	2288	length	as370 alone flags	cc370	
 IKJEBEFO	8	18	8	Undefined symbol	0000				cards	0x00026	2224	2224	no-pair	as370 alone flags	cc370	
 IFDOLT12	8	1	8	Undefined symbol	0000				cards	0x0003f	2181	2461	length	as370 alone flags	cc370	
 IFCETRN5	8	10	8	Undefined symbol	0000				cards	0x00034	2175	1975	length	as370 alone flags	cc370	
 AMDPRCOM	8	1	8	Undefined symbol	0000				cards	0x005e2	2138	2138	length	as370 alone flags	cc370	
 IFNX3K	8	26	8	Undefined symbol	0000				cards	0x0000a	2123	1619	length	as370 alone flags	cc370	
 IFNX4E	8	26	8	Undefined symbol	0000				bytes	0x00008	2105	2105	text	as370 alone flags	cc370	
-IGC0003A	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x001e4	2104	2104	length	as370 alone flags	cc370	
-IGG0CLAY	8	44	8	Undefined symbol	0000				cards	0x00043	2080	2064	length	as370 alone flags	cc370	
-IFG0193A	8	11	8	Undefined symbol | Undefined operation code	0000				cards	0x00176	2016	1944	length	as370 alone flags	cc370	
-IFG0195B	8	6	8	Undefined symbol | Undefined operation code	0000				cards	0x00047	2008	2000	length	as370 alone flags	cc370	
+IGG0CLAY	8	37	8	Undefined symbol	0000				cards	0x00043	2080	2064	length	as370 alone flags	cc370	
+IFG0193A	8	7	8	Undefined symbol	0000				cards	0x00176	2016	1944	length	as370 alone flags	cc370	
 IKJEBEME	8	24	8	Undefined symbol	0000				cards	0x00026	1960	1960	no-pair	as370 alone flags	cc370	
 IKJEBEMA	8	1	8	Undefined symbol	0000				cards	0x00049	1948	1944	no-pair	as370 alone flags	cc370	
-IGC0005E	8	4	8	Undefined symbol | Undefined operation code	0000				bytes	0x00058	1928	1912	length	as370 alone flags	cc370	
 IFG0196L	8	2	8	Undefined symbol	0000				bytes	0x004f0	1864	1864	length	as370 alone flags	cc370	
-IEAVMFRR	8	2	8	Undefined symbol	0000				cards	0x000f8	1847	1805	length	as370 alone flags	cc370	
 IERRCB	8	1	8	Undefined symbol	0000				bytes	0x00714	1828	1836	no-pair	as370 alone flags	cc370	
 IFDOLT00	8	3	8	Undefined symbol	0000				bytes	0x00033	1824	1824	length	as370 alone flags	cc370	
 BLSRRNCH	8	6	8	Undefined symbol	0000				cards	0x00123	1792	1792	length	as370 alone flags	cc370	
-IFG0552F	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x00240	1736	1736	text	as370 alone flags	cc370	
-IGC00020	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x00045	1736	1736	length	as370 alone flags	cc370	
 IFNX4D	8	5	8	Undefined symbol	0000				cards	0x00008	1710	1710	mixed	as370 alone flags	cc370	
 BLSRSADE	12	7	12	Undefined symbol | IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x00024	1704	1672	length	as370 alone flags	cc370	
 IGC0002G	8	1	8	Undefined symbol	0000				bytes	0x00401	1704	1704	length	as370 alone flags	cc370	
 IEECVET4	8	4	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0000				bytes	0x00170	1686	1686	length	as370 alone flags	cc370	
-IFG0552B	8	2	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0000				cards	0x0009e	1664	1656	length	as370 alone flags	cc370	
-IGC0001I	8	3	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined operation code	0000				bytes	0x00072	1664	1656	length	as370 alone flags	cc370	
-IGC0002C	8	3	8	Undefined symbol | Undefined operation code	0000				cards	0x0003e	1608	1592	length	as370 alone flags	cc370	
+IGC0001I	8	1	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0000				bytes	0x00072	1664	1656	length	as370 alone flags	cc370	
 IFCETRN3	8	4	8	Undefined symbol	0000				cards	0x00058	1577	1389	length	as370 alone flags	cc370	
 IKJEBELT	8	3	8	Undefined symbol	0000				cards	0x00026	1568	1568	no-pair	as370 alone flags	cc370	
 IEAVSTAA	8	1	8	Undefined symbol	0000				bytes	0x004ba	1527	1527	length	as370 alone flags	cc370	
 IFNX4V	8	3	8	Undefined symbol	0000				bytes	0x0047d	1521	1521	text	as370 alone flags	cc370	
-IFG0552X	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x00297	1520	1520	length	as370 alone flags	cc370	
 BLSRESDR	12	4	12	Undefined symbol | IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				bytes	0x0001f	1512	1488	length	as370 alone flags	cc370	
-IFG0193D	8	1	8	Undefined operation code	0000				bytes	0x0057b	1504	1504	length	as370 alone flags	cc370	
-IFG0196T	8	5	8	Undefined symbol | Undefined operation code	0000				cards	0x0031a	1488	1472	length	as370 alone flags	cc370	
-IFG0196V	8	12	8	Undefined symbol | Undefined operation code	0000				cards	0x0006a	1472	1392	length	as370 alone flags	cc370	
-IFG0552R	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x00235	1448	1448	length	as370 alone flags	cc370	
+IFG0196V	8	9	8	Undefined symbol	0000				cards	0x0006a	1472	1392	length	as370 alone flags	cc370	
 IFG0232Z	8	1	8	Undefined symbol	0000				bytes	0x0033c	1432	1432	length	as370 alone flags	cc370	
 IFNX5C	8	12	8	Undefined symbol	0000				bytes	0x00021	1401	1401	text	as370 alone flags	cc370	
-IFG0200Y	8	6	8	Undefined symbol | Undefined operation code	0000				cards	0x00016	1400	1352	length	as370 alone flags	cc370	
+IFG0200Y	8	4	8	Undefined symbol	0000				cards	0x00016	1400	1352	length	as370 alone flags	cc370	
 IERRCV	8	1	8	Undefined symbol	0000				bytes	0x0001c	1376	1376	no-pair	as370 alone flags	cc370	
 BLSFLD00	8	1	8	Undefined symbol	0000				bytes	0x0031e	1344	1344	length	as370 alone flags	cc370	
-IFG0202B	8	8	8	Undefined symbol | Undefined operation code	0000				cards	0x00006	1344	1288	length	as370 alone flags	cc370	
+IFG0202B	8	2	8	Undefined symbol	0000				cards	0x00006	1344	1288	length	as370 alone flags	cc370	
 IGG0194Q	8	1	8	Undefined symbol	0000				cards	0x003e2	1344	1465	length	as370 alone flags	cc370	
 IEEVMNT1	8	8	8	Undefined symbol | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0000				bytes	0x000dc	1319	1319	mixed	as370 alone flags	cc370	
-IFG0196W	8	2	8	Undefined symbol | Undefined operation code	0000				cards	0x0002a	1272	1272	length	as370 alone flags	cc370	
 BLSRRAGE	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				bytes	0x0001f	1248	1224	length	as370 alone flags	cc370	
 IFG0195V	8	1	8	Undefined symbol	0000				cards	0x000af	1248	1232	length	as370 alone flags	cc370	
 IFG0232G	8	1	8	Undefined symbol	0000				bytes	0x0007c	1248	1248	mixed	as370 alone flags	cc370	
 IGG0193S	8	6	8	Undefined symbol	0000				cards	0x0009d	1248	1260	length	as370 alone flags	cc370	
-IFG0554P	8	6	8	Undefined symbol | Undefined operation code	0000				cards	0x00002	1240	1208	length	as370 alone flags	cc370	
-IFG0551F	8	3	8	Undefined symbol | Undefined operation code	0000				bytes	0x000bc	1232	1224	length	as370 alone flags	cc370	
+IFG0554P	8	2	8	Undefined symbol	0000				bytes	0x00002	1240	1208	length	as370 alone flags	cc370	
 IKJEFA24	8	1	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				cards	0x0046a	1224	1224	no-pair	as370 alone flags	cc370	
 IFNX3B	8	13	8	Undefined symbol	0000				bytes	0x00060	1214	1208	length	as370 alone flags	cc370	
 IFCSSOFT	8	1	8	Undefined symbol	0000				bytes	0x00007	1183	1137	length	as370 alone flags	cc370	
-IFG0195K	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x00055	1152	1152	length	as370 alone flags	cc370	
-IFG0196M	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x0032a	1152	1152	text	as370 alone flags	cc370	
-IFG0202E	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x002f6	1144	1136	length	as370 alone flags	cc370	
 IEFRPREP	8	2	8	Undefined symbol	0000				bytes	0x000a2	1130	1130	length	as370 alone flags	cc370	
 BLSUVSAR	12	2	12	IFO231 Duplication factor uses a symbol not previously defined  - MOD1L | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved | IFO231 Duplication factor uses a symbol not previously defined  - MOD2L	0000				cards	0x0001f	1120	1096	length	as370 alone flags	cc370	
 IFDOLT57	8	1	8	Undefined symbol	0000				bytes	0x000c4	1110	1110	mixed	as370 alone flags	cc370	
 IFG0232S	8	1	8	Undefined symbol	0000				bytes	0x00090	1104	1104	mixed	as370 alone flags	cc370	
-IEESB670	8	3	8	Undefined symbol	0000				cards	0x0006d	1103	1039	length	as370 alone flags	cc370	
-IFG0196X	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x00384	1088	1088	length	as370 alone flags	cc370	
-IFG0551H	8	8	8	Undefined symbol | Undefined operation code	0000				cards	0x000c2	1080	1016	length	as370 alone flags	cc370	
+IFG0551H	8	5	8	Undefined symbol	0000				cards	0x000c2	1080	1016	length	as370 alone flags	cc370	
 IGG019PD	8	3	8	Undefined symbol	0000				cards	0x00272	1080	1201	length	as370 alone flags	cc370	
 IGG0203A	8	3	8	Undefined symbol | Undefined operation code	0000				cards	0x00004	1075	989	length	as370 alone flags	cc370	
-IFG0553P	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x00200	1072	1064	length	as370 alone flags	cc370	
-IFG0200V	8	4	8	Undefined symbol | Undefined operation code	0000				cards	0x0004c	1064	1048	length	as370 alone flags	cc370	
 IEECVETU	8	9	8	Undefined symbol	0000				bytes	0x000be	1049	1049	text	as370 alone flags	cc370	
 IGE0002A	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - PATCH1 | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x00046	1042	434	length	as370 alone flags	cc370	
 BLSUHELP	8	2	8	Undefined symbol	0000				cards	0x00071	1008	1008	length	as370 alone flags	cc370	
 IGG0192C	8	1	8	Undefined symbol	0000				bytes	0x00152	996	996	length	as370 alone flags	cc370	
 IFCET003	8	1	8	Undefined symbol	0000				cards	0x00066	983	887	length	as370 alone flags	cc370	
-IFG0195H	8	3	8	Undefined symbol | Undefined operation code	0000				bytes	0x00044	968	968	length	as370 alone flags	cc370	
-IFG0193E	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x002d4	944	944	length	as370 alone flags	cc370	
-IFG0202F	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x0003e	912	904	length	as370 alone flags	cc370	
-IEESB665	8	3	8	Undefined symbol	0000				cards	0x000f7	907	843	length	as370 alone flags	cc370	
 BLSRRDPU	12	2	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved | IFO231 Duplication factor uses a symbol not previously defined  - MODPARML	0000				cards	0x0001f	904	872	length	as370 alone flags	cc370	
 IFG0195U	8	1	8	Undefined symbol	0000				bytes	0x00070	904	896	length	as370 alone flags	cc370	
-IFG0196N	8	3	8	Undefined symbol | Undefined operation code	0000				cards	0x00165	896	888	length	as370 alone flags	cc370	
 BLSRLIST	8	6	8	Undefined symbol	0000				cards	0x0007b	888	888	length	as370 alone flags	cc370	
-IFG0200W	8	17	8	Undefined symbol | Undefined operation code	0000				cards	0x00026	856	752	length	as370 alone flags	cc370	
+IFG0200W	8	14	8	Undefined symbol	0000				cards	0x00026	856	752	length	as370 alone flags	cc370	
 IGC0010E	8	3	8	Undefined symbol	0000				bytes	0x00067	838	838	length	as370 alone flags	cc370	
 BLSRDUDR	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x0001f	832	808	length	as370 alone flags	cc370	
 BLSRDULS	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x0001f	816	784	length	as370 alone flags	cc370	
-IEFIB645	8	3	8	Undefined symbol	0000				cards	0x0004b	800	748	length	as370 alone flags	cc370	
 BLSRTCBX	8	6	8	Undefined symbol	0000				cards	0x00075	760	760	length	as370 alone flags	cc370	
-IFG0196Q	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x0006b	736	728	length	as370 alone flags	cc370	
 HEWLDRGO	8	1	8	Undefined symbol	0000				bytes	0x00056	696	696	mixed	as370 alone flags	cc370	
-IFG0196O	8	2	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0000				bytes	0x00080	664	656	mixed	as370 alone flags	cc370	
-IFG0551T	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x00061	664	664	length	as370 alone flags	cc370	
 BLSRESAR	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				bytes	0x00025	616	584	length	as370 alone flags	cc370	
 BLSREVAL	8	6	8	Undefined symbol	0000				cards	0x001f9	576	576	length	as370 alone flags	cc370	
 IFDOLT42	8	3	8	Undefined symbol	0000				bytes	0x00037	574	574	text	as370 alone flags	cc370	
 BLSRESPU	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				bytes	0x00025	568	544	length	as370 alone flags	cc370	
-SECLOADA	8	2	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0000				cards	0x00157	536	528	length	as370 alone flags	cc370	
 BLSRPHGE	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x0001f	528	496	length	as370 alone flags	cc370	
 BLSRRDGE	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x0001f	504	480	length	as370 alone flags	cc370	
 BLSREQU	8	6	8	Undefined symbol	0000				cards	0x00075	496	496	length	as370 alone flags	cc370	
 BLSRSAGC	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x0001f	496	472	length	as370 alone flags	cc370	
-IFG0195D	8	2	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0000				bytes	0x00068	472	456	length	as370 alone flags	cc370	
 BLSRESGC	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x0001f	464	432	length	as370 alone flags	cc370	
 BLSRSAAR	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x0001f	464	432	length	as370 alone flags	cc370	
 BLSRPHAR	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				bytes	0x0001f	456	424	length	as370 alone flags	cc370	
@@ -898,11 +876,9 @@ BLSUINI1	8	1	8	Undefined symbol	0000				cards	0x000c0	440	440	length	as370 alone
 BLSRRDAR	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x0001f	432	408	length	as370 alone flags	cc370	
 IFNX4S	8	1	8	Undefined symbol	0000				cards	0x00008	429	406	mixed	as370 alone flags	cc370	
 BLSRSAPU	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x0001f	416	392	length	as370 alone flags	cc370	
-IEFISEXR	8	3	8	Undefined symbol	0000				cards	0x00041	364	304	length	as370 alone flags	cc370	
 IFNX1S	8	30	8	Undefined symbol	0000				cards	0x00056	339	339	text	as370 alone flags	cc370	
 IEECVFTR	8	9	8	Undefined symbol	0000				bytes	0x0008a	302	302	text	as370 alone flags	cc370	
 IGC0009D	8	1	8	Undefined operation code	0000				bytes	0x00013	279	275	length	as370 alone flags	cc370	
-IFG0195G	8	2	8	Undefined symbol | Undefined operation code	0000				bytes	0x00054	208	208	text	as370 alone flags	cc370	
 HEWLFBTP	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				length	as370 alone flags	cc370	
 IEAVGTCL	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				identical	as370 alone flags	cc370	
 IEECVETH	8	3	8	Undefined symbol	0000				identical				identical	as370 alone flags	cc370	
@@ -919,9 +895,7 @@ ISTINCU7	8	329	8	Addressability error - no active USING covers the operand's sec
 ISTZFMAA	8	1	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				text	as370 alone flags	cc370	
 AMDPRMST	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	cards	0x00ff8	4445	4447	length	IFOX00 alone flags	cc370	
 IEAVSY50	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00049	4312	4328	length	IFOX00 alone flags	cc370	
-IEAVELK	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical	0x0006f	4178	4178	mixed	IFOX00 alone flags	cc370	
 IEAVRTI0	0				0008	1	8	IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION	bytes	0x0002b	3792	3808	length	IFOX00 alone flags	cc370	
-IEAVSETS	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical	0x00069	3588	3588	mixed	IFOX00 alone flags	cc370	
 IKJCT435	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	cards	0x00398	3302	3430	length	IFOX00 alone flags	cc370	
 IEAVRCF	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	cards	0x00035	3136	3168	length	IFOX00 alone flags	cc370	
 IEAVPSI	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00459	2768	2768	mixed	IFOX00 alone flags	cc370	
@@ -934,18 +908,12 @@ IEAVPCB	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITIO
 IKJEBECO	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	1880	1880	no-pair	IFOX00 alone flags	cc370	
 IKJEBEFC	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00026	1844	1844	no-pair	IFOX00 alone flags	cc370	
 IEAVSQA	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	cards	0x0007f	1764	1780	length	IFOX00 alone flags	cc370	
-IEAVTRT1	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical	0x005e0	1727	1727	text	IFOX00 alone flags	cc370	
-IEAVLK02	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical	0x002a4	1716	1716	mixed	IFOX00 alone flags	cc370	
 IKJEBEDX	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00028	1698	1698	no-pair	IFOX00 alone flags	cc370	
 IKJEES75	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x0051d	1602	1602	text	IFOX00 alone flags	cc370	
-IEAVEVT0	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical	0x000df	1358	1358	text	IFOX00 alone flags	cc370	
-IEE0603D	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00488	1184	1184	length	IFOX00 alone flags	cc370	
-IEAVTRCE	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical	0x00062	1066	1066	text	IFOX00 alone flags	cc370	
-IEAVETCL	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical	0x0027c	965	965	text	IFOX00 alone flags	cc370	
+IGG0290E	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00099	1304	1296	length	IFOX00 alone flags	cc370	
 IKJEBEDA	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	936	936	no-pair	IFOX00 alone flags	cc370	
 IEAVITAS	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	cards	0x00085	918	926	length	IFOX00 alone flags	cc370	
 IKJEBESE	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00024	880	880	no-pair	IFOX00 alone flags	cc370	
-IEAVEEXP	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical	0x001d9	828	828	length	IFOX00 alone flags	cc370	
 IGG020P3	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x001bb	816	816	length	IFOX00 alone flags	cc370	
 IGG0325U	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x0008d	736	736	text	IFOX00 alone flags	cc370	
 IKJEBEMS	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00026	731	731	no-pair	IFOX00 alone flags	cc370	
@@ -953,6 +921,8 @@ IGG0325V	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITIO
 IEAVINV	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00184	616	616	text	IFOX00 alone flags	cc370	
 IKJEBEEX	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	592	592	no-pair	IFOX00 alone flags	cc370	
 IKJEBEUT	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	592	592	no-pair	IFOX00 alone flags	cc370	
+IGC0003B	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x000e8	536	528	text	IFOX00 alone flags	cc370	
+IGG0553F	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00118	448	448	text	IFOX00 alone flags	cc370	
 IEAVESC0	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x0002d	440	444	length	IFOX00 alone flags	cc370	
 IEAVEXS	0				0008	1	8	IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION	bytes	0x0002b	428	432	text	IFOX00 alone flags	cc370	
 IKJEBEVE	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	348	348	no-pair	IFOX00 alone flags	cc370	
@@ -977,18 +947,23 @@ IEAVEDR	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITIO
 IEAVEED0	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	IFOX00 alone flags	cc370	
 IEAVEEE2	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	IFOX00 alone flags	cc370	
 IEAVEES	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	IFOX00 alone flags	cc370	
+IEAVEEXP	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	IFOX00 alone flags	cc370	
 IEAVEIPR	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
+IEAVELK	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
 IEAVEMS0	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVEOR	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
 IEAVEPC	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVERI	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVERP	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVESVC	0				0008	2	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO026 CHARACTERS APPEAR BETWEEN THE BEGIN AND CONTINUE COLUMNS ON CONTINUATION CARD	identical				text	IFOX00 alone flags	cc370	
+IEAVETCL	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVEVAL	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
+IEAVEVT0	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVFP	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVFREE	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
 IEAVGPRR	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	IFOX00 alone flags	cc370	
 IEAVIOCP	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
+IEAVLK02	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
 IEAVLK03	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
 IEAVMODE	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	IFOX00 alone flags	cc370	
 IEAVPREF	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
@@ -997,11 +972,15 @@ IEAVPRT0	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITIO
 IEAVRCV	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVRSM	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVRT02	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	IFOX00 alone flags	cc370	
+IEAVSETS	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
+IEAVTRCE	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
+IEAVTRT1	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVTRV	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
 IEAVVCRA	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVVCRX	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
 IECVDDT0	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
 IECVPURG	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
+IEE0603D	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes				length	IFOX00 alone flags	cc370	
 IEE3503D	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	IFOX00 alone flags	cc370	
 IEEVSDIO	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes				length	IFOX00 alone flags	cc370	
 IEEVSND4	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
@@ -1032,7 +1011,7 @@ IEAVNIPM	8	253	8	Undefined symbol | Undefined operation code	0012	275	12	IFO188 
 IRARMEVT	8	26	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code	0008	25	8	IFO188 MCVRSVF4 IS AN UNDEFINED SYMBOL | IFO188 RMEPBSWI IS AN UNDEFINED SYMBOL | IFO188 SPCTFIX IS AN UNDEFINED SYMBOL | IFO188 SPCT IS AN UNDEFINED SYMBOL | IFO188 SPCTLSQA IS AN UNDEFINED SYMBOL | IFO188 RMEPBRVT IS AN UNDEFINED SYMBOL	cards	0x00d83	8916	8916	text	both flag	cc370	
 IAPCNTRL	8	5	8	Undefined symbol | Undefined operation code	0008	5	8	IFO188 DVC3330 IS AN UNDEFINED SYMBOL | IFO188 DVC3330B IS AN UNDEFINED SYMBOL | IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC3350 IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	cards	0x00026	8698	8738	length	both flag	cc370	
 IEAVENQ1	8	243	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00003	8512	8536	length	both flag	cc370	
-IEAVNP11	8	43	8	Undefined symbol | Undefined operation code	0012	45	12	IFO188 NVTDCBSN IS AN UNDEFINED SYMBOL | IFO188 NVT IS AN UNDEFINED SYMBOL | IFO188 NVTFLWSC IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 RPARM IS AN UNDEFINED SYMBOL | IFO188 RENTRY IS AN UNDEFINED SYMBOL	bytes	0x0201f	8408	8408	length	both flag	cc370	
+IEAVNP11	8	42	8	Undefined symbol | Undefined operation code	0012	45	12	IFO188 NVTDCBSN IS AN UNDEFINED SYMBOL | IFO188 NVT IS AN UNDEFINED SYMBOL | IFO188 NVTFLWSC IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 RPARM IS AN UNDEFINED SYMBOL | IFO188 RENTRY IS AN UNDEFINED SYMBOL	bytes	0x0201f	8408	8408	length	both flag	cc370	
 IEDQXC	8	303	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | IFO117 first expression in substring notation exceeds the length of the string | Undefined symbol	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x0000e	7760	7736	length	both flag	cc370	
 IEEVDCCR	8	327	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00046	7669	7669	mixed	both flag	cc370	
 IEDQFA	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00277	7602	7602	length	both flag	cc370	
@@ -1043,7 +1022,7 @@ IEWFETCH	8	8	8	Undefined symbol | Undefined operation code	0008	8	8	IFO188 DVC23
 ISDAAPR1	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	bytes	0x0002e	6661	6661	length	both flag	cc370	
 ISDADHE1	8	1	8	Undefined operation code	0008	1	8	IFO078 UNDEFINED OP CODE	bytes	0x0002e	6169	6169	text	both flag	cc370	
 IEDQFA2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x0026b	6166	6166	length	both flag	cc370	
-IECVEXCP	8	4	8	Undefined symbol | Undefined operation code	0008	4	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 BEBKEY IS AN UNDEFINED SYMBOL	bytes	0x0062a	6086	6082	length	both flag	cc370	
+IECVEXCP	8	4	8	Undefined symbol | Undefined operation code	0008	4	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 BEBKEY IS AN UNDEFINED SYMBOL	bytes	0x0101b	6086	6082	length	both flag	cc370	
 IEAVSOUT	8	326	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | Undefined operation code	0008	106	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 SPCTFLG1 IS AN UNDEFINED SYMBOL | IFO188 SPCT IS AN UNDEFINED SYMBOL | IFO188 SPCTOUT IS AN UNDEFINED SYMBOL | IFO188 SPCTSWRT IS AN UNDEFINED SYMBOL	bytes	0x0002a	6048	6064	length	both flag	cc370	
 IGG019Q5	8	756	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x00002	5816	4742	length	both flag	cc370	
 ISDASUM0	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	bytes	0x0002e	5766	5766	length	both flag	cc370	
@@ -1073,7 +1052,7 @@ IGG019Q8	8	1	8	IFO117 first expression in substring notation exceeds the length 
 IEAVNIPX	8	70	8	Undefined symbol | Undefined operation code	0012	76	12	IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 RPARM IS AN UNDEFINED SYMBOL | IFO188 RENTRY IS AN UNDEFINED SYMBOL | IFO188 NVTWTO IS AN UNDEFINED SYMBOL | IFO188 RNVT IS AN UNDEFINED SYMBOL | IFO226 BASE REGISTER OF MACHINE INSTRUCTION NOT ABSOLUTE NEAR OPERAND COLUMN 21	cards	0x00027	4317	4325	length	both flag	cc370	
 ISDACSB1	8	1	8	Undefined operation code	0008	1	8	IFO078 UNDEFINED OP CODE	bytes	0x0002e	4204	4204	length	both flag	cc370	
 IEDQHM	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00e6b	4188	4188	length	both flag	cc370	
-IEAVNP12	8	26	8	Undefined symbol | Undefined operation code	0012	20	12	IFO188 NVTFLWSC IS AN UNDEFINED SYMBOL | IFO188 NVT IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 RENTRY IS AN UNDEFINED SYMBOL | IFO188 NVTSWAIT IS AN UNDEFINED SYMBOL | IFO188 RNVT IS AN UNDEFINED SYMBOL	bytes	0x00f2f	4056	4056	length	both flag	cc370	
+IEAVNP12	8	25	8	Undefined symbol | Undefined operation code	0012	20	12	IFO188 NVTFLWSC IS AN UNDEFINED SYMBOL | IFO188 NVT IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 RENTRY IS AN UNDEFINED SYMBOL | IFO188 NVTSWAIT IS AN UNDEFINED SYMBOL | IFO188 RNVT IS AN UNDEFINED SYMBOL	bytes	0x00f2f	4056	4056	length	both flag	cc370	
 IGFCCHCR	8	10	8	Undefined symbol | Undefined operation code	0008	11	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 CRCACSSA IS AN UNDEFINED SYMBOL | IFO188 CATMODEL IS AN UNDEFINED SYMBOL | IFO188 CATTYPE IS AN UNDEFINED SYMBOL | IFO188 CSTIOWRK IS AN UNDEFINED SYMBOL	bytes	0x000ce	4042	4042	text	both flag	cc370	
 IKJEGAT	8	1	8	Undefined symbol	0008	1	8	IFO188 CWORK260 IS AN UNDEFINED SYMBOL	cards	0x00eb9	3950	3918	no-pair	both flag	cc370	
 IEDQOB	8	9	8	IFO117 first expression in substring notation exceeds the length of the string | Undefined symbol	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x00021	3936	3528	length	both flag	cc370	
@@ -1084,20 +1063,19 @@ IGG019Q4	8	583	8	Undefined symbol | IFO117 first expression in substring notatio
 IEDQEU	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00785	3652	3652	length	both flag	cc370	
 IEDQWIE	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00048	3632	3632	length	both flag	cc370	
 IFOX0D	8	2	8	Undefined symbol	0008	2	8	IFO188 JWRKSIZE IS AN UNDEFINED SYMBOL	bytes	0x000a1	3577	3577	length	both flag	cc370	
-IKJEBERE	8	27	8	Undefined symbol	0008	3	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	cards	0x00026	3576	3576	no-pair	both flag	cc370	
+IKJEBERE	8	22	8	Undefined symbol	0008	3	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	cards	0x00026	3576	3576	no-pair	both flag	cc370	
 IEAVSWIN	8	85	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code	0008	85	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO188 SPCTFLG1 IS AN UNDEFINED SYMBOL | IFO188 SPCT IS AN UNDEFINED SYMBOL | IFO188 SPCTSWIN IS AN UNDEFINED SYMBOL | IFO188 SPCTWSSZ IS AN UNDEFINED SYMBOL	cards	0x0008b	3532	3564	length	both flag	cc370	
-IEHDDUMP	8	25	8	Undefined symbol | Undefined operation code	0008	25	8	IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC3330 IS AN UNDEFINED SYMBOL | IFO188 DVC3330B IS AN UNDEFINED SYMBOL | IFO188 NOCYL IS AN UNDEFINED SYMBOL | IFO188 DVC2311 IS AN UNDEFINED SYMBOL | IFO188 DVC2305 IS AN UNDEFINED SYMBOL	bytes	0x00716	3448	3448	length	both flag	cc370	
 ISDAFSC0	8	4	8	Undefined operation code	0008	4	8	IFO078 UNDEFINED OP CODE	bytes	0x00022	3432	3432	length	both flag	cc370	
 IEDQWJ1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x00027	3354	3482	length	both flag	cc370	
 ISDASUM1	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	bytes	0x00022	3200	3200	length	both flag	cc370	
 IEDQHM1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00a5b	3118	3118	length	both flag	cc370	
-IKJEBEIA	8	48	8	Undefined symbol | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	2926	2926	no-pair	both flag	cc370	
+IKJEBEIA	8	47	8	Undefined symbol | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	2926	2926	no-pair	both flag	cc370	
 IEHDREST	8	19	8	Undefined symbol | Undefined operation code	0008	19	8	IFO188 DVC3330B IS AN UNDEFINED SYMBOL | IFO188 DVC3330 IS AN UNDEFINED SYMBOL | IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC2305A IS AN UNDEFINED SYMBOL | IFO188 DVC23052 IS AN UNDEFINED SYMBOL | IFO188 DVC2305 IS AN UNDEFINED SYMBOL	bytes	0x003fb	2862	2862	length	both flag	cc370	
 IFNX5M	8	3	8	Undefined symbol	0008	2	8	IFO188 RREREGS IS AN UNDEFINED SYMBOL	bytes	0x00040	2781	2781	mixed	both flag	cc370	
 IEDAYO	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x003d1	2770	2770	length	both flag	cc370	
 IEDQGA	8	2	8	IFO117 first expression in substring notation exceeds the length of the string	0008	4	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00223	2752	2728	length	both flag	cc370	
-IGG0290F	8	5	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol | Undefined operation code	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00036	2728	2768	length	both flag	cc370	
-IGG019RN	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00043	2699	2699	length	both flag	cc370	
+IGG0290F	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00036	2728	2768	length	both flag	cc370	
+IGG019RN	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x000c5	2699	2699	length	both flag	cc370	
 ISDAFSC1	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	bytes	0x0002a	2671	2671	length	both flag	cc370	
 IEDQWO	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x0095e	2660	2660	length	both flag	cc370	
 ISDADHE0	8	8	8	Undefined operation code	0008	8	8	IFO078 UNDEFINED OP CODE	bytes	0x0002a	2646	2646	text	both flag	cc370	
@@ -1109,14 +1087,13 @@ IEFSD263	8	1	8	Undefined symbol	0008	1	8	IFO188 STESMFTC IS AN UNDEFINED SYMBOL	
 IEDQHM2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x0076b	2366	2366	length	both flag	cc370	
 IEAVTERM	8	11	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code	0008	10	8	IFO188 SPCTFLG1 IS AN UNDEFINED SYMBOL | IFO188 SPCT IS AN UNDEFINED SYMBOL | IFO188 SPCTOUT IS AN UNDEFINED SYMBOL | IFO188 SPCTSWRT IS AN UNDEFINED SYMBOL | IFO188 SPCTSWIN IS AN UNDEFINED SYMBOL | IFO085 MACRO HEADER MISSING, MACRO NOT EXPANDABLE	bytes	0x0003d	2272	2280	length	both flag	cc370	
 IEDQAK	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00795	2254	2254	length	both flag	cc370	
-IGC0008B	8	5	8	Undefined symbol | Undefined operation code	0008	5	8	IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC2305A IS AN UNDEFINED SYMBOL | IFO188 DVC23052 IS AN UNDEFINED SYMBOL | IFO188 DVC3350 IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	bytes	0x00364	2240	2240	length	both flag	cc370	
-IGG020P1	8	5	8	Undefined symbol | Undefined operation code	0008	2	8	IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL	cards	0x0013c	2216	2192	length	both flag	cc370	
+IGG020P1	8	2	8	Undefined symbol	0008	2	8	IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL	bytes	0x0013c	2216	2192	length	both flag	cc370	
 ISDAAPR0	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	bytes	0x0002a	2191	2191	length	both flag	cc370	
 ISDAEQC1	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	bytes	0x0002a	2174	2174	mixed	both flag	cc370	
 ISDADRC1	8	1	8	Undefined operation code	0008	1	8	IFO078 UNDEFINED OP CODE	bytes	0x00022	2073	2073	length	both flag	cc370	
 ISDAPAD0	8	10	8	Undefined operation code	0008	10	8	IFO078 UNDEFINED OP CODE	bytes	0x0002a	2064	2064	length	both flag	cc370	
 IEDQW33	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x0062a	2028	2028	mixed	both flag	cc370	
-IGC0002I	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	cards	0x004cb	1960	1952	length	both flag	cc370	
+IGC0002I	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x004cb	1960	1952	length	both flag	cc370	
 IEAVFXLD	8	2	8	Undefined symbol | Undefined operation code	0008	3	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO188 AIAFLG1 IS AN UNDEFINED SYMBOL | IFO188 AIA IS AN UNDEFINED SYMBOL | IFO188 AIAPRIV IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	bytes	0x0003d	1936	1948	length	both flag	cc370	
 IGG0290D	8	2	8	Undefined symbol	0008	2	8	IFO188 DORACDEF IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x0019d	1920	1920	length	both flag	cc370	
 IEDQAS	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x0007d	1909	1909	length	both flag	cc370	
@@ -1131,9 +1108,7 @@ IKJEES11	8	1	8	Undefined symbol	0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED
 ISDACSB0	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	bytes	0x00022	1595	1595	length	both flag	cc370	
 IRARMSRV	8	10	8	Undefined symbol	0008	10	8	IFO188 IRAFLTM IS AN UNDEFINED SYMBOL | IFO188 IRAEPPR IS AN UNDEFINED SYMBOL | IFO188 IRAOUCB IS AN UNDEFINED SYMBOL | IFO188 IRAWTQE IS AN UNDEFINED SYMBOL | IFO188 IRAOTQE IS AN UNDEFINED SYMBOL | IFO188 IRAINQE IS AN UNDEFINED SYMBOL	cards	0x00018	1564	1692	length	both flag	cc370	
 IGG01944	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x00024	1550	1678	length	both flag	cc370	
-IGG0290A	8	7	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol | Undefined operation code	0008	4	8	IFO188 DORACDEF IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x0033c	1520	1512	length	both flag	cc370	
 ISDADCK0	8	7	8	Undefined operation code	0008	7	8	IFO078 UNDEFINED OP CODE	bytes	0x00022	1480	1480	mixed	both flag	cc370	
-IEDAYH	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x004ad	1448	1448	length	both flag	cc370	
 IGE0004G	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00026	1392	1384	length	both flag	cc370	
 IKJEBEFI	8	2	8	Undefined symbol	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	1382	1382	no-pair	both flag	cc370	
 IEDQGQ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00209	1380	1380	length	both flag	cc370	
@@ -1141,16 +1116,15 @@ IKJEBETA	8	3	8	Undefined symbol	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED 
 IEDPMD	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	4	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3 | IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 19	bytes	0x00225	1356	1392	length	both flag	cc370	
 IFCE0125	8	534	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0012	617	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 SUBCD0 IS AN UNDEFINED SYMBOL | IFO188 R3 IS AN UNDEFINED SYMBOL | IFO223 RELOCATABLE INDEX REGISTER SPECIFIED NEAR OPERAND COLUMN 9 | IFO188 R14 IS AN UNDEFINED SYMBOL	cards	0x002a5	1335	1656	unpaired	both flag	cc370	
 IGE0004H	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00026	1316	1308	length	both flag	cc370	
-IGG0290E	8	2	8	Undefined symbol | Undefined operation code	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00099	1304	1296	length	both flag	cc370	
 ISDAFSC2	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	bytes	0x00022	1250	1250	length	both flag	cc370	
 IGG032I7	8	14	8	Undefined symbol | Undefined operation code	0008	15	8	IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL | IFO188 DS4DEVCY IS AN UNDEFINED SYMBOL | IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 ADSFLAG IS AN UNDEFINED SYMBOL | IFO188 ALLRACF IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00331	1232	1232	length	both flag	cc370	
 IGG019RO	8	7	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string	0012	116	12	IFO188 RENTRY IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 16 | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0 | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 7 | IFO188 RBASE IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15	bytes	0x00000	1194	1194	length	both flag	cc370	
 IEDQWP	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x003bd	1146	1146	mixed	both flag	cc370	
 IGG01931	8	4	8	IFO117 first expression in substring notation exceeds the length of the string | Undefined symbol	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00126	1127	1127	length	both flag	cc370	
-IGG0325A	8	3	8	Undefined symbol | Undefined operation code	0008	2	8	IFO188 ADSFLAG IS AN UNDEFINED SYMBOL | IFO188 ALLRACF IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x0034e	1112	1112	length	both flag	cc370	
+IGG0325A	8	1	8	Undefined symbol	0008	2	8	IFO188 ADSFLAG IS AN UNDEFINED SYMBOL | IFO188 ALLRACF IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x0034e	1112	1112	length	both flag	cc370	
 IGG0325H	8	1	8	Undefined symbol	0008	2	8	IFO188 ADSFLAG IS AN UNDEFINED SYMBOL | IFO188 ALLRACF IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00041	1112	1112	length	both flag	cc370	
-IGG032I3	8	3	8	Undefined symbol | Undefined operation code	0008	2	8	IFO188 ADSFLAG IS AN UNDEFINED SYMBOL | IFO188 ALLRACF IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x0028c	1112	1112	length	both flag	cc370	
-IGG0553A	8	4	8	Undefined symbol | Undefined operation code	0008	2	8	IFO188 EDSFLAG IS AN UNDEFINED SYMBOL | IFO188 EXTRACF IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00057	1112	1096	length	both flag	cc370	
+IGG032I3	8	1	8	Undefined symbol	0008	2	8	IFO188 ADSFLAG IS AN UNDEFINED SYMBOL | IFO188 ALLRACF IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x0028c	1112	1112	length	both flag	cc370	
+IGG0553A	8	1	8	Undefined symbol	0008	2	8	IFO188 EDSFLAG IS AN UNDEFINED SYMBOL | IFO188 EXTRACF IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00057	1112	1096	length	both flag	cc370	
 IEDQWP1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x003a9	1107	1107	length	both flag	cc370	
 IGG0325G	8	2	8	Undefined symbol	0008	3	8	IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00253	1104	1104	length	both flag	cc370	
 IGG0553D	8	2	8	Undefined symbol	0008	3	8	IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00213	1104	1104	length	both flag	cc370	
@@ -1159,7 +1133,7 @@ IGCM810D	8	1	8	IFO117 first expression in substring notation exceeds the length 
 IEAVTPER	8	18	8	Undefined symbol | Undefined operation code	0012	21	12	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 SHDR IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 5 | IFO188 SHDRPFC IS AN UNDEFINED SYMBOL | IFO188 SLPLLSTW IS AN UNDEFINED SYMBOL	bytes	0x0002c	1048	1048	mixed	both flag	cc370	
 IECVHDET	8	68	8	Undefined symbol | Undefined operation code	0012	122	12	IFO188 PSA IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 4 | IFO188 LCCA IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 5 | IFO188 PSACSID IS AN UNDEFINED SYMBOL | IFO188 IRTENVR IS AN UNDEFINED SYMBOL	bytes	0x00000	1040	0	length	both flag	cc370	
 IGG01933	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x0002c	1024	1255	length	both flag	cc370	
-IGG0325B	8	9	8	Undefined symbol | Undefined operation code	0008	8	8	IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL | IFO188 DEBUCBAD IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00102	1024	1024	text	both flag	cc370	
+IGG0325B	8	7	8	Undefined symbol	0008	8	8	IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL | IFO188 DEBUCBAD IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00102	1024	1024	text	both flag	cc370	
 IGG0325T	8	1	8	Undefined symbol	0008	2	8	IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x0029b	1016	1016	length	both flag	cc370	
 IGG0553E	8	1	8	Undefined symbol	0008	2	8	IFO188 EDSFLAG IS AN UNDEFINED SYMBOL | IFO188 EXTRACF IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00051	1008	1008	length	both flag	cc370	
 IEDQWP2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00319	986	986	length	both flag	cc370	
@@ -1193,17 +1167,15 @@ IEDQBV	8	1	8	IFO117 first expression in substring notation exceeds the length of
 IFCE0115	8	259	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	312	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 SUBCD0 IS AN UNDEFINED SYMBOL | IFO188 L0 IS AN UNDEFINED SYMBOL | IFO188 L8 IS AN UNDEFINED SYMBOL | IFO188 R3 IS AN UNDEFINED SYMBOL	cards	0x0002a	611	704	unpaired	both flag	cc370	
 IFCETRN6	8	230	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	260	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 REG1314 IS AN UNDEFINED SYMBOL | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0 | IFO188 L0 IS AN UNDEFINED SYMBOL | IFO188 L3 IS AN UNDEFINED SYMBOL	cards	0x00179	611	960	unpaired	both flag	cc370	
 IEAVSWPC	8	13	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code	0008	13	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 SPCTSWRT IS AN UNDEFINED SYMBOL | IFO188 SPCT IS AN UNDEFINED SYMBOL | IFO188 SPCTFLG1 IS AN UNDEFINED SYMBOL | IFO188 SPCTPURG IS AN UNDEFINED SYMBOL	bytes	0x00072	576	576	length	both flag	cc370	
-IECVXVRS	8	94	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	144	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x00006	569	569	length	both flag	cc370	
+IECVXVRS	8	94	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	144	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x0002e	569	569	length	both flag	cc370	
 IEDQAX	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00077	544	544	length	both flag	cc370	
-IGC0003B	8	1	8	Undefined symbol	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x000e8	536	528	length	both flag	cc370	
 IKJEBEMR	8	1	8	Undefined symbol	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	516	516	no-pair	both flag	cc370	
-IECVXDRS	8	105	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	119	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x0000e	509	509	length	both flag	cc370	
+IECVXDRS	8	105	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	119	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x00062	509	509	length	both flag	cc370	
 IFCENFM3	8	268	8	Undefined operation code | Undefined symbol	0012	289	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 LABELS IS AN UNDEFINED SYMBOL | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 3 | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	cards	0x0014b	492	3291	length	both flag	cc370	
 IFCENFP2	8	223	8	Undefined operation code | Undefined symbol	0012	244	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 LABELS IS AN UNDEFINED SYMBOL | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 3 | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	cards	0x0014b	492	2332	length	both flag	cc370	
 IFCENFH3	8	206	8	Undefined operation code | Undefined symbol	0012	227	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 LABELS IS AN UNDEFINED SYMBOL | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 3 | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	cards	0x0014b	491	2168	length	both flag	cc370	
 IECVXDAS	8	22	8	Undefined operation code | Undefined symbol	0008	23	8	IFO078 UNDEFINED OP CODE | IFO188 DVC3330 IS AN UNDEFINED SYMBOL | IFO188 DVC3330B IS AN UNDEFINED SYMBOL | IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DAS50 IS AN UNDEFINED SYMBOL | IFO188 DAS70 IS AN UNDEFINED SYMBOL	bytes	0x00105	485	485	length	both flag	cc370	
 IEDQFE20	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x00002	456	581	length	both flag	cc370	
-IGG0553F	8	2	8	Undefined symbol | Undefined operation code	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00118	448	448	text	both flag	cc370	
 IFCE5424	8	216	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	243	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 CSWUS IS AN UNDEFINED SYMBOL | IFO188 SNB00 IS AN UNDEFINED SYMBOL | IFO188 L0 IS AN UNDEFINED SYMBOL | IFO188 L8 IS AN UNDEFINED SYMBOL	cards	0x00104	432	1759	unpaired	both flag	cc370	
 IFCET040	8	138	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	160	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 L5 IS AN UNDEFINED SYMBOL | IFO225 RELOCATABLE LENGTH FIELD IN MACHINE INSTRUCTION NEAR OPERAND COLUMN 9 | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0 | IFO188 DATE IS AN UNDEFINED SYMBOL	cards	0x00104	431	584	unpaired	both flag	cc370	
 IFNX5L	8	3	8	Undefined symbol	0008	2	8	IFO188 VPDUPERR IS AN UNDEFINED SYMBOL | IFO188 PDUPERR IS AN UNDEFINED SYMBOL | IFO188 ON IS AN UNDEFINED SYMBOL	bytes	0x00196	430	430	length	both flag	cc370	
@@ -1217,26 +1189,27 @@ IFCSI115	8	144	8	Undefined operation code | Undefined symbol | Addressability er
 IFCS0115	8	130	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	147	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 R4 IS AN UNDEFINED SYMBOL | IFO188 R8 IS AN UNDEFINED SYMBOL | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0 | IFO188 R5 IS AN UNDEFINED SYMBOL	bytes	0x000e0	339	376	unpaired	both flag	cc370	
 IFCS33XX	8	28	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	30	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 R0 IS AN UNDEFINED SYMBOL | IFO188 R15 IS AN UNDEFINED SYMBOL | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0 | IFO188 R1 IS AN UNDEFINED SYMBOL	bytes	0x00110	339	276	length	both flag	cc370	
 IFCE3401	8	164	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	190	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 CSWUS IS AN UNDEFINED SYMBOL | IFO188 R3 IS AN UNDEFINED SYMBOL | IFO226 BASE REGISTER OF MACHINE INSTRUCTION NOT ABSOLUTE NEAR OPERAND COLUMN 7 | IFO188 TASKID IS AN UNDEFINED SYMBOL	cards	0x00068	319	384	unpaired	both flag	cc370	
-IECVXT2S	8	55	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	56	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 CPAR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x00000	217	217	length	both flag	cc370	
+IECVXT2S	8	55	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	56	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 CPAR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x00030	217	217	length	both flag	cc370	
 IFCEARG1	8	130	8	Undefined operation code | Undefined symbol	0012	149	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO197 *** MNOTE *** | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 3 | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	cards	0x00032	206	1891	length	both flag	cc370	
 IFCEARG2	8	130	8	Undefined operation code | Undefined symbol	0012	149	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO197 *** MNOTE *** | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 3 | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	cards	0x00032	206	1891	length	both flag	cc370	
 IFCEARG3	8	130	8	Undefined operation code | Undefined symbol	0012	149	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO197 *** MNOTE *** | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 3 | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	cards	0x00032	206	1891	length	both flag	cc370	
 IFCEARG4	8	146	8	Undefined operation code | Undefined symbol	0012	165	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO197 *** MNOTE *** | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 3 | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	cards	0x00032	206	1891	length	both flag	cc370	
 IFCEARG5	8	154	8	Undefined operation code | Undefined symbol	0012	173	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO197 *** MNOTE *** | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 3 | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	cards	0x00032	206	1891	length	both flag	cc370	
 IFCEARG6	8	98	8	Undefined operation code | Undefined symbol	0012	117	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO197 *** MNOTE *** | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 3 | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	cards	0x00032	206	771	length	both flag	cc370	
-IECVXVRT	8	52	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	53	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x00000	197	197	length	both flag	cc370	
-IECVXDRT	8	22	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	26	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11 | IFO078 UNDEFINED OP CODE | IFO188 UCBR IS AN UNDEFINED SYMBOL	bytes	0x00008	145	145	length	both flag	cc370	
+IECVXVRT	8	52	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	53	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x00018	197	197	length	both flag	cc370	
+IECVXDRT	8	22	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	26	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11 | IFO078 UNDEFINED OP CODE | IFO188 UCBR IS AN UNDEFINED SYMBOL	bytes	0x00028	145	145	length	both flag	cc370	
 IFCEARG7	8	74	8	Undefined operation code | Undefined symbol	0012	85	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO197 *** MNOTE *** | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 3 | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	cards	0x00032	142	707	length	both flag	cc370	
 IFCETRN7	8	60	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	73	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 L0 IS AN UNDEFINED SYMBOL | IFO188 L8 IS AN UNDEFINED SYMBOL | IFO188 R3 IS AN UNDEFINED SYMBOL | IFO225 RELOCATABLE LENGTH FIELD IN MACHINE INSTRUCTION NEAR OPERAND COLUMN 9	bytes	0x00067	103	104	unpaired	both flag	cc370	
 IECVXURT	8	11	8	Undefined operation code | Undefined symbol	0012	12	12	IFO078 UNDEFINED OP CODE | IFO188 CHT IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 4 | IFO188 URT20 IS AN UNDEFINED SYMBOL | IFO188 CHTELP2 IS AN UNDEFINED SYMBOL | IFO188 CHTTYPE IS AN UNDEFINED SYMBOL	bytes	0x0001e	73	73	length	both flag	cc370	
 IECVXVRU	8	8	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	10	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO078 UNDEFINED OP CODE | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0	bytes	0x00000	49	49	length	both flag	cc370	
-IECVXMGN	8	9	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	10	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x00000	45	45	length	both flag	cc370	
+IECVXMGN	8	9	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	10	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x0000c	45	45	length	both flag	cc370	
 IEAVMDSV	8	1	8	Undefined symbol	0008	1	8	IFO188 UCM2FEXT IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
 IEAVNP01	8	12	8	Undefined symbol | Undefined operation code	0008	15	8	IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 NVTUCBFN IS AN UNDEFINED SYMBOL | IFO188 NVTFLWSC IS AN UNDEFINED SYMBOL | IFO188 NVT IS AN UNDEFINED SYMBOL | IFO188 NVTSWAIT IS AN UNDEFINED SYMBOL | IFO188 NVTFLCN IS AN UNDEFINED SYMBOL	bytes				text	both flag	cc370	
 IEAVNP19	8	18	8	Undefined symbol | Undefined operation code	0012	22	12	IFO188 NVTPTAB IS AN UNDEFINED SYMBOL | IFO188 NVT IS AN UNDEFINED SYMBOL | IFO188 NVTDCBSN IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 RPARM IS AN UNDEFINED SYMBOL | IFO188 RENTRY IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
 IEBDRD	8	4	8	Undefined symbol	0008	4	8	IFO188 CCWAREA IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
 IEBDSCPY	8	19	8	Undefined symbol	0008	19	8	IFO188 ADDLPT04 IS AN UNDEFINED SYMBOL | IFO188 ADDLPT20 IS AN UNDEFINED SYMBOL | IFO188 ADDLPT16 IS AN UNDEFINED SYMBOL | IFO188 ADDLPT08 IS AN UNDEFINED SYMBOL | IFO188 ADDLPT12 IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
 IEBDWR	8	4	8	Undefined symbol	0008	4	8	IFO188 CCWAREA IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
+IEDAYH	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes				length	both flag	cc370	
 IEDAYZ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	4	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3 | IFO197 *** MNOTE ***	bytes				length	both flag	cc370	
 IEDCSA	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards				length	both flag	cc370	
 IEDQEC	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes				length	both flag	cc370	
@@ -1254,12 +1227,14 @@ IEDQWN	8	1	8	IFO117 first expression in substring notation exceeds the length of
 IEECVETG	8	1	8	Undefined symbol	0008	1	8	IFO188 CSASWTCH IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
 IEHDASDS	8	4	8	Undefined symbol | Undefined operation code	0008	4	8	IFO188 DVC3330 IS AN UNDEFINED SYMBOL | IFO188 DVC3330B IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	bytes				text	both flag	cc370	
 IEHDDOIO	8	2	8	Undefined symbol | Undefined operation code	0008	2	8	IFO188 DVC2305 IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	bytes				length	both flag	cc370	
+IEHDDUMP	8	25	8	Undefined symbol | Undefined operation code	0008	25	8	IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC3330 IS AN UNDEFINED SYMBOL | IFO188 DVC3330B IS AN UNDEFINED SYMBOL | IFO188 NOCYL IS AN UNDEFINED SYMBOL | IFO188 DVC2311 IS AN UNDEFINED SYMBOL | IFO188 DVC2305 IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
 IEHDGETA	8	7	8	Undefined symbol | Undefined operation code	0008	7	8	IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC2305A IS AN UNDEFINED SYMBOL | IFO188 DVC23052 IS AN UNDEFINED SYMBOL | IFO188 DVC2314 IS AN UNDEFINED SYMBOL | IFO188 DVC3350 IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	bytes				length	both flag	cc370	
 IEHDINIT	8	3	8	Undefined symbol | Undefined operation code	0008	3	8	IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	bytes				length	both flag	cc370	
 IEHDRVID	8	5	8	Undefined symbol | Undefined operation code	0008	5	8	IFO188 DVC3330 IS AN UNDEFINED SYMBOL | IFO188 DVC3330B IS AN UNDEFINED SYMBOL | IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC2314 IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	bytes				text	both flag	cc370	
 IEHDVTOC	8	9	8	Undefined symbol | Undefined operation code	0008	9	8	IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC3330 IS AN UNDEFINED SYMBOL | IFO188 DVC3350 IS AN UNDEFINED SYMBOL | IFO188 DVC3390 IS AN UNDEFINED SYMBOL | IFO188 DS4DEVCY IS AN UNDEFINED SYMBOL | IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
 IFFAJA02	8	15	8	Undefined symbol	0012	18	12	IFO188 GDSCB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 6 | IFO188 GDSGDSID IS AN UNDEFINED SYMBOL | IFO188 GDSGTMCB IS AN UNDEFINED SYMBOL | IFO188 GTMCB IS AN UNDEFINED SYMBOL | IFO188 GTMGSPCB IS AN UNDEFINED SYMBOL	bytes				text	both flag	cc370	
 IFOX0A	8	3	8	Undefined symbol	0008	3	8	IFO188 MINCORE IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
+IGC0008B	8	5	8	Undefined symbol | Undefined operation code	0008	5	8	IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC2305A IS AN UNDEFINED SYMBOL | IFO188 DVC23052 IS AN UNDEFINED SYMBOL | IFO188 DVC3350 IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	bytes				length	both flag	cc370	
 IGG019TI	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes				length	both flag	cc370	
 IGG020D1	8	2	8	Undefined symbol	0008	3	8	IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes				length	both flag	cc370	
 IGG020P2	8	1	8	Undefined symbol	0008	2	8	IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes				length	both flag	cc370	
