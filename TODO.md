@@ -78,6 +78,16 @@ Queue, with what is known about each:
   tree-wide). It is not tuned to reproduce 52 and it does not.
 - **#140**, `as370` silent where IFOX00 flags: 5 modules — **413 of them are no
   longer silent** after #141, all one cause.
+- **#151 wants the next gate, and it must run against IBM's object.** `as370`
+  clips a `SETC` value at 95 characters where IFOX00 holds 255. Before #141 the
+  clip was *silent* and put wrong characters into decks that already assembled —
+  the `&SYSECT` pattern again, so gating it `as370`-against-`as370` would show
+  nothing. **71 modules can reach a long `SETC`**
+  ([`setc95-reach.tsv`](work/measurements/setc95-reach.tsv)); 43 assemble, 4 are
+  already identical, 56 are in the length bucket. cc370 is building it on its own
+  branch — folding it into #141's would have invalidated the 874.
+- **#148**, **#149**, **#150** are filed with oracles and not repaired. Two are
+  written to fail when they are fixed, so none can be closed quietly.
 
   ⚠️ **The gate must keep the deck of a module it calls failed.** Seven modules
   assemble byte-identical to IBM's object while returning non-zero; every tree
@@ -122,6 +132,11 @@ Every one of these caught a wrong finding today:
   authority at all.
 - **In zsh, build flag lists as arrays** and pass `"${arr[@]}"`. An unquoted
   variable arrives as one argument.
+- **`grep` here is `ugrep`, and it returns nothing on MVSBLD members** — no
+  count, no error. Use `/usr/bin/grep`, `rg`, or Python. An empty result is not
+  evidence of absence; it hid a `COPY` chain for half a day.
+- **Pin `ASMDATE`/`ASMTIME` and drop the `END` card** before comparing decks from
+  two runs. 381 decks carry the stamp; every deck carries the date.
 
 ### Small and named, still open
 
