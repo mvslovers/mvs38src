@@ -103,7 +103,7 @@ Two traps, both silent, both cost a wrong finding here first:
   without its last card.
 
 The comparator must also be the current one: a stale `cmplmd370` without the
-`X'10'` scatter record silently mis-scored thirteen `ICK*` modules and `IECTSVC`.
+`X'10'` scatter record silently mis-scored twelve `ICK*` modules and `IECTSVC` — thirteen in all.
 
 ---
 

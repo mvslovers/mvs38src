@@ -13,13 +13,13 @@ here=$(cd "$(dirname "$0")" && pwd)
 SRC="/Users/mike/repos/MVSSRC/Dave Kreiss - MVS from Source/MVSBLD"
 M=$HOME/repos/mvs/mvs38src/work/macros
 MACFLAGS="-I $M/mvsce-2.1.4-dlib/AMACLIB -I $M/mvsce-2.1.4-dlib/AMODGEN -I $M/mvsce-2.1.4-dlib/AGENLIB -I $M/mvsce-2.1.4-dlib/ATSOMAC -I $M/mvsce-2.1.4-dlib/ATCAMMAC -I $M/mvsce-2.1.4-dlib/APVTMACS -I $M/tape -I $M/mirror"
-OUTDIR="$here/obj_$LABEL"
+OUTDIR="$PWD/obj_$LABEL"
 rm -rf "$OUTDIR"; mkdir -p "$OUTDIR"
-ASMDATE=09/07/26; ASMTIME=12.00        # pin the stamp: 381 decks carry it
+: ${ASMDATE:=09/07/26}; : ${ASMTIME:=12.00}   # pin the stamp: 381 decks carry it
 export BIN OUTDIR MACFLAGS SRC ASMDATE ASMTIME
-ls "$SRC" | sed -n 's/\.ASM$//p' | sort > "$here/modules.txt"
-xargs -P 8 -n 1 "$here/gate-worker.sh" < "$here/modules.txt" | sort > "$here/$LABEL.tsv"
+ls "$SRC" | sed -n 's/\.ASM$//p' | sort > "$PWD/modules.txt"
+xargs -P 8 -n 1 "$here/gate-worker.sh" < "$PWD/modules.txt" | sort > "$PWD/$LABEL.tsv"
 printf '%s: %s modules, rc0=%s, decks=%s\n' "$LABEL" \
-  "$(wc -l < "$here/$LABEL.tsv")" \
-  "$(awk -F'\t' '$2==0' "$here/$LABEL.tsv" | wc -l)" \
-  "$(awk -F'\t' '$3==1' "$here/$LABEL.tsv" | wc -l)"
+  "$(wc -l < "$PWD/$LABEL.tsv")" \
+  "$(awk -F'\t' '$2==0' "$PWD/$LABEL.tsv" | wc -l)" \
+  "$(awk -F'\t' '$3==1' "$PWD/$LABEL.tsv" | wc -l)"
