@@ -109,6 +109,39 @@ that substitution stays unapplied — unproven.
 rather than a maintenance-level one. That is 3,507 modules, and this is the first
 mechanism found in them.
 
+### What the tape tree is actually for — where Dave Kreiss got to
+
+His project *was* ours: bring the surviving sources up to the shipped maintenance
+level. So his tree being closer to the object than IBM's original is the
+construction, not a finding, and the trial below should be read for its 16
+exceptions and not for its headline.
+
+What the tape does give, for the first time, is **which modules he worked on**.
+His change markers (`*DSKnnnn`, or `DSKnnnn` in column 65) mark 783 modules:
+
+| | Paired | identical + holes | |
+|---|---:|---:|---:|
+| **with his marker** | 744 | 108 | **14.5 %** |
+| without | 4,284 | 1,289 | **30.1 %** |
+
+**He worked on the hard ones** — that is what the inverted rate says, and it is
+the right way round. The untouched modules are untouched because nobody needed to
+look at them.
+
+**634 modules carry his marker and still differ from the object.** They split in
+a way that decides who does what:
+
+- **364 wait on the assembler** — they are booked to `cc370`, so his source may
+  already be right and unmeasurable until more fixes land. Every `as370` merge
+  re-tests them for free.
+- **270 are real source work**, and they are the best-documented modules in the
+  tree: he left markers, and 44 of them carry `???` where he could not
+  reconstruct what the code does. 142 differ in text, 107 in length.
+
+`classes/kreiss-source-unfinished.txt` is that list. It is the most concrete
+source-side work item this project has: modules with a known repair history, a
+known author, and a measured gap.
+
 ### And the second: IBM's own source, measured against IBM's own object
 
 `mvssrc-20` extracted the IBM distribution tapes byte-exact —
@@ -123,11 +156,10 @@ instead:
 | `DS` holes only | 19 |
 | **worse** — a text difference became a length difference | **110** |
 
-**The negative result is the important one.** IBM's own source does not
-reproduce IBM's own object for 98 % of them, and it makes more modules worse than
-better. That is the premise this project was founded on, measured directly for
-the first time rather than assumed — and it says Dave Kreiss' tree, with his 747
-repairs, is the better base and should stay the base.
+**Read this for the 16, not for the headline.** That Kreiss' tree beats IBM's
+original is what his project was *for*; measuring it proves nothing new. The
+useful part is the exceptions: 16 modules where IBM's untouched text reaches the
+object and his does not, and 110 where his is better by a measurable margin.
 
 The sixteen are in `src/`; recovered goes 912 -> 928. Full result in
 [`ibm-source-trial.tsv`](work/measurements/ifox-run/ibm-source-trial.tsv).
