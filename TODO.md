@@ -102,6 +102,16 @@ never measured.
   makes them a 52nd and 53rd entry for the missing-macro inventory, and `TABLE`
   is now the second-largest single blocker after `IHANVT`.
 
+  **Three of the 48 need no macro at all.** `mvssrc-20` found that their tape
+  carries `XTB1GFC`, `XTB1GSC` and `XTB1GUC` in the expanded, macro-free form —
+  `DC`/`DS`/`ORG` only, no call. Measured here: **all three assemble
+  byte-identical to the DLIB object**, 288 bytes each, `rc 0`. Not deposited: the
+  tape tree is held pending Mike's word, and these come from it.
+
+  Their search for `TABLE`/`NAME` was exhaustive and negative — 1,761 macros
+  across the tapes, stben's maclib, the HASP set and `ext/`, no member of that
+  name and no definition with that prototype. The other 45 stay blocked.
+
 Everything is kept in `work/kreiss-newasm/` unmeasured. Recovered goes 928 -> 935.
 
 ### The first recovered source — ten modules, and a class the IFOX comparison could not see
