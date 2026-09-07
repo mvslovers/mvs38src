@@ -86,6 +86,12 @@ Queue, with what is known about each:
   ([`setc95-reach.tsv`](work/measurements/setc95-reach.tsv)); 43 assemble, 4 are
   already identical, 56 are in the length bucket. cc370 is building it on its own
   branch — folding it into #141's would have invalidated the 874.
+
+  **Build it as a scan plus a measurement, not one or the other.** The
+  assignment is lexical — 17 members, and a scan of those can be trusted. The
+  reach is not, because `&TR3270` is *set* in one member and *read* in another
+  across a `COPY` edge, so no scan of the reading module can see it. Trust the
+  scan of the assignments; measure the tree for the consequences.
 - **#148**, **#149**, **#150** are filed with oracles and not repaired. Two are
   written to fail when they are fixed, so none can be closed quietly.
 

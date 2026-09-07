@@ -260,3 +260,16 @@ reference is only the *start* of a value flow, and `BLSR3270` is the proof of
 what that flow crosses: fourteen `COPY` members and a `GBLC`.
 
 **Scan where the defect is lexical. Measure the tree where it is not.**
+
+And there is a test for which case you are in, cc370's formulation: **if the
+thing you are scanning for can be set in one member and read in another, no scan
+of the reading member can see it.** `&TR3270` is set in `BLSR327M` and read in
+`BLSRSF`, `BLSRCVTA` and `BLSR327I`; `BLSR3270`, which reads it at one further
+remove, names none of them. `COPY` is the edge both scans failed to follow, and
+a `GBLC` is an edge with no statement behind it at all.
+
+That settles the shape of #151's gate rather than leaving it to taste. The
+**assignment** is lexical — a `SETC` value over 95 characters, 17 members, and a
+scan of those is trustworthy. The **reach** is not: 71 modules through `COPY` and
+a global. So: trust the scan of the assignments, measure the tree for the
+consequences.
