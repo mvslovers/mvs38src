@@ -80,6 +80,26 @@ lost is not "+1"; it is a gain and a break, and the break has a module name.
   sequence number; the `END` card is where each assembler names itself and dates
   the assembly.
 
+## Any count cancels — including the ones that look like inventories
+
+`no-as370-deck : 10 -> 10` across cc370#182, and `retest.py` reported that
+nothing had moved. `IFNX1A` had gained a deck and `IFCEE155` had lost one:
+
+| | before | after |
+|---|---|---|
+| `IFNX1A` | does not finish in 240 s | 0.06 s, deck produced |
+| `IFCEE155` | deck | killed by a 20 s alarm it needs 11.4 s to beat |
+
+One was the largest single behavioural change in that merge and the other was an
+artefact of this gate's own timeout. The count showed neither. The section below
+had already made this argument about verdict counts — it applies to *every*
+aggregate here, and the one that lied was two lines further down the same output.
+
+**A deck that appears or disappears is a timeout until proved otherwise.** Time
+the module alone, against a build from before the change, before believing it is
+the code. `IFCEE155` and `IFNX1A` looked identical in the gate table — both
+`rc 142`, both no deck — and one was a race while the other was real.
+
 ## Verdict counts are not enough to accept a "moves nothing" change
 
 `retest.py` compares verdicts. A change that swapped two modules in opposite

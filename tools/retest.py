@@ -183,6 +183,21 @@ def main():
         print(f"  {k:14s}: {sum(1 for m in mods if old[m] == k)} -> "
               f"{sum(1 for m in mods if new[m] == k)}")
 
+    # Named, both directions, because the count above cancels. On cc370#182
+    # IFNX1A gained a deck and IFCEE155 lost one to a timeout race, so the line
+    # read "10 -> 10" and this tool reported that nothing had moved -- while one
+    # of the two was a module that had never terminated before and now
+    # assembles in a second. `regression-gate.md` already said a count cannot
+    # see two modules moving in opposite directions; it said it about verdicts,
+    # and the deck count has exactly the same shape.
+    gd = [m for m in mods if old[m] == "no-as370-deck" != new[m]]
+    ld = [m for m in mods if new[m] == "no-as370-deck" != old[m]]
+    if gd or ld:
+        print(f"  deck now produced : {len(gd)}  {' '.join(gd)}")
+        print(f"  deck NOW MISSING  : {len(ld)}  {' '.join(ld)}")
+        print("  (a deck that comes and goes is usually the worker's alarm, "
+              "not the code -- time the module alone before believing it)")
+
     out = a.out or f"{RUN}/retest-{os.path.basename(a.objdir)}.tsv"
     with open(out, "w") as f:
         f.write("module\tbefore\tafter\n")

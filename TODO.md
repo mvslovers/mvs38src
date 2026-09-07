@@ -334,12 +334,32 @@ more than the previous run, on a change that alters nothing: `IFCEE155` assemble
 in **11.4 s** and the worker's alarm was 20 s, so under `-P 8` it finished
 sometimes and was killed sometimes. Its deck is byte-identical either way.
 
-That corrects cc370#163 by half. Of its *two* modules that "never terminate",
-one terminates and races the gate's own timeout; `HEWLDIOC` alone is real, and it
-does not finish in **300 s**. The alarm is 90 s now — it costs one module's wall
-clock and buys a run that repeats. **A gate that reports a difference no code
-produced is worse than a slow one**, and this one had been doing it since the
-first tree-wide run.
+The alarm is 90 s now — it costs one module's wall clock and buys a run that
+repeats. **A gate that reports a difference no code produced is worse than a slow
+one**, and this one had been doing it since the first tree-wide run.
+
+**And the same run hid a real result behind the same count.** `no-as370-deck`
+read `10 -> 10` across #182, so this tool reported that nothing had moved. Two
+modules had moved, in opposite directions:
+
+| | before #182 | after |
+|---|---|---|
+| `IFNX1A` | **does not finish in 240 s** | **0.06 s**, deck produced |
+| `IFCEE155` | deck | killed by the 20 s alarm — a race, not the code |
+
+Timed here against a `713ee9b` build, not taken on report. `IFNX1A` is a genuine
+non-terminating module, it was never on cc370#163's list, and #182 — a fix aimed
+at an apostrophe — ended it. The unterminated quote state evidently left a scan
+without an end condition.
+
+So cc370#163's "two modules that never terminate" was three modules, of which one
+was never a defect, one is fixed by a change aimed elsewhere, and `HEWLDIOC`
+stands — it does not finish in **300 s**.
+
+[`regression-gate.md`](docs/regression-gate.md) already said a count cannot see
+two modules moving in opposite directions. It said it about verdict counts, and
+the deck count has exactly the same shape; the warning was one line above the
+number that was lying. `retest.py` names both directions now.
 
 **cc370's own suite stayed green through a version that cost 96 identities.**
 The obvious fix reused a purely lexical predicate, which reads the *closing*
