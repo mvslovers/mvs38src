@@ -380,7 +380,7 @@ that name.
 - **The member-name test undercounts** and must not be read as "not installed": a
   CSECT is usually bound into a load module of another name.
 
-### The second corpus, and what it can actually decide
+### The second corpus — run, and what it did and did not give
 
 `mvssrc` has `handover/not-in-mvsbld.tsv` ready: the 1,025 members their tapes
 carry that `MVSBLD` does not, with tape, tape file, SSI, prefix and chosen
@@ -420,7 +420,36 @@ figure independently and got the same four hits: `ISDAFSPC` (27 modules),
 missing there too: `IHANVT` (33), `DSGEN` (33), `LINE` (33), `UCBDADVC` (32),
 `ILRAIA` (30), `ROUTINE` (28). Two computations from different data, one answer.
 
-Nothing is taken from the tree until Mike releases it.
+**Released 2026-09-07 and run.** 435 members (185 modules + 250 dsects) through
+`as370`, macros unchanged so the figures stay comparable:
+
+| | |
+|---|---|
+| assemble at `rc 0` | 97 of 435 |
+| the 16 with a DLIB object | **3 identical** (`XTB1GFC`, `XTB1GSC`, `XTB1GUC`), 12 length, 1 mixed |
+| dominant message | `Undefined operation code`, 198 — macros we do not have, not a defect |
+
+The three identical are in `src/`. The rest of the corpus is dominated by the
+macro gap rather than by assembler defects, which is itself the answer: **this
+material cannot be assembled without macros nobody has.**
+
+**The blocker name-check is negative.** Of our 51 unresolvable operations exactly
+**one** is among the 590 macros the tapes add — `ISDAFSPC`, and it is the
+deliberately empty one. The other 50, `IHANVT` and `UCBDADVC` and the EREP family
+among them, are absent from the tapes as well. That direction is now closed with
+two independent derivations agreeing.
+
+**And the answer to whether dsects are the better test piece: no.** They were
+worth running and the hypothesis does not hold —
+
+| | Members | `rc 0` | carrying an evaluator message |
+|---|---:|---:|---:|
+| module | 183 | 30.1 % | **23.5 %** |
+| dsect | 134 | 31.3 % | 17.9 % |
+
+A dsect is mostly `EQU` and `DC` and was expected to press harder on the
+expression evaluator. It presses less. The construct that breaks an evaluator
+lives in the code around the data, not in the data.
 
 ### The reference is not sound everywhere — and that is the next work here
 
