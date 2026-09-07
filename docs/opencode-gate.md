@@ -204,3 +204,31 @@ a three-character value with a long remark. **The loose rule is measuring the
 remarks field**, which is cc370#149 wearing different clothes — an attribute or
 quote state that runs past the operand. Any count of "long `SETC`" built without
 splitting the remarks off will inherit it.
+
+## How far #151 reaches
+
+[`tools/setc95_reach.py`](../tools/setc95_reach.py) closes the graph three ways —
+macro calls, `COPY`, and a `GBLC` shared between members with no call between
+them — because `BLSR3270` uses the last two and would be invisible to the first.
+
+**71 MVSBLD modules can arrive at a `SETC` value over 95 characters**
+([`setc95-reach.tsv`](../work/measurements/setc95-reach.tsv)): 43 assemble
+cleanly today, 4 are already byte-identical to IBM's object, 56 sit in the length
+bucket. Three of the seventeen exposed members set their long value into a
+`GBLC` — `&TR3270`, `&IDAOPT2`, `&IDAVALC` — so the mechanism that hid
+`BLSR3270` exists in two more places.
+
+**This is a set the gate must cover, not a forecast.** The finding above is that
+candidate scans do not predict movers; there is no reason this one is different.
+
+## A tool trap that cost three wrong readings
+
+**`grep` in this environment is `ugrep`**, and on MVSBLD's 80-column CRLF members
+it returns *nothing at all* — not zero, no error, no count — where
+`/usr/bin/grep` returns 3. Three checks were made with it and all three came back
+empty and were read as "none": whether `BLSR3270` contains an ampersand, whether
+it contains an attribute apostrophe, and whether it names `BLSRCVTA`. The first
+two happened to be true anyway. The third was false and hid the `COPY` chain.
+
+**Use `/usr/bin/grep` or `rg` on this material, or do the scan in Python.**
+An empty result from a bare `grep` over `MVSBLD/` is not evidence of absence.
