@@ -113,6 +113,60 @@ is the same question Dave Kreiss' rebuilt tape is expected to answer.
 in the same place, the source is the question, not the tooling. Check one by hand
 before spending effort here.
 
+## Two macros tried, 2026-09-07 — and what they taught
+
+### `ISDAFSPC` — a stub, and measurably harmful
+
+Found in the MVS-sysgen collection. Three cards: `MACRO`, the prototype
+`ISDAFSPC &OP,&LV=,&A=`, `MEND`. It generates nothing.
+
+`ISDAAPR0` calls it twice as `ISDAFSPC R,LV=(0),A=(1)`. Against IBM's shipped
+object:
+
+| | Diagnostics | Section |
+|---|---:|---|
+| without | 2 | 2,191 B against IBM's 2,217 |
+| **with the stub** | **0** | **2,191 B against IBM's 2,217** |
+
+**The stub silences the diagnostic and leaves the object 26 bytes short — 13
+bytes for each of the two calls.** Installed, it would have produced exactly what
+this document warns about: `rc 0` from Assembler XF and a *clean reference deck
+for code that is not there*. Rejected;
+[`work/macros/mvs-sysgen/README.md`](../work/macros/mvs-sysgen/README.md) keeps
+it and the measurement.
+
+**A macro is usable here when its expansion is right, not when the assembly falls
+silent.**
+
+### `IHANVT` — real, partial, and not adopted
+
+From CBT tape file 405. A genuine `NVT` mapping, and it helps: on `IEAVAP00` the
+diagnostics fall from 380 to 312. But **39 `NVT` symbols stay undefined**
+(`NVTPAREA` alone is used 26 times), and the module's dominant undefined symbols
+are not `NVT` at all — `RENTRY` (96), `RNVT` (48), `REXIT` (48), `RPARM` (45),
+register conventions out of a further macro we do not have.
+
+Adopted on the host side alone and measured tree-wide, it **loses two identities
+and gains none** (`IEAVNP07`, `IEAVNPM2`). That is not a verdict on the macro: it
+is the two sides seeing different macro libraries, which is the one inequality
+that makes every difference unattributable. Both modules call `IHANVT`, and MVS
+has no `IHANVT` in `SYS1.AMACLIB` or `IBMUSER.PVTMAC`.
+
+**So a macro can only be adopted on both sides at once**, host and MVS, with the
+reference decks of the affected modules replaced in the same step. The recipe
+below does that; the two lost identities are what happens when it is not
+followed.
+
+### And the reason all of this matters more than it looks
+
+Of the 33 modules blocked on `IHANVT`, **13 currently count as
+`as370` == IFOX00 identical.** Both assemblers fail on the same missing macro in
+the same way and produce the same wrong object. **Not one of the 33 is identical
+to its DLIB member.**
+
+Agreement between the two assemblers is not correctness when both are missing the
+same thing. That is the sharpest statement of what this document is for.
+
 ## How to work an entry
 
 ```sh
