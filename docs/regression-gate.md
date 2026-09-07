@@ -162,6 +162,25 @@ produced it, and it says which run.**
 
 ## After a merge
 
+**First, promote the gate run.** Everything below reads
+`work/measurements/ifox-run/as370/` and `as370-gate.tsv`, which are *the current
+decks*, not the ones the gate just produced. Copy them across before measuring:
+
+```sh
+cd ~/repos/mvs/mvs38src/work/measurements/ifox-run
+rm -rf as370 restamp && cp -R /path/to/obj_<label> as370
+cp /path/to/<label>.tsv as370-gate.tsv
+```
+
+**`restamp/` goes with them.** It is a cache keyed by module name and nothing
+else, so a stale entry is silently a different build's deck.
+
+Skipping this does not fail — it reports. `ifox_compare.py` compares the stored
+decks *and* re-assembles the differing ones with the binary on its command line,
+so a run against last merge's decks with this merge's binary gave 4,340 where
+both instruments, used properly, say 4,352. A figure from two builds at once, and
+nothing in the output says so.
+
 ```sh
 tools/as370_messages.py /path/to/as370   # both assemblers' messages, per module
 tools/ifox_compare.py /path/to/as370     # attribution, tool against source
@@ -169,6 +188,13 @@ tools/module_table.py                    # the per-module table and for-cc370.ts
 tools/ifox_cluster.py                    # where the decks part company
 tools/rebuild_classes.py /path/to/as370  # the case-class lists the issues link at
 ```
+
+**An emptied class is the one it used to get wrong.** It collected into a
+`defaultdict`, so a class with no members was never written and its file kept its
+last non-empty contents. After cc370#182 took `relocatable-displacement` to zero,
+the file still named the two modules the fix had repaired — the one file the tool
+never rewrote was the one where a fix had succeeded completely. Every class is
+seeded now and an emptied one prints `EMPTY -- close the issue by hand`.
 
 **`rebuild_classes.py` is not optional and was added because it was skipped.**
 After #175 and #178 the class files still held their pre-merge counts —
