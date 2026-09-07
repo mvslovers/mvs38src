@@ -47,11 +47,17 @@ About ten minutes for step 2, seconds for step 3.
 ## What the output means
 
 ```
-as370 == IFOX00 : 3465 -> 3478   (+13)
-  gained  : 15  AHLMCIH BLSRESAR ...
-  LOST    : 2   IEFJDSNA ...
-  length -> bytes : 41
+as370 == IFOX00 : 3910 -> 4192   (+282)
+  gained  : 282  BLSCCLSE ...
+  LOST    : 0
+  decks closer to IFOX00 : 452
+  decks FURTHER from it  : 2   IFCE2880(+1) IFNX1J(+1)
 ```
+
+**The example is a real run** — cc370#175, the largest single change so far.
+Every figure in this document names the run it came from, and the baseline moves
+with each merge: it was 3,465 when this gate was written and 3,910 before #175.
+A quoted figure without its build is worthless here.
 
 **Report both numbers, always.** New agreements is the headline; modules that
 moved out of the length bucket is the other half, and on cc370#142 it was five

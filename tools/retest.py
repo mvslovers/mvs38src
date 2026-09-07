@@ -13,7 +13,7 @@ Reports what moved, in both directions. A change that gains ten agreements and
 loses three has gained seven and broken three, and both halves have to be said.
 
 The agreement figure here is **3,465**, one below the 3,466 in
-`docs/ifox-tree.md`. That is not a discrepancy: `ifox_compare.py` re-assembles
+That is not a discrepancy: `ifox_compare.py` re-assembles
 every differing module with the date and time its IFOX run used, and exactly one
 module of 1,334 needs that to match. This tool does not, because a gate wants a
 figure it can compute in ten minutes.
