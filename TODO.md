@@ -220,7 +220,7 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
-### Eleven fixes in — 62.7 % to 78.3 %, and past a thousand recovered
+### Twelve fixes in — 62.7 % to 78.7 %, and the first class emptied outright
 
 Baseline `126d8d3`. **as370 == IFOX00: 3,737 of 5,528 (67.6 %)**, recovered
 against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
@@ -237,6 +237,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #175 (a relocatable `EQU` took its section from the card's position) | **+282** | 0 | 452 | 2 |
 | #178 (a `USING` replaces the domain of its base register) | **+108** | 0 | 167 | **0** |
 | #180 (a continued operand must also close its parentheses) | +24 | 0 | 90 | 5 |
+| #182 (an attribute apostrophe is not a quote) | +23 | 0 | 50 | 1 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
@@ -283,12 +284,49 @@ program. Populations derived that way were lower bounds.
 
 Baseline `6cddc98`: **as370 == IFOX00 4,329 of 5,528 (78.3 %)**, **1,002 modules
 byte-identical to the object IBM shipped**, silent divergences 1,169 -> **682**,
-hand-over list 2,107 -> **1,264**.
+hand-over list 2,107 -> **1,242**.
 
-*The hand-over figure is whatever `for-cc370.tsv` holds — 1,264 rows, from 1,271
+*The hand-over figure is whatever `for-cc370.tsv` holds — 1,242 rows, from 1,249
 owned by the assembler less the 7 excluded. An earlier draft of this paragraph
 carried 1,289, arrived at by subtracting a merge's gain from the previous figure
 instead of re-counting the file. Derive it, and it drifts.*
+
+Baseline `fdf7427`: **as370 == IFOX00 4,352 of 5,528 (78.7 %)**, **1,015 modules
+byte-identical to the object IBM shipped**.
+
+**#182 is the first change to empty a class outright, and it took a second one
+with it.** An attribute apostrophe — the `'` in `L'A`, `T'&V` — was toggling the
+splitter's quote state, so the state stayed inverted, the first blank read as
+inside a string, and the remarks field was swallowed into the operand.
+
+| class | before | after |
+|---|---:|---:|
+| #156 relocatable-displacement | 2 | **0** |
+| #157 duplication-factor | 23 | **2** |
+| #153 undefined-symbol | 135 | 119 |
+| #159 symbol-over-8 | 8 | 7 |
+
+#157 had not moved a module in eleven merges and was on the list of issues
+nobody had touched; #182 was not aimed at it and took 21 of its 23. So "flat
+across eleven merges" was a statement about where the attention went, not about
+five independent defects.
+
+**And the class files hid the completed fix.** `rebuild_classes.py` collected
+into a `defaultdict`, so a class with no members was never written and its file
+kept its last non-empty contents — `relocatable-displacement.txt` still named
+the two modules #182 had just repaired. The one file the tool never rewrote was
+the one where a fix had succeeded completely. It is the stale-class failure the
+tool exists to prevent, arriving through the case where the news is good, and it
+is the second time today a container's shape decided what a measurement could
+say. Every class is seeded now and an emptied one prints `EMPTY`.
+
+**cc370's own suite stayed green through a version that cost 96 identities.**
+The obvious fix reused a purely lexical predicate, which reads the *closing*
+quote of a string whose last character is an attribute letter as an attribute
+apostrophe — `'S'` in `AMDPREAD` card 327. None of their 743 corpus modules
+contains such a string. This is the first time the corpus blindness we have both
+been describing let a real regression through rather than merely failing to show
+a gain, and the gate caught it on the `LOST` line.
 
 **#178 is the only change today with no regression on any instrument** — none
 lost, none further by bytes, section lengths unmoved. And it settles the

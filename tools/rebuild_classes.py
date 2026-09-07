@@ -53,7 +53,16 @@ def main():
                            capture_output=True, text=True, errors="replace")
         return m, (p.stdout + p.stderr)
 
+    # Seeded with every class, so a class that EMPTIES is written as an empty
+    # file instead of keeping its last non-empty contents. A defaultdict only
+    # ever held the classes that still had a member, and the one file nobody
+    # rewrote was the one a fix had just succeeded on completely: after cc370#182
+    # emptied `relocatable-displacement`, its file still named the two modules
+    # the fix had repaired. The stale-file failure this tool exists to prevent,
+    # in the one case where the news is good.
     b = defaultdict(set)
+    for slug in KEYS:
+        b[slug] = set()
     with ThreadPoolExecutor(8) as ex:
         for m, t in ex.map(run, loud):
             for slug, key in KEYS.items():
@@ -68,8 +77,10 @@ def main():
     for slug, ms in sorted(b.items()):
         p = f"{RUN}/classes/{slug}.txt"
         was = len(open(p).read().split()) if os.path.exists(p) else 0
-        open(p, "w").write("\n".join(sorted(ms)) + "\n")
+        open(p, "w").write("".join(f"{m}\n" for m in sorted(ms)))
         mark = "" if was == len(ms) else f"   was {was}"
+        if not ms:
+            mark += "   EMPTY -- close the issue by hand"
         print(f"  {slug:26s} {len(ms):5d}{mark}")
 
 
