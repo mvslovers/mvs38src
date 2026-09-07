@@ -138,12 +138,16 @@ A module using conditional assembly in open code is a harder module.
 Of the 102 decks the branch moves, **40 carry no open-code variable-symbol
 reference at all**. Thirty-nine of them carry `&&` in open code — they are the
 `&&` commit's work, and no scan built for #141 was ever going to see them. The
-fortieth is **`BLSR3270`, which contains no ampersand anywhere in its source**
-and still moves, under `810e566`, the substitution commit itself.
+fortieth is **`BLSR3270`, which has no ampersand in any code card** — one appears
+in a comment — and still moves under `810e566`, the substitution commit.
 
 So the miss cc370 attributed to continuation handling is not that: this scan
-does handle continuations and still does not flag `BLSR3270`. Its deck changes
-in an ESD section length. That one is open.
+handles continuations and still does not flag `BLSR3270`. **It is a `COPY`
+miss.** The module reaches a 128-character `SETC` through
+`COPY BLSR327A`/`BLSR327X` and thirteen further `BLSR327*` members, one of which
+sets `&TR3270` and another of which calls `BLSRSF`. No scan that reads only the
+module and the macros it names by operation can see any of it, and neither of
+ours followed `COPY`.
 
 `opencond2.txt` is left as it is and the `TODO` link corrected. The three lists
 above are `work/measurements/opencode-{set,emit,cond}.txt`.
