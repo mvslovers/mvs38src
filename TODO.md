@@ -220,7 +220,7 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
-### Eight fixes in — 62.7 % to 70.8 % in one day
+### Nine fixes in — 62.7 % to 75.9 % in one day
 
 Baseline `126d8d3`. **as370 == IFOX00: 3,737 of 5,528 (67.6 %)**, recovered
 against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
@@ -234,6 +234,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #171 (`L'` of a value-length constant) | **+95** | 0 | 229 | 1 |
 | #172 (three more call sites of the same guard) | **+86** | 0 | 177 | 5 |
 | #174 (the 63-character operand-field clamp) | **+92** | 0 | see below | see below |
+| #175 (a relocatable `EQU` took its section from the card's position) | **+282** | 0 | 452 | 2 |
 
 **#174 needed a third instrument, and both of ours were wrong for it.** Widening
 an operand field changes macro expansion, expansion changes layout, and a block
@@ -260,8 +261,25 @@ disappear from the expanded source depending on this defect. Every scan either
 side ran before this commit measured `as370`'s truncated expansion, not the
 program. Populations derived that way were lower bounds.
 
-Baseline `2126de0`: **as370 == IFOX00 3,913 of 5,528 (70.8 %)**, recovered **920**,
-silent divergences 1,169 -> **906**, hand-over list 2,107 -> **1,669**.
+Baseline `1df5f3f`: **as370 == IFOX00 4,196 of 5,528 (75.9 %)**, recovered **988**,
+silent divergences 1,169 -> **766**, hand-over list 2,107 -> **1,389**.
+
+**#175 is the largest single change and it corrected three of our guesses.** The
+class had sat still through eight merges, which was read here as evidence for the
+`USING` rekey. It is not: a relocatable `EQU` took its section from *where the
+card sits*, and PL/S output puts every `EQU` at the end of the module, after a
+mapping macro has left a DSECT current. A CSECT label booked into a DSECT then
+either finds no `USING` in range — the `IFO209` the issue reported — or finds the
+wrong section's and takes that base register **silently at rc 0**. One line, two
+symptoms, +282.
+
+Corrected with it: the `USING` table being append-only is *not* the cause of this
+class (only 6 of 156 modules carry 32 or more `USING` cards) and wants its own
+issue; `HEWLDIOC` still does not terminate, so #163 is untouched; and `IDA019R2`,
+which this session offered as the witness for the silent class, is not in the
+addressability class at all — it belongs to `rx-index-dropped`. The behaviour it
+was cited for is real and now pinned by cc370's `tests/equsect.s`; the module was
+the wrong example.
 
 #172's five are the same shape as before but at a larger scale, and were weighed
 individually: `IEBVMS` 77 % wrong -> 80 %, `IGC0M05B` 90.5 % -> 94 %,

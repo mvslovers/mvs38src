@@ -1,7 +1,4 @@
-cc370 2126de0 — merge of #174 (the 63-character operand-field clamp)
-rc 0: 4340 of 5528 | decks: 5518 | as370 == IFOX00: 3910
-#174 judged on SECTION LENGTH, not on bytes: a widened field changes macro
-  expansion and therefore layout, so a displaced but correct block scores as
-  wholly wrong at a fixed address. 134 sections wrong->correct, 2 the other way.
-  Neither of the two was near recovery: IEAVSWCH held a correct length with 69 %
-  of its bytes wrong.
+cc370 1df5f3f — merge of #175 (a relocatable EQU took its section from where the card sits)
+rc 0: 4450 of 5528 | decks: 5518 | as370 == IFOX00: 4192
+#175: +282 identical, none lost, 452 closer, 2 further by one byte each;
+  section lengths unchanged 0/0, which fits a symbol-attribution fix
