@@ -82,6 +82,33 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
   Kreiss' tape — but no difference in this run can be blamed on the two sides
   reading different macros.
 
+### The first recovered source — ten modules, and a class the IFOX comparison could not see
+
+`src/` has its first entries. `MVSBLD` came through a transfer that read EBCDIC
+as **cp1047**, where X'5F' is `^`; everything here reads **cp037**, where X'5F' is
+`¬` and `^` is X'B0'. A constant written `C'^'` therefore assembled to the wrong
+byte. 39 modules carry the character inside a constant, 78 occurrences.
+
+**With the substitution, ten modules become byte-identical to the object IBM
+shipped, and not one gets worse.** Repaired copies in `src/`, tool in
+[`tools/caret_fix.py`](tools/caret_fix.py). Recovered goes 902 -> 912.
+
+**Why this took a third instrument.** `as370` encodes cp037; the source reaches
+MVS through mvsMF, which encodes cp037 as well. So IFOX00 received X'B0' too, and
+the two assemblers agreed with each other perfectly. Every one of these sat in the
+table as *"the assemblers agree, only IBM's object differs"* — booked to the
+source, which was right, and unexplainable from either assembler. Only IBM's
+shipped object could settle it.
+
+Found by the `mvssrc-20` session as a case; measured here. `!` is X'5A' in both
+code pages. `[`/`]` do differ but the two modules carrying them do not improve, so
+that substitution stays unapplied — unproven.
+
+**What follows from it, and it is not small:** every module whose verdict is
+"assemblers agree, source differs" is now a candidate for a *transfer* defect
+rather than a maintenance-level one. That is 3,507 modules, and this is the first
+mechanism found in them.
+
 ### Six fixes in — 62.7 % to 67.6 % in one afternoon
 
 Baseline `126d8d3`. **as370 == IFOX00: 3,737 of 5,528 (67.6 %)**, recovered
