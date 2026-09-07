@@ -130,7 +130,16 @@ merge. Three instances in one day:
   hidden behind the defect that has just been fixed.
 
 So a class count belongs next to the binary that produced it, the same way an
-identity figure does.
+identity figure does — **and the file has to be re-derived, not just the number
+in the prose.**
+
+**Class proper, not symptom.** These lists hold the modules where `as370` flags
+and IFOX00 is silent. Counting every module whose output carries the message
+gives more than twice as many: 96 against 42 for addressability, because a module
+dominated by another defect emits the message downstream — `IFCE0115` has 128
+undefined-opcode and 100 undefined-symbol messages ahead of its 53 addressability
+ones. The two numbers answer different questions and these files answer the
+first.
 
 ## What must not be carried across a merge
 
@@ -154,11 +163,17 @@ produced it, and it says which run.**
 ## After a merge
 
 ```sh
+tools/as370_messages.py /path/to/as370   # both assemblers' messages, per module
 tools/ifox_compare.py /path/to/as370     # attribution, tool against source
 tools/module_table.py                    # the per-module table and for-cc370.tsv
 tools/ifox_cluster.py                    # where the decks part company
-tools/ifox_offdiag.py /path/to/as370     # the two disagreement cells
+tools/rebuild_classes.py /path/to/as370  # the case-class lists the issues link at
 ```
+
+**`rebuild_classes.py` is not optional and was added because it was skipped.**
+After #175 and #178 the class files still held their pre-merge counts —
+`addressability.txt` said 156 where the class was 42, and cc370#154 linked at it
+the whole time. Six of the ten files were stale by up to a factor of four.
 
 That regenerates [`cc370-cases.md`](cc370-cases.md)'s figures. The IFOX side does
 not have to be re-run unless the *source* changes — and if it does, only for the
