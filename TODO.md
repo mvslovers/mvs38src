@@ -486,6 +486,26 @@ is ours.
 so this sits directly on top of the 302 timestamp-bearing modules. Smallest case:
 `IECVOID`, three cards.
 
+### The hunting list for the missing macros
+
+[`docs/missing-macros.md`](docs/missing-macros.md) and
+[`missing-macros.tsv`](work/measurements/missing-macros/missing-macros.tsv):
+**40 operations neither assembler can resolve, blocking 204 module–operation
+pairs**, each with its module list and the record of where it has already been
+searched — our 1,822 macros, the IBM tapes, stben's 1,761, mainframe.eu, and
+Dave Kreiss' `NEW.ASM`. Two independent derivations agree on the negative.
+
+Largest: **`TABLE`** with 48 `XTB*` modules (all with a DLIB object, on Kreiss'
+install tape) and the **EREP family** — `DSGEN` 31, `PROLOG`/`LINE` 11 each,
+`ROUTINE` 10 — which is one find rather than five, since the same modules call
+all of them.
+
+**`IHANVT` and `UCBDADVC` have dropped off this list.** cc370#174 removed a
+63-character clamp on operand fields, and the modules that appeared to need them
+now get far enough to resolve them from a library we already had. Every earlier
+count was measuring `as370`'s truncated expansion rather than the program — a
+missing-macro list is only as good as the assembler that produced it.
+
 ### Waiting on other people
 
 - **Dave Kreiss' rebuilt install tape** with his built `PVTMAC`/`APVTMAC`. That
