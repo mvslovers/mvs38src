@@ -220,7 +220,7 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
-### Nine fixes in — 62.7 % to 75.9 % in one day
+### Ten fixes in — 62.7 % to 77.9 %, and past a thousand recovered
 
 Baseline `126d8d3`. **as370 == IFOX00: 3,737 of 5,528 (67.6 %)**, recovered
 against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
@@ -235,6 +235,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #172 (three more call sites of the same guard) | **+86** | 0 | 177 | 5 |
 | #174 (the 63-character operand-field clamp) | **+92** | 0 | see below | see below |
 | #175 (a relocatable `EQU` took its section from the card's position) | **+282** | 0 | 452 | 2 |
+| #178 (a `USING` replaces the domain of its base register) | **+108** | 0 | 167 | **0** |
 
 **#174 needed a third instrument, and both of ours were wrong for it.** Widening
 an operand field changes macro expansion, expansion changes layout, and a block
@@ -261,8 +262,20 @@ disappear from the expanded source depending on this defect. Every scan either
 side ran before this commit measured `as370`'s truncated expansion, not the
 program. Populations derived that way were lower bounds.
 
-Baseline `1df5f3f`: **as370 == IFOX00 4,196 of 5,528 (75.9 %)**, recovered **988**,
-silent divergences 1,169 -> **766**, hand-over list 2,107 -> **1,389**.
+Baseline `d8c509b`: **as370 == IFOX00 4,304 of 5,528 (77.9 %)**, **1,002 modules
+byte-identical to the object IBM shipped**, silent divergences 1,169 -> **682**,
+hand-over list 2,107 -> **1,289**.
+
+**#178 is the only change today with no regression on any instrument** — none
+lost, none further by bytes, section lengths unmoved. And it settles the
+`USING`-rekey hypothesis this session pushed for #154: the defect is real, the
+neighbourhood was right, and it closes **one** of #154's 40 residual modules. The
+6-of-156 count is the only thing that kept the two apart; plausibility would have
+merged them and buried a +282 fix inside a +108 one.
+
+`IDA019R2` — the witness offered here for the silent class and correctly rejected
+as belonging to a different issue — is among the 108 and is now byte-identical.
+Right module, right mechanism, wrong issue.
 
 **#175 is the largest single change and it corrected three of our guesses.** The
 class had sat still through eight merges, which was read here as evidence for the
