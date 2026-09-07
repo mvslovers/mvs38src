@@ -368,7 +368,10 @@ def cmd_diag(args):
             ftp(["ascii", f"get '{LSTPDS}({m})' {OUT}/diag/{m}.full"])
             if os.path.exists(f"{OUT}/diag/{m}.full"):
                 txt = open(f"{OUT}/diag/{m}.full", errors="replace").read()
-                cut = txt.rfind("ASSEMBLER DIAGNOSTICS AND STATISTICS")
+                # the FIRST page of the diagnostics section, not the last:
+                # the header repeats per page, and rfind() would throw away
+                # every message before the final page of a long list
+                cut = txt.find("ASSEMBLER DIAGNOSTICS AND STATISTICS")
                 open(f"{OUT}/diag/{m}.txt", "w").write(txt[cut:] if cut >= 0 else txt[-8000:])
                 os.remove(f"{OUT}/diag/{m}.full")
         print(f"[{b + len(batch)}/{len(todo)}]", flush=True)
