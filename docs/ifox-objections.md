@@ -169,6 +169,31 @@ to its DLIB member.**
 Agreement between the two assemblers is not correctness when both are missing the
 same thing. That is the sharpest statement of what this document is for.
 
+## Measured for the `mvssrc` sessions: the missing comment star
+
+129 members of their tape tree carry lines that begin with a blank and `/*`
+instead of `*/*` — the comment star is missing in column 1, and `jay` has the
+same lines, so it comes off the tape rather than out of their extraction. They
+have no assembler to ask what it costs. Asked here, 2026-09-07:
+
+```
+ /*   MACRO NAME = IDAAMBL                              */
+```
+
+| | |
+|---|---|
+| IFOX00 | `rc 8`, **`IFO054 INVALID OPERATION CODE`** on that statement |
+| `as370` | `rc 8`, `Undefined operation code - /*` |
+| object | **unaffected** — the statement generates nothing and assembly continues |
+
+So it is invalid assembler on both sides and the two agree about it. A member
+with 26 such lines earns 26 diagnostics and a correct deck. It costs a return
+code, not bytes — but it will put a module in the "both flag" class for a reason
+that has nothing to do with its code.
+
+None of the 129 is in `MVSBLD`; they are DSECT macros that live in Dave Kreiss'
+macro libraries rather than in his `.ASM` tree.
+
 ## How to work an entry
 
 ```sh
