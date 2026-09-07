@@ -37,15 +37,18 @@ construct is legal. Nothing else is needed to work on these — no listing, no M
 And it is code work, not message work: **501 of the 512 also produce a different
 deck.** The rejection is not a stray diagnostic on otherwise correct output.
 
-| `as370` message | Modules | Smallest cases |
-|---|---:|---|
-| Undefined symbol | 333 | `AMDSATAP` (1,062 cards), `AMDPRCOM` (1,826) |
-| Addressability error — no active `USING` covers the operand | 163 | `BLSCCLSE` (472), `AMDPRPJB` (2,176) |
-| Undefined operation code | 41 | `IFG0193E` (574), `IFG0193D` (772) |
-| Relocatable displacement in machine instruction (explicit base) | 29 | `IEE1603D` (644), `IEE3103D` (750) |
-| Duplication factor family — `IFO206` / `IFO217` / `IFO231` | 23 | `BLSRESAR` (292), `BLSRESGC` (566) |
-| This card was consumed as a continuation | 8 | `IEAVGTCL` (458), `IEECVFTM` (619) |
-| Symbol longer than 8 characters in operand expression | 7 | `IEECVET4`, `IFNX1J` |
+| Issue | `as370` message | Modules | Smallest case |
+|---|---|---:|---|
+| [cc370#153](https://github.com/mvslovers/cc370/issues/153) | Undefined symbol | 333 | `AMDSATAP` (1,062 cards) |
+| [cc370#154](https://github.com/mvslovers/cc370/issues/154) | Addressability error — no active `USING` | 163 | `BLSCCLSE` (472) |
+| [cc370#155](https://github.com/mvslovers/cc370/issues/155) | Undefined operation code | 41 | `IFG0193E` (574) |
+| [cc370#156](https://github.com/mvslovers/cc370/issues/156) | Relocatable displacement (explicit base) | 29 | `IEE1603D` (644) |
+| [cc370#157](https://github.com/mvslovers/cc370/issues/157) | Duplication factor — `IFO206`/`217`/`231` | 23 | `BLSRESAR` (292) |
+| [cc370#158](https://github.com/mvslovers/cc370/issues/158) | Card consumed as a continuation | 8 | `IEAVGTCL` (458) |
+| [cc370#159](https://github.com/mvslovers/cc370/issues/159) | Symbol longer than 8 characters | 8 | `IEECVET4` |
+
+Each issue carries the failing card, the full module list, and the re-test
+recipe. Labelled **Paket A** in the cc370 repository.
 
 Counts overlap where a module carries more than one message. Full breakdown with
 five examples each:
@@ -71,13 +74,19 @@ Sorted by where the difference sits
 |---|---:|---|
 | same length, bytes differ | 1,086 | one or a few bytes inside instructions |
 | different length | 1,038 | `as370` generates more or fewer bytes |
-| **difference starts in the first 16 bytes of the section** | **134** | worth taking as one group — a difference at offset 0 is unlikely to be 134 separate causes |
-| section present on one side only | 21 | `AHLSETEV`: `as370` emits a whole section `IGAFETCH`, 6,736 bytes, that IFOX00 does not |
+| **difference starts in the first 16 bytes of the section** — [cc370#160](https://github.com/mvslovers/cc370/issues/160) | **134** | unlikely to be 134 separate causes |
+| section present on one side only — [cc370#161](https://github.com/mvslovers/cc370/issues/161) | 21 (16 modules) | `AHLSETEV`: `as370` emits a whole section `IGAFETCH`, 6,736 bytes, that IFOX00 does not |
 | section this tool could not name | 26 | **not comparable by name — the pairing is in question, not the assembler** |
 
 Smallest cases in the prologue group: `IECVXMGN` (45 B, 11 bytes differ from
 offset 0), `IECVXVRU` (49 B, 15 bytes from 0), `IDCTSST0` (83 B, 1 byte at
-`0x01`).
+`0x01`). Checked against `cmplmd370`: all 11 of `IECVXMGN`'s differing bytes are
+in generated text, none in a `DS` hole, so the class is code and not a hole
+artefact.
+
+Issues carry the module lists in
+[`classes/`](../work/measurements/ifox-run/classes/); the two `Paket B` issues are
+open, the rest of B is a data file to mine, not a ticket.
 
 ## C. Both flag, and the decks differ — 393 modules
 
