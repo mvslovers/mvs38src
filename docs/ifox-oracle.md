@@ -80,7 +80,14 @@ something else. It also saved building a `--sysdate` option nobody needed.
 
 `SYSPUNCH` does not come back byte-exact, not even with
 `X-IBM-Data-Type: binary` — it arrives transcoded with non-printables replaced.
-So **object-deck comparison cannot go through the spool.** Two routes not yet
+So **object-deck comparison cannot go through the spool.**
+
+> **This is about spool files, and only about them.** A deck punched into a
+> *data set* comes back byte-exact through `GET /zosmf/restfiles/ds/...` with
+> `X-IBM-Data-Type: binary` — measured on 2026-09-07, when the FTP server wedged
+> and the tree-wide run had to change transport mid-flight. Without that header
+> the same 320-byte deck arrives as 96 bytes and nothing says so.
+> [`ifox-tree.md`](ifox-tree.md). Two routes not yet
 measured: FTP in `TYPE I` on ports 2122/2123, or writing the deck to a permanent
 data set and fetching it with `dasdcat` while the instance is down.
 

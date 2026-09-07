@@ -97,6 +97,12 @@ start in `JESYSMSG`. Control: a source of `DC C'&SYSDATE'`/`DC C'&SYSTIME'`
 assembled with two different `ASMTIME` values produces two different decks, so
 the mechanism is known to work.
 
+**The localiser checked against a second tool.** `ifox_cluster.py` rebuilds each
+section from the TXT cards to say where the two decks part company. `cmplmd370`,
+written independently, reports the same section lengths on the cases checked:
+`IGG019PF` 265 against 144, `IGG019MY` 343 against 216, `IDCLC01` 16,548 both
+with four differing bytes.
+
 **The two comparison rules.** The `END` card is excluded — each assembler names
 itself there, `15741SC103` against `ASM370`, and the card also carries the
 assembly date, so two IFOX runs on different days differ in it. Columns 73–80 are
