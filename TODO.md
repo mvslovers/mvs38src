@@ -220,16 +220,40 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
-### Die größte offene Einzelursache: ein Bit im RLD, 173 Module
+### Erledigt: ein Bit im RLD, +160 — und die Ursache stand im Idiom
 
-`docs/silent-divergences.md`, cc370#186. **173 der 1.242 übergebenen Module
-unterscheiden sich von IFOX00 in nichts als ihrem Relocation Dictionary** —
-gleiches `ESD`, gleiches `TXT`, und 163 von 175 abweichenden Einträgen
-unterscheiden sich allein im Flag-Byte, jeder um genau ein Bit (`0x04`), und
-**152 davon sind der letzte Eintrag des Decks**. `IEAVELCR` trägt drei
-gleichartige Konstanten und `as370` kennzeichnet nur die dritte anders, ist sich
-also selbst uneins. Eine Codestelle, bis zu **+173 Identitäten** — nach #175 die
-zweitgrößte Änderung des Projekts.
+`docs/silent-divergences.md`, cc370#186, behoben in #187. **173 der 1.242
+übergebenen Module unterschieden sich von IFOX00 in nichts als ihrem Relocation
+Dictionary** — gleiches `ESD`, gleiches `TXT`, 163 von 175 abweichenden Einträgen
+allein im Flag-Byte, jeder um genau ein Bit (`0x04`), und **152 davon der letzte
+Eintrag des Decks**.
+
+**Die Ursache war ein Idiom, kein Rechenfehler.** Jede Aufrufstelle schrieb die
+Breite *nach* dem Aufruf:
+
+```c
+add_reloc(lc, r, 1); rels[nrel - 1].len = blen;
+```
+
+`add_reloc` steigt bei `in_dsect` aus — und die Zuweisung landet dann auf dem
+**vorherigen** Eintrag. In `IEAVELCR` 24 echte Aufrufe gegen 138 aus
+Dummy-Sections: die letzte echte Relokation wurde 138-mal überschrieben und
+behielt die Breite der letzten DSECT-Konstanten. Daher das eine Bit, und daher
+„152 von 163 sind der letzte Eintrag" — das Ziel der Überschreibung ist immer
+`rels[nrel-1]`. `len` ist jetzt Parameter, das Idiom ist an allen fünf Stellen
+weg und kann nicht durch Kopieren zurückkommen.
+
+**+160 Identitäten, keine verloren, null näher, null weiter.** Die Null in beiden
+Richtungen ist die Signatur eines Defekts, der nie teilweise war: jedes betroffene
+Deck wich in genau diesem einen Bit ab, wanderte also direkt auf identisch oder
+gar nicht. RLD-only ist von 173 auf **13** gefallen, die unmögliche Zelle von 27
+auf **1**.
+
+**Welcher Assembler recht hat, war ohne das Orakel zu klären.** `IEAVELCR`s
+Tabelle sind `VL3`-Konstanten; `as370` gab für 23 davon Länge 3 aus und für die
+letzte 4. Es war sich selbst uneins, also hat IFOX00 recht und für
+`ifox-objections.md` bleibt nichts. Genau deshalb war „es ist sich selbst uneins"
+die tragfähige Beobachtung und nicht „IFOX00 ist das Orakel".
 
 Kein Diagnosewerkzeug hätte darauf zeigen können: beide Assembler schweigen, und
 beide Decks laden zu einem Abbild, das mit IBMs ausgeliefertem Objekt
@@ -262,6 +286,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #180 (a continued operand must also close its parentheses) | +24 | 0 | 90 | 5 |
 | #182 (an attribute apostrophe is not a quote) | +23 | 0 | 50 | 1 |
 | #183 (the same guard in the second splitter) | 0 | 0 | 0 | 0 |
+| #187 (an RLD entry's length belongs to that entry) | **+160** | 0 | **0** | **0** |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of

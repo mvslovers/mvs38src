@@ -1,4 +1,4 @@
-module	ifox_vs_dlib	as370_vs_dlib	cell	first_diff	len_ifox	len_as370	dlib_library
+module	ifox_vs_dlib	as370_vs_dlib	cell	first_diff	len_ifox	len_as370	as370_dlib_verdict
 IDCCDDE	length	length	neither matches IBM	0x03d58	42880	25457	length
 IEFXB609	length	length	neither matches IBM	0x023da	15336	15336	length
 IRBMFINP	length	length	neither matches IBM	0x0324f	15281	15277	length
@@ -167,6 +167,7 @@ IECVESIO	length	length	neither matches IBM	0x00092	3019	3019	length
 IKJEGDCB	no-pair	no-pair	no distribution member	0x009a0	3000	3000	no-pair
 IKJEFA10	no-pair	no-pair	no distribution member	0x00a70	2982	2982	no-pair
 IFCSXXXX	length	length	neither matches IBM	0x00007	2972	2596	length
+IFCEE155	length	length	neither matches IBM	0x00002	2967	1616	length
 IFNX6A	length	length	neither matches IBM	0x00021	2964	2964	length
 IEESF03D	no-pair	no-pair	no distribution member	0x00005	2962	2954	no-pair
 AHLTPID	length	length	neither matches IBM	0x00058	2960	2960	length
@@ -535,76 +536,36 @@ AMDPRPJB	holes	holes	neither matches IBM				holes
 AMDPRPMS	holes	holes	neither matches IBM				holes
 HMASMDC2	mixed	mixed	neither matches IBM				mixed
 IDCRI04	length	length	neither matches IBM	0x00000	0	14023	length
-IEAVELCR	identical	identical	both match -- impossible, check the comparison				identical
-IEAVTFMT	length	length	neither matches IBM				length
-IEAVTRER	text	text	neither matches IBM				text
-IEBIOE	length	length	neither matches IBM				length
-IECDAFMT	length	length	neither matches IBM				length
-IECIOFMT	length	length	neither matches IBM				length
-IEDAYOO	length	length	neither matches IBM				length
-IEE1403D	length	length	neither matches IBM				length
-IEE70110	length	length	neither matches IBM				length
 IEFSD087	length	length	neither matches IBM				length
-IEHDLABL	length	length	neither matches IBM				length
-IEHMVSSF	length	length	neither matches IBM				length
-IEHMVSSX	length	length	neither matches IBM				length
 IERABW	no-pair	no-pair	no distribution member				no-pair
 IERAOL	no-pair	no-pair	no distribution member				no-pair
 IERAOM	no-pair	no-pair	no distribution member				no-pair
 IFASMFDP	length	length	neither matches IBM				length
-IFCEE155	length	length	neither matches IBM				length
-IFCERFMT	length	length	neither matches IBM				length
-IFG0192A	length	length	neither matches IBM				length
 IFG0193D	length	length	neither matches IBM				length
 IFG0193E	length	length	neither matches IBM				length
 IFG0194A	length	length	neither matches IBM				length
-IFG0195A	length	length	neither matches IBM				length
 IFG0195C	mixed	mixed	neither matches IBM				mixed
 IFG0195D	text	text	neither matches IBM				text
-IFG0195G	text	text	neither matches IBM				text
 IFG0195H	length	length	neither matches IBM				length
 IFG0195K	length	length	neither matches IBM				length
 IFG0195T	text	text	neither matches IBM				text
-IFG0196J	text	text	neither matches IBM				text
 IFG0196N	mixed	mixed	neither matches IBM				mixed
 IFG0196O	length	length	neither matches IBM				length
 IFG0196Q	text	text	neither matches IBM				text
 IFG0196T	length	length	neither matches IBM				length
-IFG0196U	length	length	neither matches IBM				length
 IFG0196W	mixed	mixed	neither matches IBM				mixed
 IFG0196X	length	length	neither matches IBM				length
 IFG0200V	length	length	neither matches IBM				length
-IFG0200Z	length	length	neither matches IBM				length
-IFG0201R	mixed	mixed	neither matches IBM				mixed
-IFG0202A	length	length	neither matches IBM				length
-IFG0202C	length	length	neither matches IBM				length
-IFG0202D	mixed	mixed	neither matches IBM				mixed
 IFG0202F	mixed	mixed	neither matches IBM				mixed
-IFG0202J	length	length	neither matches IBM				length
-IFG0232D	text	text	neither matches IBM				text
-IFG0232J	mixed	mixed	neither matches IBM				mixed
-IFG0232M	length	length	neither matches IBM				length
-IFG0232S	mixed	mixed	neither matches IBM				mixed
-IFG0232Z	length	length	neither matches IBM				length
-IFG0551F	length	length	neither matches IBM				length
-IFG0551P	mixed	mixed	neither matches IBM				mixed
-IFG0551R	mixed	mixed	neither matches IBM				mixed
 IFG0551T	length	length	neither matches IBM				length
 IFG0552B	length	length	neither matches IBM				length
-IFG0552D	length	length	neither matches IBM				length
 IFG0552F	text	text	neither matches IBM				text
-IFG0552N	length	length	neither matches IBM				length
 IFG0552R	length	length	neither matches IBM				length
-IFG0552T	length	length	neither matches IBM				length
 IFG0552X	length	length	neither matches IBM				length
 IFG0553H	text	text	neither matches IBM				text
 IFG0553P	length	length	neither matches IBM				length
-IFG0553X	length	length	neither matches IBM				length
 IFG0553Z	length	length	neither matches IBM				length
 IFG0554B	mixed	mixed	neither matches IBM				mixed
-IFG0554N	length	length	neither matches IBM				length
-IFG0554Z	text	text	neither matches IBM				text
-IFG0555B	text	text	neither matches IBM				text
 IFG0555H	length	length	neither matches IBM				length
 IFG0RR0E	length	length	neither matches IBM				length
 IFG0RR0F	mixed	mixed	neither matches IBM				mixed
@@ -615,89 +576,21 @@ IGC0002B	length	length	neither matches IBM				length
 IGC0002C	mixed	mixed	neither matches IBM				mixed
 IGC0003A	length	length	neither matches IBM				length
 IGC0005E	length	length	neither matches IBM				length
-IGC0005G	length	length	neither matches IBM				length
 IGC0006D	length	length	neither matches IBM				length
 IGC0007H	text	text	neither matches IBM				text
-IGC0408B	holes	holes	neither matches IBM				holes
-IGE0000H	holes	holes	neither matches IBM				holes
-IGE0001H	mixed	mixed	neither matches IBM				mixed
-IGE0004A	length	length	neither matches IBM				length
-IGE0004C	length	length	neither matches IBM				length
 IGE0019I	length	length	neither matches IBM				length
 IGE0119I	holes	holes	neither matches IBM				holes
-IGE0904B	length	length	neither matches IBM				length
-IGG01910	identical	identical	both match -- impossible, check the comparison				identical
-IGG01911	identical	identical	both match -- impossible, check the comparison				identical
-IGG01912	identical	identical	both match -- impossible, check the comparison				identical
-IGG01913	identical	identical	both match -- impossible, check the comparison				identical
-IGG01915	identical	identical	both match -- impossible, check the comparison				identical
-IGG01916	length	length	neither matches IBM				length
-IGG01917	identical	identical	both match -- impossible, check the comparison				identical
-IGG01918	identical	identical	both match -- impossible, check the comparison				identical
-IGG01919	identical	identical	both match -- impossible, check the comparison				identical
-IGG0191A	length	length	neither matches IBM				length
-IGG0191B	text	text	neither matches IBM				text
-IGG0191C	length	length	neither matches IBM				length
-IGG0191D	identical	identical	both match -- impossible, check the comparison				identical
-IGG0191G	identical	identical	both match -- impossible, check the comparison				identical
-IGG0191H	identical	identical	both match -- impossible, check the comparison				identical
-IGG0191I	length	length	neither matches IBM				length
-IGG0191J	length	length	neither matches IBM				length
-IGG0191K	identical	identical	both match -- impossible, check the comparison				identical
-IGG0191L	length	length	neither matches IBM				length
-IGG0191M	length	length	neither matches IBM				length
-IGG0191N	length	length	neither matches IBM				length
-IGG0191O	identical	identical	both match -- impossible, check the comparison				identical
-IGG0191P	identical	identical	both match -- impossible, check the comparison				identical
-IGG0191Q	length	length	neither matches IBM				length
-IGG0191R	length	length	neither matches IBM				length
-IGG0191S	length	length	neither matches IBM				length
-IGG0191T	length	length	neither matches IBM				length
-IGG0191U	length	length	neither matches IBM				length
-IGG0191V	length	length	neither matches IBM				length
-IGG0191W	identical	identical	both match -- impossible, check the comparison				identical
-IGG0191X	identical	identical	both match -- impossible, check the comparison				identical
-IGG0191Y	identical	identical	both match -- impossible, check the comparison				identical
-IGG0191Z	identical	identical	both match -- impossible, check the comparison				identical
-IGG01923	text	text	neither matches IBM				text
-IGG01926	identical	identical	both match -- impossible, check the comparison				identical
-IGG0193A	length	length	neither matches IBM				length
-IGG0193I	text	text	neither matches IBM				text
-IGG0196A	length	length	neither matches IBM				length
-IGG0196B	text	text	neither matches IBM				text
-IGG0196I	text	text	neither matches IBM				text
-IGG0196K	length	length	neither matches IBM				length
-IGG0196L	length	length	neither matches IBM				length
-IGG0196P	identical	identical	both match -- impossible, check the comparison				identical
-IGG0197E	length	length	neither matches IBM				length
-IGG0197F	length	length	neither matches IBM				length
-IGG0197U	length	length	neither matches IBM				length
 IGG0197V	mixed	mixed	neither matches IBM				mixed
-IGG01991	identical	identical	both match -- impossible, check the comparison				identical
-IGG01992	identical	identical	both match -- impossible, check the comparison				identical
-IGG01993	identical	identical	both match -- impossible, check the comparison				identical
-IGG01994	identical	identical	both match -- impossible, check the comparison				identical
-IGG0199K	identical	identical	both match -- impossible, check the comparison				identical
-IGG0199O	holes	identical	as370 matches IBM, IFOX00 does not				identical
-IGG019MC	length	length	neither matches IBM				length
-IGG019V6	length	length	neither matches IBM				length
-IGG0201A	length	length	neither matches IBM				length
-IGG0201B	length	length	neither matches IBM				length
-IGG0201Z	length	length	neither matches IBM				length
 IGG08108	length	length	neither matches IBM				length
 IKJCT430	length	length	neither matches IBM				length
-IKJCT431	length	length	neither matches IBM				length
 IKJCT463	length	length	neither matches IBM				length
 IKJEBEAA	no-pair	no-pair	no distribution member	0x00000	0	216	no-pair
 IKJEFE02	no-pair	no-pair	no distribution member				no-pair
 IKJEFF19	length	length	neither matches IBM				length
 IKJEGCVT	no-pair	no-pair	no distribution member				no-pair
-IKJEGDEB	no-pair	no-pair	no distribution member				no-pair
 IKJEGEQU	no-pair	no-pair	no distribution member	0x00000	0	2843	no-pair
 IKJEGINT	no-pair	no-pair	no distribution member				no-pair
-IKJEGLSA	no-pair	no-pair	no distribution member				no-pair
 IKJEGMAP	no-pair	no-pair	no distribution member				no-pair
-IKJEGPSW	no-pair	no-pair	no distribution member				no-pair
 IKJEGQFY	no-pair	no-pair	no distribution member				no-pair
 IKJEGTCB	no-pair	no-pair	no distribution member				no-pair
 IKJEGWHR	no-pair	no-pair	no distribution member				no-pair
@@ -705,7 +598,6 @@ IKJEHAL1	no-pair	no-pair	no distribution member				no-pair
 IKJEHDEF	no-pair	no-pair	no distribution member				no-pair
 IKJEHDS1	no-pair	no-pair	no distribution member	0x00000	0	6440	no-pair
 IKJEHREN	no-pair	no-pair	no distribution member	0x00000	0	5260	no-pair
-IKJRBBU0	length	length	neither matches IBM				length
 ISTRAMA3	length	length	neither matches IBM				length
 ISTRAMA4	length	length	neither matches IBM				length
 SECLOADA	length	length	neither matches IBM				length
