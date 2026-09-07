@@ -100,6 +100,20 @@ def tsv(path, keycol=0):
     return out
 
 
+def excluded():
+    """Modules deliberately out of scope, with the reason each one is out.
+
+    Not deleted: a number that quietly loses rows stops being checkable. They
+    stay in module-table.tsv with the reason in their own column, and drop out
+    of the hand-over list only.
+    """
+    p = f"{RUN}/excluded.tsv"
+    if not os.path.exists(p):
+        return {}
+    return {l.split("\t")[0]: l.split("\t")[1]
+            for l in open(p).read().splitlines()[1:] if "\t" in l}
+
+
 def main():
     verd = tsv(f"{RUN}/verdicts.tsv")
     a370 = tsv(f"{RUN}/as370-messages.tsv")
@@ -112,7 +126,9 @@ def main():
 
     head = ["module", "as370_rc", "as370_flagged", "as370_severity", "as370_messages",
             "ifox_rc", "ifox_flagged", "ifox_severity", "ifox_messages",
-            "tool", "first_diff", "len_ifox", "len_as370", "dlib", "signal", "owner"]
+            "tool", "first_diff", "len_ifox", "len_as370", "dlib", "signal", "owner",
+            "excluded"]
+    skip = excluded()
     rows = []
     for m in sorted(verd):
         v, a, s = verd[m], a370.get(m, {}), state.get(m, {})
@@ -124,7 +140,8 @@ def main():
                      a.get("messages", ""),
                      s.get("ifox_rc", ""), ff, sv, msg,
                      tool, d[4], d[2], d[3], v.get("dlib", ""), sg,
-                     owner(a.get("rc", ""), s.get("ifox_rc", ""), tool, sg)])
+                     owner(a.get("rc", ""), s.get("ifox_rc", ""), tool, sg),
+                     skip.get(m, "")])
 
     # sorted so the hand-over list is one contiguous block at the top and
     # everything below it can go in a single stroke
@@ -134,14 +151,15 @@ def main():
         f.write("\t".join(head) + "\n")
         for r in rows:
             f.write("\t".join(r) + "\n")
-    cc = [r for r in rows if r[15] == "cc370"]
+    cc = [r for r in rows if r[15] == "cc370" and not r[16]]
     with open(f"{RUN}/for-cc370.tsv", "w") as f:
         f.write("\t".join(head) + "\n")
         for r in cc:
             f.write("\t".join(r) + "\n")
     open(f"{RUN}/for-cc370.txt", "w").write("\n".join(r[0] for r in cc) + "\n")
 
-    print(f"{len(rows)} rows -> module-table.tsv")
+    print(f"{len(rows)} rows -> module-table.tsv"
+          + (f", {len(skip)} of them out of scope" if skip else ""))
     print(f"{len(cc)} of them are the assembler's business -> for-cc370.tsv / .txt")
     print("\nwho owns the difference:")
     for k, v in Counter(r[15] for r in rows).most_common():

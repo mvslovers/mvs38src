@@ -82,6 +82,24 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
   Kreiss' tape — but no difference in this run can be blamed on the two sides
   reading different macros.
 
+### What is in the tree that is not in the system
+
+[`docs/module-origin.md`](docs/module-origin.md) — per module, which
+distribution library holds its object and whether MVS/CE carries a load module of
+that name.
+
+- **CICS: 5 modules excluded.** `BNGC3270`, `BNGCDISP`, `BNGCLOCL`, `BNGCMENU`,
+  `BNGCRMOT` call `DFH*` macros; there is no CICS here and none of the five is
+  installed. They keep their row with the reason in an `excluded` column and drop
+  out of the hand-over list: **2,112 owned by the assembler, 2,107 handed over.**
+- **Sort: 251 `IER*` modules, decision open.** No object in any distribution
+  library, no member of any target library, and **there is no sort library on the
+  instance at all**. They can never be verified. 243 of them already assemble
+  identically between `as370` and IFOX00, so excluding them costs the hand-over
+  list 8 modules and takes 4.5 % out of a denominator no measurement can settle.
+- **The member-name test undercounts** and must not be read as "not installed": a
+  CSECT is usually bound into a load module of another name.
+
 ### The reference is not sound everywhere — and that is the next work here
 
 **IFOX00 flagged 933 of the 5,528 modules at `rc 8` or worse, so their decks are
