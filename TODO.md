@@ -84,8 +84,8 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
 
 ### Four fixes in; two more cases filed from the silent class
 
-Baseline `fc18fac`. **as370 == IFOX00: 3,582 of 5,528**, recovered against IBM's
-object 869 -> 883.
+Baseline `fc18fac`. **as370 == IFOX00: 3,583 of 5,528 (64.8 %)**, the hand-over
+list 2,016 -> 1,992.
 
 cc370#168 (an address constant whose value starts with `(` is not zero) was the
 first change accepted on more than the verdict counts: +24 identical, none lost,
