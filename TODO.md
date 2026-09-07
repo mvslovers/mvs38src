@@ -238,6 +238,24 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #178 (a `USING` replaces the domain of its base register) | **+108** | 0 | 167 | **0** |
 | #180 (a continued operand must also close its parentheses) | +24 | 0 | 90 | 5 |
 
+**#180's +24 is the smaller half, and the larger half is a bracket, not a
+number.** The mis-joined continuation was inventing operations out of
+change-level tags — `XCTLTABL`'s operand broke inside an unclosed sublist and
+carried the tag `Y02134` in as a sublist element, so a module whose only fault
+was a line break was reported as using an undefined operation.
+
+| Counting rule | Reach |
+|---|---:|
+| class files, deltas summed (`undefined-opcode` 51 -> 5, `undefined-symbol` 170 -> 135, `addressability` 42 -> 37) | **81** — upper bound |
+| modules that stopped carrying **any** of the three, counted independently by cc370 (`e3f55f2`) | **33** — lower bound |
+
+The class files hold each module once under its dominant diagnostic, so their
+deltas are summable — but a module that merely *reclassifies* leaves one class
+without becoming clean, and the sum counts it. The two bracket the same change.
+The commit message of `9947ff6` states the upper bound as a result; this is the
+correction. It is the class-proper-against-symptom distinction one level down,
+and an identity count sees neither end of it.
+
 **#174 needed a third instrument, and both of ours were wrong for it.** Widening
 an operand field changes macro expansion, expansion changes layout, and a block
 that is *correct but displaced* scores as wholly wrong when bytes are compared at
@@ -265,7 +283,12 @@ program. Populations derived that way were lower bounds.
 
 Baseline `6cddc98`: **as370 == IFOX00 4,329 of 5,528 (78.3 %)**, **1,002 modules
 byte-identical to the object IBM shipped**, silent divergences 1,169 -> **682**,
-hand-over list 2,107 -> **1,289**.
+hand-over list 2,107 -> **1,264**.
+
+*The hand-over figure is whatever `for-cc370.tsv` holds — 1,264 rows, from 1,271
+owned by the assembler less the 7 excluded. An earlier draft of this paragraph
+carried 1,289, arrived at by subtracting a merge's gain from the previous figure
+instead of re-counting the file. Derive it, and it drifts.*
 
 **#178 is the only change today with no regression on any instrument** — none
 lost, none further by bytes, section lengths unmoved. And it settles the
