@@ -12,8 +12,17 @@ libraries `gate.sh` passes. Same input, recorded output. Nothing about them
 changes when `as370` changes, so they are a fixed reference — the expensive half
 of the measurement was paid once.
 
-They are not in git (30 MB, reproducible). Rebuild them with
-`tools/ifox_run.py run`, which is resumable and skips what it already has.
+The decks themselves are 30 MB and stay out of git, but **the reference is
+archived**: `work/measurements/ifox-run/ifox-decks.tar.gz`, 8.5 MB, all 5,528.
+Unpack it before the first gate:
+
+```sh
+tar xzf work/measurements/ifox-run/ifox-decks.tar.gz -C work/measurements/ifox-run
+```
+
+Re-running `tools/ifox_run.py run` would also produce decks — but from *that
+day's* MVS/CE, not this one. The archive is the reference the recorded figures
+belong to; a re-run is a new reference and has to be re-baselined.
 
 ## The recipe
 

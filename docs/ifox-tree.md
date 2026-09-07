@@ -140,6 +140,11 @@ the number of cards, and 10 produced no deck locally at all.
 | **as370 0** | 4,049 | 21 | **84** |
 | **as370 8+** | **522** | 3 | 849 |
 
+The `as370 8+` row bands every non-zero return code together, so its 522 is the
+512 modules of package A plus the 10 that produced no deck at all (`rc 2`). 849
+is likewise the whole class both assemblers flag; **the decks differ in 393 of
+them** and the other 456 belong to the source.
+
 The two off-diagonal cells are defects the deck comparison cannot see, because
 one of the two assemblers refuses to produce a deck at all — or produces one
 without a word while the other objects.
@@ -150,10 +155,11 @@ without a word while the other objects.
 |---|---:|
 | **the assembler — for cc370** | **2,112** |
 | — silent divergence: both clean, object different anyway | 1,113 |
-| — both flag, and the decks differ | 849 |
 | — as370 rejects what Assembler XF assembles | 512 |
+| — both flag, **and the decks differ** | 393 |
 | — IFOX00 flags, as370 is silent | 84 |
 | — no deck on one side | 8 |
+| — as370 does not terminate | 2 |
 | **the source — ours** | 3,416 |
 
 `silent divergence` is the class this run exists for. `IGG019PF` is the pattern:

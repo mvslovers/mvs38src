@@ -48,9 +48,11 @@ first:
 | | Modules |
 |---|---:|
 | silent divergence — both clean, object different | 1,113 |
-| both flag, and the decks differ | 849 |
 | `as370` rejects what Assembler XF assembles | 512 |
+| both flag, **and the decks differ** (of 849 that both flag) | 393 |
 | IFOX00 flags, `as370` is silent | 84 |
+| no deck on one side | 8 |
+| `as370` does not terminate | 2 |
 
 The third class is already broken down by message
 ([`as370-flags.tsv`](work/measurements/ifox-run/as370-flags.tsv)); on the first
