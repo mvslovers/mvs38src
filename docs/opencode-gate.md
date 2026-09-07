@@ -236,3 +236,27 @@ two happened to be true anyway. The third was false and hid the `COPY` chain.
 
 **Use `/usr/bin/grep` or `rg` on this material, or do the scan in Python.**
 An empty result from a bare `grep` over `MVSBLD/` is not evidence of absence.
+
+## One candidate list did predict, and it is worth saying which
+
+cc370, correcting its own `&&` count after hitting the same `grep` trap, put the
+population at **1,124**. That number counts `&&` **anywhere in the file, comment
+cards included**, and a `&&` in a comment cannot reach the object code. Measured
+on code cards it is **144** — and every one of those 144 has it in *open* code,
+so the two rules pick the same set.
+
+That list behaves nothing like the others:
+
+| | modules | of them moved | identities gained |
+|---|---:|---:|---:|
+| open-code emit-path reference (`--mode emit`) | 258 | 62 | 11 |
+| **`&&` in a code card** | **144** | **71** | **29 — all of them** |
+
+**Half of the `&&` list moved, and it contains every identity the `&&` commit
+gained.** So "candidate scans do not predict movers" is too strong as a general
+claim, and the distinction is worth keeping: `&&` is a **lexical fact of the
+card** — either the two characters are there or they are not. A variable-symbol
+reference is only the *start* of a value flow, and `BLSR3270` is the proof of
+what that flow crosses: fourteen `COPY` members and a `GBLC`.
+
+**Scan where the defect is lexical. Measure the tree where it is not.**
