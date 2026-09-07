@@ -1,6 +1,6 @@
 # TODO — MVS 3.8j source recovery
 
-As of 2026-09-06, end of day. The working list for [`docs/workplan.md`](docs/workplan.md).
+As of 2026-09-07, midday. The working list for [`docs/workplan.md`](docs/workplan.md).
 The plan says *why* and *where to*; this list says *what next*.
 
 **Key:** 🔒 blocks other work · ⚡ runs in parallel, blocks nothing ·
