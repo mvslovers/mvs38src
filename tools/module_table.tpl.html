@@ -1,0 +1,262 @@
+<title>IFOX00 against as370</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#f2f4f7; --card:#ffffff; --rule:#d5dae2; --rule-soft:#e6eaf0;
+  --ink:#141a22; --ink-2:#4a5666; --ink-3:#78859a;
+  --accent:#1f3a5f; --accent-soft:#e3eaf4;
+  --tool:#a8362a; --source:#8a6414; --holes:#5d7233; --recovered:#1f6b52;
+  --none:#7a8697;
+  --tool-bg:#f7e6e3; --source-bg:#f7efdd; --holes-bg:#eaf0df; --recovered-bg:#dcefe7;
+  --none-bg:#e8ebef;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#12151a; --card:#191d24; --rule:#2c333d; --rule-soft:#232a33;
+    --ink:#e7eaef; --ink-2:#a5b0bf; --ink-3:#78849a;
+    --accent:#9fc0e8; --accent-soft:#1d2733;
+    --tool:#e88b7e; --source:#dbb35a; --holes:#a6c06e; --recovered:#6fc7a4;
+    --none:#8d99aa;
+    --tool-bg:#33201d; --source-bg:#332b18; --holes-bg:#253019; --recovered-bg:#153029;
+    --none-bg:#242a33;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#12151a; --card:#191d24; --rule:#2c333d; --rule-soft:#232a33;
+  --ink:#e7eaef; --ink-2:#a5b0bf; --ink-3:#78849a;
+  --accent:#9fc0e8; --accent-soft:#1d2733;
+  --tool:#e88b7e; --source:#dbb35a; --holes:#a6c06e; --recovered:#6fc7a4;
+  --none:#8d99aa;
+  --tool-bg:#33201d; --source-bg:#332b18; --holes-bg:#253019; --recovered-bg:#153029;
+  --none-bg:#242a33;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  font-size:14px; line-height:1.5; padding:28px 22px 80px;
+}
+.wrap{max-width:1500px; margin:0 auto; display:flex; flex-direction:column; gap:22px}
+
+header h1{
+  font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;
+  font-weight:600; font-size:30px; letter-spacing:-.01em; margin:0 0 6px;
+  text-wrap:balance;
+}
+header p{margin:0; color:var(--ink-2); max-width:64ch}
+header .meta{margin-top:10px; color:var(--ink-3); font-family:"IBM Plex Mono",monospace; font-size:12px}
+
+.summary{display:grid; grid-template-columns:minmax(0,3fr) minmax(0,2fr); gap:18px; align-items:start}
+@media(max-width:900px){.summary{grid-template-columns:1fr}}
+
+.cards{display:flex; flex-wrap:wrap; gap:8px}
+.card{
+  flex:1 1 130px; background:var(--card); border:1px solid var(--rule);
+  border-left:4px solid var(--none); border-radius:3px; padding:10px 12px;
+  display:flex; flex-direction:column; gap:2px; text-align:left; cursor:pointer;
+  font:inherit; color:inherit;
+}
+.card:hover{border-color:var(--accent)}
+.card.sel{background:var(--accent-soft); border-color:var(--accent)}
+.card .n{font-family:"IBM Plex Mono",monospace; font-size:22px; font-weight:600; font-variant-numeric:tabular-nums}
+.card .l{font-family:"IBM Plex Sans Condensed",sans-serif; font-size:11.5px;
+  text-transform:uppercase; letter-spacing:.06em; color:var(--ink-2)}
+.c-tool{border-left-color:var(--tool)} .c-tool .n{color:var(--tool)}
+.c-source{border-left-color:var(--source)} .c-source .n{color:var(--source)}
+.c-holes{border-left-color:var(--holes)} .c-holes .n{color:var(--holes)}
+.c-recovered{border-left-color:var(--recovered)} .c-recovered .n{color:var(--recovered)}
+
+.matrix{background:var(--card); border:1px solid var(--rule); border-radius:3px; padding:12px 14px}
+.matrix h2{
+  font-family:"IBM Plex Sans Condensed",sans-serif; font-size:11.5px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.06em; color:var(--ink-2); margin:0 0 8px;
+}
+.matrix table{border-collapse:collapse; font-family:"IBM Plex Mono",monospace; font-size:13px}
+.matrix th{color:var(--ink-3); font-weight:500; padding:3px 10px; text-align:right}
+.matrix thead th{text-align:center}
+.matrix td{padding:0; text-align:center}
+.matrix .mx{
+  font:inherit; color:var(--ink); background:none; border:1px solid transparent;
+  border-radius:2px; padding:3px 12px; min-width:56px; cursor:pointer;
+  font-variant-numeric:tabular-nums;
+}
+.matrix .mx:hover{border-color:var(--accent)}
+.matrix .mx.on{color:var(--tool); font-weight:600}
+.matrix .mx.sel{background:var(--accent-soft); border-color:var(--accent)}
+.matrix .cap{margin-top:8px; color:var(--ink-3); font-size:11.5px; line-height:1.45}
+
+.controls{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+input[type=search]{
+  font:inherit; font-family:"IBM Plex Mono",monospace; padding:7px 10px;
+  border:1px solid var(--rule); border-radius:3px; background:var(--card);
+  color:var(--ink); min-width:300px; flex:1 1 300px;
+}
+input[type=search]:focus-visible, .card:focus-visible, .mx:focus-visible, .clear:focus-visible{
+  outline:2px solid var(--accent); outline-offset:1px;
+}
+.count{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-2); font-variant-numeric:tabular-nums}
+.clear{
+  font:inherit; font-size:12.5px; background:none; border:1px solid var(--rule);
+  border-radius:3px; padding:5px 10px; color:var(--ink-2); cursor:pointer;
+}
+.clear:hover{border-color:var(--accent); color:var(--ink)}
+
+.tablewrap{background:var(--card); border:1px solid var(--rule); border-radius:3px; overflow-x:auto}
+table.main{border-collapse:collapse; width:100%; font-family:"IBM Plex Mono",monospace; font-size:12.5px}
+table.main thead th{
+  position:sticky; top:0; z-index:2; background:var(--card);
+  font-family:"IBM Plex Sans Condensed",sans-serif; font-size:11px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.05em; color:var(--ink-2);
+  text-align:left; padding:9px 10px; border-bottom:1px solid var(--rule); white-space:nowrap;
+}
+table.main tbody tr{
+  border-bottom:1px solid var(--rule-soft);
+  content-visibility:auto; contain-intrinsic-size:0 30px;
+}
+table.main tbody tr:hover{background:var(--accent-soft)}
+table.main td{padding:5px 10px; vertical-align:top}
+td.mod{font-weight:600; white-space:nowrap}
+td.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--ink-2)}
+td.rc{text-align:center; font-variant-numeric:tabular-nums}
+td.msg{max-width:640px}
+.msg .line{display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+tr.open .msg .line{white-space:normal}
+.msg .tag{
+  font-family:"IBM Plex Sans Condensed",sans-serif; font-size:10px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-3); margin-right:6px;
+}
+.pill{
+  display:inline-block; padding:1px 7px; border-radius:9px; font-size:11px;
+  font-family:"IBM Plex Sans Condensed",sans-serif; letter-spacing:.03em; white-space:nowrap;
+}
+.p-tool{background:var(--tool-bg); color:var(--tool)}
+.p-source{background:var(--source-bg); color:var(--source)}
+.p-holes{background:var(--holes-bg); color:var(--holes)}
+.p-recovered{background:var(--recovered-bg); color:var(--recovered)}
+.p-none{background:var(--none-bg); color:var(--none)}
+.stripe{border-left:3px solid var(--none)}
+.s-tool{border-left-color:var(--tool)} .s-source{border-left-color:var(--source)}
+.s-holes{border-left-color:var(--holes)} .s-recovered{border-left-color:var(--recovered)}
+footer{color:var(--ink-3); font-size:12px; line-height:1.6}
+footer code{font-family:"IBM Plex Mono",monospace; color:var(--ink-2)}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>IFOX00 against as370</h1>
+  <p>Every module of Dave Kreiss' MVS 3.8j tree assembled twice — once by the real
+     Assembler XF under MVS/CE, once by the host assembler — from the same source and
+     the same 1,822 macros. What differs is the tool and nothing else.</p>
+  <div class="meta"><!--TOTAL--> modules · deck comparison on columns 1–72 with the END card excluded · <!--TOOLBREAK--></div>
+</header>
+
+<section class="summary">
+  <div>
+    <div class="cards"><!--CARDS--></div>
+  </div>
+  <div class="matrix">
+    <h2>Return codes · as370 down, IFOX00 across</h2>
+    <table><thead><tr><th></th><!--MHEAD--></tr></thead><tbody><!--MBODY--></tbody></table>
+    <p class="cap">The diagonal is agreement about whether anything is wrong. Off it, one
+       assembler is content where the other is not — a class the deck comparison cannot see.</p>
+  </div>
+</section>
+
+<div class="controls">
+  <input type="search" id="q" placeholder="module, message, IFO code…" autocomplete="off">
+  <span class="count" id="count"></span>
+  <button class="clear" id="clear">clear filters</button>
+</div>
+
+<div class="tablewrap">
+  <table class="main">
+    <thead><tr>
+      <th>module</th><th>as370</th><th>IFOX</th><th>decks</th><th>DLIB</th>
+      <th>first diff</th><th>IFOX B</th><th>as370 B</th><th>messages</th>
+    </tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+</div>
+
+<footer>
+  Source of record: <code>work/measurements/ifox-run/module-table.tsv</code>.
+  Messages are the assemblers' own, deduplicated per module and cut at six.
+  A row is <span class="pill p-tool">tool</span> when the two decks differ,
+  <span class="pill p-source">source</span> when they agree and the DLIB member does not,
+  <span class="pill p-recovered">recovered</span> when all three agree.
+</footer>
+</div>
+
+<script>
+const DATA = /*DATA*/;
+const [MOD,ARC,IRC,TOOL,DLIB,OFF,LI,LA,AMSG,IMSG,CLS,PAIR] = [0,1,2,3,4,5,6,7,8,9,10,11];
+const rowsEl = document.getElementById('rows');
+const countEl = document.getElementById('count');
+const q = document.getElementById('q');
+let fClass = null, fRc = null, chunk = null;
+
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pill = c => `<span class="pill p-${c==='tool'?'tool':c==='source'?'source':c==='holes'?'holes':c==='recovered'?'recovered':'none'}">${c}</span>`;
+
+function match(r){
+  if (fClass && r[CLS] !== fClass) return false;
+  if (fRc && r[PAIR] !== fRc) return false;
+  const t = q.value.trim().toLowerCase();
+  if (t && !(r[MOD].toLowerCase().includes(t) || r[AMSG].toLowerCase().includes(t)
+             || r[IMSG].toLowerCase().includes(t))) return false;
+  return true;
+}
+
+function render(){
+  if (chunk) cancelAnimationFrame(chunk);
+  const hits = DATA.filter(match);
+  countEl.textContent = hits.length + ' of ' + DATA.length + ' modules';
+  rowsEl.replaceChildren();
+  let i = 0;
+  const step = () => {
+    const frag = document.createDocumentFragment();
+    for (let n = 0; n < 400 && i < hits.length; n++, i++){
+      const r = hits[i];
+      const tr = document.createElement('tr');
+      tr.className = 'stripe s-' + r[CLS];
+      tr.innerHTML =
+        `<td class="mod">${esc(r[MOD])}</td>`
+      + `<td class="rc">${esc(r[ARC])}</td>`
+      + `<td class="rc">${esc(r[IRC])}</td>`
+      + `<td>${pill(r[TOOL]||'—')}</td>`
+      + `<td>${pill(r[DLIB]||'—')}</td>`
+      + `<td class="num">${esc(r[OFF])}</td>`
+      + `<td class="num">${esc(r[LI])}</td>`
+      + `<td class="num">${esc(r[LA])}</td>`
+      + `<td class="msg">`
+      + (r[AMSG] ? `<span class="line" title="${esc(r[AMSG])}"><span class="tag">as370</span>${esc(r[AMSG])}</span>` : '')
+      + (r[IMSG] ? `<span class="line" title="${esc(r[IMSG])}"><span class="tag">ifox</span>${esc(r[IMSG])}</span>` : '')
+      + (!r[AMSG] && !r[IMSG] ? `<span class="line" style="color:var(--ink-3)">clean on both sides</span>` : '')
+      + `</td>`;
+      tr.addEventListener('click', () => tr.classList.toggle('open'));
+      frag.appendChild(tr);
+    }
+    rowsEl.appendChild(frag);
+    if (i < hits.length) chunk = requestAnimationFrame(step);
+  };
+  step();
+}
+
+document.querySelectorAll('[data-filter]').forEach(el => {
+  el.addEventListener('click', () => {
+    const [kind, val] = el.dataset.filter.split(':');
+    const sel = el.classList.contains('sel');
+    document.querySelectorAll(`[data-filter^="${kind}:"]`).forEach(x => x.classList.remove('sel'));
+    if (!sel) el.classList.add('sel');
+    if (kind === 'class') fClass = sel ? null : val; else fRc = sel ? null : val;
+    render();
+  });
+});
+q.addEventListener('input', () => render());
+document.getElementById('clear').addEventListener('click', () => {
+  fClass = fRc = null; q.value = '';
+  document.querySelectorAll('.sel').forEach(x => x.classList.remove('sel'));
+  render();
+});
+render();
+</script>
