@@ -147,3 +147,60 @@ in an ESD section length. That one is open.
 
 `opencond2.txt` is left as it is and the `TODO` link corrected. The three lists
 above are `work/measurements/opencode-{set,emit,cond}.txt`.
+
+---
+
+# What cc370#151 is exposed to here
+
+cc370 traced `BLSR3270` to a third defect: `as370` clips a `SETC` value at 95
+characters where IFOX00 holds 255, so a 128-character translation table indexed
+near its end returns null. They asked the one question that is ours rather than
+theirs — **are the exposed macro members among the mirror members whose
+provenance is still open?**
+
+[`tools/setc95.py`](../tools/setc95.py) counts the value the way IFOX does:
+literal content, `''` folded to `'` and `&&` to `&`, concatenated operands
+summed, continuations joined at column 72 first.
+
+| library | members with a `SETC` value over 95 | provenance |
+|---|---:|---|
+| `AMACLIB` | 10 | IBM, from the MVS/CE 2.1.4 DLIBs |
+| `AMODGEN` | 2 | IBM |
+| `AGENLIB` | 2 | IBM |
+| `ATCAMMAC` | 1 | IBM |
+| **`mirror`** | **2** | **web mirror, maintenance level unestablished** |
+
+**Fifteen of the seventeen are IBM's own material**, so #151's exposure does not
+rest on anything we doubt. The full list is
+[`../work/measurements/setc-over-95.txt`](../work/measurements/setc-over-95.txt).
+
+## The witness, though, is entirely mirror material
+
+The two in `mirror/` are `BLSCAMMM` (104) and **`BLSR327M` (128) — the macro
+holding `&TR3270`**, the table in cc370's own reduction. The two macros that
+index it, `BLSRCVTA` and `BLSRSF`, are mirror-only as well. All four arrived in
+the web-mirror import of 2026-09-05 and exist nowhere else on this machine, and
+all four appear in the tape's `++MAC` inventory — Dave Kreiss' build expects
+them; the tape does not deliver them.
+
+So the length of `&TR3270` is not an established fact. **Keep #151 and drop
+`BLSR3270` as its witness:** the defect is proved by cc370's own reduced case in
+`as370`'s test corpus, which owes nothing to a mirror.
+
+## Two counts that do not reconcile, and one of them is a scanner artifact
+
+cc370 measured 46 macro members and 5 MVSBLD modules. This rule gives **17 and
+zero**. The zero is not a near miss: **the longest `SETC` literal in any of the
+5,528 modules is 48 characters** (`ICBVMG00`).
+
+A looser rule — operand *text* over 95 characters rather than value — gives 28
+and 1, and that one module is `IGARPT01`, whose statements look like
+
+```
+&IGADDR  SETC  'X''00'''  THE OFFSET TO THE ADDRESS OF THE MODULE …
+```
+
+a three-character value with a long remark. **The loose rule is measuring the
+remarks field**, which is cc370#149 wearing different clothes — an attribute or
+quote state that runs past the operand. Any count of "long `SETC`" built without
+splitting the remarks off will inherit it.
