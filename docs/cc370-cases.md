@@ -13,6 +13,14 @@ decks part company and both section lengths. This page is the way in.
 **These are cases, not diagnoses.** Every line below is what was measured. What
 the cause is, is cc370's to find.
 
+⚠️ **The message column is a set, not a sequence.** as370 dumps its diagnostics
+by category, not in source order (undefined-symbol last), so the first message
+listed for a module is not its first defect; and `line_org` folds
+macro-generated diagnostics onto the call card, so their line numbers point at
+the call. Reported by cc370 on 2026-09-07 and confirmed here as a property of the
+output, not of this pipeline. Partitioning these modules by "first diagnostic"
+gives a wrong answer.
+
 **What the work is worth, measured rather than hoped.** Of the 2,112 modules,
 **five** are already byte-identical to their DLIB member; the rest are blocked.
 Where the two assemblers already agree, 28.2 % of modules with a DLIB

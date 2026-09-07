@@ -12,6 +12,15 @@ as370 prints its diagnostics as
 
 and the exit code is the highest severity. The message text is the useful key --
 most messages carry no IFOX code at all.
+
+**The order of these messages is not source order.** cc370 pointed this out on
+2026-09-07: as370 dumps its diagnostics by category (`as370.c:3936-4038`, with
+undefined-symbol last), so a module carrying any addressability or relocation
+error can never show an undefined symbol first, whatever the source says. Read
+this column as *the set of things as370 objected to*, never as "the first
+defect". Line numbers carry the same warning: `line_org` folds every
+macro-generated diagnostic onto the macro call card, so all 75 of `IFG0190P`'s
+say "in line 1".
 """
 import os, re, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
