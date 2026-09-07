@@ -128,8 +128,10 @@ finishes, and it does not move systematically as it completes.
 
 ## What it found
 
-*Figures below are against `as370` at cc370 **879e86a** — the merge of #164 and
-#165, re-baselined 2026-09-07. The run that established the method was against
+*Figures below are against `as370` at cc370 **3d6a997** — #164, #165 and #166
+merged, re-baselined 2026-09-07. #166 changed the diagnostics path only and moved
+**no deck: 0 of 5,518 differ by sha256**, so every figure here is the same as at
+`879e86a`. The run that established the method was against
 `ee1090b`; both numbers are given where the change matters.
 [`work/measurements/ifox-run/as370-baseline.txt`](../work/measurements/ifox-run/as370-baseline.txt)
 records which build every figure belongs to. The IFOX00 side does not move.*

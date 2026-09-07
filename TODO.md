@@ -82,6 +82,17 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
   Kreiss' tape — but no difference in this run can be blamed on the two sides
   reading different macros.
 
+### Three fixes in; the gate is now the release path
+
+cc370#164, #165 and #166 are merged (`3d6a997`), each measured here before the
+merge. **Mike delegated the merge decision to this session on 2026-09-07**, so a
+cc370 PR is confirmed and merged here after a gate run, not escalated.
+
+#166 (diagnostics in source order, statement named) is the first change accepted
+on a *no movement* claim, and that needed a stricter test than the verdict
+counts: **0 of 5,518 decks differ by sha256**, and all seven Package A class
+memberships unchanged, both binaries built and classified here.
+
 ### The first two fixes are in, and re-baselined
 
 cc370#164 (`.*` is a comment card in `parse()`) and cc370#165 (IPK and PTLB take

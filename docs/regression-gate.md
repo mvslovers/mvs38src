@@ -74,6 +74,25 @@ lost is not "+1"; it is a gain and a break, and the break has a module name.
   sequence number; the `END` card is where each assembler names itself and dates
   the assembly.
 
+## Verdict counts are not enough to accept a "moves nothing" change
+
+`retest.py` compares verdicts. A change that swapped two modules in opposite
+directions would leave the identical count unchanged and pass. For a PR whose
+claim is *no deck moves*, compare the decks themselves:
+
+```python
+import hashlib, os
+h = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
+base = "work/measurements/ifox-run/as370"
+diff = [m for m in (f[:-4] for f in os.listdir(base) if f.endswith(".obj"))
+        if h(f"obj_<label>/{m}.obj") != h(f"{base}/{m}.obj")]
+```
+
+cc370#166 was accepted on that test: **0 of 5,518 decks changed**, and the
+membership of all seven Package A classes was unchanged as well — checked by
+building both binaries and running the classification twice, rather than assuming
+it from the diff.
+
 ## What must not be carried across a merge
 
 Figures a peer derives from `as370`'s message output are not counts, and cc370
