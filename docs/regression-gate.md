@@ -99,6 +99,39 @@ membership of all seven Package A classes was unchanged as well — checked by
 building both binaries and running the classification twice, rather than assuming
 it from the diff.
 
+## A documentation-only PR is checked on the binary, not the diff
+
+A change that claims to touch no source is verified by building it and comparing
+the binary against the current build byte for byte. cc370#176 and #179 were both
+accepted that way. Reading the file list tells you what the diff touched; the
+binary tells you what the compiler saw.
+
+```sh
+git -C ~/repos/mvs/cc370 worktree add /tmp/wt-pr <ref> --detach
+make -C /tmp/wt-pr as370/as370
+cmp /tmp/wt-pr/as370/as370 /path/to/current/as370   # must be identical
+```
+
+## Populations are provisional while the assembler moves
+
+Any class list derived from `as370`'s own behaviour is a snapshot of the
+assembler, not an inventory of the work, and it wants re-deriving after every
+merge. Three instances in one day:
+
+- **#174** removed a 63-character clamp on operand fields, and `IHANVT` (33
+  modules) and `UCBDADVC` (32) — two of the three largest entries on the
+  missing-macro hunting list — **dissolved entirely**. The modules that appeared
+  to need them resolve them from a library we already had.
+- **#154's reach** was read here as evidence about the `USING` table. It was
+  evidence about `EQU` section attribution, and the wrong reading nearly buried a
+  +282 fix inside a +108 one.
+- **#178** took `as370 alone flags` from 233 to 236 while the three new entries'
+  decks improved tenfold. The residual they expose is #154's class, previously
+  hidden behind the defect that has just been fixed.
+
+So a class count belongs next to the binary that produced it, the same way an
+identity figure does.
+
 ## What must not be carried across a merge
 
 Figures a peer derives from `as370`'s message output are not counts, and cc370
