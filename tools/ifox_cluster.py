@@ -97,7 +97,11 @@ def main():
         if not (os.path.exists(pi) and os.path.exists(pa)):
             continue
         for name, li, la, first, n in diff(pi, pa):
-            kind = ("length" if li != la else
+            # a section this tool could not name is not comparable by name: the
+            # pairing is what would be wrong, not the assembler. 24 modules.
+            kind = ("unnamed" if name.startswith("#") else
+                    "section only on one side" if 0 in (li, la) else
+                    "length" if li != la else
                     "prologue" if first < 16 else "text")
             out.write(f"{m}\t{name}\t{li}\t{la}\t{first:#07x}\t{n}\t{kind}\n")
             kinds[kind].append((m, name, li, la, first, n))
