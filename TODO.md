@@ -248,42 +248,20 @@ fake:
 | further | 23 |
 | correct -> wrong | 2 |
 
-The two are  and , and neither was near recovery. 
-held IFOX00's exact length with **7,503 of its 10,938 bytes wrong** — a correct
-length over entirely wrong content. So a length measure can flatter as badly as a
-byte measure can condemn, and the honest report needs both. cc370 proposed the
-instrument; that caveat came out of using it.
+The two are `IFG0196W` and `IEAVSWCH`, and neither was near recovery.
+`IEAVSWCH` held IFOX00's exact length with **7,503 of its 10,938 bytes wrong** —
+a correct length over entirely wrong content. So a length measure can flatter as
+badly as a byte measure can condemn, and the honest report needs both. cc370
+proposed the instrument; that caveat came out of using it.
 
 **And a consequence for every population we have quoted.** A macro argument cut
 at 63 characters changes what the expansion emits, so a construct could appear or
 disappear from the expanded source depending on this defect. Every scan either
-side ran before this commit measured Usage: as370 [options...] file
- Options:
-  -- -m              accept any valid HLASM option (not yet implemented)
-  -a[sub-option...]  turn on listings
-                     Sub-options:
-                     e     produce external symbol dictionary
-                     g     produce general purpose register cross-reference (not yet implemented)
-                     i     produce product information (not yet implemented)
-                     m     produce macro and copy code source summary (not yet implemented)
-                     r     produce relocation dictionary
-                     s     produce ordinary symbol and literal cross-reference (not yet implemented)
-                     x     produce DSECT cross-reference (not yet implemented)
-                     =FILE list to FILE (must be last sub-option)
-  --help             show this message and exit
-  -I dir             add PDS or HFS directory name to the search list for assembler macros
-  -o OBJFILE         name object-file output OBJFILE in binary mode
-  -v                 print as utility version
-
-macro search order (highest first):  -I dirs ; $AS370_MACLIB ; <exedir>/../macros
-  the last is a built-in relocatable default -- the installed sysroot macro
-  library found from this executable's own path, so an installed as370
-  (<prefix>/<triple>/bin/as370) assembles with no -I and no environment.
-  AS370_MACLIB is a colon-separated override (the assembler C_INCLUDE_PATH).'s truncated expansion, not the
+side ran before this commit measured `as370`'s truncated expansion, not the
 program. Populations derived that way were lower bounds.
 
-Baseline `517161c`: **as370 == IFOX00 3,823 of 5,528 (69.2 %)**, recovered **915**,
-silent divergences 1,169 -> 977, hand-over list 2,107 -> **1,756**.
+Baseline `2126de0`: **as370 == IFOX00 3,913 of 5,528 (70.8 %)**, recovered **920**,
+silent divergences 1,169 -> **906**, hand-over list 2,107 -> **1,669**.
 
 #172's five are the same shape as before but at a larger scale, and were weighed
 individually: `IEBVMS` 77 % wrong -> 80 %, `IGC0M05B` 90.5 % -> 94 %,
