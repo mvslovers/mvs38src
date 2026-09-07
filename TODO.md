@@ -339,20 +339,37 @@ variant. **It is not 1,025 measurable modules and must not be quoted as one:**
 
 | | Members |
 |---|---:|
-| macros — no object anywhere, and standalone assembly yields an empty deck | 597 |
-| source, no object in any distribution library | 412 |
-| **source with an object — a byte verdict is possible** | **16** |
+| **module — produces a CSECT, has a DLIB object: a byte verdict is possible** | **16** |
+| module, no object to compare against | 169 |
+| macro — meaningless standalone, needs a driver or a library | 590 |
+| dsect / `COPY` member — no CSECT, but exercises the same expression evaluator | 250 |
 
-So the corpus is worth having for exactly the reason it was wanted — a construct
-that does not occur in Kreiss' tree is invisible to every measurement made here,
-and an `as370` failure is a case whether or not an object exists to compare
-against. It is worth **428** for that, and **16** for byte identity.
+**185 modules, not 428.** `mvssrc` first classified by the member's *first*
+statement — not `MACRO`, therefore source — and PL/S members like `IHASPCT` open
+with comment text and a `%GOTO` and carry their `MACRO` further down. 15 macros
+were counted as source and 22 members with a real `CSECT` as macros. They found
+it while re-deriving our blocker figure independently, and they say plainly what
+let it through: their control only asked whether a *macro* had an object, never
+whether a *source* was a macro. One-directional, so it could not see this.
+
+The corrected classification is checked both ways: no macro and no dsect has an
+object, and every member with an object is a module.
+
+Worth running anyway: the **250 dsects**. They produce no CSECT and so admit no
+verdict, but they drive the same expression evaluator, which is where most of
+this session's defects were found.
 
 ⚠️ **And a trap they marked before we could walk into it.** 129 of the 1,025 are
 the members with the missing comment star, 122 of them `kind=source` — 12.6 % of
 this corpus against 2.2 % of the tree. A message count over it would show
 `INVALID OPERATION CODE` heavily overrepresented and it would look like a finding
 about the corpus. Filter on `blank_comment_marker = yes`.
+
+**The blocker count is confirmed twice.** `mvssrc` re-derived our 51-operation
+figure independently and got the same four hits: `ISDAFSPC` (27 modules),
+`IHASPCT` (7), `IHASHDR` (1), `IECDSCD` (1). The largest of the 47 that are
+missing there too: `IHANVT` (33), `DSGEN` (33), `LINE` (33), `UCBDADVC` (32),
+`ILRAIA` (30), `ROUTINE` (28). Two computations from different data, one answer.
 
 Nothing is taken from the tree until Mike releases it.
 
