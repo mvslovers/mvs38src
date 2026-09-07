@@ -115,3 +115,94 @@ five cards "differing" entirely there.
 Because the order after the controls is a fixed shuffle, **any prefix of the run
 is an unbiased sample of the tree**: the split can be read off before the run
 finishes, and it does not move systematically as it completes.
+
+## What it found
+
+All 5,528 modules assembled both ways, every one of them with a deck on the MVS
+side, nothing left outstanding.
+
+**`as370` and IFOX00 produce the same object for 3,466 of 5,528 modules —
+62.7 %.** Of the rest, 1,334 differ in bytes at the same length, 718 differ in
+the number of cards, and 10 produced no deck locally at all.
+
+| Return codes | IFOX 0 | IFOX 4 | IFOX 8+ |
+|---|---:|---:|---:|
+| **as370 0** | 4,049 | 21 | **84** |
+| **as370 8+** | **522** | 3 | 849 |
+
+The two off-diagonal cells are defects the deck comparison cannot see, because
+one of the two assemblers refuses to produce a deck at all — or produces one
+without a word while the other objects.
+
+### Whose problem each module is
+
+| | Modules |
+|---|---:|
+| **the assembler — for cc370** | **2,112** |
+| — silent divergence: both clean, object different anyway | 1,113 |
+| — both flag, and the decks differ | 849 |
+| — as370 rejects what Assembler XF assembles | 512 |
+| — IFOX00 flags, as370 is silent | 84 |
+| — no deck on one side | 8 |
+| **the source — ours** | 3,416 |
+
+`silent divergence` is the class this run exists for. `IGG019PF` is the pattern:
+both assemblers exit clean and say nothing, IFOX00 emits 144 bytes, `as370`
+emits 265, and the first difference sits at `0x89`. Nothing in the DLIB
+comparison could have separated that from a source defect.
+
+### On the population the project's own figures are about
+
+Modules `as370` assembled cleanly that have a DLIB counterpart — 3,719 of them:
+
+| | Modules | |
+|---|---:|---:|
+| source | 1,357 | 36.5 % |
+| **tool** | **1,052** | **28.3 %** |
+| recovered — all three agree | 869 | 23.4 % |
+| source, `DS` holes only | 441 | 11.9 % |
+
+**Two controls hold.** The 869 recovered stand against the 874 byte-identical
+modules the repository last recorded — the same yardstick, measured again
+through a different pipeline. And the assembly stamp, which had 302 modules
+under suspicion, explains **exactly one** of the 1,334 byte differences: every
+differing module was re-assembled locally with the date and time that IFOX run
+used, and one became identical.
+
+The sample of thirty had said 14 source, 11 tool. Over the whole tree it is
+36 % source against 28 % tool, with 12 % holes and 23 % already finished. The
+method carries.
+
+## What broke, and what it cost
+
+**The MVS FTP server wedged after 3,900 modules.** It accepted the connection
+and never sent a banner again — to `tnftp` and to `ftplib` alike — and killing
+every client did not free it. The stall was not the worst of it: the session it
+left behind held `IBMUSER.IFOXOBJ`, so every `DISP=OLD` allocation on that
+library waited for ever, and the assemblies stopped with it. Measured rather
+than guessed: the same job punching into a fresh data set finished in under a
+second.
+
+The run continued without restarting anything on the system, because **the REST
+files API does what the spool route could not**:
+
+| | |
+|---|---|
+| deck download | `X-IBM-Data-Type: binary` — byte-exact. **Without that header a 320-byte deck comes back as 96 bytes, and nothing says so** |
+| source upload | `PUT .../ds/PDS(member)` — controlled: the same source uploaded this way assembles to a deck identical to the one from the FTP-uploaded source |
+
+The earlier note that REST cannot return an object deck byte-exact
+([`ifox-oracle.md`](ifox-oracle.md)) is about **spool files** and stands; for a
+data set on DASD it does not apply.
+
+Cost of the switch: upload 1.8 s a member against 0.7 over FTP, download three
+times faster, 4.9 minutes a 150-module batch against 3.6.
+
+## The per-module table
+
+[`work/measurements/ifox-run/module-table.tsv`](../work/measurements/ifox-run/module-table.tsv)
+carries one row per module: what each assembler returned, how many statements it
+flagged, its highest severity, its messages, the deck verdict, the offset where
+the two decks part company, both section lengths, and the DLIB verdict. The rows
+are sorted so the hand-over list is one contiguous block at the top;
+`for-cc370.tsv` and `for-cc370.txt` are that block on its own.
