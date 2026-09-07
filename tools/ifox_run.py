@@ -43,7 +43,12 @@ ORDER = os.path.join(OUT, "order.txt")
 
 SYSLIB = ["SYS1.AMACLIB", "SYS1.AMODGEN", "SYS1.AGENLIB", "SYS1.ATSOMAC",
           "SYS1.ATCAMMAC", "SYS1.APVTMACS", "IBMUSER.PVTMAC"]
-SRCPDS, OBJPDS = "IBMUSER.SRC", "IBMUSER.IFOXOBJ"
+# The FTP server wedged mid-run on 2026-09-07: it accepted connections and never
+# sent a banner again, and the session it left behind held IBMUSER.IFOXOBJ, so
+# every DISP=OLD allocation on it waited for ever. The transfers now go through
+# the REST files API instead -- measured byte-exact in both directions, control
+# in docs/ifox-tree.md -- and onto data sets the stuck session never touched.
+SRCPDS, OBJPDS = "IBMUSER.SRC2", "IBMUSER.IFOXOB2"
 LSTPDS, DIAGSRC = "IBMUSER.IFOXLST", "IBMUSER.SRCD"
 PER_JOB, PER_BATCH, FTPJOBS = 25, 150, 3
 
@@ -96,35 +101,40 @@ def purge(jobname, jobid):
         pass
 
 
-def ftp(lines):
-    p = subprocess.run(["ftp", "-n", HOST, str(FTPPORT)],
-                       input="\n".join([f"user {USER} {PW}"] + lines + ["quit"]) + "\n",
-                       capture_output=True, text=True)
-    return p.stdout + p.stderr
+FILES = f"http://{HOST}:{PORT}/zosmf/restfiles/ds"
+
+
+def cards(m):
+    """The 80-column card images of one member, CRLF stripped."""
+    out = [l.decode("latin-1").ljust(80)[:80]
+           for l in open(f"{SRC}/{m}.ASM", "rb").read().split(b"\r\n")]
+    while out and out[-1].strip() == "":
+        out.pop()
+    return out
 
 
 def members(pds):
-    """The member names in a PDS, as the FTP server lists them."""
-    out = ftp([f"cd '{pds}'", "ls"])
-    names = set()
-    for line in out.splitlines():
-        t = line.split()
-        # a PDS without ISPF statistics lists one bare name per line -- the first
-        # version of this required two fields, found nothing, and made every
-        # upload run three times while reporting success
-        if t and t[0] != "Name" and re.fullmatch(r"[A-Z@#$][A-Z0-9@#$]{0,7}", t[0]):
-            names.add(t[0])
-    return names
+    """The member names in a PDS."""
+    try:
+        d = json.loads(_req("GET", f"{FILES}/{pds}/member"))
+    except Exception:
+        return set()
+    return {i["member"] for i in d.get("items", []) if i.get("member")}
 
 
 def upload(modules, pds=None):
-    """Serially -- three FTP sessions storing into one PDS lose members: the
-    first attempt at this put 47 of 150 there and said nothing."""
+    """One member at a time, and checked afterwards. Concurrency here has cost a
+    measurement once already: three parallel sessions writing into one PDS put
+    47 of 150 members there and reported success."""
     pds = pds or SRCPDS
     todo = list(modules)
     for _ in range(3):
-        ftp(["quote site RECFM=FB LRECL=80 BLKSIZE=19040", "ascii"] +
-            [f'put "{SRC}/{m}.ASM" \'{pds}({m})\'' for m in todo])
+        for m in todo:
+            try:
+                _req("PUT", f"{FILES}/{pds}({m})",
+                     ("\n".join(cards(m)) + "\n").encode("latin-1"), "text/plain")
+            except Exception:
+                pass
         have = members(pds)
         todo = [m for m in modules if m not in have]
         if not todo:
@@ -133,12 +143,18 @@ def upload(modules, pds=None):
 
 
 def download(modules):
-    """Serially, and checked. Three parallel sessions reading one PDS brought
-    back 45 of 135 members and reported nothing."""
+    """Byte-exact needs X-IBM-Data-Type: binary. Without it the deck comes back
+    transcoded -- 96 bytes where the deck is 320, and no error."""
     on_mvs = members(OBJPDS)
     want = [m for m in modules if m in on_mvs]
     for _ in range(3):
-        ftp(["binary"] + [f"get '{OBJPDS}({m})' {DECKS}/{m}.obj" for m in want])
+        for m in want:
+            try:
+                d = _req("GET", f"{FILES}/{OBJPDS}({m})",
+                         extra={"X-IBM-Data-Type": "binary"})
+                open(f"{DECKS}/{m}.obj", "wb").write(d)
+            except Exception:
+                pass
         want = [m for m in want if not os.path.exists(f"{DECKS}/{m}.obj")]
         if not want:
             break
@@ -365,7 +381,11 @@ def cmd_diag(args):
         for m in batch:
             if m not in on_mvs:
                 continue
-            ftp(["ascii", f"get '{LSTPDS}({m})' {OUT}/diag/{m}.full"])
+            try:
+                open(f"{OUT}/diag/{m}.full", "wb").write(
+                    _req("GET", f"{FILES}/{LSTPDS}({m})"))
+            except Exception:
+                pass
             if os.path.exists(f"{OUT}/diag/{m}.full"):
                 txt = open(f"{OUT}/diag/{m}.full", errors="replace").read()
                 # the FIRST page of the diagnostics section, not the last:
