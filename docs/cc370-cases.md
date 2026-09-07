@@ -58,6 +58,12 @@ five examples each:
 where the symbol is defined later. Three `as370` messages, one construct, and
 IFOX00 assembles it.
 
+**And two modules that never finish** —
+[cc370#163](https://github.com/mvslovers/cc370/issues/163). `HEWLDIOC` burned
+299 s of CPU and had produced nothing when it was killed; IFOX00 assembles it to
+8,160 bytes in under a second. `IFNX1A` the same. They are the only two the gate
+ever had to kill, and they are why the count of packages is 2,112 and not 2,110.
+
 ## B. Both assemblers silent, the object different — 1,113 modules
 
 The class the comparison exists for. Both exit clean, neither flags a statement,
