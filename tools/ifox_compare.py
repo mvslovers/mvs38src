@@ -189,11 +189,28 @@ def main():
     print(f"  as370 silent where IFOX00 flags (rc>=8): {len(flagged)}")
     if aben:
         print(f"  IFOX00 did not finish (abend / not run): {len(aben)}")
-    print("\nAttribution, where a DLIB counterpart exists:")
+    # cross-check: this distribution must match the tree-wide run that was
+    # measured without IFOX00 at all (docs/tree-wide-run.md). If it does not,
+    # the DLIB side of this run is not the same measurement.
+    rc0 = {r[0] for r in rows if r[1] == "0"}
+    dd = {}
+    for m, v in dv.items():
+        if m in rc0:
+            dd[v] = dd.get(v, 0) + 1
+    print("\nas370 against the distribution libraries, for control "
+          "(as370 rc 0 only -- tree-wide-run.md says 20.4 % identical, "
+          "10.5 % holes):")
+    for k in sorted(dd, key=lambda x: -dd[x]):
+        print(f"  {k:26s}: {dd[k]}")
+    # Attribution runs on the population the project's own figures are about:
+    # a module `as370` assembled cleanly, and that has a DLIB counterpart. Mixing
+    # in the modules as370 could not assemble drops the identical rate from
+    # 21 % to 16 % and makes the table incomparable with tree-wide-run.md.
+    print("\nAttribution, where as370 assembled cleanly and a DLIB member exists:")
     tab = {}
     for r in rows:
         d = dv.get(r[0], "no-pair")
-        if d == "no-pair":
+        if d == "no-pair" or r[1] != "0":
             continue
         t = tool(r)
         # a module with no deck on one side attributes nothing: it is not an
