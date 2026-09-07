@@ -331,6 +331,31 @@ that name.
 - **The member-name test undercounts** and must not be read as "not installed": a
   CSECT is usually bound into a load module of another name.
 
+### The second corpus, and what it can actually decide
+
+`mvssrc` has `handover/not-in-mvsbld.tsv` ready: the 1,025 members their tapes
+carry that `MVSBLD` does not, with tape, tape file, SSI, prefix and chosen
+variant. **It is not 1,025 measurable modules and must not be quoted as one:**
+
+| | Members |
+|---|---:|
+| macros — no object anywhere, and standalone assembly yields an empty deck | 597 |
+| source, no object in any distribution library | 412 |
+| **source with an object — a byte verdict is possible** | **16** |
+
+So the corpus is worth having for exactly the reason it was wanted — a construct
+that does not occur in Kreiss' tree is invisible to every measurement made here,
+and an `as370` failure is a case whether or not an object exists to compare
+against. It is worth **428** for that, and **16** for byte identity.
+
+⚠️ **And a trap they marked before we could walk into it.** 129 of the 1,025 are
+the members with the missing comment star, 122 of them `kind=source` — 12.6 % of
+this corpus against 2.2 % of the tree. A message count over it would show
+`INVALID OPERATION CODE` heavily overrepresented and it would look like a finding
+about the corpus. Filter on `blank_comment_marker = yes`.
+
+Nothing is taken from the tree until Mike releases it.
+
 ### The reference is not sound everywhere — and that is the next work here
 
 **IFOX00 flagged 933 of the 5,528 modules at `rc 8` or worse, so their decks are
