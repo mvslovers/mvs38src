@@ -31,20 +31,22 @@ belongs to the source or to IBM's maintenance.
 | attribution | [`tools/ifox_compare.py`](../tools/ifox_compare.py) |
 | localisation | [`tools/ifox_cluster.py`](../tools/ifox_cluster.py) |
 
-Throughput, measured: 150 modules per 3.5 minutes — 95 s to upload the sources,
-60 s to assemble them, 55 s to fetch the decks. IFOX00 itself needs about
-**0.4 s per module**; the transfers dominate.
+Throughput, measured: 3.6 minutes per 150 modules over FTP, 4.9 over REST. IFOX00
+itself needs about **0.4 s per module** — 50 to 60 s of each batch. The transfers
+dominate, and so does one deliberate limit: `DISP=OLD` on the punch library
+serialises the assemblies, so a fourth initiator would add nothing. Measured on
+the job start times, which form a staircase rather than overlapping.
 
 ## How the source gets there, and why not the other ways
 
 **Not through the reader.** mvsMF closes the connection on a 2.9 MB submission;
 twenty modules with their source in-stream is already that big. The sources go up
-by FTP into `IBMUSER.SRC` and the job reads `SYSIN` from the PDS, which makes a
-25-module job 12 KB of JCL.
+into a PDS and the job reads `SYSIN` from there, which makes a 25-module job
+12 KB of JCL.
 
 **Uploaded serially.** Three FTP sessions storing into one PDS put 47 of 150
-members there and reported success. Every batch is now uploaded in one session
-and the PDS directory is read back and compared against the batch.
+members there and reported success. Uploads are serial ever since, over either
+transport, and the PDS directory is read back and compared against the batch.
 
 **Punched with `DISP=OLD`.** Six jobs punching into one object PDS with
 `DISP=SHR` filed **20 of 244 decks under the wrong member name** — the member
@@ -52,8 +54,10 @@ and the PDS directory is read back and compared against the batch.
 set per step; the assembly time went from 43 s to 60 s per 150 modules, which is
 the whole price.
 
-**Fetched over FTP in binary.** `SYSPUNCH` does not come back byte-exact through
-the REST API, not even with `X-IBM-Data-Type: binary`.
+**Fetched byte-exact, first over FTP and then over REST.** A deck must come back
+byte for byte; the *spool* route cannot do it, and after the FTP server wedged
+mid-run the transfers moved to the REST files API, which can — see *What broke*
+below.
 
 ## The controls
 
