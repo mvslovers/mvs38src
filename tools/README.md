@@ -8,6 +8,9 @@ these exist because they were needed before those landed.
 | `awstape.py` | Walks an AWS tape image and yields its files and logical records. `python3 awstape.py TAPE.AWS` prints the structure — standard labels, data files, record counts |
 | `pdsunload.py` | Reads an IEBCOPY unload off such a tape **member by member**, directory included. Does what `file370` cannot yet (cc370#113) |
 | `measure-as370.sh` | Assembles a fixed sample with as370 and counts the clean ones, one line per module so two runs can be joined for regressions |
+| `gate.sh` + `gate-worker.sh` | Assembles all 5,528 MVSBLD modules, records the **return code** and keeps the deck whatever that code is, then hashes it. The gate for measuring what an `as370` change is worth |
+| `hashdecks.sh` | Hashes object decks with the `END` card excluded — it carries the assembly date, so without this every deck differs between two days |
+| `opencode_scan.py` | Finds conditional-assembly constructs in **open code** (outside `MACRO`/`MEND`), continuations joined: `--mode set`, `--mode emit`, `--mode cond` |
 | `ebcdic2text.py` | Turns `dasdpdsu` output (raw EBCDIC, fixed-length records) into host text. Read its docstring before using it; both traps it handles are silent ones |
 
 `awstape.py` replaces `awsread.py`, which had the AWS record flags backwards —
@@ -58,3 +61,17 @@ python3 tools/ebcdic2text.py raw text
 
 ⚠️ Read volumes only with Hercules shut down, and never those of a running
 instance.
+
+## Measuring an as370 change
+
+```sh
+export ASMDATE=09/07/26 ASMTIME=12.00   # or 381 decks differ on the clock alone
+tools/gate.sh /path/to/as370-before pre
+tools/gate.sh /path/to/as370-after  post
+```
+
+Build the binaries from **`git worktree` checkouts**, never by checking out a
+branch in `~/repos/mvs/cc370` — that tree belongs to a live session. Gate the
+branch **one commit at a time**: on `fix/as370-open-code-setc` the end-to-end
+figure hid which of two fixes carried the yield, and it was not the one the
+branch is named after. See [`docs/opencode-gate.md`](../docs/opencode-gate.md).

@@ -63,10 +63,25 @@ Queue, with what is known about each:
   differences as well. A module calling `DCB` with a self-defining term is a
   module with more going on — the set selected for complexity, not for one cause.
   Do not go looking for a fourth `T'` gap.
-- **#141**, `SETA`/`SETB`/`SETC` not substituted in open code: **52 modules, 13
-  of them assembling, and 0 byte-identical** against a tree rate of 20.4 %. Small
-  and completely depleted — [`../work/measurements/opencond2.txt`](work/measurements/opencond2.txt).
-- **#140**, `as370` silent where IFOX00 flags: 5 modules.
+- **#141 — landed, and the yield is in the commit next to it.** Gated over the
+  whole tree, one commit at a time: **844 → 874 byte-identical, none lost**, and
+  **29 of the 30 come from the `'&&'` folding fix**, not from #141 itself.
+  Sixteen gainers came out of the *length* bucket. `rc 0` falls 4,533 → 4,154
+  because 413 modules now report `IFO117` on an empty `&SYSPARM` — their decks do
+  not change, so that is #140's silent class shrinking, not a regression.
+  [`docs/opencode-gate.md`](docs/opencode-gate.md).
+
+  **The "52 modules" figure is withdrawn.** That list was never saved and the
+  link here pointed at the `AIF`/`AGO` list by mistake. The rule is rebuilt in
+  [`tools/opencode_scan.py`](tools/opencode_scan.py): **258 modules** carry an
+  open-code emit-path reference, 148 of them assembling (57 % against 82 %
+  tree-wide). It is not tuned to reproduce 52 and it does not.
+- **#140**, `as370` silent where IFOX00 flags: 5 modules — **413 of them are no
+  longer silent** after #141, all one cause.
+
+  ⚠️ **The gate must keep the deck of a module it calls failed.** Seven modules
+  assemble byte-identical to IBM's object while returning non-zero; every tree
+  run before this one deleted those decks unseen.
 
 > ⚠️ **One measurement deliberately not reported.** Counting `AIF`/`AGO`/`MEXIT`
 > in open code gives 1,738 modules, of which **247 are byte-identical**. That
