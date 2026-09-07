@@ -54,6 +54,17 @@ def main():
     a = ap.parse_args()
 
     mods = sorted(f[:-4] for f in os.listdir(IFOX) if f.endswith(".obj"))
+
+    # An unfinished gate run is indistinguishable from a catastrophic
+    # regression: read while gate.sh was still working, this tool once reported
+    # 1,268 identities lost, and every one of them was a deck not yet written.
+    have = sum(1 for m in mods if os.path.exists(f"{a.objdir}/{m}.obj"))
+    base = sum(1 for m in mods if os.path.exists(f"{a.baseline}/{m}.obj"))
+    if have < base - 5:
+        sys.exit(f"{a.objdir} holds {have} decks against the baseline's {base}. "
+                 f"Wait for gate.sh to finish -- a partial run reads as a "
+                 f"regression and there is no way to tell from the numbers.")
+
     new = measure(a.objdir, mods)
     old = measure(a.baseline, mods)
 
