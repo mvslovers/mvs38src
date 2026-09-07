@@ -1,0 +1,79 @@
+# Re-testing an `as370` change — the gate, and it no longer needs MVS
+
+2026-09-07. Every `as370` change is accepted or rejected on a tree-wide run
+against IBM's own assembler. Until today that meant an hour on MVS; it now takes
+ten minutes on the host, because **the 5,528 IFOX00 decks are recorded**.
+
+## Why this works
+
+The decks in `work/measurements/ifox-run/decks/` were produced by the real
+Assembler XF under MVS/CE from the sources in `MVSBLD/` and the seven macro
+libraries `gate.sh` passes. Same input, recorded output. Nothing about them
+changes when `as370` changes, so they are a fixed reference — the expensive half
+of the measurement was paid once.
+
+They are not in git (30 MB, reproducible). Rebuild them with
+`tools/ifox_run.py run`, which is resumable and skips what it already has.
+
+## The recipe
+
+```sh
+cd ~/repos/mvs/mvs38src
+
+# 1. build the candidate from a worktree -- never from a branch checked out in
+#    ~/repos/mvs/cc370, that tree belongs to a live session
+git -C ~/repos/mvs/cc370 worktree add /tmp/wt-<sha> <sha> --detach
+make -C /tmp/wt-<sha> as370/as370
+
+# 2. assemble the whole tree with it, keeping the deck whatever the return code
+export ASMDATE=09/07/26 ASMTIME=12.00      # or 381 decks differ on the clock alone
+tools/gate.sh /tmp/wt-<sha>/as370/as370 <label>
+
+# 3. compare against the recorded IFOX00 decks
+tools/retest.py obj_<label>
+```
+
+About ten minutes for step 2, seconds for step 3.
+
+## What the output means
+
+```
+as370 == IFOX00 : 3465 -> 3478   (+13)
+  gained  : 15  AHLMCIH BLSRESAR ...
+  LOST    : 2   IEFJDSNA ...
+  length -> bytes : 41
+```
+
+**Report both numbers, always.** New agreements is the headline; modules that
+moved out of the length bucket is the other half, and on cc370#142 it was five
+times larger. A change can be worth taking on the second number alone.
+
+**An identity lost is a regression**, whatever the total says. Two gained and one
+lost is not "+1"; it is a gain and a break, and the break has a module name.
+
+## The rules this gate had to learn
+
+- **Keep the deck of a module the assembler calls failed.** Seven modules
+  assemble byte-identical to IBM's object while returning non-zero. Earlier runs
+  deleted those decks unseen.
+- **Pin `ASMDATE` and `ASMTIME`.** 381 decks carry the assembly stamp; without
+  pinning they differ between two runs on the same source.
+- **Gate one commit at a time.** On `fix/as370-open-code-setc` the end-to-end
+  figure hid which of two fixes carried the yield, and it was not the one the
+  branch is named after. [`opencode-gate.md`](opencode-gate.md).
+- **Compare columns 1–72 and exclude the `END` card.** Columns 73–80 are the card
+  sequence number; the `END` card is where each assembler names itself and dates
+  the assembly.
+
+## After a merge
+
+```sh
+tools/ifox_compare.py /path/to/as370     # attribution, tool against source
+tools/module_table.py                    # the per-module table and for-cc370.tsv
+tools/ifox_cluster.py                    # where the decks part company
+tools/ifox_offdiag.py /path/to/as370     # the two disagreement cells
+```
+
+That regenerates [`cc370-cases.md`](cc370-cases.md)'s figures. The IFOX side does
+not have to be re-run unless the *source* changes — and if it does, only for the
+modules that changed: `ifox_run.py` skips what it has.
