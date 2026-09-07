@@ -220,6 +220,29 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
+### Die größte offene Einzelursache: ein Bit im RLD, 173 Module
+
+`docs/silent-divergences.md`, cc370#186. **173 der 1.242 übergebenen Module
+unterscheiden sich von IFOX00 in nichts als ihrem Relocation Dictionary** —
+gleiches `ESD`, gleiches `TXT`, und 163 von 175 abweichenden Einträgen
+unterscheiden sich allein im Flag-Byte, jeder um genau ein Bit (`0x04`), und
+**152 davon sind der letzte Eintrag des Decks**. `IEAVELCR` trägt drei
+gleichartige Konstanten und `as370` kennzeichnet nur die dritte anders, ist sich
+also selbst uneins. Eine Codestelle, bis zu **+173 Identitäten** — nach #175 die
+zweitgrößte Änderung des Projekts.
+
+Kein Diagnosewerkzeug hätte darauf zeigen können: beide Assembler schweigen, und
+beide Decks laden zu einem Abbild, das mit IBMs ausgeliefertem Objekt
+byte-identisch ist. Gefunden über eine Zelle, die es nicht geben kann — 27 Module,
+bei denen *beide* Decks IBMs Objekt treffen und sich voneinander unterscheiden.
+
+**Und daraus eine Grenze für eine Zahl, die hier oft steht:** „byte-identisch mit
+dem ausgelieferten Objekt" heißt, das **Abbild** ist identisch, nicht das Deck.
+`cmplmd370` baut das ladbare Abbild. Einige der 1.015 tragen ein Relocation
+Dictionary, das von IBMs abweicht. Keine Rücknahme — das Abbild ist, was läuft —
+aber das Deck ist damit nicht bewiesen, und die zwei Gedanken teilten sich hier
+bisher einen Satz.
+
 ### Twelve fixes in — 62.7 % to 78.7 %, and the first class emptied outright
 
 Baseline `126d8d3`. **as370 == IFOX00: 3,737 of 5,528 (67.6 %)**, recovered
