@@ -1,6 +1,7 @@
-cc370 517161c — merge of #172 (three further call sites of the expr_val guard)
-built from a git worktree, ASMDATE=09/07/26 ASMTIME=12.00
-rc 0: 4339 of 5528 | decks: 5518 | as370 == IFOX00: 3821
-#172: +86 identical, none lost, 177 closer, 5 further -- all five already 5-90 %
-  wrong before the commit, IGC0M05B at 90.5 % going to 94 %
-previous: e502f71 (3640), fc18fac (3582), 3d6a997 (3558), ee1090b (3465)
+cc370 2126de0 — merge of #174 (the 63-character operand-field clamp)
+rc 0: 4340 of 5528 | decks: 5518 | as370 == IFOX00: 3910
+#174 judged on SECTION LENGTH, not on bytes: a widened field changes macro
+  expansion and therefore layout, so a displaced but correct block scores as
+  wholly wrong at a fixed address. 134 sections wrong->correct, 2 the other way.
+  Neither of the two was near recovery: IEAVSWCH held a correct length with 69 %
+  of its bytes wrong.

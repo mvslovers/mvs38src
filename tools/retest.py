@@ -89,6 +89,37 @@ def distance(a, b):
     return n
 
 
+def seclen(path):
+    """{section name: declared length} from the ESD cards.
+
+    The third instrument, and for some changes the only honest one. Widening a
+    field changes macro expansion, expansion changes layout, and a block that is
+    correct but displaced scores as entirely wrong when bytes are compared at a
+    fixed address. A section's declared length cannot be faked by a shift.
+    cc370 found this on #174, where the byte measures called 24 decks worse and
+    the lengths called 136 of them right for the first time.
+    """
+    out, names = {}, {}
+    d = open(path, "rb").read()
+    for i in range(0, len(d), 80):
+        c = d[i:i + 80]
+        if c[1:4] != b"\xc5\xe2\xc4":
+            continue
+        esdid = int.from_bytes(c[14:16], "big")
+        n = int.from_bytes(c[10:12], "big") or 16
+        for k in range(16, 16 + n, 16):
+            item = c[k:k + 16]
+            if len(item) < 16:
+                break
+            if item[8] == 0x01:                       # LD: no ESDID, no length
+                continue
+            nm = item[:8].decode("cp037").strip()
+            if item[8] in (0x00, 0x04, 0x05) and nm:  # SD / PC / CM
+                out[nm] = int.from_bytes(item[13:16], "big")
+            esdid += 1
+    return out
+
+
 def verdict(a, b):
     if not os.path.exists(a):
         return "no-as370-deck"
