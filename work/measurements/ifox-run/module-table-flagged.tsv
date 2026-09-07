@@ -1,0 +1,229 @@
+module	as370_rc	as370_flagged	as370_severity	as370_messages	ifox_rc	ifox_flagged	ifox_severity	ifox_messages	tool	first_diff	len_ifox	len_as370	dlib	signal
+BLSR3270	8	192	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0004				cards	0x00192	1736	1736	length	silent divergence
+BLSRRAGE	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				bytes	0x0001f	1248	1224	length	as370 alone flags
+BLSRRNCH	8	6	8	Undefined symbol	0000				cards	0x00123	1792	1792	length	as370 alone flags
+BLSRSAPU	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - GENPARML | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards				length	as370 alone flags
+BLSRSETD	8	2	8	Undefined symbol	0000				cards				length	as370 alone flags
+BLSRVSLD	8	5	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes				length	as370 alone flags
+BLSUINI1	8	1	8	Undefined symbol	0000				cards	0x000c0	440	440	length	as370 alone flags
+BLSUNOTE	8	3	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards				length	as370 alone flags
+BLSVTCB	8	1	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00460	2264	2264	text	as370 alone flags
+BNGTDISP	8	511	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards				length	as370 alone flags
+HEWLDRGO	8	1	8	Undefined symbol	0000				bytes				mixed	as370 alone flags
+HMASMCPI	8	10	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes				text	as370 alone flags
+ICAPRTBL	8	197	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Symbol longer than 8 characters in name field (name rejected; MVS symbols are limited to 8)	0000				cards	0x001d2	4824	4824	no-pair	as370 alone flags
+IDA121A2	8	1	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x01112	5584	5584	text	as370 alone flags
+IEAVMDSV	8	1	8	Undefined symbol	0008				bytes	0x00882	2580	2348	length	both flag
+IEAVNP02	8	43	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0012				bytes	0x00182	4356	4356	mixed	both flag
+IEAVNP17	8	15	8	Undefined operation code | Undefined symbol	0012				identical				text	both flag
+IEAVNPA1	8	46	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0012				bytes	0x003c8	2536	2536	text	both flag
+IEAVNPM2	8	54	8	Undefined operation code | Undefined symbol	0012				identical				mixed	both flag
+IEAVPIOP	8	7	8	Undefined operation code | Undefined symbol	0008				identical				mixed	both flag
+IEAVRCF	8	3	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008				cards	0x00035	3136	3168	length	both flag
+IEAVSWIN	8	85	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined operation code | Undefined symbol	0008				cards	0x0008b	3532	3564	length	both flag
+IEBPPCH1	8	847	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00026	8228	8228	length	as370 alone flags
+IEBVTM	8	11	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008				cards				length	both flag
+IECIOSAM	8	148	8	Undefined operation code | Undefined symbol	0012				cards	0x00660	14913	15041	length	both flag
+IECVDDT1	8	11	8	Undefined operation code | Undefined symbol	0012				identical				length	both flag
+IECVHREC	8	37	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards	0x00043	8768	8734	length	as370 alone flags
+IECVIRST	8	77	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008				bytes	0x00134	4524	4524	text	both flag
+IECVMAP	8	5	8	Undefined operation code | Undefined symbol	0012				bytes	0x000b8	426	426	text	both flag
+IECVRRSV	8	3	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes				mixed	as370 alone flags
+IECVXDAT	8	9	8	Undefined operation code | Undefined symbol	0008				identical				length	both flag
+IECVXDRS	8	55	8	Undefined operation code | Undefined symbol	0012				bytes				length	both flag
+IECVXDRT	8	11	8	Undefined operation code | Undefined symbol	0012				bytes				length	both flag
+IECVXPRE	8	9	8	Undefined operation code | Undefined symbol	0008				identical				length	both flag
+IECVXT3S	8	6	8	Undefined operation code	0008				identical				length	both flag
+IEDAYD	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDAYI	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDCSA	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				cards				length	both flag
+IEDIAA	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDNCU2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDNLT	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDNTR	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDPCOUT	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQA3	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQA4	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes	0x0028e	750	750	length	both flag
+IEDQA8	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQAI	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQAS	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes				length	both flag
+IEDQAX	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes	0x00077	544	544	length	both flag
+IEDQBG	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQBM	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQBP	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQBQ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes				mixed	both flag
+IEDQBR	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQBX	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQGA	8	2	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes				length	both flag
+IEDQHM1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes	0x00a5b	3118	3118	length	both flag
+IEDQKB	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQKC	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes				length	both flag
+IEDQNB	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				mixed	both flag
+IEDQNM	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008				bytes				length	both flag
+IEDQW33	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes	0x002cf	2028	2028	mixed	both flag
+IEDQWA1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				cards				length	both flag
+IEDQWAJ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQWI5U	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQWJ2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				cards				length	both flag
+IEDQWM2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQWN	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				cards				length	both flag
+IEDQWQ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDQWR	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IEDSCPRP	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				mixed	both flag
+IEDXFMO	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				mixed	both flag
+IEE1603D	8	2	8	Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0000				cards				length	as370 alone flags
+IEE70110	8	1	8	Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0000				bytes	0x00179	776	776	length	as370 alone flags
+IEECVET1	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol	0008				bytes	0x003fa	1772	1772	length	both flag
+IEECVETQ	8	3	8	Undefined symbol	0000				identical				holes	as370 alone flags
+IEECVFTQ	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				length	as370 alone flags
+IEFIB645	8	3	8	Undefined symbol	0000				cards	0x0004b	800	748	length	as370 alone flags
+IEFSD263	8	1	8	Undefined symbol	0008				cards				length	both flag
+IERRCV	8	1	8	Undefined symbol	0000				bytes				no-pair	as370 alone flags
+IEWFETCH	8	8	8	Undefined operation code | Undefined symbol	0008				bytes				no-pair	both flag
+IFCE0115	8	259	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0012				cards				unpaired	both flag
+IFCE0135	8	1	8	Undefined symbol	0000				cards	0x00106	8017	6913	length	as370 alone flags
+IFCE1018	8	263	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0012				cards				unpaired	both flag
+IFCE2880	8	39	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0000				cards	0x00002	14307	12496	length	as370 alone flags
+IFCEA155	8	124	8	Undefined symbol	0000				cards	0x00003	5669	4691	length	as370 alone flags
+IFCEARG2	8	130	8	Undefined operation code | Undefined symbol	0012				cards	0x00032	206	1891	length	both flag
+IFCEARG6	8	98	8	Undefined operation code | Undefined symbol	0012				cards				length	both flag
+IFCEAXXX	8	30	8	Undefined symbol	0000				cards				length	as370 alone flags
+IFCEEDIT	8	1	8	Undefined operation code	0008				identical				length	both flag
+IFCENFM3	8	268	8	Undefined operation code | Undefined symbol	0012				cards	0x0014b	492	3291	length	both flag
+IFCENFP2	8	223	8	Undefined operation code | Undefined symbol	0012				cards				length	both flag
+IFCEOAK1	8	16	8	Undefined symbol	0000				cards				length	as370 alone flags
+IFCETRN5	8	10	8	Undefined symbol	0000				cards				length	as370 alone flags
+IFCETRN6	8	230	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0012				cards				unpaired	both flag
+IFCEXXXG	8	128	8	Undefined symbol	0000				cards	0x00016	21351	17013	length	as370 alone flags
+IFDOLT16	8	1	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00058	906	906	mixed	as370 alone flags
+IFDOLT17	8	3	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x000b2	360	360	mixed	as370 alone flags
+IFDOLT18	8	7	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0000				bytes				length	as370 alone flags
+IFDOLT53	8	11	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes				length	as370 alone flags
+IFDOLT57	8	1	8	Undefined symbol	0000				bytes	0x000c4	1110	1110	mixed	as370 alone flags
+IFDOLT73	8	7	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00033	1508	1508	mixed	as370 alone flags
+IFFAAA02	8	5	8	Undefined symbol	0012				identical				text	both flag
+IFFAAA04	8	12	8	Undefined symbol	0012				identical				text	both flag
+IFFAFA14	8	3	8	Undefined symbol	0012				identical				mixed	both flag
+IFFAFA15	8	22	8	Undefined symbol	0012				identical				length	both flag
+IFFAGA01	8	21	8	Undefined symbol	0012				identical				length	both flag
+IFFAGA03	8	13	8	Undefined symbol	0012				identical				text	both flag
+IFFAGA05	8	12	8	Undefined symbol	0012				identical				text	both flag
+IFFAHA06	8	39	8	Undefined symbol	0012				identical				text	both flag
+IFFAJA04	8	22	8	Undefined symbol	0012				identical				length	both flag
+IFG0194A	8	440	8	Undefined operation code | Undefined symbol	0000				cards				length	as370 alone flags
+IFG0194F	8	460	8	Undefined operation code | Undefined symbol	0000				cards				length	as370 alone flags
+IFG0195G	8	16	8	Undefined symbol	0000				bytes				length	as370 alone flags
+IFG0199B	8	43	8	Undefined symbol	0000				cards				length	as370 alone flags
+IFG0202B	8	182	8	Undefined operation code | Undefined symbol	0000				cards				length	as370 alone flags
+IFG0202C	8	183	8	Undefined symbol	0000				bytes	0x00002	1416	1416	length	as370 alone flags
+IFG0202D	8	145	8	Undefined symbol	0000				bytes	0x00002	1096	1096	mixed	as370 alone flags
+IFG0202I	8	189	8	Undefined symbol	0000				bytes				length	as370 alone flags
+IFG0232J	8	151	8	Undefined symbol	0000				bytes				mixed	as370 alone flags
+IFG0232S	8	104	8	Undefined symbol	0000				bytes	0x0000a	1104	1104	mixed	as370 alone flags
+IFG0232Z	8	185	8	Undefined symbol	0000				bytes				length	as370 alone flags
+IFG0551B	8	79	8	Undefined symbol	0000				bytes	0x00002	1168	1168	length	as370 alone flags
+IFG0551L	8	219	8	Undefined symbol	0000				bytes				length	as370 alone flags
+IFG0551R	8	208	8	Undefined symbol	0000				bytes				mixed	as370 alone flags
+IFG0552D	8	64	8	Undefined symbol	0000				bytes				length	as370 alone flags
+IFG0552N	8	63	8	Undefined symbol	0000				bytes	0x00002	648	648	length	as370 alone flags
+IFG0552V	8	99	8	Undefined symbol	0000				bytes				mixed	as370 alone flags
+IFG0553F	8	284	8	Undefined operation code | Undefined symbol	0000				cards	0x00016	2824	2784	length	as370 alone flags
+IFG0554B	8	141	8	Undefined symbol	0000				bytes	0x00002	1192	1192	mixed	as370 alone flags
+IFG0554T	8	156	8	Undefined symbol	0000				bytes	0x00002	1504	1504	length	as370 alone flags
+IFG0555J	8	151	8	Undefined symbol	0000				bytes				mixed	as370 alone flags
+IFNX1K	8	44	8	Undefined symbol	0000				cards				length	as370 alone flags
+IFNX3K	8	26	8	Undefined symbol	0000				cards				length	as370 alone flags
+IFNX4V	8	3	8	Undefined symbol	0000				cards				length	as370 alone flags
+IFNX5P	8	2	8	Undefined symbol	0000				bytes	0x0005d	2344	2321	length	as370 alone flags
+IFOX0D	8	2	8	Undefined symbol	0008				bytes	0x000a1	3577	3554	length	both flag
+IGC0B10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGC0E05A	8	1	8	Undefined symbol	0000				bytes	0x0069b	5004	5004	length	as370 alone flags
+IGCA110D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGCA810D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGCAF10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				mixed	both flag
+IGCDB10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGCDD10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGCFC10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGCFE10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGCFH10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGCME10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGCML10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGCN410D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes	0x00133	2048	2048	mixed	both flag
+IGCSW10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				cards				length	both flag
+IGCVA10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGCZ010D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGE0004G	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes	0x00026	1392	1384	length	both flag
+IGE0004I	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGE0204G	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGE0304G	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGFPEXIT	8	1	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes				text	as370 alone flags
+IGG01916	8	14	8	Undefined symbol	0000				bytes				length	as370 alone flags
+IGG0191C	8	77	8	Undefined symbol	0000				bytes	0x00024	1144	1144	length	as370 alone flags
+IGG0191N	8	93	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0000				bytes				length	as370 alone flags
+IGG0191P	8	25	8	Undefined symbol	0000				bytes	0x00026	544	544	text	as370 alone flags
+IGG0191W	8	46	8	Undefined symbol	0000				bytes	0x00030	1226	1226	text	as370 alone flags
+IGG0191X	8	35	8	Undefined symbol	0000				bytes	0x0002e	1106	1106	text	as370 alone flags
+IGG01931	8	18	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008				bytes	0x00044	1127	1127	length	both flag
+IGG01936	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGG01937	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes				length	both flag
+IGG01938	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGG01945	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGG0194Q	8	17	8	Undefined symbol	0000				cards	0x00098	1344	1465	length	as370 alone flags
+IGG0196K	8	48	8	Undefined symbol	0000				bytes				length	as370 alone flags
+IGG0196L	8	27	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0000				bytes				length	as370 alone flags
+IGG0196P	8	27	8	Undefined symbol	0000				bytes				text	as370 alone flags
+IGG0197E	8	44	8	Undefined symbol	0000				bytes	0x00030	1016	1016	length	as370 alone flags
+IGG0197N	8	51	8	Undefined symbol	0000				cards				length	as370 alone flags
+IGG0197V	8	12	8	Undefined symbol	0000				cards				length	as370 alone flags
+IGG0198E	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes				length	both flag
+IGG01991	8	15	8	Undefined symbol	0000				bytes				text	as370 alone flags
+IGG01993	8	13	8	Undefined symbol	0000				bytes	0x00064	511	511	text	as370 alone flags
+IGG01994	8	14	8	Undefined symbol	0000				bytes				text	as370 alone flags
+IGG0199L	8	30	8	Undefined symbol	0000				cards	0x00012	1104	1052	length	as370 alone flags
+IGG0199O	8	31	8	Undefined symbol	0000				bytes				text	as370 alone flags
+IGG019FQ	8	3	8	Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0000				bytes	0x00068	1200	1200	text	as370 alone flags
+IGG019HG	8	3	8	Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0000				cards	0x003a6	1236	1178	length	as370 alone flags
+IGG019HN	8	23	8	Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0000				cards	0x00054	4823	4594	length	as370 alone flags
+IGG019R0	8	1551	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008				cards	0x00002	12640	8570	length	both flag
+IGG019R6	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				bytes	0x0032d	1160	1160	length	both flag
+IGG019RG	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGG019RO	8	7	8	IFO117 first expression in substring notation exceeds the length of the string | Undefined symbol	0012				bytes	0x00000	1194	1194	length	both flag
+IGG019RQ	8	1	8	Undefined symbol	0008				identical				text	both flag
+IGG0201D	8	13	8	Undefined symbol	0000				bytes				length	as370 alone flags
+IGG02030	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGG0203M	8	5	8	Undefined symbol	0000				bytes	0x000b9	1780	1800	length	as370 alone flags
+IGG020D0	8	7	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008				bytes	0x00006	496	496	text	both flag
+IGG020P2	8	9	8	Relocatable displacement in machine instruction (explicit base requires an absolute displacement) | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008				bytes	0x0000c	904	904	length	both flag
+IGG0299A	8	24	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008				bytes	0x00019	1000	1000	length	both flag
+IGG0325G	8	9	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008				bytes				length	both flag
+IGG0325H	8	44	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008				bytes				length	both flag
+IGG0325U	8	5	8	Undefined symbol	0008				bytes				text	both flag
+IGG032I4	8	23	8	Undefined symbol	0008				bytes	0x00005	1064	1064	mixed	both flag
+IGG032I6	8	11	8	Undefined symbol	0008				bytes	0x00004	1096	1096	length	both flag
+IGG0553C	8	41	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008				bytes				length	both flag
+IGG09411	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008				identical				length	both flag
+IGG0CLCD	8	1	8	Undefined symbol	0000				bytes	0x00023	3483	3483	length	as370 alone flags
+IHDGSP01	8	10	8	Undefined symbol	0012				identical				length	both flag
+IKJCT431	8	70	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00064	7232	7232	length	as370 alone flags
+IKJCT467	8	93	8	Undefined operation code | Undefined symbol	0012				bytes				length	both flag
+IKJEBEIA	8	71	8	Relocatable displacement in machine instruction (explicit base requires an absolute displacement) | Undefined symbol	0008				bytes				no-pair	both flag
+IKJEBEME	8	24	8	Undefined symbol	0000				cards	0x00026	1960	1960	no-pair	as370 alone flags
+IKJEBEUP	8	2	8	Undefined symbol	0008				bytes				no-pair	both flag
+IKJEFA24	8	1	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				cards	0x00469	1224	1224	no-pair	as370 alone flags
+IKJEFH03	8	7	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes				no-pair	as370 alone flags
+IKJEFT01	8	6	8	Undefined symbol	0000				bytes				length	as370 alone flags
+IKJEGMNL	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol	0008				cards				no-pair	both flag
+IKTAY8	8	4	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0033a	2880	2880	length	as370 alone flags
+ILRMSG00	8	8	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008				bytes				mixed	both flag
+ILRTMRLG	8	1	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes				mixed	as370 alone flags
+ILRVIOCM	8	25	8	Undefined operation code | Undefined symbol	0008				identical				text	both flag
+IRARMERR	8	10	8	Undefined symbol	0008				bytes				length	both flag
+IRARMEVT	8	26	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined operation code | Undefined symbol	0008				cards	0x00d83	8916	8916	text	both flag
+ISDADCS0	8	1	8	Undefined operation code	0008				bytes	0x00022	954	954	length	both flag
+ISDAPRT0	8	5	8	Undefined operation code	0008				bytes				mixed	both flag
+ISDASUM1	8	2	8	Undefined operation code	0008				bytes				length	both flag
+ISTCSCMR	8	1	8	Undefined symbol	0000				bytes				length	as370 alone flags
+ISTSDCC1	8	1	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00132	740	740	mixed	as370 alone flags
+ISTZDMMB	8	1	8	Undefined symbol	0000				bytes				length	as370 alone flags
+ISTZGF0A	8	143	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes				length	as370 alone flags
+SECLOADA	8	76	8	Undefined operation code | Undefined symbol	0000				cards				length	as370 alone flags
