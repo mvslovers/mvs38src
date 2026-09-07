@@ -128,66 +128,68 @@ finishes, and it does not move systematically as it completes.
 
 ## What it found
 
-All 5,528 modules assembled both ways, every one of them with a deck on the MVS
-side, nothing left outstanding.
+*Figures below are against `as370` at cc370 **879e86a** — the merge of #164 and
+#165, re-baselined 2026-09-07. The run that established the method was against
+`ee1090b`; both numbers are given where the change matters.
+[`work/measurements/ifox-run/as370-baseline.txt`](../work/measurements/ifox-run/as370-baseline.txt)
+records which build every figure belongs to. The IFOX00 side does not move.*
 
-**`as370` and IFOX00 produce the same object for 3,466 of 5,528 modules —
-62.7 %.** Of the rest, 1,334 differ in bytes at the same length, 718 differ in
-the number of cards, and 10 produced no deck locally at all.
+All 5,528 modules assembled both ways, 5,518 with a deck on the host side.
+
+**`as370` and IFOX00 produce the same object for 3,559 of 5,528 modules —
+64.4 %**, up from 3,466 (62.7 %) before the two fixes landed. Of the rest, 1,242
+differ in bytes at the same length, 717 differ in the number of cards, and 10
+produced no deck locally.
+
+**The ten without a deck, so the gap is never read as new:** eight EREP modules
+abort at `rc 2` — `IFCED155`, `IFCEG155`, `IFCEL155`, `IFCEM155`, `IFCEXXXH`,
+`IFCSGUS1`, `IFCSXXXF`, `IFCSXXXH` — and two never terminate, `HEWLDIOC` and
+`IFNX1A` ([cc370#163](https://github.com/mvslovers/cc370/issues/163)). IFOX00
+assembles all ten at `rc 0`.
 
 | Return codes | IFOX 0 | IFOX 4 | IFOX 8+ |
 |---|---:|---:|---:|
-| **as370 0** | 4,049 | 21 | **84** |
-| **as370 8+** | **522** | 3 | 849 |
-
-The `as370 8+` row bands every non-zero return code together, so its 522 is the
-512 modules of package A plus the 10 that produced no deck at all (`rc 2`). 849
-is likewise the whole class both assemblers flag; **the decks differ in 393 of
-them** and the other 456 belong to the source.
-
-The two off-diagonal cells are defects the deck comparison cannot see, because
-one of the two assemblers refuses to produce a deck at all — or produces one
-without a word while the other objects.
+| **as370 0** | 4,195 | 21 | **96** |
+| **as370 8+** | **376** | 3 | 837 |
 
 ### Whose problem each module is
 
-| | Modules |
-|---|---:|
-| **the assembler — for cc370** | **2,112** |
-| — silent divergence: both clean, object different anyway | 1,113 |
-| — as370 rejects what Assembler XF assembles | 512 |
-| — both flag, **and the decks differ** | 393 |
-| — IFOX00 flags, as370 is silent | 84 |
-| — no deck on one side | 8 |
-| — as370 does not terminate | 2 |
-| **the source — ours** | 3,416 |
+| | Modules | before the merge |
+|---|---:|---:|
+| **the assembler — for cc370** | **2,021** | 2,112 |
+| — silent divergence: both clean, object different anyway | 1,169 | 1,113 |
+| — both flag, and the decks differ | 380 | 393 |
+| — as370 rejects what Assembler XF assembles | 366 | 512 |
+| — IFOX00 flags, as370 is silent | 96 | 84 |
+| — no deck on one side | 8 | 8 |
+| — as370 does not terminate | 2 | 2 |
+| **the source — ours** | 3,507 | 3,416 |
 
-`silent divergence` is the class this run exists for. `IGG019PF` is the pattern:
-both assemblers exit clean and say nothing, IFOX00 emits 144 bytes, `as370`
-emits 265, and the first difference sits at `0x89`. Nothing in the DLIB
-comparison could have separated that from a source defect.
+**A fix does not only remove cases, it reclassifies them.** `as370 alone flags`
+fell by 146 — 93 of those became byte-identical, and **56 moved into silent
+divergence**, which is the harder class. `IFOX00 alone flags` rose from 84 to 96
+for the same reason: as370 fell silent where XF still objects. The
+`Relocatable displacement` class grew from 29 modules to 44 because modules that
+used to fail earlier now reach it.
 
 ### On the population the project's own figures are about
 
-Modules `as370` assembled cleanly that have a DLIB counterpart — 3,719 of them:
+Modules `as370` assembled cleanly that have a DLIB counterpart — 3,877 of them:
 
-| | Modules | |
-|---|---:|---:|
-| source | 1,357 | 36.5 % |
-| **tool** | **1,052** | **28.3 %** |
-| recovered — all three agree | 869 | 23.4 % |
-| source, `DS` holes only | 441 | 11.9 % |
+| | Modules | | before |
+|---|---:|---:|---:|
+| source | 1,432 | 36.9 % | 1,357 |
+| **tool** | **1,118** | **28.8 %** | 1,052 |
+| **recovered — all three agree** | **879** | **22.7 %** | **869** |
+| source, `DS` holes only | 448 | 11.6 % | 441 |
 
-**Two controls hold.** The 869 recovered stand against the 874 byte-identical
-modules the repository last recorded — the same yardstick, measured again
-through a different pipeline. And the assembly stamp, which had 302 modules
-under suspicion, explains **exactly one** of the 1,334 byte differences: every
-differing module was re-assembled locally with the date and time that IFOX run
-used, and one became identical.
+**Ten more modules are byte-identical to IBM's shipped object** than before the
+merge. That is what the two fixes were worth where it counts.
 
-The sample of thirty had said 14 source, 11 tool. Over the whole tree it is
-36 % source against 28 % tool, with 12 % holes and 23 % already finished. The
-method carries.
+**The attribution predicted correctly.** All 93 modules the fixes turned
+byte-identical to IFOX00 were rows this table had booked to the assembler — not
+one to the source. It is the first independent evidence that the ownership column
+means what it says.
 
 ## What broke, and what it cost
 

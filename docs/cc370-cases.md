@@ -1,7 +1,8 @@
 # Cases for cc370, in the order they pay
 
-2026-09-07. Out of the tree-wide comparison against IFOX00
-([`ifox-tree.md`](ifox-tree.md)), **2,112 of 5,528 modules are the assembler's
+2026-09-07, re-baselined against `as370` at cc370 **879e86a** (the merge of #164
+and #165). Out of the tree-wide comparison against IFOX00
+([`ifox-tree.md`](ifox-tree.md)), **2,021 of 5,528 modules are the assembler's
 problem**: the two decks differ although the source and the macro libraries were
 the same, or one assembler refuses what the other assembles.
 
@@ -21,13 +22,21 @@ the call. Reported by cc370 on 2026-09-07 and confirmed here as a property of th
 output, not of this pipeline. Partitioning these modules by "first diagnostic"
 gives a wrong answer.
 
-**What the work is worth, measured rather than hoped.** Of the 2,112 modules,
-**five** are already byte-identical to their DLIB member; the rest are blocked.
-Where the two assemblers already agree, 28.2 % of modules with a DLIB
-counterpart are byte-identical. If the tool stopped being the obstacle for these
-1,947 paired modules, that rate would be the expectation: **on the order of 550
-further modules byte-identical to IBM's shipped object.** That is the size of
-this list.
+**What the work is worth, and the first instalment is measured.** #164 and #165
+together turned **93 modules byte-identical to IFOX00, none lost — and every one
+of the 93 was a row this list had booked to the assembler.** Ten of them went the
+whole way to byte-identical with IBM's shipped object, so the recovered count
+went 869 -> 879.
+
+Where the two assemblers agree, 22.7 % of modules with a DLIB counterpart are
+byte-identical to IBM's object. If the tool stopped being the obstacle for the
+rest of this list, that rate is the expectation: **on the order of 400 further
+recoveries.**
+
+**And a fix reclassifies as much as it removes.** Package A fell by 146 modules;
+93 became identical and **56 moved into Package B**, where neither assembler says
+anything and the object differs anyway. Package D grew from 84 to 96. The total
+came down by 91; the hard class grew.
 
 **And the expensive half is done once.** The 5,528 IFOX00 decks are a fixed
 reference now. Measuring an `as370` change no longer needs MVS at all: assemble
@@ -42,18 +51,23 @@ The strongest starting point: **`as370`'s own messages name the construct**, and
 IFOX00 assembling the same source with the same macros without a word says the
 construct is legal. Nothing else is needed to work on these — no listing, no MVS.
 
-And it is code work, not message work: **501 of the 512 also produce a different
+And it is code work, not message work: **355 of the 366 also produce a different
 deck.** The rejection is not a stray diagnostic on otherwise correct output.
 
 | Issue | `as370` message | Modules | Smallest case |
 |---|---|---:|---|
-| [cc370#153](https://github.com/mvslovers/cc370/issues/153) | Undefined symbol | 333 | `AMDSATAP` (1,062 cards) |
-| [cc370#154](https://github.com/mvslovers/cc370/issues/154) | Addressability error — no active `USING` | 163 | `BLSCCLSE` (472) |
-| [cc370#155](https://github.com/mvslovers/cc370/issues/155) | Undefined operation code | 41 | `IFG0193E` (574) |
-| [cc370#156](https://github.com/mvslovers/cc370/issues/156) | Relocatable displacement (explicit base) | 29 | `IEE1603D` (644) |
-| [cc370#157](https://github.com/mvslovers/cc370/issues/157) | Duplication factor — `IFO206`/`217`/`231` | 23 | `BLSRESAR` (292) |
-| [cc370#158](https://github.com/mvslovers/cc370/issues/158) | Card consumed as a continuation | 8 | `IEAVGTCL` (458) |
-| [cc370#159](https://github.com/mvslovers/cc370/issues/159) | Symbol longer than 8 characters | 8 | `IEECVET4` |
+| Issue | `as370` message | Modules | was | Smallest case |
+|---|---|---:|---:|---|
+| [cc370#153](https://github.com/mvslovers/cc370/issues/153) | Undefined symbol | **176** | 333 | `AMDPRCOM` |
+| [cc370#154](https://github.com/mvslovers/cc370/issues/154) | Addressability error — no active `USING` | **156** | 163 | `BLSCCLSE` (472) |
+| [cc370#156](https://github.com/mvslovers/cc370/issues/156) | Relocatable displacement (explicit base) | **44** | 29 | `IEE1603D` (644) |
+| [cc370#155](https://github.com/mvslovers/cc370/issues/155) | Undefined operation code | **39** | 41 | `IFG0193E` (574) |
+| [cc370#157](https://github.com/mvslovers/cc370/issues/157) | Duplication factor — `IFO206`/`217`/`231` | 23 | 23 | `BLSRESAR` (292) |
+| [cc370#158](https://github.com/mvslovers/cc370/issues/158) | Card consumed as a continuation | 8 | 8 | `IEAVGTCL` (458) |
+| [cc370#159](https://github.com/mvslovers/cc370/issues/159) | Symbol longer than 8 characters | 8 | 8 | `IEECVET4` |
+
+`#153` more than halved and `#156` grew by half: modules that used to fail
+earlier now reach the relocation check. Both are gate figures against `879e86a`.
 
 Each issue carries the failing card, the full module list, and the re-test
 recipe. Labelled **Paket A** in the cc370 repository.
@@ -70,9 +84,9 @@ IFOX00 assembles it.
 [cc370#163](https://github.com/mvslovers/cc370/issues/163). `HEWLDIOC` burned
 299 s of CPU and had produced nothing when it was killed; IFOX00 assembles it to
 8,160 bytes in under a second. `IFNX1A` the same. They are the only two the gate
-ever had to kill, and they are why the count of packages is 2,112 and not 2,110.
+ever had to kill, and they are why the count of packages is 2,021 and not 2,019.
 
-## B. Both assemblers silent, the object different — 1,113 modules
+## B. Both assemblers silent, the object different — 1,169 modules
 
 The class the comparison exists for. Both exit clean, neither flags a statement,
 and the generated code is not the same. Against the distribution libraries this
@@ -86,10 +100,10 @@ Sorted by where the difference sits
 
 | | Sections | What it looks like |
 |---|---:|---|
-| same length, bytes differ | 1,086 | one or a few bytes inside instructions |
 | different length | 1,038 | `as370` generates more or fewer bytes |
-| **difference starts in the first 16 bytes of the section** — [cc370#160](https://github.com/mvslovers/cc370/issues/160) | **134** | unlikely to be 134 separate causes |
-| section present on one side only — [cc370#161](https://github.com/mvslovers/cc370/issues/161) | 21 (16 modules) | `AHLSETEV`: `as370` emits a whole section `IGAFETCH`, 6,736 bytes, that IFOX00 does not |
+| same length, bytes differ | 991 | one or a few bytes inside instructions |
+| **difference starts in the first 16 bytes of the section** — [cc370#160](https://github.com/mvslovers/cc370/issues/160) | **49** (was 134) | #165 cleared 85 of them |
+| section present on one side only — [cc370#161](https://github.com/mvslovers/cc370/issues/161) | 20 (15 modules) | `AHLSETEV`: `as370` emits a whole section `IGAFETCH`, 6,736 bytes, that IFOX00 does not |
 | section this tool could not name | 26 | **not comparable by name — the pairing is in question, not the assembler** |
 
 Smallest cases in the prologue group: `IECVXMGN` (45 B, 11 bytes differ from
@@ -102,21 +116,22 @@ Issues carry the module lists in
 [`classes/`](../work/measurements/ifox-run/classes/); the two `Paket B` issues are
 open, the rest of B is a data file to mine, not a ticket.
 
-## C. Both flag, and the decks differ — 393 modules
+## C. Both flag, and the decks differ — 380 modules
 
 Both assemblers object, so there is something in the source too; but they
 disagree about the result as well. Lower priority than A and B: the source side
 has to be untangled first, and part of it is ours.
 
-**849 modules are flagged by both, and in 456 of them the decks are identical
+**837 modules are flagged by both, and in 457 of them the decks are identical
 anyway** — those are not cc370's at all, and they are booked to the source.
 (An earlier version of this page called all 849 cc370's. It was the count of the
 class, not of the part where the decks differ.)
 
-## D. IFOX00 flags, `as370` is silent — 84 modules — [cc370#162](https://github.com/mvslovers/cc370/issues/162)
+## D. IFOX00 flags, `as370` is silent — 96 modules — [cc370#162](https://github.com/mvslovers/cc370/issues/162)
 
-In 39 of the 84 the decks are identical, so there it really is a missing
-diagnostic; in the other **45 the code differs too**.
+In 41 of the 96 the decks are identical, so there it really is a missing
+diagnostic; in the other **55 the code differs too**. The class grew from 84
+because #164 and #165 made `as370` fall silent on modules XF still objects to.
 
 The listings are in now, and the class is one thing: **83 of the 84 are
 `IFO092 KEYWORD PARAMETER ... UNDEFINED IN MACRO DEFINITION`.** `IECVOID` is the
@@ -149,9 +164,9 @@ directly on top of the 302 timestamp-bearing modules.
 
 ## Two things that are not cc370's
 
-**The 3,416 modules where the two assemblers agree.** Whatever differs there
+**The 3,507 modules where the two assemblers agree.** Whatever differs there
 against IBM's shipped object belongs to the source or to IBM's maintenance.
 
 **The assembly stamp.** It was suspected of explaining hundreds of differences.
 Every differing module was re-assembled locally with the date and time that IFOX
-run used: **one difference of 1,334 is the stamp.**
+run used: **one difference of 1,242 is the stamp.**

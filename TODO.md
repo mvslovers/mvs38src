@@ -82,21 +82,23 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
   Kreiss' tape — but no difference in this run can be blamed on the two sides
   reading different macros.
 
-### Waiting on the cc370 merge — and what not to inherit from it
+### The first two fixes are in, and re-baselined
 
 cc370#164 (`.*` is a comment card in `parse()`) and cc370#165 (IPK and PTLB take
-no operand) are confirmed here: both rebuilt from their branches, gate-run
-against the recorded IFOX00 decks, **+93 byte-identical together, none lost**,
-and **all 93 were modules this table had booked to the assembler, not one to the
-source** — the first evidence the attribution itself holds. `gh pr merge` was
-blocked in the cc370 session by its permission classifier and put to Mike; not
-done here on their behalf.
+no operand) are merged as `879e86a`, confirmed here by an independent rebuild,
+and everything is re-measured against that build.
 
-**When the merge lands, re-baseline before anything else is claimed:** new
-`as370` decks with `tools/gate.sh`, then `ifox_compare.py`, `module_table.py`,
-`ifox_cluster.py`, `ifox_offdiag.py`, and the counts on cc370#153/#155/#157
-updated. Every figure in [`docs/cc370-cases.md`](docs/cc370-cases.md) is against
-`ee1090b` until then. The IFOX00 side does not move.
+- **+93 byte-identical to IFOX00, none lost** — 3,466 -> 3,559 (64.4 %)
+- **+10 recovered**, all three decks agreeing — 869 -> 879
+- **all 93 gained modules were rows this table had booked to the assembler**, not
+  one to the source. The first independent evidence the ownership column means
+  what it says.
+- the hand-over list falls 2,107 -> 2,016
+
+**A fix reclassifies as much as it removes.** Package A lost 146 modules: 93
+became identical and **56 moved into the silent-divergence class**, which is
+harder. Package D grew 84 -> 96. `Relocatable displacement` grew 29 -> 44,
+because modules that used to fail earlier now reach it.
 
 Two figures must not be inherited — see
 [`regression-gate.md`](docs/regression-gate.md): the "56 modules" for the IPK
