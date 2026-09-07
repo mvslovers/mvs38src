@@ -82,6 +82,26 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
   Kreiss' tape — but no difference in this run can be blamed on the two sides
   reading different macros.
 
+### The reference is not sound everywhere — and that is the next work here
+
+**IFOX00 flagged 933 of the 5,528 modules at `rc 8` or worse, so their decks are
+a doubtful reference.** 495 of the 3,466 `as370`==IFOX00 agreements and 477 of
+the 2,112 cases handed to cc370 rest on one. The 869 recovered do not — IBM's
+shipped object settles those independently.
+
+Two classes of it are ours to fix, and fixing them opens a loop: a better
+reference exposes differences that were hidden behind the flawed one, and those
+are new cases for cc370.
+
+- **197 modules, `IFO078` UNDEFINED OP CODE — 51 operations no library of ours
+  has.** `IHANVT` (33 modules), `UCBDADVC` (32), `IECDCST` (11) were already
+  listed as missing below; now their reach is known. A whole EREP family
+  (`DSGEN`, `LINE`, `ROUTINE`, `BIN`, `HEX`, …) blocks 33 more.
+- **225 modules, `IFO092` keyword undefined — macros at the wrong level.**
+
+Written up as a standalone brief, meant to be worked in its own session:
+[`docs/ifox-objections.md`](docs/ifox-objections.md).
+
 ### A source-side finding out of the same run, and it does not wait
 
 **Our `MODID` is not the level the source was written against, and now it is

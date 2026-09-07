@@ -300,6 +300,19 @@ def cmd_run(args):
     os.makedirs(f"{OUT}/msg", exist_ok=True)
     order = open(ORDER).read().split()
     st = load_state()
+    if args.only:
+        # refresh named modules: their reference deck is replaced. Use after
+        # fixing the macro supply -- an IFOX assembly that ended rc>=8 is a
+        # doubtful reference, and a better one supersedes it.
+        want = [m.strip() for m in open(args.only) if m.strip()]
+        for m in want:
+            p = f"{DECKS}/{m}.obj"
+            if os.path.exists(p):
+                os.remove(p)
+        rest = [l for l in open(STATE).read().splitlines()
+                if l.split("\t")[0] not in want]
+        open(STATE, "w").write("\n".join(rest) + "\n")
+        st = load_state()
     done = {m for m, f in st.items()
             if f[1] not in ("NOTRUN", "?") and (f[3] != "0" or f[1].startswith("ABEND"))}
     todo = [m for m in order if m not in done]
@@ -413,7 +426,10 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("plan"); p.add_argument("--seed", type=int, default=20260907); p.set_defaults(fn=cmd_plan)
-    p = sub.add_parser("run"); p.add_argument("--limit", type=int, default=0); p.set_defaults(fn=cmd_run)
+    p = sub.add_parser("run")
+    p.add_argument("--limit", type=int, default=0)
+    p.add_argument("--only", help="a file of module names whose reference deck is to be replaced")
+    p.set_defaults(fn=cmd_run)
     p = sub.add_parser("diag"); p.add_argument("--list", required=True); p.set_defaults(fn=cmd_diag)
     p = sub.add_parser("status"); p.set_defaults(fn=cmd_status)
     a = ap.parse_args()
