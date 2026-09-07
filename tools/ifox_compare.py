@@ -197,6 +197,21 @@ def main():
     for m, v in dv.items():
         if m in rc0:
             dd[v] = dd.get(v, 0) + 1
+    # what the two assemblers make of the same source, side by side. The
+    # interesting cells are off the diagonal: one assembler content where the
+    # other is not.
+    print("\nReturn codes, as370 against IFOX00:")
+    band = lambda v: ("-" if not v.isdigit() else "0" if int(v) == 0 else
+                      "4" if int(v) == 4 else "8+" )
+    mat = {}
+    for r in rows:
+        k = (band(r[1]), band(r[2]))
+        mat[k] = mat.get(k, 0) + 1
+    cols = ["0", "4", "8+", "-"]
+    print("            IFOX  " + "".join(f"{c:>8s}" for c in cols))
+    for a in cols:
+        line = "".join(f"{mat.get((a, b), 0):8d}" for b in cols)
+        print(f"  as370 {a:>4s}      {line}")
     print("\nas370 against the distribution libraries, for control "
           "(as370 rc 0 only -- tree-wide-run.md says 20.4 % identical, "
           "10.5 % holes):")
