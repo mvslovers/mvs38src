@@ -15,104 +15,70 @@ alone.*
 
 ### Where the project stands
 
-**837 of 4,108 modules assemble byte-identical to the object code MVS/CE ships**,
-and 432 more differ only in `DS` holes — **1,269, or 31 %**. Of 5,528 modules,
-**4,533** assemble at all. [`docs/tree-wide-run.md`](docs/tree-wide-run.md).
+**The whole tree has been assembled twice** — once by `as370` here, once by the
+real Assembler XF under MVS/CE, from the same source and the same 1,822 macros.
+That separates the tool question from the source question for every module, and
+it is done: [`docs/ifox-tree.md`](docs/ifox-tree.md).
 
-What remains: **2,128 length differences** and **441 text differences**.
+- **`as370` and IFOX00 agree on 3,466 of 5,528 modules (62.7 %).**
+- **2,112 modules are the assembler's problem** and are written out ready to hand
+  over: [`work/measurements/ifox-run/for-cc370.tsv`](work/measurements/ifox-run/for-cc370.tsv)
+  and `for-cc370.txt`.
+- **3,416 are ours** — the two assemblers agree and only IBM's shipped object
+  differs.
+- On the population the earlier figures are about (as370 rc 0, DLIB counterpart,
+  3,719 modules): source 1,357, tool 1,052, recovered 869, `DS` holes only 441.
 
-### What changed today, in one paragraph
+### The class that only this comparison can see
 
-The comparison used to run only against the distribution libraries, which
-conflates two questions — *does `as370` assemble like IFOX00* and *does Dave
-Kreiss' source match IBM's object*. Those are now separable: the same source is
-assembled here and by the real Assembler XF under MVS/CE, and the decks compared
-([`docs/ifox-oracle.md`](docs/ifox-oracle.md)). Seven `as370` defects were closed
-that way, **four of them silent** — the assembler reported success and produced
-different code. Details in [`docs/as370-gaps.md`](docs/as370-gaps.md).
+**1,113 modules are a silent divergence**: both assemblers exit clean, neither
+says a word, and the object code is different anyway. `IGG019PF` is the pattern —
+IFOX00 emits 144 bytes, `as370` emits 265, first difference at `0x89`. Against
+the distribution libraries alone this is indistinguishable from a source defect,
+which is why it was never counted before.
 
-### The three things to do next
+### The next three things
 
-**1. Extend the direct IFOX comparison from 30 modules to all 4,511.** This is
-the biggest single step available and it needs no one else. On a sample of 30 the
-split was **14 source, 11 tool, 5 where IFOX00 flags and `as370` is silent**; the
-population figure will rank everything that follows. Upload the sources once as a
-PDS to `MVSCE-EXP` so the assembly jobs stay small, then assemble both ways and
-compare columns 1–72 excluding the `END` card.
+**1. Hand the 2,112 to cc370 as cases, ordered.** The table gives each one the
+offset where the two decks part, both section lengths, and both assemblers'
+messages — [`module-table.tsv`](work/measurements/ifox-run/module-table.tsv), one
+row per module, sorted so the hand-over block is contiguous. The classes, largest
+first:
 
-**2. Measure what cc370 lands.** After each: full tree run, and report **both**
-numbers — new identities *and* how many modules moved out of the length bucket.
-On #142 the second number was five times the first.
+| | Modules |
+|---|---:|
+| silent divergence — both clean, object different | 1,113 |
+| both flag, and the decks differ | 849 |
+| `as370` rejects what Assembler XF assembles | 512 |
+| IFOX00 flags, `as370` is silent | 84 |
 
-Queue, with what is known about each:
+The third class is already broken down by message
+([`as370-flags.tsv`](work/measurements/ifox-run/as370-flags.tsv)); on the first
+900 modules it was 68 `Undefined symbol`, 25 `Addressability error — no active
+USING covers the operand`, 6 `Undefined operation code`. Send the case, not the
+diagnosis.
 
-- **#144 — landed, and it moved nothing measurable.** `T'` of a defined symbol
-  now answers from an open-code look-ahead. **22 more modules assemble** (4,511 →
-  4,533) and **not one comparison figure changed**: identical stays 837, length
-  differences stay 2,128. All 22 are `IKJEG*` and `IGC000*` modules with **no
-  DLIB counterpart**, so they never enter the comparison. The fix is real; its
-  yield is outside the yardstick.
+**2. The source work, now attributable with certainty.** Where `as370` == IFOX00
+and the DLIB member still differs, the difference belongs to the source or to
+IBM's maintenance and to nothing else. That is 1,357 modules, plus 441 that
+differ only in `DS` holes. This no longer waits on the assembler.
 
-  **#147 followed** — `T'` written out rather than through a macro parameter was
-  still answered as an omitted operand — and moved nothing either. **The `T'`
-  family is closed.**
+**3. Re-run the comparison after every cc370 merge.** The pipeline is resumable
+and the order is a fixed shuffle, so a partial re-run is still an unbiased
+sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
 
-  **The depletion is explained, and not by a further defect.** Of the 184
-  candidates, **77 had their object deck corrected** by the three fixes and 5
-  became identical. The fixes reach them; those modules simply carry other
-  differences as well. A module calling `DCB` with a self-defining term is a
-  module with more going on — the set selected for complexity, not for one cause.
-  Do not go looking for a fourth `T'` gap.
-- **#141 — landed, and the yield is in the commit next to it.** Gated over the
-  whole tree, one commit at a time: **844 → 874 byte-identical, none lost**, and
-  **29 of the 30 come from the `'&&'` folding fix**, not from #141 itself.
-  Sixteen gainers came out of the *length* bucket. `rc 0` falls 4,533 → 4,154
-  because 413 modules now report `IFO117` on an empty `&SYSPARM` — their decks do
-  not change, so that is #140's silent class shrinking, not a regression.
-  [`docs/opencode-gate.md`](docs/opencode-gate.md).
+### What is settled and needs no more work
 
-  **The "52 modules" figure is withdrawn.** That list was never saved and the
-  link here pointed at the `AIF`/`AGO` list by mistake. The rule is rebuilt in
-  [`tools/opencode_scan.py`](tools/opencode_scan.py): **258 modules** carry an
-  open-code emit-path reference, 148 of them assembling (57 % against 82 %
-  tree-wide). It is not tuned to reproduce 52 and it does not.
-- **#140**, `as370` silent where IFOX00 flags: 5 modules — **413 of them are no
-  longer silent** after #141, all one cause.
-- **#151 wants the next gate, and it must run against IBM's object.** `as370`
-  clips a `SETC` value at 95 characters where IFOX00 holds 255. Before #141 the
-  clip was *silent* and put wrong characters into decks that already assembled —
-  the `&SYSECT` pattern again, so gating it `as370`-against-`as370` would show
-  nothing. **71 modules can reach a long `SETC`**
-  ([`setc95-reach.tsv`](work/measurements/setc95-reach.tsv)); 43 assemble, 4 are
-  already identical, 56 are in the length bucket. cc370 is building it on its own
-  branch — folding it into #141's would have invalidated the 874.
-
-  **Build it as a scan plus a measurement, not one or the other.** The
-  assignment is lexical — 17 members, and a scan of those can be trusted. The
-  reach is not, because `&TR3270` is *set* in one member and *read* in another
-  across a `COPY` edge, so no scan of the reading module can see it. Trust the
-  scan of the assignments; measure the tree for the consequences.
-- **#148**, **#149**, **#150** are filed with oracles and not repaired. Two are
-  written to fail when they are fixed, so none can be closed quietly.
-
-  ⚠️ **The gate must keep the deck of a module it calls failed.** Seven modules
-  assemble byte-identical to IBM's object while returning non-zero; every tree
-  run before this one deleted those decks unseen.
-
-> ⚠️ **One measurement deliberately not reported.** Counting `AIF`/`AGO`/`MEXIT`
-> in open code gives 1,738 modules, of which **247 are byte-identical**. That
-> contradicts the premise: if open-code `AIF` were ignored and both branches
-> emitted, those modules would carry too much code and could not be identical.
-> Either the `MACRO`/`MEND` depth counting is too crude and it is counting
-> statements inside macro definitions, or `as370` handles most of these
-> correctly and the minimal case hits a narrower condition. **Check one of the
-> 247 by hand before this number is used for anything.**
-
-**3. The source work proper.** The 441 text differences are right-length, real
-differences with no hole excuse — and now attributable with certainty. The 1,360
-length differences that use no mirror macro
-([`docs/what-is-not-blocked.md`](docs/what-is-not-blocked.md)) do not wait on
-anything either.
+- **The assembly stamp.** 302 modules were under suspicion. Every module whose
+  decks differ was re-assembled locally with the date and time *that* IFOX run
+  used; **exactly one of 1,334 byte differences is the stamp**. No `--sysdate`
+  option, no `difin` masking.
+- **The macro question, for this comparison.** Both sides see the same libraries:
+  equal member counts in all six distribution libraries, the 444 private macros
+  identical by name, 25 members drawn at random identical byte for byte. It does
+  not settle the *provenance* of the 319 mirror macros — that still waits on Dave
+  Kreiss' tape — but no difference in this run can be blamed on the two sides
+  reading different macros.
 
 ### Waiting on other people
 
