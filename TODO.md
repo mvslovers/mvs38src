@@ -109,6 +109,36 @@ that substitution stays unapplied — unproven.
 rather than a maintenance-level one. That is 3,507 modules, and this is the first
 mechanism found in them.
 
+### And the second: IBM's own source, measured against IBM's own object
+
+`mvssrc-20` extracted the IBM distribution tapes byte-exact —
+`~/repos/mvs/mvs38-ibmsrc`, 7,206 members, cp037, 80 columns. For **1,023**
+modules where the assemblers agree, the object differs, and IBM's source is
+unambiguously available *and different from Dave Kreiss'*, it was assembled here
+instead:
+
+| | Modules |
+|---|---:|
+| byte-identical to IBM's object | **16** |
+| `DS` holes only | 19 |
+| **worse** — a text difference became a length difference | **110** |
+
+**The negative result is the important one.** IBM's own source does not
+reproduce IBM's own object for 98 % of them, and it makes more modules worse than
+better. That is the premise this project was founded on, measured directly for
+the first time rather than assumed — and it says Dave Kreiss' tree, with his 747
+repairs, is the better base and should stay the base.
+
+The sixteen are in `src/`; recovered goes 912 -> 928. Full result in
+[`ibm-source-trial.tsv`](work/measurements/ifox-run/ibm-source-trial.tsv).
+
+⚠️ **A trap `mvssrc-20` measured and we must not walk into:** the FTP table is a
+*swap*, X'5F' and X'B0' exchanging places, so `^` -> `¬` is only half a rule.
+`MVSBLD` is not one pipeline: two members (`IFCDIP00`, `IFCIOHND`) are already
+cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
+(X'9B') that no substitution can repair — it has to come from the tape.
+`caret_fix.py` cannot touch any of the three, which was checked and not assumed.
+
 ### Six fixes in — 62.7 % to 67.6 % in one afternoon
 
 Baseline `126d8d3`. **as370 == IFOX00: 3,737 of 5,528 (67.6 %)**, recovered

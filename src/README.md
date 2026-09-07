@@ -31,3 +31,32 @@ character in a constant; the other 29 have further differences and will follow a
 those are settled.
 
 Found by the `mvssrc-20` session, measured here.
+
+## Sixteen more, from IBM's own tape
+
+The `mvssrc-20` session extracted the IBM distribution tapes byte-exact
+(`~/repos/mvs/mvs38-ibmsrc`, 7,206 members). For 1,023 modules where the two
+assemblers agree, the object still differs from the DLIB member, and IBM's
+original source is unambiguously available and **differs from Dave Kreiss'**,
+that source was assembled here instead:
+
+| | Modules |
+|---|---:|
+| became byte-identical to IBM's object | **16** |
+| fell to `DS` holes only | 19 |
+| **got worse** — text difference became a length difference | **110** |
+| unchanged in kind | the rest |
+
+**So IBM's own source is not the better starting point.** It rescues 16 modules
+and damages 110. Dave Kreiss' tree is closer to the shipped object than the
+source IBM shipped with it, which is what 747 modules of his repair work buys —
+and it is the founding premise of this project measured directly for the first
+time: **IBM's own source does not reproduce IBM's own object.**
+
+The sixteen are here because for them it does. Each names the tape it came from
+in the commit.
+
+Seven of them are modules the `^` substitution alone could not rescue
+(`ICKTSTP0`, `IDCTSTP0`, `IEBFDANL`, `IGG1QN`, `IGG1QNC`, `IGG2G11`, `IGG2P11`):
+IBM's text carries the right byte natively *and* whatever else differed. The two
+routes do not overlap and do not collide.
