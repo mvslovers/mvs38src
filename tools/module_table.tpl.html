@@ -49,7 +49,20 @@ header .meta{margin-top:10px; color:var(--ink-3); font-family:"IBM Plex Mono",mo
 .summary{display:grid; grid-template-columns:minmax(0,3fr) minmax(0,2fr); gap:18px; align-items:start}
 @media(max-width:900px){.summary{grid-template-columns:1fr}}
 
+.stack{display:flex; flex-direction:column; gap:14px}
+.grouplabel{
+  font-family:"IBM Plex Sans Condensed",sans-serif; font-size:11.5px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.06em; color:var(--ink-2); margin:0 0 7px;
+}
 .cards{display:flex; flex-wrap:wrap; gap:8px}
+.card.sig{flex:1 1 150px; border-left-color:var(--ink-3)}
+.card.sig .n{font-size:19px}
+.card.own{flex:1 1 210px}
+.card.o-cc370{border-left-color:var(--tool)} .card.o-cc370 .n{color:var(--tool)}
+.card.o-source{border-left-color:var(--source)} .card.o-source .n{color:var(--source)}
+.card.s-silent{border-left-color:var(--tool)} .card.s-silent .n{color:var(--tool)}
+.card.s-as370{border-left-color:var(--source)}
+.card.s-ifox00{border-left-color:var(--holes)}
 .card{
   flex:1 1 130px; background:var(--card); border:1px solid var(--rule);
   border-left:4px solid var(--none); border-radius:3px; padding:10px 12px;
@@ -151,20 +164,33 @@ footer code{font-family:"IBM Plex Mono",monospace; color:var(--ink-2)}
 </header>
 
 <section class="summary">
-  <div>
-    <div class="cards"><!--CARDS--></div>
+  <div class="stack">
+    <div>
+      <h2 class="grouplabel">Whose problem it is</h2>
+      <div class="cards"><!--OWNCARDS--></div>
+    </div>
+    <div>
+      <h2 class="grouplabel">Where the difference belongs</h2>
+      <div class="cards"><!--CARDS--></div>
+    </div>
+    <div>
+      <h2 class="grouplabel">What the row is a case of</h2>
+      <div class="cards"><!--SIGCARDS--></div>
+    </div>
   </div>
   <div class="matrix">
     <h2>Return codes · as370 down, IFOX00 across</h2>
     <table><thead><tr><th></th><!--MHEAD--></tr></thead><tbody><!--MBODY--></tbody></table>
-    <p class="cap">The diagonal is agreement about whether anything is wrong. Off it, one
-       assembler is content where the other is not — a class the deck comparison cannot see.</p>
+      <p class="cap">The diagonal is agreement about whether anything is wrong. Off it, one
+       assembler is content where the other is not — a class the deck comparison cannot see.
+       The cell 0/0 hides the opposite case: both silent, decks different anyway.</p>
   </div>
 </section>
 
 <div class="controls">
   <input type="search" id="q" placeholder="module, message, IFO code…" autocomplete="off">
   <span class="count" id="count"></span>
+  <button class="clear" id="copy">copy module names</button>
   <button class="clear" id="clear">clear filters</button>
 </div>
 
@@ -172,7 +198,7 @@ footer code{font-family:"IBM Plex Mono",monospace; color:var(--ink-2)}
   <table class="main">
     <thead><tr>
       <th>module</th><th>as370</th><th>IFOX</th><th>decks</th><th>DLIB</th>
-      <th>first diff</th><th>IFOX B</th><th>as370 B</th><th>messages</th>
+      <th>first diff</th><th>IFOX B</th><th>as370 B</th><th>case</th><th>owner</th><th>messages</th>
     </tr></thead>
     <tbody id="rows"></tbody>
   </table>
@@ -181,6 +207,9 @@ footer code{font-family:"IBM Plex Mono",monospace; color:var(--ink-2)}
 <footer>
   Source of record: <code>work/measurements/ifox-run/module-table.tsv</code>.
   Messages are the assemblers' own, deduplicated per module and cut at six.
+  <span class="pill p-tool">cc370</span> marks the rows the assembler owns: the decks
+  differ although source and macros were the same, or one assembler rejects what the
+  other assembles. Filter to those, copy the names, hand them over.
   A row is <span class="pill p-tool">tool</span> when the two decks differ,
   <span class="pill p-source">source</span> when they agree and the DLIB member does not,
   <span class="pill p-recovered">recovered</span> when all three agree.
@@ -189,11 +218,11 @@ footer code{font-family:"IBM Plex Mono",monospace; color:var(--ink-2)}
 
 <script>
 const DATA = /*DATA*/;
-const [MOD,ARC,IRC,TOOL,DLIB,OFF,LI,LA,AMSG,IMSG,CLS,PAIR] = [0,1,2,3,4,5,6,7,8,9,10,11];
+const [MOD,ARC,IRC,TOOL,DLIB,OFF,LI,LA,AMSG,IMSG,CLS,PAIR,SIG,OWN] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13];
 const rowsEl = document.getElementById('rows');
 const countEl = document.getElementById('count');
 const q = document.getElementById('q');
-let fClass = null, fRc = null, chunk = null;
+let fClass = null, fRc = null, fSig = null, fOwn = null, chunk = null, hits = [];
 
 const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pill = c => `<span class="pill p-${c==='tool'?'tool':c==='source'?'source':c==='holes'?'holes':c==='recovered'?'recovered':'none'}">${c}</span>`;
@@ -201,6 +230,8 @@ const pill = c => `<span class="pill p-${c==='tool'?'tool':c==='source'?'source'
 function match(r){
   if (fClass && r[CLS] !== fClass) return false;
   if (fRc && r[PAIR] !== fRc) return false;
+  if (fSig && r[SIG] !== fSig) return false;
+  if (fOwn && r[OWN] !== fOwn) return false;
   const t = q.value.trim().toLowerCase();
   if (t && !(r[MOD].toLowerCase().includes(t) || r[AMSG].toLowerCase().includes(t)
              || r[IMSG].toLowerCase().includes(t))) return false;
@@ -209,7 +240,7 @@ function match(r){
 
 function render(){
   if (chunk) cancelAnimationFrame(chunk);
-  const hits = DATA.filter(match);
+  hits = DATA.filter(match);
   countEl.textContent = hits.length + ' of ' + DATA.length + ' modules';
   rowsEl.replaceChildren();
   let i = 0;
@@ -228,6 +259,8 @@ function render(){
       + `<td class="num">${esc(r[OFF])}</td>`
       + `<td class="num">${esc(r[LI])}</td>`
       + `<td class="num">${esc(r[LA])}</td>`
+      + `<td>${r[SIG] ? `<span class="pill ${r[SIG]==='silent divergence'?'p-tool':'p-none'}">${esc(r[SIG])}</span>` : ''}</td>`
+      + `<td>${r[OWN] === 'cc370' ? '<span class="pill p-tool">cc370</span>' : r[OWN] === 'source' ? '<span class="pill p-source">ours</span>' : ''}</td>`
       + `<td class="msg">`
       + (r[AMSG] ? `<span class="line" title="${esc(r[AMSG])}"><span class="tag">as370</span>${esc(r[AMSG])}</span>` : '')
       + (r[IMSG] ? `<span class="line" title="${esc(r[IMSG])}"><span class="tag">ifox</span>${esc(r[IMSG])}</span>` : '')
@@ -248,15 +281,24 @@ document.querySelectorAll('[data-filter]').forEach(el => {
     const sel = el.classList.contains('sel');
     document.querySelectorAll(`[data-filter^="${kind}:"]`).forEach(x => x.classList.remove('sel'));
     if (!sel) el.classList.add('sel');
-    if (kind === 'class') fClass = sel ? null : val; else fRc = sel ? null : val;
+    if (kind === 'class') fClass = sel ? null : val;
+    else if (kind === 'sig') fSig = sel ? null : val;
+    else if (kind === 'own') fOwn = sel ? null : val;
+    else fRc = sel ? null : val;
     render();
   });
 });
 q.addEventListener('input', () => render());
 document.getElementById('clear').addEventListener('click', () => {
-  fClass = fRc = null; q.value = '';
+  fClass = fRc = fSig = fOwn = null; q.value = '';
   document.querySelectorAll('.sel').forEach(x => x.classList.remove('sel'));
   render();
+});
+document.getElementById('copy').addEventListener('click', async (e) => {
+  const names = hits.map(r => r[MOD]).join('\n');
+  try { await navigator.clipboard.writeText(names); e.target.textContent = hits.length + ' names copied'; }
+  catch { e.target.textContent = 'clipboard blocked'; }
+  setTimeout(() => { e.target.textContent = 'copy module names'; }, 2200);
 });
 render();
 </script>

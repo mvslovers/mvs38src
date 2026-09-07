@@ -45,7 +45,22 @@ def main():
     slim = [[r["module"], r["as370_rc"], r["ifox_rc"], r["tool"], r["dlib"],
              r["first_diff"], r["len_ifox"], r["len_as370"],
              r["as370_messages"], r["ifox_messages"], r["_class"],
-             r["_a"] + "/" + r["_i"]] for r in data]
+             r["_a"] + "/" + r["_i"], r.get("signal", ""), r.get("owner", "")]
+            for r in data]
+
+    own = Counter(r.get("owner", "") for r in data)
+    owncards = "".join(
+        f'<button class="card own o-{k}" data-filter="own:{k}">'
+        f'<span class="n">{own.get(k, 0)}</span><span class="l">{lab}</span></button>'
+        for k, lab in (("cc370", "for cc370 — the assembler"),
+                       ("source", "ours — the source")) if own.get(k))
+    sig = Counter(r.get("signal", "") for r in data)
+    sig_order = ["silent divergence", "as370 alone flags", "IFOX00 alone flags",
+                 "both flag", "no deck", "did not finish"]
+    sigcards = "".join(
+        f'<button class="card sig s-{k.split()[0].lower()}" data-filter="sig:{k}">'
+        f'<span class="n">{sig.get(k, 0)}</span><span class="l">{k}</span></button>'
+        for k in sig_order if sig.get(k))
 
     labels = {"recovered": "recovered", "source": "source", "holes": "source, DS holes only",
               "tool": "tool", "unattributable": "no deck", "unpaired": "no DLIB member"}
@@ -73,6 +88,8 @@ def main():
                             "module_table.tpl.html")).read()
     page = (tpl.replace("/*DATA*/", json.dumps(slim, separators=(",", ":")))
                .replace("<!--CARDS-->", cards)
+               .replace("<!--SIGCARDS-->", sigcards)
+               .replace("<!--OWNCARDS-->", owncards)
                .replace("<!--MHEAD-->", thead)
                .replace("<!--MBODY-->", body)
                .replace("<!--TOTAL-->", str(len(data)))
