@@ -181,15 +181,25 @@ def main():
         if c:
             print(f"  {k:14s}: {len(c)}")
     print(f"  of those explained by the assembly stamp: {sum(1 for m, v in fixed.items() if v == 'identical')}")
-    silent = [r for r in rows if r[1] == "0" and r[2] not in ("0000", "0004", "NOTRUN", "?")]
-    print(f"  as370 silent where IFOX00 flags: {len(silent)}")
+    # "flags" means return code 8 or worse: 4 is a warning and IFOX00 gives it
+    # freely. An ABEND is not the assembler flagging anything -- it is a job
+    # that did not finish, and it is counted apart.
+    flagged = [r for r in rows if r[1] == "0" and r[2].isdigit() and int(r[2]) >= 8]
+    aben = [r for r in rows if not r[2].isdigit()]
+    print(f"  as370 silent where IFOX00 flags (rc>=8): {len(flagged)}")
+    if aben:
+        print(f"  IFOX00 did not finish (abend / not run): {len(aben)}")
     print("\nAttribution, where a DLIB counterpart exists:")
     tab = {}
     for r in rows:
         d = dv.get(r[0], "no-pair")
         if d == "no-pair":
             continue
-        k = ("tool" if tool(r) != "identical" else
+        t = tool(r)
+        # a module with no deck on one side attributes nothing: it is not an
+        # as370 defect, it is a measurement that did not happen
+        k = ("unattributable (deck missing)" if t.startswith("no-") else
+             "tool" if t != "identical" else
              "recovered" if d == "identical" else
              "source (DS holes only)" if d == "holes" else "source")
         tab[k] = tab.get(k, 0) + 1

@@ -44,6 +44,7 @@ ORDER = os.path.join(OUT, "order.txt")
 SYSLIB = ["SYS1.AMACLIB", "SYS1.AMODGEN", "SYS1.AGENLIB", "SYS1.ATSOMAC",
           "SYS1.ATCAMMAC", "SYS1.APVTMACS", "IBMUSER.PVTMAC"]
 SRCPDS, OBJPDS = "IBMUSER.SRC", "IBMUSER.IFOXOBJ"
+LSTPDS = "IBMUSER.IFOXLST"
 PER_JOB, PER_BATCH, FTPJOBS = 25, 150, 3
 
 import base64, urllib.request
@@ -155,6 +156,24 @@ def realloc_src():
 //D2       DD  DSN={SRCPDS},DISP=(,CATLG),UNIT=SYSDA,
 //             SPACE=(CYL,(150,60,400)),
 //             DCB=(RECFM=FB,LRECL=80,BLKSIZE=19040)
+"""
+    n, i = submit(jcl)
+    wait(n, i)
+    purge(n, i)
+
+
+def realloc_lst():
+    jcl = f"""//IFXLST   JOB (ACCT),'MVS38SRC',CLASS=A,MSGCLASS=H,NOTIFY=IBMUSER
+//DEL     EXEC PGM=IDCAMS
+//SYSPRINT DD  SYSOUT=H
+//SYSIN    DD  *
+  DELETE '{LSTPDS}' NONVSAM PURGE
+  SET MAXCC=0
+/*
+//ALLOC   EXEC PGM=IEFBR14
+//D2       DD  DSN={LSTPDS},DISP=(,CATLG),UNIT=SYSDA,
+//             SPACE=(CYL,(150,60,100)),
+//             DCB=(RECFM=FBA,LRECL=121,BLKSIZE=6050)
 """
     n, i = submit(jcl)
     wait(n, i)
@@ -305,7 +324,7 @@ def cmd_run(args):
               f"misfiled {len(wrong)}  total {(time.time() - t00) / 60:.1f}min", flush=True)
 
 
-LSTPDS = "IBMUSER.IFOXLST"
+LSTPDS_MOVED = None
 
 
 def cmd_diag(args):
@@ -319,9 +338,10 @@ def cmd_diag(args):
     os.makedirs(f"{OUT}/diag", exist_ok=True)
     todo = [m for m in mods if not os.path.exists(f"{OUT}/diag/{m}.txt")]
     print(f"{len(mods)} modules, {len(todo)} to go")
-    for b in range(0, len(todo), 50):
-        batch = todo[b:b + 50]
+    for b in range(0, len(todo), 40):
+        batch = todo[b:b + 40]
         realloc_src()
+        realloc_lst()      # a full listing is ~600 KB; 60 cyl holds about fifty
         upload(batch)
         for k in range(0, len(batch), 10):
             chunk = batch[k:k + 10]
