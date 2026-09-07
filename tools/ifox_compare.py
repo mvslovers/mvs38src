@@ -115,7 +115,7 @@ def main():
         if len(f) >= 5 and f[0] != "module":
             state[f[0]] = f
     gate = {}
-    for line in open(f"{RUN}/as370-ee1090b.tsv"):
+    for line in open(f"{RUN}/as370-gate.tsv"):
         f = line.rstrip("\n").split("\t")
         if len(f) >= 4:
             gate[f[0]] = f
