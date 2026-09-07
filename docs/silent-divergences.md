@@ -89,7 +89,7 @@ Three identical constants, and only the last one is flagged differently.
 **`as370` disagrees with itself, not just with IFOX00** — which is the argument
 that this is one code site and not 173 source questions.
 
-Filed as cc370#185 with [`rld-flag-cases.tsv`](../work/measurements/ifox-run/rld-flag-cases.tsv)
+Filed as cc370#186 with [`rld-flag-cases.tsv`](../work/measurements/ifox-run/rld-flag-cases.tsv)
 — one row per module, the entry counts, the flags, and whether the last entry
 alone is affected. The class list is
 [`classes/rld-flag.txt`](../work/measurements/ifox-run/classes/rld-flag.txt).
