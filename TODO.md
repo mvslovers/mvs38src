@@ -80,6 +80,21 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
   Kreiss' tape — but no difference in this run can be blamed on the two sides
   reading different macros.
 
+### A source-side finding out of the same run, and it does not wait
+
+**Our `MODID` is not the level the source was written against, and now it is
+measured.** 112 modules call `MODID` with `DATE=` or `PTF=`. The only `MODID` we
+have — MVS/CE 2.1.4 `AMACLIB`, the same library IFOX00 reads — has the prototype
+`&LABEL MODID &BRANCH=,&BR=` and defines neither keyword, while its own comments
+name the PTF that added `PTF=` support (`OZ15314`). IFOX00 flags every one of
+those calls with `IFO092`; `as370` says nothing, which is
+[cc370#162](https://github.com/mvslovers/cc370/issues/162), but the macro level
+is ours.
+
+`MODID` is also one of the macros that stamps the assembly date into the object,
+so this sits directly on top of the 302 timestamp-bearing modules. Smallest case:
+`IECVOID`, three cards.
+
 ### Waiting on other people
 
 - **Dave Kreiss' rebuilt install tape** with his built `PVTMAC`/`APVTMAC`. That

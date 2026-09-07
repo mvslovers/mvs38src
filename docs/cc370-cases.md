@@ -99,16 +99,39 @@ anyway** — those are not cc370's at all, and they are booked to the source.
 (An earlier version of this page called all 849 cc370's. It was the count of the
 class, not of the part where the decks differ.)
 
-## D. IFOX00 flags, `as370` is silent — 84 modules
+## D. IFOX00 flags, `as370` is silent — 84 modules — [cc370#162](https://github.com/mvslovers/cc370/issues/162)
 
 In 39 of the 84 the decks are identical, so there it really is a missing
-diagnostic; in the other **45 the code differs too**. The listings that say
-*what* XF flagged are being fetched; until they are here this package cannot be
-worked.
-Everything seen so far is `IFO092 KEYWORD PARAMETER PTF/DATE UNDEFINED IN MACRO
-DEFINITION` — which also points back at the maintenance level of our macros.
+diagnostic; in the other **45 the code differs too**.
+
+The listings are in now, and the class is one thing: **83 of the 84 are
+`IFO092 KEYWORD PARAMETER ... UNDEFINED IN MACRO DEFINITION`.** `IECVOID` is the
+whole case in three cards:
+
+```
+         IECDVOID CSECT=YES
+         MODID BR=NO,DATE=11/21/78
+         END   ,
+```
+
+`MODID` in `SYS1.AMACLIB` has the prototype `&LABEL MODID &BRANCH=,&BR=`, so
+`DATE=` is not a keyword it defines. IFOX00 says `IFO092`; `as370` returns rc 0
+and prints nothing.
 
 ---
+
+## What this class also told us, and it is ours
+
+**Our `MODID` is not the level the source was written against.** 112 modules call
+`MODID` with `DATE=` or `PTF=`; the only `MODID` we have — from the MVS/CE 2.1.4
+`AMACLIB`, the same library IFOX00 read — defines neither. Its own comments
+mention the PTF that added `PTF=` support (`OZ15314`), and the prototype does not
+carry it.
+
+That is the macro-provenance question with a measured instance for the first
+time, and it is not cc370's: it is evidence about which maintenance level our
+macros are at. `MODID` also stamps the assembly date into the object, so it sits
+directly on top of the 302 timestamp-bearing modules.
 
 ## Two things that are not cc370's
 
