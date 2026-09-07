@@ -82,6 +82,28 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
   Kreiss' tape — but no difference in this run can be blamed on the two sides
   reading different macros.
 
+### Dave Kreiss' install tape holds source we were not measuring
+
+`BLDMVS.AWS` has `NEW.ASM` as its own data set — 848 members, **321 of them not in
+`MVSBLD`**. His package separates what he built (`NEW.ASM`), the MVT-era
+originals (`MVT.ASM`, 106 members, all also in `MVSBLD`) and his own tools
+(`UTL.ASM`, 64, none in `MVSBLD`). `MVSBLD` itself is flat and mixed: original
+and repaired side by side, with nothing but his `*DSKnnnn` markers to tell them
+apart.
+
+Of the 321: **56 have a DLIB object**, so they were measurable all along and were
+never measured.
+
+- **7 are recovered immediately** — `HASPBLKS`, `HASPFMT0`–`FMT5`, byte-identical
+  at the first attempt. These are exactly the seven the `mvssrc` sessions had
+  reported as having no source anywhere, presumed to need a `HASPGEN` run.
+- **48 are `XTB*` translate tables** blocked on a `TABLE`/`NAME` macro pair that
+  is in none of our libraries, none of the IBM tapes and not in `NEW.ASM`. That
+  makes them a 52nd and 53rd entry for the missing-macro inventory, and `TABLE`
+  is now the second-largest single blocker after `IHANVT`.
+
+Everything is kept in `work/kreiss-newasm/` unmeasured. Recovered goes 928 -> 935.
+
 ### The first recovered source — ten modules, and a class the IFOX comparison could not see
 
 `src/` has its first entries. `MVSBLD` came through a transfer that read EBCDIC
