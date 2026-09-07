@@ -82,10 +82,29 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
   Kreiss' tape — but no difference in this run can be blamed on the two sides
   reading different macros.
 
-### Four fixes in; two more cases filed from the silent class
+### Five fixes in — 62.7 % to 65.9 % in one afternoon
 
-Baseline `fc18fac`. **as370 == IFOX00: 3,583 of 5,528 (64.8 %)**, the hand-over
-list 2,016 -> 1,992.
+Baseline `e502f71`. **as370 == IFOX00: 3,641 of 5,528 (65.9 %)**, recovered
+against IBM's shipped object **893**, hand-over list **1,936** (from 2,107).
+
+| merge | identical | lost | closer | further |
+|---|---:|---:|---:|---:|
+| #164 + #165 | +93 | 0 | — | — |
+| #166 (diagnostics order) | 0 | 0 | 0 | 0 |
+| #168 (parenthesised adcon) | +24 | 0 | 69 | 9 |
+| #170 (index subscript, grouping parens) | +58 | 0 | 172 | 6 |
+
+**Nothing has been lost in any of them.** The "further" columns were weighed,
+not netted: every one lands inside a TXT card already carrying 8 to 799 wrong
+bytes, where a previously wrong value happened to coincide with IFOX00's byte.
+The assembler computing the right value is the point; the coincidence was not
+worth defending.
+
+#170 also carried a second defect of the same family, found while fixing the
+first: a displacement parenthesised for *grouping* was taken as a subscript
+list. `SLL R11,24-(8*((A-B)-(((A-B)/4)*4)))` gave `ff fe 00 18` — not even a
+valid instruction — where IFOX00 gives `89 b0 00 18`. Silent, and not in any
+catalogue of ours.
 
 cc370#168 (an address constant whose value starts with `(` is not zero) was the
 first change accepted on more than the verdict counts: +24 identical, none lost,
