@@ -109,12 +109,20 @@ that substitution stays unapplied — unproven.
 rather than a maintenance-level one. That is 3,507 modules, and this is the first
 mechanism found in them.
 
-### What the tape tree is actually for — where Dave Kreiss got to
+### What the tape tree is for — the material Dave Kreiss started from
 
-His project *was* ours: bring the surviving sources up to the shipped maintenance
-level. So his tree being closer to the object than IBM's original is the
-construction, not a finding, and the trial below should be read for its 16
-exceptions and not for its headline.
+**Two projects, one goal, and they are not the same work.** What this repository
+does is take over Dave Kreiss' project: bring the surviving sources up to the
+maintenance level of the shipped object. The `mvssrc` sessions are not doing that
+— they are **curating IBM's original sources for us** out of several archives, so
+that we have one byte-exact, provenance-known starting point instead of a
+handful of mirrors.
+
+So the tape tree is not an alternative base to be compared against his. It is
+**what he began with**, which means it finally makes his work visible as a delta:
+what he changed, where he changed it, and what he never reached. The trial below
+should be read for its 16 exceptions and not for its headline — that his tree
+beats IBM's original is his project's definition, not a result.
 
 What the tape does give, for the first time, is **which modules he worked on**.
 His change markers (`*DSKnnnn`, or `DSKnnnn` in column 65) mark 783 modules:
@@ -156,10 +164,11 @@ instead:
 | `DS` holes only | 19 |
 | **worse** — a text difference became a length difference | **110** |
 
-**Read this for the 16, not for the headline.** That Kreiss' tree beats IBM's
-original is what his project was *for*; measuring it proves nothing new. The
-useful part is the exceptions: 16 modules where IBM's untouched text reaches the
-object and his does not, and 110 where his is better by a measurable margin.
+**Read this for the 16, not for the headline.** IBM's tree is the material he
+started from, so "his is closer" is the definition of his project rather than a
+result. The useful part is the exceptions: 16 modules where IBM's untouched text
+reaches the object and his does not — places his repair either never happened or
+went the wrong way — and 110 where his is better by a measurable margin.
 
 The sixteen are in `src/`; recovered goes 912 -> 928. Full result in
 [`ibm-source-trial.tsv`](work/measurements/ifox-run/ibm-source-trial.tsv).

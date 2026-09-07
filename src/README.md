@@ -47,11 +47,15 @@ that source was assembled here instead:
 | **got worse** — text difference became a length difference | **110** |
 | unchanged in kind | the rest |
 
-**So IBM's own source is not the better starting point.** It rescues 16 modules
-and damages 110. Dave Kreiss' tree is closer to the shipped object than the
-source IBM shipped with it, which is what 747 modules of his repair work buys —
-and it is the founding premise of this project measured directly for the first
-time: **IBM's own source does not reproduce IBM's own object.**
+**These are the 16 exceptions, and that is all they are.** IBM's tape is the
+material Dave Kreiss started from, curated for us by the `mvssrc` sessions; his
+tree being closer to the object is his project's definition, not a discovery. The
+16 are the places where his repair never happened or went the wrong way, and the
+110 are where it demonstrably worked.
+
+What the comparison does establish, and it was previously an assumption: **IBM's
+own source does not reproduce IBM's own object** — for 98 % of these modules the
+untouched original misses it too.
 
 The sixteen are here because for them it does. Each names the tape it came from
 in the commit.
