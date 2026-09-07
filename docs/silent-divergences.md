@@ -94,11 +94,36 @@ Filed as cc370#186 with [`rld-flag-cases.tsv`](../work/measurements/ifox-run/rld
 alone is affected. The class list is
 [`classes/rld-flag.txt`](../work/measurements/ifox-run/classes/rld-flag.txt).
 
-**Worth up to +173 identities from one site**, which would be the second-largest
-change of the project after #175's +282. And no diagnostic could ever have found
-it: both assemblers are silent by construction, both decks load to the right
-image, and the difference survives every instrument except a byte comparison of
-the deck.
+**Fixed in cc370#187: +160 identities, none lost, zero decks closer and zero
+further.** The zero in both directions is the signature of a defect that was
+never partial — each affected deck differed in exactly this one bit, so it moves
+to identical or not at all.
+
+The cause was the call idiom, not arithmetic. Every site wrote the width *after*
+the call:
+
+```c
+add_reloc(lc, r, 1); rels[nrel - 1].len = blen;
+```
+
+`add_reloc` bails on `in_dsect`, so the write then lands on the **previous**
+entry. `IEAVELCR` calls it 24 times for real and 138 times from dummy sections,
+and the last real relocation was overwritten 138 times, keeping the width of the
+final DSECT constant. That is the one bit, and it is why 152 of 163 were the last
+entry: the clobber target is always `rels[nrel-1]`.
+
+**Which assembler was right needed no oracle.** `IEAVELCR`'s table is `VL3`
+constants; `as370` emitted length 3 for twenty-three of them and 4 for the last.
+It disagreed with itself, so IFOX00 is right and nothing goes to
+`ifox-objections.md`. *"It disagrees with itself"* was the load-bearing
+observation — not *"IFOX00 is the oracle"*, which would have decided the same
+question on authority rather than evidence.
+
+`RLD`-only fell from 173 to **13**, the impossible cell from 27 to **1**.
+
+And no diagnostic could ever have found it: both assemblers are silent by
+construction, both decks load to the right image, and the difference survives
+every instrument except a byte comparison of the deck.
 
 ## What the recovery figure does and does not say
 
