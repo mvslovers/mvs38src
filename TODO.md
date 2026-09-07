@@ -82,6 +82,37 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
   Kreiss' tape — but no difference in this run can be blamed on the two sides
   reading different macros.
 
+### Four fixes in; two more cases filed from the silent class
+
+Baseline `fc18fac`. **as370 == IFOX00: 3,582 of 5,528**, recovered against IBM's
+object 869 -> 883.
+
+cc370#168 (an address constant whose value starts with `(` is not zero) was the
+first change accepted on more than the verdict counts: +24 identical, none lost,
+**69 decks closer to IFOX00 and 9 one byte further**. The nine were weighed
+rather than netted — each sits inside a region IFOX00 leaves as zeros and our
+macro fills, so the new byte is the correctly computed value in a block that is
+wrong for a different reason. `retest.py` now reports that distance, because a
+change that improves wrong code without reaching identity is invisible in the
+verdict counts.
+
+**A guessed population is a subset.** My class file for #167 was the 35 modules
+carrying `DC Y((` in their cards; the fix moved **79**, and the other 44 receive
+the construct through a macro where no card shows it. The measured set replaces
+the scanned one: `classes/parenthesised-adcon.txt`.
+
+Two filed from the silent class, both with a three- or six-card reproducer
+measured against IFOX00 on MVSCE-EXP:
+
+- [cc370#169](https://github.com/mvslovers/cc370/issues/169) — an index register
+  written as `((1),0)` is dropped, **and the base with it**. Byte signature:
+  962 sites in 277 modules.
+- [cc370#148](https://github.com/mvslovers/cc370/issues/148) gets its reach —
+  `MVC` length from `L'symbol` comes out zero. 1,016 sites in 192 modules.
+
+These two are the largest signatures in the silent class by some distance;
+everything else visible there is under 50 modules.
+
 ### Three fixes in; the gate is now the release path
 
 cc370#164, #165 and #166 are merged (`3d6a997`), each measured here before the

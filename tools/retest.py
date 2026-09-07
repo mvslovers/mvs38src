@@ -30,6 +30,23 @@ def body(path):
             if d[i + 1:i + 4] != b"\xc5\xd5\xc4"]          # END excluded
 
 
+def distance(a, b):
+    """How many bytes of the deck are wrong, not merely whether any are.
+
+    A verdict count cannot see a change that leaves a module non-identical and
+    moves it closer to -- or further from -- IFOX00. cc370 measured exactly that
+    on #168: 69 decks closer, 9 one byte further, and no verdict moved. Anything
+    claiming to improve wrong code has to be judged on this.
+
+    Cards beyond the shorter deck count as wholly different.
+    """
+    if not (os.path.exists(a) and os.path.exists(b)):
+        return None
+    x, y = body(a), body(b)
+    n = sum(1 for p, q in zip(b"".join(x), b"".join(y)) if p != q)
+    return n + abs(len(x) - len(y)) * 72
+
+
 def verdict(a, b):
     if not os.path.exists(a):
         return "no-as370-deck"
@@ -73,6 +90,11 @@ def main():
     moved = [m for m in mods if old[m] == "cards" and new[m] == "bytes"]
     back = [m for m in mods if old[m] == "bytes" and new[m] == "cards"]
 
+    dn = {m: distance(f"{a.objdir}/{m}.obj", f"{IFOX}/{m}.obj") for m in mods}
+    do = {m: distance(f"{a.baseline}/{m}.obj", f"{IFOX}/{m}.obj") for m in mods}
+    closer = [m for m in mods if dn[m] is not None and do[m] is not None and dn[m] < do[m]]
+    further = [m for m in mods if dn[m] is not None and do[m] is not None and dn[m] > do[m]]
+
     n_new = sum(1 for m in mods if new[m] == "identical")
     n_old = sum(1 for m in mods if old[m] == "identical")
     print(f"as370 == IFOX00 : {n_old} -> {n_new}   ({n_new - n_old:+d})")
@@ -81,6 +103,9 @@ def main():
     print(f"  length -> bytes : {len(moved)}   (the second number: a length "
           f"difference became a byte difference)")
     print(f"  bytes -> length : {len(back)}")
+    print(f"  decks closer to IFOX00 : {len(closer)}")
+    print(f"  decks FURTHER from it  : {len(further)}  "
+          f"{' '.join(f'{m}(+{dn[m]-do[m]})' for m in further[:8])}")
     for k in ("bytes", "cards", "no-as370-deck"):
         print(f"  {k:14s}: {sum(1 for m in mods if old[m] == k)} -> "
               f"{sum(1 for m in mods if new[m] == k)}")
