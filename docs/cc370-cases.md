@@ -14,6 +14,18 @@ decks part company and both section lengths. This page is the way in.
 **These are cases, not diagnoses.** Every line below is what was measured. What
 the cause is, is cc370's to find.
 
+⚠️ **Two modules were withdrawn on 2026-09-07 and the reason is worth knowing.**
+`IBCDASDI` and `IBCDMPRS` carry an embedded binary deck in which an FTP transfer
+tore one 80-character record into records of 61 and 18. IBM's tape has it whole.
+Their `cards` verdict is that tear, not an assembler defect. Reported by the
+`mvssrc-20` session.
+
+The same table named twelve more, and for those the warning does **not** carry:
+`IKJEFP20`/`IKJEFP40` have IBM's record count exactly and no short record in
+Kreiss' tree, and the `IDCCD*` family is not the damaged copy at all — Kreiss'
+`IDCCDDE` is 8,665 records against IBM's 1,885, a different text rather than a
+torn one. Those twelve stay on the list.
+
 ⚠️ **The message column is a set, not a sequence.** as370 dumps its diagnostics
 by category, not in source order (undefined-symbol last), so the first message
 listed for a module is not its first defect; and `line_org` folds
