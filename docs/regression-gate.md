@@ -74,6 +74,25 @@ lost is not "+1"; it is a gain and a break, and the break has a module name.
   sequence number; the `END` card is where each assembler names itself and dates
   the assembly.
 
+## What must not be carried across a merge
+
+Figures a peer derives from `as370`'s message output are not counts, and cc370
+said so themselves on 2026-09-07:
+
+- **A "modules carrying this construct" figure is not causation.** Their 56 for
+  the IPK/PTLB class was modules that carry the construct, return rc 0 and differ
+  from IFOX00. The number where the divergence was actually traced to that site
+  is **48**, measured here by taking the gate's gained set and reading its case
+  class. Take the traced number.
+- **"Reach" figures owned by a first diagnostic are unsound** while as370 dumps
+  its diagnostics by category rather than by source line. Fourteen mechanisms in
+  cc370#153's comment carry reach figures of that kind: read them as isolation
+  evidence with a witness each, not as counts. Only what a gate run measured is a
+  count.
+
+The rule underneath both: **a number enters this repository when a tool run
+produced it, and it says which run.**
+
 ## After a merge
 
 ```sh

@@ -82,6 +82,28 @@ sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
   Kreiss' tape — but no difference in this run can be blamed on the two sides
   reading different macros.
 
+### Waiting on the cc370 merge — and what not to inherit from it
+
+cc370#164 (`.*` is a comment card in `parse()`) and cc370#165 (IPK and PTLB take
+no operand) are confirmed here: both rebuilt from their branches, gate-run
+against the recorded IFOX00 decks, **+93 byte-identical together, none lost**,
+and **all 93 were modules this table had booked to the assembler, not one to the
+source** — the first evidence the attribution itself holds. `gh pr merge` was
+blocked in the cc370 session by its permission classifier and put to Mike; not
+done here on their behalf.
+
+**When the merge lands, re-baseline before anything else is claimed:** new
+`as370` decks with `tools/gate.sh`, then `ifox_compare.py`, `module_table.py`,
+`ifox_cluster.py`, `ifox_offdiag.py`, and the counts on cc370#153/#155/#157
+updated. Every figure in [`docs/cc370-cases.md`](docs/cc370-cases.md) is against
+`ee1090b` until then. The IFOX00 side does not move.
+
+Two figures must not be inherited — see
+[`regression-gate.md`](docs/regression-gate.md): the "56 modules" for the IPK
+class is a superset, the traced number is 48; and the reach figures for the
+fourteen unfixed mechanisms in cc370#153's comment are owned by a first
+diagnostic and therefore unsound while as370's output is category-ordered.
+
 ### What is in the tree that is not in the system
 
 [`docs/module-origin.md`](docs/module-origin.md) — per module, which
