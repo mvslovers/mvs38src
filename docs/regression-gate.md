@@ -24,6 +24,24 @@ Re-running `tools/ifox_run.py run` would also produce decks — but from *that
 day's* MVS/CE, not this one. The archive is the reference the recorded figures
 belong to; a re-run is a new reference and has to be re-baselined.
 
+## Before anything: check the PR's own CI
+
+```sh
+gh -R mvslovers/cc370 pr checks <n>      # or: gh run list --limit 5
+```
+
+**Do not merge a PR whose own run is failing, whatever the tree-wide numbers
+say.** This gate measures object decks produced by *this* machine's compiler, and
+that is structurally blind to a portability or warnings failure: `/usr/bin/gcc`
+here is Apple clang and does not emit `-Wstringop-truncation` at all, so a
+`-Werror` build that CI rejects passes clean locally.
+
+cc370#208 was merged with its PR run already red — `strncpy(r->name, b, 19)`
+flagged as a possible truncation — and `main` stayed broken until it was noticed
+from outside. The source file already carried a comment about the previous
+instance of the same class, in the same file, written after it happened the first
+time.
+
 ## The recipe
 
 ```sh
