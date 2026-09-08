@@ -322,10 +322,29 @@ as370  41 60 95 47      LA R6,X'547'(,R9)      Ziel 282 Bytes früher
 Differenzen sind verschieden (32 und 282), es fehlt also an **mehr als einer
 Stelle**.
 
-Das `IFC*`-Geschlecht hat 118 Module im Baum; 82 davon stehen hier. **Einen
-Mechanismus habe ich nicht** und biete auch keinen an — die letzten beiden
-Vermutungen (#157, `PREFL`) waren beide falsch und haben nur deshalb wenig
-gekostet, weil sie als Vermutung gekennzeichnet waren.
+**Und die Klasse ist über eine Schwelle definiert, nicht über einen Mechanismus
+— das war mein Fehler in der Fallbeschreibung.** Über alle 84 gemessen:
+
+| | Module |
+|---|---:|
+| Δ Vielfaches von 8 | 27 |
+| Vielfaches von 4 | 27 |
+| gerade | 17 |
+| ungerade | 13 |
+
+Praktisch gleichverteilt; der häufigste Einzelwert kommt **3-mal von 84** vor. Und
+`IFCE0155` ist das **untypischste** Modul der Klasse: 78 der 84 weichen schon in
+den ersten 32 Bytes ab, mit 50–93 % Abweichung danach, während `IFCE0155` 832
+Bytes identischen Vorlauf und einen einzigen späten Bruchpunkt hat.
+
+Ich hatte den saubersten Zeugen ausgewählt — und **den saubersten Zeugen zu
+wählen ist genau, wie aus einer Schwellenklasse eine Mechanismusklasse wird.**
+„Eine Ursache plausibel, weil EREP ein zusammenhängendes Produkt ist" war ein
+Schluss aus einem Familiennamen und einem Modul. Die Messung trägt ihn nicht.
+
+Vierter Rest dieser Woche, der über eine Zugehörigkeitsregel statt über eine
+Ursache definiert war — und der erste, bei dem ich die Mechanismus-Deutung selbst
+ins Issue geschrieben habe.
 
 ### 84,8 % — der Rest, nach Form sortiert
 
