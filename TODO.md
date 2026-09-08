@@ -291,6 +291,41 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### #223 — und ein Widerspruch, den ich erfunden hatte
+
+`attr_apos` trug ein `E` in der Attribut-Buchstabenmenge, das IFOX' eigener
+Quelltext nicht kennt (`T L I S N K`, `ifnx1a.asm:4862`). `E` ist in Assembler XF
+kein Attribut, wohl aber ein **Konstantentyp** — also öffnet `DC E'1.0'` gar
+keine Zeichenkette, das schließende Anführungszeichen schaltet den Quote-Zustand
+*ein*, der Operand endet nicht mehr am Leerzeichen, und die Bemerkung wandert
+hinein. Ein Komma darin macht daraus eine zweite Konstante:
+
+| | rc | Bytes |
+|---|---|---|
+| IFOX00 | **0**, keine Diagnose | `41100000` |
+| `as370` vorher | **8**, „Invalid type declared" | `41100000` |
+
+**Gleiche Bytes, und `as370` lehnt die Anweisung ab.** Ein Fehlalarm, kein
+übersehener Fehler — und unter `COND=(8,LT)` scheitert damit ein Build, den
+IFOX00 sauber assembliert.
+
+**Der Fall scheitert am rc-Gate, nicht am Bytevergleich.** Jedes Instrument, das
+ich diese Woche gebaut habe, liest Bytes; dieser Defekt hat nie eines berührt.
+Sichtbar war er nur, weil der Rückgabecode eine eigene Achse ist, die wir
+mitschreiben.
+
+**Und ich habe cc370 einen Widerspruch gemeldet, den es nicht gab.** Ich hatte
+berichtet, ihre Anweisung ergebe bei mir „rc 0, in drei Formen". Nachgeprüft:
+ihre Datei ergibt rc 8 — und **meine eigene ebenfalls**, dieselbe Datei, die ich
+als sauber gemeldet hatte. Zusätzlich die Lücke vor der Bemerkung von 1 bis 24
+Zeichen durchgefahren: **überall rc 8.** Es gab keinen Unterschied im Eingang,
+den zu suchen ich sie gebeten hatte. Wie ich zu rc 0 kam, kann ich nicht
+rekonstruieren.
+
+cc370s Antwort darauf ist die Regel: **die Datei schicken, nicht die
+Beschreibung.** Sie haben `attre.s` committet statt die Karte zu beschreiben, und
+es war in einem Lauf erledigt.
+
 ### #221: ein Fix, den dieser Baum weder belegen noch widerlegen kann
 
 `L'` eines `EQU` ist die Länge des linkesten Terms. `equ_len_of` prüfte das erste
@@ -1040,6 +1075,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #209 (vorzeichenbehaftetes Relokationspaar) | +1 | 0 | 0 | 0 |
 | #218 (`dc_split` las jedes Apostroph als Anführungszeichen) | +2 | 0 | 4 | 0 |
 | #221 (Gruppierungsklammer verbarg den linkesten Term) | 0 | 0 | 0 | 0 |
+| #223 (`E` gehört nicht in die Attribut-Buchstabenmenge) | 0 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
