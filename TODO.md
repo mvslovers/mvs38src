@@ -250,7 +250,47 @@ Zwei Sektionen treffen IFOX00s Länge jetzt **exakt**. Der Byteabstand steigt, w
 ein Bytevergleich an festen Adressen Inhalt verurteilt, der ein Loch gefüllt hat.
 Es ist die größte Einzelverbesserung des Merges und stand in der Rückschritt-Zeile.
 
-### 84,6 % — Übergabeliste 927, offene Abweichungen 843
+### 84,8 % — und der Rest, nach Form sortiert
+
+Die 832 verbliebenen Abweichungen, aufgeteilt danach, ob die **Sektionslängen**
+stimmen — „richtige Form, falscher Inhalt" ist eine andere Arbeit als „falsche
+Form":
+
+| | Module |
+|---|---:|
+| genau **eine** Sektion mit falscher Länge | **471** |
+| alle Längen stimmen | **328** |
+| zwei Sektionen falsch | 14 |
+| drei oder mehr | 11 |
+| andere Sektionsmenge | 4 |
+
+Die 471 zerfallen nicht weiter: die Längendifferenzen streuen (häufigste −8 mit
+21 Modulen, +16 mit 20, +8 mit 17), also sind es viele Ursachen und nicht eine.
+Bei den 328 ist der Median acht abweichende Bytes, und 173 haben höchstens acht.
+
+**Daraus fiel cc370#203: das Spiegelbild von #190.** Dort schrieb `as370` `B=0`,
+wo IFOX00 ein Basisregister setzt. Hier **gibt `as370` ein Basisregister, wo
+IFOX00 `B=0` schreibt** — eine blanke Distanz in den niedrigen Speicher. 49
+Module rein, 18 teilweise, und von 164 abweichenden Bytes sind **161 das
+`B1`-Feld des ersten Operanden einer SS-Instruktion**. Keines ist RX.
+
+```
+AHLTPID   0x058   IFOX  d5 01 00 8e      as370  d5 01 20 8e     B1 0 -> 2
+AMDSAPGE  0x06a   IFOX  d2 27 00 58      as370  d2 27 80 58     B1 0 -> 8
+```
+
+**Und #191s eigener Kontrollfall behauptet genau die Regel, die hier verletzt
+wird**: ein relokierbares `USING *,15` über der ganzen CSECT, und IFOX00 benutzt
+R15 nie für einen absoluten Operanden. Der Kontrollfall steht auf einem
+**RX**-Operanden und greift deshalb hier nicht.
+
+**Was ich vorher ausgeschlossen habe:** dass es ein Rückschritt aus #191 ist.
+Acht dieser Module gegen den Stand *vor* #191 gemessen — Abweichungszahl und
+Basis-0→n identisch, Modul für Modul. Die Klasse ist älter und unabhängig. Das
+war das Erste, was auszuschließen war, weil #191s erste Fassung genau in diese
+Richtung danebenlag.
+
+### 84,6 % — Übergabeliste 927
 
 **#200: eine ESDID gehört dem ESD-Eintrag, nicht dem Symbol.** Ein Name kann zwei
 tragen — eine CSECT, die einen `V`-Con auf den eigenen Namen enthält, hat einen
@@ -563,6 +603,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #198 (`L'` eines `EQU`-Symbols war 1) | **+38** | 0 | 57 | **0** |
 | #197 (Kommentarkorrektur) | 0 | 0 | 0 | 0 |
 | #200 (eine ESDID gehört dem ESD-Eintrag, nicht dem Symbol) | **+53** | 0 | 9 | **0** |
+| #202 (ausgelassene SS-Länge, plus die absolute DSECT-Differenz) | +11 | 0 | 19 | 1 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
