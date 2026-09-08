@@ -291,6 +291,37 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### 85,8 % — und zwei Populationen, die sich nur scheinbar widersprachen
+
+**#206:** ein `ENTRY`, das eine Kontrollsektion benennt, bekommt kein `LD` — die
+`SD` *ist* dieser Einsprungpunkt. `as370` gab trotzdem eines aus, und zwar
+**zuerst**, weil die `ENTRY`-Karte der `CSECT` vorausgeht (in `IERABW` 104 Karten
+davor). +7, keine verloren.
+
+**Und eine Zahlendifferenz, die keine Definitionsfrage war.** cc370 leitete den
+#199-Rest mit **17** ab, ich mit **32**, und wir wollten schon die Definitionen
+abgleichen. Die Modulnamen nebeneinandergelegt: ihre vier Signaturen sind
+Teilmengen meiner sieben, Modul für Modul identisch, und es fehlen genau die drei
+Kategorien, in denen sich **`TXT`-Karten** unterscheiden (8 + 6 + 1 = 15).
+17 + 15 = 32.
+
+Also kein Definitionsunterschied, sondern eine fehlende Kategorie — dieselben
+Bytes, andere Kartengrenzen. **Namen vergleichen, nicht Zahlen** hätte das sofort
+gezeigt, und es ist billiger als jede Definitionsdebatte.
+
+Nach #206 sind es **25**:
+
+| Signatur | Module |
+|---|---:|
+| nur `TXT` | 8 |
+| Kartenzahl −1 | 6 |
+| `RLD`/`TXT` | 6 |
+| nur `RLD` | 2 |
+| Kartenzahl +1, nur `ESD`, `ESD`/`RLD`/`TXT` | je 1 |
+
+`AMDPRPJB` und `AMDPRPMS` stehen darin — dieselben zwei, die cc370 aus #186s Rest
+als „nie das Flag-Byte" herausgehoben hatte. Sie gehören hierher.
+
 ### 85,7 % — der größte verbleibende Block ist EREP
 
 **cc370#205: 84 Module, fast alle `IFC*`, in denen `as370` aus derselben Quelle
@@ -701,6 +732,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #200 (eine ESDID gehört dem ESD-Eintrag, nicht dem Symbol) | **+53** | 0 | 9 | **0** |
 | #202 (ausgelassene SS-Länge, plus die absolute DSECT-Differenz) | +11 | 0 | 19 | 1 |
 | #204 (`sub[0]` einer SS-Instruktion ist die Länge, nie eine Basis) | **+47** | 0 | 52 | 2 |
+| #206 (ein `ENTRY` auf eine Kontrollsektion erzeugt kein `LD`) | +7 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
