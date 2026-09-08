@@ -151,9 +151,19 @@ artefact of this gate's own timeout. The count showed neither. The section below
 had already made this argument about verdict counts — it applies to *every*
 aggregate here, and the one that lied was two lines further down the same output.
 
-**A deck that appears or disappears is a timeout until proved otherwise.** Time
-the module alone, against a build from before the change, before believing it is
-the code. `IFCEE155` and `IFNX1A` looked identical in the gate table — both
+**A deck that appears or disappears is a timeout until proved otherwise — and
+"otherwise" has to stay reachable.** `HEWLDIOC` was written down here as a module
+that "does not terminate in 300 s and never will within any alarm". The 300 s was
+measured; the rest was a conclusion, and cc370#215 shows it was wrong. The module
+was **hung** — an expression walk with no progress guard, live on `main` for
+eleven months — and with the guard it assembles in 0 s, its image 4 bytes from
+IFOX00's out of 5,056. Both of us had it in our runbooks as a fact about the
+module. **A limit written down as a property of the thing measured stops being a
+question.** An alarm cannot tell *slow* from *broken*; only sampling the running
+process can.
+
+Time the module alone, against a build from before the change, before believing it
+is the code. `IFCEE155` and `IFNX1A` looked identical in the gate table — both
 `rc 142`, both no deck — and one was a race while the other was real.
 
 ## Verdict counts are not enough to accept a "moves nothing" change
