@@ -220,6 +220,36 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
+### #195: +4 an Identitäten, −27 an Meldungen, und ein „Rückschritt", der keiner war
+
+`vref()` stellt `&SYSLIST` als `(op1,op2,...)` dar und kopiert 95 Bytes; `N'`
+zählte Kommas in dieser abgeschnittenen Zeichenkette. Die Antwort fiel also mit
+der **Länge** der Operanden statt mit ihrer Anzahl — bei 13 Operanden sagte `N'`
+zehn, während `&SYSLIST(11)`–`(13)` den richtigen Text lieferten. `IFNX1K` ist
+ein **Drei-Karten-Modul**, und `JTEXT`s Schleife über 39 Einträge sah sieben.
+
+Dazu drei Tabellengrenzen, die beim Weiterlaufen sichtbar wurden (global SET
+4.096 → 32.768, local SET 256 → 512, `&SYSLIST` 32 → 64). **Jede war doppelt
+notiert** — Felddeklaration und Prüfung getrennt —, sodass das Anheben nur einer
+von beiden nichts ändert und trotzdem so aussieht.
+
+**+4 ist die Identitätszahl, −27 die eigentliche:** `undefined-symbol` fällt von
+110 auf **83**, fünf Module bekommen überhaupt erst ein Deck (rc 2 → rc 0).
+
+**Und die 17 „weiter" sind 16 plus ein Missverständnis.** Sechzehn davon sind
+1–4 Bytes in Decks, die 537 bis 13.200 Bytes falsch sind. Der siebzehnte ist
+`IKJEGMNL` mit **+295** — und auf dem Längeninstrument gelesen:
+
+| Sektion | vorher | nachher | IFOX00 |
+|---|---:|---:|---:|
+| `IKJEGSCD` | 97 | **390** | 390 |
+| `IKJEGSCU` | 0 | **1** | 1 |
+
+Zwei Sektionen treffen IFOX00s Länge jetzt **exakt**. Der Byteabstand steigt, weil
+293 Bytes Inhalt dort stehen, wo vorher ein Loch war — genau die #174-Lehre, dass
+ein Bytevergleich an festen Adressen Inhalt verurteilt, der ein Loch gefüllt hat.
+Es ist die größte Einzelverbesserung des Merges und stand in der Rückschritt-Zeile.
+
 ### Der nächste Fall: die implizite SS-Länge, 54 Module rein und 59 teilweise
 
 cc370#194. **Eine SS-Instruktion ohne ausdrückliche Länge bekommt von `as370`
@@ -444,6 +474,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #189 (a character comparison ordered by length first) | +9 | 0 | 12 | 1 |
 | #191 (an absolute `USING` domain was never consulted) | **+57** | 0 | 69 | **0** |
 | #192 (Dokumentation: Kontrollfall und Rest-Regel) | 0 | 0 | 0 | 0 |
+| #195 (`N'&SYSLIST` zählte eine Darstellung, plus drei Tabellengrenzen) | +4 | 0 | 77 | 17 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of

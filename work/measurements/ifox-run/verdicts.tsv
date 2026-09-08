@@ -1348,7 +1348,7 @@ IEAVSOUT	8	0008	bytes	bytes	length
 IEAVSQA	0	0008	cards		length
 IEAVSTA0	0	0000	identical		length
 IEAVSTAA	8	0000	bytes	bytes	length
-IEAVSWCH	0	0000	bytes	bytes	length
+IEAVSWCH	0	0000	identical		length
 IEAVSWIN	8	0008	cards		length
 IEAVSWPC	8	0008	bytes	bytes	length
 IEAVSY50	0	0008	bytes	bytes	length
@@ -1910,7 +1910,7 @@ IEE4403D	0	0000	identical		length
 IEE4603D	0	0000	identical		length
 IEE4703D	0	0000	identical		mixed
 IEE4803D	0	0000	identical		length
-IEE4903D	0	0000	cards		length
+IEE4903D	0	0000	identical		mixed
 IEE5103D	0	0000	cards		length
 IEE5403D	0	0000	bytes	bytes	length
 IEE5503D	0	0000	identical		text
@@ -2746,19 +2746,19 @@ IFCDEVIC	0	0000	identical		length
 IFCDIP00	8	0000	cards		length
 IFCE0115	8	0012	cards		unpaired
 IFCE0125	8	0012	cards		unpaired
-IFCE0135	8	0000	cards		length
+IFCE0135	0	0000	cards		length
 IFCE0145	0	0000	cards		length
 IFCE0155	0	0000	cards		length
-IFCE0165	8	0000	cards		length
+IFCE0165	0	0000	cards		length
 IFCE1017	8	0012	cards		unpaired
 IFCE1018	8	0012	cards		unpaired
 IFCE2860	0	0000	cards		length
 IFCE2870	0	0000	cards		length
-IFCE2880	8	0000	cards		length
+IFCE2880	0	0000	cards		length
 IFCE33XX	8	0012	bytes	bytes	length
 IFCE3401	8	0012	cards		unpaired
 IFCE5424	8	0012	cards		unpaired
-IFCEA155	8	0000	cards		length
+IFCEA155	0	0000	cards		length
 IFCEA165	0	0000	cards		length
 IFCEAEXX	0	0000	identical		identical
 IFCEARG1	8	0012	cards		length
@@ -2768,14 +2768,14 @@ IFCEARG4	8	0012	cards		length
 IFCEARG5	8	0012	cards		length
 IFCEARG6	8	0012	cards		length
 IFCEARG7	8	0012	cards		length
-IFCEAXXX	8	0000	cards		length
+IFCEAXXX	0	0000	cards		length
 IFCEB155	0	0000	cards		length
 IFCEB165	0	0000	cards		length
 IFCEC155	0	0000	cards		length
-IFCEC165	8	0000	cards		length
+IFCEC165	0	0000	cards		length
 IFCECHAR	0	0000	identical		identical
 IFCECUT0	8	0012	cards		length
-IFCED155	2	0000	no-as370-deck		no-pair
+IFCED155	0	0000	cards		length
 IFCED165	0	0000	bytes	bytes	length
 IFCEDDR0	0	0000	cards		length
 IFCEDPA	0	0000	identical		identical
@@ -2783,12 +2783,12 @@ IFCEDSUM	8	0008	identical		length
 IFCEE155	0	0000	cards		length
 IFCEE165	0	0000	bytes	bytes	length
 IFCEEDIT	8	0008	identical		length
-IFCEF155	8	0000	cards		length
+IFCEF155	0	0000	cards		length
 IFCEF165	0	0000	cards		length
 IFCEFBA4	8	0012	cards		length
 IFCEFBA5	8	0012	cards		length
-IFCEG155	2	0000	no-as370-deck		no-pair
-IFCEGUS1	8	0000	cards		length
+IFCEG155	0	0000	cards		length
+IFCEGUS1	0	0000	cards		length
 IFCEI135	0	0000	cards		length
 IFCEI145	8	0000	cards		length
 IFCEI155	0	0000	cards		length
@@ -2796,13 +2796,13 @@ IFCEIPL0	0	0000	cards		length
 IFCEJ145	0	0000	cards		length
 IFCEL155	2	0000	no-as370-deck		no-pair
 IFCELEX1	0	0000	cards		length
-IFCEM155	2	0000	no-as370-deck		no-pair
+IFCEM155	0	0000	cards		length
 IFCEMAD1	0	0000	cards		length
 IFCEMER0	0	0000	cards		length
 IFCEMER1	0	0000	cards		length
 IFCEMER2	0	0000	cards		length
 IFCEMER3	0	0000	cards		length
-IFCEMER4	8	0000	cards		length
+IFCEMER4	0	0000	cards		length
 IFCEMER5	0	0000	cards		length
 IFCENAGO	0	0000	identical		identical
 IFCENF11	8	0012	cards		length
@@ -2810,31 +2810,31 @@ IFCENFH3	8	0012	cards		length
 IFCENFM3	8	0012	cards		length
 IFCENFP1	8	0012	cards		length
 IFCENFP2	8	0012	cards		length
-IFCEOAK1	8	0000	cards		length
-IFCEOAK2	8	0000	cards		length
-IFCEOAK3	8	0000	cards		length
-IFCEOAK4	8	0000	cards		length
-IFCEOAK5	8	0000	cards		length
+IFCEOAK1	0	0000	cards		length
+IFCEOAK2	0	0000	cards		length
+IFCEOAK3	0	0000	cards		length
+IFCEOAK4	0	0000	cards		length
+IFCEOAK5	0	0000	cards		length
 IFCEREP1	0	0000	identical		length
 IFCERFMT	0	0000	identical		length
 IFCESOFT	0	0000	cards		length
 IFCESUMS	0	0000	identical		length
 IFCET002	0	0000	cards		length
-IFCET003	8	0000	cards		length
+IFCET003	0	0000	cards		length
 IFCET004	0	0000	cards		length
 IFCET005	0	0000	cards		length
 IFCET006	0	0000	cards		length
 IFCET008	8	0000	cards		length
 IFCET00B	0	0000	cards		length
-IFCET00C	8	0000	cards		length
+IFCET00C	0	0000	cards		length
 IFCET00D	0	0000	bytes	bytes	length
 IFCET040	8	0012	cards		unpaired
-IFCETRN0	8	0000	cards		length
+IFCETRN0	0	0000	cards		length
 IFCETRN1	0	0000	cards		length
 IFCETRN2	0	0000	cards		length
-IFCETRN3	8	0000	cards		length
+IFCETRN3	0	0000	cards		length
 IFCETRN4	0	0000	cards		length
-IFCETRN5	8	0000	cards		length
+IFCETRN5	0	0000	cards		length
 IFCETRN6	8	0012	cards		unpaired
 IFCETRN7	8	0012	bytes	bytes	unpaired
 IFCETRN8	0	0000	identical		identical
@@ -2857,12 +2857,12 @@ IFCEXXX8	0	0000	cards		length
 IFCEXXX9	0	0000	cards		length
 IFCEXXXA	0	0000	cards		length
 IFCEXXXB	0	0000	cards		length
-IFCEXXXC	8	0000	cards		length
+IFCEXXXC	0	0000	cards		length
 IFCEXXXD	0	0000	cards		length
 IFCEXXXE	0	0000	cards		length
-IFCEXXXF	8	0000	cards		length
-IFCEXXXG	8	0000	cards		length
-IFCEXXXH	2	0000	no-as370-deck		no-pair
+IFCEXXXF	0	0000	cards		length
+IFCEXXXG	0	0000	cards		length
+IFCEXXXH	0	0000	cards		length
 IFCEXXXX	0	0000	cards		length
 IFCFILT1	8	0008	identical		length
 IFCFILT2	0	0000	identical		length
@@ -2903,7 +2903,7 @@ IFCSCRND	0	0000	identical		identical
 IFCSCRXX	0	0000	identical		identical
 IFCSDASD	0	0000	identical		length
 IFCSDICH	0	0000	identical		identical
-IFCSGUS1	2	0000	no-as370-deck		no-pair
+IFCSGUS1	0	0000	cards		length
 IFCSHARE	0	0000	identical		length
 IFCSI115	8	0012	bytes	bytes	unpaired
 IFCSI145	0	0000	cards		length
@@ -2928,8 +2928,8 @@ IFCSXXX7	0	0000	cards		length
 IFCSXXX8	0	0000	cards		length
 IFCSXXX9	0	0000	cards		length
 IFCSXXXA	0	0000	cards		length
-IFCSXXXB	8	0000	cards		length
-IFCSXXXD	8	0000	cards		length
+IFCSXXXB	0	0000	cards		length
+IFCSXXXD	0	0000	cards		length
 IFCSXXXE	0	0000	cards		length
 IFCSXXXF	2	0000	no-as370-deck		no-pair
 IFCSXXXG	0	0000	cards		length
@@ -3236,9 +3236,9 @@ IFHSTATR	0	0000	identical		holes
 IFNX1A	8	0000	cards		length
 IFNX1J	8	0000	bytes	bytes	mixed
 IFNX1K	8	0000	cards		length
-IFNX1S	8	0000	cards		text
+IFNX1S	0	0000	bytes	identical	text
 IFNX2A	8	0000	bytes	bytes	mixed
-IFNX3A	8	0008	cards		mixed
+IFNX3A	8	0008	bytes	bytes	text
 IFNX3B	8	0000	bytes	bytes	length
 IFNX3K	8	0000	cards		length
 IFNX3N	8	0000	bytes	bytes	mixed
@@ -3249,7 +3249,7 @@ IFNX4N	8	0000	cards		text
 IFNX4S	8	0000	cards		mixed
 IFNX4T	8	0000	cards		mixed
 IFNX4V	8	0000	bytes	bytes	text
-IFNX5A	8	0000	cards		mixed
+IFNX5A	8	0000	cards		text
 IFNX5C	8	0000	bytes	bytes	text
 IFNX5D	8	0008	cards		mixed
 IFNX5F	0	0000	bytes	bytes	text
@@ -4474,7 +4474,7 @@ IKJEBEM4	0	0000	identical		no-pair
 IKJEBEM5	0	0000	identical		no-pair
 IKJEBEM6	0	0000	identical		no-pair
 IKJEBEM7	0	0000	bytes	bytes	no-pair
-IKJEBEMA	8	0000	cards		no-pair
+IKJEBEMA	0	0000	bytes	bytes	no-pair
 IKJEBEMC	8	0000	cards		length
 IKJEBEME	8	0000	cards		no-pair
 IKJEBEMR	0	0008	bytes	bytes	no-pair
@@ -4662,7 +4662,7 @@ IKJEGOFF	0	0000	bytes	bytes	no-pair
 IKJEGPCH	0	0000	bytes	bytes	no-pair
 IKJEGPSW	0	0000	identical		no-pair
 IKJEGQFY	0	0000	bytes	bytes	no-pair
-IKJEGSCD	0	0000	cards		no-pair
+IKJEGSCD	0	0000	identical		no-pair
 IKJEGSRH	0	0000	identical		no-pair
 IKJEGSTA	0	0000	identical		no-pair
 IKJEGSYM	0	0000	identical		no-pair
@@ -4771,7 +4771,7 @@ ILROPS00	8	0012	identical		length
 ILRPAGCM	8	0008	identical		text
 ILRPAGIO	8	0008	identical		length
 ILRPEX	0	0000	identical		text
-ILRPGEXP	0	0000	cards		length
+ILRPGEXP	0	0000	identical		length
 ILRPOS	8	0008	identical		length
 ILRPREAD	0	0000	identical		holes
 ILRPTM	8	0008	identical		text
