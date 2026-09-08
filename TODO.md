@@ -250,7 +250,38 @@ Zwei Sektionen treffen IFOX00s Länge jetzt **exakt**. Der Byteabstand steigt, w
 ein Bytevergleich an festen Adressen Inhalt verurteilt, der ein Loch gefüllt hat.
 Es ist die größte Einzelverbesserung des Merges und stand in der Rückschritt-Zeile.
 
-### 85,7 % — und der größte verbleibende Block ist EREP
+### #205: vier Hypothesen geprüft, vier tot — und das ist das Ergebnis
+
+An `IFCE0155` weitergearbeitet, mit IFOX00s vollständigem Listing als Orakel
+(`work/measurements/ifox-run/ifox-155.txt`, von cc370 vom Band geholt). **Vier
+Vermutungen empirisch widerlegt**, darunter die übergebene und zwei eigene:
+
+| Hypothese | Test | Ergebnis |
+|---|---|---|
+| globale SET-Arrays laufen bei 3.000 über | `&ITEM(1)`, `(2999)`, `(3000)` gesetzt und gelesen | **alle korrekt** |
+| `K'&SYSLIST(1)` gegen `K'&SYSLIST(1,1)` falsch | `(ABC,3)` → 7 gegen 3, `ABC` → 3 gegen 3 | **beide Richtungen richtig** |
+| ausgelassenes erstes Sublisten-Element | `SHOW (,4)`, `(AB,4)`, `(,4,EQU)` | **leerer Zweig jedes Mal korrekt** |
+| Makro ruft später definiertes Makro | äußeres Makro ruft inneres, danach definiert | **korrekt expandiert** |
+
+**Und eine Beobachtung, die als Beweis gehandelt wurde, ist keiner.** „as370
+erzeugt mehr Anweisungen und weniger Bytes" (1.099 gegen 1.037) — der Überschuss
+sind **innere Makroaufrufzeilen, die IFOX00 nicht listet**. Eine
+Listing-Konvention, kein inhaltlicher Unterschied. Das gehört aus der
+Fallbeschreibung heraus.
+
+Was steht: Abbilder identisch bis `0x340`, danach durchgehend verschieden; IFOX00
+erreicht `***** LOG ITEM SYMBOL NOT PROVIDED *****` 28-mal, `as370` nie; beide
+schweigen. Da Test 3 zeigt, dass `as370` genau diese Bedingung isoliert richtig
+auswertet, liegt die Abweichung eher darin, **was auf diesen Aufrufen in
+`&SYSLIST` ankommt**, als darin, wie geprüft wird.
+
+Von außen komme ich nicht weiter — nötig ist `as370`s eigene Expansion eines
+`DSGEN`-Aufrufs gegen die Quellzeilen 469–479.
+
+**Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
+plausibel ausgesehen und jeweils eine Sitzung gekostet.
+
+### 85,7 % — der größte verbleibende Block ist EREP
 
 **cc370#205: 84 Module, fast alle `IFC*`, in denen `as370` aus derselben Quelle
 Hunderte Bytes weniger erzeugt als IFOX00 — und beide Assembler schweigen.**
