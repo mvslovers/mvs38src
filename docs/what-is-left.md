@@ -135,3 +135,42 @@ minute, `05.34` and `05.24`), the TXT becomes identical and **one RLD card is
 left** on each. That belongs to cc370#186, not to a time-stamp chase.
 
 Everything else in `small-delta.tsv` is a real object difference.
+
+## A fifth instrument, and the largest block in the tree — 2026-09-09
+
+`small_delta.py` reached forty modules with no group above three, which is the
+signal that the object side is mined out. cc370 named the way on: **every class
+here is defined by what the deck looks like, and every mechanism found this week
+came from asking what the assembler was told to do.**
+
+`first_divergence.py` does that for all of them. For each module whose deck
+differs it takes the **first** address where the two objects part — everything
+after may be consequence rather than cause — resolves it to the generating
+statement, and clusters the statements.
+
+```
+ 90  DC AL2(sym-sectionbase)  LENGTH OF CSECT      IKJ* 40  BLS* 32  IDC* 18
+ 78  DC A/AL(...)  address constant
+ 29  LA
+ 27  DC Y(sym-sym)                                 IDCTS* almost entirely
+ 24  SPM
+ 21  DC C'...'
+```
+
+**The first row is 18 % of everything still differing and it is one macro card.**
+The length and offset constants are symptoms — forward references to the end of a
+PARSE control list whose size is wrong. Skipping every divergence whose statement
+is a length or offset constant and taking the next lands on `IKJIDENT`'s
+
+```
+         DC    AL2(IKJ@&SYSNDX-*),AL2(18),C&TYPNAM PARAMETER TYPE MESSA*
+               GE SEGMENT
+```
+
+where `as370` loses `&TYPNAM` entirely because the card is continued. **cc370#250**,
+nine-card fixture with its control.
+
+**Read the first divergence, then read past it.** A length constant that names a
+symbol at the end of its own section can only ever be a symptom, and it was the
+largest cluster in the tree — the instrument would have handed over ninety
+modules of symptom if it had stopped at its own answer.
