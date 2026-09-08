@@ -174,3 +174,49 @@ nine-card fixture with its control.
 symbol at the end of its own section can only ever be a symptom, and it was the
 largest cluster in the tree — the instrument would have handed over ninety
 modules of symptom if it had stopped at its own answer.
+
+## 92.7 %, and the symptom rule earns its keep twice — 2026-09-09
+
+cc370#250 merged: **+82, none lost, 107 closer**, and `cards : 183 -> 128` —
+fifty-five modules stopped being card-count differences in one merge. One deck
+moved further, `ISTINCU7(+6)`, and it is not a regression: that module is 2,498
+bytes against IFOX00's 210 and was 2,492 before, wrong at 2,282 addresses either
+way. **Check a module that moves away before accepting the run**; six bytes on
+something wrong by a factor of twelve is not information about the change.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,123 of 5,528 (92.7 %)** |
+| still differing | **398** |
+| byte-identical to IBM's shipped object | **1,168** |
+
+The re-clustered first divergences, and both new entries were found the same way:
+
+```
+ 67  DC A/AL(...)
+ 29  LA                        27  PARSE PCL constant (was 90)
+ 27  DC Y(sym-sym)             24  SPM
+ 21  DC C'...'                 15  TM
+```
+
+**cc370#252 — `SPM` keeps the R2 field of the previous RR instruction**, 24
+modules. `SR GR8,GR8` then `SPM GR8` gives `1B88 0488` where IFOX00 gives
+`1B88 0480`. `SPM` alone encodes correctly, which is why a source scan finds
+nothing: it needs a preceding RR instruction, and in real code there always is
+one.
+
+**cc370#253 — `DC H'6,0,17,6,0'` generates only the first value**, 32 modules,
+almost all `IDCTS*`. Three controls in the same fixture — a single value, a
+duplication factor, and two separate operands — all work.
+
+### Read past the symptom, and then past that one too
+
+`DC Y(sym-sym)` at 27 modules is a table of message offsets, and every one of
+them is six to eight bytes low. Skipping them lands on **more** offset constants
+(`DC Y(STE11A-TXT1A) TEXT OFFSET`), and only skipping those as well reaches
+`DC H'06,00,17,06,00'` — the eight bytes that were never generated.
+
+That is twice in one day that the largest cluster was a symptom, and the second
+time it was two layers deep. **A constant that names another symbol in its own
+section can only be wrong because something else is**; the instrument has to be
+told to walk past every one of them, not just the first kind.
