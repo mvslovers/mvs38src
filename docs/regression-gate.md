@@ -27,8 +27,25 @@ belong to; a re-run is a new reference and has to be re-baselined.
 ## Before anything: check the PR's own CI
 
 ```sh
-gh -R mvslovers/cc370 pr checks <n>      # or: gh run list --limit 5
+gh -R mvslovers/cc370 pr checks <n>
+gh pr view <n> --json baseRefName         # is it stacked on another PR?
+/opt/homebrew/bin/gcc-16 -O2 -Wall -Wextra -Werror \
+    -Ias370/include -Icommon/include -o /dev/null \
+    as370/src/as370.c common/src/mvs370.c common/src/obj370.c
 ```
+
+**Real gcc is on this machine** — `/opt/homebrew/bin/gcc-16`. `/usr/bin/gcc` is
+Apple clang and emits none of the diagnostics CI fails on. I first wrote that
+this class was "structurally blind" to my gate; it was not, I had probed
+`gcc-14`, `gcc-13`, `gcc-12` and stopped. **A tool absent from three guessed
+names is not an absent tool.**
+
+**Check the base branch before merging with `--delete-branch`.** cc370#213 was
+stacked on #212, and deleting #212's branch on merge **closed** #213 — GitHub
+will not reopen a pull request whose base branch is gone, and the base of a
+closed one cannot be retargeted. It had to be re-opened as a new PR (#214) from
+the same commit. Either retarget the child to `main` first, or merge without
+`--delete-branch`.
 
 **Do not merge a PR whose own run is failing, whatever the tree-wide numbers
 say.** This gate measures object decks produced by *this* machine's compiler, and

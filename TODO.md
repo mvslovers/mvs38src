@@ -291,6 +291,46 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### CI war rot, und zwei Fehler davon waren meine
+
+**#208 wurde mit rotem CI gemerged.** `gcc -Werror` weist
+`strncpy(r->name, b, 19)` als mögliche Verkürzung zurück; der Lauf auf dem
+PR-Branch war um 13:46 gescheitert, der Merge war um 13:56. Mein Gate schaut auf
+Objektdecks und hat nie in die CI gesehen. **#212** repariert es mit `scopy`,
+dem Helfer, den die Datei schon hatte.
+
+**Ich habe geschrieben, mein Gate sei für diese Klasse „strukturell blind". Das
+stimmt nicht.** `/opt/homebrew/bin/gcc-16` liegt auf dieser Maschine und
+reproduziert den Fehler exakt. Ich hatte `gcc-14`, `gcc-13`, `gcc-12` und
+`/usr/bin/gcc` probiert und aufgehört. **Ein Werkzeug, das unter drei geratenen
+Namen fehlt, ist kein fehlendes Werkzeug** — dieselbe Form wie alles andere, was
+diese Woche schiefging: aus einer Beschreibung geschlossen statt nachgesehen.
+
+**Und der zweite Fehler:** #213 hing als gestapelter PR an #212. Mein
+`--delete-branch` beim Merge von #212 hat dessen Branch entfernt und #213 damit
+**geschlossen**. GitHub öffnet keinen PR wieder, dessen Basis fehlt, und die
+Basis eines geschlossenen lässt sich nicht ändern — er musste als **#214** neu
+aufgemacht werden, gleicher Commit. Beides steht jetzt im Runbook.
+
+### #214: die CCW-Datenadresse `*`, +7
+
+Eine CCW, deren Datenadresse als `*` geschrieben ist, ist relokierbar, und
+`as370` ließ den Eintrag fallen: `reloc_sym` liefert `"*"`, `sym_find` findet
+nichts. Der `DC`-Pfad sechs Zeilen darunter behandelt den Ortszähler seit jeher
+in seinem `tgtreal`-Prädikat — zwei Pfade, derselbe Term, einer richtig.
+
+**Und cc370 hat meine 78 aufgeteilt und die Größenfrage umgedreht.** Von 410
+fehlenden Einträgen sind 390 nachgelagert: 43 Module melden undefinierte Symbole
+(ein undefiniertes Symbol assembliert als absolute Null und trägt per Definition
+keine Relokation), bei 28 weicht das `TXT`-Abbild schon ab. **Übrig bleiben 7
+Module mit 20 Einträgen**, und 18 davon sind dieser eine CCW-Defekt.
+
+Mein Eintragsvergleich **kann eine fehlende Relokation nicht von einem fehlenden
+Symbol unterscheiden** und meldet beides gleich. Ich hatte vermutet, neben der
+kleinen Änderung liege eine größere mit zwanzigfacher Reichweite. Es war
+umgekehrt: die kleine war die richtige, und die 178 `R == P` waren keine
+Population.
+
 ### #209: fehlende Relokationseinträge — 78 Module, und der Mechanismus ist eins
 
 cc370 fand in #199s Rest, dass sechs Module **gar kein** Relocation Dictionary
@@ -874,6 +914,8 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #206 (ein `ENTRY` auf eine Kontrollsektion erzeugt kein `LD`) | +7 | 0 | 0 | 0 |
 | #207 (Makrorahmen vom Stapel auf den Haufen) | 0 | 0 | 0 | 0 |
 | #208 (ein SET-Array ist eine Zeile mit Vektor) | 0 | 0 | 0 | 0 |
+| #212 (gebundene Kopie in `set_put` — CI-Reparatur) | 0 | 0 | 0 | 0 |
+| #214 = #213 (CCW-Datenadresse `*` ist relokierbar) | **+7** | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
