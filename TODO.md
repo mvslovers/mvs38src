@@ -291,6 +291,48 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### Alle 5.528 Module erzeugen ein Deck — zum ersten Mal
+
+**`HEWLDIOC` war nie langsam. Es hing, seit elf Monaten, auf `main`.**
+`expr_sect`s Ausdruckslauf verbraucht Leerzeichen, Operatoren und Klammern und
+hält einen Namen am Komma an — ohne Zweig dafür. Ein Komma lässt den Zeiger
+stehen, und die Schleife läuft ewig. Erreichbar aus einem ganz gewöhnlichen
+Maschinenoperanden; gefunden erst, als cc370 denselben Lauf von einer zweiten
+Seite ansprach.
+
+Einzeln nachgemessen, nachdem der Schutz drin war:
+
+| `HEWLDIOC` | |
+|---|---|
+| Laufzeit | **0,04 s** |
+| Sektionslänge | **5.224 gegen IFOX00s 5.224** |
+| Abstand zum Abbild | **4 Bytes von 5.056** |
+
+Elf Monate „terminiert nie" — und es war vier Bytes von der Identität entfernt.
+
+**Und mein Runbook hat das mitgetragen.** Ich hatte in `gate-worker.sh` und im
+Gate-Dokument stehen: „terminiert nicht in 300 s und wird es unter keiner
+Schranke". Die 300 s waren gemessen, das „nie" war ein Schluss — und er begründete
+den Schrankenwert, wodurch niemand mehr nachfragte. **Eine Zeitschranke kann nicht
+zwischen langsam und kaputt unterscheiden**; sie meldet, wo das Messen aufhörte.
+Beide Stellen korrigiert.
+
+**Die Schranke ist jetzt 150 s statt 240.** Das langsamste Modul, das durchläuft,
+ist `IFCEL155` mit 72 s — doppelte Reserve —, und seit #215 wird **kein einziges**
+mehr abgeschossen. Der Lauf kostet 2:02 statt 4:04. Als No-op kalibriert:
+5.528/5.528, null verschieden.
+
+**Und die Relokationsseite ist zu.** `IEDCSA` ist identisch, und die Zeile, die
+seit gestern die interessanteste war:
+
+```
+image identical AND RLD different: 0
+```
+
+**Jedes Modul, dessen Bytes stimmen, hat jetzt auch ein richtiges Relocation
+Dictionary.** Das war der Fehlermodus, der am schwersten zu sehen war — richtiger
+Wert, richtiges Abbild, und ein Binder, der nicht relokiert.
+
 ### CI war rot, und zwei Fehler davon waren meine
 
 **#208 wurde mit rotem CI gemerged.** `gcc -Werror` weist
@@ -916,6 +958,8 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #208 (ein SET-Array ist eine Zeile mit Vektor) | 0 | 0 | 0 | 0 |
 | #212 (gebundene Kopie in `set_put` — CI-Reparatur) | 0 | 0 | 0 | 0 |
 | #214 = #213 (CCW-Datenadresse `*` ist relokierbar) | **+7** | 0 | 0 | 0 |
+| #215 (`expr_sect` terminierte nie an einem Komma) | 0 | 0 | 0 | 0 |
+| #209 (vorzeichenbehaftetes Relokationspaar) | +1 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of

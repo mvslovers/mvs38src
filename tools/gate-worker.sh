@@ -9,7 +9,10 @@
 # the very run that recovered it. The rule from the IFCEE155 case holds one order
 # of magnitude up -- a module near the alarm is a module that appears and
 # disappears -- and a gate that reports a difference no code produced is worse
-# than a slow one. 240 s costs HEWLDIOC's wall clock and buys a run that repeats.
+# than a slow one. 150 s: the slowest module that finishes is IFCEL155 at 72 s
+# alone, so this is 2x headroom, and since cc370#215 NO module is killed at all --
+# all 5,528 produce a deck. 240 s was HEWLDIOC's budget and HEWLDIOC no longer
+# needs one.
 #
 # This comment used to add that HEWLDIOC "does not terminate in 300 s and never
 # will within any alarm". The 300 s was measured; the rest was a conclusion, and
@@ -19,7 +22,7 @@
 # bytes of IFOX00 out of 5056. An alarm cannot tell slow from broken. Writing the
 # limit down as a property of the module is what stopped it being a question.
 m=$1
-perl -e 'alarm 240; exec @ARGV' "$BIN" $MACFLAGS -o "$OUTDIR/$m.obj" "$SRC/$m.ASM" >/dev/null 2>&1
+perl -e 'alarm 150; exec @ARGV' "$BIN" $MACFLAGS -o "$OUTDIR/$m.obj" "$SRC/$m.ASM" >/dev/null 2>&1
 rc=$?
 if [ -f "$OUTDIR/$m.obj" ]; then
   h=$(shasum -a 256 "$OUTDIR/$m.obj" | cut -d' ' -f1)
