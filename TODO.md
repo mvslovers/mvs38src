@@ -291,6 +291,36 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### #221: ein Fix, den dieser Baum weder belegen noch widerlegen kann
+
+`L'` eines `EQU` ist die Länge des linkesten Terms. `equ_len_of` prüfte das erste
+Zeichen auf einen Buchstaben, also fiel eine führende Klammer auf 1 durch.
+
+**Baumlauf: null. Kein Byte von 5.528 Decks bewegt.** Und das Konstrukt ist nicht
+selten — **`EQU (` steht 135-mal in 75 Modulen** (cc370 zählt 126 Karten bei
+denselben 75; die neun Karten Differenz ist ungeklärt und betrifft nur die
+Zählung, nicht den Fix). Der Baum *trägt* es und **verbraucht** es nie: niemand
+liest `L'` eines solchen Symbols.
+
+**Also ist die Testvorrichtung die einzige Absicherung.** Gegen beide Binaries
+gefahren:
+
+```
+ohne Fix   01 01 01 01 01 01 01
+mit Fix    07 01 07 07 03 01 01
+IFOX00     07 01 07 07 03 01 01
+```
+
+Drei der sieben Fälle sind Kontrollen, die in **beiden** Binaries `01` bleiben —
+`(4+S1)` gegen „erstes Symbol irgendwo", `(X'04'+S1)` gegen „erstes
+alphabetisches Token", `( S1+4)` gegen „auch Leerzeichen überspringen". Ein
+übereifriger Fix fällt dort durch.
+
+Das ist die erste Änderung, bei der „bewegt nichts" **die Erwartung** war und
+nicht der Befund — und cc370 hat das in den PR-Text geschrieben, statt jemanden
+später finden zu lassen, dass die Änderung nichts bewegt, und daraus zu
+schließen, sie sei unnötig.
+
 ### 86,0 % — die Ortsklasse liefert, bevor die Aufzählung fertig ist
 
 **#218:** drei Leser trennen an Kommas auf oberster Ebene. Zwei prüfen auf das
@@ -1009,6 +1039,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #215 (`expr_sect` terminierte nie an einem Komma) | 0 | 0 | 0 | 0 |
 | #209 (vorzeichenbehaftetes Relokationspaar) | +1 | 0 | 0 | 0 |
 | #218 (`dc_split` las jedes Apostroph als Anführungszeichen) | +2 | 0 | 4 | 0 |
+| #221 (Gruppierungsklammer verbarg den linkesten Term) | 0 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
