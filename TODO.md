@@ -220,6 +220,47 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
+### Der nächste Fall: die implizite SS-Länge, 54 Module rein und 59 teilweise
+
+cc370#194. **Eine SS-Instruktion ohne ausdrückliche Länge bekommt von `as370`
+Länge 1**, wo IFOX00 das Längenattribut des ersten Operanden heranzieht. Das
+Längenbyte geht als `0x00` hinaus statt als `L'operand − 1`.
+
+| | Module |
+|---|---:|
+| **alle** Abweichungen des Decks sind SS-Längenbytes auf 0 | **54** |
+| SS-Längenbyte **plus** anderes | **59** |
+
+31 der 54 unterscheiden sich in genau diesem einen Byte im ganzen Deck. Opcodes:
+`D1` MVN, `D2` MVC, `D4` NC, `D5` CLC, `D6` OC, `D7` XC — und **immer** `as370`
+mit 0 gegen eine echte Länge, nie umgekehrt.
+
+**Der Zeuge trägt seinen eigenen Kontrollfall.** `HMASMTMD`, Offset `0x3020`, das
+einzige abweichende Byte im Deck:
+
+```
+IFOX00 : D2 03 C507 1000     MVC @PC00031,0(R1)     Länge 4
+as370  : D2 00 C507 1000                            Länge 1
+```
+
+`@PC00031 EQU A003520`. Und 135 Karten früher schreibt dasselbe Modul dasselbe
+Feld richtig:
+
+```
+6774     MVC   @PC00031(4),0(R1)      ausdrücklich -- as370 gibt D2 03 aus
+6909     MVC   @PC00031,0(R1)         impliziert   -- as370 gibt D2 00 aus
+```
+
+Gleiches Symbol, gleiche Instruktion, gleiches Modul. **Der Assembler hat die
+Länge und benutzt sie nicht.** Das ist wieder das Selbstwiderspruch-Argument, und
+diesmal ist es zulässig: das richtige Verhalten ist im selben Modul vorhanden.
+
+**Eine Prüfung, die nicht optional war.** `D1`, `D2`, `D5`, `D6`, `D7` sind auch
+EBCDIC-Buchstaben (`J`, `K`, `N`, `O`, `P`), also hätte die ganze Klasse
+Textkonstanten sein können. Jeder Zeuge wurde durch Lesen der Nachbarbytes
+geprüft — alle stehen zwischen einem Ladebefehl und einem Sprung, keiner in einer
+Zeichenkette.
+
 ### #191: 82,9 %, und zweimal falsch geraten, bevor es stimmte
 
 `ISDACVT EQU 0` mit absoluten `EQU`-Feldern ist die Art, ein Steuerblock vor
@@ -402,6 +443,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #188 (the same guard in the third splitter) | +2 | 0 | 4 | 3 |
 | #189 (a character comparison ordered by length first) | +9 | 0 | 12 | 1 |
 | #191 (an absolute `USING` domain was never consulted) | **+57** | 0 | 69 | **0** |
+| #192 (Dokumentation: Kontrollfall und Rest-Regel) | 0 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
