@@ -1,7 +1,9 @@
 # The remaining 690 — where they are and what each block needs
 
-2026-09-08, against merged cc370 `7bb7796`. **`as370` == IFOX00 on 4,831 of
-5,528 (87.4 %)**, from 3,465 (62.7 %) this morning, across 46 merges with **no
+2026-09-08, last re-derived against cc370 `89fb177`. **`as370` == IFOX00 on
+4,997 of 5,528 (90.4 %)** — the table below is from `7bb7796` at 87.4 % and its
+two largest rows have since been closed by #240 (+99) and #241 (+67). Current
+shape: **524 differ**, 214 too short, 52 too long, 254 shape-right., from 3,465 (62.7 %) this morning, across 46 merges with **no
 identity lost**.
 
 This is the map for the last 12.6 %.

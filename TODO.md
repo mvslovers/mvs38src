@@ -291,6 +291,38 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### 90,4 % — und die „Ausrichtungsklasse" war keine
+
+**#241: ein Vergleichsoperator ohne Leerzeichen wird nicht erkannt.**
+
+```
+         AIF   ('&EVENT'EQ'USERRDY').EOK
+```
+
+Der Tokenizer beendet ein Token, wenn ein Buchstabe an ein **schließendes**
+Anführungszeichen stößt — damit trennt er `'&EVENT'` von `EQ` richtig. Für den
+Spiegelfall gab es keine Regel: ein Operator, der an das **öffnende**
+Anführungszeichen seines rechten Operanden stößt. `EQ'USERRDY'` wurde **ein**
+Token, kein Vergleich fand statt, das `AIF` fiel durch. Dieselbe Regel existierte
+für einen Operator an `(` — **siebter Fall einer Syntax mit zwei Lesern.**
+
+In `IEAVESC0` lief `SYSEVENT` damit an seinem Treffer vorbei *und* ignorierte
+`ENTRY=BRANCH`: falscher Ereigniscode, falsche Anbindung, vier Bytes länger —
+**eine ausrichtungsförmige Differenz ohne Ausrichtung darin.**
+
+**+67, keine verloren.** Die drei „weiter"-Decks sind in der **Größe näher**
+(Überschuss +16→+12, +16→+12, +8→+6) — hier nachgemessen.
+
+**Und meine Klasse ist damit widerlegt, wie sie sollte.** Die 136 „zu langen"
+fallen auf **52**, und die Mehrheit der Vielfachen von acht ist **weg**: jetzt 17
+von 52 durch acht teilbar, 18 durch vier, 15 ungerade. Die Verteilung ist flach.
+
+Ich hatte die Klasse als Ausrichtungsfrage eingestellt — aus der
+Differenzverteilung gelesen, mit dem ausdrücklichen Vermerk, kein Modul geöffnet
+zu haben. Der kleinste Zeuge (`IFCETRN7`, ein `MNOTE`-Pfad) hat die Hypothese
+zuerst gebrochen, und der Fix hat gezeigt, dass die Vielfachen von acht ein
+*Symptom* waren. **Die Beschriftung hat getan, wofür sie da war.**
+
 ### 89,2 % — der letzte dreistellige Block ist zu
 
 **#240: `DC AL.12(1)` reservierte nichts.** Der Längenparser liest `L` und
@@ -1301,6 +1333,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #235 (`AIF`-Bedingung bei 126 Zeichen abgeschnitten) | +9 | 0 | 104 | 12 |
 | #238 (`EQU C''''` wertet zu null aus) | +12 | 0 | 26 | 1 |
 | #240 (Bit-Längenmodifikator reservierte nichts) | **+99** | 0 | 124 | 1 |
+| #241 (Vergleichsoperator ohne Leerzeichen nicht erkannt) | **+67** | 0 | 84 | 3 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of

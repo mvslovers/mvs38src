@@ -3133,7 +3133,7 @@ IFG0193C	0
 IFG0193D	0			
 IFG0193E	0			
 IFG0194A	0			
-IFG0194C	8	12	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFG0194C	0			
 IFG0194F	0			
 IFG0194J	0			
 IFG0195A	0			
@@ -3238,27 +3238,27 @@ IFNX1J	8	10	8	Symbol longer than 8 characters in operand expression (instruction
 IFNX1K	8	11	8	Undefined symbol
 IFNX1S	8	7	8	MNOTE
 IFNX2A	8	41	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
-IFNX3A	8	100	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
+IFNX3A	8	66	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
 IFNX3B	8	11	8	MNOTE | Undefined symbol | IFO158 DSECT symbol JTSYMBL used in a relocatable address constant
 IFNX3K	8	9	8	Undefined symbol
-IFNX3N	8	30	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
+IFNX3N	8	28	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
 IFNX4D	8	7	8	MNOTE | Undefined symbol
-IFNX4E	8	30	8	MNOTE | Undefined symbol | IFO158 DSECT symbol JTSYMBL used in a relocatable address constant
+IFNX4E	8	28	8	MNOTE | Undefined symbol | IFO158 DSECT symbol JTSYMBL used in a relocatable address constant
 IFNX4M	8	52	8	MNOTE | Undefined symbol
 IFNX4N	8	7	8	MNOTE | Undefined symbol
 IFNX4S	8	3	8	MNOTE | Undefined symbol
 IFNX4T	8	53	8	MNOTE | Undefined symbol | Undefined operation code
-IFNX4V	8	28	8	MNOTE | Undefined symbol
-IFNX5A	8	59	8	Undefined symbol
+IFNX4V	8	16	8	MNOTE | Undefined symbol
+IFNX5A	8	49	8	Undefined symbol
 IFNX5C	8	14	8	Undefined symbol
 IFNX5D	8	15	8	Undefined symbol
 IFNX5F	8	5	8	MNOTE
 IFNX5L	8	3	8	Undefined symbol
 IFNX5M	8	589	8	Undefined symbol
-IFNX5P	8	8	8	Undefined symbol | MNOTE
-IFNX5V	0	25	0	
+IFNX5P	8	4	8	Undefined symbol | MNOTE
+IFNX5V	0	13	0	
 IFNX6A	0			
-IFNX6B	8	13	8	MNOTE
+IFNX6B	8	3	8	MNOTE
 IFNX6C	0			
 IFOX0A	8	3	8	Undefined symbol
 IFOX0B	0	2	0	
@@ -4069,9 +4069,9 @@ IGG019PQ	0
 IGG019Q0	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | Undefined operation code
 IGG019Q1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019Q2	8	1302	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IGG019Q3	8	999	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IGG019Q3	8	997	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 IGG019Q4	8	583	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string
-IGG019Q5	8	756	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IGG019Q5	8	755	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 IGG019Q6	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019Q7	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019Q8	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -4474,7 +4474,7 @@ IKJEBEM4	0
 IKJEBEM5	0			
 IKJEBEM6	0			
 IKJEBEM7	0			
-IKJEBEMA	4	2	4	MNOTE
+IKJEBEMA	0			
 IKJEBEMC	0			
 IKJEBEME	0			
 IKJEBEMR	0			
@@ -4612,7 +4612,7 @@ IKJEFP40	0
 IKJEFP60	0			
 IKJEFR00	0			
 IKJEFT01	0			
-IKJEFT02	4	2	4	MNOTE
+IKJEFT02	0			
 IKJEFT03	0			
 IKJEFT04	0			
 IKJEFT05	0			
@@ -4620,7 +4620,7 @@ IKJEFT06	0
 IKJEFT07	0			
 IKJEFT08	0			
 IKJEFT09	0			
-IKJEFT25	4	3	4	MNOTE
+IKJEFT25	0			
 IKJEFT30	0			
 IKJEFT35	0			
 IKJEFT40	0			
@@ -4656,7 +4656,7 @@ IKJEGLDR	0
 IKJEGLSA	0			
 IKJEGLST	8	11	8	Undefined symbol
 IKJEGMAP	0			
-IKJEGMNL	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | MNOTE | Undefined symbol
+IKJEGMNL	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol
 IKJEGMSG	0			
 IKJEGOFF	0			
 IKJEGPCH	0			
