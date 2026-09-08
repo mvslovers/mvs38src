@@ -291,6 +291,41 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### #227 — und die dritte Frage fand den einzigen Byte-Defekt
+
+Dieselbe Ursache eine Anweisung früher: `lrecs[].loc` wird gestempelt, **bevor**
+die Anweisung läuft, also listet alles, was den Ortszähler bewegt oder ersetzt,
+den Stand von vorher. IFOX00 macht es umgekehrt — LOC behält den Zähler davor,
+der **neue** steht in ADDR2:
+
+```
+ohne Fix   00000A                21   ORG   *-4
+mit Fix    00000A        00006   21   ORG   *-4
+IFOX00     00000A        00006   21   ORG   *-4
+```
+
+**Die fortgesetzten Fälle sind die ganze Testvorrichtung.** Ohne sie geben „der
+Ursprung des Abschnitts" und „der eigene Zähler des Abschnitts" dieselbe Antwort,
+und cc370 hätte die eine oder die andere Regel mit grünem Test ausgeliefert.
+
+**Und die dritte Frage fand den einzigen Defekt der drei, der Bytes berührt.**
+`COM` war nur in der Sonde, weil cc370 alle zählerbewegenden Anweisungen in einem
+Zug erfassen wollte: **`as370` unterstützt `COM` überhaupt nicht** — kein
+ESD-Eintrag, der Zähler springt nicht zurück, und danach deklarierter Speicher
+landet im vorigen Abschnitt. Als #229 eingestellt.
+
+Hier nachgezählt, feldweise tokenisiert: **`COM` kommt im Korpus 0-mal vor.**
+Deshalb hat es nie gestört — und deshalb wäre es aus keiner Baummessung je
+gefallen. Ein Defekt, den nur eine Frage findet, die man aus Gründlichkeit
+mitgestellt hat.
+
+**Der Prüfer behauptet die Divergenz** — die `COM`-Karte und alles danach ist
+über **Quelltext** ausgeschlossen, nicht über Anweisungsnummern, weil der
+Kommentarblock am Kopf jeder Vorrichtung sonst alles verschiebt. Der Fall
+scheitert, **wenn `COM` aufhört zu divergieren**: #229s Gate existiert, bevor die
+Arbeit beginnt. Und `equlist`s Liste bekannter Divergenzen ist jetzt **leer** —
+das Leerwerden ist selbst die Prüfung, dass #226 gelandet ist.
+
 ### #226: zwei zurückgezogene Befunde, ein Rendering-Fehler
 
 Mein `PREFL`-Fehllesen und cc370s `L'4.0'`-Fehllesen waren **derselbe Defekt**,
@@ -1114,6 +1149,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #221 (Gruppierungsklammer verbarg den linkesten Term) | 0 | 0 | 0 | 0 |
 | #223 (`E` gehört nicht in die Attribut-Buchstabenmenge) | 0 | 0 | 0 | 0 |
 | #226 (ein `EQU` steht nicht am Ortszähler) | 0 | 0 | 0 | 0 |
+| #227 (`ORG`/`CSECT`/`DSECT` listeten den Zähler von vorher) | 0 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
