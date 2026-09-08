@@ -10,6 +10,66 @@ This is a hunting list. Every one of these was searched for and not found — th
 point of the document is that the searching is already done, so what is left is
 to find the material somewhere else.
 
+## 2026-09-08: the EREP macros are here after all — in the source, not in a library
+
+**`DSGEN`, `LINE`, `ROUTINE`, `SPECIAL`, `SUM` and `LINEND` exist locally**, and
+have all along. Not as members of any macro library — as **in-stream `MACRO`
+definitions inside EREP modules that carry their own**:
+
+| where | members defining `DSGEN` |
+|---|---:|
+| Jay Moseley's `MVSSRC.EREPSYM` | **144** |
+| Dave Kreiss' `MVSBLD` | e.g. `IFCE0135`, `IFCE0155`, `IFCEOAK1` |
+
+`IFCE0135` alone defines `BIN DSGEN HEX LABEL LINE LINEND LSTART ROUTINE` — eight
+of the names on this list, in one member.
+
+**The EREP family splits in two, and the list is the second half.** A module
+either carries its macros or expects them; the 31 that need `DSGEN` are exactly
+the ones that do not define it. Checked in both directions: none of the 125
+module–operation pairs on this list defines its own macro, and the modules that
+do define one are not on the list.
+
+**The call shape matches.** `IFCE0115` — one of the 31 — calls
+
+```
+         DSGEN (RECTYP,8),(LEVEL,8),(FLAG1,8),(FLAG2,8)
+```
+
+and the prototype in `IFCE0135` is `&NAME DSGEN` with the body reading
+`&SYSLIST(&OP,1)` — a macro with no declared operands, driven entirely by the
+positional sublists. That is the macro these modules expect.
+
+**What is not established** is the maintenance level. `ISDAFSPC` is the standing
+warning: a macro is usable when its expansion is right, not when the assembly
+falls silent. The test is the gate — supply it, and count modules that move
+*toward* IFOX00, not modules that stop complaining.
+
+## `TABLE` is still missing, and a false hit is why that needs saying
+
+`MVSSRC.SYM1-2(IGARPT01)` defines a macro called `TABLE`. **It is not this one.**
+
+| | |
+|---|---|
+| Jay's `TABLE` | `&TABLE TABLE &A` — one positional operand, generates a 256-byte translate table from pairs |
+| what the 48 `XTB*` need | `TABLE CGMID=(82),LOC=((40,00,0),(4B,0B,0),…)` — keyword operands |
+
+Same name, different macro. The largest single entry on this list is unchanged,
+and the near miss is worth recording: a name match is not a find.
+
+## What was searched on 2026-09-08
+
+| Searched | Result |
+|---|---|
+| Dave Kreiss' `MVT.ASM` (tape file 11, 3.27 MB) | **106 members, all of them modules, all 106 also in `MVSBLD`.** No macro of any name on this list, and no in-stream definition of one. |
+| Jay Moseley's 21 datasets, **6,351 members**, by member name | no hit on any of the 40 |
+| the same 6,351, by **in-stream `MACRO` definition** | `DSGEN` 144, `LINE` 145, `ROUTINE` 145, `SPECIAL` 81, `SUM` 79, `PROLOG` 2, `TABLE` 1 (the wrong one) |
+| `mvs38-ibmsrc`'s 1,147 macros | no hit on any of the 40 |
+
+`MVT.ASM` being 106 modules that all exist in `MVSBLD` is a **variant** finding
+rather than a macro one: Dave carried a second copy of them, and whether the two
+differ has not been measured.
+
 ## Where it has been searched
 
 | Searched | Result |
