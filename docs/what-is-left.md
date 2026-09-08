@@ -256,3 +256,45 @@ written off as noise.
 The observation that made the diagnosis quick was a *negative* one: `SPM R12`
 alone encodes correctly. That says the encoder is right and something before the
 instruction decides the byte — a very short list of possibilities.
+
+## The `DC A/AL(...)` walk produced no new mechanism — 2026-09-09
+
+Written down because a negative result that is not recorded gets re-derived.
+
+121 modules have an address or offset constant as their first divergence. Walking
+past **every** kind of them — `A`, `AL`, `Y`, `S`, `V` — leaves 4 with nothing but
+address constants differing, and the rest resolve to:
+
+| under it | modules | verdict |
+|---|---:|---|
+| `DC X'8400' STATIC TEXT FLAG` and friends | 14 | **already cc370#253** — the `IDCTS*` value lists |
+| `BAL 1,*+24  BRANCH AROUND PARM LIST` | 13 | **not a defect** — see below |
+| `DC BL2'…'` in a PARSE expansion | 15 | **withdrawn** — see below |
+
+**The `BAL` family is the missing-macro class.** All thirteen are `IFCE*`, and
+`module-table.tsv` says `both flag`, `rc 12`, with `as370` reporting
+`Undefined operation code` and `Addressability error`. The four zero bytes where
+IFOX00 has an instruction are what an EREP module does when `DSGEN` and `PROLOG`
+are not there — [`missing-macros.md`](missing-macros.md), not a new issue. The
+first-divergence instrument will keep offering them, because a module that cannot
+resolve its macros still produces a deck and still has a first divergence.
+
+**The `BL2` lead was withdrawn before it was filed, and by the rule already in
+the runbook.** `IKJIDENT` line 275 is
+
+```
+         DC    BL2'100&FPRPT&FDFLT.0&FHELP&FVALID&FLIST&FASIS&FRANGE.00*
+```
+
+— a literal split across a macro continuation — and `as370`'s listing renders the
+expansion as `DC BL2'10000000000000`: fourteen digits, no closing quote. That
+looks exactly like a residue of cc370#250.
+
+It is not. A fixture with the same shape produces **the correct two bytes**; the
+truncation is in how the listing prints a continued statement, not in what is
+assembled. *A listing is faithful for what it reports and is not a substitute for
+the object* — the rule was already written down two sections above, from two
+earlier withdrawals, and it caught a third.
+
+So the remaining divergence in those fifteen is a layout difference with no cause
+yet, and the honest entry is that the walk found nothing new.
