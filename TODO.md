@@ -291,6 +291,51 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### 87,0 % — und ein Histogramm fand, was zwei Tage Zählen nicht fand
+
+**#231, der größte Gewinn seit #175: +57, keine verloren, 88 näher, null weiter.**
+Zwei Defekte in einem fünfzeiligen Handler:
+
+```c
+if (nn > 0) while ((lc % nn) != b && g++ < 64) { put(lc, 0x0700, 2); lc += 2; }
+```
+
+**`CNOP` richtet nie auf ein Halbwort aus.** Von einem ungeraden Zähler ist
+`lc % 4` immer ungerade, erreicht also nie einen geraden Rest — 64 No-ops, der
+Zähler 128 Bytes weiter, **rc 0 und keine Meldung auf beiden Seiten**, und jede
+folgende Adresse im Abschnitt falsch. Und **es definiert das Namensfeld nie**.
+
+Damit war `NOREL1` in `IEAVSTAA` undefiniert — der Name eines `LOAD EP=`, den
+`AMACLIB(LOAD)` mit `&NAME CNOP 0,4` setzt.
+
+**Die neun Module, die vom Längen- in den Byte-Eimer wechselten, sind der Beweis
+von der anderen Seite.** Hier nachgemessen:
+
+| Modul | Distanz vorher → nachher | Längen |
+|---|---|---|
+| `IECIOSAM` | 1.351 → **43** | == IFOX00 |
+| `IKTMSGS` | 1.316 → **112** | noch verschieden |
+| `IGG019Q0` | 514 → **55** | == IFOX00 |
+| `IGG019PD` | 140 → **12** | == IFOX00 |
+
+Sechs der neun treffen jetzt IFOX00s Sektionslängen **exakt**. Ein zerstörter
+Abschnitt, von der anderen Seite gesehen.
+
+**Und `HEWLDIOC` ist jetzt byte-identisch mit IFOX00.** Das Modul, das elf Monate
+lang in beiden Runbooks als „terminiert unter keiner Schranke" stand.
+
+**Die Lehre ist cc370s, und sie trifft mich:** *„Eine Zahl sagte mir nichts, ein
+Histogramm sagte mir alles."* „83 Module melden undefinierte Symbole" ist eine
+Zahl, die zwei Tage lang dastand. Die **Symbolnamen** anzusehen — `R5`, `R15`,
+`R1`, Registerequates — kostete zehn Minuten und zeigte direkt auf den
+Mechanismus. Ich habe das Neuableiten der Population für die Arbeit gehalten; es
+war der Aufbau.
+
+Und es zeigt, dass meine Eimer „stille Abweichung" und „nur as370 meldet" weniger
+unabhängig sind, als sie aussehen: **ein Defekt hat Module in beide gelegt**, und
+die neun Längenwechsel saßen im ersten, während die Diagnose, die sie erklärt
+hätte, im zweiten stand.
+
 ### #227 — und die dritte Frage fand den einzigen Byte-Defekt
 
 Dieselbe Ursache eine Anweisung früher: `lrecs[].loc` wird gestempelt, **bevor**
@@ -1150,6 +1195,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #223 (`E` gehört nicht in die Attribut-Buchstabenmenge) | 0 | 0 | 0 | 0 |
 | #226 (ein `EQU` steht nicht am Ortszähler) | 0 | 0 | 0 | 0 |
 | #227 (`ORG`/`CSECT`/`DSECT` listeten den Zähler von vorher) | 0 | 0 | 0 | 0 |
+| #231 (`CNOP` von ungeradem Zähler, und ohne Namensfeld) | **+57** | 0 | 88 | **0** |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
