@@ -220,3 +220,39 @@ That is twice in one day that the largest cluster was a symptom, and the second
 time it was two layers deep. **A constant that names another symbol in its own
 section can only be wrong because something else is**; the instrument has to be
 told to walk past every one of them, not just the first kind.
+
+## 93.0 % — and a class fix that produced no collateral at all
+
+cc370#252 merged: **+17, none lost, none further, nothing moved between buckets.**
+Three merges in a row with no deck moving the wrong way.
+
+**It was not an `SPM` defect.** `split_fields` filled only as many fields as the
+operand had, into a stack array the next statement reused, so an unwritten slot
+held the previous statement's text at the same address. `SPM` has one operand and
+the RR emitter reads two. cc370 fixed it in `split_fields` — every consumer of a
+shorter-than-expected operand list had the same exposure — which touches every
+statement in the tree and moved nothing the wrong way.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,140 of 5,528 (93.0 %)** |
+| still differing | **388** |
+| byte-identical to IBM's object | **1,172** |
+
+### A limit of the byte histogram, stated properly
+
+`cluster_remaining.py` had this defect filed as eight unrelated single-byte
+cases — `88 87 8E C4 C8 E4 EB F6`. cc370's reading is the one to keep:
+
+> It clusters by *value*, and a defect whose value is copied from elsewhere has
+> no value of its own.
+
+The leaked nibble is whatever register the previous RR instruction named, so the
+histogram is **guaranteed** to shred this class into as many pieces as the corpus
+has preceding instructions. That is not a bug in the instrument; it is the shape
+of question it cannot ask, and it explains a run of singletons that had been
+written off as noise.
+
+The observation that made the diagnosis quick was a *negative* one: `SPM R12`
+alone encodes correctly. That says the encoder is right and something before the
+instruction decides the byte — a very short list of possibilities.
