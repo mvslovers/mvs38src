@@ -291,6 +291,54 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### 86,0 % — die Ortsklasse liefert, bevor die Aufzählung fertig ist
+
+**#218:** drei Leser trennen an Kommas auf oberster Ebene. Zwei prüfen auf das
+Attribut-Apostroph, `dc_split` nie. Nach ungerader Zahl von `L'`/`K'` hält es
+sich für innerhalb einer Zeichenkette, und das nächste Komma trennt nicht mehr:
+
+```
+DC AL1(L'FLD),X'FF'   ->  07        IFOX00: 07FF
+```
+
+**Das `X'FF'` fällt weg — bei rc 0, ohne Meldung, und IFOX00 assembliert es
+ebenfalls bei rc 0 ohne Diagnose.** Weder Rückgabecode noch Meldung hätten das je
+gesehen; nur die Bytes. +2, keine verloren.
+
+**Und cc370s Quelltextscan war eine Schranke auf der falschen Population.** Er
+fand zwei Module mit dem Konstrukt — **keins der beiden ist unter den Gewinnern.**
+Der Operand erreichte `IEAVNP11`/`IEAVNP12` über ein Makro, und ein Kartenscan
+sieht keinen erzeugten Text. Dieselbe Lehre wie bei den 35 gegen 79 vom ersten
+Tag, nur eine Ebene subtiler: ein Attribut-Apostroph in einem DC-Operanden ist
+lexikalisch, die Zeichen stehen auf einer Karte — nur nicht auf einer, die
+gelesen wurde.
+
+**Ein Kandidatenpaar war ausdrücklich kein Defekt.** Sechs Leser entscheiden „ist
+dieses Apostroph ein Attribut", mit drei verschiedenen Buchstabenmengen
+(`KNLT`, `LTKNIS`, `LTKNISE`). Sieht nach Vernachlässigung aus, ist aber richtig:
+IFOX00 liest `S'` und `I'` in einem gewöhnlichen Ausdruck als öffnendes
+Anführungszeichen. **Verschiedene Mengen nach Kontext.** Ohne das Orakel wäre das
+als fünfter Fall der Ortsklasse eingestellt worden.
+
+**#217, der Skalenmodifikator — und meine Zahl schrumpft ihn.** `DC FS3'1.25'`
+gibt bei IFOX00 `0000000A` und bei `as370` `00000001`; der Modifikator wird
+ignoriert. Sechs Module tragen ihn, alle sechs weichen ab — aber:
+
+| Modul | Sektionslänge | abweichende Bytes | zuordenbar |
+|---|---|---:|---|
+| **`IFFPEAGR`** | **gleich** | 18 | **ja** |
+| `IFFPIAPG` | 3.692 gegen 3.844 | 63 | nein |
+| `IFFPJAPV` | 3.214 gegen 3.366 | 59 | nein |
+| `IFFPCAAR` | 2.150 gegen 2.288 | 49 | nein |
+| `IFFPFAVA` | 2.616 gegen 2.754 | 62 | nein |
+| `IFNX5M` | gleich | **647** in 126 Läufen | nein |
+
+**Ein Skalenmodifikator ändert den Wert, nicht die Breite.** Ein Modul, dessen
+Sektion 138 bis 152 Bytes zu kurz ist, ist es aus einem anderen Grund. `IFNX5M`
+trägt **ein** `HS14` und weicht in 647 Bytes ab. Gemessene Reichweite des
+Defekts in diesem Baum: **ein Modul, sechzehn Bytes.** Sechstes Mal, dass „N
+Module tragen das Konstrukt" wie eine Reichweite von N gelesen wird.
+
 ### Alle 5.528 Module erzeugen ein Deck — zum ersten Mal
 
 **`HEWLDIOC` war nie langsam. Es hing, seit elf Monaten, auf `main`.**
@@ -960,6 +1008,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #214 = #213 (CCW-Datenadresse `*` ist relokierbar) | **+7** | 0 | 0 | 0 |
 | #215 (`expr_sect` terminierte nie an einem Komma) | 0 | 0 | 0 | 0 |
 | #209 (vorzeichenbehaftetes Relokationspaar) | +1 | 0 | 0 | 0 |
+| #218 (`dc_split` las jedes Apostroph als Anführungszeichen) | +2 | 0 | 4 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
