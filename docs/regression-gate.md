@@ -115,6 +115,27 @@ lost is not "+1"; it is a gain and a break, and the break has a module name.
   sequence number; the `END` card is where each assembler names itself and dates
   the assembly.
 
+## A listing is not a deck, and it is reliable for different things
+
+Three findings this week came out of an `as370` listing. **The two that were
+wrong were the two where the listing was the only thing read.**
+
+| | read from | verdict |
+|---|---|---|
+| cc370#224, `DC L'4.0'` misaligned | listing address column | **withdrawn** — the object images are identical, `L'4.0'` is doubleword-aligned at `x'08'` exactly as IFOX00 puts it |
+| my `PREFL EQU` evaluating to zero | listing address column | **withdrawn** — `PREFL` is 4; the column shows the *location counter* at that card, not the symbol's value |
+| cc370#223, `DC E'…'` giving `rc 8` | listing message and return code | **stood**, and was merged |
+
+The pattern is not "listings mislead". It is that a listing is **faithful for what
+it reports** — messages, statement numbers, return codes — and **not a substitute
+for the object**: it prints at most eight bytes per statement, its address column
+is the location counter rather than a value, and it renders alignment padding on
+its own line in one assembler and folded into the next in the other.
+
+**So take the verdict from the deck whenever the claim is about bytes, addresses
+or values, and from the listing only when the claim is about what the assembler
+said.** Both of us captured deck and listing and then reasoned from the wrong one.
+
 ## A completeness claim needs the list, not the count
 
 cc370's `TODO.md` carried the sentence *"every other scanner in as370 already
