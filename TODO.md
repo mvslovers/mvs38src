@@ -250,7 +250,67 @@ Zwei Sektionen treffen IFOX00s Länge jetzt **exakt**. Der Byteabstand steigt, w
 ein Bytevergleich an festen Adressen Inhalt verurteilt, der ein Loch gefüllt hat.
 Es ist die größte Einzelverbesserung des Merges und stand in der Rückschritt-Zeile.
 
-### Der nächste Fall: die implizite SS-Länge, 54 Module rein und 59 teilweise
+### 83,7 % — und der nächste Fall ist einer ohne inhaltlichen Fehler
+
+**83 Module, deren Objektabbild byte-identisch mit IFOX00 ist und deren Deck es
+nicht ist.** Gleiche Sektionen, gleiche Bytes an jeder Adresse, gleiche Längen —
+und die Karten, die das tragen, unterscheiden sich. cc370#199.
+
+| was abweicht | Module |
+|---|---:|
+| **ESD-Nummerierung** — gleiche Symbole, andere ESDIDs | **56** |
+| nur `RLD`, Abbild identisch | 13 |
+| Kartenzahl um eins verschieden | 7 |
+| nur `TXT`, Abbild identisch | 3 |
+
+`HMASMDC2`, 118 ESD-Einträge, dieselben 118 Symbole:
+
+```
+IFOX00                        as370
+id=0x0001 HMASMDC2  SD        id=0x0074 HMASMDC2  SD
+id=0x0002 HMASMAAR  ER        id=0x0075 HMASMAAR  ER
+id=0x0004 HMASMALC  ER        id=0x0004 HMASMALC  ER
+```
+
+Der Eintrag der Kontrollsektion selbst bekommt von IFOX00 die **1** und von
+`as370` die **0x74**; ab dem vierten Eintrag stimmen beide wieder überein. Also
+eine Reihenfolgefrage, kein Nummernschema.
+
+**Das ist die Umkehrung aller bisherigen Fälle.** Hier gibt es keinen
+inhaltlichen Fehler: das Abbild ist richtig, das Objekt lädt, IBMs Modul stimmt
+mit beiden Decks überein. 83 Module, die **korrekt** sind und nicht
+**identisch** — und nur ein Bytevergleich der Karten sieht das. Nach dem Ziel
+dieses Projekts zählen sie trotzdem.
+
+**Und es erklärt einen Rest.** `HMASMTMD` war der Zeuge für #194; sein Abbild
+erreichte unter #198 null abweichende Bytes, sein Deck nicht, weil es eine Karte
+mehr trägt als IFOX00. Wer einen Klassenrest am Abbild misst, nennt so ein Modul
+erledigt; wer ihn am Deck misst, nicht. Beide haben recht, und die Zahl muss
+sagen welche.
+
+**Anders als #190 gibt es hier keinen Selbstwiderspruch**, an den man appellieren
+könnte — `as370` ist in sich stimmig und ordnet nur anders. Hier ist das Orakel
+das ganze Argument, und das gehört dazugesagt.
+
+### Der überstandene Fall: die implizite SS-Länge — und der Zeuge zeigte tiefer
+
+cc370#194/#198: Nicht der SS-Pfad war falsch, sondern **`L'` eines
+`EQU`-Symbols war 1**. Der SS-Pfad liest das Längenattribut korrekt. `HMASMTMD`s
+Kontrollfall leistete also mehr, als er aussah: die ausdrückliche Form war nicht
+deshalb richtig, weil der SS-Pfad anders ist, sondern weil eine ausdrückliche
+Länge das Attribut gar nicht befragt.
+
+Die Regel, gemessen: **linkester Term, und nur wenn dieser Term ein Symbol ist.**
+`1+A` ergibt 1, nicht 4 — der Fall, der die Regel festlegt statt sie nur zu
+bestätigen, denn überall sonst fallen „linkester Term" und „erstes Symbol im
+Ausdruck" zusammen.
+
+**+38, keine verloren, 57 näher, null weiter.** Von den 54 der Klasse sind 34
+deck-identisch, 12 tragen weiterhin das SS-Längenmuster (eine zweite Ursache,
+z. B. `IGC121`) und 8 haben ein identisches Abbild bei abweichendem Deck — die
+gehören jetzt zu #199.
+
+### Der ursprüngliche Fall: die implizite SS-Länge, 54 Module rein und 59 teilweise
 
 cc370#194. **Eine SS-Instruktion ohne ausdrückliche Länge bekommt von `as370`
 Länge 1**, wo IFOX00 das Längenattribut des ersten Operanden heranzieht. Das
@@ -475,6 +535,8 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #191 (an absolute `USING` domain was never consulted) | **+57** | 0 | 69 | **0** |
 | #192 (Dokumentation: Kontrollfall und Rest-Regel) | 0 | 0 | 0 | 0 |
 | #195 (`N'&SYSLIST` zählte eine Darstellung, plus drei Tabellengrenzen) | +4 | 0 | 77 | 17 |
+| #198 (`L'` eines `EQU`-Symbols war 1) | **+38** | 0 | 57 | **0** |
+| #197 (Kommentarkorrektur) | 0 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
