@@ -115,6 +115,27 @@ lost is not "+1"; it is a gain and a break, and the break has a module name.
   sequence number; the `END` card is where each assembler names itself and dates
   the assembly.
 
+## A clean headline is not a clean gate
+
+cc370#209's first gate read **`+1 IEDCSA, LOST 0`** — correct, and blind to the
+fact that two modules had stopped assembling *at all*. `IFCE0115` and `IFCE0125`
+assemble in 0 s on the baseline and never terminate on the candidate: an infinite
+loop in a scan that the change was the first to reach. The identity figure was
+right and had nothing to say about it, because a module with no deck cannot lose
+an identity it never had.
+
+**A deck that was produced and is not is a regression**, and `retest.py` now says
+so in the same register as a lost identity. It is worse than a lost identity:
+there is no object at all to compare, so every other line in the report silently
+excludes the module.
+
+**And the tool's own hint nearly caused the miss.** `retest.py` prints *"a deck
+that comes and goes is usually the worker's alarm"* — true in general, learned
+from `IFCEE155` and `IFCEL155`, and wrong here. What saved it was following the
+rest of the sentence: *time the module alone*. Thirty seconds turned a dismissed
+footnote into a hang. **A hint that is right most of the time is exactly the kind
+that gets followed instead of the procedure it recommends.**
+
 ## Any count cancels — including the ones that look like inventories
 
 `no-as370-deck : 10 -> 10` across cc370#182, and `retest.py` reported that

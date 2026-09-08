@@ -207,6 +207,18 @@ def main():
     print(f"\nevery module that moved: {out}")
     if lost:
         print("\nAn identity lost is a regression, whatever the total says.")
+    # A deck that stops being produced is a regression the headline cannot show.
+    # cc370#209's first gate read "+1 IEDCSA, LOST 0" while two modules had
+    # stopped assembling entirely -- an infinite loop, not an alarm -- and the
+    # figure being watched was fine. A lost deck is now as loud as a lost
+    # identity, because it is worse: there is no object at all to compare.
+    if ld:
+        print(f"\nA DECK THAT WAS PRODUCED AND IS NOT IS A REGRESSION: "
+              f"{' '.join(ld)}")
+        print("Time each alone with a generous limit before believing the "
+              "alarm. A module that assembles in 0 s on the baseline and never "
+              "terminates on the candidate is a hang, and the headline line "
+              "will not show it.")
 
 
 if __name__ == "__main__":
