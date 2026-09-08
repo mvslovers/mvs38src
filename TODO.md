@@ -291,6 +291,43 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### #226: zwei zurückgezogene Befunde, ein Rendering-Fehler
+
+Mein `PREFL`-Fehllesen und cc370s `L'4.0'`-Fehllesen waren **derselbe Defekt**,
+und er ist jetzt behoben statt bloß benannt.
+
+Ein `EQU` steht nicht am Ortszähler — es benennt einen **Wert**, und IFOX00
+listet es so: LOC leer, der Wert in ADDR2. `as370` druckte den laufenden Zähler
+in LOC und ließ ADDR2 leer.
+
+```
+ohne Fix   00000A                         18 E1  EQU  A1
+           00000A                         19 E2  EQU  A1+4
+mit Fix                            00000  18 E1  EQU  A1
+                                   00004  19 E2  EQU  A1+4
+IFOX00                             00000 / 00004
+```
+
+**Beide Symbole zeigten ohne den Fix dieselbe Zahl** — die Signatur einer Spalte,
+die etwas anderes meldet als behauptet. Genau daran bin ich hängengeblieben.
+
+**Ein falsches Listing informiert nicht nur falsch, es erzeugt Arbeit:** zwei
+Sitzungen, zwei zurückgezogene Befunde, ein Rendering-Fehler. Damit hat die
+Tabelle aus dem Runbook eine vierte Zeile — Instrumentendefekt, und beide
+Fehllesungen lasen dieselbe lügende Spalte, während #223 bestand, weil es eine
+Meldung las.
+
+**Und kein Test konnte es fangen:** keiner der fünf `listref`-Fälle enthielt je
+ein `EQU`. Die Suite ist seit ihrer Entstehung spaltengenau und hatte diese
+Anweisung schlicht nie gesehen. `equlist.s` trägt jetzt unter anderem ein
+DSECT-relatives Equate — die `PREFL`-Form — als Regressionstest.
+
+Die Testvorrichtung fand dabei zwei weitere Divergenzen (`ORG`, `DSECT`, aus
+derselben Ursache eine Anweisung früher), die cc370 **nicht** mitbehoben hat:
+eigenes Issue, damit die Messung zuordenbar bleibt. Der Prüfer **behauptet die
+Divergenz**, statt sie zu dulden — wer sie behebt, bricht den Test laut, statt
+ihn still bestehen zu lassen.
+
 ### #223 — und ein Widerspruch, den ich erfunden hatte
 
 `attr_apos` trug ein `E` in der Attribut-Buchstabenmenge, das IFOX' eigener
@@ -1076,6 +1113,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #218 (`dc_split` las jedes Apostroph als Anführungszeichen) | +2 | 0 | 4 | 0 |
 | #221 (Gruppierungsklammer verbarg den linkesten Term) | 0 | 0 | 0 | 0 |
 | #223 (`E` gehört nicht in die Attribut-Buchstabenmenge) | 0 | 0 | 0 | 0 |
+| #226 (ein `EQU` steht nicht am Ortszähler) | 0 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
