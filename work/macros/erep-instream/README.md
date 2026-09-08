@@ -40,19 +40,35 @@ without them: all 33 move *away* from IFOX00 by construction, 32 further and 1
 closer. A macro can only be adopted on both sides at once — see
 `docs/ifox-objections.md`.
 
-## An as370 anomaly found while measuring
+## An anomaly I reported and then had to withdraw
 
-With this library alone, `IFCE0115`'s `LINE` calls resolve. **Add
-`mvsce-2.1.4-dlib/AMACLIB` and they stop**, 43 of them, although `AMACLIB`
-contains no member of that name — verified by search. `DSGEN` and `ROUTINE`,
-from the same library, keep resolving.
+I reported to cc370 that `IFCE0115`'s `LINE` calls resolve with this library alone
+and stop resolving the moment `AMACLIB` is added. **It is not true.** Re-measured
+with real argument vectors:
+
+| configuration | `DSGEN` | `LINE` | `ROUTINE` |
+|---|---:|---:|---:|
+| this library alone | **0** | **0** | **0** |
+| this library + `AMACLIB` | **0** | **0** | **0** |
+| the eight gate libraries | 11 | 52 | 3 |
+| the eight + this one | **0** | **0** | **0** |
+
+`AMACLIB` makes no difference in either direction; the macros resolve wherever
+this library is on the path.
+
+**The false result came from a shell trap that is written down in my own notes.**
+The ladder that "found" `AMACLIB` accumulated its flags in a variable —
 
 ```sh
-as370 -I work/macros/erep-instream                      IFCE0115.ASM   # LINE resolves
-as370 -I work/macros/erep-instream -I .../AMACLIB       IFCE0115.ASM   # 43x "- LINE"
+ACC="$ACC -I $M/$d"
+as370 $ACC ...        # zsh does not word-split: one argument, not two
 ```
 
-**A minimal fixture does not reproduce it** — a three-line source calling
-`LINE (1,1),(44,1),SKIP=3` is clean with both libraries. Only the real module
-shows it, which is why the command above names the module rather than describing
-the shape.
+zsh passes `$ACC` as a **single** argument, so no `-I` ever took effect and every
+rung of the ladder measured the same thing. Worse, cc370#104 records that an
+unrecognised option is silently taken as the source filename, so there was no
+error to notice. The figures in this file's table above were taken from direct
+command lines and from `gate.sh`, both of which pass a real argv, and they stand.
+
+**Measuring a difference requires that the two runs differ.** A ladder whose
+rungs are identical produces a clean-looking trend and means nothing.
