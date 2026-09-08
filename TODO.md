@@ -220,7 +220,47 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
-### Neu ausgerichtet: die 998, nach Mechanismus sortiert
+### #191: 82,9 %, und zweimal falsch geraten, bevor es stimmte
+
+`ISDACVT EQU 0` mit absoluten `EQU`-Feldern ist die Art, ein Steuerblock vor
+DSECTs abzubilden; `USING ISDACVT,2` macht R2 zur Basis dieser Offsets. `as370`
+hat solche `USING` registriert und **nie konsultiert** — es hat überhaupt keine
+Auflösung absoluter Domänen. **+57, keine verloren, 69 näher, null weiter.**
+
+Nach dem Merge nachgerechnet:
+
+| | |
+|---|---:|
+| von den 54 identisch geworden | **52** |
+| gewonnen, aber **nicht** in den 54 | **5** |
+| von den 54 übrig | **2** — `IECVXURT`, `IDA019S6` |
+
+**Die Untergrenze war echt, und zwar um 5.** Der Scan sah nur Module mit
+höchstens acht abweichenden Adressen; fünf trugen diesen Defekt *und* etwas
+anderes. Und die beiden Überlebenden sind genau die zwei, die nie das Muster
+`B → 0` hatten — der Rest einer Klasse besteht aus dem, was nie zur Klasse
+gehörte. Dieselbe Warnung hatte ich cc370 für den Rest von #186 gegeben; sie gilt
+hier für meine eigene.
+
+**Und meine Prognose war falsch.** Ich hatte cc370 geschrieben, sie bräuchten das
+Orakel nicht: wenn `as370` Basis 0 nimmt, wo ein `USING` gilt, widerspricht es
+sich selbst, und das entscheide die Sache. Sie brauchten IFOX00 zweimal, und
+beide Male hat es die Antwort geändert:
+
+1. Ob eine blanke `256` eine Basis bekommt — cc370s Instinkt sagte nein, IFOX00
+   löst alle sechs Formen auf. Die erwartete Ausnahme hätte die Klasse halb
+   bewegt und der Test wäre grün gewesen.
+2. Die erste Fassung ergab **+0 und −52**. Das Unterscheidungsmerkmal ist nicht
+   „nicht relokierbar", sondern **„definiert und absolut"**: ein *undefiniertes*
+   Symbol wertet ebenfalls zu 0 und nicht-relokierbar aus, also wurde
+   `USING GSPCB,R2WRK` in `IFFAAA01` zur absoluten Domäne und `L R4WRK,16` griff
+   auf R2+16 statt auf absolut 16 — den CVT-Zeiger.
+
+**Selbstwiderspruch beweist, dass ein Assembler falsch liegt, sagt aber nicht,
+was richtig ist.** Das ist die Grenze des Arguments, das bei `IEAVELCR`
+funktioniert hat, und ich hatte sie zu weit gezogen.
+
+### Neu ausgerichtet: die 940, nach Mechanismus sortiert
 
 **Das Ziel ist `as370 == IFOX00` auf allen 5.528.** Ob IBMs ausgeliefertes Objekt
 dazu passt, ist eine eigene Frage und ordnet diese Arbeit nicht — eine Abweichung
@@ -228,11 +268,11 @@ ist eine Abweichung, ob eine Wiederherstellung dahintersteht oder nicht. Die
 Sortierung nach IBM-Urteil in `docs/silent-divergences.md` bleibt als Nebenbefund
 stehen, ist aber nicht mehr die Reihenfolge.
 
-`tools/cluster_remaining.py`, gegen `6e578f4`:
+`tools/cluster_remaining.py`, gegen `928454b` (in Klammern der Stand vor #191):
 
 | Kartentyp-Signatur | Module |
 |---|---:|
-| nur `TXT` | 335 |
+| nur `TXT` | **277** (335) |
 | Kartenzahl verschieden (Δ2–9) | 161 |
 | Kartenzahl verschieden (Δ10+) | 141 |
 | Kartenzahl verschieden (Δ1) | 128 |
@@ -243,8 +283,8 @@ stehen, ist aber nicht mehr die Reihenfolge.
 | nur `ESD` | 7 |
 | nur `ESD`/`RLD` | 4 |
 
-**101 Module unterscheiden sich in genau einem Byte**, und daraus fiel der nächste
-Fall: **54 Module, deren einzige Abweichung das Basisregister einer
+**69 Module unterscheiden sich in genau einem Byte** (vor #191: 101), und daraus
+fiel der Fall, den #191 erledigt hat: **54 Module, deren einzige Abweichung das Basisregister einer
 RX-Instruktion ist**, bei 52 davon schreibt `as370` **B=0**, wo IFOX00 ein echtes
 Basisregister setzt. Die Distanz ist identisch, jedes andere Byte des Decks ist
 identisch.
@@ -361,6 +401,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #187 (an RLD entry's length belongs to that entry) | **+160** | 0 | **0** | **0** |
 | #188 (the same guard in the third splitter) | +2 | 0 | 4 | 3 |
 | #189 (a character comparison ordered by length first) | +9 | 0 | 12 | 1 |
+| #191 (an absolute `USING` domain was never consulted) | **+57** | 0 | 69 | **0** |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
