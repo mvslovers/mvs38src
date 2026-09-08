@@ -250,7 +250,32 @@ Zwei Sektionen treffen IFOX00s Länge jetzt **exakt**. Der Byteabstand steigt, w
 ein Bytevergleich an festen Adressen Inhalt verurteilt, der ein Loch gefüllt hat.
 Es ist die größte Einzelverbesserung des Merges und stand in der Rückschritt-Zeile.
 
-### 83,7 % — und der nächste Fall ist einer ohne inhaltlichen Fehler
+### 84,6 % — Übergabeliste 927, offene Abweichungen 843
+
+**#200: eine ESDID gehört dem ESD-Eintrag, nicht dem Symbol.** Ein Name kann zwei
+tragen — eine CSECT, die einen `V`-Con auf den eigenen Namen enthält, hat einen
+`SD`- **und** einen `ER`-Eintrag, und IFOX00 nummeriert sie getrennt. `as370`
+hielt die ID an `struct sym`, also überschrieb die `ER`-Vergabe die der `SD`.
+
+**Meine Deutung war nah und die Sache kleiner und bösartiger.** Ich hatte
+geschrieben, es sei eine Frage der Reihenfolge — *wann* der Eintrag der Sektion
+gegenüber den Externverweisen vergeben wird. Die Reihenfolge war bereits richtig:
+`HMASMDC2` steht in `esdord` auf Position 0 **und** 117, und die Nummerierung gab
+demselben `struct sym` erst 1 und dann 116. Weil eine ESD-Karte *eine*
+Start-ID trägt und die Einträge positionsweise folgen, verschob das die ganze
+erste Karte — daher stimmten die Einträge 1–3 nicht und ab dem vierten alles.
+
+**Und die Hälfte, die kaputt ausgeliefert worden wäre.** Der `R`-Zeiger war
+*zufällig* richtig: er will ohnehin die ID des `ER`-Eintrags, und genau die stand
+nach dem Überschreiben da. Der `P`-Zeiger war in jedem RLD-Eintrag falsch. Wer
+nur die Nummerierung repariert, bekommt `P=1` und **macht `R` zu 1 kaputt**, wo
+IFOX00 `0x74` hat. cc370 hat `R` erst zerbrochen, es gesehen, und der Kontrollfall
+ist, was die Testvorrichtung davon behalten hat.
+
+**+53, keine verloren, null weiter.** Die Klasse „Abbild identisch, Deck nicht"
+fällt von 83 auf **31**, und keiner der 31 ist neu hinzugekommen.
+
+### 83,7 % — der Fall ohne inhaltlichen Fehler
 
 **83 Module, deren Objektabbild byte-identisch mit IFOX00 ist und deren Deck es
 nicht ist.** Gleiche Sektionen, gleiche Bytes an jeder Adresse, gleiche Längen —
@@ -537,6 +562,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #195 (`N'&SYSLIST` zählte eine Darstellung, plus drei Tabellengrenzen) | +4 | 0 | 77 | 17 |
 | #198 (`L'` eines `EQU`-Symbols war 1) | **+38** | 0 | 57 | **0** |
 | #197 (Kommentarkorrektur) | 0 | 0 | 0 | 0 |
+| #200 (eine ESDID gehört dem ESD-Eintrag, nicht dem Symbol) | **+53** | 0 | 9 | **0** |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
