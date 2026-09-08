@@ -220,6 +220,53 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
+### Neu ausgerichtet: die 998, nach Mechanismus sortiert
+
+**Das Ziel ist `as370 == IFOX00` auf allen 5.528.** Ob IBMs ausgeliefertes Objekt
+dazu passt, ist eine eigene Frage und ordnet diese Arbeit nicht — eine Abweichung
+ist eine Abweichung, ob eine Wiederherstellung dahintersteht oder nicht. Die
+Sortierung nach IBM-Urteil in `docs/silent-divergences.md` bleibt als Nebenbefund
+stehen, ist aber nicht mehr die Reihenfolge.
+
+`tools/cluster_remaining.py`, gegen `6e578f4`:
+
+| Kartentyp-Signatur | Module |
+|---|---:|
+| nur `TXT` | 335 |
+| Kartenzahl verschieden (Δ2–9) | 161 |
+| Kartenzahl verschieden (Δ10+) | 141 |
+| Kartenzahl verschieden (Δ1) | 128 |
+| nur `ESD`/`RLD`/`TXT` | 124 |
+| nur `ESD`/`TXT` | 56 |
+| nur `RLD`/`TXT` | 20 |
+| nur `RLD` | 13 |
+| nur `ESD` | 7 |
+| nur `ESD`/`RLD` | 4 |
+
+**101 Module unterscheiden sich in genau einem Byte**, und daraus fiel der nächste
+Fall: **54 Module, deren einzige Abweichung das Basisregister einer
+RX-Instruktion ist**, bei 52 davon schreibt `as370` **B=0**, wo IFOX00 ein echtes
+Basisregister setzt. Die Distanz ist identisch, jedes andere Byte des Decks ist
+identisch.
+
+`ISDAAPR1`, Sektionsoffset `0x2e`, ein Byte im ganzen Deck:
+
+```
+IFOX00 : 4110 2100     LA R1,256(,R2)
+as370  : 4110 0100     LA R1,256(,R0)
+```
+
+27 der 54 sind `ISDA*` mit derselben Signatur — eine Auflösungsstelle, nicht 27
+Quelltextfragen. **B=0 ist kein falsches Basisregister, sondern gar keins**: die
+Instruktion adressiert dann die blanke Distanz, also niedrigen Speicher.
+
+**Und es ist nicht #154.** Null der 54 stehen in der `addressability`-Klasse —
+`as370` meldet hier nichts, es löst den Operanden auf, nimmt still Basis 0 und
+erzeugt eine Instruktion, die sauber assembliert und woandershin zeigt. 23 der 54
+sind vollständig stille Abweichungen. Als cc370#190 eingestellt.
+
+Untergrenze: der Scan sieht nur Module mit höchstens 8 abweichenden Adressen.
+
 ### #188: +2 an Identitäten, und ein Modul, das die Überschrift nicht zeigt
 
 `join_cont()`, der dritte und letzte Kartenzerleger, mit demselben
@@ -313,6 +360,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #183 (the same guard in the second splitter) | 0 | 0 | 0 | 0 |
 | #187 (an RLD entry's length belongs to that entry) | **+160** | 0 | **0** | **0** |
 | #188 (the same guard in the third splitter) | +2 | 0 | 4 | 3 |
+| #189 (a character comparison ordered by length first) | +9 | 0 | 12 | 1 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
