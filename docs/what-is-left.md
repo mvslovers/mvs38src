@@ -341,3 +341,54 @@ wrong in both directions, and the 85 above:
 
 > **The population an instrument returns is the population it can see, not the
 > one the question is about.**
+
+## 93.6 %, and the loud population is where the clustering still works — 2026-09-09
+
+cc370#217 merged: **+5, none lost, none further.** Five of the six the reach
+measurement named; `IFNX5M` stays, exactly as the issue said when it was filed —
+647 differing bytes in 126 runs from something else. **A reach figure that comes
+with the module it will not fix is the only kind worth quoting.**
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,176 of 5,528 (93.6 %)** |
+| still differing | **352** |
+| byte-identical to IBM's object | **1,192** |
+
+### The instrument has to match the population
+
+`first_divergence.py --signal loud` on the 92 where `as370` alone flags is just as
+atomised as the silent 163 — largest cluster **two**. But the same 92 clustered
+**by message** are not atomised at all:
+
+```
+ 40  Undefined symbol                        cc370#153
+ 36  Addressability error, no active USING   cc370#154
+ 28  MNOTE
+  5  Undefined operation code                cc370#155
+  5  Symbol longer than 8 characters
+```
+
+**A message names its own cause; a statement does not.** That is why the loud
+population is the one worth taking next: the 163 silent modules are exhausted for
+clustering, and these are clustered by construction.
+
+Splitting the 28 `MNOTE` modules by the *text* of the note:
+
+| the macro's complaint | modules | |
+|---|---:|---|
+| `REDUNDANT LOGIC, MACRO EXPANSION ATTEMPTED` | 8 | all `IFNX*`, undiagnosed |
+| `IHB001 REGISTER OPERAND REQ'D-NOT SPECIFIED` | 7 | undiagnosed |
+| **`INVALID TYPE ATTRIBUTE SPECIFIED IN PARAMETERS`** | **6** | **cc370#257** |
+| `ITEMFIND FAILED FOR NAME YCPU / YSER / YCUA` | 2 | EREP |
+| `STATUS--CHANGE LEVEL n` | 11 | severity `*`, informational, harmless |
+
+**cc370#257** — `T'` of a variable symbol in a `SETC` is not evaluated; the four
+characters `T'&P` are assigned verbatim. Third defect in the attribute operators
+in two days and each fails differently: `L'&VAR` returned `K'` (#249, fixed),
+`L'ORDINARY` returns `0` (open, on #244), `T'&VAR` is not evaluated at all.
+
+### Two class files to close by hand
+
+`relocatable-displacement` is **empty**, and `symbol-over-8` is down to 2
+(`ICAPRTBL`, `IGC0001I`) from 7.
