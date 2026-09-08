@@ -1,0 +1,91 @@
+         MACRO
+&LABEL   IOSSCP     &OP1,&OP2,&SAVE
+         GBLB  &IECESCP          GLOBAL IOSSCP BLOCK COMMENT FLAG
+         AIF        ('&LABEL' EQ '').S01
+&LABEL   DS    0H
+.S01     AIF   (&IECESCP EQ 1).S0
+&IECESCP SETB 1                  BLOCK COMMENT GENERATED & MARKED
+****************************************************************
+*                                                              *
+*       THE MACRO IOSSCP IS USED TO CALL THE SIO SUBROUTINE.   *
+*                                                              *
+****************************************************************
+.*                                                             *
+.*      THE FIRST OPERAND MUST BE 'RETURN' OR 'NORETURN'; THE  *
+.*      SECOND OPERAND MUST BE 'SIO' OR 'SIOF'; THE THIRD HAS  *
+.*      MEANING ONLY WHEN 'RETURN' IS CODED: IT CAN BE 'SAVE'  *
+.*      OR CAN BE OMITTED. THE MACRO EXPANSION USES REGISTERS  *
+.*      14 AND 15 TO CALL THE SUBROUTINE WHEN 'RETURN' IS      *
+.*      CODED. WHEN 'SAVE' IS SPECIFIED, THE EXPANSION WILL    *
+.*      SAVE AND RESTORE THESE REGISTERS.  WHEN NO THIRD       *
+.*      OPERAND IS SPECIFIED, REGISTERS 14 AND 15 ARE NOT      *
+.*      SAVED.                                                 *
+.*                                                             *
+.*      NOTES: 1. AN IOSSIO MACRO WITH ENTRY SPECIFIED MUST BE *
+.*                USED IN THE ASSEMBLY; A DSECT OF IOCOM MUST  *
+.*                ALSO BE INCLUDED.                            *
+.*                                                             *
+.***************************************************************
+.S0      AIF      (N'&SYSLIST LE 3).S2    THREE OPERANDS AT MOST
+         IHBERMAC   1012,OPERANDS            * INCORRECT NUMBER
+.*                                           * OF OPERANDS
+         MEXIT
+.S2      AIF        ('&OP1' EQ 'RETURN').S3  FIRST OPERAND RETURN?
+         AIF        ('&OP1' EQ 'NORETURN').S10  * SECOND OPERAND
+.*                                              * NORETURN?
+         IHBERMAC   1014,FIRST          * INVALID FIRST PARAMETER
+.*                                      * SPECIFIED
+         MEXIT
+.S3      ANOP                           FIRST OPERAND IS RETURN
+         AIF        ('&OP2' EQ 'SIO').S4 SECOND OPERAND SIO?
+         AIF        ('&OP2' EQ 'SIOF').S5  SECOND OPERAND SIOF?
+         IHBERMAC   1007,RETURN         * INVALID OPERAND FOR
+.*                                      * RETURN OPTION
+         MEXIT
+.S4      ANOP                           RETURN, SIO CODED
+         AIF   ('&SAVE' EQ 'SAVE').S43 SAVE CODED?
+         AIF   (N'&SYSLIST EQ 2).S45   NO THIRD OPERAND?
+         IHBERMAC   1007,RETURN        * INVALED OPERAND FOR
+.*                                     * RETURN OPTION
+         MEXIT
+.S43     ST    14,64(,SAVER)       * SAVE
+         ST    15,68(,SAVER)       * REGISTERS
+         L     15,IOCRS-IOCOM(,IOCOMR)   * GET ADDRESS OF RETURN,
+         BALR  14,15                     * SIO ROUTINE, GO THERE
+         L     14,64(,SAVER)       * RESTORE REGISTERS
+         L     15,68(,SAVER)       * ON RETURN
+         MEXIT
+.S45     L     15,IOCRS-IOCOM(,IOCOMR)   * GET ADDRESS OF RETURN,
+         BALR  14,15                     * SIO ROUTINE, GO THERE
+         MEXIT
+.S5      ANOP                           RETURN, SIOF CODED
+         AIF   ('&SAVE' EQ 'SAVE').S53  SAVE SPECIFIED?
+         AIF   (N'&SYSLIST EQ 2).S55    NO THIRD OPERAND?
+         IHBERMAC   1007,RETURN        * INVALID OPERAND FOR
+.*                                     * RETURN OPTION
+         MEXIT
+.S53     ST    14,64(,SAVER)       * SAVE
+         ST    15,68(,SAVER)       * REGISTERS
+         L     15,IOCRSF-IOCOM(,IOCOMR)  * GET ADDRESS OF RETURN,
+         BALR  14,15                     * SIOF ROUTINE, GO THERE
+         L     14,64(,SAVER)       * RESTORE REGISTERS
+         L     15,68(,SAVER)       * ON RETURN
+         MEXIT
+.S55     L     15,IOCRSF-IOCOM(,IOCOMR)  * GET ADDRESS OF RETURN,
+         BALR  14,15                     * SIOF ROUTINE, GO THERE
+         MEXIT
+.S10     ANOP                             * FIRST OPERAND IS NORETURN
+         AIF        (N'&SYSLIST NE 2).S11   EXACTLY TWO OPERANDS?
+         AIF        ('&OP2' EQ 'SIO').S12   SECOND OPERAND SIO?
+         AIF        ('&OP2' EQ 'SIOF').S13   SECOND OPERAND SIOF?
+.S11     IHBERMAC   1007,NORETURN           * INVALID OPERAND FOR
+.*                                          * NORETURN OPTION
+         MEXIT
+.S12     ANOP                               NORETURN, SIO CODED
+         L     15,IOCNRS-IOCOM(,IOCOMR)  * GO TO SIO ROUTINE
+         BR    15                        * WITH NO RETURN
+         MEXIT
+.S13     ANOP                               NORETURN, SIOF CODED
+         L     15,IOCNRSF-IOCOM(,IOCOMR) * GO TO SIOF ROUTINE
+         BR    15                        * WITH NO RETURN
+         MEND

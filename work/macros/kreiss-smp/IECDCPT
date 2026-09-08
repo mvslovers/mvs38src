@@ -1,0 +1,14 @@
+         MACRO
+***********************************************************************
+*                                                                     *
+*        CPT - CHANNEL PATH TABLE                                     *
+*                                                                     *
+***********************************************************************
+CPT      DSECT ,
+CPTPCHAN DS    X                   PRIMARY DEVICE ADDR
+CPTFLAGS DS    X                   PATH BITS
+CPTPPATH EQU   X'08'               PRIMARY PATH INDICATOR
+CPTSELSC EQU   X'F0'               INDICATES ALT CONTROL UNIT
+CPTSCHAN DS    X                   SECONDARY DEVICE ADDR
+         DS    X
+         MEND

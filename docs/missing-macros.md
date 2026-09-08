@@ -45,6 +45,31 @@ warning: a macro is usable when its expansion is right, not when the assembly
 falls silent. The test is the gate — supply it, and count modules that move
 *toward* IFOX00, not modules that stop complaining.
 
+## 2026-09-08, second sweep: 26,254 files, and Dave had already shipped the `IOS*` family
+
+Every source collection scanned for **in-stream `MACRO` definitions**, not just
+member names: `MVSBLD`, all nine datasets off `BLDMVS.AWS` (3,443 members,
+extracted for this), `mvs38-ibmsrc`, Jay Moseley's 21 datasets, both web mirrors,
+`ifox-src`, `lked-src`. **26,254 files.**
+
+| | macros | module–operation pairs |
+|---|---:|---:|
+| **found** | **13** | **92 of 204** |
+| still missing | 27 | 112 |
+
+**The `IOS*` family was on Dave's own tape as SMP usermods.** `DSK0049` through
+`DSK0058`, each a `++PTF(DSKnnnn)` carrying
+`++MAC( IOSTRAP ) SYSLIB(PVTMAC) DISTLIB(APVTMAC)` and the macro body. He had
+solved this part and shipped the answer; nobody had opened `SMP.LIB`. In
+`work/macros/kreiss-smp/`, with `ILRAIA`, `IEAPPNIP`, `IECDCST` and eleven others
+that came with them.
+
+**A count corrected before it was reported.** Those libraries declare **2,329**
+distinct macro names in `++MAC` elements — and **27 carry macro text**.
+`FDM1133` is 17 KB, declares 73 macros and contains no `MACRO` card at all: the
+text lives in RELFILEs that are not on this tape. Declarations are not a library,
+and "391 names missing from our path" became **22**.
+
 ## `TABLE` is still missing, and a false hit is why that needs saying
 
 `MVSSRC.SYM1-2(IGARPT01)` defines a macro called `TABLE`. **It is not this one.**
@@ -78,6 +103,8 @@ differ has not been measured.
 | the IBM distribution tapes as extracted by the `mvssrc` sessions — 5,927 members, 615 macros | not there, except `ISDAFSPC` |
 | `stben.net`'s maclib, 1,024 members; the HASP set, 181; `ext/`, 41 — 1,761 macros in total, searched by name **and** by prototype | not there |
 | `mainframe.eu` | a proper subset of `stben`, nothing new |
+| **`TABLE`, all five copies** | `IGARPT01` in `MVSBLD`, Jay, `mvs38-ibmsrc`, `stben.net`, `mainframe.eu` — **the same wrong macro five times** |
+| **`PROLOG`, all eight copies** | `IEAVESC0`/`IEAVMWTO`, prototype `PROLOG` with no operands, where EREP calls `PROLOG NAME=` — **wrong one, eight times** |
 | Dave Kreiss' own install tape, `NEW.ASM`, 848 members | not there |
 
 Two independent derivations agree on the negative: ours from the module side,

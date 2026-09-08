@@ -1,0 +1,26 @@
+         MACRO
+         IECDCHT
+********************************************************************
+*                                                                  *
+*        THIS DSECT MAPS A CHANNEL TABLE ENTRY.                    *
+*                                                                  *
+*A-000000-999999                                               @G64JPLQ
+********************************************************************
+         SPACE
+CHT      DSECT
+         DS    C                   RESERVED
+CHTTYPE  DS    X                   TYPE OF CHANNEL SPECIFIED
+         SPACE
+*        DEFINITION FOR CHTTYPE
+CHTMPX   EQU   1                   BYTE MULTIPLEXOR CHANNEL
+CHTHSMPX EQU   2                   HI-SPEED MULTIPLEXOR CHANNEL
+CHTSEL   EQU   3                   SELECTOR CHANNEL
+CHTBMPX  EQU   4                   BLOCK MULTIPLEXOR CHANNEL
+         SPACE
+CHTMASK  DS    H                   CHANNEL MASK FOR IRTCHMSK
+CHTCSM   DS    A                   ADDRESS OF CHANNEL SEARCH MODULE
+         SPACE
+CHTEL    EQU   8                   SIZE OF ENTRY IN BYTES
+CHTELP2  EQU   3                   SIZE OF ENTRY IN POWERS OF 2
+         SPACE
+         MEND

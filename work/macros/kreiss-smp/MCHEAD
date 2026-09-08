@@ -1,0 +1,54 @@
+         MACRO
+         MCHEAD
+.*******************************************************************
+.*                                                                 *
+.*   CREATED FROM AHLCWRIT, AHLIWRIT AND AHLWWRIT                  *
+.*                                                                 *
+.*******************************************************************
+********************************************************************
+*                              MCHEAD                              *
+********************************************************************
+*                                                                  *
+* LEVEL OF APPLICABILITY                                           *
+*   VS2-R2                                                         *
+*                                                                  *
+* FUNCTION                                                         *
+*   THIS MAPPING DESCRIBES THE MONITOR CALL ROUTING TABLES HEAD,   *
+*   THE BEGINNING OF ALL TABLES FOR MONITOR CALL EVENT ROUTING. THE*
+*   GTF WORD IN THE CVT, CVTGTF, CONTAINS THE ADDRESS OF MCHEAD.   *
+*   THIS ADDRESS IS SET UP BY A VCON WHEN THE NUCLEUS IS LINK      *
+*   EDITED.                                                        *
+*                                                                  *
+* INITIALIZATION                                                   *
+*   THIS CONTROL BLOCK IS CONTAINED IN AHLMCIH.  THE ADDRESSES     *
+*   OF SETEVENT ENTRIES ARE INITIALIZED BY IEAVNP17 AT NIP         *
+*   TIME.  THIS BLOCK IS NEVER FREED.                              *
+*                                                                  *
+* RESIDENCE                                                        *
+*   THIS BLOCK IS A PART OF AHLMCIH, AND THEREFORE, IS IN FIXED    *
+*   COMMON.                                                        *
+*                                                                  *
+* PHILOSOPHY OF DESIGN                                             *
+*   THIS CONTROL BLOCK MAPPING ASSUMES THAT CVTGTF WILL CONTAIN    *
+*   THE ADDRESS OF IT.                                             *
+*                                                                  *
+********************************************************************
+MCHEAD   DSECT
+MCHIDEN  DS    CL8                  EBDIC IDENTIFIER - MCHEAD
+MCHCUR   DS    A                    @ CURRENT MCCE
+MCHCNT   DS    A                    USE COUNT
+MCHCTL   DS    A                    CURRENT MASK OF ACTIVE CLASSES
+MCHDIS   DS    A                    USED TO DISABLE MCEE/MCCLE
+MCHFLGS  DS    0A                   FLAG BYTES
+MCHFLG1  DS    X                    FLAG BYTE
+MCHACT   EQU   X'80'                MC ROUTING ACTIVE INDICATOR
+MCHTERM  EQU   X'40'                MC ROUTING TERMINATION INDICATOR
+         DS    XL3                  UNUSED
+MCHSETE  DS    A                    ENABLED ENTRY TO AHLSETEV
+MCHSETD  DS    A                    DISABLED ENTRY TO AHLSETEV
+MCHMCER  DS    A                    ADDRESS OF MC ROUTER AHLMCER
+MCHFRRAD DS    A                    ADDR OF AHLMCIH RECOVERY CODE
+MCHEADRD DS    A                    ADDR OF AHLREADR WRITER-STACK SVC
+MCHEADTR DS    A                    RMTR E.P.
+MCHEADLN EQU   *-MCHEAD             LENGTH
+         MEND

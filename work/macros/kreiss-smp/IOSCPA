@@ -1,0 +1,22 @@
+         MACRO
+&LABEL   IOSCPA
+         AIF        ('&LABEL' EQ '').S1
+&LABEL   DS    0H
+.S1      ANOP
+****************************************************************
+*                                                              *
+*        IOSCPA PLACES THE ADDRESS OF THE CHANNEL              *
+*        PROGRAM AREA IN CPAR.                                 *
+*                                                              *
+****************************************************************
+.*                                                             *
+.*       A DSECT FOR THE UCB (WITH PREFIX=YES), A DSECT FOR    *
+.*       IOCOM, AND A 'ENTRY' MACRO MUST BE INCLUDED IN THE    *
+.*       ASSEMBLY WITH IOSCPA.                                 *
+.*                                                             *
+.***************************************************************
+         L     CPAR,UCBEXTPT-UCB(,UCBR)      UCB COMMON EXTENSION
+         LH    CPAR,UCBCCWOF-UCBCMEXT(,CPAR) OFFSET FOR THIS UCB
+         SLL   CPAR,3                        MULTIPLY BY CCW LENGTH
+         A     CPAR,IOCIOSCP-IOCOM(,IOCOMR)  ADD TO CPA ADDRESS
+         MEND

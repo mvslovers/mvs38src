@@ -1,0 +1,44 @@
+         MACRO
+&LABEL   IOSCKVOL   &SAVE
+         AIF     ('&LABEL' EQ '').S1
+&LABEL   DS    0H
+.S1      ANOP
+****************************************************************
+*                                                              *
+*        THE IOSCKVOL EXPANSION CALLS A SUBROUTINE WHICH       *
+*        DETERMINES IF VOLUME VERIFICATION IS NEEDED.  THE     *
+*        SUBROUTINE WILL RETURN CONTROL IF NONE IS NEEDED.     *
+*        IF VOLUME VERIFICATION IS NEEDED, THE SUBROUTINE      *
+*        DOES NOT RETURN; THE NEXT TIME THE SIO EXIT IS        *
+*        ENTERED FOR THIS REQUEST VOLUME VERIFICATION WILL     *
+*        WILL HAVE BEEN COMPLETED.                             *
+*                                                              *
+****************************************************************
+.*                                                             *
+.*       NOTES: 1. IOSCKVOL SHOULD BE USED ONLY IN SIO EXITS   *
+.*                 FOR MOUNTABLE DEVICES WHEN IT HAS BEEN      *
+.*                 DETERMINED THAT UNSOLICITED DEVICE END HAS  *
+.*                 OCCURRED (UCBUDE IS ON).                    *
+.*              2. IOSSIO MUST BE INCLUDED IN THE ASSEMBLY TO  *
+.*                 PROVIDE EQUATES; A DSECT OF IOCOM IS ALSO   *
+.*                 REQUIRED.                                   *
+.*              3. THE OPERAND FOR IOSCKVOL CAN BE OMITTED OR  *
+.*                 'SAVE' CAN BE SPECIFIED. THE MACRO EXPAN-   *
+.*                 SION USES REGISTERS 14 AND 15 TO CALL THE   *
+.*                 SUBROUTINE; IF 'SAVE' IS CODED THE REGIS-   *
+.*                 TERS WILL BE SAVED AND RESTORED.  WHEN NO   *
+.*                 OPERAND  IS SPECIFIED, REGISTERS 14 AND 15  *
+.*                 ARE NOT SAVED.                              *
+.*                                                             *
+.***************************************************************
+         AIF   ('&SAVE' EQ 'SAVE').S2    REGS14 AND 15 SHOULD BE SAVED
+         L     15,IOCVV-IOCOM(,IOCOMR) * GO TO VOLUME VERIFICATION
+         BALR  14,15                   * RTN POSSIBLY W/O RETURN
+         MEXIT
+.S2      ST    14,64(,SAVER)       * SAVE REGISTERS (AFTER
+         ST    15,68(,SAVER)       * 16 WORD SAVE AREA)
+         L     15,IOCVV-IOCOM(,IOCOMR) * GO TO VOLUME VERIFICATION
+         BALR  14,15                   * RTN POSSIBLY W/O RETURN
+         L     14,64(,SAVER)       * RESTORE
+         L     15,68(,SAVER)       * REGISTERS
+         MEND

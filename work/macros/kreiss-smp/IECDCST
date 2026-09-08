@@ -1,0 +1,46 @@
+         MACRO
+         IECDCST
+         SPACE 1
+.* %CSTPLS1: ;
+*/********************************************************************/
+*/*                                                                  */
+*/*   THIS MACRO DSECT DESCRIBES THE IOS CHANNEL SET TABLE.          */
+*/*   ONE ENTRY EXISTS FOR EACH OF UP TO 16 CHANNEL SETS.            */
+*/*   THE CHANNEL SET ID IS USED TO INDEX TO THE PROPER ENTRY.       */
+*/*   THE CST IS POINTED TO BY THE CVT (CVTCST) AND IOCM (IOCMCST).  */
+*/*   SERIALIZATION IS OBTAINED BY BEING DISABLED ON THE PROCESSOR   */
+*/*   WHICH HAS CONTROL OF THE CHANNEL SET WHOSE ENTRY IS BEING      */
+*/*   MODIFIED.                                                      */
+*/*                                                                  */
+*/********************************************************************/
+*      %GOTO CSTPLS2;
+.* A000000-999999                                              @G64APLK
+         SPACE 1
+CSTE     DSECT
+*              MAP OF A SINGLE CST ENTRY                       *
+         DS    0F                  SINGLE ENTRY
+CSTCATP  DS    A                   ADDRESS OF CHANNEL AVAILABILITY
+*                                  TABLE (CAT).
+CSTIOM   DS    F                   CURRENT VALUE FOR CONTROL REG 2
+CSTSCDP  DS    A                   ADDRESS OF STATUS COLLECTION DATA
+*                                  AREA (SCD)
+CSTIOWRK DS    A                   ADDRESS OF CHANNEL SET RECOVERY
+*                                  WORK AREA
+CSTCPU   DS    H                   PHYSICAL CPU ADDRESS OF PROCESSOR
+*                                  USING THIS CHANNEL SET
+CSTINIT  DS    H                   PHYSICAL CPU ADDRESS OF PROCESSOR
+*                                  ORIGINALLY CONNECTED TO CHANNEL SET
+*                                  AT IPL OR VARY ONLINE.
+CSTFLAGS DS    X                   FLAG BYTE
+CSTVALID EQU   X'80'               THIS CSTE HAS VALID DATA
+CSTDSC   EQU   X'40'               CHANNEL SET HAS BEEN DISCONNECTED
+CSTRESV  EQU   X'3F'               RESERVED
+         DS    XL3                 RESERVED
+         DS    2F                  RESERVED
+CSTEND   EQU   *
+         SPACE 1
+CSTELP2  EQU   5                   CSTE SIZE IN POWERS OF 2
+         SPACE 1
+         ORG   CSTE
+CSTENTRY DS    16XL(CSTEND-CSTE)   16 ENTRIES PER CST
+         MEND

@@ -1,0 +1,252 @@
+         MACRO
+         IEEDCCB &DCCBLWT=NO,&DCCBSTA=NO
+*                                      */
+*%DCCB10: ;
+*/*********************************************************************
+*
+* MACRO NAME = IEEDCCB
+*
+* DESCRIPTIVE NAME = DISABLED CONSOLE COMMUNICATIONS BLOCK
+*
+* COPYRIGHT = NONE
+*
+* STATUS = OS/VS2 SU64
+*
+* FUNCTION = PROVIDE THE REQUIRED INTERFACE TO THE STOP/RESTART
+*            FUNCTION (IEESTPRS / IEEVLDWT) AND THE DISABLED CONSOLE
+*            COMMUNICATIONS ROUTINE (IEEVDCCR)
+*
+* NOTES = NONE
+*
+* DEPENDENCIES = THE STORAGE USED FOR THIS MACRO INTERFACE AND THE
+*                STORAGE POINTED TO BY THIS INTERFACE MUST BE
+*                IN FIXED STORAGE.
+*
+*    CHARACTER CODE DEPENDENCIES = NONE
+*
+* MODULE TYPE = MACRO
+*
+*    PROCESSOR = BILINGUAL (PL/S AND BAL)
+*
+*    MACRO SIZE = 24 (DECIMAL) BYTES FOR DISABLED CONSOLE INTERFACE
+*               = 36 (DECIMAL) BYTES IF COMMON INTERFACE FOR STOP/
+*                              RESTART IS INCLUDED
+*
+*    ATTRIBUTES = WHEN PASSED AS PARAMETER LIST THE LIST MUST
+*                 BE IN FIXED CORE
+*
+* ENTRY POINT = NOT APPLICABLE
+*
+*    PURPOSE = THIS INTERFACE WILL BE USED FOR TWO FUNCTIONS:
+*
+*              1. CONTAIN DATA / MESSAGES TO PROVIDE DIAGNOSTIC OR
+*              PROBLEM DETERMINATION ASSISTANCE TO THE SYSTEM OPERATOR
+*              FOR CONDITIONS WHERE NORMAL INTERACTIVE MVS PROCESSING
+*              IS NOT AVAILABLE. THIS INTERFACE TO IEEVDCCR ALLOWS:
+*
+*                   - DATA OR MESSAGES TO BE PLACED ON THE WARNING
+*                     LINE OF THE MASTER CONSOLE (OR ITS ALTERNATE)
+*                     OR THE ENTIRE SCREEN OR BOTH.
+*                     IF THE ENTIRE SCREEN IS TO BE USED THEN IT WILL
+*                     BE ERASED FIRST.
+*                     (NOTE: THE FORMAT OF THE MESSAGES ARE CONTAINED
+*                     IN THE SECOND DECLARE (DCCBMSGS) ).
+*
+*                   - AN OPERATOR REPLY TO BE PASSED BACK TO THE
+*                     INVOKER WITH AN ADDITIONAL OPTION OF AN
+*                     INVOKER-EXIT ROUTINE TO CHECK THE SYNTAX OF
+*                     THE REPLY.
+*
+*                   - DATA FOR THE BACKUP MECHANISM OF A RESTARTABLE
+*                     WAIT STATE IF ENTRY IS THROUGH STOP/RESTART
+*                     (IEESTPRS).
+*
+*              2. CONTAIN DATA FOR A COMMON INTERFACE FOR STOP/
+*                 RESTART PROCESSING (IEEVLDWT). THIS INTERFACE
+*                 ALLOWS:
+*
+*                   - A RECORD TO BE WRITTEN TO SYS1.LOGREC
+*
+*                   - HANDLING THE OBTAINING OF THE RESTART
+*                     RESOURCE (CVTRSTWD VIA CS).
+*
+*
+*    LINKAGE:
+*              BAL  - DSECT ONLY. USING ON 'DCCB' ESTABLISHES
+*                     ADDRESSABILITY FOR THE MACRO INTERFACE.
+*                     USING ON 'DCCBMSGS' ESTABLISHES
+*                     ADDRESSABLITY FOR THE MESSAGES POINTED
+*                     TO BY FIELD DCCBSCRN IN DCCB.
+*
+*                     THERE ARE 2 KEYWORDS SPECIFIED AS FOLLOWS:
+*
+*                          DCCBLWT = YES/NO WITH A DEFAULT OF NO
+*                          DCCBSTA = YES/NO WITH A DEFAULT OF NO
+*
+*                     THE USE OF DCCBLWT=YES WILL INCLUDE THE DSECT
+*                     REQUIRED FOR THE IEEVLDWT AND IEEVDCCR FUNCTIONS,
+*                     PLUS THE DSECT FOR THE MESSAGES.
+*
+*                     THE USE OF DCCBLWT=NO WILL INCLUDE THE DSECT
+*                     REQUIRED FOR IEEVDCCR ONLY, PLUS THE MESSAGES
+*
+*                     THE USE OF DCCBSTA=YES WILL INCLUDE THE FIELD
+*                     REQUIRED FOR THE SAVING OF SYSTEM STATUS FOR THE
+*                     QUIESCE PROCESSING.
+*
+*                     THE USE OF DCCBSTA=NO WILL BYPASS THE SAVE STATUS
+*                     FIELD AND INDICATION.
+*
+*              PL/S - DCL DCCBPTR PTR
+*                     DECLARE A POINTER (PTR) AND BASE 'DCCBMSGS'
+*                     ON  THAT POINTER.
+*
+*                     THE MACRO PROVIDES 2 INTERFACES. CODING
+*                        %DCCBLWT='YES'        BEFORE THE INCLUDE
+*                     WILL PRODUCE A MAPPING OF SECTIONS REQUIRED
+*                     BY IEEVDCCR FOR THE DISABLED CONSOLE COMMUN-
+*                     ICATION AND IEEVLDWT FOR THE COMMON INTERFACE
+*                     FOR STOP/RESTART PROCESSING, PLUS THE MAPPING
+*                     FOR THE MESSAGES. CODING
+*                        %DCCBLWT='NO'       BEFORE THE INCLUDE
+*                     WILL SUPPRESS THE IEEVLDWT SECTION.
+*
+*                     DEFAULT = %DCCBLWT='NO'
+*
+* CHANGE ACTIVITY = NEW FOR SU64 - @G64UP1A
+*
+**********************************************************************
+**********************************************************************/
+*%GOTO DCCB20; /*
+         SPACE 2
+DCCB    DSECT
+*
+DCCBWSCD DS    CL4                     WAIT STATE CODE IF ENTRY VIA
+*                                      STOP/RESTART AND THE BACKUP
+*                                      MECHANISM OF RESTARTABLE WAIT
+*                                      STATE IS TO BE USED
+*
+DCCBSCRN DS    A                       ADDRESS OF MESSAGES TO BE
+*                                      PUT ON THE SCREEN
+*
+DCCBRPLY DS    A                       ADDRESS OF STORAGE WHERE THE
+*                                      OPERATORS REPLY SHOULD BE
+*                                      PLACED.
+*
+DCCBEXIT DS    A                       ADDRESS OF A PARAMETER LIST
+*                                      TO BE USED FOR EXIT PROCESSING.
+*                                      IF NON-ZERO, THE FIRST WORD WILL
+*                                      POINT TO THE ROUTINE TO PERFORM
+*                                      VERIFICATION OF THE REPLY. ALL
+*                                      OTHER FIELDS ARE CALLER DEFINED.
+*
+DCCBBYT1 DS    0CL4                    STATUS BYTES
+*
+DCCBINTF DS    XL1                     INTERFACE FLAGS FOR INPUT
+*
+DCCBNSIG EQU   X'80'                   IF MP, DO NOT AFFECT STATE OF
+*                                      OTHER PROCESSORS VIA SIGP STOP
+*                                      THIS RESTRICTS PROCESSING TO
+*                                      ONLY CONSOLES PHYSICALLY
+*                                      ATTACHED TO THE CURRENT
+*                                      PROCESSOR
+*
+DCCBDSAB EQU   X'40'                   DO NOT ENABLE FOR INTERRUPTS
+*
+DCCBWAIT EQU   X'20'                   WHEN DONE, ENTER WAIT STATE
+*                                      EVEN IF MESSAGES WERE
+*                                      SUCCESSFULLY DISPLAYED
+*
+DCCBNRPL EQU   X'10'                   IEEVDCCR SHOULD NOT WAIT
+*                                      FOR A REPLY FROM THE
+*                                      OPERATOR.
+*
+DCCBWARN EQU   X'08'                   THE FIRST MESSAGE TO BE
+*                                      PUT ON THE SCREEN SHOULD GO
+*                                      ON THE WARNING LINE OF THE
+*                                      SCREEN
+*
+DCCBQUIE EQU   X'04'                   INDICATES CALLED FOR QUIESCE
+*                                      PROCESSING AND A STATUS SAVE
+*                                      AREA WAS PROVIDED
+*
+DCCBSTPR EQU   X'02'                   SET BY IEESTPRS TO INDICATE THAT
+*                                      ENTRY TO DISABLED CONSOLE
+*                                      SUPPORT WAS THROUGH STOP/RESTART
+*
+DCCBRSV1 EQU   X'01'                   RESERVED FOR FUTURE USE
+*
+DCCBOUTP DS    XL1                     FLAGS SET BY DISABLED PROCESS
+*
+DCCBRSV4 EQU   X'80'                   RESERVED FOR FUTURE USE
+*
+DCCBTRNC EQU   X'40'                   THE MESSAGES / DATA SUPPLIED BY
+*                                      CALLER HAD TO BE TRUNCATED BY
+*                                      THE DISABLED CONSOLE ROUTINE TO
+*                                      FIT ON THE CONSOLES SCREEN
+*
+DCCBRSV2 EQU   X'3F'                   RESERVED FOR FUTURE USE
+*
+DCCBRTCD DS    XL1                     CONTAINS THE RETURN CODE FROM
+*                                      IEEVDCCR
+*
+DCCBUSER DS    XL1                     FIELD TO BE USED BY THE
+*                                      INVOKER AND ITS EXIT ROUTINE
+*                                      TO COMMUNICATE WITH EACH
+*                                      OTHER
+*
+         AIF   ('&DCCBLWT' NE 'YES').DCCB30
+*
+DCCBLGRC DS    A                       ADDRESS OF BUFFER TO BE
+*                                      WRITTEN TO LOGREC
+*
+DCCBPSA1 DS    F                       DATA TO BE STORED INTO
+*                                      PSAWTCOD
+*
+DCCBBYT2 DS    0CL4                    STATUS BYTES
+*
+DCCBTYPE DS    XL1                     WAIT STATE TYPE
+*
+DCCBRST  EQU   X'80'                   WAIT STATE IS RESTARTABLE
+*
+DCCBRSV3 EQU   X'7F'                   RESERVED FOR FUTURE USE
+*
+*
+DCCBCTCD DS    XL1                     CONTENTS OF PSAACTCD STORED
+*                                      HERE ON OUTPUT
+*
+DCCBRSID DS    XL2                     CALLER ID TO BE PUT INTO THE
+*                                      RESTART RESOURCE WORD AS OWNER
+*
+         AIF ('&DCCBSTA' NE 'YES').DCCB30
+*
+DCCBSTSV DS    A                       ADDRESS OF STATUS SAVE AREA
+*                                      (CURRENTLY USED ONLY BY
+*                                      QUIESCE PROCESSING)
+*
+*
+.DCCB30  ANOP
+DCCBEND  DS    0X                      WILL ALWAYS BE THE LAST
+*                                      STATEMENT SO THAT THE LENGTH
+*                                      OF THE DCCB CAN BE CALCULATED
+DCCBMSGS DSECT                         FORMATS THE MESSAGES THAT WILL
+*                                      BE ADDRESSED FROM THE IEEDCCB
+*                                      VIA DCCBSCRN
+*
+DCCBNEXT DS    A                       POINTS TO THE NEXT MESSAGE TO
+*                                      BE PUT ON THE SCREEN OR ZERO
+*                                      FOR THE LAST MESSAGE
+*
+DCCBWPL  DS    0C                      TO ADDRESS LENGTH AND TEXT
+*                                      TOGETHER
+*
+DCCBDLEN DS    XL2                     LENGTH OF MESSAGE TEXT PLUS 4
+*
+DCCBMCS  DS    XL2                     MCS FLAGS FOR THE MESSAGE. THESE
+*                                      WILL NOT BE USED BY DISABLED
+*                                      CONSOLE PROCESSING
+*
+DCCBDATA DS    0C                      TEXT TO BE PUT ON THE CONSOLES
+*                                      SCREEN
+*
+         MEND

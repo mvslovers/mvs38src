@@ -1,0 +1,83 @@
+         MACRO
+&LABEL   IOSTRAP    &OP1,&VAR1
+         GBLB       &IECECOM
+.****************************************************************
+.*                                                              *
+.*       THE IOSTRAP MACRO IS USED FOR ENTRY AND EXIT IN THE    *
+.*       TRAP EXIT.  NO OTHER OPERANDS ARE USED WITH THE 'ENTRY'*
+.*       OPERAND.  WITH THE 'EXIT' OPERAND 'HOLD', 'NORESTART', *
+.*       OR NO OPERAND CAN BE USED.                             *
+.*                                                              *
+.*       NOTE:    1. THE OPERAND 'NORESTART' SHOULD BE USED ONLY*
+.*                   FOR A SHARED SUBCHANNEL OF A HIGH SPEED    *
+.*                   MULTIPLEXOR CHANNEL WHEN DEVICE END HAS    *
+.*                   NOT OCCURRED.                              *
+.*                                                              *
+.*       &IECECOM IS SET IN ANY 'ENTRY' MACRO WHEN THE COMMON   *
+.*                REGISTERS ARE EQUATED.  IT IS TESTED TO AVOID *
+.*                GENERATING DUPLICATE NAMES (IF MORE THAN ONE  *
+.*                'ENTRY' MACRO IS USED IN AN ASSEMBLY).        *
+.*                                                              *
+.****************************************************************
+         AIF    ('&LABEL' EQ '').S0
+&LABEL   DS    0H
+.S0      ANOP
+         AIF        ('&OP1' EQ 'ENTRY').S1  FIRST OPERAND ENTRY?
+         AIF        ('&OP1' EQ 'EXIT').S10  FIRST OPERAND EXIT?
+         IHBERMAC   1014,FIRST               * INVALID FIRST PARM
+         MEXIT                               SPECIFIED
+.S1      ANOP                                FIRST OPERAND IS ENTRY
+         AIF        (N'&SYSLIST GT 1).S3   SECOND SHOULD BE NULL
+         AIF        (&IECECOM EQ 1).S6       COMMON EQUATES DONE?
+*****************************************************************
+*                                                               *
+*        THE IOSTRAP MACRO IS USED FOR ENTRY AND EXIT IN        *
+*        THE TRAP EXIT.  REGISTERS 0, 1, 14, AND 15 ARE         *
+*        AVAILABLE AS WORK REGISTERS.                           *
+*                                                               *
+*****************************************************************
+IOSBR    EQU   2                   ADDRESS OF IOSB
+RETR     EQU   4                   RETURN ADDRESS
+IOCOMR   EQU   5                   ADDRESS OF I/O COMMUNICATIONS AREA
+UCBR     EQU   7                   ADDRESS OF UNIT CONTROL BLOCK PREFIX
+BASER    EQU   10                  ADDRESS OF EXIT FOR ADDRESSABILITY
+CPAR     EQU   12                  ADDRESS OF CHANNEL PROGRAM AREA-
+*                                  NOT INITIALIZED ON ENTRY TO THE
+*                                  TRAP EXIT
+SAVER    EQU   13                  ADDRESS OF  16 WORD SAVE AREA
+&IECECOM SETB  1                             MARK COMMON EQUATES DONE
+         MEXIT
+.S3      IHBERMAC   1007,ENTRY                *INVALID OPERAND FOR
+.*                                            *ENTRY OPTION
+         MEXIT
+.S6      ANOP
+*****************************************************************
+*                                                               *
+*        THE IOSTRAP MACRO IS USED FOR ENTRY AND EXIT IN        *
+*        THE TRAP EXIT.  REGISTERS 0, 1, 14, AND 15 ARE         *
+*        AVAILABLE AS WORK REGISTERS.  REGISTER EQUATES FOR     *
+*        IOSBR, RETR, IOCOMR, UCBR, BASER, CPAR, AND SAVER      *
+*        HAVE BEEN GENERATED IN ANOTHER 'ENTRY' MACRO IN THIS   *
+*        ASSEMBLY; CPAR IS NOT INITIALIZED IN THE TRAP EXIT.    *
+*                                                               *
+*****************************************************************
+         MEXIT
+.S10     ANOP                                 FIRST OPERAND IS EXIT
+         AIF        (N'&SYSLIST EQ 1).S14     EXIT ONLY?
+         AIF        (N'&SYSLIST GT 2).S101    MORE THAN 2 OPERANDS?
+         AIF        ('&VAR1' EQ 'HOLD').S11   SECOND OPERAND HOLD?
+         AIF        ('&VAR1' EQ 'NORESTART').S13  *SECOND OPERAND
+.*                                                *NORESTART?
+.S101    IHBERMAC 1007,EXIT             *INVALID OPERAND FOR
+.*                                      *EXIT OPTION
+         MEXIT
+.S11     ANOP
+         B     4(,RETR)            RETURN INDICATING HOLD
+         MEXIT
+.S13     ANOP
+         B     8(,RETR)            RETURN INDICATING NO RESTART
+         MEXIT
+.S14     ANOP
+         BR    RETR                RETURN TO CALLER
+         MEXIT
+         MEND

@@ -1,0 +1,73 @@
+         MACRO
+&LABEL   IOSSENSE   &OP1
+         GBLB       &IECECOM,&IECEEWA
+.****************************************************************
+.*                                                              *
+.*       THE IOSSENSE MACRO IS USED FOR ENTRY AND EXIT IN THE   *
+.*       SENSE EXIT.  'ENTRY' OR 'EXIT' MUST BE CODED AS AN     *
+.*       OPERAND.                                               *
+.*                                                              *
+.*       &IECECOM AND                                           *
+.*       &IECEEWA ARE SET IN ANY 'ENTRY' MACRO WHEN THE COMMON  *
+.*                REGISTERS OR EWAR ARE EQUATED.  THEY ARE      *
+.*                TESTED TO AVOID GENERATING DUPLICATE NAMES    *
+.*                (IF MORE THAN ONE 'ENTRY' MACRO IS USED IN    *
+.*                AN ASSEMBLY).                                 *
+.*                                                              *
+.****************************************************************
+         AIF    ('&LABEL' EQ '').S0
+&LABEL   DS    0H
+.S0      AIF        (N'&SYSLIST NE 1).S4     ONLY ONE OPERAND?
+         AIF        ('&OP1' EQ  'ENTRY').S1  FIRST OPERAND ENTRY?
+         AIF        ('&OP1' EQ  'EXIT').S10  FIRST OPERAND EXIT?
+         IHBERMAC   1014,FIRST               * INVALID FIRST
+.*                                           * PARM SPECIFIED
+         MEXIT
+.S1      ANOP                                FIRST OPERAND ENTRY
+         AIF        (&IECECOM EQ 1).S6       COMMON EQUATES DONE?
+*****************************************************************
+*                                                               *
+*        IOSSENSE IS USED FOR ENTRY AND EXIT IN THE             *
+*        SENSE EXIT.  REGISTERS 0, 1, 14, AND 15 ARE            *
+*        AVAILABLE AS WORK REGISTERS.                           *
+*                                                               *
+*****************************************************************
+IOSBR    EQU   2                   ADDRESS OF IOSB OR ZERO
+*                                  IF THERE IS NO IOSB
+RETR     EQU   4                   RETURN ADDRESS
+IOCOMR   EQU   5                   ADDRESS OF I/O COMMUNICATIONS AREA
+UCBR     EQU   7                   ADDRESS OF UNIT CONTROL BLOCK PREFIX
+BASER    EQU   10                  ADDRESS OF EXIT FOR ADDRESSABILITY
+CPAR     EQU   12                  ADDRESS OF CHANNEL PROGRAM AREA
+SAVER    EQU   13                  ADDRESS OF 16 WORD SAVE AREA
+&IECECOM SETB       1                        MARK COMMON EQUATES DONE
+.S2      AIF        (&IECEEWA EQ 1).S7       EWAR EQUATED?
+EWAR     EQU   11                  ADDRESS OF ERP WORK AREA
+&IECEEWA SETB       1                        MARK EWA EQUATED
+         MEXIT
+.S4      IHBERMAC   1012,OPERAND        * INCORRECT # OF OPERANDS
+         MEXIT
+.S6      ANOP
+*****************************************************************
+*                                                               *
+*        IOSSENSE IS USED FOR ENTRY AND EXIT IN THE             *
+*        SENSE EXIT.  REGISTERS 0, 1, 14, AND 15 ARE            *
+*        AVAILABLE AS WORK REGISTERS.   REGISTER EQUATES        *
+*        FOR IOSBR, RETR, IOCOMR, UCBR, BASER, CPAR, AND        *
+*        SAVER ARE GENERATED IN ANOTHER 'ENTRY' MACRO IN        *
+*        THIS ASSEMBLY. IN A SENSE EXIT, IF THERE IS NO         *
+*        IOSB, IOSBR IS ZERO.                                   *
+*                                                               *
+*****************************************************************
+         AGO    .S2
+.S7      ANOP
+*****************************************************************
+*                                                               *
+*        EWAR IS EQUATED IN ANOTHER SENSE OR EOS 'ENTRY'        *
+*        MACRO IN THIS ASSEMBLY.                                *
+*                                                               *
+*****************************************************************
+         MEXIT
+.S10     ANOP                                FIRST OPERAND IS EXIT
+         BR    RETR                     RETURN
+         MEND
