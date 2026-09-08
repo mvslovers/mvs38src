@@ -62,7 +62,7 @@ def one(m):
 
 def main():
     os.environ["AS370"] = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser(
-        "~/.local/bin/as370")
+        "~/repos/mvs/cc370/as370/as370")
     mods = sorted(f[:-4] for f in os.listdir(SRC) if f.endswith(".ASM"))
     with open(f"{RUN}/as370-messages.tsv", "w") as f:
         f.write("module\trc\tflagged\tseverity\tmessages\n")

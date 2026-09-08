@@ -41,7 +41,7 @@ KEYS = {"undefined-symbol": "Undefined symbol",
 
 
 def main():
-    binary = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser("~/.local/bin/as370")
+    binary = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser("~/repos/mvs/cc370/as370/as370")
     head = open(f"{RUN}/module-table.tsv").readline().strip().split("\t")
     H = {h: i for i, h in enumerate(head)}
     rows = [l.split("\t") for l in open(f"{RUN}/module-table.tsv").read().splitlines()[1:]]

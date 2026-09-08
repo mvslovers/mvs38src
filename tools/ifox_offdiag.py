@@ -49,7 +49,7 @@ def as370_messages(args):
 
 
 def main():
-    binary = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser("~/.local/bin/as370")
+    binary = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser("~/repos/mvs/cc370/as370/as370")
     rows = [l.split("\t") for l in open(f"{RUN}/verdicts.tsv").read().splitlines()[1:]]
     loud = [r[0] for r in rows if r[1].isdigit() and int(r[1]) >= 8
             and r[2].isdigit() and int(r[2]) == 0]

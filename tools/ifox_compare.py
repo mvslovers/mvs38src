@@ -108,7 +108,7 @@ def dlib_verdict(args):
 def main():
     global BIN
     BIN = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser(
-        "~/.local/bin/as370")
+        "~/repos/mvs/cc370/as370/as370")
     state = {}
     for line in open(f"{RUN}/state.tsv"):
         f = line.rstrip("\n").split("\t")

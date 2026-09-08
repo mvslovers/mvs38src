@@ -31,7 +31,8 @@ which of the three any figure is before comparing it with another.
 | card count differs by 10+ | 16 |
 | only RLD, only ESD | 1 each |
 
-By length: **231 too short, 76 too long, 232 the right shape with wrong content.**
+By length, on the same 524: **216 too short, 75 too long, 233 the right shape with
+wrong content.**
 
 ## Three mechanisms named, with fixtures and measured reach
 
@@ -99,9 +100,9 @@ Nothing structural forbids it: the goal is `as370` == IFOX00 on identical input,
 and IFOX00's own return code does not enter into it. Two things make the tail
 expensive:
 
-- **307 length problems**, each "material missing or extra", and no named
+- **291 length problems**, each "material missing or extra", and no named
   mechanism covers them since #240 closed;
-- **232 shape-right modules**, correct sizes and wrong content, which is where
+- **233 shape-right modules**, correct sizes and wrong content, which is where
   single-instruction defects live — small reach each, and the small-delta cut is
   the only instrument that has reached into them.
 
@@ -123,3 +124,14 @@ IFCSXXXX IFNX1K IFNX3K
 and they are on the too-short block, not on a class of their own: the bit-length
 modifier was #205's mechanism and it is fixed. `IFCE0155` differs in exactly four
 bytes and is not a length case at all.
+
+## Two in the small-delta cut that are the clock, not the assembler
+
+`IFNX5V` and `IFOX0A` each differ in four bytes and all four are a `&SYSTIME`
+stamp — `PATCHDC DC C'IFNX5V00 00.13 09/09/26'` and its like. They are the two
+the restamp pass did *not* settle, and the reason is not the clock: re-assembled
+with IFOX00's own `ASMDATE`/`ASMTIME` (which match `state.tsv`'s job start to the
+minute, `05.34` and `05.24`), the TXT becomes identical and **one RLD card is
+left** on each. That belongs to cc370#186, not to a time-stamp chase.
+
+Everything else in `small-delta.tsv` is a real object difference.
