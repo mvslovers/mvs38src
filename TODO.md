@@ -291,7 +291,44 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
-### #173: nicht die Grenze, sondern das Speichermodell
+### #208: eine Änderung, beide Probleme, keine Grenze angehoben
+
+Ein subskribiertes SET-Symbol ist jetzt **eine** Tabellenzeile mit Vektor statt N
+benannter Zeilen. `MAXLSET` bleibt 512, `MAXGSET` bleibt 32.768 — die Grenzfrage
+hat sich aufgelöst, wie vorhergesagt.
+
+**Das dreiteilige Gate, in der Reihenfolge, in der ich es festgelegt hatte:**
+
+1. **0 von 5.524 gemeinsamen Decks geändert.** Die einzigen Decks, die sich
+   bewegen, sind die drei, die vorher keins hatten.
+2. **Alle drei erzeugen ein Deck.** `no-as370-deck` 4 → 1.
+3. **Laufzeit:** `IFCE0155` 1,441 s → **0,339 s** (Faktor 4,2), `IFCEE155`
+   5,796 s → **2,254 s** (Faktor 2,6).
+
+**Punkt 3 war der, den ich nicht weglassen wollte, und er ist der einzige, der
+etwas ergab, das die anderen nicht zeigen.** cc370 misst Faktor 9,8, ich 4,2 —
+verschiedene Maschinen, dasselbe Vorzeichen. Wäre er flach gewesen, hätten
+identische Decks und drei gerettete Module trotzdem wie Erfolg ausgesehen.
+
+**Und mein Gate war beim ersten Durchlauf falsch — an meiner eigenen
+Zeitschranke.** `IFCEL155` starb nicht mehr an der Tabelle, sondern lief 72 s
+allein und unter `-P 8` über die 90-s-Schranke: `rc 2 → rc 142`. Die Regel aus
+dem `IFCEE155`-Fall, eine Größenordnung höher — **ein Modul nahe der Schranke ist
+ein Modul, das kommt und geht.** Schranke auf 240 s, danach alle drei stabil.
+Der Lauf kostet jetzt 4:04 statt 1:40, weil `HEWLDIOC` die vollen 240 s zieht.
+Ein Gate, das einen Unterschied meldet, den kein Code erzeugt hat, ist schlimmer
+als ein langsames.
+
+**Eine Verwechslung von mir gehört auch dazu.** Ich hatte cc370 als Prüfpunkt
+genannt: „`IFCE0155` läuft heute in 6,50 s". Gemessen hatte ich `IFCEE155` — ein
+Buchstabe, in der Spezifikation des Gates, das ich selbst gefordert hatte.
+`IFCE0155` lief 1,44 s.
+
+**+0 Identitäten, keine verloren.** Die drei neuen Decks sind 7.528, 3.104 und
+7.087 Bytes falsch — EREP-Module, also ab jetzt #205s Gebiet. #173 ging um ihr
+Sterben, nicht um ihre Richtigkeit.
+
+### #173: die Diagnose — nicht die Grenze, sondern das Speichermodell
 
 cc370 hat profiliert statt geschätzt und mich korrigiert: die **lokale** Tabelle
 gipfelt in `IFCE0155` bei **elf** Einträgen. Die Kosten liegen im **globalen**
@@ -803,6 +840,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #204 (`sub[0]` einer SS-Instruktion ist die Länge, nie eine Basis) | **+47** | 0 | 52 | 2 |
 | #206 (ein `ENTRY` auf eine Kontrollsektion erzeugt kein `LD`) | +7 | 0 | 0 | 0 |
 | #207 (Makrorahmen vom Stapel auf den Haufen) | 0 | 0 | 0 | 0 |
+| #208 (ein SET-Array ist eine Zeile mit Vektor) | 0 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
