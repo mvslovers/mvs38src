@@ -291,7 +291,38 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
-### 85,8 % — und zwei Populationen, die sich nur scheinbar widersprachen
+### #207: die erste Änderung ohne Deck-Gewinn, absichtlich genommen
+
+`struct ctx` und das `seqn`/`seqi`-Paar liegen nicht mehr auf dem Stapel.
+**Gemessen mit `sizeof`: 78.240 + 49.152 = 127.392 Bytes pro Ebene, 4,86 MB bei
+Tiefe 40** — meine gerechneten Werte lagen elf Bytes daneben.
+
+**Strikter No-op, und genau so geprüft:** 0 von 5.524 Decks geändert (per Hash),
+0 rc-Änderungen, `+0 / 0 verloren / 0 näher / 0 weiter`. Zusätzlich die Laufzeit
+gemessen, weil eine Haufenzuteilung pro Makroexpansion etwas kosten könnte:
+
+| Modul | vor #207 | nach #207 |
+|---|---:|---:|
+| `IFCEE155` | 6,58 s | 6,50 s |
+| `IEAVNP01` | 0,06 s | 0,04 s |
+| `IEAVAP00` | 0,11 s | 0,11 s |
+
+Kein messbarer Unterschied. Der Gate-Lauf war 1:38 statt 1:18 — Maschinenlast,
+nicht die Änderung.
+
+**Der Wert liegt nicht im Deck.** Es entkoppelt *jede* kontextlokale Tabelle von
+der Rekursionstiefe und macht #173 überhaupt erst lösbar. Eine Änderung ohne
+Deck-Gewinn gewinnt nie ein Argument gegen ein „+47" — sie passiert nur
+absichtlich oder gar nicht.
+
+**Und cc370s erster No-op-Vergleich meldete 13 geänderte Decks.** Sieben waren
+#206s eigene Gewinne, drei meine Kartenpackungs-Wechsel: die Basis war einen
+Merge alt. Die Zwei-Builds-Falle in ihrer gewöhnlichsten Form — nicht zwei
+Binaries in einer Zahl, sondern ein herumliegendes Vergleichsverzeichnis. **Beim
+No-op ist dieser Fehler sichtbar**, was ein weiteres Argument dafür ist, No-ops
+absichtlich zu fahren.
+
+### 85,8 % — zwei Populationen, die sich nur scheinbar widersprachen
 
 **#206:** ein `ENTRY`, das eine Kontrollsektion benennt, bekommt kein `LD` — die
 `SD` *ist* dieser Einsprungpunkt. `as370` gab trotzdem eines aus, und zwar
@@ -733,6 +764,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #202 (ausgelassene SS-Länge, plus die absolute DSECT-Differenz) | +11 | 0 | 19 | 1 |
 | #204 (`sub[0]` einer SS-Instruktion ist die Länge, nie eine Basis) | **+47** | 0 | 52 | 2 |
 | #206 (ein `ENTRY` auf eine Kontrollsektion erzeugt kein `LD`) | +7 | 0 | 0 | 0 |
+| #207 (Makrorahmen vom Stapel auf den Haufen) | 0 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
