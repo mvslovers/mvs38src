@@ -1,0 +1,19 @@
+         MACRO
+&NAME    ROUTINE &LOGITEM,&RNAME
+         GBLC  &DSECT,&CSECT
+         GBLC  &ITEM(1000)
+         GBLA  &SHIFT(1000),&ITEMNBR
+         GBLA  &NRENTS
+         LCLA  &ISHIFT,&NDX
+.LOOP    ANOP
+&NDX     SETA  &NDX+1
+         AIF   ('&ITEM(&NDX)' EQ '&LOGITEM').FOUND
+         AIF   (&NDX LT &ITEMNBR).LOOP
+         MNOTE *,'LOG ITEM NOT DEFINED'
+         MEXIT
+.FOUND   ANOP
+&ISHIFT  SETA  &SHIFT(&NDX)
+&NAME    DC    AL.12(&LOGITEM-&DSECT),XL.4'D'
+         DC    AL.4(&ISHIFT),AL.12(&RNAME-&CSECT)
+&NRENTS  SETA  &NRENTS+1
+         MEND

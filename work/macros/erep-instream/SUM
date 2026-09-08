@@ -1,0 +1,51 @@
+         MACRO
+         SUM   &LOGITEM,&MASK
+.*                            THIS MACRO GENERATES A NORMAL EDIT ENTRY
+.*                                 FOR PROCESSING BY THE SUMMARY MODULE
+.*                            &LOGITEM - NAME OF DATA ITEM TO BE SUMMED
+.*                            &MASK - BYTE MASK FOR BITS TO BE TESTED.
+.*                                 THIS OPERAND SHOULD BE OMITTED FOR
+.*                                 SINGLE BIT ITEMS IN WHICH CASE THE
+.*                                 MASK WILL BE SET ACCORDING TO THE
+.*                                 OFF BYTE BIT DISPLACEMENT OF THE
+.*                                 ITEM AS DEFINED BY THE MACRO 'DSGEN'
+         GBLA  &COUNTR,&ITEMNBR,&BITS(3000),&SHIFT(3000)
+         GBLC  &ITEM(3000),&DSECT
+         LCLA  &IBITS,&NDX,&ISHIFT,&M,&BITNBR
+.LOOP    ANOP
+&NDX     SETA  &NDX+1
+         AIF   ('&ITEM(&NDX)' EQ '&LOGITEM').FOUND
+         AIF   (&NDX LT &ITEMNBR).LOOP
+         MNOTE *,'LOGITEM NOT FOUND'
+         MEXIT
+.FOUND   ANOP
+&ISHIFT  SETA  &SHIFT(&NDX)
+&IBITS   SETA  &BITS(&NDX)
+         AIF   (&IBITS EQ 1).FORM1      TEST FOR OLD FORM
+         AIF   ('&MASK' NE '').FORM1    TEST FOR MASK
+         AIF   (&IBITS+&ISHIFT GT 8).MSG     TEST FOR MORE THAN EIGHT
+         DC    AL.1(0),AL.3(&ISHIFT),AL.4(&IBITS)
+         DC    AL1(0)
+         AGO   .ITEM
+.MSG     MNOTE '**BITS GREATER THAN 8**'
+         MEXIT
+.FORM1   ANOP
+         DC    AL1(0)
+         AIF   ('&MASK' EQ '').FORM
+         DC    B'&MASK'
+         AGO   .ITEM
+.FORM    ANOP
+&BITNBR  SETA  &ISHIFT-7
+&BITNBR  SETA  0-&BITNBR
+&M       SETA  1
+.LOOP2   ANOP
+         AIF   (&BITNBR EQ 0).GOTIT
+&M       SETA  &M*2
+&BITNBR  SETA  &BITNBR-1
+         AGO   .LOOP2
+.GOTIT   ANOP
+         DC    AL1(&M)
+.ITEM    DC    AL2(&LOGITEM-&DSECT)
+         DC    AL2(&COUNTR)
+&COUNTR  SETA  &COUNTR+1
+         MEND
