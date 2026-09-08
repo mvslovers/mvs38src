@@ -115,6 +115,37 @@ lost is not "+1"; it is a gain and a break, and the break has a module name.
   sequence number; the `END` card is where each assembler names itself and dates
   the assembly.
 
+## A completeness claim needs the list, not the count
+
+cc370's `TODO.md` carried the sentence *"every other scanner in as370 already
+special-cases the attribute apostrophe."* It sat above the defect that disproved
+it for months: `dc_split` never tested for it, and #218 was worth +2 identities
+on a construct **neither assembler diagnoses** — `rc 0` on both sides, and only
+the bytes differ.
+
+**A stale number invites recounting. A false claim of completeness forecloses the
+question.** Nothing could contradict *"every other X"* until a defect did,
+because there was no enumeration to check it against. When the sweep finished,
+the readers were six, carrying three different letter sets — and **two of the
+differences were correct**, which no count would have said either.
+
+So a claim about a population carries its **list**. A count is already better
+than a bare "all of them", and it is still unfalsifiable without the members.
+
+## Names, not counts — the third and cleanest instance
+
+Three population disagreements this week were settled by listing the members
+instead of arguing the total, and each took one step:
+
+| | |
+|---|---|
+| 17 against 32 | cc370's split had no `TXT` bucket; every module they listed, I listed |
+| 1,642 against 1,271 | my RLD comparison keyed on ESDID, and mishandled `LD` |
+| **126 against 135** | my regex `^\S+\s+EQU\s+\(` matched `*SZD` — **nine comment cards counted as code**, all in one module that already contributed real ones, so the module counts agreed and hid it |
+
+The last is the sharpest: the totals differed, the module counts did not, and no
+amount of comparing the two numbers would have found a `*` in column 1.
+
 ## A clean headline is not a clean gate
 
 cc370#209's first gate read **`+1 IEDCSA, LOST 0`** — correct, and blind to the
