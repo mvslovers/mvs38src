@@ -220,6 +220,31 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
+### #188: +2 an Identitäten, und ein Modul, das die Überschrift nicht zeigt
+
+`join_cont()`, der dritte und letzte Kartenzerleger, mit demselben
+Attribut-Apostroph-Guard. Als Identitätszahl **+2** — eine fortgesetzte Anweisung
+mit Attributverweis vor einer Bemerkung ist schlicht selten. cc370 hat sie
+trotzdem genommen, „weil einer von drei Zerlegern falsch stehen zu lassen genau
+die Art ist, wie der nächste Leser die Familie für erledigt hält". Richtig.
+
+**Die Zeile `length -> bytes : 1` war das Interessantere.** Sie liest sich wie ein
+Wechsel und ist eine Verbesserung:
+
+| `IEDQOB` | vorher | nachher | IFOX00 |
+|---|---:|---:|---:|
+| Distanz zu IFOX00 | 3.345 | **2.963** | — |
+| Sektionslänge | 4.068 | **3.928** | 3.936 |
+
+382 Bytes näher, und die Sektionslänge von 132 zu lang auf 8 zu kurz. Die
+Übergabeliste zeigt das Modul weiterhin, die Überschrift zeigt es nicht, und
+ohne das dritte Instrument wäre es als „ein Modul hat den Eimer gewechselt"
+durchgelaufen.
+
+Die drei „weiter" (`IFNX1J` +3, `IFNX2A` +7, `IFNX3N` +2) sind 2–7 Bytes in
+Decks, die 2.325 bis 3.136 Bytes falsch sind — hier nachgemessen, nicht
+übernommen.
+
 ### Erledigt: ein Bit im RLD, +160 — und die Ursache stand im Idiom
 
 `docs/silent-divergences.md`, cc370#186, behoben in #187. **173 der 1.242
@@ -287,6 +312,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #182 (an attribute apostrophe is not a quote) | +23 | 0 | 50 | 1 |
 | #183 (the same guard in the second splitter) | 0 | 0 | 0 | 0 |
 | #187 (an RLD entry's length belongs to that entry) | **+160** | 0 | **0** | **0** |
+| #188 (the same guard in the third splitter) | +2 | 0 | 4 | 3 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of

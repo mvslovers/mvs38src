@@ -18,7 +18,6 @@ IKTTOMRT	0				0000				bytes	0x000a9	9608	9616	length	silent divergence	cc370
 BLSDMSGS	0				0000				cards	0x00002	9524	9204	length	silent divergence	cc370	
 IFCEF165	0				0000				cards	0x00052	9137	8641	length	silent divergence	cc370	
 IKJEGIO	0				0000				bytes	0x00000	8900	8942	no-pair	silent divergence	cc370	
-IECVHREC	0				0000				cards	0x00043	8768	8734	length	silent divergence	cc370	
 IFCED165	0				0000				bytes	0x001aa	8564	8390	length	silent divergence	cc370	
 AKJLKL01	0				0000				cards	0x01cbe	8455	8455	no-pair	silent divergence	cc370	
 AMDPRFCB	0				0000				cards	0x017d8	8376	8288	length	silent divergence	cc370	
@@ -285,7 +284,6 @@ IRBMFIOI	0				0000				bytes	0x001a8	1896	1896	length	silent divergence	cc370
 IKJEFT25	0				0000				cards	0x00023	1888	1888	length	silent divergence	cc370	
 IKJEBESU	0				0000				cards	0x00141	1868	1868	no-pair	silent divergence	cc370	
 IKJEFE11	0				0000				cards	0x00638	1867	1626	no-pair	silent divergence	cc370	
-IFG0199E	0				0000				cards	0x00019	1856	1808	length	silent divergence	cc370	
 IFDOLT46	0				0000				bytes	0x00055	1852	1852	mixed	silent divergence	cc370	
 IFCSIPL0	0				0000				cards	0x00007	1850	1692	length	silent divergence	cc370	
 AMDPREXT	0				0000				cards	0x0001f	1842	1786	length	silent divergence	cc370	
@@ -664,7 +662,7 @@ IEHPROG2	8	2	8	Addressability error - no active USING covers the operand's secti
 IGE0000I	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - PATCH | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved	0000				cards	0x00e32	4096	3634	length	as370 alone flags	cc370	
 IGG019MA	8	5	8	Undefined symbol	0000				cards	0x000fd	4096	4104	mixed	as370 alone flags	cc370	
 IFCEXXXC	8	15	8	Undefined symbol	0000				cards	0x0021e	3907	3477	length	as370 alone flags	cc370	
-IFNX3N	8	10	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0000				bytes	0x0000f	3854	3854	mixed	as370 alone flags	cc370	
+IFNX3N	8	28	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0000				bytes	0x0000f	3854	3854	mixed	as370 alone flags	cc370	
 IFCEOAK2	8	16	8	Undefined symbol	0000				cards	0x00016	3777	3053	length	as370 alone flags	cc370	
 BNGLOGR2	8	18	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0064a	3757	3757	length	as370 alone flags	cc370	
 BLSRSUMM	8	7	8	Undefined symbol	0000				cards	0x00226	3656	3656	length	as370 alone flags	cc370	
@@ -678,13 +676,13 @@ IKJEFD37	8	2	8	Undefined symbol	0000				cards	0x001b2	3328	3328	length	as370 alo
 IFNX4M	8	98	8	Undefined symbol	0000				cards	0x00045	3299	3264	length	as370 alone flags	cc370	
 IFCEOAK1	8	16	8	Undefined symbol	0000				cards	0x000d6	3180	2596	length	as370 alone flags	cc370	
 BLSFAD00	8	7	8	Undefined symbol	0000				cards	0x000ea	3096	3096	length	as370 alone flags	cc370	
-IFNX1J	8	8	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol	0000				bytes	0x00017	3085	3085	mixed	as370 alone flags	cc370	
+IFNX1J	8	12	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol	0000				bytes	0x00017	3085	3085	mixed	as370 alone flags	cc370	
 IFCEXXXF	8	5	8	Undefined symbol	0000				cards	0x0005a	3060	2840	length	as370 alone flags	cc370	
 IKTXINIT	8	2	8	Undefined symbol	0000				bytes	0x0073e	3040	3040	length	as370 alone flags	cc370	
 BLSRSETD	8	2	8	Undefined symbol	0000				cards	0x00152	3000	3000	length	as370 alone flags	cc370	
 IFCEF155	8	2	8	Undefined symbol	0000				cards	0x00002	2976	1639	length	as370 alone flags	cc370	
 BLSRCOMP	8	12	8	Undefined symbol	0000				cards	0x00165	2864	2864	length	as370 alone flags	cc370	
-IFNX2A	8	27	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0000				bytes	0x0001d	2846	2846	mixed	as370 alone flags	cc370	
+IFNX2A	8	45	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0000				bytes	0x0001d	2846	2846	mixed	as370 alone flags	cc370	
 IFCEMER4	8	1	8	Undefined symbol	0000				cards	0x0017a	2711	2244	length	as370 alone flags	cc370	
 BLSRSALI	8	6	8	Undefined symbol	0000				cards	0x00247	2680	2680	length	as370 alone flags	cc370	
 BLSRLSYM	8	3	8	Undefined symbol	0000				bytes	0x0006f	2672	2672	length	as370 alone flags	cc370	
@@ -934,7 +932,7 @@ IEDQHM	8	1	8	IFO117 first expression in substring notation exceeds the length of
 IEAVNP12	8	25	8	Undefined symbol | Undefined operation code	0012	20	12	IFO188 NVTFLWSC IS AN UNDEFINED SYMBOL | IFO188 NVT IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 RENTRY IS AN UNDEFINED SYMBOL | IFO188 NVTSWAIT IS AN UNDEFINED SYMBOL | IFO188 RNVT IS AN UNDEFINED SYMBOL	bytes	0x00f2f	4056	4056	length	both flag	cc370	
 IGFCCHCR	8	10	8	Undefined symbol | Undefined operation code	0008	11	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 CRCACSSA IS AN UNDEFINED SYMBOL | IFO188 CATMODEL IS AN UNDEFINED SYMBOL | IFO188 CATTYPE IS AN UNDEFINED SYMBOL | IFO188 CSTIOWRK IS AN UNDEFINED SYMBOL	bytes	0x000ce	4042	4042	text	both flag	cc370	
 IKJEGAT	8	1	8	Undefined symbol	0008	1	8	IFO188 CWORK260 IS AN UNDEFINED SYMBOL	cards	0x00eb9	3950	3918	no-pair	both flag	cc370	
-IEDQOB	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x00021	3936	4068	length	both flag	cc370	
+IEDQOB	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x00021	3936	4068	length	both flag	cc370	
 IEDQKC	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x005c1	3889	3889	length	both flag	cc370	
 IKJEGLST	8	11	8	Undefined symbol	0008	11	8	IFO188 TCOM00FC IS AN UNDEFINED SYMBOL | IFO188 TCOM0100 IS AN UNDEFINED SYMBOL	cards	0x0013b	3860	3860	no-pair	both flag	cc370	
 IFNX3A	8	98	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0008	1	8	IFO188 ERRSTK7 IS AN UNDEFINED SYMBOL	cards	0x00033	3858	3858	mixed	both flag	cc370	
@@ -1707,6 +1705,8 @@ IRARMIOM	8	10	8	Undefined symbol	0008	10	8	IFO188 IRAFLTM IS AN UNDEFINED SYMBOL
 IRARMRMR	8	10	8	Undefined symbol	0008	10	8	IFO188 IRAFLTM IS AN UNDEFINED SYMBOL | IFO188 IRAEPPR IS AN UNDEFINED SYMBOL | IFO188 IRAOUCB IS AN UNDEFINED SYMBOL | IFO188 IRAWTQE IS AN UNDEFINED SYMBOL | IFO188 IRAOTQE IS AN UNDEFINED SYMBOL | IFO188 IRAINQE IS AN UNDEFINED SYMBOL	identical				holes	both flag	source	
 IRARMSTM	8	11	8	Undefined symbol	0008	11	8	IFO188 MCCSTLCT IS AN UNDEFINED SYMBOL | IFO188 IRAFLTM IS AN UNDEFINED SYMBOL | IFO188 IRAEPPR IS AN UNDEFINED SYMBOL | IFO188 IRAOUCB IS AN UNDEFINED SYMBOL | IFO188 IRAWTQE IS AN UNDEFINED SYMBOL | IFO188 IRAOTQE IS AN UNDEFINED SYMBOL	identical				mixed	both flag	source	
 IRARMWLM	8	19	8	Relocatable displacement in machine instruction (explicit base requires an absolute displacement) | Undefined symbol	0008	19	8	IFO228 RELOCATABLE DISPLACEMENT IN MACHINE INSTRUCTION NEAR OPERAND COLUMN 15 | IFO188 WPOXSRV IS AN UNDEFINED SYMBOL | IFO228 RELOCATABLE DISPLACEMENT IN MACHINE INSTRUCTION NEAR OPERAND COLUMN 16 | IFO188 RMEPBSWI IS AN UNDEFINED SYMBOL | IFO188 IRAFLTM IS AN UNDEFINED SYMBOL | IFO188 IRAEPPR IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
+IECVHREC	0				0000				identical	0x00043	8768	8734	length		source	
+IFG0199E	0				0000				identical	0x00019	1856	1808	length		source	
 AHLCWRIT	0				0000				identical				length		source	
 AHLIWRIT	0				0000				identical				length		source	
 AHLSBLOK	0				0000				identical				text		source	
