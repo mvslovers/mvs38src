@@ -269,14 +269,24 @@ sind **innere Makroaufrufzeilen, die IFOX00 nicht listet**. Eine
 Listing-Konvention, kein inhaltlicher Unterschied. Das gehört aus der
 Fallbeschreibung heraus.
 
-Was steht: Abbilder identisch bis `0x340`, danach durchgehend verschieden; IFOX00
-erreicht `***** LOG ITEM SYMBOL NOT PROVIDED *****` 28-mal, `as370` nie; beide
-schweigen. Da Test 3 zeigt, dass `as370` genau diese Bedingung isoliert richtig
-auswertet, liegt die Abweichung eher darin, **was auf diesen Aufrufen in
-`&SYSLIST` ankommt**, als darin, wie geprüft wird.
+**Und die schärfste Beobachtung ist widerrufen.** „IFOX00 erreicht
+`LOG ITEM SYMBOL NOT PROVIDED` 28-mal, `as370` nie" — die Karte ist ein
+**Kommentar im Makrorumpf**, und `as370` listet generierte Kommentarkarten
+überhaupt nicht. Ein Unterschied zweier Listing-Konventionen, kein
+Verzweigungsunterschied. Damit fällt auch die Zählung generierter Anweisungen in
+beide Richtungen weg.
 
-Von außen komme ich nicht weiter — nötig ist `as370`s eigene Expansion eines
-`DSGEN`-Aufrufs gegen die Quellzeilen 469–479.
+Was bleibt, ist ausschließlich Deck-Evidenz: Sektion 2.550 gegen 2.832, Abbilder
+identisch bis `0x340` und danach durchgehend verschieden, beide Assembler still,
+der Instruktionsstrom korrekt bis er auf nicht vorhandene Daten zeigt.
+
+**Die Klasse ist damit sauber begrenzt und hat weder Mechanismus noch lebende
+Spur.** Das ist der ehrliche Stand.
+
+**Und es ist das zweite Mal an einem Tag, dass ein Instrument nicht sehen konnte,
+was man ihm zugetraut hat** — nach dem kartenbasierten Deck-Vergleich, der für
+einen Ein-Byte-Fehler „269 von 274 Karten" ausgab. Beide Male sah die Zahl
+gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
