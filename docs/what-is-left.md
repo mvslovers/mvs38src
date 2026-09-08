@@ -298,3 +298,46 @@ earlier withdrawals, and it caught a third.
 
 So the remaining divergence in those fifteen is a layout difference with no cause
 yet, and the honest entry is that the walk found nothing new.
+
+## 93.5 %, and the silent population has no large mechanism left — 2026-09-09
+
+cc370#253 merged: **+31, none lost, none further**, `cards : 128 -> 108`. Four
+merges in a row with nothing moving the wrong way, and the card-count bucket is
+down from 2,063 at the start of this comparison to 108.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,171 of 5,528 (93.5 %)** |
+| still differing | **357** |
+| byte-identical to IBM's object | **1,191** |
+
+### What the 357 actually are
+
+`first_divergence.py` now defaults to `--signal silent`, because the instrument
+cannot tell *`as370` is wrong here* from *`as370` was never given what it needed*:
+
+| signal | modules | what it is |
+|---|---:|---|
+| **silent divergence** | **163** | neither assembler says a word and they disagree — the real work |
+| `as370` alone flags | 92 | the diagnostic classes, #153 / #154 and friends |
+| both flag | 85 | mostly EREP without `DSGEN` and `PROLOG` — **not `as370` defects** |
+| IFOX00 alone flags | 9 | |
+| did not finish | 1 | |
+
+**The 163 atomise completely**: 160 distinct first-divergence statements, largest
+cluster **three**. There is no large mechanism left in the silent population that
+clustering can see. That is a result, not a gap — five instruments have been run
+over it and the sixth says the same thing.
+
+What is left with a name: **cc370#217**, the scale modifier on a fixed-point
+constant, `TWOPI DC FS28'6.2832'` in the `IFFP*` scientific routines, **6
+modules** — measured here for the first time. And five `IEES*03D` modules whose
+`L R0,SIZE` displacement differs, silently, with no cause yet.
+
+### The rule this session ends on
+
+cc370 stated it and it covers the missing-macro thirteen, the `L'` count I got
+wrong in both directions, and the 85 above:
+
+> **The population an instrument returns is the population it can see, not the
+> one the question is about.**

@@ -19,7 +19,17 @@ generated it, and clusters the statements.
 The first address, not every address, is the whole point. A module missing four
 hundred bytes scores as four hundred wrong bytes and one wrong statement.
 
-    first_divergence.py [--jobs N]
+    first_divergence.py [--jobs N] [--signal silent|loud|all]
+
+`--signal` filters by `module-table.tsv`'s `signal` column, and the default is
+**silent** for a reason worth stating. A module that cannot resolve its macros
+still produces a deck and still has a first divergence, so the instrument cannot
+tell *`as370` is wrong here* from *`as370` was never given what it needed*. On
+2026-09-09 that was 85 of 357 modules answering a question nobody asked, and
+thirteen of them were the largest cluster under the address constants.
+
+**The population an instrument returns is the population it can see, not the one
+the question is about.**
 """
 import os, re, sys, subprocess, collections
 from concurrent.futures import ThreadPoolExecutor
@@ -97,12 +107,17 @@ def normalise(l):
 
 def main():
     jobs = int(sys.argv[sys.argv.index("--jobs") + 1]) if "--jobs" in sys.argv else 8
+    sig = sys.argv[sys.argv.index("--signal") + 1] if "--signal" in sys.argv else "silent"
+    KEEP = {"silent": {"silent divergence"},
+            "loud": {"as370 alone flags"},
+            "all": None}[sig]
     head = open(f"{RUN}/module-table.tsv").readline().rstrip("\n").split("\t")
     H = {h: i for i, h in enumerate(head)}
     rows = [r.split("\t") for r in
             open(f"{RUN}/module-table.tsv").read().splitlines()[1:]]
     nid = [r[0] for r in rows
-           if r[H["tool"]] != "identical" and not r[H["excluded"]]]
+           if r[H["tool"]] != "identical" and not r[H["excluded"]]
+           and (KEEP is None or r[H["signal"]] in KEEP)]
 
     def one(m):
         pa, pi = f"{RUN}/as370/{m}.obj", f"{RUN}/decks/{m}.obj"
@@ -135,7 +150,7 @@ def main():
                     f"{'--' if ba is None else f'{ba:02X}'}\t"
                     f"{normalise(l) if l else ''}\n")
 
-    print(f"{len(nid)} modules differ; first divergence resolved for {len(out)}\n")
+    print(f"{len(nid)} modules ({sig}); first divergence resolved for {len(out)}\n")
     print("clustered by the statement that made it, largest first:\n")
     for k, n in fam.most_common(30):
         print(f"  {n:4d}  {k[:96]}")
