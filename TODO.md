@@ -291,6 +291,39 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### #209: fehlende Relokationseinträge — 78 Module, und der Mechanismus ist eins
+
+cc370 fand in #199s Rest, dass sechs Module **gar kein** Relocation Dictionary
+erzeugen, und diagnostizierte es: `DC A(IEDIAP05-IEDIAP04)` über zwei
+Kontrollsektionen ist netto absolut, also gibt `as370` nichts aus, während IFOX00
+ein **negatives** und ein positives Paar setzt — `as370`s RLD-Emitter hat kein
+Richtungsbit.
+
+Ich habe die Reichweite baumweit gemessen, Eintrag für Eintrag (`R`, `P`,
+Adresse) über alle 5.527 Decks:
+
+| | Module |
+|---|---:|
+| IFOX00 hat **mehr** RLD-Einträge als `as370` | **78** |
+| davon: `as370` erzeugt **gar keinen** RLD | **6** |
+| davon: IFOX00 hat einen Eintrag mit **Richtungsbit** | **1** |
+
+Die sechs sind exakt cc370s sechs — unabhängig aus dem Eintragsvergleich statt
+aus dem Rest abgeleitet, also von zwei Seiten bestätigt. **Aber der Mechanismus
+betrifft eines davon.** `IEDCSA` ist das einzige Modul im ganzen Baum, in dem
+IFOX00 ein Flag mit `0x02` setzt.
+
+Die anderen 77 vermissen 410 gewöhnliche positive Einträge — 178 davon mit
+`R == P`, also Adresskonstanten, die in die eigene Kontrollsektion zeigen.
+`IGG019R0`: IFOX00 14 Einträge, `as370` 3.
+
+**Eine richtige Diagnose und eine richtige Population, aber auf verschiedene
+Fragen.** Sechs Module erzeugen keinen RLD; eines davon aus dem gefundenen Grund.
+Das Richtungsbit als Ursache der sechs zu führen hieße, einen
+Ein-Modul-Mechanismus hinter eine Sechs-Modul-Überschrift zu setzen — die Form,
+die uns diese Woche fünfmal begegnet ist, und das erste Mal bei einem Defekt, der
+zweifelsfrei echt ist.
+
 ### #208: eine Änderung, beide Probleme, keine Grenze angehoben
 
 Ein subskribiertes SET-Symbol ist jetzt **eine** Tabellenzeile mit Vektor statt N
