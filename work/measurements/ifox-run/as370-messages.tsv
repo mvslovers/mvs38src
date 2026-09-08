@@ -2,14 +2,14 @@ module	rc	flagged	severity	messages
 AHLCWRIT	0			
 AHLGTFI	0			
 AHLIWRIT	0			
-AHLMCER	0			
+AHLMCER	4	1	4	MNOTE
 AHLMCIH	0			
 AHLREADR	0			
 AHLSBLOK	0			
 AHLSBUF	0			
 AHLSCAN	0			
 AHLSETD	0			
-AHLSETEV	8	6	8	Undefined symbol
+AHLSETEV	8	13	8	MNOTE | Undefined symbol
 AHLSETMG	0			
 AHLT103	0			
 AHLTCTL1	0			
@@ -38,24 +38,24 @@ AHLWTASK	0
 AHLWTMSG	0			
 AHLWTO	0			
 AHLWWRIT	0			
-AKJLKL01	0			
+AKJLKL01	8	10	8	MNOTE
 AKJLKL02	0			
 AKJLKMSG	0			
 AMAPTF01	0			
 AMAPTF02	0			
 AMAPTFLE	8	592	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 AMASPZAP	0			
-AMDPRAPP	0			
-AMDPRCOM	8	1	8	Undefined symbol
+AMDPRAPP	12	4	12	MNOTE
+AMDPRCOM	12	4	12	MNOTE | Undefined symbol
 AMDPRCTL	0			
 AMDPRCVT	0			
 AMDPRDPS	0			
 AMDPREAD	0			
 AMDPRECT	0			
 AMDPREID	0			
-AMDPREXT	0			
+AMDPREXT	12	1	12	MNOTE
 AMDPRFAR	0			
-AMDPRFCB	0			
+AMDPRFCB	12	2	12	MNOTE
 AMDPRFDS	0			
 AMDPRFLT	0			
 AMDPRFMG	0			
@@ -77,14 +77,14 @@ AMDPRPMG	0
 AMDPRPMS	0			
 AMDPRQCB	0			
 AMDPRRDC	0			
-AMDPRREC	0			
+AMDPRREC	12	4	12	MNOTE
 AMDPRSCN	0			
 AMDPRSEG	0			
 AMDPRSMG	0			
 AMDPRSN2	0			
 AMDPRSN3	8	1	8	Undefined symbol
 AMDPRSUM	0			
-AMDPRUIM	0			
+AMDPRUIM	12	4	12	MNOTE
 AMDSAAID	0			
 AMDSAAMR	0			
 AMDSAARD	0			
@@ -133,7 +133,7 @@ BLSCAINT	0
 BLSCALOC	0			
 BLSCAMER	0			
 BLSCAMIN	0			
-BLSCAMOD	0			
+BLSCAMOD	8	16	8	MNOTE
 BLSCAMPR	0			
 BLSCANAL	0			
 BLSCANLE	0			
@@ -167,7 +167,7 @@ BLSDENQ0	0
 BLSDENQP	0			
 BLSDFDSD	0			
 BLSDFPDR	0			
-BLSDIFP0	0			
+BLSDIFP0	8	9	8	MNOTE
 BLSDMSG0	0			
 BLSDMSGS	0			
 BLSDPC00	0			
@@ -178,12 +178,12 @@ BLSDTM00	0
 BLSDVECT	0			
 BLSDWAIT	0			
 BLSEADP1	0			
-BLSEADPR	8	4	8	Undefined symbol
+BLSEADPR	8	19	8	Undefined symbol | MNOTE
 BLSEAUTH	0			
-BLSEDEL0	0			
+BLSEDEL0	8	1	8	MNOTE
 BLSEDEL1	0			
 BLSEDELC	0			
-BLSELP00	8	13	8	Undefined symbol
+BLSELP00	8	20	8	Undefined symbol | MNOTE
 BLSELPCC	0			
 BLSELPCL	0			
 BLSELPCT	0			
@@ -193,8 +193,8 @@ BLSELPFM	0
 BLSELPFR	0			
 BLSELPOP	0			
 BLSEMDP1	0			
-BLSEMDPR	8	1	8	Undefined symbol
-BLSFAD00	8	7	8	Undefined symbol
+BLSEMDPR	8	16	8	Undefined symbol | MNOTE
+BLSFAD00	8	9	8	Undefined symbol | MNOTE
 BLSFAV00	0			
 BLSFBP00	0			
 BLSFCLOS	0			
@@ -214,15 +214,15 @@ BLSFGD00	0
 BLSFGG00	0			
 BLSFGP00	0			
 BLSFLALL	0			
-BLSFLD00	8	1	8	Undefined symbol
+BLSFLD00	8	2	8	Undefined symbol | MNOTE
 BLSFLONE	0			
 BLSFLP00	0			
-BLSFMD00	8	3	8	Undefined symbol
+BLSFMD00	8	5	8	Undefined symbol | MNOTE
 BLSFND00	0			
 BLSFND01	0			
 BLSFOD00	0			
 BLSFOPEN	0			
-BLSFPARS	0			
+BLSFPARS	8	2	8	MNOTE
 BLSFPERA	0			
 BLSFPERS	0			
 BLSFPS00	0			
@@ -246,13 +246,13 @@ BLSRADDR	0
 BLSRADDS	0			
 BLSRADDT	0			
 BLSRADDU	0			
-BLSRASCX	0			
+BLSRASCX	8	2	8	MNOTE
 BLSRASM7	0			
 BLSRCOCL	0			
 BLSRCOHD	0			
 BLSRCOIN	0			
 BLSRCOMK	0			
-BLSRCOMP	8	12	8	Undefined symbol
+BLSRCOMP	8	24	8	Undefined symbol | MNOTE
 BLSRCOPY	0			
 BLSRCOTA	0			
 BLSRDUAL	0			
@@ -267,12 +267,12 @@ BLSRDUIN	0
 BLSRDUIS	0			
 BLSRDULS	0			
 BLSRDUOP	0			
-BLSRDUSC	0			
-BLSRENQK	0			
-BLSREQU	8	6	8	Undefined symbol
+BLSRDUSC	8	1	8	MNOTE
+BLSRENQK	8	1	8	MNOTE
+BLSREQU	8	13	8	Undefined symbol | MNOTE
 BLSRESAR	0			
 BLSRESCK	0			
-BLSRESDR	8	3	8	Undefined symbol
+BLSRESDR	8	5	8	Undefined symbol | MNOTE
 BLSRESGC	0			
 BLSRESGE	0			
 BLSRESGQ	0			
@@ -280,13 +280,13 @@ BLSRESGU	0
 BLSRESPU	0			
 BLSRESRU	0			
 BLSRESSA	0			
-BLSREVAL	8	6	8	Undefined symbol
-BLSRFIND	8	6	8	Undefined symbol
-BLSRFMOD	0			
-BLSRFUCB	0			
+BLSREVAL	8	12	8	Undefined symbol | MNOTE
+BLSRFIND	8	14	8	Undefined symbol | MNOTE
+BLSRFMOD	8	1	8	MNOTE
+BLSRFUCB	8	1	8	MNOTE
 BLSRIOSK	0			
-BLSRLIST	8	6	8	Undefined symbol
-BLSRLSYM	8	3	8	Undefined symbol
+BLSRLIST	8	13	8	Undefined symbol | MNOTE
+BLSRLSYM	8	5	8	Undefined symbol | MNOTE
 BLSRMSGA	0			
 BLSRMSGB	0			
 BLSRMSGD	0			
@@ -300,33 +300,33 @@ BLSRRAGE	0
 BLSRRDAR	0			
 BLSRRDGE	0			
 BLSRRDPU	0			
-BLSRRNCH	8	6	8	Undefined symbol
+BLSRRNCH	8	17	8	Undefined symbol | MNOTE
 BLSRSAAR	0			
-BLSRSADE	8	6	8	Undefined symbol
+BLSRSADE	8	12	8	Undefined symbol | MNOTE
 BLSRSAG	0			
 BLSRSAGC	0			
 BLSRSAGE	0			
 BLSRSAGN	0			
 BLSRSAGQ	0			
 BLSRSAGU	0			
-BLSRSALI	8	6	8	Undefined symbol
+BLSRSALI	8	12	8	Undefined symbol | MNOTE
 BLSRSAPC	0			
 BLSRSAPU	0			
-BLSRSCAN	8	6	8	Undefined symbol
-BLSRSETD	8	2	8	Undefined symbol
-BLSRST00	0			
-BLSRSUMM	8	7	8	Undefined symbol
+BLSRSCAN	8	15	8	Undefined symbol | MNOTE
+BLSRSETD	8	6	8	Undefined symbol | MNOTE
+BLSRST00	8	1	8	MNOTE
+BLSRSUMM	8	10	8	Undefined symbol | MNOTE
 BLSRSURB	0			
 BLSRSUTC	0			
 BLSRSYRB	0			
-BLSRTCBX	8	6	8	Undefined symbol
+BLSRTCBX	8	13	8	Undefined symbol | MNOTE
 BLSRVECT	0			
 BLSRVPAD	0			
 BLSRVPAS	0			
 BLSRVPCP	0			
 BLSRVPTC	0			
 BLSRVPVS	0			
-BLSRVRBX	0			
+BLSRVRBX	8	1	8	MNOTE
 BLSRVSLD	0			
 BLSSASCB	0			
 BLSSASMV	0			
@@ -384,8 +384,8 @@ BLSUBLDD	0
 BLSUBLDL	0			
 BLSUDYNA	0			
 BLSUGWDM	0			
-BLSUHELP	8	2	8	Undefined symbol
-BLSUINI1	8	1	8	Undefined symbol
+BLSUHELP	8	5	8	Undefined symbol | MNOTE
+BLSUINI1	8	2	8	Undefined symbol | MNOTE
 BLSUINI2	0			
 BLSUIT01	0			
 BLSUIT02	0			
@@ -402,7 +402,7 @@ BLSUMONX	0
 BLSUMPK1	0			
 BLSUMPKN	0			
 BLSUMTOD	0			
-BLSUNOTE	0			
+BLSUNOTE	8	1	8	MNOTE
 BLSUPARI	0			
 BLSUPARU	0			
 BLSUPGMC	0			
@@ -948,43 +948,43 @@ IDCAU03	0
 IDCAV01	0			
 IDCBI01	0			
 IDCCC01	0			
-IDCCDAL	0			
+IDCCDAL	8	25	8	MNOTE
 IDCCDAU	0			
 IDCCDAV	0			
-IDCCDBI	0			
-IDCCDCC	0			
+IDCCDBI	8	4	8	MNOTE
+IDCCDCC	8	4	8	MNOTE
 IDCCDCH	0			
-IDCCDCK	0			
+IDCCDCK	8	3	8	MNOTE
 IDCCDCN	0			
 IDCCDCO	0			
 IDCCDCP	0			
 IDCCDCT	0			
 IDCCDCV	0			
-IDCCDDE	0			
-IDCCDDL	0			
+IDCCDDE	8	258	8	MNOTE
+IDCCDDL	8	3	8	MNOTE
 IDCCDDU	0			
 IDCCDEC	0			
 IDCCDEV	0			
 IDCCDGR	0			
-IDCCDLC	0			
+IDCCDLC	8	5	8	MNOTE
 IDCCDLD	0			
 IDCCDLM	0			
-IDCCDLR	0			
+IDCCDLR	8	5	8	MNOTE
 IDCCDLV	0			
 IDCCDMC	0			
 IDCCDMG	0			
-IDCCDMP	0			
+IDCCDMP	8	10	8	MNOTE
 IDCCDMV	0			
 IDCCDNC	0			
-IDCCDPM	0			
-IDCCDPR	0			
-IDCCDRC	0			
-IDCCDRD	0			
+IDCCDPM	8	10	8	MNOTE
+IDCCDPR	8	13	8	MNOTE
+IDCCDRC	8	12	8	MNOTE
+IDCCDRD	8	48	8	MNOTE
 IDCCDRL	0			
-IDCCDRM	0			
-IDCCDRP	0			
+IDCCDRM	8	10	8	MNOTE
+IDCCDRP	8	8	8	MNOTE
 IDCCDRR	0			
-IDCCDRS	0			
+IDCCDRS	8	8	8	MNOTE
 IDCCDRV	0			
 IDCCDSD	0			
 IDCCDSG	0			
@@ -994,7 +994,7 @@ IDCCDSV	0
 IDCCDTR	0			
 IDCCDTU	0			
 IDCCDVY	0			
-IDCCDXP	0			
+IDCCDXP	8	7	8	MNOTE
 IDCCH01	0			
 IDCCH02	0			
 IDCCH03	0			
@@ -1051,7 +1051,7 @@ IDCRD07	0
 IDCRI01	0			
 IDCRI02	0			
 IDCRI03	0			
-IDCRI04	0			
+IDCRI04	8	2	8	MNOTE
 IDCRIFF	0			
 IDCRIKT	0			
 IDCRILT	0			
@@ -1396,7 +1396,7 @@ IEAVTSBP	0
 IEAVTSDC	0			
 IEAVTSDF	0			
 IEAVTSDG	0			
-IEAVTSDH	0			
+IEAVTSDH	12	1	12	MNOTE
 IEAVTSDI	8	78	8	Undefined symbol | Undefined operation code
 IEAVTSDL	0			
 IEAVTSDO	0			
@@ -1489,7 +1489,7 @@ IEBSCN	8	7	8	Undefined symbol
 IEBTCR02	0			
 IEBTCR03	0			
 IEBTCR04	0			
-IEBTCR05	0			
+IEBTCR05	12	1	12	MNOTE
 IEBTCRIN	0			
 IEBUPDT2	8	270	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 IEBUPDTE	0			
@@ -1704,7 +1704,7 @@ IEDQAU	8	1	8	IFO117 first expression in substring notation exceeds the length of
 IEDQAV	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQAW	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQAX	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IEDQAY	8	2	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO117 first expression in substring notation exceeds the length of the string
+IEDQAY	8	3	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IEDQAZ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQB1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQB2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -1760,12 +1760,12 @@ IEDQFE30	8	1	8	IFO117 first expression in substring notation exceeds the length 
 IEDQFM	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQFSC	8	2	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO117 first expression in substring notation exceeds the length of the string
 IEDQFW	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IEDQGA	8	2	8	IFO117 first expression in substring notation exceeds the length of the string
+IEDQGA	12	4	12	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IEDQGH	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQGP	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQGQ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQGR	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IEDQGT	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IEDQGT	12	2	12	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IEDQHG	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQHI	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQHK	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -1779,7 +1779,7 @@ IEDQKC	8	1	8	IFO117 first expression in substring notation exceeds the length of
 IEDQKD	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQKE	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQNA	0			
-IEDQNA2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IEDQNA2	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IEDQNB	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQND	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQNF	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -1816,7 +1816,7 @@ IEDQWAA	8	1	8	IFO117 first expression in substring notation exceeds the length o
 IEDQWAB	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQWAC	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQWAJ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IEDQWB	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IEDQWB	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IEDQWB1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQWB2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQWC	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -1833,7 +1833,7 @@ IEDQWI	8	1	8	IFO117 first expression in substring notation exceeds the length of
 IEDQWI5U	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQWI7	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQWI8	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IEDQWI9	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IEDQWI9	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IEDQWIA	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQWID	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQWIE	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -1857,7 +1857,7 @@ IEDQWS	8	1	8	IFO117 first expression in substring notation exceeds the length of
 IEDQWX	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQWY	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQXA	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IEDQXB	8	358	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEDQXB	8	381	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IEDQXC	8	303	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | IFO117 first expression in substring notation exceeds the length of the string | Undefined symbol
 IEDRQIN	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDRSPIN	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -1938,7 +1938,7 @@ IEE9403D	0
 IEEAB400	0			
 IEEAB401	0			
 IEEBASEC	0			
-IEEC2740	8	1	8	Undefined symbol
+IEEC2740	12	2	12	Undefined symbol | MNOTE
 IEECB800	0			
 IEECB801	0			
 IEECB806	0			
@@ -1955,7 +1955,7 @@ IEECB909	0
 IEECB910	0			
 IEECB911	0			
 IEECB912	0			
-IEECB914	0			
+IEECB914	4	2	4	MNOTE
 IEECB915	0			
 IEECLEAN	0			
 IEECVET1	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol
@@ -2017,7 +2017,7 @@ IEEMB821	0
 IEEMB822	0			
 IEEMB823	0			
 IEEMB824	0			
-IEEMB825	0			
+IEEMB825	12	1	12	MNOTE
 IEEMB826	0			
 IEEMB827	0			
 IEEMB828	0			
@@ -2082,7 +2082,7 @@ IEEVSND2	0
 IEEVSND3	0			
 IEEVSND4	0			
 IEEVSND5	0			
-IEEVSND6	0			
+IEEVSND6	4	4	4	MNOTE
 IEEVSND8	0			
 IEEVSND9	0			
 IEEVSTAR	0			
@@ -2314,7 +2314,7 @@ IEFSD089	0
 IEFSD094	0			
 IEFSD095	0			
 IEFSD101	0			
-IEFSD102	0			
+IEFSD102	12	1	12	MNOTE
 IEFSD103	0			
 IEFSD160	0			
 IEFSD161	0			
@@ -2744,37 +2744,37 @@ IFBDCB02	0
 IFCCRNDR	0			
 IFCDEVIC	0			
 IFCDIP00	8	368	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IFCE0115	8	259	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IFCE0125	8	534	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCE0115	12	311	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
+IFCE0125	12	616	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCE0135	0			
 IFCE0145	0			
 IFCE0155	0			
 IFCE0165	0			
-IFCE1017	8	267	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IFCE1018	8	263	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCE1017	12	304	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
+IFCE1018	12	299	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCE2860	0			
 IFCE2870	0			
 IFCE2880	0			
-IFCE33XX	8	27	8	Undefined operation code | Undefined symbol
-IFCE3401	8	164	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IFCE5424	8	216	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCE33XX	12	28	12	Undefined operation code | Undefined symbol | MNOTE
+IFCE3401	12	189	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
+IFCE5424	12	242	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCEA155	0			
 IFCEA165	0			
 IFCEAEXX	0			
-IFCEARG1	8	130	8	Undefined operation code | Undefined symbol
-IFCEARG2	8	130	8	Undefined operation code | Undefined symbol
-IFCEARG3	8	130	8	Undefined operation code | Undefined symbol
-IFCEARG4	8	146	8	Undefined operation code | Undefined symbol
-IFCEARG5	8	154	8	Undefined operation code | Undefined symbol
-IFCEARG6	8	98	8	Undefined operation code | Undefined symbol
-IFCEARG7	8	74	8	Undefined operation code | Undefined symbol
+IFCEARG1	12	148	12	Undefined operation code | Undefined symbol | MNOTE
+IFCEARG2	12	148	12	Undefined operation code | Undefined symbol | MNOTE
+IFCEARG3	12	148	12	Undefined operation code | Undefined symbol | MNOTE
+IFCEARG4	12	164	12	Undefined operation code | Undefined symbol | MNOTE
+IFCEARG5	12	172	12	Undefined operation code | Undefined symbol | MNOTE
+IFCEARG6	12	116	12	Undefined operation code | Undefined symbol | MNOTE
+IFCEARG7	12	84	12	Undefined operation code | Undefined symbol | MNOTE
 IFCEAXXX	0			
 IFCEB155	0			
 IFCEB165	0			
 IFCEC155	0			
 IFCEC165	0			
 IFCECHAR	0			
-IFCECUT0	8	85	8	Undefined operation code | Undefined symbol
+IFCECUT0	12	91	12	Undefined operation code | Undefined symbol | MNOTE
 IFCED155	0			
 IFCED165	0			
 IFCEDDR0	0			
@@ -2785,8 +2785,8 @@ IFCEE165	0
 IFCEEDIT	8	1	8	Undefined operation code
 IFCEF155	0			
 IFCEF165	0			
-IFCEFBA4	8	76	8	Undefined operation code | Undefined symbol
-IFCEFBA5	8	76	8	Undefined operation code | Undefined symbol
+IFCEFBA4	12	82	12	Undefined operation code | Undefined symbol | MNOTE
+IFCEFBA5	12	82	12	Undefined operation code | Undefined symbol | MNOTE
 IFCEG155	0			
 IFCEGUS1	0			
 IFCEI135	0			
@@ -2805,11 +2805,11 @@ IFCEMER3	0
 IFCEMER4	0			
 IFCEMER5	0			
 IFCENAGO	0			
-IFCENF11	8	237	8	Undefined operation code | Undefined symbol
-IFCENFH3	8	206	8	Undefined operation code | Undefined symbol
-IFCENFM3	8	268	8	Undefined operation code | Undefined symbol
-IFCENFP1	8	266	8	Undefined operation code | Undefined symbol
-IFCENFP2	8	223	8	Undefined operation code | Undefined symbol
+IFCENF11	12	258	12	Undefined operation code | Undefined symbol | MNOTE
+IFCENFH3	12	226	12	Undefined operation code | Undefined symbol | MNOTE
+IFCENFM3	12	288	12	Undefined operation code | Undefined symbol | MNOTE
+IFCENFP1	12	286	12	Undefined operation code | Undefined symbol | MNOTE
+IFCENFP2	12	243	12	Undefined operation code | Undefined symbol | MNOTE
 IFCEOAK1	0			
 IFCEOAK2	0			
 IFCEOAK3	0			
@@ -2828,23 +2828,23 @@ IFCET008	8	4	8	Addressability error - no active USING covers the operand's secti
 IFCET00B	0			
 IFCET00C	0			
 IFCET00D	0			
-IFCET040	8	138	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCET040	12	159	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCETRN0	0			
 IFCETRN1	0			
 IFCETRN2	0			
 IFCETRN3	0			
 IFCETRN4	0			
 IFCETRN5	0			
-IFCETRN6	8	230	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IFCETRN7	8	60	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCETRN6	12	259	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
+IFCETRN7	12	72	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCETRN8	0			
 IFCETUL1	0			
 IFCEUKNO	0			
 IFCEVENT	0			
 IFCEWHT1	0			
 IFCEWIN1	0			
-IFCEWIN2	8	263	8	Undefined operation code | Undefined symbol
-IFCEWOD1	8	407	8	Undefined operation code | Undefined symbol
+IFCEWIN2	12	295	12	Undefined operation code | Undefined symbol | MNOTE
+IFCEWOD1	12	439	12	Undefined operation code | Undefined symbol | MNOTE
 IFCEXXX0	0			
 IFCEXXX1	0			
 IFCEXXX2	0			
@@ -2881,21 +2881,21 @@ IFCPARM1	0
 IFCPARM2	0			
 IFCRDESM	0			
 IFCRFLO1	0			
-IFCS0115	8	130	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCS0115	12	146	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCS0135	0			
 IFCS0145	0			
 IFCS0155	0			
 IFCS0165	0			
-IFCS1017	8	150	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IFCS1018	8	148	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCS1017	12	166	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
+IFCS1018	12	164	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCS2860	0			
 IFCS2870	0			
 IFCS2880	0			
 IFCS3031	0			
 IFCS3032	0			
 IFCS3033	0			
-IFCS33XX	8	28	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IFCS5424	8	306	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCS33XX	12	29	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
+IFCS5424	12	344	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCSAEXX	0			
 IFCSAXXX	0			
 IFCSCHAR	0			
@@ -2905,7 +2905,7 @@ IFCSDASD	0
 IFCSDICH	0			
 IFCSGUS1	0			
 IFCSHARE	0			
-IFCSI115	8	144	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCSI115	12	160	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCSI145	0			
 IFCSI155	0			
 IFCSIPL0	0			
@@ -2931,9 +2931,9 @@ IFCSXXXA	0
 IFCSXXXB	0			
 IFCSXXXD	0			
 IFCSXXXE	0			
-IFCSXXXF	0			
+IFCSXXXF	20	3	20	MNOTE
 IFCSXXXG	0			
-IFCSXXXH	0			
+IFCSXXXH	20	6	20	MNOTE
 IFCSXXXX	0			
 IFCSYMCD	0			
 IFCSYSUM	0			
@@ -3128,103 +3128,103 @@ IFG0190P	0
 IFG0191X	0			
 IFG0191Y	8	1	8	Undefined symbol
 IFG0192A	0			
-IFG0193A	8	7	8	Undefined symbol
-IFG0193C	0			
-IFG0193D	0			
-IFG0193E	0			
-IFG0194A	0			
-IFG0194C	8	12	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IFG0194F	0			
-IFG0194J	0			
-IFG0195A	0			
-IFG0195B	0			
-IFG0195C	0			
-IFG0195D	0			
-IFG0195G	0			
-IFG0195H	0			
-IFG0195J	0			
-IFG0195K	0			
-IFG0195N	0			
-IFG0195T	0			
-IFG0195U	8	1	8	Undefined symbol
-IFG0195V	8	1	8	Undefined symbol
-IFG0196J	0			
-IFG0196K	0			
-IFG0196L	8	2	8	Undefined symbol
-IFG0196M	0			
-IFG0196N	0			
-IFG0196O	0			
-IFG0196Q	0			
-IFG0196T	0			
-IFG0196U	0			
-IFG0196V	8	9	8	Undefined symbol
-IFG0196W	0			
-IFG0196X	0			
-IFG0198N	0			
-IFG0199B	0			
-IFG0199D	0			
-IFG0199E	0			
+IFG0193A	12	9	12	Undefined symbol | MNOTE
+IFG0193C	8	1	8	MNOTE
+IFG0193D	8	1	8	MNOTE
+IFG0193E	8	1	8	MNOTE
+IFG0194A	8	1	8	MNOTE
+IFG0194C	8	13	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
+IFG0194F	8	1	8	MNOTE
+IFG0194J	8	1	8	MNOTE
+IFG0195A	8	1	8	MNOTE
+IFG0195B	8	1	8	MNOTE
+IFG0195C	8	1	8	MNOTE
+IFG0195D	8	1	8	MNOTE
+IFG0195G	8	1	8	MNOTE
+IFG0195H	8	1	8	MNOTE
+IFG0195J	8	1	8	MNOTE
+IFG0195K	8	1	8	MNOTE
+IFG0195N	8	1	8	MNOTE
+IFG0195T	8	1	8	MNOTE
+IFG0195U	8	2	8	Undefined symbol | MNOTE
+IFG0195V	8	2	8	Undefined symbol | MNOTE
+IFG0196J	8	1	8	MNOTE
+IFG0196K	8	1	8	MNOTE
+IFG0196L	8	3	8	Undefined symbol | MNOTE
+IFG0196M	8	1	8	MNOTE
+IFG0196N	8	1	8	MNOTE
+IFG0196O	8	1	8	MNOTE
+IFG0196Q	8	1	8	MNOTE
+IFG0196T	8	1	8	MNOTE
+IFG0196U	8	1	8	MNOTE
+IFG0196V	8	10	8	Undefined symbol | MNOTE
+IFG0196W	8	1	8	MNOTE
+IFG0196X	8	1	8	MNOTE
+IFG0198N	8	1	8	MNOTE
+IFG0199B	8	1	8	MNOTE
+IFG0199D	8	1	8	MNOTE
+IFG0199E	8	1	8	MNOTE
 IFG0199I	0			
-IFG019RA	0			
-IFG019TR	0			
+IFG019RA	8	1	8	MNOTE
+IFG019TR	8	1	8	MNOTE
 IFG0200N	0			
 IFG0200P	0			
-IFG0200V	0			
-IFG0200W	8	14	8	Undefined symbol
-IFG0200Y	8	4	8	Undefined symbol
-IFG0200Z	0			
-IFG0201R	0			
-IFG0202A	0			
-IFG0202B	8	2	8	Undefined symbol
-IFG0202C	0			
-IFG0202D	0			
-IFG0202E	0			
-IFG0202F	0			
-IFG0202H	0			
-IFG0202I	0			
-IFG0202J	0			
-IFG0202K	0			
-IFG0202L	0			
+IFG0200V	8	1	8	MNOTE
+IFG0200W	8	15	8	Undefined symbol | MNOTE
+IFG0200Y	8	5	8	Undefined symbol | MNOTE
+IFG0200Z	8	1	8	MNOTE
+IFG0201R	8	1	8	MNOTE
+IFG0202A	8	1	8	MNOTE
+IFG0202B	8	3	8	Undefined symbol | MNOTE
+IFG0202C	8	1	8	MNOTE
+IFG0202D	8	1	8	MNOTE
+IFG0202E	8	1	8	MNOTE
+IFG0202F	8	1	8	MNOTE
+IFG0202H	8	1	8	MNOTE
+IFG0202I	8	1	8	MNOTE
+IFG0202J	8	1	8	MNOTE
+IFG0202K	8	1	8	MNOTE
+IFG0202L	8	1	8	MNOTE
 IFG0230P	0			
-IFG0232D	0			
-IFG0232G	0			
-IFG0232J	0			
-IFG0232M	0			
-IFG0232S	0			
-IFG0232Z	0			
+IFG0232D	8	1	8	MNOTE
+IFG0232G	8	1	8	MNOTE
+IFG0232J	8	1	8	MNOTE
+IFG0232M	8	1	8	MNOTE
+IFG0232S	8	1	8	MNOTE
+IFG0232Z	8	1	8	MNOTE
 IFG0550P	0			
-IFG0551B	0			
-IFG0551D	0			
-IFG0551F	0			
-IFG0551H	8	5	8	Undefined symbol
-IFG0551L	0			
-IFG0551P	0			
-IFG0551R	0			
-IFG0551T	0			
-IFG0552B	0			
-IFG0552D	0			
-IFG0552F	0			
-IFG0552N	0			
-IFG0552R	0			
-IFG0552T	0			
-IFG0552V	0			
-IFG0552X	0			
-IFG0553C	0			
-IFG0553F	0			
-IFG0553H	0			
-IFG0553P	0			
-IFG0553X	0			
-IFG0553Z	0			
-IFG0554B	0			
-IFG0554L	0			
-IFG0554N	0			
-IFG0554P	8	2	8	Undefined symbol
-IFG0554T	0			
-IFG0554Z	0			
-IFG0555B	0			
-IFG0555H	0			
-IFG0555J	0			
-IFG0558X	0			
+IFG0551B	8	1	8	MNOTE
+IFG0551D	8	1	8	MNOTE
+IFG0551F	8	1	8	MNOTE
+IFG0551H	8	6	8	Undefined symbol | MNOTE
+IFG0551L	8	1	8	MNOTE
+IFG0551P	8	1	8	MNOTE
+IFG0551R	8	1	8	MNOTE
+IFG0551T	8	1	8	MNOTE
+IFG0552B	8	1	8	MNOTE
+IFG0552D	8	1	8	MNOTE
+IFG0552F	8	1	8	MNOTE
+IFG0552N	8	1	8	MNOTE
+IFG0552R	8	1	8	MNOTE
+IFG0552T	8	1	8	MNOTE
+IFG0552V	8	1	8	MNOTE
+IFG0552X	8	1	8	MNOTE
+IFG0553C	8	1	8	MNOTE
+IFG0553F	8	1	8	MNOTE
+IFG0553H	8	1	8	MNOTE
+IFG0553P	8	1	8	MNOTE
+IFG0553X	8	1	8	MNOTE
+IFG0553Z	8	1	8	MNOTE
+IFG0554B	8	1	8	MNOTE
+IFG0554L	8	1	8	MNOTE
+IFG0554N	8	1	8	MNOTE
+IFG0554P	12	4	12	Undefined symbol | MNOTE
+IFG0554T	8	1	8	MNOTE
+IFG0554Z	8	1	8	MNOTE
+IFG0555B	8	1	8	MNOTE
+IFG0555H	8	1	8	MNOTE
+IFG0555J	8	1	8	MNOTE
+IFG0558X	8	1	8	MNOTE
 IFG0559C	0			
 IFG0EX0A	0			
 IFG0RR0A	0			
@@ -3234,34 +3234,34 @@ IFG0RR0F	0
 IFG0TC0A	0			
 IFHSTATR	0			
 IFNX1A	8	14	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
-IFNX1J	8	9	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol
+IFNX1J	8	11	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol
 IFNX1K	8	11	8	Undefined symbol
-IFNX1S	0			
-IFNX2A	8	21	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
-IFNX3A	8	18	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
-IFNX3B	8	5	8	Undefined symbol | IFO158 DSECT symbol JTSYMBL used in a relocatable address constant
+IFNX1S	8	7	8	MNOTE
+IFNX2A	8	44	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
+IFNX3A	8	102	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
+IFNX3B	8	11	8	MNOTE | Undefined symbol | IFO158 DSECT symbol JTSYMBL used in a relocatable address constant
 IFNX3K	8	9	8	Undefined symbol
-IFNX3N	8	27	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
-IFNX4D	8	5	8	Undefined symbol
-IFNX4E	8	22	8	Undefined symbol | IFO158 DSECT symbol JTSYMBL used in a relocatable address constant
-IFNX4M	8	50	8	Undefined symbol
-IFNX4N	8	5	8	Undefined symbol
-IFNX4S	8	1	8	Undefined symbol
-IFNX4T	8	51	8	Undefined symbol | Undefined operation code
-IFNX4V	8	3	8	Undefined symbol
-IFNX5A	8	19	8	Undefined symbol
-IFNX5C	8	5	8	Undefined symbol
-IFNX5D	8	1	8	Undefined symbol
-IFNX5F	0			
+IFNX3N	8	32	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
+IFNX4D	8	7	8	MNOTE | Undefined symbol
+IFNX4E	8	30	8	MNOTE | Undefined symbol | IFO158 DSECT symbol JTSYMBL used in a relocatable address constant
+IFNX4M	8	54	8	MNOTE | Undefined symbol
+IFNX4N	8	7	8	MNOTE | Undefined symbol
+IFNX4S	8	3	8	MNOTE | Undefined symbol
+IFNX4T	8	55	8	MNOTE | Undefined symbol | Undefined operation code
+IFNX4V	8	28	8	MNOTE | Undefined symbol
+IFNX5A	8	59	8	Undefined symbol
+IFNX5C	8	18	8	Undefined symbol
+IFNX5D	8	15	8	Undefined symbol
+IFNX5F	8	5	8	MNOTE
 IFNX5L	8	3	8	Undefined symbol
-IFNX5M	8	3	8	Undefined symbol
-IFNX5P	8	1	8	Undefined symbol
-IFNX5V	0			
-IFNX6A	0			
-IFNX6B	0			
+IFNX5M	8	589	8	Undefined symbol
+IFNX5P	8	8	8	Undefined symbol | MNOTE
+IFNX5V	0	25	0	
+IFNX6A	8	9	8	MNOTE
+IFNX6B	8	13	8	MNOTE
 IFNX6C	0			
 IFOX0A	8	3	8	Undefined symbol
-IFOX0B	0			
+IFOX0B	0	2	0	
 IFOX0C	0			
 IFOX0D	8	2	8	Undefined symbol
 IFOX0E	0			
@@ -3270,31 +3270,31 @@ IFOX0G	0
 IFOX0H	0			
 IFOX0I	0			
 IFOX0J	0			
-IGARPT01	12	22	12	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol | IFO231 Duplication factor uses a symbol not previously defined  - IGAFS80 | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved
+IGARPT01	12	39	12	MNOTE | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol | IFO231 Duplication factor uses a symbol not previously defined  - IGAFS80 | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved
 IGC0001F	8	81	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 IGC0001G	0			
-IGC0001I	8	1	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
-IGC00020	0			
+IGC0001I	8	2	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | MNOTE
+IGC00020	8	1	8	MNOTE
 IGC0002A	0			
-IGC0002B	0			
-IGC0002C	0			
+IGC0002B	8	1	8	MNOTE
+IGC0002C	8	1	8	MNOTE
 IGC0002D	0			
 IGC0002E	0			
 IGC0002F	0			
 IGC0002G	0			
 IGC0002I	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
 IGC00030	0			
-IGC0003A	0			
+IGC0003A	8	1	8	MNOTE
 IGC0003B	0			
 IGC0003C	0			
 IGC0003I	0			
 IGC0005C	0			
 IGC0005D	0			
-IGC0005E	0			
+IGC0005E	8	1	8	MNOTE
 IGC0005G	0			
 IGC0005I	0			
 IGC0006A	0			
-IGC0006D	0			
+IGC0006D	8	1	8	MNOTE
 IGC0006F	0			
 IGC0006H	0			
 IGC0006I	0			
@@ -3375,7 +3375,7 @@ IGC0C06F	0
 IGC0C10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGC0D06F	0			
 IGC0D10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGC0E05A	0			
+IGC0E05A	8	1	8	MNOTE
 IGC0E06F	0			
 IGC0E10D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGC0F05A	0			
@@ -3554,8 +3554,8 @@ IGE0004A	0
 IGE0004B	0			
 IGE0004C	0			
 IGE0004D	0			
-IGE0004G	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGE0004H	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGE0004G	12	2	12	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
+IGE0004H	12	2	12	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IGE0004I	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGE0010A	0			
 IGE0010B	0			
@@ -3687,24 +3687,24 @@ IGG01918	0
 IGG01919	0			
 IGG0191A	0			
 IGG0191B	0			
-IGG0191C	0			
-IGG0191D	0			
-IGG0191F	0			
+IGG0191C	8	1	8	MNOTE
+IGG0191D	8	1	8	MNOTE
+IGG0191F	8	1	8	MNOTE
 IGG0191G	0			
-IGG0191H	0			
+IGG0191H	8	1	8	MNOTE
 IGG0191I	0			
-IGG0191J	0			
+IGG0191J	8	1	8	MNOTE
 IGG0191K	0			
 IGG0191L	0			
 IGG0191M	0			
 IGG0191N	0			
-IGG0191O	0			
+IGG0191O	8	1	8	MNOTE
 IGG0191P	0			
 IGG0191Q	0			
 IGG0191R	0			
 IGG0191S	0			
 IGG0191T	0			
-IGG0191U	0			
+IGG0191U	8	1	8	MNOTE
 IGG0191V	0			
 IGG0191W	0			
 IGG0191X	0			
@@ -3743,10 +3743,10 @@ IGG0192V	0
 IGG0192W	0			
 IGG0192X	0			
 IGG0192Z	0			
-IGG01930	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGG01931	8	4	8	IFO117 first expression in substring notation exceeds the length of the string | Undefined symbol
-IGG01933	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGG01934	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG01930	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
+IGG01931	8	5	8	IFO117 first expression in substring notation exceeds the length of the string | Undefined symbol | MNOTE
+IGG01933	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
+IGG01934	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IGG01935	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG01936	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG01937	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -3764,7 +3764,7 @@ IGG01941	8	1	8	IFO117 first expression in substring notation exceeds the length 
 IGG01942	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG01943	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG01944	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGG01945	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG01945	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IGG01946	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG01948	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG01949	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -4019,7 +4019,7 @@ IGG019M3	0
 IGG019M4	0			
 IGG019M5	0			
 IGG019M6	0			
-IGG019MA	8	5	8	Undefined symbol
+IGG019MA	8	6	8	Undefined symbol | MNOTE
 IGG019MB	8	446	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 IGG019MC	0			
 IGG019MD	0			
@@ -4053,7 +4053,7 @@ IGG019P9	8	3	8	Undefined symbol | Undefined operation code
 IGG019PA	0			
 IGG019PB	0			
 IGG019PC	0			
-IGG019PD	8	3	8	Undefined symbol
+IGG019PD	8	4	8	Undefined symbol | MNOTE
 IGG019PE	0			
 IGG019PF	0			
 IGG019PG	0			
@@ -4076,22 +4076,22 @@ IGG019Q6	8	1	8	IFO117 first expression in substring notation exceeds the length 
 IGG019Q7	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019Q8	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019Q9	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGG019QE	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG019QE	12	2	12	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IGG019R0	8	1551	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 IGG019R1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019R2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019R3	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019R4	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGG019R5	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG019R5	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IGG019R6	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019R7	0			
 IGG019R8	0			
 IGG019R9	0			
 IGG019RA	0			
-IGG019RC	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG019RC	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IGG019RD	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019RE	0			
-IGG019RF	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG019RF	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IGG019RG	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019RI	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019RK	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -4134,7 +4134,7 @@ IGG019UN	0
 IGG019UO	0			
 IGG019UP	0			
 IGG019V1	0			
-IGG019V2	0			
+IGG019V2	12	1	12	MNOTE
 IGG019V3	0			
 IGG019V4	0			
 IGG019V5	0			
@@ -4143,9 +4143,9 @@ IGG019VA	0
 IGG019VB	0			
 IGG019VC	0			
 IGG019VD	0			
-IGG019VE	0			
+IGG019VE	12	1	12	MNOTE
 IGG019VF	0			
-IGG019VG	0			
+IGG019VG	12	1	12	MNOTE
 IGG019VH	0			
 IGG019VI	0			
 IGG019VJ	0			
@@ -4172,7 +4172,7 @@ IGG0202K	0
 IGG0202L	0			
 IGG0202M	0			
 IGG0202N	0			
-IGG02030	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG02030	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IGG02035	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG02036	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG0203A	8	2	8	Undefined operation code | Undefined symbol
@@ -4181,7 +4181,7 @@ IGG0203K	0
 IGG0203M	0			
 IGG0203Y	0			
 IGG0203Z	0			
-IGG02041	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG02041	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
 IGG02046	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG020D0	0			
 IGG020D1	8	2	8	Undefined symbol
@@ -4436,7 +4436,7 @@ IKJCT463	0
 IKJCT464	0			
 IKJCT466	0			
 IKJCT467	8	93	8	Undefined symbol | Undefined operation code
-IKJCT469	8	3	8	Undefined symbol
+IKJCT469	8	7	8	Undefined symbol | MNOTE
 IKJCT470	0			
 IKJCT471	0			
 IKJCT472	0			
@@ -4446,27 +4446,27 @@ IKJEBEAE	0
 IKJEBEAR	0			
 IKJEBEAT	0			
 IKJEBEBO	0			
-IKJEBECH	0			
+IKJEBECH	8	11	8	MNOTE
 IKJEBECI	0			
 IKJEBECK	0			
 IKJEBECO	0			
 IKJEBEDA	0			
 IKJEBEDC	0			
-IKJEBEDE	0			
-IKJEBEDO	8	2	8	Undefined symbol
+IKJEBEDE	8	3	8	MNOTE
+IKJEBEDO	8	3	8	Undefined symbol | MNOTE
 IKJEBEDX	0			
 IKJEBEEN	0			
 IKJEBEEX	0			
 IKJEBEFC	0			
-IKJEBEFI	8	2	8	Undefined symbol
-IKJEBEFO	8	18	8	Undefined symbol
+IKJEBEFI	8	6	8	Undefined symbol | MNOTE
+IKJEBEFO	8	23	8	Undefined symbol | MNOTE
 IKJEBEHE	0			
 IKJEBEIA	8	46	8	Undefined symbol
-IKJEBEIP	0			
+IKJEBEIP	8	3	8	MNOTE
 IKJEBEIS	0			
 IKJEBELE	0			
-IKJEBELI	0			
-IKJEBELT	8	3	8	Undefined symbol
+IKJEBELI	8	2	8	MNOTE
+IKJEBELT	8	6	8	Undefined symbol | MNOTE
 IKJEBEM1	0			
 IKJEBEM2	0			
 IKJEBEM3	0			
@@ -4474,32 +4474,32 @@ IKJEBEM4	0
 IKJEBEM5	0			
 IKJEBEM6	0			
 IKJEBEM7	0			
-IKJEBEMA	0			
-IKJEBEMC	8	1	8	Undefined symbol
-IKJEBEME	8	23	8	Undefined symbol
+IKJEBEMA	4	2	4	MNOTE
+IKJEBEMC	8	8	8	Undefined symbol | MNOTE
+IKJEBEME	8	31	8	Undefined symbol | MNOTE
 IKJEBEMR	0			
 IKJEBEMS	0			
 IKJEBEPS	0			
 IKJEBERC	0			
-IKJEBERE	8	22	8	Undefined symbol
+IKJEBERE	8	26	8	Undefined symbol | MNOTE
 IKJEBERN	0			
-IKJEBERU	0			
-IKJEBESA	8	159	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol
-IKJEBESC	0			
+IKJEBERU	8	2	8	MNOTE
+IKJEBESA	8	164	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | MNOTE
+IKJEBESC	8	3	8	MNOTE
 IKJEBESE	0			
-IKJEBESU	0			
-IKJEBETA	8	3	8	Undefined symbol
+IKJEBESU	8	11	8	MNOTE
+IKJEBETA	8	4	8	Undefined symbol | MNOTE
 IKJEBETO	0			
 IKJEBEUI	0			
 IKJEBEUN	0			
-IKJEBEUP	8	2	8	Undefined symbol
+IKJEBEUP	8	3	8	Undefined symbol | MNOTE
 IKJEBEUT	0			
 IKJEBEVE	0			
 IKJEE100	0			
 IKJEE150	0			
 IKJEE1A0	0			
 IKJEES10	0			
-IKJEES11	8	1	8	Undefined symbol
+IKJEES11	8	5	8	MNOTE | Undefined symbol
 IKJEES20	0			
 IKJEES40	0			
 IKJEES70	0			
@@ -4507,7 +4507,7 @@ IKJEES74	0
 IKJEES75	0			
 IKJEFA00	0			
 IKJEFA01	0			
-IKJEFA10	0			
+IKJEFA10	8	9	8	MNOTE
 IKJEFA11	0			
 IKJEFA12	0			
 IKJEFA13	0			
@@ -4515,8 +4515,8 @@ IKJEFA20	0
 IKJEFA21	0			
 IKJEFA22	0			
 IKJEFA23	0			
-IKJEFA24	8	1	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
-IKJEFA30	0			
+IKJEFA24	8	11	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | MNOTE
+IKJEFA30	8	3	8	MNOTE
 IKJEFA31	0			
 IKJEFA32	0			
 IKJEFA40	0			
@@ -4526,10 +4526,10 @@ IKJEFA51	0
 IKJEFA52	0			
 IKJEFA53	0			
 IKJEFA54	0			
-IKJEFA55	0			
-IKJEFATT	0			
+IKJEFA55	8	15	8	MNOTE
+IKJEFATT	8	12	8	MNOTE
 IKJEFD00	0			
-IKJEFD20	0			
+IKJEFD20	8	6	8	MNOTE
 IKJEFD30	0			
 IKJEFD31	0			
 IKJEFD32	0			
@@ -4537,14 +4537,14 @@ IKJEFD33	0
 IKJEFD34	0			
 IKJEFD35	0			
 IKJEFD36	0			
-IKJEFD37	8	2	8	Undefined symbol
+IKJEFD37	8	29	8	MNOTE | Undefined symbol
 IKJEFE01	0			
 IKJEFE02	0			
 IKJEFE03	0			
 IKJEFE04	0			
 IKJEFE05	0			
 IKJEFE06	0			
-IKJEFE11	0			
+IKJEFE11	8	2	8	MNOTE
 IKJEFE15	0			
 IKJEFE16	0			
 IKJEFF00	0			
@@ -4561,12 +4561,12 @@ IKJEFF10	0
 IKJEFF12	0			
 IKJEFF13	0			
 IKJEFF15	0			
-IKJEFF16	0			
+IKJEFF16	4	1	4	MNOTE
 IKJEFF18	0			
 IKJEFF19	0			
 IKJEFF20	0			
-IKJEFF49	0			
-IKJEFF50	0			
+IKJEFF49	4	1	4	MNOTE
+IKJEFF50	4	1	4	MNOTE
 IKJEFF51	0			
 IKJEFF52	0			
 IKJEFF53	0			
@@ -4577,9 +4577,9 @@ IKJEFF57	0
 IKJEFF58	0			
 IKJEFF76	0			
 IKJEFF77	0			
-IKJEFG00	0			
+IKJEFG00	8	1	8	MNOTE
 IKJEFH00	0			
-IKJEFH01	0			
+IKJEFH01	8	3	8	MNOTE
 IKJEFH02	0			
 IKJEFH03	0			
 IKJEFL00	0			
@@ -4588,10 +4588,10 @@ IKJEFLB	0
 IKJEFLC	0			
 IKJEFLCM	0			
 IKJEFLE	0			
-IKJEFLEA	8	5	8	Undefined symbol
+IKJEFLEA	8	11	8	Undefined symbol | MNOTE
 IKJEFLF	0			
 IKJEFLG	0			
-IKJEFLGB	0			
+IKJEFLGB	4	3	4	MNOTE
 IKJEFLGH	0			
 IKJEFLGM	0			
 IKJEFLGN	0			
@@ -4602,7 +4602,7 @@ IKJEFLK	0
 IKJEFLL	0			
 IKJEFLLM	0			
 IKJEFLPA	0			
-IKJEFLS	0			
+IKJEFLS	4	1	4	MNOTE
 IKJEFP00	0			
 IKJEFP03	0			
 IKJEFP10	0			
@@ -4610,17 +4610,17 @@ IKJEFP20	0
 IKJEFP30	0			
 IKJEFP40	0			
 IKJEFP60	0			
-IKJEFR00	0			
+IKJEFR00	8	3	8	MNOTE
 IKJEFT01	0			
-IKJEFT02	0			
+IKJEFT02	4	2	4	MNOTE
 IKJEFT03	0			
 IKJEFT04	0			
 IKJEFT05	0			
 IKJEFT06	0			
 IKJEFT07	0			
-IKJEFT08	0			
+IKJEFT08	8	1	8	MNOTE
 IKJEFT09	0			
-IKJEFT25	0			
+IKJEFT25	4	3	4	MNOTE
 IKJEFT30	0			
 IKJEFT35	0			
 IKJEFT40	0			
@@ -4630,36 +4630,36 @@ IKJEFT53	0
 IKJEFT54	0			
 IKJEFT55	0			
 IKJEFT56	0			
-IKJEFT80	0			
-IKJEFT82	0			
+IKJEFT80	8	9	8	MNOTE
+IKJEFT82	8	2	8	MNOTE
 IKJEFTE2	0			
 IKJEFTE8	0			
 IKJEFTNS	0			
 IKJEFTSC	0			
 IKJEFXSR	0			
 IKJEGASN	0			
-IKJEGAT	8	1	8	Undefined symbol
+IKJEGAT	8	3	8	MNOTE | Undefined symbol
 IKJEGATD	8	1	8	Undefined symbol
 IKJEGATN	0			
 IKJEGCIV	0			
-IKJEGCPY	0			
+IKJEGCPY	8	1	8	MNOTE
 IKJEGCVT	0			
 IKJEGDCB	0			
 IKJEGDEB	0			
 IKJEGEND	0			
-IKJEGEQU	0			
-IKJEGGO	0			
+IKJEGEQU	8	4	8	MNOTE
+IKJEGGO	4	1	4	MNOTE
 IKJEGINT	0			
 IKJEGIO	0			
-IKJEGLDF	8	16	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol
+IKJEGLDF	8	22	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | MNOTE
 IKJEGLDR	0			
 IKJEGLSA	0			
-IKJEGLST	8	11	8	Undefined symbol
+IKJEGLST	8	14	8	Undefined symbol | MNOTE
 IKJEGMAP	0			
-IKJEGMNL	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol
+IKJEGMNL	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | MNOTE | Undefined symbol
 IKJEGMSG	0			
-IKJEGOFF	0			
-IKJEGPCH	0			
+IKJEGOFF	4	1	4	MNOTE
+IKJEGPCH	4	1	4	MNOTE
 IKJEGPSW	0			
 IKJEGQFY	0			
 IKJEGSCD	0			
@@ -4671,9 +4671,9 @@ IKJEGWHR	0
 IKJEHAL1	0			
 IKJEHCIR	0			
 IKJEHDEF	0			
-IKJEHDS1	0			
+IKJEHDS1	4	1	4	MNOTE
 IKJEHMEM	0			
-IKJEHPRO	8	14	8	Undefined symbol
+IKJEHPRO	8	20	8	Undefined symbol | MNOTE
 IKJEHREN	0			
 IKJEHSIR	0			
 IKJL4T00	0			
@@ -4734,7 +4734,7 @@ IKTIMIDS	0
 IKTIMLU2	0			
 IKTIOFRR	0			
 IKTIST00	0			
-IKTLOGFF	0			
+IKTLOGFF	4	2	4	MNOTE
 IKTLOGR	0			
 IKTLTERM	0			
 IKTMSGS	0			
@@ -5115,7 +5115,7 @@ ISTINCU3	0
 ISTINCU4	0			
 ISTINCU5	0			
 ISTINCU6	0			
-ISTINCU7	8	329	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | Undefined operation code
+ISTINCU7	8	331	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | Undefined operation code | MNOTE
 ISTINCU8	0			
 ISTINCUA	0			
 ISTINCUB	0			

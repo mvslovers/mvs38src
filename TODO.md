@@ -291,6 +291,27 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### #39: 182 Module assemblierten sauber, während ein Makro sich beschwerte
+
+`as370` gab für ein `MNOTE` **nichts** aus — keine Zeile, keine Meldung, rc 0, wo
+IFOX00 die Schwere durchreicht (ungedeckelt: `MNOTE 20` ergibt rc 20). Gegated:
+**0 von 5.528 Decks geändert, 224 rc-Änderungen, davon 182 von rc 0 aus.**
+
+**182 Module assemblierten sauber, während ein Makro sich beschwerte und nichts
+es hören konnte.** Das ist die Größe des Lochs, durch das jede Makro-Messung
+dieser Woche gelesen hat — vor jedem neuen Makro auf dem Pfad.
+
+Für meine Seite heißt das: **ein Modul, das unter #39 von rc 0 auf rc 8 geht, ist
+kein Rückschritt eines neuen Makros**, sondern ein `MNOTE`, das immer da war.
+Die beiden zu trennen braucht einen Basislauf mit #39 und ohne neue Makros — der
+ist jetzt `m234`.
+
+**Und eine Zahl, die noch nicht vergleichbar ist:** `as370` meldet jetzt `MNOTE`
+in **304** Modulen, IFOX00 in **26**. Das ist kein Befund, sondern eine
+Instrumentendifferenz — meine IFOX-Meldungsspalte kommt aus dem
+Diagnoseabschnitt des Listings, und ein `MNOTE *` oder mit Schwere 0 steht dort
+gar nicht. Die beiden Zahlen zählen Verschiedenes, bis das geprüft ist.
+
 ### 87,0 % — und ein Histogramm fand, was zwei Tage Zählen nicht fand
 
 **#231, der größte Gewinn seit #175: +57, keine verloren, 88 näher, null weiter.**
@@ -1196,6 +1217,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #226 (ein `EQU` steht nicht am Ortszähler) | 0 | 0 | 0 | 0 |
 | #227 (`ORG`/`CSECT`/`DSECT` listeten den Zähler von vorher) | 0 | 0 | 0 | 0 |
 | #231 (`CNOP` von ungeradem Zähler, und ohne Namensfeld) | **+57** | 0 | 88 | **0** |
+| #39 (`MNOTE` erzeugte gar nichts) | 0 | 0 | 0 | 0 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
