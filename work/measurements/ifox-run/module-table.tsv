@@ -110,7 +110,7 @@ IEEVSTAR	0				0000				bytes	0x00643	3797	3797	text	silent divergence	cc370
 IFCSAXXX	0				0000				cards	0x00007	3783	3479	length	silent divergence	cc370	
 IEHINITT	0				0000				bytes	0x00c48	3778	3578	length	silent divergence	cc370	
 IFCEOAK2	0				0000				cards	0x00016	3777	3053	length	silent divergence	cc370	
-IECVCINT	0				0000				bytes	0x0006e	3732	3732	length	silent divergence	cc370	
+IECVCINT	0				0000				bytes	0x00124	3732	3732	length	silent divergence	cc370	
 IEAVTSDT	0				0000				cards	0x00025	3709	3717	length	silent divergence	cc370	
 IFCEXXX3	0				0000				cards	0x001a0	3705	3293	length	silent divergence	cc370	
 IEFAB489	0				0000				bytes	0x0002b	3694	3711	length	silent divergence	cc370	
@@ -157,7 +157,7 @@ IFCEXXXF	0				0000				cards	0x0005a	3060	2840	length	silent divergence	cc370
 IFFAHA16	0				0000				cards	0x0000a	3048	3048	identical	silent divergence	cc370	
 IFCEXXX2	0				0000				cards	0x00278	3035	2683	length	silent divergence	cc370	
 IEFAB488	0				0000				cards	0x00181	3032	3160	length	silent divergence	cc370	
-IECVESIO	0				0000				bytes	0x00092	3019	3019	length	silent divergence	cc370	
+IECVESIO	0				0000				bytes	0x00126	3019	3019	length	silent divergence	cc370	
 IKJEGDCB	0				0000				cards	0x009a0	3000	3000	no-pair	silent divergence	cc370	
 IKJEFA10	0				0000				cards	0x00a70	2982	2982	no-pair	silent divergence	cc370	
 IFCEF155	0				0000				cards	0x00002	2976	1639	length	silent divergence	cc370	
@@ -182,7 +182,7 @@ IEAVEMRQ	0				0000				bytes	0x00023	2779	2813	length	silent divergence	cc370
 IFG0RR0A	0				0000				bytes	0x0001b	2776	2824	length	silent divergence	cc370	
 IFCS2870	0				0000				cards	0x00007	2764	2356	length	silent divergence	cc370	
 IFFPFAVA	0				0000				cards	0x00031	2754	2616	length	silent divergence	cc370	
-IEAXPALL	0				0000				cards	0x00325	2752	2752	length	silent divergence	cc370	
+IEAXPALL	0				0000				bytes	0x00325	2752	2752	length	silent divergence	cc370	
 IDCCDRP	0				0000				cards	0x00460	2742	1935	length	silent divergence	cc370	
 IKJEFA55	0				0000				cards	0x009f2	2725	2725	no-pair	silent divergence	cc370	
 IFCEMER5	0				0000				cards	0x00176	2723	2211	length	silent divergence	cc370	
@@ -340,7 +340,7 @@ IEFSD166	0				0000				bytes	0x0001f	1194	1210	length	silent divergence	cc370
 IEAVEMDL	0				0000				cards	0x0001f	1186	1203	length	silent divergence	cc370	
 IFCSSOFT	0				0000				bytes	0x00007	1183	1137	length	silent divergence	cc370	
 IGG09301	0				0000				bytes	0x00025	1180	1196	length	silent divergence	cc370	
-IEAXPDXR	0				0000				cards	0x001ed	1160	1160	text	silent divergence	cc370	
+IEAXPDXR	0				0000				bytes	0x001ed	1160	1160	text	silent divergence	cc370	
 ISTSC029	0				0000				bytes	0x00438	1160	1160	length	silent divergence	cc370	
 IFDOLT07	0				0000				cards	0x0003b	1158	1158	mixed	silent divergence	cc370	
 BLSRVRBX	0				0000				cards	0x00075	1152	1152	length	silent divergence	cc370	
@@ -463,9 +463,6 @@ AMDPRPJB	0				0000				bytes				holes	silent divergence	cc370
 AMDPRPMS	0				0000				bytes				holes	silent divergence	cc370	
 HMASMTMD	0				0000				cards				identical	silent divergence	cc370	
 IEFSD087	0				0000				bytes				length	silent divergence	cc370	
-IERABW	0				0000				bytes				no-pair	silent divergence	cc370	
-IERAOL	0				0000				bytes				no-pair	silent divergence	cc370	
-IERAOM	0				0000				bytes				no-pair	silent divergence	cc370	
 IFASMFDP	0				0000				bytes				length	silent divergence	cc370	
 IFNX5V	0				0000				bytes				text	silent divergence	cc370	
 IGE0019I	0				0000				cards				length	silent divergence	cc370	
@@ -482,8 +479,6 @@ IKJEGTCB	0				0000				bytes				no-pair	silent divergence	cc370
 IKJEGWHR	0				0000				bytes				no-pair	silent divergence	cc370	
 IKJEHAL1	0				0000				bytes				no-pair	silent divergence	cc370	
 IKJEHDEF	0				0000				bytes				no-pair	silent divergence	cc370	
-ISTRAMA3	0				0000				bytes				length	silent divergence	cc370	
-ISTRAMA4	0				0000				bytes				length	silent divergence	cc370	
 IEHLIST1	8	334	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x028a8	15968	15920	length	as370 alone flags	cc370	
 IFCIOHND	8	855	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0003c	14722	14722	length	as370 alone flags	cc370	
 BLSUPUT	8	1	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00040	13400	13400	text	as370 alone flags	cc370	
@@ -633,7 +628,6 @@ IKJEBEDA	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITIO
 IEAVITAS	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	cards	0x00085	918	926	length	IFOX00 alone flags	cc370	
 IKJEBESE	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00024	880	880	no-pair	IFOX00 alone flags	cc370	
 IKJEBEMS	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00026	731	731	no-pair	IFOX00 alone flags	cc370	
-IEAVINV	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical	0x00184	616	616	text	IFOX00 alone flags	cc370	
 IKJEBEEX	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	592	592	no-pair	IFOX00 alone flags	cc370	
 IKJEBEUT	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	592	592	no-pair	IFOX00 alone flags	cc370	
 IKJEBEMR	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x00026	516	516	no-pair	IFOX00 alone flags	cc370	
@@ -677,6 +671,7 @@ IEAVEVT0	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITIO
 IEAVFP	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVFREE	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
 IEAVGPRR	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	IFOX00 alone flags	cc370	
+IEAVINV	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVIOCP	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				text	IFOX00 alone flags	cc370	
 IEAVLK02	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
 IEAVLK03	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				mixed	IFOX00 alone flags	cc370	
@@ -720,8 +715,8 @@ IKJEES70	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITI
 IKJEES74	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	IFOX00 alone flags	cc370	
 ILRASM00	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	IFOX00 alone flags	cc370	
 ISTCFCMM	0				0008	163	8	IFO092 KEYWORD PARAMETER SUPP UNDEFINED IN MACRO DEFINITION | IFO197 *** MNOTE *** | IFO113 ILLEGAL REFERENCE MADE TO A PARAMETER THAT IS A SUBLIST | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	identical				text	IFOX00 alone flags	cc370	
-IBCDASDI	8	1459	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	2	8	IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD	cards	0x005ca	40912	40912	no-pair	both flag	cc370	source torn by an FTP transfer: record 10 is 61 characters and record 11 is 18, where IBM's tape has one 80-character record (an embedded binary REPRO deck). Not an assembler case.
-IBCDMPRS	8	1244	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	2	8	IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD	cards	0x00482	39910	39910	no-pair	both flag	cc370	source torn by an FTP transfer, same shape as IBCDASDI: records 10 and 11 are one record on IBM's tape
+IBCDASDI	8	1459	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	2	8	IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD	cards	0x00626	40912	40912	no-pair	both flag	cc370	source torn by an FTP transfer: record 10 is 61 characters and record 11 is 18, where IBM's tape has one 80-character record (an embedded binary REPRO deck). Not an assembler case.
+IBCDMPRS	8	1244	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	2	8	IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD	cards	0x004d2	39910	39910	no-pair	both flag	cc370	source torn by an FTP transfer, same shape as IBCDASDI: records 10 and 11 are one record on IBM's tape
 IEDQXB	8	358	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x04a00	19200	18944	length	both flag	cc370	
 IEAVNIP0	8	31	8	Undefined symbol | Undefined operation code	0008	31	8	IFO188 CRCACSS IS AN UNDEFINED SYMBOL | IFO188 CSTINIT IS AN UNDEFINED SYMBOL | IFO188 CSTE IS AN UNDEFINED SYMBOL | IFO188 CSTCPU IS AN UNDEFINED SYMBOL | IFO188 CSTIOM IS AN UNDEFINED SYMBOL | IFO188 CSTCATP IS AN UNDEFINED SYMBOL	bytes	0x00027	16240	16240	mixed	both flag	cc370	
 IEAVNP05	8	353	8	Undefined symbol | Undefined operation code	0012	422	12	IFO188 NVTFLPO IS AN UNDEFINED SYMBOL | IFO188 NVT IS AN UNDEFINED SYMBOL | IFO188 NVTFLQS IS AN UNDEFINED SYMBOL | IFO188 NVTLVIRT IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 RENTRY IS AN UNDEFINED SYMBOL	bytes	0x02790	16198	16198	text	both flag	cc370	
@@ -756,7 +751,7 @@ IECVDERP	8	154	8	Addressability error - no active USING covers the operand's sec
 IFCE33XX	8	27	8	Undefined operation code | Undefined symbol	0012	29	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO197 *** MNOTE ***	bytes	0x00133	5432	5432	length	both flag	cc370	
 IEAVGFA	8	8	8	Undefined symbol | Undefined operation code	0008	10	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO188 AIANXAIA IS AN UNDEFINED SYMBOL | IFO188 AIA IS AN UNDEFINED SYMBOL | IFO188 AIAFLG2 IS AN UNDEFINED SYMBOL | IFO188 AIAFRAUX IS AN UNDEFINED SYMBOL	cards	0x00043	5426	5482	length	both flag	cc370	
 IEAVNP10	8	61	8	Undefined symbol | Undefined operation code	0012	69	12	IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 RPARM IS AN UNDEFINED SYMBOL | IFO188 RENTRY IS AN UNDEFINED SYMBOL | IFO188 NVTPRMPT IS AN UNDEFINED SYMBOL | IFO188 RNVT IS AN UNDEFINED SYMBOL | IFO226 BASE REGISTER OF MACHINE INSTRUCTION NOT ABSOLUTE NEAR OPERAND COLUMN 23	bytes	0x0000d	5146	5162	length	both flag	cc370	
-IKJEBESA	8	159	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00006	5110	5110	no-pair	both flag	cc370	
+IKJEBESA	8	159	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	cards	0x00006	5110	5110	no-pair	both flag	cc370	
 IEDQOA	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x002fa	5088	5216	length	both flag	cc370	
 IEHDANAL	8	134	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | Undefined operation code	0008	38	8	IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC3350 IS AN UNDEFINED SYMBOL | IFO188 DVC3330 IS AN UNDEFINED SYMBOL | IFO188 DVC2305A IS AN UNDEFINED SYMBOL | IFO188 DVC23052 IS AN UNDEFINED SYMBOL | IFO188 DVC3390 IS AN UNDEFINED SYMBOL	bytes	0x00044	4965	4965	length	both flag	cc370	
 IEAVEQR	8	5	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code	0008	5	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 SPCTFLG1 IS AN UNDEFINED SYMBOL | IFO188 SPCT IS AN UNDEFINED SYMBOL | IFO188 SPCTVROT IS AN UNDEFINED SYMBOL | IFO085 MACRO HEADER MISSING, MACRO NOT EXPANDABLE	cards	0x00031	4951	4983	length	both flag	cc370	
@@ -868,18 +863,12 @@ IEBDWR	8	4	8	Undefined symbol	0008	4	8	IFO188 CCWAREA IS AN UNDEFINED SYMBOL	byt
 IEDAYZ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	4	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3 | IFO197 *** MNOTE ***	bytes				length	both flag	cc370	
 IEDCSA	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards				length	both flag	cc370	
 IEDQWN	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards				length	both flag	cc370	
-IFFAJA02	8	15	8	Undefined symbol	0012	18	12	IFO188 GDSCB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 6 | IFO188 GDSGDSID IS AN UNDEFINED SYMBOL | IFO188 GDSGTMCB IS AN UNDEFINED SYMBOL | IFO188 GTMCB IS AN UNDEFINED SYMBOL | IFO188 GTMGSPCB IS AN UNDEFINED SYMBOL	bytes				text	both flag	cc370	
 IFOX0A	8	3	8	Undefined symbol	0008	3	8	IFO188 MINCORE IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
 IKJCT467	8	93	8	Undefined symbol | Undefined operation code	0012	93	12	IFO188 OUTCOMTB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 9 | IFO188 OUTCPPL IS AN UNDEFINED SYMBOL | IFO188 IOPLUPT IS AN UNDEFINED SYMBOL | IFO188 IOPLECT IS AN UNDEFINED SYMBOL | IFO188 OUTATTN IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
-IRARMEVT	8	26	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code	0008	25	8	IFO188 MCVRSVF4 IS AN UNDEFINED SYMBOL | IFO188 RMEPBSWI IS AN UNDEFINED SYMBOL | IFO188 SPCTFIX IS AN UNDEFINED SYMBOL | IFO188 SPCT IS AN UNDEFINED SYMBOL | IFO188 SPCTLSQA IS AN UNDEFINED SYMBOL | IFO188 RMEPBRVT IS AN UNDEFINED SYMBOL	cards				text	both flag	cc370	
 IFCEL155	2				0000				no-as370-deck				no-pair	no deck	cc370	
 IFCSXXXF	2				0000				no-as370-deck				no-pair	no deck	cc370	
 IFCSXXXH	2				0000				no-as370-deck				no-pair	no deck	cc370	
 HEWLDIOC	-14				0000				no-as370-deck				no-pair	did not finish	cc370	
-IECVRSTI	8	27	8	Undefined symbol | Undefined operation code	0008	28	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO188 CSTELP2 IS AN UNDEFINED SYMBOL | IFO188 CSTCATP IS AN UNDEFINED SYMBOL | IFO188 CSTE IS AN UNDEFINED SYMBOL | IFO188 CSTFLAGS IS AN UNDEFINED SYMBOL	identical	0x00178	5616	5616	mixed	both flag	source	
-IEAVTRTR	8	5	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0008	7	8	IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0 | IFO228 RELOCATABLE DISPLACEMENT IN MACHINE INSTRUCTION NEAR OPERAND COLUMN 15	identical	0x00abe	5324	5324	text	both flag	source	
-IGFCCHCR	8	10	8	Undefined symbol | Undefined operation code	0008	11	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 CRCACSSA IS AN UNDEFINED SYMBOL | IFO188 CATMODEL IS AN UNDEFINED SYMBOL | IFO188 CATTYPE IS AN UNDEFINED SYMBOL | IFO188 CSTIOWRK IS AN UNDEFINED SYMBOL	identical	0x000ce	4042	4042	text	both flag	source	
-IGFCCHED	8	9	8	Undefined symbol | Undefined operation code	0008	9	8	IFO188 CSTFLAGS IS AN UNDEFINED SYMBOL | IFO188 CSTE IS AN UNDEFINED SYMBOL | IFO188 CSTVALID IS AN UNDEFINED SYMBOL | IFO188 CSTIOWRK IS AN UNDEFINED SYMBOL | IFO188 CSTCATP IS AN UNDEFINED SYMBOL | IFO188 CRCACSSA IS AN UNDEFINED SYMBOL	identical	0x002ba	856	856	text	both flag	source	
 AMDPRSN3	8	1	8	Undefined symbol	0008	1	8	IFO188 SEGRD IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
 BNGIEXIT	8	30	8	Undefined symbol | Undefined operation code	0012	30	12	IFO188 IECTDECB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 9 | IFO188 CNT IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 4 | IFO188 CTB IS AN UNDEFINED SYMBOL | IFO188 SCD IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
 IDA121A4	8	6	8	Undefined symbol	0008	6	8	IFO188 IOSFP IS AN UNDEFINED SYMBOL | IFO188 IOSEQCHK IS AN UNDEFINED SYMBOL | IFO188 IOSPCHKB IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
@@ -923,6 +912,7 @@ IEAVRELS	8	5	8	Undefined symbol | Undefined operation code	0008	6	8	IFO092 KEYWO
 IEAVRFR	8	5	8	Undefined symbol | Undefined operation code	0008	6	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO188 AIAFLG1 IS AN UNDEFINED SYMBOL | IFO188 AIA IS AN UNDEFINED SYMBOL | IFO188 AIAWRITE IS AN UNDEFINED SYMBOL | IFO188 AIAPRIV IS AN UNDEFINED SYMBOL	identical				mixed	both flag	source	
 IEAVTABI	8	82	8	Undefined symbol | Undefined operation code	0012	91	12	IFO188 NVTPAREA IS AN UNDEFINED SYMBOL | IFO188 NVT IS AN UNDEFINED SYMBOL | IFO188 NIPPANAM IS AN UNDEFINED SYMBOL | IFO188 NIPPAREA IS AN UNDEFINED SYMBOL | IFO188 NIPPARC IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION	identical				text	both flag	source	
 IEAVTRTH	8	5	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0008	7	8	IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0 | IFO228 RELOCATABLE DISPLACEMENT IN MACHINE INSTRUCTION NEAR OPERAND COLUMN 15	identical				length	both flag	source	
+IEAVTRTR	8	5	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0008	7	8	IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0 | IFO228 RELOCATABLE DISPLACEMENT IN MACHINE INSTRUCTION NEAR OPERAND COLUMN 15	identical				text	both flag	source	
 IEAVTRTS	8	5	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)	0008	7	8	IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0 | IFO228 RELOCATABLE DISPLACEMENT IN MACHINE INSTRUCTION NEAR OPERAND COLUMN 15	identical				text	both flag	source	
 IEAVTSDI	8	78	8	Undefined symbol | Undefined operation code	0012	101	12	IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 RPARM IS AN UNDEFINED SYMBOL | IFO188 RENTRY IS AN UNDEFINED SYMBOL | IFO188 NVTWTO IS AN UNDEFINED SYMBOL | IFO188 RNVT IS AN UNDEFINED SYMBOL | IFO226 BASE REGISTER OF MACHINE INSTRUCTION NOT ABSOLUTE NEAR OPERAND COLUMN 21	identical				mixed	both flag	source	
 IEAVVCTR	8	1	8	Undefined symbol	0008	1	8	IFO188 CSASWTCH IS AN UNDEFINED SYMBOL	identical				mixed	both flag	source	
@@ -935,6 +925,7 @@ IEBWSU	8	3	8	Undefined symbol	0008	3	8	IFO188 LASTTRK IS AN UNDEFINED SYMBOL	ide
 IECVDDT1	8	11	8	Undefined symbol | Undefined operation code	0012	11	12	IFO188 DVC3350 IS AN UNDEFINED SYMBOL | IFO188 A000074 IS AN UNDEFINED SYMBOL | IFO188 CHT IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 4 | IFO188 CHTTYPE IS AN UNDEFINED SYMBOL | IFO188 CHTMPX IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
 IECVGENA	8	7	8	Undefined operation code | Undefined symbol	0008	7	8	IFO078 UNDEFINED OP CODE | IFO188 CRCACSSA IS AN UNDEFINED SYMBOL | IFO188 CSTFLAGS IS AN UNDEFINED SYMBOL | IFO188 CSTE IS AN UNDEFINED SYMBOL | IFO188 CSTVALID IS AN UNDEFINED SYMBOL | IFO188 CSTCPU IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
 IECVIRST	8	61	8	Undefined symbol | Undefined operation code	0008	61	8	IFO188 CSTENTRY IS AN UNDEFINED SYMBOL | IFO188 CSTE IS AN UNDEFINED SYMBOL | IFO188 CSTCPU IS AN UNDEFINED SYMBOL | IFO188 CSTCATP IS AN UNDEFINED SYMBOL | IFO188 DCCBWPL IS AN UNDEFINED SYMBOL | IFO188 DCCBMSGS IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
+IECVRSTI	8	27	8	Undefined symbol | Undefined operation code	0008	28	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO188 CSTELP2 IS AN UNDEFINED SYMBOL | IFO188 CSTCATP IS AN UNDEFINED SYMBOL | IFO188 CSTE IS AN UNDEFINED SYMBOL | IFO188 CSTFLAGS IS AN UNDEFINED SYMBOL	identical				mixed	both flag	source	
 IECVTCCW	8	5	8	Undefined symbol	0008	5	8	IFO188 BEB006 IS AN UNDEFINED SYMBOL | IFO188 BEBKEY IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
 IECVXDAT	8	9	8	Undefined operation code | Undefined symbol	0008	10	8	IFO078 UNDEFINED OP CODE | IFO188 DAT10 IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				length	both flag	source	
 IECVXDAU	8	3	8	Undefined operation code | Undefined symbol	0008	4	8	IFO078 UNDEFINED OP CODE | IFO188 DAU10 IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				length	both flag	source	
@@ -1245,6 +1236,7 @@ IFFAHA05	8	57	8	Undefined symbol	0012	60	12	IFO188 GDSCB IS AN UNDEFINED SYMBOL 
 IFFAHA06	8	39	8	Undefined symbol	0012	41	12	IFO188 GDSCB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 6 | IFO188 GSPARRAY IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 9 | IFO188 GDSDATMD IS AN UNDEFINED SYMBOL | IFO188 GDSXVRUR IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
 IFFAHA07	8	76	8	Undefined symbol	0012	79	12	IFO188 GDSCB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 6 | IFO188 GSPARRAY IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 9 | IFO188 GDSSCISS IS AN UNDEFINED SYMBOL | IFO188 GDSXLAST IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
 IFFAHA13	8	25	8	Undefined symbol	0012	28	12	IFO188 GDSCB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 6 | IFO188 GDSGTMCB IS AN UNDEFINED SYMBOL | IFO188 GTMCB IS AN UNDEFINED SYMBOL | IFO188 GDSGDOAL IS AN UNDEFINED SYMBOL | IFO188 GDSAOACB IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
+IFFAJA02	8	15	8	Undefined symbol	0012	18	12	IFO188 GDSCB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 6 | IFO188 GDSGDSID IS AN UNDEFINED SYMBOL | IFO188 GDSGTMCB IS AN UNDEFINED SYMBOL | IFO188 GTMCB IS AN UNDEFINED SYMBOL | IFO188 GTMGSPCB IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
 IFFAJA04	8	22	8	Undefined symbol	0012	27	12	IFO188 GDSCB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 6 | IFO188 GDSGDSID IS AN UNDEFINED SYMBOL | IFO188 GDSGTMCB IS AN UNDEFINED SYMBOL | IFO188 GTMCB IS AN UNDEFINED SYMBOL | IFO188 GTMGSPCB IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
 IGC0002I	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				length	both flag	source	
 IGC0008B	8	5	8	Undefined symbol | Undefined operation code	0008	5	8	IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC2305A IS AN UNDEFINED SYMBOL | IFO188 DVC23052 IS AN UNDEFINED SYMBOL | IFO188 DVC3350 IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	identical				length	both flag	source	
@@ -1394,6 +1386,8 @@ IGE0804G	8	1	8	IFO117 first expression in substring notation exceeds the length 
 IGE0904G	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical				length	both flag	source	
 IGE0904H	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical				length	both flag	source	
 IGE0904I	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical				length	both flag	source	
+IGFCCHCR	8	10	8	Undefined symbol | Undefined operation code	0008	11	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 CRCACSSA IS AN UNDEFINED SYMBOL | IFO188 CATMODEL IS AN UNDEFINED SYMBOL | IFO188 CATTYPE IS AN UNDEFINED SYMBOL | IFO188 CSTIOWRK IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
+IGFCCHED	8	9	8	Undefined symbol | Undefined operation code	0008	9	8	IFO188 CSTFLAGS IS AN UNDEFINED SYMBOL | IFO188 CSTE IS AN UNDEFINED SYMBOL | IFO188 CSTVALID IS AN UNDEFINED SYMBOL | IFO188 CSTIOWRK IS AN UNDEFINED SYMBOL | IFO188 CSTCATP IS AN UNDEFINED SYMBOL | IFO188 CRCACSSA IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
 IGFPBUCR	8	1	8	Undefined operation code	0008	1	8	IFO078 UNDEFINED OP CODE	identical				text	both flag	source	
 IGFPINIT	8	4	8	Undefined symbol | Undefined operation code	0008	4	8	IFO188 NVTNUCND IS AN UNDEFINED SYMBOL | IFO188 NVT IS AN UNDEFINED SYMBOL | IFO188 NVTNBFND IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	identical				text	both flag	source	
 IGFRINIT	8	14	8	Undefined symbol | Undefined operation code	0012	17	12	IFO188 NVTNUCND IS AN UNDEFINED SYMBOL | IFO188 NVT IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER PLS UNDEFINED IN MACRO DEFINITION | IFO188 RPARM IS AN UNDEFINED SYMBOL | IFO188 RENTRY IS AN UNDEFINED SYMBOL | IFO188 NVTWTO IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
@@ -1518,6 +1512,7 @@ ILRVIOCM	8	25	8	Undefined symbol | Undefined operation code	0008	25	8	IFO188 AIA
 IRARMCPM	8	10	8	Undefined symbol	0008	10	8	IFO188 IRAFLTM IS AN UNDEFINED SYMBOL | IFO188 IRAEPPR IS AN UNDEFINED SYMBOL | IFO188 IRAOUCB IS AN UNDEFINED SYMBOL | IFO188 IRAWTQE IS AN UNDEFINED SYMBOL | IFO188 IRAOTQE IS AN UNDEFINED SYMBOL | IFO188 IRAINQE IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
 IRARMCTL	8	11	8	Undefined symbol	0008	11	8	IFO188 MCVRSVF4 IS AN UNDEFINED SYMBOL | IFO188 IRAFLTM IS AN UNDEFINED SYMBOL | IFO188 IRAEPPR IS AN UNDEFINED SYMBOL | IFO188 IRAOUCB IS AN UNDEFINED SYMBOL | IFO188 IRAWTQE IS AN UNDEFINED SYMBOL | IFO188 IRAOTQE IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
 IRARMERR	8	10	8	Undefined symbol	0008	10	8	IFO188 IRAFLTM IS AN UNDEFINED SYMBOL | IFO188 IRAEPPR IS AN UNDEFINED SYMBOL | IFO188 IRAOUCB IS AN UNDEFINED SYMBOL | IFO188 IRAWTQE IS AN UNDEFINED SYMBOL | IFO188 IRAOTQE IS AN UNDEFINED SYMBOL | IFO188 IRAINQE IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
+IRARMEVT	8	26	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code	0008	25	8	IFO188 MCVRSVF4 IS AN UNDEFINED SYMBOL | IFO188 RMEPBSWI IS AN UNDEFINED SYMBOL | IFO188 SPCTFIX IS AN UNDEFINED SYMBOL | IFO188 SPCT IS AN UNDEFINED SYMBOL | IFO188 SPCTLSQA IS AN UNDEFINED SYMBOL | IFO188 RMEPBRVT IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
 IRARMINT	8	9	8	Undefined symbol	0008	9	8	IFO188 IRAFLTM IS AN UNDEFINED SYMBOL | IFO188 IRAEPPR IS AN UNDEFINED SYMBOL | IFO188 IRAOUCB IS AN UNDEFINED SYMBOL | IFO188 IRAWTQE IS AN UNDEFINED SYMBOL | IFO188 IRAOTQE IS AN UNDEFINED SYMBOL | IFO188 IRAINQE IS AN UNDEFINED SYMBOL	identical				text	both flag	source	
 IRARMIOM	8	10	8	Undefined symbol	0008	10	8	IFO188 IRAFLTM IS AN UNDEFINED SYMBOL | IFO188 IRAEPPR IS AN UNDEFINED SYMBOL | IFO188 IRAOUCB IS AN UNDEFINED SYMBOL | IFO188 IRAWTQE IS AN UNDEFINED SYMBOL | IFO188 IRAOTQE IS AN UNDEFINED SYMBOL | IFO188 IRAINQE IS AN UNDEFINED SYMBOL	identical				mixed	both flag	source	
 IRARMRMR	8	10	8	Undefined symbol	0008	10	8	IFO188 IRAFLTM IS AN UNDEFINED SYMBOL | IFO188 IRAEPPR IS AN UNDEFINED SYMBOL | IFO188 IRAOUCB IS AN UNDEFINED SYMBOL | IFO188 IRAWTQE IS AN UNDEFINED SYMBOL | IFO188 IRAOTQE IS AN UNDEFINED SYMBOL | IFO188 IRAINQE IS AN UNDEFINED SYMBOL	identical				holes	both flag	source	
@@ -1550,50 +1545,9 @@ ISDAPRT0	8	5	8	Undefined operation code	0008	5	8	IFO078 UNDEFINED OP CODE	identi
 ISDASUM0	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	identical				length	both flag	source	
 ISDASUM1	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	identical				length	both flag	source	
 ISDATYPE	8	3	8	Undefined operation code	0008	3	8	IFO078 UNDEFINED OP CODE	identical				holes	both flag	source	
-AHLTSVC	0				0000				identical	0x016f0	8332	8332	length		source	
-AHLTSLIP	0				0000				identical	0x0006a	7147	7147	length		source	
-ICFBDF00	0				0000				identical	0x00042	5088	5088	length		source	
-IEAVTRTM	0				0000				identical	0x00082	4928	4928	identical		source	
-IEAVTSLP	0				0000				identical	0x00d90	4386	4386	length		source	
-AMDSAPGE	0				0000				identical	0x0006a	4380	4380	holes		source	
-AHLTSYSM	0				0000				identical	0x001cc	3842	3842	length		source	
-AMDSATER	0				0000				identical	0x009f2	3704	3704	length		source	
-IDA019R1	0				0000				identical	0x003d0	3180	3180	length		source	
-IEAVTSL2	0				0000				identical	0x00720	3052	3052	identical		source	
-AHLTPID	0				0000				identical	0x00058	2960	2960	length		source	
-IDA019SE	0				0000				identical	0x0035a	2928	2928	length		source	
-IGG019OA	0				0000				identical	0x004f2	2784	2784	length		source	
-IEEMPS03	0				0000				identical	0x00354	2430	2430	length		source	
-IECVRDIO	0				0000				identical	0x00412	2380	2380	identical		source	
-IECVURDT	0				0000				identical	0x00148	2296	2296	identical		source	
-IECTEDIT	0				0000				identical	0x0033c	2250	2250	holes		source	
-IEDTEDIT	0				0000				identical	0x0033c	2250	2250	holes		source	
-IEAVTSLR	0				0000				identical	0x0029a	2118	2118	length		source	
-IEEVEXSN	0				0000				identical	0x002c2	2102	2102	length		source	
-AMDSAPRO	0				0000				identical	0x0003c	2048	2048	text		source	
-IGFPTREC	0				0000				identical	0x003ee	1905	1905	identical		source	
-IRBMFIOI	0				0000				identical	0x001a8	1896	1896	length		source	
-AHLTEXT	0				0000				identical	0x00064	1638	1638	mixed		source	
-ISTAPC61	0				0000				identical	0x0012a	1596	1596	length		source	
-IEAVESPR	0				0000				identical	0x000a0	1475	1475	identical		source	
-AMDSASVI	0				0000				identical	0x0002a	1364	1364	holes		source	
-IGFC60	0				0000				identical	0x000de	1118	1118	length		source	
-ISTOCCOA	0				0000				identical	0x0010a	1024	1024	mixed		source	
-AMDSAAUD	0				0000				identical	0x00072	1012	1012	length		source	
-AMDSAPGI	0				0000				identical	0x0020a	956	956	holes		source	
-AMDSAWAT	0				0000				identical	0x000b2	952	952	holes		source	
-IEEVWKUP	0				0000				identical	0x0006c	936	936	length		source	
-IRBMFECH	0				0000				identical	0x000f8	772	772	no-pair		source	
-IGFPTSIG	0				0000				identical	0x000a6	640	640	identical		source	
-IGFPTCON	0				0000				identical	0x00144	536	536	identical		source	
-AMDSATAP	0				0000				identical	0x00106	466	466	length		source	
-IGFPEXIT	0				0000				identical	0x00040	458	458	identical		source	
-AHLMCIH	0				0000				identical	0x0002e	288	288	identical		source	
-IGFPMFRS	0				0000				identical	0x000d8	260	260	identical		source	
-IGFPMRTM	0				0000				identical	0x0008a	256	256	text		source	
-IRBMFTCH	0				0000				identical	0x00084	216	216	no-pair		source	
 AHLCWRIT	0				0000				identical				length		source	
 AHLIWRIT	0				0000				identical				length		source	
+AHLMCIH	0				0000				identical				identical		source	
 AHLSBLOK	0				0000				identical				text		source	
 AHLSBUF	0				0000				identical				length		source	
 AHLSCAN	0				0000				identical				holes		source	
@@ -1603,12 +1557,17 @@ AHLT103	0				0000				identical				length		source
 AHLTCTL1	0				0000				identical				identical		source	
 AHLTCTL2	0				0000				identical				identical		source	
 AHLTDIR	0				0000				identical				length		source	
+AHLTEXT	0				0000				identical				mixed		source	
 AHLTFOR	0				0000				identical				identical		source	
 AHLTMMSG	0				0000				identical				holes		source	
+AHLTPID	0				0000				identical				length		source	
 AHLTPMT	0				0000				identical				length		source	
 AHLTSCN	0				0000				identical				length		source	
 AHLTSIO	0				0000				identical				length		source	
+AHLTSLIP	0				0000				identical				length		source	
+AHLTSVC	0				0000				identical				length		source	
 AHLTSYFL	0				0000				identical				mixed		source	
+AHLTSYSM	0				0000				identical				length		source	
 AHLTTAB	0				0000				identical				holes		source	
 AHLTUSR	0				0000				identical				length		source	
 AHLTVTAM	0				0000				identical				identical		source	
@@ -1657,6 +1616,7 @@ AMDSAAID	0				0000				identical				holes		source
 AMDSAAMR	0				0000				identical				holes		source	
 AMDSAARD	0				0000				identical				holes		source	
 AMDSAASM	0				0000				identical				holes		source	
+AMDSAAUD	0				0000				identical				length		source	
 AMDSABUF	0				0000				identical				holes		source	
 AMDSACON	0				0000				identical				length		source	
 AMDSACSA	0				0000				identical				holes		source	
@@ -1668,13 +1628,20 @@ AMDSAIOI	0				0000				identical				length		source
 AMDSALDR	0				0000				identical				length		source	
 AMDSAMDM	0				0000				identical				holes		source	
 AMDSAMSG	0				0000				identical				holes		source	
+AMDSAPGE	0				0000				identical				holes		source	
+AMDSAPGI	0				0000				identical				holes		source	
+AMDSAPRO	0				0000				identical				text		source	
 AMDSARSM	0				0000				identical				identical		source	
 AMDSASIN	0				0000				identical				holes		source	
 AMDSASIO	0				0000				identical				length		source	
+AMDSASVI	0				0000				identical				holes		source	
+AMDSATAP	0				0000				identical				length		source	
+AMDSATER	0				0000				identical				length		source	
 AMDSATXT	0				0000				identical				holes		source	
 AMDSAUCB	0				0000				identical				length		source	
 AMDSAUPD	0				0000				identical				holes		source	
 AMDSAVCK	0				0000				identical				holes		source	
+AMDSAWAT	0				0000				identical				holes		source	
 AMDSYS00	0				0000				identical				length		source	
 AMDSYS01	0				0000				identical				length		source	
 AMDSYS02	0				0000				identical				mixed		source	
@@ -2199,6 +2166,7 @@ ICBVUP01	0				0000				identical				identical		source
 ICBVUT00	0				0000				identical				length		source	
 ICBVUT01	0				0000				identical				length		source	
 ICBVUT03	0				0000				identical				length		source	
+ICFBDF00	0				0000				identical				length		source	
 ICFBDX00	0				0000				identical				identical		source	
 ICFBIX00	0				0000				identical				identical		source	
 ICGDSA01	0				0000				identical				holes		source	
@@ -2336,6 +2304,7 @@ IDA0192W	0				0000				identical				holes		source
 IDA0192Y	0				0000				identical				length		source	
 IDA0192Z	0				0000				identical				length		source	
 IDA0195A	0				0000				identical				identical		source	
+IDA019R1	0				0000				identical				length		source	
 IDA019R2	0				0000				identical				length		source	
 IDA019R5	0				0000				identical				length		source	
 IDA019R8	0				0000				identical				length		source	
@@ -2368,6 +2337,7 @@ IDA019S2	0				0000				identical				length		source
 IDA019S4	0				0000				identical				length		source	
 IDA019SA	0				0000				identical				length		source	
 IDA019SB	0				0000				identical				identical		source	
+IDA019SE	0				0000				identical				length		source	
 IDA019SF	0				0000				identical				identical		source	
 IDA019SG	0				0000				identical				identical		source	
 IDA019SH	0				0004	2	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 12	identical				identical		source	
@@ -2650,6 +2620,7 @@ IEAVEPDR	0				0000				identical				text		source
 IEAVEQV0	0				0000				identical				text		source	
 IEAVERER	0				0000				identical				identical		source	
 IEAVESCR	0				0000				identical				text		source	
+IEAVESPR	0				0000				identical				identical		source	
 IEAVESVR	0				0000				identical				identical		source	
 IEAVEUPC	0				0000				identical				identical		source	
 IEAVEVRR	0				0000				identical				text		source	
@@ -2699,6 +2670,7 @@ IEAVTRML	0				0000				identical				identical		source
 IEAVTRT2	0				0000				identical				length		source	
 IEAVTRTC	0				0000				identical				length		source	
 IEAVTRTE	0				0000				identical				length		source	
+IEAVTRTM	0				0000				identical				identical		source	
 IEAVTSBP	0				0000				identical				text		source	
 IEAVTSDF	0				0000				identical				length		source	
 IEAVTSDL	0				0000				identical				identical		source	
@@ -2708,8 +2680,11 @@ IEAVTSDW	0				0000				identical				length		source
 IEAVTSIG	0				0000				identical				identical		source	
 IEAVTSKT	0				0000				identical				length		source	
 IEAVTSL1	0				0000				identical				identical		source	
+IEAVTSL2	0				0000				identical				identical		source	
 IEAVTSLB	0				0000				identical				identical		source	
 IEAVTSLE	0				0000				identical				identical		source	
+IEAVTSLP	0				0000				identical				length		source	
+IEAVTSLR	0				0000				identical				length		source	
 IEAVTSLS	0				0000				identical				identical		source	
 IEAVTSSD	0				0000				identical				length		source	
 IEAVTSSE	0				0000				identical				length		source	
@@ -2795,6 +2770,7 @@ IECTATEN	0				0000				identical				length		source
 IECTATTN	0				0000				identical				identical		source	
 IECTCATN	0				0000				identical				text		source	
 IECTCHGN	0				0000				identical				identical		source	
+IECTEDIT	0				0000				identical				holes		source	
 IECTLERP	0				0000				identical				identical		source	
 IECTLOPN	0				0000				identical				length		source	
 IECTONLT	0				0000				identical				holes		source	
@@ -2808,7 +2784,9 @@ IECVHREC	0				0000				identical				length		source
 IECVITRP	0				0000				identical				identical		source	
 IECVOTBL	0				0000				identical				text		source	
 IECVPST	0				0000				identical				text		source	
+IECVRDIO	0				0000				identical				identical		source	
 IECVRRSV	0				0000				identical				mixed		source	
+IECVURDT	0				0000				identical				identical		source	
 IECVURSV	0				0000				identical				identical		source	
 IEDAY1	0				0000				identical				length		source	
 IEDAY2	0				0000				identical				holes		source	
@@ -2856,6 +2834,7 @@ IEDQNG	0				0000				identical				length		source
 IEDQNH	0				0000				identical				length		source	
 IEDQNP	0				0000				identical				identical		source	
 IEDQNR	0				0000				identical				identical		source	
+IEDTEDIT	0				0000				identical				holes		source	
 IEDUSSTB	0				0000				identical				identical		source	
 IEE0003D	0				0000				identical				length		source	
 IEE00110	0				0000				identical				holes		source	
@@ -2984,6 +2963,7 @@ IEEMB877	0				0000				identical				text		source
 IEEMB878	0				0000				identical				identical		source	
 IEEMB879	0				0000				identical				length		source	
 IEEMB880	0				0000				identical				identical		source	
+IEEMPS03	0				0000				identical				length		source	
 IEEPALTR	0				0000				identical				length		source	
 IEEPRTN2	0				0000				identical				holes		source	
 IEEPRWI2	0				0000				identical				length		source	
@@ -3004,6 +2984,7 @@ IEEVCPU	0				0000				identical				length		source
 IEEVDEV	0				0000				identical				text		source	
 IEEVDUMY	0				0000				identical				holes		source	
 IEEVDUS1	0				0000				identical				mixed		source	
+IEEVEXSN	0				0000				identical				length		source	
 IEEVIPL	0				0000				identical				length		source	
 IEEVJCL	0				0000				identical				text		source	
 IEEVMNT1	0				0000				identical				mixed		source	
@@ -3018,6 +2999,7 @@ IEEVSND6	0				0004	4	4	IFO197 *** MNOTE ***	identical				length		source
 IEEVSND8	0				0000				identical				length		source	
 IEEVSND9	0				0000				identical				length		source	
 IEEVWAIT	0				0000				identical				length		source	
+IEEVWKUP	0				0000				identical				length		source	
 IEEXEDNA	0				0000				identical				mixed		source	
 IEEZB03D	0				0000				identical				no-pair		source	
 IEEZC03D	0				0000				identical				no-pair		source	
@@ -3395,6 +3377,7 @@ IERABS	0				0000				identical				no-pair		source
 IERABT	0				0000				identical				no-pair		source	
 IERABU	0				0000				identical				no-pair		source	
 IERABV	0				0000				identical				no-pair		source	
+IERABW	0				0000				identical				no-pair		source	
 IERABX	0				0000				identical				no-pair		source	
 IERABY	0				0000				identical				no-pair		source	
 IERABZ	0				0000				identical				no-pair		source	
@@ -3448,6 +3431,8 @@ IERAOH	0				0000				identical				no-pair		source
 IERAOI	0				0000				identical				no-pair		source	
 IERAOJ	0				0000				identical				no-pair		source	
 IERAOK	0				0000				identical				no-pair		source	
+IERAOL	0				0000				identical				no-pair		source	
+IERAOM	0				0000				identical				no-pair		source	
 IERAON	0				0000				identical				no-pair		source	
 IERAOO	0				0000				identical				no-pair		source	
 IERAOP	0				0000				identical				no-pair		source	
@@ -4001,6 +3986,7 @@ IGE0904B	0				0000				identical				length		source
 IGE0904C	0				0000				identical				length		source	
 IGF2503D	0				0000				identical				mixed		source	
 IGF2603D	0				0000				identical				identical		source	
+IGFC60	0				0000				identical				length		source	
 IGFC70	0				0000				identical				text		source	
 IGFC80	0				0000				identical				text		source	
 IGFCHDA	0				0000				identical				identical		source	
@@ -4027,19 +4013,25 @@ IGFDU1	0				0000				identical				holes		source
 IGFDV0	0				0000				identical				length		source	
 IGFDV1	0				0000				identical				length		source	
 IGFDW0	0				0000				identical				length		source	
+IGFPEXIT	0				0000				identical				identical		source	
 IGFPKREF	0				0000				identical				text		source	
 IGFPMCIH	0				0000				identical				identical		source	
+IGFPMFRS	0				0000				identical				identical		source	
 IGFPMHCA	0				0000				identical				text		source	
 IGFPMKTA	0				0000				identical				text		source	
 IGFPMMSG	0				0000				identical				identical		source	
 IGFPMPFX	0				0000				identical				text		source	
+IGFPMRTM	0				0000				identical				text		source	
 IGFPMSCA	0				0000				identical				identical		source	
 IGFPMTHA	0				0000				identical				identical		source	
 IGFPNRFH	0				0000				identical				text		source	
 IGFPNSAV	0				0000				identical				identical		source	
 IGFPSAD0	0				0000				identical				identical		source	
 IGFPTAIM	0				0000				identical				text		source	
+IGFPTCON	0				0000				identical				identical		source	
 IGFPTERM	0				0000				identical				identical		source	
+IGFPTREC	0				0000				identical				identical		source	
+IGFPTSIG	0				0000				identical				identical		source	
 IGFPWMSG	0				0000				identical				length		source	
 IGFPXMFA	0				0000				identical				identical		source	
 IGFRWAC	0				0000				identical				identical		source	
@@ -4359,6 +4351,7 @@ IGG019MR	0				0000				identical				text		source
 IGG019MS	0				0000				identical				text		source	
 IGG019MT	0				0000				identical				identical		source	
 IGG019MX	0				0000				identical				identical		source	
+IGG019OA	0				0000				identical				length		source	
 IGG019OB	0				0000				identical				text		source	
 IGG019OC	0				0000				identical				text		source	
 IGG019OE	0				0000				identical				length		source	
@@ -4882,12 +4875,14 @@ IRBMFDPP	0				0000				identical				holes		source
 IRBMFDSP	0				0000				identical				text		source	
 IRBMFDTA	0				0000				identical				length		source	
 IRBMFDTP	0				0000				identical				identical		source	
+IRBMFECH	0				0000				identical				no-pair		source	
 IRBMFEDV	0				0000				identical				no-pair		source	
 IRBMFEVT	0				0000				identical				no-pair		source	
 IRBMFFUR	0				0000				identical				holes		source	
 IRBMFICP	0				0000				identical				holes		source	
 IRBMFIDV	0				0000				identical				holes		source	
 IRBMFIHA	0				0000				identical				holes		source	
+IRBMFIOI	0				0000				identical				length		source	
 IRBMFIPG	0				0000				identical				holes		source	
 IRBMFISP	0				0000				identical				text		source	
 IRBMFITR	0				0000				identical				text		source	
@@ -4911,6 +4906,7 @@ IRBMFRTR	0				0000				identical				text		source
 IRBMFRWR	0				0000				identical				holes		source	
 IRBMFSAR	0				0000				identical				length		source	
 IRBMFSDE	0				0000				identical				holes		source	
+IRBMFTCH	0				0000				identical				no-pair		source	
 IRBMFTRM	0				0000				identical				length		source	
 IRBMFTTB	0				0000				identical				identical		source	
 ISDACNFG	0				0000				identical				length		source	
@@ -4949,6 +4945,7 @@ ISTAPC55	0				0000				identical				mixed		source
 ISTAPC56	0				0000				identical				text		source	
 ISTAPC57	0				0000				identical				length		source	
 ISTAPC59	0				0000				identical				mixed		source	
+ISTAPC61	0				0000				identical				length		source	
 ISTAPC62	0				0000				identical				length		source	
 ISTAPC63	0				0000				identical				mixed		source	
 ISTAPC64	0				0000				identical				identical		source	
@@ -5212,6 +5209,7 @@ ISTOCCFR	0				0000				identical				length		source
 ISTOCCLD	0				0000				identical				identical		source	
 ISTOCCMD	0				0000				identical				identical		source	
 ISTOCCNV	0				0000				identical				identical		source	
+ISTOCCOA	0				0000				identical				mixed		source	
 ISTOCCOB	0				0000				identical				length		source	
 ISTOCCOC	0				0000				identical				identical		source	
 ISTOCCOD	0				0000				identical				length		source	
@@ -5246,6 +5244,8 @@ ISTRACTL	0				0000				identical				length		source
 ISTRAFD1	0				0000				identical				no-pair		source	
 ISTRAFTP	0				0000				identical				length		source	
 ISTRAMA1	0				0000				identical				length		source	
+ISTRAMA3	0				0000				identical				length		source	
+ISTRAMA4	0				0000				identical				length		source	
 ISTRCC21	0				0000				identical				identical		source	
 ISTRCC22	0				0000				identical				identical		source	
 ISTRCC23	0				0000				identical				identical		source	

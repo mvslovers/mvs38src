@@ -1424,8 +1424,8 @@ IEAVVRP1	0	0000	identical		length
 IEAVVRP2	0	0000	identical		length
 IEAVVWTO	0	0000	identical		length
 IEAVXDOM	0	0000	identical		length
-IEAXPALL	0	0000	cards		length
-IEAXPDXR	0	0000	cards		text
+IEAXPALL	0	0000	bytes	bytes	length
+IEAXPDXR	0	0000	bytes	bytes	text
 IEAXPSIM	0	0000	identical		identical
 IEBASCAN	0	0000	identical		length
 IEBBAM	8	0008	identical		text
@@ -2520,7 +2520,7 @@ IERABS	0	0000	identical		no-pair
 IERABT	0	0000	identical		no-pair
 IERABU	0	0000	identical		no-pair
 IERABV	0	0000	identical		no-pair
-IERABW	0	0000	bytes	bytes	no-pair
+IERABW	0	0000	identical		no-pair
 IERABX	0	0000	identical		no-pair
 IERABY	0	0000	identical		no-pair
 IERABZ	0	0000	identical		no-pair
@@ -2574,8 +2574,8 @@ IERAOH	0	0000	identical		no-pair
 IERAOI	0	0000	identical		no-pair
 IERAOJ	0	0000	identical		no-pair
 IERAOK	0	0000	identical		no-pair
-IERAOL	0	0000	bytes	bytes	no-pair
-IERAOM	0	0000	bytes	bytes	no-pair
+IERAOL	0	0000	identical		no-pair
+IERAOM	0	0000	identical		no-pair
 IERAON	0	0000	identical		no-pair
 IERAOO	0	0000	identical		no-pair
 IERAOP	0	0000	identical		no-pair
@@ -3105,7 +3105,7 @@ IFFAHA12	0	0000	identical		text
 IFFAHA13	8	0012	identical		length
 IFFAHA16	0	0000	cards		identical
 IFFAJA01	0	0000	identical		identical
-IFFAJA02	8	0012	bytes	bytes	text
+IFFAJA02	8	0012	identical		text
 IFFAJA04	8	0012	identical		length
 IFFANA	0	0000	identical		holes
 IFFCAN01	0	0000	identical		length
@@ -4484,7 +4484,7 @@ IKJEBERC	0	0000	identical		identical
 IKJEBERE	8	0008	cards		no-pair
 IKJEBERN	0	0000	bytes	bytes	no-pair
 IKJEBERU	0	0000	cards		no-pair
-IKJEBESA	8	0008	bytes	bytes	no-pair
+IKJEBESA	8	0008	cards		no-pair
 IKJEBESC	0	0000	cards		no-pair
 IKJEBESE	0	0008	bytes	bytes	no-pair
 IKJEBESU	0	0000	cards		no-pair
@@ -4810,7 +4810,7 @@ IRARMCPM	8	0008	identical		text
 IRARMCPU	0	0000	identical		identical
 IRARMCTL	8	0008	identical		text
 IRARMERR	8	0008	identical		length
-IRARMEVT	8	0008	cards		text
+IRARMEVT	8	0008	identical		text
 IRARMINT	8	0008	identical		text
 IRARMIOM	8	0008	identical		mixed
 IRARMIPS	8	0008	bytes	bytes	length
@@ -5241,8 +5241,8 @@ ISTRAFD1	0	0000	identical		no-pair
 ISTRAFTP	0	0000	identical		length
 ISTRAMA1	0	0000	identical		length
 ISTRAMA2	0	0000	cards		length
-ISTRAMA3	0	0000	bytes	bytes	length
-ISTRAMA4	0	0000	bytes	bytes	length
+ISTRAMA3	0	0000	identical		length
+ISTRAMA4	0	0000	identical		length
 ISTRCC21	0	0000	identical		identical
 ISTRCC22	0	0000	identical		identical
 ISTRCC23	0	0000	identical		identical
