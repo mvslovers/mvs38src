@@ -342,3 +342,40 @@ the whole time. Six of the ten files were stale by up to a factor of four.
 That regenerates [`cc370-cases.md`](cc370-cases.md)'s figures. The IFOX side does
 not have to be re-run unless the *source* changes — and if it does, only for the
 modules that changed: `ifox_run.py` skips what it has.
+
+## `as370 -v` before believing a timing — 2026-09-09
+
+`~/.local/bin/as370` is an **installed copy** and it goes stale. The gate runs
+whatever binary it is given, which since the first tree run has been the freshly
+built `~/repos/mvs/cc370/as370/as370`; the one on `PATH` was three weeks of
+merges behind and nobody noticed, because nothing else uses it.
+
+It cost ten minutes and nearly cost a wrong verdict. Re-timing `HEWLDIOC` for
+cc370#163 with the `PATH` copy, it ran past 600 s — which would have said the
+issue was still open. The current build assembles it in **0.066 s**, and the deck
+the gate promoted at 23:17 that same evening is 8160 bytes with `rc 0`.
+
+```sh
+as370 -v                       # as370 V1.0 - Sep  7 2026   <- stale
+~/repos/mvs/cc370/as370/as370 -v   # as370 V1.0 - Sep  8 2026
+```
+
+**A stale install answers every question with yesterday's assembler**, and it
+answers confidently. Print the build date before any single-module measurement,
+and use the repo path for everything the gate does.
+
+## The three counts, and saying which one you mean — 2026-09-09
+
+"What is left" has three legitimate values and they differ by fifteen:
+
+| | |
+|---:|---|
+| 539 | decks that differ card-for-card |
+| 531 | after the `&SYSTIME` restamp settles 8 of them |
+| **524** | after the 7 excluded modules |
+
+`module-table.tsv`'s `tool` column already carries the restamped verdict, so a
+tool reading that column gets 531 and 524 for free. A script that compares the
+decks itself gets 539 and looks like it has found eight regressions. **Both were
+written in this repository, and for one evening they disagreed with no note
+saying why.** Quote 524, and name the filter whenever a figure is not it.
