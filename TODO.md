@@ -291,6 +291,35 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### 89,2 % — der letzte dreistellige Block ist zu
+
+**#240: `DC AL.12(1)` reservierte nichts.** Der Längenparser liest `L` und
+erwartet Ziffern; `.` ist keine, also blieb die Länge 0 — keine Bytes, kein
+Fortschalten des Ortszählers, rc 0, keine Meldung auf beiden Seiten. Jedes Symbol
+danach lag um genau das zu früh, was nie reserviert wurde.
+
+**+99, keine verloren, 124 Decks näher** — der größte Gewinn seit #175. Und
+**byte-identisch mit IBMs Objekt: 1.080 → 1.124.**
+
+**Meine beiden Gate-Bedingungen haben sich gelohnt, und die zweite mehr als die
+erste.** Die Kontrollfälle (`AL1(1)`, `XL1'F'`, `AL2(1)`, `CL3'AB'`, `F'7'`)
+kommen aus beiden Binaries byte-gleich heraus — hier nachgeprüft, nicht
+übernommen. cc370 hat die Implementierung so geformt, dass sie es können: **der
+Bit-Pfad ist ein Zweig vor der Typverteilung**, ein Operand ohne `L.` erreicht
+exakt den Code wie vorher.
+
+**Und cc370 hat das Orakel ein zweites Mal gefragt, bevor sie geschrieben haben.**
+Die erste Erfassung fixierte Packen und Auffüllen; die zweite fragte die Fälle,
+die *nicht* gemessen waren — Mischung von Bit- und Nicht-Bit-Operanden, den
+Duplikationsfaktor, das Ende eines Laufs. **Drei der fünf Antworten hätten sie
+falsch geraten**: `AL.12(1),AL2(3)` spült auf `0010 0003` statt durchzupacken,
+`3AL.4(1)` multipliziert *in* den Lauf hinein, und `AL.4(1),C'A',AL.4(2)` spült
+**mitten in der Anweisung** zweimal. Aus der ersten Erfassung geschrieben wäre ein
+Feature entstanden, das seine eigene Testvorrichtung besteht.
+
+**Der eine „weiter"-Fall vorher geprüft**: `IGG0193S` war schon vor der Änderung
+13 Bytes zu lang und ist jetzt 20 — vorbestehender Überschuss, andere Ursache.
+
 ### 87,4 % — und ein Instrumentendefekt, der ein Ergebnis umgedreht hat
 
 **#235: eine `AIF`-Bedingung länger als 126 Zeichen wurde mitten im Term
@@ -1271,6 +1300,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #39 (`MNOTE` erzeugte gar nichts) | 0 | 0 | 0 | 0 |
 | #235 (`AIF`-Bedingung bei 126 Zeichen abgeschnitten) | +9 | 0 | 104 | 12 |
 | #238 (`EQU C''''` wertet zu null aus) | +12 | 0 | 26 | 1 |
+| #240 (Bit-Längenmodifikator reservierte nichts) | **+99** | 0 | 124 | 1 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
