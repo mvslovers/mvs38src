@@ -291,6 +291,44 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### #173: nicht die Grenze, sondern das Speichermodell
+
+cc370 hat profiliert statt geschätzt und mich korrigiert: die **lokale** Tabelle
+gipfelt in `IFCE0155` bei **elf** Einträgen. Die Kosten liegen im **globalen**
+Scan — 98 Millionen Vergleiche über 6.757 Einträge.
+
+Ich habe daraufhin die andere Hälfte gemessen. Die drei Module, die an
+`local SET-symbol table full (512)` sterben, deklarieren jeweils **eine** Sache:
+
+```
+IFCEL155 Zeile 1336:   LCLB   &SW(4000)
+IFCSXXXF Zeile  377:   LCLB   &SW(4000)
+IFCSXXXH Zeile  378:   LCLB   &SW(4000)
+```
+
+Ihre distinkten `LCL`-Symbole zählen 45, 52 und 52 — nirgends nahe 512.
+
+**Mit Testfällen festgestellt: ein subskribiertes Array kostet einen
+Tabelleneintrag pro *zugewiesenem* Subskript.**
+
+| Testfall | Ergebnis |
+|---|---|
+| `LCLB &SW(4000)` deklariert, nie zugewiesen | rc 0 |
+| 400 distinkte Subskripte zugewiesen | rc 0 |
+| **600 distinkte Subskripte** | **Tabelle voll (512)** |
+| 5.000 Zuweisungen an zwei Symbole | rc 0 — kein Duplikatfehler |
+| 60 verschachtelte Expansionen mit je 20 Locals | rc 0 — kein Leck |
+
+**Und damit sind cc370s Befund und meiner dieselbe Sache von zwei Seiten.**
+`DSGEN`s `GBLC &ITEM(3000)` und `GBLA &BITS(3000),&SHIFT(3000)` sind ebenfalls
+subskribierte Arrays, ebenso gespeichert — deshalb existieren dort überhaupt
+6.757 Einträge, und deshalb reicht 512 für *ein* Array nicht.
+
+Ein Array mit N Elementen ist N einzeln benannte Zeilen in einer linear
+durchsuchten Tabelle. **Das Speichermodell zu ändern erledigt beides und lässt
+die Grenzfrage weitgehend verschwinden.** Nur die globale Suche zu reparieren
+ließe die drei Module an einer Grenze scheitern, die dann willkürlich wäre.
+
 ### #207: die erste Änderung ohne Deck-Gewinn, absichtlich genommen
 
 `struct ctx` und das `seqn`/`seqi`-Paar liegen nicht mehr auf dem Stapel.
