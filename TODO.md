@@ -250,7 +250,43 @@ Zwei Sektionen treffen IFOX00s Länge jetzt **exakt**. Der Byteabstand steigt, w
 ein Bytevergleich an festen Adressen Inhalt verurteilt, der ein Loch gefüllt hat.
 Es ist die größte Einzelverbesserung des Merges und stand in der Rückschritt-Zeile.
 
-### 84,8 % — und der Rest, nach Form sortiert
+### 85,7 % — und der größte verbleibende Block ist EREP
+
+**cc370#205: 84 Module, fast alle `IFC*`, in denen `as370` aus derselben Quelle
+Hunderte Bytes weniger erzeugt als IFOX00 — und beide Assembler schweigen.**
+
+| Modul | `as370` | IFOX00 | Δ |
+|---|---:|---:|---:|
+| `IFCE0145` | 10.432 | 11.635 | **−1.203** |
+| `IFCE0135` | 6.975 | 8.017 | **−1.042** |
+| `IFCE0155` | 2.550 | 2.832 | −282 |
+
+**Es ist nicht die Makrolücke.** `IFCE0155` ruft `DSGEN` 59-mal, `LINE` 17-mal,
+`HEX` 16-mal — alles Namen von der Suchliste — und **definiert sie selbst**: acht
+`MACRO`-Definitionen im Quelltext. Deshalb schweigen beide. Es ist bedingte
+Assemblierung in eingebetteten Makros (`AIF` 27-mal, `SETA` 10-mal in dem einen
+Modul), die in `as370` weniger Material erzeugt.
+
+Der Befund in zwei Zeilen — der Instruktionsstrom stimmt bis `0x24`, dann eine
+`LA`-**Distanz**:
+
+```
+IFOX   41 50 93 96      LA R5,X'396'(,R9)
+as370  41 50 93 76      LA R5,X'376'(,R9)      Ziel 32 Bytes früher
+IFOX   41 60 96 61      LA R6,X'661'(,R9)
+as370  41 60 95 47      LA R6,X'547'(,R9)      Ziel 282 Bytes früher
+```
+
+**Der Code stimmt, und die Daten, die er adressiert, sind nicht da.** Die beiden
+Differenzen sind verschieden (32 und 282), es fehlt also an **mehr als einer
+Stelle**.
+
+Das `IFC*`-Geschlecht hat 118 Module im Baum; 82 davon stehen hier. **Einen
+Mechanismus habe ich nicht** und biete auch keinen an — die letzten beiden
+Vermutungen (#157, `PREFL`) waren beide falsch und haben nur deshalb wenig
+gekostet, weil sie als Vermutung gekennzeichnet waren.
+
+### 84,8 % — der Rest, nach Form sortiert
 
 Die 832 verbliebenen Abweichungen, aufgeteilt danach, ob die **Sektionslängen**
 stimmen — „richtige Form, falscher Inhalt" ist eine andere Arbeit als „falsche
@@ -604,6 +640,7 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #197 (Kommentarkorrektur) | 0 | 0 | 0 | 0 |
 | #200 (eine ESDID gehört dem ESD-Eintrag, nicht dem Symbol) | **+53** | 0 | 9 | **0** |
 | #202 (ausgelassene SS-Länge, plus die absolute DSECT-Differenz) | +11 | 0 | 19 | 1 |
+| #204 (`sub[0]` einer SS-Instruktion ist die Länge, nie eine Basis) | **+47** | 0 | 52 | 2 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
