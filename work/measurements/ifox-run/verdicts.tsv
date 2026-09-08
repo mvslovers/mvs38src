@@ -1488,7 +1488,7 @@ IEBRSAM	0	0000	identical		text
 IEBSCN	8	0008	identical		length
 IEBTCR02	0	0000	identical		holes
 IEBTCR03	0	0000	identical		mixed
-IEBTCR04	0	0000	bytes	bytes	mixed
+IEBTCR04	0	0000	identical		holes
 IEBTCR05	12	0000	bytes	bytes	length
 IEBTCRIN	0	0000	identical		identical
 IEBUPDT2	8	0000	bytes	bytes	length
@@ -1889,7 +1889,7 @@ IEE10110	0	0000	identical		length
 IEE11110	0	0000	identical		holes
 IEE12110	0	0000	identical		holes
 IEE1403D	0	0000	identical		length
-IEE1603D	0	0000	bytes	bytes	length
+IEE1603D	0	0000	identical		length
 IEE20110	0	0000	identical		length
 IEE21110	0	0000	identical		text
 IEE22110	0	0000	identical		identical
@@ -1912,7 +1912,7 @@ IEE4703D	0	0000	identical		mixed
 IEE4803D	0	0000	identical		length
 IEE4903D	0	0000	identical		mixed
 IEE5103D	0	0000	cards		length
-IEE5403D	0	0000	bytes	bytes	length
+IEE5403D	0	0000	identical		length
 IEE5503D	0	0000	identical		text
 IEE5603D	0	0000	identical		length
 IEE5703D	0	0000	identical		length
@@ -1984,7 +1984,7 @@ IEECVETW	0	0000	identical		length
 IEECVFT1	0	0000	identical		holes
 IEECVFT2	0	0000	identical		length
 IEECVFTA	0	0000	identical		identical
-IEECVFTB	0	0000	bytes	bytes	length
+IEECVFTB	0	0000	identical		length
 IEECVFTD	0	0000	identical		identical
 IEECVFTG	0	0000	identical		length
 IEECVFTL	0	0000	identical		length
@@ -2085,7 +2085,7 @@ IEEVSND5	0	0000	identical		length
 IEEVSND6	4	0004	identical		length
 IEEVSND8	0	0000	identical		length
 IEEVSND9	0	0000	identical		length
-IEEVSTAR	0	0000	bytes	bytes	text
+IEEVSTAR	0	0000	identical		text
 IEEVSTOP	8	0008	identical		text
 IEEVWAIT	0	0000	identical		length
 IEEVWKUP	0	0000	identical		length
@@ -2343,7 +2343,7 @@ IEFVDA	8	0000	cards		length
 IEFVDBSD	0	0000	identical		length
 IEFVEA	8	0000	bytes	bytes	length
 IEFVFA	8	0000	cards		length
-IEFVFB	0	0000	bytes	bytes	mixed
+IEFVFB	0	0000	identical		mixed
 IEFVGI	0	0000	identical		text
 IEFVGK	0	0000	identical		text
 IEFVGM	0	0000	identical		length
@@ -2387,7 +2387,7 @@ IEFVHM	0	0000	identical		length
 IEFVHN	0	0000	identical		text
 IEFVHQ	0	0000	identical		length
 IEFVHR	0	0000	identical		length
-IEFVINA	0	0000	bytes	bytes	length
+IEFVINA	0	0000	identical		length
 IEFVINB	0	0000	identical		length
 IEFVINC	0	0000	identical		holes
 IEFVIND	0	0000	identical		length
@@ -3015,7 +3015,7 @@ IFDOLT35	0	0000	bytes	bytes	mixed
 IFDOLT36	0	0000	identical		length
 IFDOLT37	0	0000	bytes	bytes	mixed
 IFDOLT38	0	0000	bytes	bytes	mixed
-IFDOLT39	0	0000	cards		mixed
+IFDOLT39	0	0000	bytes	bytes	mixed
 IFDOLT41	0	0000	identical		holes
 IFDOLT42	8	0000	bytes	bytes	text
 IFDOLT43	0	0000	bytes	bytes	text
@@ -3103,7 +3103,7 @@ IFFAHA07	8	0012	identical		text
 IFFAHA11	0	0000	identical		length
 IFFAHA12	0	0000	identical		text
 IFFAHA13	8	0012	identical		length
-IFFAHA16	0	0000	cards		identical
+IFFAHA16	0	0000	bytes	bytes	identical
 IFFAJA01	0	0000	identical		identical
 IFFAJA02	8	0012	identical		text
 IFFAJA04	8	0012	identical		length
@@ -3475,7 +3475,7 @@ IGCM410D	8	0008	identical		mixed
 IGCM510D	8	0008	identical		length
 IGCM610D	8	0008	identical		length
 IGCM710D	8	0008	identical		mixed
-IGCM810D	8	0008	bytes	bytes	length
+IGCM810D	8	0008	identical		length
 IGCM910D	8	0008	identical		length
 IGCMA10D	8	0008	identical		length
 IGCMB10D	8	0008	identical		length
@@ -4606,9 +4606,9 @@ IKJEFLS	4	0004	identical		length
 IKJEFP00	0	0000	bytes	bytes	length
 IKJEFP03	0	0000	identical		length
 IKJEFP10	0	0000	identical		identical
-IKJEFP20	0	0000	cards		length
+IKJEFP20	0	0000	identical		length
 IKJEFP30	0	0000	identical		mixed
-IKJEFP40	0	0000	cards		length
+IKJEFP40	0	0000	identical		length
 IKJEFP60	0	0000	identical		length
 IKJEFR00	0	0000	cards		no-pair
 IKJEFT01	0	0000	identical		length
@@ -4637,14 +4637,14 @@ IKJEFTE8	0	0000	identical		text
 IKJEFTNS	0	0000	identical		identical
 IKJEFTSC	0	0000	identical		length
 IKJEFXSR	0	0000	bytes	bytes	length
-IKJEGASN	0	0000	bytes	bytes	no-pair
+IKJEGASN	0	0000	identical		no-pair
 IKJEGAT	8	0008	bytes	bytes	no-pair
 IKJEGATD	8	0008	bytes	bytes	no-pair
 IKJEGATN	0	0000	identical		no-pair
 IKJEGCIV	0	0000	identical		no-pair
 IKJEGCPY	0	0000	bytes	bytes	no-pair
 IKJEGCVT	0	0000	bytes	bytes	no-pair
-IKJEGDCB	0	0000	cards		no-pair
+IKJEGDCB	0	0000	bytes	bytes	no-pair
 IKJEGDEB	0	0000	identical		no-pair
 IKJEGEND	0	0000	identical		no-pair
 IKJEGEQU	0	0000	cards		no-pair
@@ -5086,7 +5086,7 @@ ISTINCOI	0	0000	identical		holes
 ISTINCOQ	0	0000	identical		length
 ISTINCOS	0	0000	identical		identical
 ISTINCPD	0	0000	identical		identical
-ISTINCPH	0	0000	cards		length
+ISTINCPH	0	0000	identical		length
 ISTINCQB	0	0000	identical		holes
 ISTINCQE	0	0000	identical		length
 ISTINCR1	0	0000	identical		holes

@@ -291,6 +291,57 @@ gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
 **Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
 plausibel ausgesehen und jeweils eine Sitzung gekostet.
 
+### 87,4 % — und ein Instrumentendefekt, der ein Ergebnis umgedreht hat
+
+**#235: eine `AIF`-Bedingung länger als 126 Zeichen wurde mitten im Term
+abgeschnitten**, während beide Aufrufstellen einen 512-Byte-Puffer übergeben. Ein
+Makro mit langer, mehrgliedriger Wächterbedingung nahm damit seinen Fehlerpfad —
+**egal, was man ihm übergab.** `AMACLIB(IKJIDENT)`s Typprüfung ist 153 Zeichen
+lang über drei Karten; jeder Aufruf fiel auf `.BAD`, meldete
+`MNOTE 8,'PARAMETER TYPE NAME MISSING BUT REQUIRED'` und erzeugte **gar nichts**.
+
+**Und damit war meine Makromessung falsch herum.** Dieselben Makros, dieselben
+Module:
+
+| | vor #235 | nach #235 |
+|---|---:|---:|
+| geänderte Decks | 33 | **107** |
+| Module, die rc 0 erreichen | 0 | **47** |
+| **näher an IBMs Objekt** | **0** | **25** |
+| weiter weg | 0 | **0** |
+| byte-identisch mit IBMs Objekt | 0 | **1** (`IEAVPIOI`) |
+
+Ich hatte „sie greifen und stellen nichts wieder her" gemeldet und in zwei
+Dokumente geschrieben. **Zurückgenommen.** Jeder andere Instrumentendefekt dieser
+Woche hat eine Zahl falsch gemacht; **dieser hat aus „stellen 25 wieder her"
+„stellen nichts wieder her" gemacht**, und beide Lesarten waren in sich stimmig.
+
+cc370s Verallgemeinerung ist die brauchbare Form davon: **man kann nicht messen,
+ob ein Makro passt, auf einem Assembler, der dessen Wächter nicht auswerten
+kann.** Das gilt für jede Messung, deren Gegenstand genau das ist, worin das
+Instrument kaputt ist — und es ist der Grund, warum #39 der ganzen Makroarbeit
+vorgelagert war statt parallel.
+
+**Und ich habe cc370s zwölf „weiter" zuerst falsch geprüft.** Eine Sektionslänge
+verglichen: „1 näher, 7 unverändert" — las sich wie ein widerlegter Anspruch. Auf
+**erzeugte Gesamtbytes** gerechnet: **6 näher, 2 unverändert, 0 weiter**.
+Ein Sektionslängenvergleich an einem Modul, dessen Sektionen überwiegend stimmen,
+verbirgt die eine, die gewachsen ist.
+
+### #238: `EQU C''''` — und es waren drei Leser, nicht einer
+
+Das Selbstdefinitions-Konstrukt `C'..'` wird an **drei** Stellen gelesen —
+Operandenauswerter, `SETA`-Leser, Auswerter der bedingten Assemblierung. **Alle
+drei falten `&&` zu einem `&`. Keiner faltete das verdoppelte Apostroph.**
+`DC C''''` stimmte die ganze Zeit, weil der `DC`-Pfad seinen eigenen Scanner hat
+und *der* es wusste — **der Pfad, den jeder zuerst prüft, funktionierte.**
+
+Gefunden aus den Bytes: ein Histogramm der Bytepaare über die verbleibenden
+Abweichungen, `0x7D → 0x00` als größte Gruppe, und `0x7D` ist EBCDIC `'`.
+**+12, keine verloren.** Sechster Fall des Musters — und cc370 hat aufgehört,
+jeden einzeln als Fehler zu behandeln, und behandelt jetzt **die Verdopplung** als
+den Fehler.
+
 ### #39: 182 Module assemblierten sauber, während ein Makro sich beschwerte
 
 `as370` gab für ein `MNOTE` **nichts** aus — keine Zeile, keine Meldung, rc 0, wo
@@ -1218,6 +1269,8 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #227 (`ORG`/`CSECT`/`DSECT` listeten den Zähler von vorher) | 0 | 0 | 0 | 0 |
 | #231 (`CNOP` von ungeradem Zähler, und ohne Namensfeld) | **+57** | 0 | 88 | **0** |
 | #39 (`MNOTE` erzeugte gar nichts) | 0 | 0 | 0 | 0 |
+| #235 (`AIF`-Bedingung bei 126 Zeichen abgeschnitten) | +9 | 0 | 104 | 12 |
+| #238 (`EQU C''''` wertet zu null aus) | +12 | 0 | 26 | 1 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
