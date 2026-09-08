@@ -10,7 +10,33 @@ and modules that expect them, and `docs/missing-macros.md`'s list is the second
 half. Jay Moseley's `MVSSRC.EREPSYM` carries `DSGEN` in 144 members and `LINE` in
 145 — same story, more copies.
 
-## What supplying them does
+## Re-measured after cc370#237, and the first answer was wrong
+
+**The first measurement of these macros was taken through a defect that made it
+meaningless.** cc370#237: an `AIF` condition longer than **126 characters** was
+cut mid-term, so a macro with a long multi-term guard took its error path
+*whatever it was passed*. IBM's macros are full of long `AIF`s. "The macro does
+not fit" was not a safe reading, and the table below is the honest one.
+
+| | before #237 | after #237 |
+|---|---:|---:|
+| decks changed | 33 | **107** |
+| modules reaching `rc 0` | 0 | **47** |
+| **closer to IBM's shipped object** | **0** | **25** |
+| further from it | 0 | **0** |
+| byte-identical to IBM's object | 0 | **1** — `IEAVPIOI` |
+
+`IEAVPIOI` goes `text` → `identical`: a module that now reproduces the object IBM
+shipped, byte for byte, because the macros are on the path. Twelve `IECVX*`
+modules go `length` → `text` or `mixed` — wrong size to right size with wrong
+content, which is the transition that matters most.
+
+**So the earlier conclusion — "they land and recover nothing" — is withdrawn.**
+It was measured on an assembler that could not evaluate the guards, and it is the
+clearest case this project has produced of an instrument defect inverting a
+result rather than merely blurring it.
+
+## What supplying them did before #237, for the record
 
 Against `d81edda`, on the 31 modules that need `DSGEN`:
 
