@@ -43,3 +43,32 @@ seven names come back 118, 112, 24, and four genuine zeros.
 **A negative that agrees with what you expected is the one that gets shipped.** I
 expected these to be missing — the previous entry in `missing-macros.md` said so —
 and a broken parser told me they were.
+
+## Why the last four are probably not findable as macro members
+
+Dave Kreiss' own SMP `++MAC` declaration catalog — `work/macinv.txt`, 1,927 lines
+and **3,163 declared elements** — contains **none** of `ENTRIES`, `ETEPILOG`,
+`FREETAB`, `SUMMARY`, `PROLOG`. Not as text, and not even as a bare declaration.
+
+That last part is the evidence. `BTMHJN` and `BTMIOBWA` **are** in that catalog,
+declared with empty bodies — the "2,329 declared, 27 carry text" shape recorded in
+[`missing-macros.md`](../../docs/missing-macros.md). So a macro that was ever a
+catalogued `SYS1.MACLIB` element on Dave's system leaves a stub there even when
+its text does not travel. **These five leave nothing at all.**
+
+Together with `EER1400` shipping no AMACLIB, that is two independent reasons to
+stop looking for them as library members and look inside EREP source instead.
+
+## Where they are not, checked with a control each time
+
+| searched | control that proves the method worked | result |
+|---|---|---|
+| `EREPSY.F01`, `SYM104.F06`–`F09` — the raw, unsplit tape dumps Dave was diffing in 2010 | `LINEND` `CONVT` `HEX` found repeatedly in the same files | the five: **zero** |
+| `tk4-source.zip`'s 254 `MVSSRC.*` libraries, via the 7,207-row member catalog | `IECPDSCB` correctly *absent* — it is mirror-only and never was on those volumes | `BTMHJN` `BTMIOBWA`: absent |
+| `mvsce-2.1.4-dlib` (8 libraries) and `-target` | — | no `ABTAMMAC` subdirectory exists at all |
+
+**`IFCMACS` is not a library and never was.** Its PDS member is named `IFCMACS`
+and the macro inside calls itself **`SYSRELN`**, with the same operand shape as
+`HEX`. One macro, out of Dave's `BLDMVS.AWS` as an SMP usermod — the same family
+as the `IOS*` set, not from the SYM or EREPSYM tapes. It carries none of the
+remaining names, and the lead that it might was worth closing.
