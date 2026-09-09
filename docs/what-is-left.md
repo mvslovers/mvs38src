@@ -12,9 +12,9 @@
 >
 > If that is not 0, the numbers under it are too large by an unknown amount and
 > `cluster_remaining.py` has to be re-run before anything is planned around them.
-> **Derived against `2f90d47`; run the command above before quoting anything here.**
+> **Derived against `847aed7`; run the command above before quoting anything here.**
 
-# The remaining 125 — as measured on 2026-09-09 against `2f90d47`
+# The remaining 105 — as measured on 2026-09-09 against `847aed7`
 
 **Derived against cc370 `2f90d47`; `git rev-list --count 2f90d47..main` = 0 at
 writing.** The previous derivation stood at `7a0cd90`, which had gone **6 merges**
@@ -1522,3 +1522,38 @@ swept them in; grouping by *whether the numbers reconcile* keeps them out. The
 first cut of this cluster had all 35 modules in one package and was wrong.
 
 Data: `work/measurements/ifox-run/first-divergence.tsv`.
+
+## After cc370#318: the literal pool is closed, and what is left has no families
+
+`847aed7` — the duplication factor a literal carries. **`as370 == IFOX00` 5,398 →
+5,418 (98.0 %), silent divergence 56 → 36, decks differing 125 → 105.**
+
+Both packages above were **one defect**: `lit_classify()` skipped the duplication
+factor and never applied it, so `=8X'0F'` measured one byte. The pool's segment
+key is the alignment its *length* implies, so a literal of the wrong length lands
+in the wrong segment as well — which is why the same fault showed as a short pool
+in L1 and as a correct-length pool in the wrong order in L2.
+
+**My alignment-padding reading was the right place and the wrong mechanism.** The
+multiples of 4 were real; they were the literal lengths the segment key is
+derived from, not padding. What settled it was cc370's negative fixture: a
+hand-built `pool.s` with mixed `=A =C =D =F =H =X` in an awkward reference order,
+on which **both assemblers produced the identical pool**. A control that
+reproduces nothing is still an answer, provided it was capable of failing.
+
+**The remaining silent class is pairs, not families.** Largest cluster is 2:
+
+| | |
+|---|---|
+| `IFNX4D IFNX4N` | `=FS3'65535'`, Δ length **0** both |
+| `IFNX4M IFNX4T` | `LH R11,=Y(MAXDBL)`, Δ length **+4** both, same address `0x45` |
+| `BNGTLOCL BNGTRMOT` | the same `CLC 15(3,INREG),=C'SS='`, Δ length **−9** both |
+
+The six `BNG*` still first diverge at a literal reference, but their deltas are
++13, −10, +10, −16, −9, −9 — mixed signs, so they are not the pool. Kept out of
+the literal heading deliberately; see the note above about a hunting list going
+stale when a heading outlives what it describes.
+
+`IEESC03D` moved **backwards** (+4 bytes) in the same merge that made twelve of
+its siblings identical — a second defect the first one was masking. Named rather
+than averaged in.

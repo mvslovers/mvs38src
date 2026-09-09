@@ -475,7 +475,7 @@ BLSVSGTE	0	0000	identical		text
 BLSVTCB	0	0000	identical		identical
 BLSVUCB	0	0000	identical		identical
 BLSVXTLS	0	0000	identical		identical
-BNGC3270	8	0008	bytes	bytes	length
+BNGC3270	8	0008	cards		length
 BNGCDISP	8	0008	cards		length
 BNGCLOCL	8	0008	bytes	bytes	length
 BNGCMENU	8	0008	bytes	bytes	length
@@ -490,7 +490,7 @@ BNGIREAD	0	0000	identical		length
 BNGIRMOT	0	0000	identical		length
 BNGISIMS	0	0000	identical		length
 BNGLOGR2	0	0000	identical		length
-BNGT3270	0	0000	cards		length
+BNGT3270	0	0000	bytes	bytes	length
 BNGTDISP	0	0000	cards		length
 BNGTLOCL	0	0000	bytes	bytes	length
 BNGTMENU	0	0000	identical		text
@@ -2036,7 +2036,7 @@ IEEMPVST	0	0000	identical		mixed
 IEEPALTR	0	0000	identical		length
 IEEPRTN2	0	0000	identical		holes
 IEEPRWI2	0	0000	identical		length
-IEESA03D	0	0000	bytes	bytes	no-pair
+IEESA03D	0	0000	identical		no-pair
 IEESB03D	0	0000	identical		no-pair
 IEESB601	0	0000	identical		holes
 IEESB605	0	0000	identical		length
@@ -2044,24 +2044,24 @@ IEESB606	0	0000	identical		holes
 IEESB665	0	0000	identical		length
 IEESB670	0	0000	identical		length
 IEESC03D	0	0000	bytes	bytes	no-pair
-IEESD03D	0	0000	cards		no-pair
-IEESE03D	0	0000	cards		no-pair
-IEESF03D	0	0000	bytes	bytes	no-pair
-IEESG03D	0	0000	bytes	bytes	no-pair
-IEESH03D	0	0000	cards		no-pair
-IEESI03D	0	0000	cards		no-pair
+IEESD03D	0	0000	identical		no-pair
+IEESE03D	0	0000	identical		no-pair
+IEESF03D	0	0000	identical		no-pair
+IEESG03D	0	0000	identical		no-pair
+IEESH03D	0	0000	identical		no-pair
+IEESI03D	0	0000	identical		no-pair
 IEESJ03D	0	0000	identical		no-pair
-IEESK03D	0	0000	cards		no-pair
-IEESL03D	0	0000	bytes	bytes	no-pair
+IEESK03D	0	0000	identical		no-pair
+IEESL03D	0	0000	identical		no-pair
 IEESM03D	0	0000	identical		no-pair
 IEESN03D	0	0000	identical		no-pair
 IEESO03D	0	0000	identical		no-pair
 IEESP03D	0	0000	identical		no-pair
-IEESQ03D	0	0000	bytes	bytes	no-pair
-IEESR03D	0	0000	cards		no-pair
+IEESQ03D	0	0000	identical		no-pair
+IEESR03D	0	0000	identical		no-pair
 IEESS03D	0	0000	identical		no-pair
 IEESTPRS	8	0008	identical		text
-IEESZ03D	0	0000	bytes	bytes	no-pair
+IEESZ03D	0	0000	identical		no-pair
 IEEVALST	0	0000	identical		mixed
 IEEVCPU	0	0000	identical		length
 IEEVDCCR	8	0008	identical		mixed
@@ -2090,10 +2090,10 @@ IEEVSTOP	8	0008	identical		text
 IEEVWAIT	0	0000	identical		length
 IEEVWKUP	0	0000	identical		length
 IEEXEDNA	0	0000	identical		mixed
-IEEZA03D	0	0000	bytes	bytes	no-pair
+IEEZA03D	0	0000	identical		no-pair
 IEEZB03D	0	0000	identical		no-pair
 IEEZC03D	0	0000	identical		no-pair
-IEEZJ03D	0	0000	bytes	bytes	no-pair
+IEEZJ03D	0	0000	identical		no-pair
 IEEZP03D	0	0000	identical		no-pair
 IEEZS03D	0	0000	identical		no-pair
 IEFAB421	0	0000	identical		length
@@ -3237,18 +3237,18 @@ IFNX1A	0	0000	bytes	bytes	length
 IFNX1J	0	0000	bytes	bytes	text
 IFNX1K	0	0000	identical		length
 IFNX1S	0	0000	bytes	identical	text
-IFNX2A	0	0000	bytes	bytes	text
+IFNX2A	0	0000	bytes	identical	text
 IFNX3A	8	0008	bytes	bytes	text
-IFNX3B	0	0000	bytes	bytes	length
+IFNX3B	0	0000	bytes	identical	text
 IFNX3K	0	0000	identical		length
-IFNX3N	0	0000	cards		text
+IFNX3N	0	0000	bytes	bytes	text
 IFNX4D	0	0000	bytes	bytes	text
-IFNX4E	0	0000	bytes	bytes	text
+IFNX4E	0	0000	bytes	identical	text
 IFNX4M	0	0000	bytes	bytes	length
 IFNX4N	0	0000	bytes	bytes	text
 IFNX4S	0	0000	bytes	bytes	text
 IFNX4T	0	0000	bytes	bytes	length
-IFNX4V	0	0000	bytes	bytes	text
+IFNX4V	0	0000	bytes	identical	text
 IFNX5A	0	0000	bytes	bytes	text
 IFNX5C	0	0000	bytes	bytes	text
 IFNX5D	8	0008	cards		mixed
@@ -3265,9 +3265,9 @@ IFOX0B	0	0000	bytes	identical	text
 IFOX0C	0	0000	bytes	identical	text
 IFOX0D	8	0008	bytes	bytes	length
 IFOX0E	0	0000	bytes	identical	text
-IFOX0F	0	0000	bytes	bytes	length
+IFOX0F	0	0000	bytes	identical	length
 IFOX0G	0	0000	bytes	identical	text
-IFOX0H	0	0000	bytes	bytes	mixed
+IFOX0H	0	0000	bytes	identical	mixed
 IFOX0I	0	0000	bytes	identical	mixed
 IFOX0J	0	0000	identical		identical
 IGARPT01	8	0004	bytes	bytes	mixed
