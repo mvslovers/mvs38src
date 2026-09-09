@@ -1185,3 +1185,39 @@ The alarm measures the module *plus seven neighbours*, so a bound picked from a
 solo run is wrong by about that much — which is how 20, 240 and 150 were all
 chosen and all wrong. 400 s is ten times the solo time, the first bound set with
 the factor in it rather than against it.
+
+## A test can keep passing while ceasing to test what it was for — 2026-09-09
+
+cc370#294: `as370 alone flags 33 → 25`, `DECK AND RC BOTH 5325 → 5333`, **0 of
+5,528 decks changed.** Eight modules where `IFOX00` gives a statement-losing
+continuation and a harmless continued comment the same severity 4, and `as370`
+split them and returned 8 — with the reason written at the call site, *a build
+must not pass silently*.
+
+**cc370 put it to Mike rather than flipping it**, because it reverses a deliberate
+choice with a stated safety rationale rather than fixing a defect, and because the
+consequence is outward: `mbt` fails at `rc >= 8`, so a module assembled against a
+mangled macro library would go from failing to warning — cc370#115's exact
+scenario, 150 modules compared in good faith against source the assembler had
+eaten. The answer was **faithful by default, guard on request**. Verified here:
+
+```
+default        -> rc 4        --strict-cont  -> rc 8
+```
+
+### The finding is in the fixtures
+
+`diag_cap` and `libmac_mend` both asserted `rc 8`, so the default change broke
+them — and **lowering their expectation to 4 would have left them green while
+converting them into re-tests of `cont72`.** What they exist to check is that a
+discarded statement is still *counted* past the print cap, and that a column-72
+comment inside a library macro definition eats the model statement. Neither is a
+claim about severity. Passing `--strict-cont` keeps them testing their own claim.
+
+**Three tests encoded one policy decision and only one of them was about the
+policy.** That belongs beside the four aggregation failures: every input correct,
+every test green, and two of them no longer measuring their subject.
+
+And `cont72` pins **both** levels now — a fixture that pins only the default
+cannot tell the flag from a no-op, which is the control rule again: **the case a
+control must exercise is the one that can go wrong, not the one that must pass.**
