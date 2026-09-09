@@ -29,8 +29,15 @@ against the recorded IFOX00 decks.
 | byte-identical to IBM's shipped object | 1,211 of 5,056 pairs |
 | `rc 0` | 4,565 |
 
-From 3,465 (62.7 %) at `ee1090b` on 2026-09-07 — distance 130 — with **no
+From 3,465 (62.7 %) at `ee1090b` on 2026-09-07 — distance 130 — with **no deck
 identity lost** anywhere along the way. This is the map for the last 2.7 %.
+
+**Say which identity.** On the deck the claim holds without exception. On the
+stricter goal it does not: cc370#304 took `IFNX1K`, `IFNX3K` and `IFNX5V` from
+`rc 0` to `rc 8`, and the gate line that carried it read `LOST : 0` and `as370
+alone flags 23 -> 19` — both true, because the three decks already differed and
+seven other modules improved in the same run. `retest.py` names such modules
+outright now.
 
 **What this block said before it was re-derived, and why that was wrong.** It
 read *the remaining 524 … against `89fb177`*, 90.4 %. `89fb177` is **distance 29**
@@ -236,8 +243,15 @@ record of what #240 left behind, not because it is still a population.
 
 ## Two in the small-delta cut that are the clock, not the assembler
 
-*Still true on `7a0cd90`: both come back `bytes`, and both are in the
-sixteen-module small-delta cut above.*
+*Re-derived on `7a0cd90`: this holds for `IFOX0A` and no longer for `IFNX5V`.*
+**`IFOX0A`** still differs in exactly four bytes, is still in the small-delta cut
+above, and is still the case described here. **`IFNX5V` is not**: it differs in
+**278 bytes** at addresses both assemblers agree exist, its sections are 1,773
+bytes against IFOX00's 1,769, and `retest.py` puts its distance at 286. It left
+the cut at cc370#304 — the same merge that took its return code from 0 to 8 —
+and it is now an ordinary object divergence, not a stamp. What is behind that is
+cc370's to find; what is measured is that the four-byte reading below is no
+longer true of it.
 
 `IFNX5V` and `IFOX0A` each differ in four bytes and all four are a `&SYSTIME`
 stamp — `PATCHDC DC C'IFNX5V00 00.13 09/09/26'` and its like. They are the two
