@@ -1,0 +1,102 @@
+         MACRO
+&NAME    LINE  &DATA,&LABEL,&SKIP=
+.*                            THIS MACRO ESTABLISHES THE MARGINS OR
+.*                                 COLUMN SETTINGS FOR EACH LINE. IT
+.*                                 GENERATES NECESSARY CARRIAGE CONTROL
+.*                                 ENTRIES. LASTLY IT DETERMINES THE
+.*                                 NUMBER OF ENTRIES ASSOCIATED WITH
+.*                                 THE PREVIOUS LINE AND STORES THAT #
+.*                                 INTO THE APPROPRIATE BYTE.
+.*                            &DATA(1) - CHARACTER POSITION TO BEGIN
+.*                                 DATA.
+.*                            &DATA(2) - # OF SPACES BETWEEN SUCCESSIVE
+.*                                 DATA COLUMN STARTING CHARACTERS.
+.*                            &LABEL(1) - CHAR. POS. TO BEGIN LABELS.
+.*                            &LABEL(2) - # SPACES BETWEEN LINE'S LABEL
+.*                                 STARTING CHARACTERS.
+.*                            &SKIP= - # OF LINES TO ADVANCE CARRIAGE
+.*                                 TO BEGIN NEXT PRINTED LINE.
+.*                            NEW ENTRIES ARE GENERATED ONLY WHEN
+.*                                 NECESSARY. OMISSION OF ITEMS MEANS
+.*                                 THEY HAVE NOT CHANGED SINCE PREVIOUS
+.*                                 SETTINGS. A LINE MACRO IS REQUIRED
+.*                                 FOR EACH PRINTED LINE. IF NO SETTING
+.*                                 CHANGES ARE REQUIRED ALL OPERANDS
+.*                                 ARE OMITTED IN WHICH CASE ONLY THE
+.*                                 # OF ENTRIES FOR THE PREVIOUS LINE
+.*                                 IS COMPUTED. THIS MACRO MUST BE THE
+.*                                 FIRST MACRO INSTRUCTION ISSUED FOR
+.*                                 THE SUBJECT LINE
+         GBLA  &DB,&DT,&LB,&LT,&NRENTS
+         GBLA  &LASTCC,&INITIAL
+         GBLC  &NRENTSX
+         GBLC  &CARRCON
+         GBLB  &TEST
+         LCLA  &S
+&NAME    DS    0C
+         AIF   (&INITIAL EQ 0).FIRSTLN
+         LINEND
+         AGO   .NTFIRST
+.FIRSTLN ANOP
+&NRENTSX SETC  'N&SYSNDX'
+&INITIAL SETA  1
+N&SYSNDX EQU   *
+.NTFIRST ANOP
+         DC    AL1(0)
+         AIF   ('&DATA(1)' EQ '').CKDTABS
+         AIF   (&DATA(1) EQ &DB).CKDTABS
+&DB      SETA  &DATA(1)
+         AGO   .AA
+.CKDTABS AIF   ('&DATA(2)' EQ '').NCDATA
+         AIF   (&DATA(2) EQ &DT).NCDATA
+         AGO   .CC
+.AA      AIF   ('&DATA(2)' EQ '').BB
+         AIF   (&DATA(2) EQ &DT).BB
+.CC      ANOP
+&DT      SETA  &DATA(2)
+.BB      DC    XL2'FFFE'
+         DC    FL1'&DB'
+         DC    FL1'&DT'
+&NRENTS  SETA  &NRENTS+1
+.NCDATA  ANOP
+         AIF   ('&LABEL(1)' EQ '').CKLTABS
+         AIF   (&LABEL(1) EQ &LB).CKLTABS
+&LB      SETA  &LABEL(1)
+         AGO   .AAA
+.CKLTABS AIF   ('&LABEL(2)' EQ '').NCLABEL
+         AIF   (&LABEL(2) EQ &LT).NCLABEL
+         AGO   .CCC
+.AAA     AIF   ('&LABEL(2)' EQ '').BBB
+         AIF   (&LABEL(2) EQ &LT).BBB
+.CCC     ANOP
+&LT      SETA  &LABEL(2)
+.BBB     DC    XL2'FFFF'
+         DC    FL1'&LB'
+         DC    FL1'&LT'
+&NRENTS  SETA  &NRENTS+1
+.NCLABEL ANOP
+         AIF   ('&SKIP' NE '').CONT
+         AIF   (&TEST EQ 0).NOCHANG
+&S       SETA  &LASTCC
+         AGO   .DEFAULT
+.CONT    ANOP
+         AIF   (&TEST EQ 0).AB
+&S       SETA  &SKIP
+.DEFAULT ANOP
+         ORG   &CARRCON+3
+         DC    AL.3(0),AL.2(&S),AL.3(1)
+         ORG
+&LASTCC  SETA  &S
+&TEST    SETB  0
+         AGO   .DD
+.AB      AIF   (&SKIP EQ &LASTCC).NOCHANG
+A&SYSNDX DC    XL2'FFFB'
+         DC    AL.3(0),AL.2(&SKIP),AL.3(1)
+         DC    FL1'9'
+&LASTCC  SETA  &SKIP
+&TEST    SETB  1
+&CARRCON SETC  'A&SYSNDX'
+&NRENTS  SETA  &NRENTS+1
+.DD      ANOP
+.NOCHANG ANOP
+         MEND

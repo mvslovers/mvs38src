@@ -1,0 +1,24 @@
+         MACRO
+         SPECIAL &ROUTINE,&PARAM,&SPACE=
+.*                            THIS MACRO GENERATES A SPECIAL ROUTINE
+.*                                 ENTRY TO BE PROCESSED BY THE SUM. M.
+.*                            &ROUTINE - SYMBOL ON SPECIAL ROUTINE EWT.
+.*                            &PARAM - AN 8 BIT BINARY REPRESENTATION
+.*                                 TO OCCUPY THE 'MASK' FIELD BUT TO BE
+.*                                 INTERPRETED AS AN ARGUMENT OF THE
+.*                                 SPECIAL ROUTINE.
+.*                            &SPACE - THE NUMBER OF 2BYTE COUNTERS TO
+.*                                 ALLOCATE FOR REQUIRED PROCESSING.
+         GBLC  &CSECT
+         GBLA  &COUNTR
+         LCLA  &ADD
+         DC    AL1(128)
+         DC    BL.8'&PARAM'
+         DC    AL2(&ROUTINE-&CSECT)
+         DC    AL2(&COUNTR)
+&ADD     SETA  1
+         AIF   ('&SPACE' EQ '').NORM
+&ADD     SETA  &SPACE
+.NORM    ANOP
+&COUNTR  SETA  &COUNTR+&ADD
+         MEND
