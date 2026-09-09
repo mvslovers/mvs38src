@@ -1,7 +1,6 @@
 module	as370_rc	as370_flagged	as370_severity	as370_messages	ifox_rc	ifox_flagged	ifox_severity	ifox_messages	tool	first_diff	len_ifox	len_as370	dlib	signal	owner	excluded
 IGC0001F	0				0000				bytes	0x01310	6088	6088	no-pair	silent divergence	cc370	
 IGARPT01	8	9	8	IFO026 Continuation card is empty - nothing between the continue column and 71 | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0004	8	4	IFO026 CHARACTERS APPEAR BETWEEN THE BEGIN AND CONTINUE COLUMNS ON CONTINUATION CARD	bytes	0x004bc	5756	5756	mixed	silent divergence	cc370	
-IFCEA155	0				0000				bytes	0x00161	5669	5661	length	silent divergence	cc370	
 IECVCINT	0				0000				bytes	0x00124	3732	3732	length	silent divergence	cc370	
 IECVESIO	0				0000				bytes	0x00126	3019	3019	length	silent divergence	cc370	
 IEAXPALL	0				0000				bytes	0x005ec	2752	2752	length	silent divergence	cc370	
@@ -22,9 +21,6 @@ IFNX5C	0				0000				bytes				text	silent divergence	cc370
 IFNX5V	0				0000				bytes				text	silent divergence	cc370	
 IFNX6B	0				0000				bytes				length	silent divergence	cc370	
 IGC0E05A	0				0000				bytes				length	silent divergence	cc370	
-IFCSXXXH	20	6	20	MNOTE	0000				cards	0x00395	8254	8230	length	as370 alone flags	cc370	
-IFCEL155	20	307	20	MNOTE	0000				cards	0x00253	8110	7128	length	as370 alone flags	cc370	
-IFCSXXXF	20	3	20	MNOTE	0000				bytes	0x00421	4027	4015	length	as370 alone flags	cc370	
 IEAVRTI0	0				0008	1	8	IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION	bytes	0x0002b	3792	3792	text	IFOX00 alone flags	cc370	
 IEAVEXS	0				0008	1	8	IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION	bytes	0x0002b	428	432	text	IFOX00 alone flags	cc370	
 IBCDASDI	0				0008	2	8	IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD	identical				no-pair	IFOX00 alone flags	cc370	
@@ -964,7 +960,11 @@ BNGTDISP	0				0000				identical	0x011c9	11888	11904	mixed		source
 BNGIDISP	0				0000				identical	0x00117	10319	10329	length		source	
 BNGI3270	0				0000				identical	0x000a0	10301	10311	length		source	
 BNGT3270	0				0000				identical	0x00037	8337	8350	mixed		source	
+IFCSXXXH	0				0000				identical	0x00395	8254	8230	length		source	
+IFCEL155	0				0000				identical	0x00253	8110	7128	identical		source	
 BNGTLOCL	0				0000				identical	0x00095	6805	6814	text		source	
+IFCEA155	0				0000				identical	0x00161	5669	5661	identical		source	
+IFCSXXXF	0				0000		0		identical	0x00421	4027	4015	length		source	
 IFNX4T	0				0000				identical	0x00045	3582	3578	length		source	
 IFNX4M	0				0000				identical	0x00045	3299	3295	length		source	
 IFNX4N	0				0000				identical	0x008b1	2332	2332	text		source	

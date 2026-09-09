@@ -1,0 +1,83 @@
+         MACRO
+         HEX   &LOGITEM,&SKIP$OR,&BYTES
+.*                            THIS MACRO FACILITATES GENERATION OF THE
+.*                                 TABLE ENTRIES SPECIFYING HEX TYPE
+.*                                 CONVERSIONS.
+.*                            &LOGITEM - NAME OF DATA ITEM TO BE
+.*                                 CONVERTED
+.*                            &SKIP$OR - NUMBER OF SPACES TO SKIP ON
+.*                                 MULTIPLE PRINT OR NBR OF SPACES TO
+.*                                 BACK UP FROM COLUMN FOR START OF
+.*                                 PRINTING. THE LETTER B PRECEEDS THE
+.*                                 NUMBER (B8) IF THE LATTER OPTION IS
+.*                                 DESIRED. OMISSION OF THIS OPERAND
+.*                                 FORCES OPTION 2 WITH BACKUP SPACING
+.*                                 EQUAL TO THE NUMBER OF BYTES SPECI-
+.*                                 FIED BY THE NEXT OPERAND (TWICE THIS
+.*                                 NUMBER IF SUFFIX IS EXPLICITLY OR
+.*                                 IMPLICITLY B).
+.*                            &BYTES - NUMBER OF TOTAL INPUT BYTES TO
+.*                                 PROCESS. THIS NUMBER IS SUFFIXED
+.*                                 WITH AN L,R, OR B TO STIPULATE
+.*                                 PRINTING OF THE LEFT HALF, RIGHT
+.*                                 HALF, OR BOTH HALVES OF THE BYTE
+.*                                 RESPECTIVELY. OMISSION OF THIS
+.*                                 OPERAND DEFAULTS TO B WITH THE NUM-
+.*                                 BER OF BYTES EQUAL TO THE ITEM LNGTH
+.*                            A NEW ENTRY IS GENERATED ONLY WHEN NECES-
+.*                                 SARY. THIS MACRO MUST BE THE FIRST
+.*                                 MACRO INSTRUCTION ISSUED FOR THE
+.*                                 SUBJECT LINE(S).
+         GBLC &ITEM(1000),&DSECT
+         GBLA &ITEMNBR,&BITS(1000),&SHIFT(1000),&NRENTS
+         LCLB  &B
+         LCLA  &IBITS,&NDX,&ISHIFT,&K,&T,&CODE,&BYTESP
+         LCLC  &S,&LETTER
+.LOOP    ANOP
+&NDX     SETA  &NDX+1
+         AIF   ('&ITEM(&NDX)' EQ '&LOGITEM').FOUND
+         AIF   (&NDX LT &ITEMNBR).LOOP
+         MNOTE *,'LOG ITEM NOT DEFINED'
+         MEXIT
+.FOUND   ANOP
+&ISHIFT  SETA  &SHIFT(&NDX)
+&IBITS   SETA  &BITS(&NDX)
+&CODE    SETA  1
+&K       SETA  K'&BYTES
+         AIF   (&IBITS-(&IBITS/4)*4 EQ 0).OK
+         MNOTE *,'BIT LENGTH SPECIFICATION INCONSISTENT WITH CONTROL'
+         MEXIT
+.OK      AIF   ('&BYTES' EQ '').USEDEFN
+&LETTER  SETC  '&BYTES'(&K,1)
+&S       SETC  '&BYTES'(1,&K-1)
+&BYTESP  SETA  &S
+         AIF   ('&LETTER' EQ 'B').BOTH
+         AIF   ('&LETTER' EQ 'L').LEFT
+&CODE    SETA  2
+         AGO   .L
+.LEFT    ANOP
+&CODE    SETA  1
+         AGO   .L
+         AIF   (&ISHIFT EQ 0 OR &ISHIFT EQ 4).OK2
+.ERR     MNOTE *,'DATA NOT ALLIGNED ON HEX OR BYTE BOUNDARY'
+         MEXIT
+.USEDEFN ANOP
+&BYTESP  SETA  &IBITS/8
+.BOTH    AIF   (&ISHIFT NE 0).ERR
+&CODE    SETA  3
+&T       SETA  &BYTESP*2-1
+&S       SETC  '&T'
+.OK2     AIF   (&ISHIFT EQ 0).L
+&CODE    SETA  2
+.L       ANOP
+&B       SETB  1
+         AIF   ('&SKIP$OR' EQ '').BACKUP
+&K       SETA  K'&SKIP$OR
+&B       SETB  ('&SKIP$OR'(1,1) EQ 'B')
+&S       SETC  '&SKIP$OR'(&B+1,&K-&B)
+.BACKUP  ANOP
+&NRENTS  SETA  &NRENTS+1
+         DC    AL.12(&LOGITEM-&DSECT),XL.4'A'
+         DC    BL.1'&B',FL.7'&S',AL.4(&BYTESP),FL.4'&CODE'
+.OUT     ANOP
+         MEND
