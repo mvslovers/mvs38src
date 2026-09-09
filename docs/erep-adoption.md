@@ -83,3 +83,41 @@ directories and deleting the six members undoes it exactly.
 ⚠️ `ifox-decks.tar.gz` was re-made **in the same commit as these figures**, and it
 now carries `state.tsv` as well as the decks, so a reader can reconstruct both the
 references and their return codes.
+
+## Round two: `LINEND`, `HEX`, `CONVT` — 2026-09-09, later the same evening
+
+Three more of the eight turned out to be in `MVSBLD` all along, defined in-stream
+by the modules that carry their own — 118, 112 and 24 copies. Adopted the same
+way: uploaded to `IBMUSER.PVTMAC` on the oracle, added to `gate.sh`'s `-I` path,
+and the affected reference decks replaced in the same step.
+
+**Scope: 31 modules** — `IFCE*` 26, `IFCS*` 5, derived from the gate rather than
+assumed.
+
+| | before | after |
+|---|---:|---:|
+| deck bytes across the 31 | 66,480 | **132,320** |
+| IFOX00 return code | `rc 12` on all 31 | **`rc 12` on all 31** |
+
+**And identity did not move, exactly as with the six:**
+
+```
+as370 == IFOX00 : 5415 -> 5415   (+0)     LOST : 0
+decks closer : 3     decks further : 28
+DECK AND RC BOTH : 5414 -> 5414   (+0)
+```
+
+The reference doubled again and both assemblers now get twice as far — and both
+still stop in the same place, because **four macros are still missing from both
+sides**: `ENTRIES`, `ETEPILOG`, `FREETAB`, `SUMMARY`.
+
+**That is the shape of the whole EREP problem in one line.** Every macro supplied
+so far has bought a better reference and no identity, because the family only
+closes when the *last* one is there. Nine of thirteen are in place; the class
+moves when the count reaches thirteen, not before.
+
+`PROLOG` is the fifth and it is a different case: two copies exist in `MVSBLD`
+and **both are the wrong macro** — no operands, where every EREP caller writes
+`PROLOG NAME=IFCE0115`. That one has to be found, not lifted.
+
+⚠️ `ifox-decks.tar.gz` re-made in this commit, as the rule requires.

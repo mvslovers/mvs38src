@@ -1,0 +1,16 @@
+         MACRO
+         LINEND
+.*                            THIS MACRO IS USED ONLY BY THE LINE
+.*                                 MACRO TO SET THE NUMBER OF ENTRIES
+.*                                 ASSOCIATED WITH EACH LINE.
+         GBLA  &NRENTS
+         GBLC &NRENTSX
+         AIF   (&NRENTS EQ 0).NORENTS   TEST FOR NO COUNT
+         ORG   &NRENTSX
+         DC    FL1'&NRENTS'
+         ORG
+&NRENTS  SETA  0
+.NORENTS ANOP
+B&SYSNDX EQU   *
+&NRENTSX SETC  'B&SYSNDX'
+         MEND
