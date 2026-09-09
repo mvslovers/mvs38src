@@ -14,7 +14,6 @@ IGC0001F	0				0000				bytes	0x0001a	6088	6088	no-pair	silent divergence	cc370
 IFNX5A	0				0000				bytes	0x00018	5853	5853	text	silent divergence	cc370	
 IGARPT01	8	5	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0004	8	4	IFO026 CHARACTERS APPEAR BETWEEN THE BEGIN AND CONTINUE COLUMNS ON CONTINUATION CARD	bytes	0x00003	5756	5740	mixed	silent divergence	cc370	
 IFCEA155	0				0000				bytes	0x00161	5669	5661	length	silent divergence	cc370	
-IKJEFT02	0				0000				bytes	0x014c8	5334	5326	length	silent divergence	cc370	
 AMASPZAP	0				0000				bytes	0x000ea	5257	5257	holes	silent divergence	cc370	
 IKJEBEMC	0				0000				bytes	0x01341	5159	5114	mixed	silent divergence	cc370	
 IKJEFF02	0				0000				bytes	0x01368	5070	5113	length	silent divergence	cc370	
@@ -28,7 +27,6 @@ IFNX1A	0				0000				bytes	0x0001a	4351	4306	length	silent divergence	cc370
 IKJEBEIP	0				0000				bytes	0x004b7	4232	4232	no-pair	silent divergence	cc370	
 IFNX6B	0				0000				bytes	0x0001b	4231	4231	length	silent divergence	cc370	
 IKJCT469	0				0000				bytes	0x00e49	4145	4112	length	silent divergence	cc370	
-IASXSD82	0				0000				bytes	0x00d29	3961	3937	length	silent divergence	cc370	
 IFNX3N	0				0000				cards	0x0000f	3854	3854	text	silent divergence	cc370	
 IECVCINT	0				0000				bytes	0x00124	3732	3732	length	silent divergence	cc370	
 IKJEFH01	0				0000				bytes	0x00d29	3595	3550	no-pair	silent divergence	cc370	
@@ -50,8 +48,6 @@ IFDOLT48	0				0000				bytes	0x0002f	2386	2386	mixed	silent divergence	cc370
 IFNX5P	0				0000				bytes	0x0005d	2344	2344	mixed	silent divergence	cc370	
 IFDOLT33	0				0000				bytes	0x0002f	2282	2282	text	silent divergence	cc370	
 IFDOLT31	0				0000				bytes	0x00035	2224	2224	mixed	silent divergence	cc370	
-AMDPRCOM	0				0000				bytes	0x005e2	2138	2138	length	silent divergence	cc370	
-IEHMVESM	0				0000				bytes	0x00726	2066	2066	holes	silent divergence	cc370	
 IFDOLT22	0				0000				bytes	0x0003d	2046	2046	mixed	silent divergence	cc370	
 IFDOLT49	0				0000				bytes	0x0002f	2032	2032	mixed	silent divergence	cc370	
 IEESK03D	0				0000				cards	0x00005	2025	2017	no-pair	silent divergence	cc370	
@@ -66,7 +62,6 @@ IFDOLT14	0				0000				bytes	0x0001f	1737	2457	length	silent divergence	cc370
 BLSR3270	0				0004	20	4	IFO197 *** MNOTE ***	bytes	0x00513	1736	1736	length	silent divergence	cc370	
 IFDOLT03	0				0000				bytes	0x0005b	1730	1730	length	silent divergence	cc370	
 IEEZJ03D	0				0000				bytes	0x00005	1710	1702	no-pair	silent divergence	cc370	
-IEHMVSTC	0				0000				bytes	0x006a3	1706	1706	length	silent divergence	cc370	
 IFDOLT54	0				0000				bytes	0x0002f	1678	1678	mixed	silent divergence	cc370	
 IFDOLT32	0				0000				bytes	0x00033	1660	1660	text	silent divergence	cc370	
 IEESR03D	0				0000				cards	0x00005	1638	1614	no-pair	silent divergence	cc370	
@@ -100,7 +95,6 @@ IFDOLT16	0				0000				bytes	0x0005b	906	906	mixed	silent divergence	cc370
 IFDOLT21	0				0000				bytes	0x00033	906	906	mixed	silent divergence	cc370	
 IFDOLT52	0				0000				bytes	0x0002f	850	850	length	silent divergence	cc370	
 IFOX0F	0				0000				bytes	0x00083	832	832	length	silent divergence	cc370	
-IEHMVSRK	0				0000				bytes	0x00288	786	746	holes	silent divergence	cc370	
 IEESC03D	0				0000				bytes	0x0007f	714	717	no-pair	silent divergence	cc370	
 IFDOLT28	0				0000				bytes	0x00052	702	702	mixed	silent divergence	cc370	
 IFDOLT37	0				0000				bytes	0x00106	666	666	mixed	silent divergence	cc370	
@@ -165,7 +159,7 @@ IEECVFTQ	8	2	8	This card was consumed as a continuation and the statement on it 
 IGC070	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				text	as370 alone flags	cc370	
 ISTINCU7	8	329	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | Undefined operation code	0000				cards	0x00000	0	2448	length	as370 alone flags	cc370	
 ISTZFMAA	8	1	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				text	as370 alone flags	cc370	
-IEAVGM00	0				0008	3	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	bytes	0x02838	11988	10508	text	IFOX00 alone flags	cc370	
+IEAVGM00	0				0008	3	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical	0x02838	11988	10508	text	IFOX00 alone flags	cc370	
 IEAVENQ1	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical	0x00026	8512	8512	text	IFOX00 alone flags	cc370	
 IEEVDCCR	0				0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical	0x0006a	7669	7669	mixed	IFOX00 alone flags	cc370	
 IKJEBESA	0				0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	bytes	0x00006	5110	5110	no-pair	IFOX00 alone flags	cc370	

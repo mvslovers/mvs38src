@@ -900,3 +900,62 @@ from *"different origins swamp it"*. `distance()` has keyed by section name sinc
 stopped measuring its own issue was the same failure, and so was the stale
 `as370-messages.tsv` — **the number was available and nobody looked at it in the
 right shape.**
+
+## 95.8 %: four of the six settled, and every one lived outside the text
+
+cc370#282 merged as #283: **+7, none lost, none further.** `sect_hwm` was raised
+by `put()`, which runs only in pass 2, while `assign_origins()` chains origins
+from the *pass-1* lengths — so a section ending in **machine instructions** was
+measured only to its last `DS`/`DC` and the next section was placed inside it. The
+section's own ESD length was right the whole time; only its **neighbour's origin**
+was wrong.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,294 of 5,528 (95.8 %)** |
+| still differing | **234** |
+| silent / `as370` alone / both flag / IFOX00 alone | **128 / 23 / 66 / 9** |
+
+### `AMASPZAP`: 7,252 → 0, and it appears in no gained list
+
+Compared **by address alone, ignoring which ESDID the text is filed under**, the
+module is now byte-for-byte identical to IFOX00 — 12,920 bytes on both sides. All
+that remains is cc370#281's filing.
+
+**Two defects stacked, and the module reads as untouched by either metric taken
+alone**: `gained` says no because the cards differ, the ESDID-keyed image says no
+because the text is under the wrong id. Only a third view — address without
+ESDID — shows it.
+
+### The through-line of the third witness
+
+```
+ISTINCDT   cc370#274   a term after a substring is concatenated
+IGG019GC   cc370#278   USING *+8 is an expression
+IGG019GD   cc370#278
+IEHINITT   cc370#280   ORG past the content extends the section
+AMASPZAP   cc370#283   pass-1 high-water mark   (image; #281 open on the filing)
+IFCEA155   open        -8 across 3,876 bytes, section 8 short
+```
+
+**Four of the five closed were length or origin defects that no text-reading
+instrument could see.** The three-way table never said *what* was wrong — only
+*which module to open* — and every one turned out to be a divergence outside the
+bytes anyone was comparing. That is a better argument for the instrument than its
+hit rate: it selects on a property none of the other six can test.
+
+The table now settles **two**: `AMASPZAP` (filing) and `IFCEA155`.
+
+### Aggregation, four times in one day
+
+Every input correct, and the number looked at in the wrong shape:
+
+| | |
+|---|---|
+| `addressability.txt` | stopped measuring its own issue when a fix made deck and diagnostic disagree |
+| `as370-messages.tsv` | eleven merges stale, and *"the silent group has not moved"* was a claim about a file |
+| `AMASPZAP`, twice | my module totals; cc370's *"different origins swamp it"* — neither looked per section |
+| `AMASPZAP` again | image to zero, invisible in `gained` and in the ESDID-keyed image both |
+
+**Only the last was caught before it shipped**, and only because cc370
+re-measured the module while writing the commit message rather than after.
