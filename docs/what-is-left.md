@@ -650,3 +650,56 @@ and this one is real — verified by running the same command on a module by han
 
 **A zero from a scan has to be confirmed against a case you already know the
 answer for**, and today one of two was an artefact.
+
+## 94.5 %, and the class lists have come apart from the issues they serve
+
+cc370#154 merged: **+25, none lost, 47 closer, 3 further.** The three were
+answered rather than waved past, and two of them turn out not to count:
+
+| | differing bytes | as370 / IFOX00 | |
+|---|---|---|---|
+| `BNGC3270` | 6,466 → 6,562 | 8,068 / 8,081 B | **excluded** (CICS) |
+| `BNGCDISP` | 5,348 → 5,515 | 6,965 / 6,949 B | **excluded** (CICS) |
+| `ISTNSC00` | 10,658 → 11,451 | **5,007 / 12,506 B** | `MSGCSECT` and `RWKAREAS` absent from the deck |
+
+All three diverge from **address 0**. Giving more instructions a base in a layout
+already wrong from the first byte makes more bytes differ, which is the expected
+direction. **Check `excluded.tsv` before analysing a module that moved** — two of
+these cannot regress the measurement at all.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,224 of 5,528 (94.5 %)** |
+| still differing | **304** |
+| silent / `as370` alone / both flag / IFOX00 alone | **149 / 62 / 76 / 9** |
+
+### The 149 are now half of everything left
+
+The loud population has halved today — 92 → 62 — and **the silent 149 have not
+moved at all**, through eleven merges. Every mechanism found today was loud;
+nothing has touched the silent group since the small-delta cut, and cc370#264
+excluded the most plausible candidate for it.
+
+### A class file can stop measuring what its issue is about
+
+`addressability.txt` went 36 → 8, and **`IEFVEA` is not on it and still raises the
+diagnostic**:
+
+```
+IEFVEA   tool=identical   as370_rc=8   ifox_rc=0000   signal=as370 alone flags
+```
+
+The file selects modules whose deck **differs** *and* where `as370` alone flags.
+`IEFVEA`'s deck is now byte-identical, so it drops out — while still returning
+`rc 8` where IFOX00 returns `rc 0`. The issue is about the diagnostic; the file is
+a deck-divergence class. **They agreed until a fix made them disagree.**
+
+Both failure modes are now on the board with a named module each:
+
+| | |
+|---|---|
+| the complaint goes, the deck stays | the eight `IFNX*` after cc370#262 |
+| **the deck goes, the complaint stays** | **`IEFVEA` after cc370#154** |
+
+Neither is visible in a gained list, and `rebuild_classes.py` can only see the
+first. Measure the diagnostic separately rather than inferring it.
