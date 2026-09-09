@@ -58,7 +58,8 @@ IEB139I I/O ERROR DURING READ - EBB1102B,SMP ,348,DA,SYM10114,00- OP,PROGRAM CHE
 ```
 
 `SYM10114` is the DD name for `MVSSRC.SYM101.F14`, and **348** is the address
-TK4- gives `src000.348`. His build was reading these volumes.
+TK4- gives `src000.348`. `MVSSRC.SYM101.F14` is on `SRC000` — unit and data set
+agree, not just the number. His build was reading these volumes.
 
 The mapping from Dave's qualifier to Jay's tape name is not a guess about
 spelling; it is fixed by the file counts above, which are distinct enough to
