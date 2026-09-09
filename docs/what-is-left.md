@@ -1221,3 +1221,63 @@ every test green, and two of them no longer measuring their subject.
 And `cont72` pins **both** levels now — a fixture that pins only the default
 cannot tell the flag from a no-op, which is the control rule again: **the case a
 control must exercise is the one that can go wrong, not the one that must pass.**
+
+## `BLSCAMOD` reduced to three lines, and five mechanisms eliminated — 2026-09-09
+
+cc370 measured the `MNOTE` cluster and found their own guess wrong: the notes are
+**the macros' own**, raised because `as370` hands them something IFOX00 does not,
+and 7 of the 8 also differ in the deck. `BLSCAMOD` is the exception — deck
+byte-identical, `rc 8` alone — and they left it *not isolated*.
+
+**It reproduces in three lines against the real macro:**
+
+```
+T        CSECT
+A        BLSCAMMM B,RDQSAMDS,Q
+         END
+```
+
+→ `MNOTE 8,'' IS AN INVALID VALUE FOR 'DYRB(2,1)'. NO FLAGS1 BIT IS SET.`
+
+### The path, and what it requires
+
+`BLSCAMMM` line 321 calls `BLSCAMM1 &DYRB(2)` to count sublist entries into the
+global `&BLSCAGA`; `&DYRB` takes its default `AL` and is not a sublist, so the
+count must be **0** and the loop at `.TEST1 AIF (&CTR GT 0).LOOP1` must not run.
+`as370` generates `BLSCAMM2 ,1` — so **`&CTR` is 1**, and the only source of that
+is `&BLSCAGA`.
+
+### Five mechanisms eliminated, each by measurement
+
+| probe | result |
+|---|---|
+| `BLSCAMM1` called directly — bare, `AL`, `(A,B)` | `&BLSCAGA` = **0, 1, 2** — correct |
+| `&P(2)` on `&P=AL`, substituted into an inner macro call | arrives **empty** — correct |
+| `K'` of a `SETC` assigned an empty parameter | **0** — correct |
+| an inner macro's `LCLA &CTR` leaking into the caller | does not leak — correct |
+| `LCLB`/`LCLC` **mid-body** (`BLSCAMMM` has them at lines 319–320) | locals and globals unchanged — correct |
+
+So `BLSCAMM1` returns the right count when called by hand and the wrong one when
+called from `BLSCAMMM`, with every obvious difference between those two paths
+measured and ruled out. **The defect still does not survive simplification** —
+but the reproduction is now three lines instead of a module, and the next person
+starts five candidates further on.
+
+### And one side-observation, unverified against the oracle
+
+A **source macro definition does not override a machine mnemonic**:
+
+```
+         MACRO
+         M     &A
+         MNOTE 4,'MACRO M CALLED'
+         MEND
+T        CSECT
+         M     1,2            -> 5C10 0002, the Multiply instruction, no MNOTE
+```
+
+IBM's assembler gives a source macro precedence over an identically-named
+instruction — that is how an instruction is overridden deliberately. **Not
+checked against IFOX00**, and it is not in this cluster's path; recorded because
+it turned up while a fixture was named `M` by accident, and a fixture whose name
+collides with a mnemonic silently tests nothing.
