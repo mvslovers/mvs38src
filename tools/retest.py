@@ -131,6 +131,35 @@ def verdict(a, b):
     return "identical" if x == y else "bytes"
 
 
+def rcmap(tsv):
+    """{module: severity} from a gate run's tsv, or from IFOX00's state.tsv."""
+    out = {}
+    for line in open(tsv):
+        f = line.rstrip("\n").split("\t")
+        if len(f) < 2 or f[0] == "module":
+            continue
+        v = f[1].strip()
+        if v.lstrip("-").isdigit():
+            out[f[0]] = int(v)
+    return out
+
+
+def rcverdict(a, b):
+    """Do the two assemblers agree about whether the module is clean?
+
+    Not the exact number -- IFOX00 counts in multiples of four and a severity
+    is a severity. `as370 == IFOX00` has always meant the deck; on 2026-09-09
+    Mike pointed out that it has to mean the RETURN CODE too, and the measure
+    below is why that is not a detail: 151 modules disagree and 124 of them
+    have a byte-identical deck, so every deck-based figure in this repository
+    calls them finished.
+    """
+    clean_a, clean_b = a is not None and a <= 4, b is not None and b <= 4
+    if clean_a == clean_b:
+        return "agree"
+    return "as370 alone flags" if not clean_a else "IFOX00 alone flags"
+
+
 def measure(objdir, mods):
     return {m: verdict(f"{objdir}/{m}.obj", f"{IFOX}/{m}.obj") for m in mods}
 
@@ -141,6 +170,9 @@ def main():
     ap.add_argument("--baseline", default=f"{RUN}/as370",
                     help="the as370 decks the recorded figures come from")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--rc", default=None, metavar="TSV",
+                    help="the gate run's own tsv, to compare return codes as "
+                         "well as decks (default: <objdir minus 'obj_'>.tsv)")
     a = ap.parse_args()
 
     mods = sorted(f[:-4] for f in os.listdir(IFOX) if f.endswith(".obj"))
@@ -182,6 +214,29 @@ def main():
     for k in ("bytes", "cards", "no-as370-deck"):
         print(f"  {k:14s}: {sum(1 for m in mods if old[m] == k)} -> "
               f"{sum(1 for m in mods if new[m] == k)}")
+
+    # The other half of "as370 == IFOX00": the return code.
+    tsv = a.rc or (os.path.basename(a.objdir).replace("obj_", "", 1) + ".tsv")
+    if os.path.exists(tsv):
+        ifox = {m: (int(v) if v.strip().lstrip("-").isdigit() else None)
+                for m, v in ((l.split("\t")[0], l.split("\t")[1])
+                             for l in open(f"{RUN}/state.tsv").read().splitlines()[1:]
+                             if len(l.split("\t")) > 1)}
+        now = rcmap(tsv)
+        base = rcmap(f"{RUN}/as370-gate.tsv")
+        vn = {m: rcverdict(now.get(m), ifox.get(m)) for m in mods}
+        vo = {m: rcverdict(base.get(m), ifox.get(m)) for m in mods}
+        an, ao = (sum(1 for m in mods if v[m] == "agree") for v in (vn, vo))
+        print(f"\n  return code agrees : {ao} -> {an}   ({an - ao:+d})")
+        for k in ("as370 alone flags", "IFOX00 alone flags"):
+            print(f"    {k:18s}: {sum(1 for m in mods if vo[m] == k)} -> "
+                  f"{sum(1 for m in mods if vn[m] == k)}")
+        both = [m for m in mods if vn[m] == "agree" and new[m] == "identical"]
+        bo = [m for m in mods if vo[m] == "agree" and old[m] == "identical"]
+        print(f"  DECK AND RC BOTH   : {len(bo)} -> {len(both)}   "
+              f"({len(both) - len(bo):+d})")
+    else:
+        print(f"\n  (no return-code comparison: {tsv} not found -- pass --rc)")
 
     # Named, both directions, because the count above cancels. On cc370#182
     # IFNX1A gained a deck and IFCEE155 lost one to a timeout race, so the line

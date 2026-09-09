@@ -538,3 +538,50 @@ the rule was wrong rather than the deck:
 Without the control, the first version reports 1,861 defective `as370` decks and
 every one of them is a lie. **A validator with no known-good corpus is a random
 number generator with good manners.**
+
+## The gate measures the deck. It now measures the return code too — 2026-09-09
+
+`as370 == IFOX00` has always been read off the deck. Mike asked the obvious
+question — *if it is an error, as370 has to report it with the same RC as IFOX00*
+— and the measurement says that is not a detail:
+
+| | modules | of those, deck **byte-identical** |
+|---|---:|---:|
+| `as370` flags, IFOX00 clean | 33 | 9 |
+| **IFOX00 flags, `as370` clean** | **118** | **115** |
+
+**151 disagree and 124 of them have an identical deck**, so every deck-based
+figure in this repository counts them as finished.
+
+`retest.py` now prints both halves:
+
+```
+  return code agrees : 5377 -> 5377   (+0)
+    as370 alone flags : 33 -> 33
+    IFOX00 alone flags: 118 -> 118
+  DECK AND RC BOTH   : 5210 -> 5210   (+0)
+```
+
+**`DECK AND RC BOTH` is the honest headline**: 5,210 of 5,528, against 5,348 on
+the deck alone.
+
+It takes the run's own `<label>.tsv` (or `--rc`), and compares *clean against not
+clean* rather than the exact number — IFOX00 counts in multiples of four and a
+severity is a severity.
+
+### The 118 are almost one thing
+
+```
+105  IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION
+103  IFO092 KEYWORD PARAMETER PTF  UNDEFINED IN MACRO DEFINITION
+  9  IFO092 KEYWORD PARAMETER ALIGN UNDEFINED IN MACRO DEFINITION
+```
+
+The source calls `MODID DATE=…,PTF=…` and `SYS1.AMACLIB(MODID)` has the prototype
+`&LABEL MODID &BRANCH=,&BR=`. IFOX00 is right to complain — the macro is an older
+maintenance level than the source. **`as370` swallows it without a word**, and
+that is cc370#162.
+
+**It is the largest single item on the board and it looks like nothing**: the gate
+will score it `+0` on decks, because 115 of the 118 are already byte-identical. It
+took a stricter definition of the goal to make it visible at all.
