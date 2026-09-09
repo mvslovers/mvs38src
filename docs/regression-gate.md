@@ -696,3 +696,38 @@ read `** is already on main.**`. It had to be corrected in a follow-up.
 Use `--body-file` with a quoted heredoc (`<<'MDEOF'`) for every comment, without
 exception. Backticks are how one writes code in Markdown and how the shell
 substitutes commands, and a comment is published before anyone reads it back.
+
+## Never chain a promotion behind unrelated commands with `&&`
+
+2026-09-09, and it is the sharpest instance of *stale by content* yet, because
+nothing failed and nothing looked wrong.
+
+```sh
+gh pr close 321 -c "..." && git checkout -q main && git pull -q && \
+  make -C as370 && cd .../ifox-run && rm -rf as370 restamp && \
+  cp -R obj_g322 as370 && cp g322.tsv as370-gate.tsv && echo promoted
+```
+
+`git checkout` aborted — the other session had uncommitted work in that checkout
+— so **every command after it was skipped, including the promotion**. The word
+`promoted` never printed and I did not notice, because the failure message was
+about a checkout and I was reading it as a git problem, not as a promotion
+problem.
+
+Consequences, both silent:
+
+- the measurement chain launched next ran the **new binary against the previous
+  merge's decks**, which is precisely the two-builds-at-once figure this document
+  already warns about;
+- `retest.py`'s rc rows compared against `g319` while claiming to compare against
+  the promoted state — which is how the `flagged-or-silent` row read
+  `5494 -> 5503 (+9)` for a merge that had already landed.
+
+**It was caught by a control, not by noticing.** Re-running `retest.py` on the
+already-promoted run must print `+0` on every line; it printed `+9`, and the only
+explanation was that the baseline was not what it claimed to be.
+
+So: **a promotion is its own command, run on its own, and its output is read.**
+Never `&&`-chained behind a merge, a build, or anything that can fail for an
+unrelated reason. And after promoting, `retest.py <the same objdir>` should print
+zeros — a one-line check that the promoted state is the run it is supposed to be.
