@@ -585,3 +585,41 @@ that is cc370#162.
 **It is the largest single item on the board and it looks like nothing**: the gate
 will score it `+0` on decks, because 115 of the 118 are already byte-identical. It
 took a stricter definition of the goal to make it visible at all.
+
+## A net count cannot report a regression it is outnumbered by — 2026-09-09
+
+cc370#304 took three modules from `rc 0` to `rc 8` — `IFNX1K`, `IFNX3K`,
+`IFNX5V` — and **I merged it.** The gate line read
+
+```
+LOST : 0        as370 alone flags : 23 -> 19
+```
+
+and **both were true.** The three decks were already non-identical, so the deck
+measure could not see them; seven other modules improved in the same run, so the
+net moved the right way. Nothing in the output was wrong. It simply could not
+carry the signal.
+
+`retest.py` now prints, unconditionally and **by name**, next to `LOST`:
+
+```
+  rc CLEAN -> FLAGGED: 3  IFNX1K IFNX3K IFNX5V
+  rc flagged -> clean : 4
+```
+
+Two lines, off two `.tsv` files that were already on disk. **The control**: run
+against `g301.tsv` and `g303.tsv` — the gates either side of #304 — it names
+exactly those three. A check that cannot reproduce the failure it was written for
+is not a check.
+
+### The shape, third instance
+
+| | the aggregate that hid it |
+|---|---|
+| `AMASPZAP` | module totals, while one section was 16 bytes and two were absent |
+| `diag_cap` / `libmac_mend` | a green test that had stopped testing its subject |
+| **cc370#304** | **a net verdict count outnumbering three regressions** |
+
+Every input correct, every figure honest, and the thing you needed to see gone.
+cc370 found it by asking *when* the `IFNX` family broke, not *whether* — the
+family was suspiciously uniform, and uniformity is a question about history.

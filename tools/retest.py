@@ -231,6 +231,24 @@ def main():
         for k in ("as370 alone flags", "IFOX00 alone flags"):
             print(f"    {k:18s}: {sum(1 for m in mods if vo[m] == k)} -> "
                   f"{sum(1 for m in mods if vn[m] == k)}")
+        # A NET count cannot report a regression it is outnumbered by.
+        # cc370#304 took three modules from rc 0 to rc 8 -- IFNX1K, IFNX3K,
+        # IFNX5V -- in a run whose gate line read `LOST : 0` and
+        # `as370 alone flags 23 -> 19`.  Both were true: the three decks were
+        # already non-identical so the deck measure could not see them, and
+        # seven other modules improved in the same run.  The net moved the
+        # right way while three modules got worse, and I merged it.
+        #
+        # So this is unconditional and by NAME, next to LOST.  Two lines, off
+        # two files that were already on disk.
+        broke = [m for m in mods
+                 if base.get(m) is not None and now.get(m) is not None
+                 and base[m] <= 4 < now[m]]
+        fixed = [m for m in mods
+                 if base.get(m) is not None and now.get(m) is not None
+                 and now[m] <= 4 < base[m]]
+        print(f"  rc CLEAN -> FLAGGED: {len(broke)}  {' '.join(broke[:10])}")
+        print(f"  rc flagged -> clean : {len(fixed)}  {' '.join(fixed[:8])}")
         both = [m for m in mods if vn[m] == "agree" and new[m] == "identical"]
         bo = [m for m in mods if vo[m] == "agree" and old[m] == "identical"]
         print(f"  DECK AND RC BOTH   : {len(bo)} -> {len(both)}   "
