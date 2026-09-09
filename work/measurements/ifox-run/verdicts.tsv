@@ -2,14 +2,14 @@ module	as370_rc	ifox_rc	tool	tool_restamped	dlib
 AHLCWRIT	0	0000	identical		length
 AHLGTFI	0	0000	identical		length
 AHLIWRIT	0	0000	identical		length
-AHLMCER	0	0004	identical		length
+AHLMCER	4	0004	identical		length
 AHLMCIH	0	0000	identical		identical
 AHLREADR	0	0000	identical		mixed
 AHLSBLOK	0	0000	identical		text
 AHLSBUF	0	0000	identical		length
 AHLSCAN	0	0000	identical		holes
 AHLSETD	0	0000	identical		mixed
-AHLSETEV	0	0004	identical		length
+AHLSETEV	4	0004	identical		length
 AHLSETMG	0	0000	identical		holes
 AHLT103	0	0000	identical		length
 AHLTCTL1	0	0000	identical		identical
@@ -2004,7 +2004,7 @@ IEEMB805	0	0000	identical		length
 IEEMB806	0	0000	identical		length
 IEEMB807	0	0000	identical		holes
 IEEMB808	0	0000	identical		identical
-IEEMB809	0	0004	identical		identical
+IEEMB809	4	0004	identical		identical
 IEEMB810	0	0000	identical		mixed
 IEEMB811	0	0000	identical		length
 IEEMB812	0	0000	identical		identical
@@ -2774,7 +2774,7 @@ IFCEB165	0	0000	identical		identical
 IFCEC155	0	0000	identical		identical
 IFCEC165	0	0000	identical		identical
 IFCECHAR	0	0000	identical		identical
-IFCECUT0	12	0012	cards		length
+IFCECUT0	12	0012	bytes	cards	length
 IFCED155	0	0000	identical		identical
 IFCED165	0	0000	identical		identical
 IFCEDDR0	0	0000	identical		length
@@ -2785,8 +2785,8 @@ IFCEE165	0	0000	identical		identical
 IFCEEDIT	8	0008	identical		length
 IFCEF155	0	0000	identical		length
 IFCEF165	0	0000	identical		identical
-IFCEFBA4	12	0012	bytes	bytes	length
-IFCEFBA5	12	0012	bytes	bytes	length
+IFCEFBA4	12	0012	bytes	cards	length
+IFCEFBA5	12	0012	bytes	cards	length
 IFCEG155	0	0000	identical		identical
 IFCEGUS1	0	0000	identical		length
 IFCEI135	0	0000	identical		length
@@ -2828,7 +2828,7 @@ IFCET008	0	0000	identical		length
 IFCET00B	0	0000	identical		length
 IFCET00C	0	0000	identical		length
 IFCET00D	0	0000	identical		length
-IFCET040	12	0012	bytes	bytes	unpaired
+IFCET040	12	0012	cards		unpaired
 IFCETRN0	0	0000	identical		identical
 IFCETRN1	0	0000	identical		identical
 IFCETRN2	0	0000	identical		identical
@@ -2836,7 +2836,7 @@ IFCETRN3	0	0000	identical		identical
 IFCETRN4	0	0000	identical		length
 IFCETRN5	0	0000	identical		identical
 IFCETRN6	12	0012	cards		unpaired
-IFCETRN7	12	0012	bytes	bytes	unpaired
+IFCETRN7	12	0012	bytes	cards	unpaired
 IFCETRN8	0	0000	identical		identical
 IFCETUL1	0	0000	identical		identical
 IFCEUKNO	0	0000	identical		length
@@ -2881,20 +2881,20 @@ IFCPARM1	0	0000	identical		length
 IFCPARM2	0	0000	identical		length
 IFCRDESM	0	0000	identical		length
 IFCRFLO1	0	0000	identical		identical
-IFCS0115	12	0012	bytes	bytes	unpaired
+IFCS0115	12	0012	cards		unpaired
 IFCS0135	0	0000	identical		identical
 IFCS0145	0	0000	identical		identical
 IFCS0155	0	0000	identical		identical
 IFCS0165	0	0000	identical		length
-IFCS1017	12	0012	bytes	bytes	unpaired
-IFCS1018	12	0012	bytes	bytes	unpaired
+IFCS1017	12	0012	cards		unpaired
+IFCS1018	12	0012	bytes	cards	unpaired
 IFCS2860	0	0000	identical		identical
 IFCS2870	0	0000	identical		identical
 IFCS2880	0	0000	identical		identical
 IFCS3031	0	0000	identical		identical
 IFCS3032	0	0000	identical		identical
 IFCS3033	0	0000	identical		identical
-IFCS33XX	12	0012	bytes	bytes	length
+IFCS33XX	12	0012	bytes	cards	length
 IFCS5424	12	0012	cards		unpaired
 IFCSAEXX	4	0004	identical		identical
 IFCSAXXX	0	0000	identical		length
@@ -2905,7 +2905,7 @@ IFCSDASD	0	0000	identical		length
 IFCSDICH	0	0000	identical		identical
 IFCSGUS1	0	0000	identical		length
 IFCSHARE	0	0000	identical		length
-IFCSI115	12	0012	bytes	bytes	unpaired
+IFCSI115	12	0012	cards		unpaired
 IFCSI145	0	0000	identical		length
 IFCSI155	0	0000	identical		identical
 IFCSIPL0	0	0000	identical		identical
@@ -3242,17 +3242,17 @@ IFNX3A	8	0008	bytes	bytes	text
 IFNX3B	0	0000	bytes	identical	text
 IFNX3K	0	0000	identical		length
 IFNX3N	0	0000	bytes	bytes	text
-IFNX4D	0	0000	bytes	bytes	text
+IFNX4D	0	0000	bytes	identical	text
 IFNX4E	0	0000	bytes	identical	text
 IFNX4M	0	0000	bytes	bytes	length
-IFNX4N	0	0000	bytes	bytes	text
+IFNX4N	0	0000	bytes	identical	text
 IFNX4S	0	0000	bytes	bytes	text
 IFNX4T	0	0000	bytes	bytes	length
 IFNX4V	0	0000	bytes	identical	text
 IFNX5A	0	0000	bytes	bytes	text
 IFNX5C	0	0000	bytes	bytes	text
 IFNX5D	8	0008	cards		mixed
-IFNX5F	0	0000	bytes	bytes	text
+IFNX5F	0	0000	bytes	identical	text
 IFNX5L	8	0008	bytes	identical	length
 IFNX5M	8	0008	bytes	bytes	mixed
 IFNX5P	0	0000	bytes	bytes	mixed

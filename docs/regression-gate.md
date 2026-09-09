@@ -803,3 +803,34 @@ grep -q 'lines elided -- head and tail' "$f" && continue
 ```
 
 **A predicate that stays true after the action is a loop, not a guard.**
+
+## A comparison whose inputs are missing must fail, not agree
+
+2026-09-09, verifying cc370#328. The check was
+
+```sh
+for spec in "IFNX4D 05.29" "IFNX4N 03.10"; do
+  set -- $spec; mod=$1; t=$2
+  a=$(shasum -a 256 /tmp/$mod.t.obj | cut -c1-16)
+  b=$(shasum -a 256 .../decks/$mod.obj | cut -c1-16)
+  [ "$a" = "$b" ] && echo IDENTICAL
+```
+
+`set -- $spec` did not split under this shell, so `$mod` was `IFNX4D 05.29`, both
+`shasum` calls failed, `$a` and `$b` were **both empty**, and the test printed
+`IDENTICAL` for three modules it had never compared. A false *pass* — the
+direction that does not get investigated.
+
+Rewritten in Python with `assert os.path.exists(...)` on both sides before
+hashing. **Any comparison that can be reached with an absent operand needs the
+operand asserted**, because "equal" is what two absent things look like.
+
+**And the second instrument was wrong too.** With the paths right, a whole-file
+`shasum` said all three *differ* — because `ifox_run.py`'s stored decks and
+`as370 -o` output are not framed identically. Card-wise with the END card set
+aside — the rule `ifox_compare.py` already applies, since each assembler writes
+its own name there — says identical, on all three. The same trap made `IBCDASDI`
+look different when it was not.
+
+Two wrong readings of one three-line check, in opposite directions. The project's
+own comparator exists precisely so that ad-hoc ones are not needed.
