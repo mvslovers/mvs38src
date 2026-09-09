@@ -278,6 +278,19 @@ missing macros. So the mechanism is right and the attribution was too narrow: th
 selection touches, not of `EDM1102` alone. One job is not a class, and the second
 one is what said so.
 
+**Swept across the whole family**, rather than generalised from one job again:
+
+| job | skipped | FMIDs named |
+|---|---:|---|
+| `MAINT01A B D E` | 11 each | `EDM1102` ×11 |
+| `MAINT02A B D E` | 6 each | `EDM1102` ×3, **`EBT1102` ×3** |
+| `MAINT03A` | 11 | `EDM1102` ×11 |
+
+**28 distinct SYSMODs, and every one names `EDM1102` or `EBT1102`** — the two
+terminated SYSMODs. No exceptions, and no skipped SYSMOD names an FMID that
+actually installed. (`EJE1103`'s own maintenance has not come up yet; it would be
+the third.)
+
 So the whole build's failure surface reduces to:
 
 | root | consequence |
