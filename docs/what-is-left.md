@@ -12,9 +12,9 @@
 >
 > If that is not 0, the numbers under it are too large by an unknown amount and
 > `cluster_remaining.py` has to be re-run before anything is planned around them.
-> **Derived against `847aed7`; run the command above before quoting anything here.**
+> **Derived against `1112488`; run the command above before quoting anything here.**
 
-# The remaining 105 — as measured on 2026-09-09 against `847aed7`
+# The remaining 99 — as measured on 2026-09-09 against `1112488`
 
 **Derived against cc370 `2f90d47`; `git rev-list --count 2f90d47..main` = 0 at
 writing.** The previous derivation stood at `7a0cd90`, which had gone **6 merges**
@@ -1557,3 +1557,28 @@ stale when a heading outlives what it describes.
 `IEESC03D` moved **backwards** (+4 bytes) in the same merge that made twelve of
 its siblings identical — a second defect the first one was masking. Named rather
 than averaged in.
+
+## After #319, #322 and #324 — 5,424 of 5,528 (98.1 %), and five classes are empty
+
+| | |
+|---|---:|
+| `as370 == IFOX00` | **5,424 (98.1 %)** |
+| decks differing | **99** |
+| silent divergence | 36 |
+| `as370 alone flags` | **3** |
+| `IFOX00 alone flags` | 4 |
+
+Empty and closed: `addressability` (#154), `undefined-symbol` (#153),
+`continuation-consumed` (#158), `duplication-factor` (#157), `symbol-over-8`
+(#159), `undefined-opcode` (#155), `relocatable-displacement`.
+
+**Three of those ended on the same module.** `undefined-symbol` went 39 → 1,
+`addressability` 36 → 9 → 1, and `section-one-side` 4 → 2, and in each case the
+last member standing was `ISTNSC00` — one 4,096-line macro-body cut wearing three
+different diagnostics. Nothing in the issue titles said so; the regenerated class
+lists did, because they group by what the assembler reported rather than by what
+the problem was called.
+
+Still open with members: `section-one-side` (`IECVHDET ISTNSC00`), `prologue`
+(`IECVXMGN IECVXVRU IGG019RO`), `ifox-alone-flags` (`IBCDASDI IBCDMPRS IEAVEXS
+IEAVRTI0`).

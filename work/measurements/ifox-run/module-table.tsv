@@ -788,7 +788,7 @@ IGG019Q0	8	1	8	IFO117 first expression in substring notation exceeds the length 
 IGG019Q1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical				length	both flag	source	
 IGG019Q6	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3 | IFO197 *** MNOTE ***	identical				length	both flag	source	
 IGG019Q7	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3 | IFO197 *** MNOTE ***	identical				length	both flag	source	
-IGG019Q8	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3 | IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 10	identical				text	both flag	source	
+IGG019Q8	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | IFO220 Alignment error - O needs a 4-byte boundary and the operand resolves to x'13E'	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3 | IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 10	identical				text	both flag	source	
 IGG019Q9	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical				length	both flag	source	
 IGG019QE	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical				text	both flag	source	
 IGG019R1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical				text	both flag	source	
@@ -1528,7 +1528,7 @@ HMASMLC1	0				0000				identical				text		source
 HMASMLCC	0				0000				identical				mixed		source	
 HMASMLCD	0				0000				identical				text		source	
 HMASMLCP	0				0000				identical				length		source	
-HMASMLID	0				0004	3	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 14	identical				text		source	
+HMASMLID	4	3	4	Alignment error - ST needs a 4-byte boundary and the operand resolves to x'13B1' (IFOX00 IFO220	0004	3	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 14	identical				text		source	
 HMASMLKD	0				0000				identical				text		source	
 HMASMLKI	0				0000				identical				text		source	
 HMASMLOG	0				0000				identical				mixed		source	
@@ -1835,8 +1835,8 @@ IDA019SB	0				0000				identical				identical		source
 IDA019SE	0				0000				identical				length		source	
 IDA019SF	0				0000				identical				identical		source	
 IDA019SG	0				0000				identical				identical		source	
-IDA019SH	0				0004	2	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 12	identical				identical		source	
-IDA019SL	0				0004	2	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 12	identical				identical		source	
+IDA019SH	4	2	4	IFO220 Alignment error - L needs a 4-byte boundary and the operand resolves to x'586' | IFO220 Alignment error - L needs a 4-byte boundary and the operand resolves to x'2E6'	0004	2	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 12	identical				identical		source	
+IDA019SL	4	2	4	IFO220 Alignment error - L needs a 4-byte boundary and the operand resolves to x'27E' | IFO220 Alignment error - L needs a 4-byte boundary and the operand resolves to x'136'	0004	2	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 12	identical				identical		source	
 IDA019SM	0				0000				identical				identical		source	
 IDA019SN	0				0000				identical				identical		source	
 IDA019ST	0				0000				identical				length		source	
@@ -2664,19 +2664,19 @@ IEFAB478	0				0000				identical				identical		source
 IEFAB479	0				0000				identical				holes		source	
 IEFAB480	0				0000				identical				holes		source	
 IEFAB481	0				0000				identical				holes		source	
-IEFAB485	0				0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 12	identical				length		source	
+IEFAB485	4	1	4	IFO220 Alignment error - ST needs a 4-byte boundary and the operand resolves to x'C7'	0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 12	identical				length		source	
 IEFAB486	0				0000				identical				length		source	
-IEFAB487	0				0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 13	identical				length		source	
+IEFAB487	4	1	4	Alignment error - CVD needs a 8-byte boundary and the operand resolves to x'114' (IFOX00 IFO220	0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 13	identical				length		source	
 IEFAB488	0				0000				identical				length		source	
 IEFAB489	0				0000				identical				identical		source	
-IEFAB48A	0				0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 13	identical				length		source	
+IEFAB48A	4	1	4	IFO220 Alignment error - CVD needs a 8-byte boundary and the operand resolves to x'FB'	0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 13	identical				length		source	
 IEFAB490	0				0000				identical				length		source	
 IEFAB491	0				0000				identical				length		source	
 IEFAB492	0				0000				identical				length		source	
 IEFAB493	0				0000				identical				identical		source	
 IEFAB494	0				0000				identical				length		source	
-IEFAB495	0				0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 13	identical				identical		source	
-IEFAB496	0				0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 14	identical				length		source	
+IEFAB495	4	1	4	Alignment error - STH needs a 2-byte boundary and the operand resolves to x'119' (IFOX00 IFO220	0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 13	identical				identical		source	
+IEFAB496	4	1	4	IFO220 Alignment error - ST needs a 4-byte boundary and the operand resolves to x'96'	0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 14	identical				length		source	
 IEFAB498	0				0000				identical				mixed		source	
 IEFAB499	0				0000				identical				holes		source	
 IEFAB49A	0				0000				identical				length		source	
@@ -2736,12 +2736,12 @@ IEFACT	0				0000				identical				length		source
 IEFACTRT	0				0000				identical				length		source	
 IEFAQTOP	0				0000				identical				identical		source	
 IEFATECB	0				0000				identical				identical		source	
-IEFBB401	0				0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 12	identical				identical		source	
+IEFBB401	4	1	4	IFO220 Alignment error - ST needs a 4-byte boundary and the operand resolves to x'31A'	0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 12	identical				identical		source	
 IEFBB402	0				0000				identical				length		source	
 IEFBB404	0				0000				identical				identical		source	
-IEFBB410	0				0004	4	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 18 | IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 12 | IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 13	identical				length		source	
+IEFBB410	4	4	4	Alignment error - CVD needs a 8-byte boundary and the operand resolves to x'142' (IFOX00 IFO220 | Alignment error - CVD needs a 8-byte boundary and the operand resolves to x'136' (IFOX00 IFO220 | IFO220 Alignment error - ST needs a 4-byte boundary and the operand resolves to x'13E'	0004	4	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 18 | IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 12 | IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 13	identical				length		source	
 IEFBB412	0				0000				identical				holes		source	
-IEFBB414	0				0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 13	identical				identical		source	
+IEFBB414	4	1	4	IFO220 Alignment error - ST needs a 4-byte boundary and the operand resolves to x'B9'	0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 13	identical				identical		source	
 IEFBB416	0				0000				identical				length		source	
 IEFBB4M1	0				0000				identical				holes		source	
 IEFBB4M2	0				0000				identical				identical		source	
@@ -3366,7 +3366,7 @@ IFCS2880	0				0000				identical				identical		source
 IFCS3031	0				0000				identical				identical		source	
 IFCS3032	0				0000				identical				identical		source	
 IFCS3033	0				0000				identical				identical		source	
-IFCSAEXX	0				0004	2	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 11	identical				identical		source	
+IFCSAEXX	4	2	4	Alignment error - CVD needs a 8-byte boundary and the operand resolves to x'2F4' (IFOX00 IFO220	0004	2	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 11	identical				identical		source	
 IFCSAXXX	0				0000				identical				length		source	
 IFCSCHAR	0				0000				identical				text		source	
 IFCSCRND	0				0000				identical				identical		source	
@@ -3701,7 +3701,7 @@ IGC0107C	0				0000				identical				mixed		source
 IGC0107D	0				0000				identical				mixed		source	
 IGC0109H	0				0000				identical				length		source	
 IGC0112F	0				0000				identical				length		source	
-IGC017	0				0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 11	identical				no-pair		source	
+IGC017	4	1	4	IFO220 Alignment error - L needs a 4-byte boundary and the operand resolves to x'22'	0004	1	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 11	identical				no-pair		source	
 IGC0203E	0				0000				identical				length		source	
 IGC0206F	0				0000				identical				holes		source	
 IGC0206H	0				0000				identical				length		source	
@@ -4364,7 +4364,7 @@ IGG08117	0				0000				identical				text		source
 IGG0860A	0				0000				identical				mixed		source	
 IGG0860B	0				0000				identical				mixed		source	
 IGG0860D	0				0000				identical				mixed		source	
-IGG09300	0				0004	5	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 11	identical				identical		source	
+IGG09300	4	5	4	IFO220 Alignment error - C needs a 4-byte boundary and the operand resolves to x'13A' | IFO220 Alignment error - C needs a 4-byte boundary and the operand resolves to x'13E' | IFO220 Alignment error - C needs a 4-byte boundary and the operand resolves to x'142' | IFO220 Alignment error - C needs a 4-byte boundary and the operand resolves to x'146' | IFO220 Alignment error - C needs a 4-byte boundary and the operand resolves to x'14A'	0004	5	4	IFO220 ALIGNMENT ERROR NEAR OPERAND COLUMN 11	identical				identical		source	
 IGG09301	0				0000				identical				length		source	
 IGG09302	0				0000				identical				length		source	
 IGG09303	0				0000				identical				text		source	

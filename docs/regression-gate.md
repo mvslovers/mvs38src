@@ -731,3 +731,19 @@ So: **a promotion is its own command, run on its own, and its output is read.**
 Never `&&`-chained behind a merge, a build, or anything that can fail for an
 unrelated reason. And after promoting, `retest.py <the same objdir>` should print
 zeros — a one-line check that the promoted state is the run it is supposed to be.
+
+## `gh issue close` has no `--body-file`
+
+It takes `-c/--comment` inline only, which collides directly with the rule above
+about never passing a body inline. Two issues appeared to close and did not,
+because `--body-file` was accepted as an unknown flag and the command did
+nothing visible.
+
+Two commands, not one:
+
+```sh
+gh issue comment 153 --body-file /tmp/c153.md && gh issue close 153
+```
+
+And **check the state afterwards** — `gh issue view <n> --json state -q .state`.
+A close that silently failed looks exactly like one that worked.
