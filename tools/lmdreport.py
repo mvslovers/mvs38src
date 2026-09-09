@@ -79,11 +79,15 @@ def rewrite(jcl, bld, org):
 
 def allocate(dsn):
     """IEFBR14 with a DD that creates it. mvsMF will not create on PUT."""
+    # Continuations start in column 16, the way Dave's own JCL writes them.
+    # At column 15 JES2 read the SPACE card as a comment and the job ended
+    # JCL ERROR -- the listing showed it back as `//*`, which is what that
+    # looks like from the outside.
     jcl = (f"//ALLOC    JOB  (BLD),'ALLOC',CLASS=A,MSGCLASS=H\n"
            f"//S1     EXEC PGM=IEFBR14\n"
-           f"//D       DD  DSN={dsn},DISP=(,CATLG),UNIT=SYSDA,\n"
-           f"//            SPACE=(CYL,(10,5)),\n"
-           f"//            DCB=(RECFM=FB,LRECL=80,BLKSIZE=4080)\n")
+           f"//D       DD  DSN={dsn},DISP=(,CATLG),\n"
+           f"//             UNIT=SYSDA,SPACE=(CYL,(10,5)),\n"
+           f"//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=4080)\n")
     d = json.loads(req("PUT", "/zosmf/restjobs/jobs", jcl.encode("latin-1"),
                        "text/plain", {"X-IBM-Intrdr-Mode": "TEXT"}))
     return wait(d["jobname"], d["jobid"])
