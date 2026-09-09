@@ -855,3 +855,48 @@ member at all — mostly `IER*`, the sort package MVS/CE does not carry.
 And two modules — `HMASMTMD`, `IFFAHA16` — match IBM within `cmplmd370`'s
 tolerance while differing from each other, which says the tolerance is wider than
 a byte comparison and is worth knowing before quoting either verdict.
+
+## 95.6 %, a divergence with no wrong bytes, and text filed under the wrong section
+
+cc370#280 merged: **+1, `IEHINITT`.** `ORG *+200` as a maintenance area reserves
+space and emits **no TXT at all**; `as370` tracked the high-water mark from
+`DS`/`DC` alone, so the section was 200 bytes short and the next one 200 forward.
+**The highest TXT byte is `X'0C42'` on both sides.**
+
+**That is a second shape for the silent group, and it names a blind spot in four
+of my seven instruments.** `small_delta.py`, `first_divergence.py`,
+`cluster_remaining.py` and the byte histogram all read TXT; a divergence that
+lives entirely in the ESD has no wrong bytes for them to find. `seclen()` and the
+three-way table are the two that can see it — and `seclen` exists only because
+cc370 found the same blind spot from the other side on #174.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,287 of 5,528 (95.6 %)** |
+| still differing | **241** |
+| byte-identical to IBM's object | **1,208** |
+
+### `AMASPZAP`, and a total that hid two whole sections
+
+I had it filed as *"moved its length onto IFOX00's exactly and stayed thousands
+of bytes wrong"* — from **totals**. Per section:
+
+| | `as370` | IFOX00 | differing |
+|---|---:|---:|---:|
+| `AMASPZAP` | 5,256 B | 5,256 B | **16** |
+| `AMASZDMP` | 964 B | 964 B | **0** |
+| `AMASZCON` | **0 B** | 3,654 B | 3,654 |
+| `AMASZIOR` | **0 B** | 3,046 B | 3,046 |
+
+**The bytes are not missing.** They are in the deck under the *external
+reference*'s ESDID, created by `DC V(AMASZCON)` at line 1142 — before the
+`AMASZCON CSECT` at 2826. IFOX00 has the same two ERs and files the text under
+the SDs. **cc370#281**, six cards.
+
+**Two readings of this module were wrong before that**, and both were failures of
+aggregation rather than of measurement: mine from whole-module totals, cc370's
+from *"different origins swamp it"*. `distance()` has keyed by section name since
+#171; what neither of us did was **report** per section. The class file that
+stopped measuring its own issue was the same failure, and so was the stale
+`as370-messages.tsv` — **the number was available and nobody looked at it in the
+right shape.**
