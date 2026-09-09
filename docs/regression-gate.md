@@ -785,3 +785,21 @@ was never on the path"*. **A negative result about a supplied file is a claim
 about the supply until the supply is demonstrated.** `gate.sh` is not affected —
 its `MACFLAGS` is expanded by `sh`, which does word-split — but every ad-hoc
 measurement typed at the prompt is.
+
+## A cleanup loop must not re-trigger on its own output
+
+The trim loop written to cap those listings behind a long-running driver tested
+`[ "$n" -gt 8000 ]` against files it had itself left at **8003** lines, so every
+pass re-cut every file it had already cut — head 4000 + marker + tail 4000 of an
+8003-line file, losing the three marker lines and writing three new ones,
+indefinitely. Harmless here and not always: the same shape on a file that shrinks
+by more than its marker is a slow grinder.
+
+The fix is to make the loop recognise its own work rather than to tune the
+threshold:
+
+```sh
+grep -q 'lines elided -- head and tail' "$f" && continue
+```
+
+**A predicate that stays true after the action is a loop, not a guard.**
