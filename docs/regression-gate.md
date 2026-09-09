@@ -860,3 +860,22 @@ displacement, is one defect from identity rather than further away.
 The third on that line, `IFNX3A(+2)`, is not this shape: every section matches
 IFOX00 in origin *and* length, so its two bytes are content. Checking which
 of the two it was cost one script over the ESD records.
+
+## Verify the worktree's commit before starting anything that reads its binary
+
+Twice in one evening: the measurement chain was started against
+`/tmp/main-cc370/as370/as370` while that worktree was **one merge behind**, and
+once while the binary was being rebuilt underneath it. Both produce a figure from
+two commits with nothing in the output saying so.
+
+The order is: **fetch, detach, build, print `-v` and the commit, and only then
+start anything that reads it.**
+
+```sh
+cd /tmp/main-cc370 && git fetch -q origin && git checkout -q --detach origin/main \
+  && git log --oneline -1 && make -C as370 && ./as370/as370 -v
+```
+
+`as370 -v` prints a build *date*, which cannot distinguish two merges on the same
+day — so the commit line is the one that matters, and it has to be read, not just
+printed.
