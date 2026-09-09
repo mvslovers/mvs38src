@@ -663,3 +663,36 @@ control has to differ from the test in exactly the one thing under examination,
 and this one differed in two. `run.sh`'s own comment names the symptom
 (*"the suite failed with `Undefined operation code ... PDPPRLG` wherever it was
 absent"*); reading the instrument would have been quicker than re-deriving it.
+
+## Build `main` from a worktree — the cc370 checkout belongs to the other session
+
+Same day, worse mistake. Promoting a merge, I ran `git checkout main` **in
+`~/repos/mvs/cc370` while cc370 was working in it** — the session had
+`feat/as370-ifo220-alignment` checked out with uncommitted changes to
+`as370/src/as370.c`. Git refused, which is the only reason nothing was lost.
+
+There was never a reason to touch it: every gate already builds from
+`git worktree add /tmp/wtNNN`, and the only thing the checkout was being used for
+was a current `main` binary for the measurement chain. So:
+
+```sh
+git -C ~/repos/mvs/cc370 worktree add /tmp/main-cc370 main
+cd /tmp/main-cc370 && git fetch -q origin && git checkout -q --detach origin/main
+```
+
+`--detach origin/main`, not the local `main` branch — the local ref lags whenever
+a pull was skipped, and moving it with `git branch -f` would reach into a ref the
+other session may be standing on. A detached worktree touches nothing shared.
+
+**Two sessions, one checkout, is a shared mutable resource with no lock.** The
+convention is: the checkout is cc370's, `/tmp` worktrees are mine.
+
+## Never pass a `gh` comment body inline
+
+`gh pr close 321 -c "... \`pool.s\` is already on main ..."` — the shell ran
+`pool.s` as a command and substituted its empty output, so the published comment
+read `** is already on main.**`. It had to be corrected in a follow-up.
+
+Use `--body-file` with a quoted heredoc (`<<'MDEOF'`) for every comment, without
+exception. Backticks are how one writes code in Markdown and how the shell
+substitutes commands, and a comment is published before anyone reads it back.
