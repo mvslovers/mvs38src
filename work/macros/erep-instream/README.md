@@ -98,3 +98,40 @@ command lines and from `gate.sh`, both of which pass a real argv, and they stand
 
 **Measuring a difference requires that the two runs differ.** A ladder whose
 rungs are identical produces a clean-looking trend and means nothing.
+
+## 2026-09-09: measured a third time, and the answer is that it cannot be measured here
+
+The entry above says *"they are genuine and they land, and supplying them recovers
+nothing."* The first version of that was invalidated by cc370#237. **This one was
+taken through a shell defect**: the two `-I` flags sat in a variable, reached
+`as370` as a single argument, and were ignored — so the run that "supplied" them
+was the run without them. Written out explicitly, `IFCSI115` goes from a 480-byte
+deck with `DSGEN LINE ROUTINE SPECIAL SUM` undefined to **1,680 bytes** with all
+five resolved.
+
+So they do land, and the honest question is what that costs. Gated tree-wide with
+`EXTRA_MACS="-I work/macros/kreiss-smp -I work/macros/erep-instream"`, against the
+same binary:
+
+| | |
+|---|---:|
+| modules at `rc 0` | 4,573 → **4,600** |
+| decks **closer** to IFOX00 | **1** |
+| decks **further** from it | **106** |
+| `DECK AND RC BOTH` | 5,403 → **5,339 (−64)** |
+| `IFOX00 alone flags` | 4 → **28** |
+
+**That is not a verdict on the macros. It is the `IHANVT` result at twenty times
+the scale**, and `docs/ifox-objections.md` predicted it in as many words: a macro
+adopted on the host side alone is measured against a reference assembled without
+it, and the two sides seeing different macro libraries is the one inequality that
+makes every difference unattributable.
+
+**So the third answer is neither "they help" nor "they recover nothing": it is
+that this question cannot be answered from the host.** Deciding it needs the
+macros on MVS *and* the affected modules' reference decks re-made in the same
+step — the recipe at the end of `ifox-objections.md` — and that replaces part of
+the oracle, so it is a deliberate act, not a measurement.
+
+The 27 modules that reach `rc 0` are the reason it is worth doing: they are the
+EREP family, the largest single block left in `both flag`.
