@@ -801,3 +801,57 @@ produced, applied to my own negative: `$0` inside a double-quoted regex, `grep -
 absent from this `grep`, `$MACFLAGS` unsplit by zsh, a `rm -f` on an empty glob
 aborting a command line — **five instances in one day of a mistake that returns a
 plausible number instead of an error.**
+
+## A seventh instrument: a third opinion on the silent 138 — 2026-09-09
+
+cc370#270 merged: **+0, none lost, one deck closer.** Checked deck against deck:
+**exactly 1 of 5,528 differs, and it is `IGC0E05A`** — whose own source has at
+most **20 commas in any `DC`**, so its long one is macro-generated. That is
+precisely the limitation written on #270 and declared unclosable from here. **A
+stated blind spot, and the instrument that covers it finding exactly one thing
+inside it** — better than the zero simply being right, because it puts a size on
+what the scan could not see.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,275 of 5,528 (95.4 %)** |
+| still differing | **253** |
+| silent / `as370` alone / both flag / IFOX00 alone | **138 / 29 / 68 / 10** |
+
+### The angle the six instruments could not give
+
+All six compare `as370` against IFOX00 and treat IFOX00 as the authority. On a
+silent divergence that is the whole difficulty: neither assembler says anything,
+so nothing in either output says which is wrong.
+
+**IBM's shipped object is a witness neither of them produced.** `three_way.py`
+compares all three:
+
+| `as370` vs IBM | IFOX00 vs IBM | modules |
+|---|---|---:|
+| differs | differs | 87 |
+| no pair | no pair | 43 |
+| **differs** | **identical** | **6** |
+| identical | identical | 2 |
+
+**Six modules are settled without any appeal to the oracle's authority**: IFOX00's
+deck is byte-identical to IBM's object and `as370`'s is not. Two independent
+parties agree and one does not.
+
+```
+AMASPZAP  IEHINITT  IFCEA155  IGG019GC  IGG019GD  ISTINCDT
+```
+
+`ISTINCDT` is the cheapest — 816 bytes on both sides, 96 differing, first at
+`X'07'`, and the statement is `DC A(ISTC000)` in VTAM's USS definition table:
+IFOX00 writes `0000000C`, `as370` writes `00000000`, and the adcons after it
+diverge the same way.
+
+**The 87 cannot be settled this way and that is the honest limit**: where both
+assemblers differ from IBM's object, the *source* does not match what IBM
+shipped, which is the gap this whole project exists to close. The 43 have no DLIB
+member at all — mostly `IER*`, the sort package MVS/CE does not carry.
+
+And two modules — `HMASMTMD`, `IFFAHA16` — match IBM within `cmplmd370`'s
+tolerance while differing from each other, which says the tolerance is wider than
+a byte comparison and is worth knowing before quoting either verdict.
