@@ -1,4 +1,20 @@
-# The remaining 524 — where they are and what each block needs
+# The remaining — where they are and what each block needs
+
+> ⚠️ **Every figure below carries the commit it was derived against, and the
+> commit alone is not enough.** cc370 found this file 29 merges stale while its
+> mtime read as today: *fresh by mtime, stale by content*. Second time the same
+> shape cost us — `as370-messages.tsv` was eleven merges behind and looked
+> current too. So a derivation line now records the distance as well:
+>
+> ```sh
+> git -C ~/repos/mvs/cc370 rev-list --count <that-commit>..main
+> ```
+>
+> If that is not 0, the numbers under it are too large by an unknown amount and
+> `cluster_remaining.py` has to be re-run before anything is planned around them.
+> **Derived against `7a0cd90`; run the command above before quoting anything here.**
+
+# The remaining 524 — as measured on 2026-09-09 against `89fb177`
 
 2026-09-09, re-derived against cc370 `89fb177`. **`as370` == IFOX00 on 4,997 of
 5,528 (90.4 %)**, from 3,465 (62.7 %) on 2026-09-07, across 49 merges with **no
