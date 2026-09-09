@@ -12,12 +12,14 @@
 >
 > If that is not 0, the numbers under it are too large by an unknown amount and
 > `cluster_remaining.py` has to be re-run before anything is planned around them.
-> **Derived against `7a0cd90`; run the command above before quoting anything here.**
+> **Derived against `2f90d47`; run the command above before quoting anything here.**
 
-# The remaining 128 — as measured on 2026-09-09 against `7a0cd90`
+# The remaining 125 — as measured on 2026-09-09 against `2f90d47`
 
-**Derived against cc370 `7a0cd90`; `git rev-list --count 7a0cd90..main` = 0 at
-writing.** Built from a `git worktree` at that commit, gated as `gdoc`, compared
+**Derived against cc370 `2f90d47`; `git rev-list --count 2f90d47..main` = 0 at
+writing.** The previous derivation stood at `7a0cd90`, which had gone **6 merges**
+stale — the guard above is what caught it, and re-running took the count from 128
+to 125. Built from a `git worktree` at that commit, gated as `gdoc`, compared
 against the recorded IFOX00 decks.
 
 | | |
