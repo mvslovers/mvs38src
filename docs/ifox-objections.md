@@ -237,3 +237,49 @@ can reconstruct.
 | `ifox-objections/undefined-ops.tsv` | the 51 unresolved operations, whether we have them, and where they occur |
 | `diag/<module>.txt` | the diagnostics section of that module's IFOX00 listing |
 | `module-table.tsv` | one row per module, both assemblers' return codes and messages |
+
+## `IBCDASDI` and `IBCDMPRS`: an exclusion withdrawn, 2026-09-09
+
+Both were set aside here as *source torn by an FTP transfer*. **That reason was
+wrong and the exclusion is withdrawn.** cc370 noticed it from the other side:
+with `REPRO` implemented (cc370#316), `IBCDASDI`'s deck came out identical to
+IFOX00's — and a deck that matches cannot have come from torn source.
+
+What is actually the case, measured rather than inferred:
+
+| | |
+|---|---|
+| MVSBLD members that are **not** a clean 80+CRLF grid | **2 of 5,528** — these two, and nothing else |
+| where each leaves the grid | record 11, the first embedded binary `REPRO` card, in both |
+| by how much | **exactly one byte**, in both |
+| what IFOX00 read | **5,957 records where the grid holds 5,955**, and two `IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD` |
+| what that cost | **`rc 8` and not one byte of object** |
+
+So the damage is real, it is in our copy, and it is worth a return code only.
+That is the same shape as the missing comment star above: invalid input both
+assemblers step over.
+
+**`IBCDASDI` is identical to IFOX00** — 404 cards, one of which differs, and that
+one is the END card's identification field, where each assembler writes its own
+name (`ASM370` against `1574ASC103`). `ifox_compare.py` excludes that field by
+design. **`IBCDMPRS` differs in 2 of 335 cards** and is an ordinary case for
+cc370, which is the reason the exclusion had to go: a skipped module is a case
+nobody looks at.
+
+### IBM's tape copy is clean and is *not* the repair
+
+Both members exist in `mvs38-ibmsrc` as perfect grids. It is tempting to swap
+them in. Measured, that moves the wrong way:
+
+| assembled from | cards differing from IFOX00 |
+|---|---:|
+| Dave Kreiss' MVSBLD (off-grid) | **1** (`IBCDASDI`), 2 (`IBCDMPRS`) |
+| IBM's tape copy (clean grid) | **7**, both |
+
+The binary cards differ from **index 2 onward**, not by the one byte. Dropping
+the stray `CR` from Dave's card does not reconstruct IBM's. These are two
+different levels of the same member, and only one of them is what IFOX00 read.
+
+**Which binary card values belong in MVS 3.8j's `IBCDASDI` and `IBCDMPRS` is
+open.** IBM's tape says one thing, Dave's tree another, and the DLIB object is
+the only thing that could settle it.

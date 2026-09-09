@@ -40,7 +40,18 @@ DONE = re.compile(r"Assembler Done\s+(\d+) Statements? Flagged\s*/\s*(\d+) was H
 
 
 def one(m):
-    p = subprocess.run(["perl", "-e", "alarm 40; exec @ARGV",
+    # The alarm is 400 s here for the same reason it is 400 s in gate-worker.sh,
+    # and it was NOT raised with it -- 2026-09-09.  gate-worker.sh went 150 -> 400
+    # when IFCEL155 turned out to assemble in 41 s alone; these three tools kept
+    # their 40/40/60 s and nobody looked.  IFCEL155 therefore came out of the GATE
+    # with rc 20 and a 43,200-byte deck, four gate runs in a row with the identical
+    # sha256, and out of THIS tool with rc -14 (SIGALRM) -- so module-table.tsv, the
+    # table cc370 actually reads, filed a module that finishes as `did not finish`.
+    # One alarm was raised, three were not, and the pipeline disagreed with itself.
+    # The rule from IFCEE155 needs the addition: an alarm belongs to the SLOWEST
+    # module in the corpus, not to the tool, so every instrument that assembles gets
+    # the same one.
+    p = subprocess.run(["perl", "-e", "alarm 400; exec @ARGV",
                         os.environ["AS370"]] + MACS +
                        ["-o", "/dev/null", f"{SRC}/{m}.ASM"],
                        capture_output=True, text=True, errors="replace",

@@ -667,9 +667,9 @@ IASFCB28	0	0000	identical		unpaired
 IASXSD81	0	0000	identical		length
 IASXSD82	0	0000	identical		length
 IASXWR00	0	0000	identical		identical
-IBCDASDI	8	0008	cards		no-pair
-IBCDMPRS	8	0008	cards		no-pair
-ICAPRTBL	8	0000	cards		no-pair
+IBCDASDI	0	0008	identical		no-pair
+IBCDMPRS	0	0008	bytes	bytes	no-pair
+ICAPRTBL	0	0000	identical		no-pair
 ICB2ACT	0	0000	identical		length
 ICB2AEA	0	0000	identical		length
 ICB2AIR	0	0000	identical		length
@@ -3235,20 +3235,20 @@ IFG0TC0A	0	0000	identical		length
 IFHSTATR	0	0000	identical		holes
 IFNX1A	0	0000	bytes	bytes	length
 IFNX1J	0	0000	bytes	bytes	text
-IFNX1K	8	0000	identical		length
+IFNX1K	0	0000	identical		length
 IFNX1S	0	0000	bytes	identical	text
 IFNX2A	0	0000	bytes	bytes	text
 IFNX3A	8	0008	bytes	bytes	text
 IFNX3B	0	0000	bytes	bytes	length
-IFNX3K	8	0000	identical		length
+IFNX3K	0	0000	identical		length
 IFNX3N	0	0000	cards		text
-IFNX4D	8	0000	cards		mixed
-IFNX4E	8	0000	bytes	bytes	text
-IFNX4M	8	0000	bytes	bytes	length
-IFNX4N	8	0000	cards		mixed
-IFNX4S	8	0000	cards		mixed
-IFNX4T	8	0000	bytes	bytes	mixed
-IFNX4V	8	0000	bytes	bytes	text
+IFNX4D	0	0000	bytes	bytes	text
+IFNX4E	0	0000	bytes	bytes	text
+IFNX4M	0	0000	bytes	bytes	length
+IFNX4N	0	0000	bytes	bytes	text
+IFNX4S	0	0000	bytes	bytes	text
+IFNX4T	0	0000	bytes	bytes	length
+IFNX4V	0	0000	bytes	bytes	text
 IFNX5A	0	0000	bytes	bytes	text
 IFNX5C	0	0000	bytes	bytes	text
 IFNX5D	8	0008	cards		mixed
@@ -3256,7 +3256,7 @@ IFNX5F	0	0000	bytes	bytes	text
 IFNX5L	8	0008	bytes	identical	length
 IFNX5M	8	0008	bytes	bytes	mixed
 IFNX5P	0	0000	bytes	bytes	mixed
-IFNX5V	8	0000	bytes	bytes	mixed
+IFNX5V	0	0000	bytes	bytes	text
 IFNX6A	0	0000	bytes	identical	length
 IFNX6B	0	0000	bytes	bytes	length
 IFNX6C	0	0000	bytes	identical	text
@@ -3273,7 +3273,7 @@ IFOX0J	0	0000	identical		identical
 IGARPT01	8	0004	bytes	bytes	mixed
 IGC0001F	0	0000	bytes	bytes	no-pair
 IGC0001G	0	0000	identical		no-pair
-IGC0001I	8	0000	bytes	bytes	length
+IGC0001I	0	0000	identical		length
 IGC00020	0	0000	identical		length
 IGC0002A	0	0000	identical		length
 IGC0002B	0	0000	identical		length
@@ -3539,13 +3539,13 @@ IGE0000D	0	0000	identical		length
 IGE0000E	0	0000	identical		identical
 IGE0000G	0	0000	identical		unpaired
 IGE0000H	0	0000	identical		holes
-IGE0000I	12	0000	cards		length
+IGE0000I	0	0000	identical		text
 IGE0001A	0	0000	identical		length
 IGE0001C	0	0000	identical		length
 IGE0001F	0	0000	identical		holes
 IGE0001G	0	0000	identical		identical
 IGE0001H	0	0000	identical		mixed
-IGE0002A	12	0000	cards		length
+IGE0002A	0	0000	identical		mixed
 IGE0002B	0	0000	identical		text
 IGE0002C	0	0000	identical		length
 IGE0002E	0	0000	identical		length

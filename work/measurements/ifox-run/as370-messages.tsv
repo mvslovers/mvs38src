@@ -667,9 +667,9 @@ IASFCB28	0
 IASXSD81	0			
 IASXSD82	0			
 IASXWR00	0			
-IBCDASDI	8	8	8	Undefined operation code
-IBCDMPRS	8	8	8	Undefined operation code
-ICAPRTBL	8	4	8	Undefined operation code | Symbol longer than 8 characters in name field (name rejected; MVS symbols are limited to 8)
+IBCDASDI	0			
+IBCDMPRS	0			
+ICAPRTBL	0			
 ICB2ACT	0			
 ICB2AEA	0			
 ICB2AIR	0			
@@ -2794,7 +2794,7 @@ IFCEI145	0
 IFCEI155	0			
 IFCEIPL0	0			
 IFCEJ145	0			
-IFCEL155	-14			
+IFCEL155	20	307	20	MNOTE
 IFCELEX1	0			
 IFCEM155	0			
 IFCEMAD1	0			
@@ -3235,20 +3235,20 @@ IFG0TC0A	0
 IFHSTATR	0			
 IFNX1A	0			
 IFNX1J	0			
-IFNX1K	8	24	8	Invalid type declared on DC/DS/DXD constant | MNOTE | Undefined symbol
+IFNX1K	0			
 IFNX1S	0			
 IFNX2A	0			
 IFNX3A	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol
 IFNX3B	0			
-IFNX3K	8	24	8	Invalid type declared on DC/DS/DXD constant | MNOTE | Undefined symbol
+IFNX3K	0			
 IFNX3N	0			
-IFNX4D	8	54	8	Invalid type declared on DC/DS/DXD constant | MNOTE | Undefined symbol
-IFNX4E	8	66	8	Invalid type declared on DC/DS/DXD constant | MNOTE | Undefined symbol
-IFNX4M	8	78	8	Invalid type declared on DC/DS/DXD constant | MNOTE | Undefined symbol
-IFNX4N	8	60	8	Invalid type declared on DC/DS/DXD constant | MNOTE | Undefined symbol
-IFNX4S	8	30	8	Invalid type declared on DC/DS/DXD constant | MNOTE | Undefined symbol
-IFNX4T	8	79	8	Invalid type declared on DC/DS/DXD constant | MNOTE | Undefined symbol
-IFNX4V	8	30	8	Invalid type declared on DC/DS/DXD constant | MNOTE | Undefined symbol
+IFNX4D	0			
+IFNX4E	0			
+IFNX4M	0			
+IFNX4N	0			
+IFNX4S	0			
+IFNX4T	0			
+IFNX4V	0			
 IFNX5A	0			
 IFNX5C	0			
 IFNX5D	8	1	8	Undefined symbol
@@ -3256,7 +3256,7 @@ IFNX5F	0
 IFNX5L	8	2	8	Undefined symbol
 IFNX5M	8	585	8	Undefined symbol
 IFNX5P	0			
-IFNX5V	8	30	8	Invalid type declared on DC/DS/DXD constant | MNOTE | Undefined symbol
+IFNX5V	0			
 IFNX6A	0			
 IFNX6B	0			
 IFNX6C	0			
@@ -3273,7 +3273,7 @@ IFOX0J	0
 IGARPT01	8	5	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 IGC0001F	0			
 IGC0001G	0			
-IGC0001I	8	1	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
+IGC0001I	0			
 IGC00020	0			
 IGC0002A	0			
 IGC0002B	0			
@@ -3539,13 +3539,13 @@ IGE0000D	0
 IGE0000E	0			
 IGE0000G	0			
 IGE0000H	0			
-IGE0000I	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - PATCH | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved
+IGE0000I	0			
 IGE0001A	0			
 IGE0001C	0			
 IGE0001F	0			
 IGE0001G	0			
 IGE0001H	0			
-IGE0002A	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - PATCH1 | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved
+IGE0002A	0			
 IGE0002B	0			
 IGE0002C	0			
 IGE0002E	0			
