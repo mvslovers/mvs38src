@@ -191,8 +191,8 @@ members it could not find.
 
 | Macro | Wanted by | Anywhere we hold it? |
 |---|---|---|
-| `BTMHJN` | `EBT1102` (TCAM) | **nowhere** |
-| `BTMIOBWA` | `EBT1102` (TCAM) | **nowhere** |
+| `BTMHJN` | `EBT1102` (**BTAM**, not TCAM) | **nowhere** — `SYS1.ABTAMMAC` per IBM |
+| `BTMIOBWA` | `EBT1102` (**BTAM**) | **nowhere** — same |
 | `IECPDSCB` | `EDM1102` (DFP) | **nowhere** |
 | `IEZCTGPL` | `EDM1102` | web mirror |
 | `IHADECB` | `EDM1102` | web mirror |
@@ -273,3 +273,55 @@ now **four macros that do not exist here** — one for TCAM, one for JES2, one f
 DFP, and `IECPDSCB` unaccounted for.
 
 Not yet searched: the CBT tape collections, and any other MVS 3.8 distribution.
+
+## Which component each of the four belongs to — 2026-09-09, from IBM's own directory
+
+The mailing-list search found no macro text, and produced something better: the
+**MVS 3.8j Base Program Directory** and IBM's BTAM installation cookbook, which
+say where each one lived. That turns four blind searches into four aimed ones,
+and it corrected a claim of mine.
+
+| macro | FMID | component | where IBM shipped it |
+|---|---|---|---|
+| `BTMHJN` `BTMIOBWA` | `EBT1102` | **BTAM** — *not TCAM, which is what I said* | `SYS1.ABTAMMAC`, merged into `SYS1.MACLIB` at install |
+| `IECPDSCB` | `EDM1102` | Data Management | `EDM1102.F2`, an AMACLIB of 118 members |
+| `$ASXB` | `EJE1103` | JES2 | `EJE1103.F1` is a **HASPSRC** library, *not* a MACLIB |
+
+IBM's cookbook, verbatim:
+
+```
+++MAC(BTMHJN)   DISTLIB(ABTAMMAC) FROMDS(DSN(SYS1.ABTAMMAC) NUMBER(1))
+++MAC(BTMIOBWA) DISTLIB(ABTAMMAC) FROMDS(DSN(SYS1.ABTAMMAC) NUMBER(1))
+```
+
+**Measured here as a consequence:** there is no `ABTAMMAC` or `BTAMMAC` on either
+system, none in the build's own allocations, no BTAM DD in `SYS1.PROCLIB(BLDSMP)`,
+and no `BTM*` member in any macro library we hold. So the search moves to
+somebody else's complete `SYS1.MACLIB` — on a system where BTAM was installed,
+the merge has already happened.
+
+And Dave's own SYSMOD does not point at BTAM at all:
+
+```
+++MAC( BTMHJN   ) TXLIB(OMACLIB ) SYSLIB(MACLIB  ) DISTLIB(AMACLIB ) .
+```
+
+`DISTLIB(AMACLIB)` where IBM says `DISTLIB(ABTAMMAC)` — his reconstruction models
+the post-merge state, which is consistent and worth knowing before anyone reads
+that card as evidence of where the macro lives.
+
+**`$ASXB` changes shape too.** A HASPSRC library is source, not macros, so it is
+most likely a `MACRO` definition *inside* a HASP assembly member — the same shape
+as `DSGEN` inside `IFCE0135`, and not something a member-name search would ever
+find.
+
+**And the eight of Group B change shape most of all.** `EER1400` is EREP and its
+distribution files contain **no AMACLIB** — only object libraries, `APROCLIB` and
+`AGENLIB`. So `LINEND CONVT HEX SUMMARY PROLOG FREETAB ETEPILOG ENTRIES` were
+very likely never `SYS1.MACLIB` members: they are `COPY` members or in-stream
+definitions inside the EREP source itself. That is exactly how `DSGEN`, `LINE`,
+`ROUTINE`, `SPECIAL` and `SUM` were found, and it means the in-stream search is
+the main line rather than the fallback.
+
+Two named targets for it, from Dave Kreiss' own 2010 posts: **`EREPSY.F01`** and
+**`SYM104.F06`–`F09`**, the two EREP source variants he was diffing.
