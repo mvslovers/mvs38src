@@ -21,8 +21,17 @@
 # machine-operand path -- and with the guard it assembles in 0 s, to within 4
 # bytes of IFOX00 out of 5056. An alarm cannot tell slow from broken. Writing the
 # limit down as a property of the module is what stopped it being a question.
+#
+# 2026-09-09: 150 s was not enough after all.  IFCEL155 assembles in 41 s ALONE
+# and is killed at 150 s under -P 8 -- a 3.6x slowdown from contention on eight
+# threads -- so the gate recorded it as `did not finish` (rc -14, SIGALRM) with a
+# TRUNCATED deck, and its verdict in module-table.tsv was measured on that.  The
+# rule from IFCEE155 and IFNX1A holds a third time: a deck that appears or
+# disappears is a timeout until proved otherwise, and the module was flapping
+# against MY alarm, not failing.  400 s is ten times the alone-time of the
+# slowest module that finishes.
 m=$1
-perl -e 'alarm 150; exec @ARGV' "$BIN" $MACFLAGS -o "$OUTDIR/$m.obj" "$SRC/$m.ASM" >/dev/null 2>&1
+perl -e 'alarm 400; exec @ARGV' "$BIN" $MACFLAGS -o "$OUTDIR/$m.obj" "$SRC/$m.ASM" >/dev/null 2>&1
 rc=$?
 if [ -f "$OUTDIR/$m.obj" ]; then
   h=$(shasum -a 256 "$OUTDIR/$m.obj" | cut -d' ' -f1)
