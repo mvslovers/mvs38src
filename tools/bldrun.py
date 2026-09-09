@@ -83,6 +83,7 @@ def member(name):
 
 SNAPDIR = os.path.expanduser("~/repos/mvs/mvs38src/work/build/snapshots")
 PRINTS = ("COPPRINT", "UPDPRINT", "ASMPRINT", "LKDPRINT", "SMPOUT")
+HALF = 4000          # lines kept from each end of a capped listing
 
 
 def snapshot(cur):
@@ -117,8 +118,24 @@ def snapshot(cur):
             continue
         if not t.strip():
             continue
-        open(os.path.join(SNAPDIR, f"{cur}.{ds}.txt"), "w").write(t)
-        kept.append(f"{ds}({len(t.splitlines())})")
+        # Cap it.  MAINT02B's ASMPRINT is 686,307 lines and 77 MB, its UPDPRINT
+        # 388,617 more; one failing job put 124 MB into a directory that is not
+        # in .gitignore, and the next `git add -A` would have committed it into
+        # a 92 MB repository.  The diagnostic value is not in the bulk: what
+        # answered EBT1102B and EDM1102B was four IEB177I lines in a 343-line
+        # COPPRINT.  Head and tail keep the header and the summary, which is
+        # where a utility puts its verdict.
+        lines = t.splitlines()
+        if len(lines) > 2 * HALF:
+            lines = (lines[:HALF]
+                     + [f"", f"*** {len(lines) - 2 * HALF} lines elided by "
+                        f"bldrun.py -- head and tail of {len(lines)} kept ***", ""]
+                     + lines[-HALF:])
+            note = f"{ds}({len(t.splitlines())}, capped)"
+        else:
+            note = f"{ds}({len(lines)})"
+        open(os.path.join(SNAPDIR, f"{cur}.{ds}.txt"), "w").write("\n".join(lines) + "\n")
+        kept.append(note)
     print(f"    kept: {' '.join(kept) if kept else 'nothing -- all five empty'}",
           flush=True)
 
