@@ -2,40 +2,39 @@ module	as370_rc	as370_flagged	as370_severity	as370_messages	ifox_rc	ifox_flagged
 BNGTRMOT	0				0000				bytes	0x00094	11982	11991	length	silent divergence	cc370	
 BNGTDISP	0				0000				cards	0x011c9	11888	11904	length	silent divergence	cc370	
 BNGIDISP	0				0000				bytes	0x00117	10319	10329	length	silent divergence	cc370	
-BNGI3270	0				0000				bytes	0x0008b	10301	10288	length	silent divergence	cc370	
-BNGT3270	0				0000				bytes	0x00037	8337	8327	length	silent divergence	cc370	
+BNGI3270	0				0000				bytes	0x000a0	10301	10311	length	silent divergence	cc370	
+BNGT3270	0				0000				bytes	0x00037	8337	8350	length	silent divergence	cc370	
 BNGTLOCL	0				0000				bytes	0x00095	6805	6814	length	silent divergence	cc370	
 IGC0001F	0				0000				bytes	0x01310	6088	6088	no-pair	silent divergence	cc370	
 IGARPT01	8	5	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0004	8	4	IFO026 CHARACTERS APPEAR BETWEEN THE BEGIN AND CONTINUE COLUMNS ON CONTINUATION CARD	bytes	0x004bc	5756	5756	mixed	silent divergence	cc370	
 IFCEA155	0				0000				bytes	0x00161	5669	5661	length	silent divergence	cc370	
-IFNX3N	0				0000				bytes	0x0004b	3854	3854	text	silent divergence	cc370	
 IECVCINT	0				0000				bytes	0x00124	3732	3732	length	silent divergence	cc370	
 IFNX4T	0				0000				bytes	0x00045	3582	3578	length	silent divergence	cc370	
 IFNX4M	0				0000				bytes	0x00045	3299	3295	length	silent divergence	cc370	
-IFNX1J	0				0000				bytes	0x00047	3085	3085	text	silent divergence	cc370	
 IECVESIO	0				0000				bytes	0x00126	3019	3019	length	silent divergence	cc370	
 IEAXPALL	0				0000				bytes	0x005ec	2752	2752	length	silent divergence	cc370	
 AMDPRUIM	0				0000				bytes	0x00067	2676	2668	length	silent divergence	cc370	
 IFDOLT39	0				0000				bytes	0x00558	2572	2924	length	silent divergence	cc370	
 IFNX5P	0				0000				bytes	0x0005d	2344	2344	mixed	silent divergence	cc370	
-IFNX4N	0				0000				bytes	0x00119	2332	2332	text	silent divergence	cc370	
+IFNX4N	0				0000				bytes	0x008b1	2332	2332	text	silent divergence	cc370	
 IFDOLT12	0				0000				cards	0x00050	2181	2957	length	silent divergence	cc370	
 IFDOLT14	0				0000				bytes	0x00316	1737	2953	length	silent divergence	cc370	
 BLSR3270	0				0004	20	4	IFO197 *** MNOTE ***	bytes	0x00513	1736	1736	length	silent divergence	cc370	
-IFNX4D	0				0000				bytes	0x0010f	1710	1710	text	silent divergence	cc370	
+IFNX4D	0				0000				bytes	0x00669	1710	1710	text	silent divergence	cc370	
 IFNX5F	0				0000				bytes	0x005d4	1630	1630	text	silent divergence	cc370	
 IKJEBELT	0				0000				bytes	0x001af	1568	1568	no-pair	silent divergence	cc370	
-IEESC03D	0				0000				bytes	0x0007f	714	717	no-pair	silent divergence	cc370	
+IEESC03D	0				0000				bytes	0x0007f	714	720	no-pair	silent divergence	cc370	
 IFNX4S	0				0000				bytes	0x00063	429	429	text	silent divergence	cc370	
 HMASMTMD	0				0000				cards				identical	silent divergence	cc370	
 IFFAHA16	0				0000				bytes				identical	silent divergence	cc370	
 IFNX1A	0				0000				bytes				length	silent divergence	cc370	
+IFNX1J	0				0000				bytes				text	silent divergence	cc370	
+IFNX3N	0				0000				bytes				text	silent divergence	cc370	
 IFNX5A	0				0000				bytes				text	silent divergence	cc370	
 IFNX5C	0				0000				bytes				text	silent divergence	cc370	
 IFNX5V	0				0000				bytes				text	silent divergence	cc370	
 IFNX6B	0				0000				bytes				length	silent divergence	cc370	
 IGC0E05A	0				0000				bytes				length	silent divergence	cc370	
-ISTNSC00	8	1109	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards	0x00000	12669	0	length	as370 alone flags	cc370	
 IFCSXXXH	20	6	20	MNOTE	0000				cards	0x00395	8254	8230	length	as370 alone flags	cc370	
 IFCEL155	20	307	20	MNOTE	0000				cards	0x00253	8110	7128	length	as370 alone flags	cc370	
 IFCSXXXF	20	3	20	MNOTE	0000				bytes	0x00421	4027	4015	length	as370 alone flags	cc370	
@@ -44,23 +43,17 @@ IEAVEXS	0				0008	1	8	IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION
 IBCDASDI	0				0008	2	8	IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD	identical				no-pair	IFOX00 alone flags	cc370	
 IBCDMPRS	0				0008	2	8	IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD	bytes				no-pair	IFOX00 alone flags	cc370	
 IECIOSAM	8	149	8	Undefined operation code | IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol	0012	163	12	IFO078 UNDEFINED OP CODE | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 IRTRSC2 IS AN UNDEFINED SYMBOL | IFO188 CSTELP2 IS AN UNDEFINED SYMBOL | IFO188 CSTE IS AN UNDEFINED SYMBOL	bytes	0x00660	14913	14913	length	both flag	cc370	
-IGG019R0	8	1232	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x00002	12640	8570	length	both flag	cc370	
 BNGCRMOT	8	38	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	42	8	IFO078 UNDEFINED OP CODE | IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO188 TCAFCAAA IS AN UNDEFINED SYMBOL	bytes	0x00000	11886	11887	length	both flag	cc370	calls CICS macros; not installed in any target library on MVS/CE
-IGG019Q2	8	1066	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x00002	10768	7458	length	both flag	cc370	
-BNGC3270	8	347	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0008	353	8	IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTLE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHFIOA NOT FOUND IN LIBRARY	cards	0x00000	8344	8156	length	both flag	cc370	calls CICS macros (DFHPC/DFHFC/DFHTC/DFHSC); no CICS here, and no member of any target library on MVS/CE
-IGG019Q3	8	857	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x00002	7472	5726	length	both flag	cc370	
+BNGC3270	8	347	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0008	353	8	IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTLE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHFIOA NOT FOUND IN LIBRARY	cards	0x00000	8344	8180	length	both flag	cc370	calls CICS macros (DFHPC/DFHFC/DFHTC/DFHSC); no CICS here, and no member of any target library on MVS/CE
 BNGCDISP	8	480	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0008	486	8	IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTLE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHFIOA NOT FOUND IN LIBRARY	cards	0x00000	7344	7048	length	both flag	cc370	calls CICS macros; not installed in any target library on MVS/CE
 IEWFETCH	8	8	8	Undefined symbol | Undefined operation code	0008	8	8	IFO188 DVC2305A IS AN UNDEFINED SYMBOL | IFO188 DVC2314 IS AN UNDEFINED SYMBOL | IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	bytes	0x00250	6930	6930	no-pair	both flag	cc370	
 BNGCLOCL	8	38	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	42	8	IFO078 UNDEFINED OP CODE | IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO188 TCAFCAAA IS AN UNDEFINED SYMBOL	bytes	0x00000	6693	6694	length	both flag	cc370	calls CICS macros; not installed in any target library on MVS/CE
-IGG019Q5	8	701	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x00002	5816	4734	length	both flag	cc370	
 IFCE33XX	12	28	12	Undefined operation code | Undefined symbol | MNOTE	0012	29	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO197 *** MNOTE ***	bytes	0x00133	5432	5432	length	both flag	cc370	
 IFNX5D	8	1	8	Undefined symbol	0008	1	8	IFO188 VPDUPERR IS AN UNDEFINED SYMBOL | IFO188 OFF IS AN UNDEFINED SYMBOL	cards	0x012d5	4908	4908	mixed	both flag	cc370	
 IKJEGMNL	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol | IFO092 keyword parameter DSECT is not declared in the macro prototype	0008	27	8	IFO188 TCOM004C IS AN UNDEFINED SYMBOL | IFO092 KEYWORD PARAMETER DSECT UNDEFINED IN MACRO DEFINITION | IFO189 INVALID ENTRY OPERAND, LINKAGE CANNOT BE PERFORMED | IFO231 SYMBOL NOT PREVIOUSLY DEFINED - SCDAT00 | IFO231 SYMBOL NOT PREVIOUSLY DEFINED - SCDEND00 | IFO231 SYMBOL NOT PREVIOUSLY DEFINED - SCDPCH00	cards	0x001ef	4662	4662	no-pair	both flag	cc370	
 IFNX3A	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol	0008	1	8	IFO188 ERRSTK7 IS AN UNDEFINED SYMBOL	bytes	0x00d4f	3858	3858	text	both flag	cc370	
-IGG019Q4	8	583	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	cards	0x00002	3792	3906	length	both flag	cc370	
 IKJEGAT	8	1	8	Undefined symbol	0008	1	8	IFO188 CWORK260 IS AN UNDEFINED SYMBOL	bytes	0x00026	3762	3762	no-pair	both flag	cc370	
 IEDQWIE	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	3	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	bytes	0x000d4	3632	3632	length	both flag	cc370	
-IFOX0D	8	2	8	Undefined symbol	0008	2	8	IFO188 JWRKSIZE IS AN UNDEFINED SYMBOL	bytes	0x000a1	3577	3577	length	both flag	cc370	
 IFNX5M	8	585	8	Undefined symbol	0008	2	8	IFO188 RREREGS IS AN UNDEFINED SYMBOL	bytes	0x00040	2781	2781	mixed	both flag	cc370	
 BNGCMENU	8	16	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0008	21	8	IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTLE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO188 TCAFCAAA IS AN UNDEFINED SYMBOL	bytes	0x00000	2120	2096	length	both flag	cc370	calls CICS macros; not installed in any target library on MVS/CE
 IFCE0125	12	616	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE	0012	617	12	IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY | IFO078 UNDEFINED OP CODE | IFO188 SUBCD0 IS AN UNDEFINED SYMBOL | IFO188 R3 IS AN UNDEFINED SYMBOL | IFO223 RELOCATABLE INDEX REGISTER SPECIFIED NEAR OPERAND COLUMN 9 | IFO188 R14 IS AN UNDEFINED SYMBOL	cards	0x002cc	1335	1528	unpaired	both flag	cc370	
@@ -110,6 +103,12 @@ IECVXURT	8	12	8	Undefined operation code | Undefined symbol | IFO092 keyword par
 IECVXVRU	8	8	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	10	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO078 UNDEFINED OP CODE | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0	bytes	0x00000	49	49	length	both flag	cc370	
 IECVXMGN	8	9	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	10	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x0000c	45	45	length	both flag	cc370	
 IFOX0A	8	3	8	Undefined symbol	0008	3	8	IFO188 MINCORE IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
+IFOX0D	8	2	8	Undefined symbol	0008	2	8	IFO188 JWRKSIZE IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
+IGG019R0	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical	0x00002	12640	8570	length	both flag	source	
+IGG019Q2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical	0x00002	10768	7458	length	both flag	source	
+IGG019Q3	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical	0x00002	7472	5726	length	both flag	source	
+IGG019Q5	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical	0x00002	5816	4734	length	both flag	source	
+IGG019Q4	8	1	8	IFO117 first expression in substring notation exceeds the length of the string	0008	2	8	IFO117 FIRST EXPRESSION IN SUBSTRING NOTATION EXCEEDS THE LENGTH OF THE STRING | IFO178 SYNTAX ERROR NEAR OPERAND COLUMN 3	identical	0x00002	3792	3906	length	both flag	source	
 AMDPRMST	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype	0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	both flag	source	
 AMDPRSN3	8	1	8	Undefined symbol	0008	1	8	IFO188 SEGRD IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
 BNGIEXIT	8	30	8	Undefined symbol | Undefined operation code	0012	30	12	IFO188 IECTDECB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 9 | IFO188 CNT IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 4 | IFO188 CTB IS AN UNDEFINED SYMBOL | IFO188 SCD IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
@@ -972,26 +971,7 @@ ISDASUM0	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	identi
 ISDASUM1	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	identical				length	both flag	source	
 ISDATYPE	8	3	8	Undefined operation code	0008	3	8	IFO078 UNDEFINED OP CODE	identical				holes	both flag	source	
 ISTCFCMM	8	110	8	IFO092 keyword parameter SUPP is not declared in the macro prototype	0008	163	8	IFO092 KEYWORD PARAMETER SUPP UNDEFINED IN MACRO DEFINITION | IFO197 *** MNOTE *** | IFO113 ILLEGAL REFERENCE MADE TO A PARAMETER THAT IS A SUBLIST | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	identical				text	both flag	source	
-IEEZA03D	0				0000				identical	0x00005	3340	3316	no-pair		source	
-IEESD03D	0				0000				identical	0x00005	3101	3093	no-pair		source	
-IEESF03D	0				0000				identical	0x00005	2962	2954	no-pair		source	
-IEESI03D	0				0000				identical	0x00005	2912	2876	no-pair		source	
-IFNX2A	0				0000				identical	0x0001d	2846	2846	text		source	
-IFNX4E	0				0000				identical	0x00061	2105	2105	text		source	
-IEESK03D	0				0000				identical	0x00005	2025	2017	no-pair		source	
-IEESE03D	0				0000				identical	0x00005	1946	1934	no-pair		source	
-IEEZJ03D	0				0000				identical	0x00005	1710	1702	no-pair		source	
-IEESR03D	0				0000				identical	0x00005	1638	1614	no-pair		source	
-IEESZ03D	0				0000				identical	0x00005	1548	1536	no-pair		source	
-IEESL03D	0				0000				identical	0x00005	1542	1530	no-pair		source	
-IEESG03D	0				0000				identical	0x00005	1530	1526	no-pair		source	
-IFNX4V	0				0000				identical	0x0047d	1521	1521	text		source	
-IEESA03D	0				0000				identical	0x0024d	1500	1492	no-pair		source	
-IFNX3B	0				0000				identical	0x004a1	1214	1208	text		source	
-IEESH03D	0				0000				identical	0x00005	1116	1104	no-pair		source	
-IFOX0H	0				0000				identical	0x000ab	1027	1027	mixed		source	
-IEESQ03D	0				0000				identical	0x00005	978	970	no-pair		source	
-IFOX0F	0				0000				identical	0x00083	832	832	length		source	
+ISTNSC00	0	1	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical	0x00000	12669	0	text		source	
 AHLCWRIT	0				0000				identical				length		source	
 AHLGTFI	0				0000				identical				length		source	
 AHLIWRIT	0				0000				identical				length		source	
@@ -1484,7 +1464,7 @@ HEWLDREL	0				0000				identical				identical		source
 HEWLDRGO	0				0000				identical				holes		source	
 HEWLFADA	0				0000				identical				length		source	
 HEWLFAPT	0				0000				identical				length		source	
-HEWLFBTP	4	2	4	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				length		source	
+HEWLFBTP	0	2	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				length		source	
 HEWLFEND	0				0000				identical				length		source	
 HEWLFENS	0				0000				identical				length		source	
 HEWLFENT	0				0000				identical				length		source	
@@ -2195,7 +2175,7 @@ IEAVEUPC	0				0000				identical				identical		source
 IEAVEVRR	0				0000				identical				text		source	
 IEAVGCAS	0				0000				identical				length		source	
 IEAVGFRR	0				0000				identical				length		source	
-IEAVGTCL	4	2	4	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				identical		source	
+IEAVGTCL	0	2	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				identical		source	
 IEAVID00	0				0000				identical				length		source	
 IEAVMASV	0				0000				identical				length		source	
 IEAVMDOM	0				0000				identical				length		source	
@@ -2537,11 +2517,11 @@ IEECVFTB	0				0000				identical				length		source
 IEECVFTD	0				0000				identical				identical		source	
 IEECVFTG	0				0000				identical				length		source	
 IEECVFTL	0				0000				identical				length		source	
-IEECVFTM	4	2	4	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				length		source	
+IEECVFTM	0	2	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				length		source	
 IEECVFTN	0				0000				identical				length		source	
-IEECVFTO	4	3	4	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				length		source	
+IEECVFTO	0	3	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				length		source	
 IEECVFTP	0				0000				identical				length		source	
-IEECVFTQ	4	2	4	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				length		source	
+IEECVFTQ	0	2	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				length		source	
 IEECVFTR	0				0000				identical				text		source	
 IEECVFTT	0				0000				identical				text		source	
 IEECVGCI	0				0000				identical				length		source	
@@ -2584,18 +2564,30 @@ IEEMPVST	0				0000				identical				mixed		source
 IEEPALTR	0				0000				identical				length		source	
 IEEPRTN2	0				0000				identical				holes		source	
 IEEPRWI2	0				0000				identical				length		source	
+IEESA03D	0				0000				identical				no-pair		source	
 IEESB03D	0				0000				identical				no-pair		source	
 IEESB601	0				0000				identical				holes		source	
 IEESB605	0				0000				identical				length		source	
 IEESB606	0				0000				identical				holes		source	
 IEESB665	0				0000				identical				length		source	
 IEESB670	0				0000				identical				length		source	
+IEESD03D	0				0000				identical				no-pair		source	
+IEESE03D	0				0000				identical				no-pair		source	
+IEESF03D	0				0000				identical				no-pair		source	
+IEESG03D	0				0000				identical				no-pair		source	
+IEESH03D	0				0000				identical				no-pair		source	
+IEESI03D	0				0000				identical				no-pair		source	
 IEESJ03D	0				0000				identical				no-pair		source	
+IEESK03D	0				0000				identical				no-pair		source	
+IEESL03D	0				0000				identical				no-pair		source	
 IEESM03D	0				0000				identical				no-pair		source	
 IEESN03D	0				0000				identical				no-pair		source	
 IEESO03D	0				0000				identical				no-pair		source	
 IEESP03D	0				0000				identical				no-pair		source	
+IEESQ03D	0				0000				identical				no-pair		source	
+IEESR03D	0				0000				identical				no-pair		source	
 IEESS03D	0				0000				identical				no-pair		source	
+IEESZ03D	0				0000				identical				no-pair		source	
 IEEVALST	0				0000				identical				mixed		source	
 IEEVCPU	0				0000				identical				length		source	
 IEEVDEV	0				0000				identical				text		source	
@@ -2620,8 +2612,10 @@ IEEVSTAR	0				0000				identical				text		source
 IEEVWAIT	0				0000				identical				length		source	
 IEEVWKUP	0				0000				identical				length		source	
 IEEXEDNA	0				0000				identical				mixed		source	
+IEEZA03D	0				0000				identical				no-pair		source	
 IEEZB03D	0				0000				identical				no-pair		source	
 IEEZC03D	0				0000				identical				no-pair		source	
+IEEZJ03D	0				0000				identical				no-pair		source	
 IEEZP03D	0				0000				identical				no-pair		source	
 IEEZS03D	0				0000				identical				no-pair		source	
 IEFAB421	0				0000				identical				length		source	
@@ -3644,13 +3638,19 @@ IFG0TC0A	0				0000				identical				length		source
 IFHSTATR	0				0000				identical				holes		source	
 IFNX1K	0				0000				identical				length		source	
 IFNX1S	0				0000				identical				text		source	
+IFNX2A	0				0000				identical				text		source	
+IFNX3B	0				0000				identical				text		source	
 IFNX3K	0				0000				identical				length		source	
+IFNX4E	0				0000				identical				text		source	
+IFNX4V	0				0000				identical				text		source	
 IFNX6A	0				0000				identical				length		source	
 IFNX6C	0				0000				identical				text		source	
 IFOX0B	0				0000				identical				text		source	
 IFOX0C	0				0000				identical				text		source	
 IFOX0E	0				0000				identical				text		source	
+IFOX0F	0				0000				identical				length		source	
 IFOX0G	0				0000				identical				text		source	
+IFOX0H	0				0000				identical				mixed		source	
 IFOX0I	0				0000				identical				mixed		source	
 IFOX0J	0				0000				identical				identical		source	
 IGC0001G	0				0000				identical				no-pair		source	
@@ -3721,7 +3721,7 @@ IGC0508B	0				0000				identical				identical		source
 IGC058	0				0000				identical				text		source	
 IGC0606F	0				0000				identical				holes		source	
 IGC0606H	0				0000				identical				length		source	
-IGC070	4	2	4	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				text		source	
+IGC070	0	2	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				text		source	
 IGC0706F	0				0000				identical				identical		source	
 IGC0706H	0				0000				identical				length		source	
 IGC0806F	0				0000				identical				holes		source	
@@ -4583,7 +4583,7 @@ IKJEFA20	0				0000				identical				no-pair		source
 IKJEFA21	0				0000				identical				no-pair		source	
 IKJEFA22	0				0000				identical				no-pair		source	
 IKJEFA23	0				0000				identical				no-pair		source	
-IKJEFA24	4	1	4	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				no-pair		source	
+IKJEFA24	0	1	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				no-pair		source	
 IKJEFA30	0				0000				identical				no-pair		source	
 IKJEFA31	0				0000				identical				no-pair		source	
 IKJEFA32	0				0000				identical				no-pair		source	
@@ -5453,7 +5453,7 @@ ISTZFM1B	0				0000				identical				length		source
 ISTZFM1F	0				0000				identical				identical		source	
 ISTZFM2B	0				0000				identical				mixed		source	
 ISTZFM3B	0				0000				identical				length		source	
-ISTZFMAA	4	1	4	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				text		source	
+ISTZFMAA	0	1	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical				text		source	
 ISTZFMAB	0				0000				identical				text		source	
 ISTZFMAF	0				0000				identical				holes		source	
 ISTZFMBB	0				0000				identical				holes		source	

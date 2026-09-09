@@ -223,7 +223,38 @@ def main():
                              for l in open(f"{RUN}/state.tsv").read().splitlines()[1:]
                              if len(l.split("\t")) > 1)}
         now = rcmap(tsv)
-        base = rcmap(f"{RUN}/as370-gate.tsv")
+        # The rc baseline must be the SAME run as the deck baseline.
+        #
+        # This read `{RUN}/as370-gate.tsv` unconditionally while the deck side
+        # read `--baseline`.  With the default baseline the two are the same run
+        # and nothing shows; override `--baseline` and every rc row silently
+        # keeps comparing against the promoted state instead.  cc370 caught it
+        # on 2026-09-09 gating #323 with `--baseline obj_g320`: the row printed
+        # `5494 -> 5517  (+23)` where g320's own value is 5503 and the delta is
+        # +14, and on the failed attempt it printed -69 where the truth was -78.
+        #
+        # Both errors were in the direction that flatters, which is the reason
+        # this is worth a hard failure rather than a fallback: `rc CLEAN ->
+        # FLAGGED` reads the same map, so a PR gated on a non-promoted baseline
+        # could have missed a return-code regression outright -- the exact
+        # failure the unconditional line was added for after #304.
+        #
+        # gate.sh writes `<label>.tsv` beside `obj_<label>`, so the companion is
+        # derivable.  If it is not there, stop: a baseline nobody can name is
+        # worse than no comparison.
+        if os.path.abspath(a.baseline) == os.path.abspath(f"{RUN}/as370"):
+            base_tsv = f"{RUN}/as370-gate.tsv"
+        else:
+            b = os.path.basename(a.baseline.rstrip("/"))
+            base_tsv = os.path.join(os.path.dirname(os.path.abspath(a.baseline)),
+                                    b.replace("obj_", "", 1) + ".tsv")
+        if not os.path.exists(base_tsv):
+            sys.exit(f"no return codes for the baseline: {base_tsv} not found.\n"
+                     f"  --baseline {a.baseline} needs its gate .tsv beside it, "
+                     f"or the rc rows would compare a different run than the "
+                     f"deck rows do.")
+        print(f"  (rc baseline: {os.path.basename(base_tsv)})")
+        base = rcmap(base_tsv)
         vn = {m: rcverdict(now.get(m), ifox.get(m)) for m in mods}
         vo = {m: rcverdict(base.get(m), ifox.get(m)) for m in mods}
         an, ao = (sum(1 for m in mods if v[m] == "agree") for v in (vn, vo))
