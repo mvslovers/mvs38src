@@ -834,3 +834,29 @@ look different when it was not.
 
 Two wrong readings of one three-line check, in opposite directions. The project's
 own comparator exists precisely so that ad-hoc ones are not needed.
+
+## Distance is not a valid reading for a wholly displaced section
+
+cc370#330 gained 7 identities and its `decks FURTHER` line named three, two of
+them by a lot: `BNGCLOCL(+266)` and `BNGCRMOT(+503)`. Read as a regression that
+is alarming. Read from the ESD it is the opposite:
+
+```
+BNGCLOCL   before @0x000 len=6694    after @0x000 len=6685    IFOX @0x008 len=6685
+BNGCRMOT   before @0x000 len=11887   after @0x000 len=11878   IFOX @0x008 len=11878
+```
+
+The section reached **IFOX00's exact length** and sits **eight bytes below** its
+origin. A byte-for-byte distance over a displaced image measures the shift; the
+fix made the two images the same size, so *fewer* bytes coincided under it. The
+metric got worse because the code got right.
+
+**So `decks FURTHER` needs the ESD before it is believed.** Where origin and
+length both match and only content differs, distance is meaningful. Where the
+origins differ, the honest readings are the declared section length and the
+origin itself — and a module whose length now matches exactly, at a constant
+displacement, is one defect from identity rather than further away.
+
+The third on that line, `IFNX3A(+2)`, is not this shape: every section matches
+IFOX00 in origin *and* length, so its two bytes are content. Checking which
+of the two it was cost one script over the ESD records.
