@@ -486,3 +486,67 @@ to the mirror copy over columns 1–72.**
 **The check cost one REST call and it had to be made before filing**, because the
 `IHANVT` case already showed what an unequal macro path does to a verdict. The
 rule stands and this time it came out the other way.
+
+## 93.9 %, and the last named MNOTE group turned out to be a collating sequence
+
+cc370#262 merged: **+9, none lost, none further**, `cards : 101 -> 94`. None of
+the nine is one of the eight `IFNX*` the issue was filed for — but **all 76
+`REDUNDANT LOGIC` sites are gone in all eight**; those modules still differ for
+other reasons. *The complaint is fixed and the module is not* is a distinct
+outcome from *nothing happened*, and the gained list alone cannot tell them apart.
+
+Two more labelled residuals came in free — `AHLMCER` (#237) and `IGG09301`
+(#245). **Third and fourth this week**, after `IFCE0155` and `IGG019MA`. All four
+were recognisable only because the residual had been written down *with its
+module name*; a "2 decks further" line would have lost every one.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,190 of 5,528 (93.9 %)** |
+| still differing | **338** |
+
+### cc370#264 — character comparison is in ASCII order
+
+The last named group, `IHB001 REGISTER OPERAND REQ'D-NOT SPECIFIED` at 7 modules,
+is `SYS1.AMACLIB(DOM)`'s register test:
+
+```
+         AIF   ('&MSG'(1,1) EQ '(' AND '&MSG(1)' GE '1' AND            X
+               '&MSG(1)' LE '12').DOML4
+```
+
+`IGG019V2` calls `DOM MSG=(R1)` with `R1 EQU PARMREG`, so `&MSG(1)` is `R1`.
+`'R1' LE '12'` is **true** in EBCDIC (`R`=`X'D9'` < `1`=`X'F1'`) and **false** in
+ASCII (`R`=`X'52'` > `1`=`X'31'`). `as370` says false.
+
+```
+'A' LE '1'   FALSE   should be TRUE      'A' LT 'B'   TRUE   correct in both
+'Z' LT '0'   FALSE   should be TRUE
+```
+
+**In EBCDIC letters sort before digits; in ASCII they sort after.** That is the
+only disagreement between the two orders over the characters assembler source
+uses — letter-against-letter and digit-against-digit agree — which is why a
+fifteen-card fixture with no macro libraries finds it and five instruments did
+not.
+
+**103 macros in our libraries carry the idiom** — `DCB`, `ENQ`, `ESTAE`, `SDUMP`,
+`XCTL`, `XDAP`, `CONSOLE`, `QEDIT`, `STATUS` among them. Seven modules is what
+raises an `MNOTE`; a comparison that answers wrongly also takes the wrong branch
+**silently**, and there are 149 silent divergences with no mechanism named. Not
+established, and the seven are what can be proved.
+
+### The provenance check, the other way round
+
+`DOM` reaches `as370` from our extracted `AMACLIB` and IFOX00 from `SYS1.AMACLIB`
+on the running system — **a distribution library against a maintained one**, which
+is the `MODID` maintenance-level question in
+[`ifox-objections.md`](ifox-objections.md) applied to the whole comparison.
+Fetched `SYS1.AMACLIB(DOM)`: 104 cards, byte-identical.
+
+Two such checks in one day, both confirming the ground rather than finding a
+fault. cc370's rule for when to make them is better than the one either of us had
+been using:
+
+> **The checks worth running are not the ones most likely to fail, they are the
+> ones whose failure costs most.**
