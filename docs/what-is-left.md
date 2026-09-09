@@ -392,3 +392,49 @@ in two days and each fails differently: `L'&VAR` returned `K'` (#249, fixed),
 
 `relocatable-displacement` is **empty**, and `symbol-over-8` is down to 2
 (`ICAPRTBL`, `IGC0001I`) from 7.
+
+## A message can name the wrong cause — 2026-09-09
+
+cc370#257 (`T'` in a `SETC` not evaluated) is a real defect, merged as #259, and
+its corpus reach is **zero**: 0 of 5,528 decks changed by a single byte. I
+checked that by comparing every deck against the promoted run rather than reading
+the verdict counts, because a count can cancel two opposite movements and has
+done so here before.
+
+**I had attributed six `AMDPR*` modules to it, and they were not it.** All six
+still raise `MNOTE 12,'INVALID TYPE ATTRIBUTE SPECIFIED IN PARAMETERS'` after the
+fix, at the same 36 sites. They use the *comparison* path, which already worked.
+I filed them on nothing better than the words matching.
+
+The real cause is **cc370#260**: `T'` of a macro parameter that is a **sublist**
+gives `U` where IFOX00 gives `N`. `SYS1.APVTMACS(HEXCNVT)` guards on
+`AIF (T'&OUT NE 'N').ERROR4`, and `AMDPREXT` calls it as `HEXCNVT (3),(2),4` — so
+`&OUT` is `(3)`, a sublist.
+
+```
+T'(3)   = U     should be N        T'4    = N   correct
+T'(3,4) = U     should be N        T'FLD  = C   correct
+```
+
+**So the rule about symptoms reaches one layer further than I had it.** It was
+written for object bytes — *a constant that names another symbol in its own
+section can only be wrong because something else is*. It applies to **diagnostic
+text** as well:
+
+> A message names its own cause, but the name can be wrong. `INVALID TYPE
+> ATTRIBUTE` named the right operator and the wrong operand shape.
+
+That does not undo the reason for taking the loud population first — clustering
+by message still found this, and clustering by statement could not have. It
+means the message is where the search **starts**, not where it ends.
+
+### And the attribute family is now five failures in five shapes
+
+| | |
+|---|---|
+| `L'&VAR` in a `SETA` | returned `K'` — cc370#244, fixed |
+| `L'ORDINARY` in an open-code `SETA` | returns `0` — open |
+| `T'&VAR` in a `SETC` | not evaluated — cc370#257, fixed, zero reach |
+| `T'` of a sublist | `U` instead of `N` — **cc370#260**, 6 modules |
+| `S'` and `I'` | not evaluated — cc370#258 |
+| `N'`, `K'` | correct |
