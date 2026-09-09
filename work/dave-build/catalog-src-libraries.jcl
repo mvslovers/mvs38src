@@ -4,11 +4,11 @@
 //* Catalog the MVS 3.8j distributed source libraries that live on the
 //* TK3/TK4- source volumes SRC000/SRC001/SRC002/SRCCAT.
 //*
-//* These entries go into the MASTER catalog, which is where the
-//* existing MVSSRC.BLD.* entries already are.  Do NOT import the user
-//* catalog that lives on SRCCAT and do NOT define an MVSSRC alias:
-//* an alias would route every MVSSRC.* request to that user catalog
-//* and hide the 213 MVSSRC.BLD.* entries the build depends on.
+//* Each entry lands in whatever catalog MVSSRC already resolves to --
+//* the same place as the 213 existing MVSSRC.BLD.* entries, whichever
+//* catalog that is.  Do NOT import the user catalog that lives on
+//* SRCCAT and do NOT define an MVSSRC alias: an alias would route
+//* every MVSSRC.* request to that user catalog and hide those 213.
 //*
 //* Volumes must be online (V 350-353,ONLINE) before the datasets are
 //* read; DEFINE NONVSAM itself does not need them mounted.
