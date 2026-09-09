@@ -240,3 +240,43 @@ one JES2 macro, absent from `SYS1.AMACLIB`, `SYS1.MACLIB` and `SYS1.HASPSRC`
 alike. So the list is seven, not six, and there is no way to know whether the
 remaining 18 SCDS casualties hide anything else until they run — which is the
 argument for a full rerun rather than re-driving the 21 failures in place.
+
+## One root cause, not two: the MAINT jobs are downstream of `EDM1102`
+
+`MAINT01A`–`MAINT04F` all end `CC 0008` and I had them filed as a second, separate
+class of failure. They are not. `MAINT01A` selects 30 SYSMODs and reports
+
+```
+HMA3792 ** SYSMOD DSK1001 SELECTED FOR APPLY HAS NO APPLICABLE ++VER
+           MODIFICATION CONTROL STATEMENT
+```
+
+for **11** of them. Read all eleven out of `MVSSRC.BLD.SMPPTS`:
+
+```
+DSK1001 M023000 M023201 M023202 M023203 M023204
+M024001 M024205 M024206 M024207 M026200
+```
+
+**Every one names `FMID(EDM1102)`.** Unanimous, not a majority. `EDM1102` is the
+SYSMOD whose APPLY was terminated for want of four macros, so the FMID is not
+installed, so no PTF that applies *to* it has an applicable `++VER`, so every
+maintenance job that selects one ends `CC 0008`.
+
+So the whole build's failure surface reduces to:
+
+| root | consequence |
+|---|---|
+| `IECPDSCB IEZCTGPL IHADECB IHADVCT` absent from `SYS1.AMACLIB` | `EDM1102` terminated → **11 PTFs skipped → 7 `MAINT` jobs at `CC 0008`** |
+| `BTMHJN BTMIOBWA` absent | `EBT1102` terminated |
+| `$ASXB` absent | `EJE1103` terminated |
+
+**Three of the four `EDM1102` macros are recoverable** — `IEZCTGPL`, `IHADECB`
+and `IHADVCT` are in `MVSSRC.SYM601.F01`, a RELFILE the job already has open.
+**`IECPDSCB` is not**, anywhere: not in the 254 `MVSSRC.*` libraries, not in
+`SYS1.AMACLIB` under that name or any near-miss (`IECP*`, `IEC*DSCB`, `*PDSCB`
+all return nothing), not in `mvs38-ibmsrc`, the web mirrors, or Dave's tape.
+
+**One member is holding the largest cascade in the build.** That is a better
+statement of where the work is than "seven jobs fail", and it is the kind of thing
+that only shows up when the return codes are read rather than the last line.
