@@ -82,6 +82,114 @@ While chasing that I also convinced myself a stray Hercules was respawning from
 its own command line** — the shell running the pgrep contained the pattern. Use
 `ps -eo pid,args` and filter, or match on something the query cannot contain.
 
+## Step 6, run 1: 265 jobs, and 26 SYSMODs that did not apply
+
+The chain ran the whole Basic phase and stopped at the load-module cross-reference
+report. **It looked finished and it was not.** Reading the return codes instead of
+the last line:
+
+| | Jobs |
+|---|---:|
+| `CC 0000` / `CC 0004` — SMP's normal | 239 |
+| **`CC 0012`, APPLY terminated — the SYSMOD did not apply** | **26** |
+| `JCL ERROR` at the report job | 1 |
+
+A build with 26 unapplied SYSMODs is not a build, and nothing in the chain says
+so: Dave's `SUB` step carries no `COND`, so every job submits its successor
+whatever happened. **The only place the failure exists is inside the SMP listing
+of the job that failed.**
+
+### Cause 1 — `SMPSCDS` runs out of directory blocks, 21 SYSMODs
+
+```
+HMA2673 ** DIRECTORY SPACE EXCEEDED ATTEMPTING TO STORE LMOD IFCEWIN2 ON SMPSCDS
+HMA4180    INLINE JCLIN PROCESSING FAILED FOR SYSMOD=EER1400
+HMA3020    APPLY PROCESSING TERMINATED FOR SYSMOD EER1400 - REASON = INLINE JCLIN FAILURE
+```
+
+`$01SMPAL` allocates it `DR=90`. It filled at **629 members** and stayed full, so
+every APPLY from `EER1400B` onward died the same way. `SMPCDS` and `SMPACDS` in
+the same job already get `DR=4500` — `SMPSCDS` is the outlier, and it holds one
+saved entry per LMOD the APPLY touches.
+
+**`SMPPTS` was next**: 307 members against `DR=105`, about 315 of capacity. It had
+not failed yet and would have, hours in.
+
+Changed in `MVSSRC.BLD.SMP.JCL($01SMPAL)`, on `MVSCE-LAB` only:
+
+```
+//SMPSCDS  EXEC ALCPDS,D=SMPSCDS,P=20,S=5,DR=4500,V=BLDSMP   (was DR=90)
+//SMPPTS   EXEC ALCPDS,D=SMPPTS,P=105,S=5,DR=1000,V=BLDSMP   (was DR=105)
+```
+
+The other 85 `ALCPDS` allocations were checked against their live member counts
+in the same pass. Nothing else is near its limit.
+
+### Cause 2 — 5 SYSMODs, `SYSTEM UTILITY FAILURE`, still open
+
+`EBT1102B` and `EDM1102B` lose **42 and 119 macro copies**:
+
+```
+HMA4092 ** COPY FAILED - MAC=ACB - LIBRARY=MACLIB - SYSMOD=EDM1102 - RETURN CODE=04
+```
+
+Every `SRC=` copy in the same job succeeds — 116 and 892 of them. The split is by
+target library, not by member. Ruled out, each by measurement rather than by
+reasoning:
+
+| Suspected | Checked | Result |
+|---|---|---|
+| the macros are not in the source library | `ACB ACBVS IFGEXLST IHADCB IHB01 OPEN NOTE POINT LOCATE MODCB PROTECT IMGLIB` in `SYS1.AMACLIB` | **all present** |
+| `MACLIB`'s directory is full | wrote a probe member into it | **accepted**, so not full |
+| `MACLIB` copies never work | `EDS1102` in the same run | **one succeeded** |
+
+All 119 failures name `TXLIB(OMACLIB)`, which `SYS1.PROCLIB(BLDSMP)` maps to
+`SYS1.AMACLIB`. The library is there and holds the macros. **What IEBCOPY itself
+said is the missing evidence, and Dave's process throws it away** — see below.
+
+### Why it could not be diagnosed, and what was changed instead
+
+`BLDCLR` empties `COPPRINT`, `UPDPRINT`, `ASMPRINT`, `LKDPRINT` and `SMPOUT` at
+the **start of every job**, and `BLDCOPY` archives only `SMPOUT`:
+
+```
+//SYSUT1   DD  DSN=MVSSRC.BLD.SMPOUT,DISP=SHR
+//*        DD  DSN=MVSSRC.BLD.COPPRINT,DISP=SHR      <- commented out
+//*        DD  DSN=MVSSRC.BLD.UPDPRINT,DISP=SHR      <- commented out
+```
+
+So the utility listing that would answer this is overwritten by the next job. The
+obvious repair is to uncomment those two cards — but that edits the running
+system's `SYS1.PROCLIB` and changes Dave's process, which is the thing being
+reproduced. `tools/bldrun.py` does it without either: the driver already waits
+for each job before submitting the next, so it is standing at the one moment the
+listings still exist. On a bad return code it now copies all five into
+`work/build/snapshots/` first.
+
+## `SYS1.SORTLIB` does not exist on MVS/CE — the report jobs cannot run
+
+The chain's last job, `ZLMDRPTD`, ends `JCL ERROR`:
+
+```
+IEF212I RPTDLB SORT1 SORTLIB - DATA SET NOT FOUND
+```
+
+There is **no sort product on this system at all** — no `SYS1.SORTLIB`, and no
+`SORT` member in `SYS1.LINKLIB`, `SYS2.LINKLIB` or `MVSSRC.BLD.LOAD`. `ZLMDRPTT`
+and `ZCMPNUC` are the same two SORT steps and will fail identically.
+
+Dave anticipates half of this — v2.1 p. 9 says to change `UNIT=SORT` to
+`UNIT=SYSDA` in `ZCMPSVC, LMDRPTD, ZLMDRPTT, ZCMPNUC` because TK5 dropped the
+esoteric name — but assumes the sort *program* is there. On MVS/CE it is not.
+
+**These are the verification jobs, not build steps**: `LMDRPT38` compares the
+load modules built from source against the original DLIBs, which is precisely the
+comparison this project exists to make. They are deferred, not abandoned. The
+inputs (`MVSSRC.BLD.NEW.LMDXRF.DLIB`, `.ORG.`) are produced correctly by
+`BLDNDLB`/`BLDODLB`, and the sort is `SORT FIELDS=(1,40,CH,A)` on FB/80 — doable
+off-host as long as **both** sides get the same collating order, which for
+EBCDIC data means sorting the raw bytes rather than a translated copy.
+
 ## Next
 
 **Step 6** — the SMP build job streams, starting with the Basic phase. Per the
