@@ -446,3 +446,47 @@ filter**. Taken that way, on merged `9606b53`:
 byte-identical decks.** Fixing it gains no identities and removes a false `rc 8`
 from eight modules — which the identity count cannot show and which is still a
 divergence from the oracle.
+
+## The other stacked-PR failure, and it is the quiet one — 2026-09-09
+
+This document already says: **check the base branch before merging a stacked PR**,
+because deleting the parent's branch on merge *closes* the child (cc370#213 →
+#214, which had to be re-opened from the same commit).
+
+Today the sibling happened, and it is worse because nothing complains.
+
+cc370#274 and #276 were stacked, #276 based on #274's branch. I merged #274 first
+— which is correct — **without** `--delete-branch`, so the child stayed
+mergeable. Merging it then squashed it **onto its parent branch**, not onto
+`main`. `gh pr view` said `state=MERGED`; `main` did not have the change.
+
+```sh
+git log --oneline origin/main --grep="USING operand beginning"   # empty
+```
+
+**A merged PR whose commit is not on `main` looks exactly like a merged PR.** The
+only thing that caught it was checking `origin/main` for the fix by name after
+merging — which I did because the promote step needs the binary, not because I
+suspected anything.
+
+Re-opening a PR from that branch does not work either: it comes up `CONFLICTING`,
+because the branch predates the parent's squash. The repair is a **clean branch
+cut from `main` with the same diff applied** — cc370#278, whose build was
+byte-identical to the tree the gate figures came from, which is what made it safe
+to merge on the existing measurement.
+
+**The rule, in the form that covers both failures**: *retarget a stacked child to
+`main` before merging its parent.* Deleting the branch loses the child loudly;
+keeping it loses the change silently. Same omission, and only one of the two tells
+you.
+
+### And check the fix is in `main` by name
+
+```sh
+gh pr merge <n> --squash
+git fetch -q origin
+git log --oneline origin/main --grep="<a phrase from the title>" | head -1
+```
+
+Three lines, and they are the difference between a merge and the appearance of
+one.
