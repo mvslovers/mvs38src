@@ -632,3 +632,34 @@ is not a check.
 Every input correct, every figure honest, and the thing you needed to see gone.
 cc370 found it by asking *when* the `IFNX` family broke, not *whether* — the
 family was suspiciously uniform, and uniformity is a question about history.
+
+## A PR worktree in `/tmp` breaks cc370's test suite, and it looks like a regression
+
+2026-09-09. Gating a PR from `git worktree add /tmp/wtNNN`, `tests/run.sh`
+reported five samples as `ASSEMBLE FAILED` — `sample2 sample7 sample8 sample9
+dcb` — where the same suite on `main` passed. That reads as a regression the PR
+introduced, and it is not one.
+
+```sh
+LIBC370=${LIBC370:-../../libc370}      # tests/run.sh, relative to the repo root
+```
+
+From `/Users/mike/repos/mvs/cc370/as370` that resolves to
+`/Users/mike/repos/mvs/libc370` and exists. From `/tmp/wt322/as370` it resolves
+to `/libc370` and does not, so the PDP macros are missing and five samples that
+need them fail. **Set it explicitly whenever the suite is run outside the
+checkout:**
+
+```sh
+cd /tmp/wtNNN/as370 && LIBC370=/Users/mike/repos/mvs/libc370 sh tests/run.sh
+```
+
+With that, all samples are byte-identical to IFOX00.
+
+**The control said "regression" because it varied more than one thing.** `main`
+passing and the PR failing looks decisive until you notice the two runs also
+differed in working directory — the very variable the failure depended on. A
+control has to differ from the test in exactly the one thing under examination,
+and this one differed in two. `run.sh`'s own comment names the symptom
+(*"the suite failed with `Undefined operation code ... PDPPRLG` wherever it was
+absent"*); reading the instrument would have been quicker than re-deriving it.
