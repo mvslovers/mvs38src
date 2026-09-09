@@ -28,7 +28,6 @@ IFCET00D	0				0000				bytes	0x00a06	4275	4261	length	silent divergence	cc370
 IKJEBEIP	0				0000				bytes	0x004b7	4232	4232	no-pair	silent divergence	cc370	
 HMASMAR3	0				0000				bytes	0x00022	4184	4184	text	silent divergence	cc370	
 IKJCT469	0				0000				bytes	0x00e49	4145	4112	length	silent divergence	cc370	
-IGG019MA	0				0000				cards	0x000fd	4096	4104	mixed	silent divergence	cc370	
 IASXSD82	0				0000				cards	0x00d29	3961	3937	length	silent divergence	cc370	
 IFCEXXXC	0				0000				bytes	0x00c8a	3907	3885	length	silent divergence	cc370	
 IEHINITT	0				0000				bytes	0x00c48	3778	3578	length	silent divergence	cc370	
@@ -170,7 +169,7 @@ IFCDIP00	8	368	8	Addressability error - no active USING covers the operand's sec
 IEFVDA	8	257	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0000				cards	0x0006c	9594	9510	length	as370 alone flags	cc370	
 IEFVFA	8	288	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol	0000				cards	0x00074	9360	9283	length	as370 alone flags	cc370	
 AMAPTFLE	8	592	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x0000a	8476	8476	mixed	as370 alone flags	cc370	
-AMDPRFCB	12	2	12	MNOTE	0000				cards	0x017d8	8376	8288	length	as370 alone flags	cc370	
+AMDPRFCB	12	2	12	MNOTE	0000				identical	0x017d8	8376	8288	length	as370 alone flags	cc370	
 BNGT3270	8	139	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards	0x00036	8337	8327	length	as370 alone flags	cc370	
 IFG0RR0B	8	9	8	Undefined symbol	0000				cards	0x006e6	8272	8200	length	as370 alone flags	cc370	
 IFCSXXXH	20	6	20	MNOTE	0000				cards	0x00395	8254	8198	length	as370 alone flags	cc370	
@@ -194,7 +193,7 @@ IEAVEAT0	8	62	8	Addressability error - no active USING covers the operand's sect
 HEWLFSCN	8	51	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x01034	4848	4848	length	as370 alone flags	cc370	
 IEHPROG1	8	3	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00202	4844	4844	length	as370 alone flags	cc370	
 ICAPRTBL	8	197	8	Undefined operation code | Symbol longer than 8 characters in name field (name rejected; MVS symbols are limited to 8) | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				cards	0x001d2	4824	4824	no-pair	as370 alone flags	cc370	
-AMDPRAPP	12	4	12	MNOTE	0000				cards	0x00026	4628	4452	length	as370 alone flags	cc370	
+AMDPRAPP	12	4	12	MNOTE	0000				identical	0x00026	4628	4452	length	as370 alone flags	cc370	
 IDCRC04	8	2	8	Undefined symbol	0000				cards	0x00039	4560	4552	length	as370 alone flags	cc370	
 IEBGENR3	8	169	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0000				bytes	0x00032	4540	4540	length	as370 alone flags	cc370	
 IFNX1A	8	14	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0000				cards	0x0001a	4351	4306	length	as370 alone flags	cc370	
@@ -212,19 +211,19 @@ IEAVTSDH	12	1	12	MNOTE	0000				bytes	0x00027	3108	3099	length	as370 alone flags	
 IFNX1J	8	10	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol	0000				bytes	0x00047	3085	3085	text	as370 alone flags	cc370	
 IKTXINIT	8	2	8	Undefined symbol	0000				identical	0x0073e	3040	3040	length	as370 alone flags	cc370	
 IFNX2A	8	41	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0000				bytes	0x0001d	2846	2846	text	as370 alone flags	cc370	
-AMDPRUIM	12	4	12	MNOTE	0000				cards	0x0001c	2676	2508	length	as370 alone flags	cc370	
-AMDPRREC	12	4	12	MNOTE	0000				cards	0x0002a	2673	2169	length	as370 alone flags	cc370	
+AMDPRUIM	12	4	12	MNOTE	0000				bytes	0x0001c	2676	2508	length	as370 alone flags	cc370	
+AMDPRREC	12	4	12	MNOTE	0000				identical	0x0002a	2673	2169	length	as370 alone flags	cc370	
 IFNX5P	8	4	8	Undefined symbol | MNOTE	0000				bytes	0x0005d	2344	2344	mixed	as370 alone flags	cc370	
 IFNX1K	8	11	8	Undefined symbol	0000				bytes	0x0020f	2342	2342	length	as370 alone flags	cc370	
 IFNX4N	8	7	8	MNOTE | Undefined symbol	0000				bytes	0x00008	2332	2332	mixed	as370 alone flags	cc370	
 IFDOLT12	8	1	8	Undefined symbol	0000				cards	0x0003f	2181	2461	length	as370 alone flags	cc370	
-AMDPRCOM	12	4	12	MNOTE | Undefined symbol	0000				cards	0x005e2	2138	2138	length	as370 alone flags	cc370	
+AMDPRCOM	12	4	12	MNOTE | Undefined symbol	0000				bytes	0x005e2	2138	2138	length	as370 alone flags	cc370	
 IFNX3K	8	9	8	Undefined symbol	0000				bytes	0x0020c	2123	2123	length	as370 alone flags	cc370	
 IFNX4E	8	28	8	MNOTE | Undefined symbol | IFO158 DSECT symbol JTSYMBL used in a relocatable address constant	0000				bytes	0x00008	2105	2105	text	as370 alone flags	cc370	
 IGG0CLAY	8	3	8	Undefined symbol	0000				cards	0x00043	2080	2064	length	as370 alone flags	cc370	
 IFG0193A	12	8	12	Undefined symbol | MNOTE	0000				cards	0x00176	2016	1952	length	as370 alone flags	cc370	
 IFG0196L	8	2	8	Undefined symbol	0000				identical	0x004f0	1864	1864	length	as370 alone flags	cc370	
-AMDPREXT	12	1	12	MNOTE	0000				cards	0x0001f	1842	1786	length	as370 alone flags	cc370	
+AMDPREXT	12	1	12	MNOTE	0000				identical	0x0001f	1842	1786	holes	as370 alone flags	cc370	
 IFDOLT00	8	3	8	Undefined symbol	0000				bytes	0x00033	1824	1824	length	as370 alone flags	cc370	
 IFNX4D	8	7	8	MNOTE | Undefined symbol	0000				cards	0x00008	1710	1710	mixed	as370 alone flags	cc370	
 IEECVET4	8	4	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)	0000				identical	0x00170	1686	1686	length	as370 alone flags	cc370	
@@ -1218,6 +1217,7 @@ BLSRFIND	0				0000				identical	0x00d11	4551	4496	text		source
 IKJEFLEA	0				0000				identical	0x00f31	4358	4299	length		source	
 BLSRST00	0				0000				identical	0x00fb9	4357	4347	identical		source	
 IDCTSCH0	0				0000				identical	0x0000d	4199	4193	length		source	
+IGG019MA	0				0000				identical	0x000fd	4096	4104	length		source	
 BLSRSUMM	0				0000				identical	0x00e49	4082	4065	text		source	
 IKJEFD20	0				0000				identical	0x00cdf	3976	3976	no-pair		source	
 BLSRENQK	0				0000				identical	0x00e61	3933	3924	identical		source	

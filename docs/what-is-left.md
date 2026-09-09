@@ -438,3 +438,51 @@ means the message is where the search **starts**, not where it ends.
 | `T'` of a sublist | `U` instead of `N` — **cc370#260**, 6 modules |
 | `S'` and `I'` | not evaluated — cc370#258 |
 | `N'`, `K'` | correct |
+
+## 93.7 %, and checking the code path before filing — 2026-09-09
+
+cc370#260 merged: **+5, none lost, none further.** Four of the six `AMDPR*`, plus
+`IGG019MA` — a named residual from #237, one of two decks that had moved the
+wrong way and was written down instead of chased. **Second time this week a
+labelled residual paid on a change aimed elsewhere** (`IFCE0155` from #205's
+nineteen was the other). Neither would have been found by looking for it.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,181 of 5,528 (93.7 %)** |
+| still differing | **347** |
+
+### cc370#262, and three hypotheses eliminated on the way
+
+`REDUNDANT LOGIC, MACRO EXPANSION ATTEMPTED` — 8 `IFNX*` modules, 76 sites — is
+`GOIF1` line 37:
+
+```
+.C4      AIF   (NOT(&B(1) AND &B(2) AND &B(3))OR '&ELSE' EQ '').C5
+```
+
+**`)OR` with no blank.** With the blank the same expression is evaluated
+correctly. Same family as cc370#245 one step out: a *logical* operator, after a
+closing parenthesis rather than a term.
+
+Eliminated first, each with a fixture: an explicitly empty keyword (`GT=`)
+comparing unequal to `''` — no; subscripted `SETB` reading wrong — no; the three-
+term `AND` chain — no, correct in a `SETB` at two and three terms and in either
+order. **`NOT(` with no blank on the opening side is also correct**, which is what
+narrows it to the closing side.
+
+### The macro-provenance scare, and why it was unfounded
+
+`GOIF1` is in **none** of the six `SYS1.A*` libraries — `as370` reads it from our
+web-mirror directory, and the mirror supplies ~300 macros the DLIBs do not. For
+an hour that looked like the unequal input that makes every difference
+unattributable, across the whole comparison.
+
+It is not. The IFOX00 runs passed **seven** libraries and the seventh is
+`IBMUSER.PVTMAC` — 444 members, holding `GOIF`, `GOIF1`, `GOIF3`. Fetched
+`IBMUSER.PVTMAC(GOIF1)` from MVSCE-EXP and compared: **228 cards, byte-identical
+to the mirror copy over columns 1–72.**
+
+**The check cost one REST call and it had to be made before filing**, because the
+`IHANVT` case already showed what an unequal macro path does to a verdict. The
+rule stands and this time it came out the other way.
