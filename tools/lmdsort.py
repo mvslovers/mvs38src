@@ -38,7 +38,14 @@ so it is an error rather than a fallback.
 """
 import argparse, base64, sys, urllib.request
 
-HOST = "http://mvsdev:8082"
+# mvsdev.lan, not mvsdev.  The bare name resolves through the search
+# domain, and on 2026-09-09 that stopped working mid-run: the driver
+# exhausted its retries on `nodename nor servname provided` at job 105 of
+# 259, while `mvsdev.lan` resolved to 192.168.0.233 the whole time.  The
+# retry loop was built for exactly this and could not help -- a name that
+# does not resolve does not start resolving because you ask again.  ssh
+# config has mapped mvsdev to mvsdev.lan all along.
+HOST = "http://mvsdev.lan:8082"
 USER, PW = "IBMUSER", "SYS1"
 KEY = (0, 40)                      # SORT FIELDS=(1,40,CH,A)
 
