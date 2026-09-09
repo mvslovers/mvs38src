@@ -308,3 +308,47 @@ all return nothing), not in `mvs38-ibmsrc`, the web mirrors, or Dave's tape.
 **One member is holding the largest cascade in the build.** That is a better
 statement of where the work is than "seven jobs fail", and it is the kind of thing
 that only shows up when the return codes are read rather than the last line.
+
+## `ZSTAGE1` `CC 0008` and `ZSTAGE2` `CC 0039` — what they actually are
+
+Both recur in run 2 and neither had been read.
+
+**`ZSTAGE2` is the stage-2 sysgen: 117 steps, mostly link-edits.**
+
+| condition code | steps |
+|---:|---:|
+| 0000 | 93 |
+| 0004 | 8 |
+| 0008 | 4 |
+| 0012 | 11 |
+| 0016 | 1 |
+
+The 16 above `CC 4` are `LINK` steps (`SG10 SG13 SG15 SG16 SG17 SG28 SG31 SG32
+SG37 SG38`) and three assemblies (`SG5 SG6`). Across 29 of their `SYSPRINT`s the
+linkage editor says:
+
+```
+IEW0342  524   module map / unresolved reference entries
+IEW0642  452
+IEW0143   92   ERROR - NO TEXT.
+IEW0123   36   ERROR - NO ESD ENTRIES, EXECUTION IMPOSSIBLE.
+IEW0461   67   -- Dave's own JCL says this one is EXPECTED for IKJEFLD
+```
+
+`NO ESD ENTRIES` and `NO TEXT` mean the linkage editor was handed **object
+members that are empty**. That is the shape one would expect from SYSMODs whose
+APPLY was terminated — their modules never got assembled into `OBJPDS0n` — but
+**the link from these particular members to `EDM1102`, `EBT1102` and `EJE1103`
+has not been established**, and it should not be asserted until it is: the
+sweep that proved the `MAINT` case took reading every skipped SYSMOD's `++VER`,
+and nothing that cheap is available here.
+
+`IEW0461` being documented in Dave's own JCL comment is the reminder that not
+every diagnostic in this build is a defect.
+
+**`ZSTAGE1` `CC 0008`** is the stage-1 sysgen assembly. Its `SYSPRINT` is not
+written to the spool at all — the job has only `SYSTERM` and `SYSGO` — so the
+assembler's diagnostics are not recoverable from the job output, and the
+snapshot has nothing either because `BLDCLR` does not run in this job. Reading
+it needs a re-run with `SYSPRINT` routed to `SYSOUT`; it is on the list, not
+done.
