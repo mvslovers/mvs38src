@@ -747,3 +747,41 @@ gh issue comment 153 --body-file /tmp/c153.md && gh issue close 153
 
 And **check the state afterwards** — `gh issue view <n> --json state -q .state`.
 A close that silently failed looks exactly like one that worked.
+
+## A flag chain in a shell variable is one argument, and it invalidated a result
+
+2026-09-09, and it is in my memory notes already, which is the annoying part.
+
+```sh
+extra=""
+[ "$lbl" = all ] && extra="-I $M/kreiss-smp -I $M/erep-instream"
+$B $MAC $extra -o /tmp/isi.$lbl.obj "$SRC/IFCSI115.ASM"
+```
+
+`$extra` reached `as370` as **one argument**, so both directories were ignored and
+the run was identical to the one without them. I reported that as *"supplying the
+EREP macros changes nothing — same rc, same 166 diagnostics, same 480-byte deck"*.
+
+Written out explicitly, the same module gives:
+
+| | rc | diagnostics | deck | still undefined |
+|---|---:|---:|---:|---|
+| through the variable | 8 | 166 | 480 B | `DSGEN LINE ROUTINE SPECIAL SUM` + 8 more |
+| paths written out | 12 | 172 | **1,680 B** | `LINEND CONVT HEX SUMMARY PROLOG FREETAB ETEPILOG ENTRIES` |
+
+**3.5× the object, and five of the thirteen undefined operations resolved.** The
+opposite of what I said.
+
+The control that should have run first is three lines:
+
+```sh
+printf 'T        CSECT\n         DSGEN (A,8)\n         END\n' > /tmp/dsg.s
+as370 -I .../erep-instream -o /tmp/dsg.obj /tmp/dsg.s   # rc 0
+as370                      -o /tmp/dsg.obj /tmp/dsg.s   # Undefined operation code - DSGEN
+```
+
+It takes seconds and it distinguishes *"the macro does not help"* from *"the macro
+was never on the path"*. **A negative result about a supplied file is a claim
+about the supply until the supply is demonstrated.** `gate.sh` is not affected —
+its `MACFLAGS` is expanded by `sh`, which does word-split — but every ad-hoc
+measurement typed at the prompt is.
