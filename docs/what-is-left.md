@@ -1481,3 +1481,44 @@ for that reason, and none of them said so.
 | deck identical | **5,351 of 5,528** |
 | **deck and return code both** | **5,337** |
 | still differing | 173 — 82 silent, 64 both flag, 23 `as370` alone, 2 IFOX00 alone, 1 timing out |
+
+## The literal pool — 23 of the 53 resolved silent divergences, 2026-09-09
+
+Handed to cc370 as two packages. The reason it is worth stating here as well is
+that the arithmetic closes, and that is what turns a cluster into a case.
+
+**L1 — the pool is N bytes short and every later displacement is N lower.**
+
+```
+IEESD03D IEESE03D IEESF03D IEESG03D IEESH03D IEESI03D IEESK03D IEESL03D
+IEESQ03D IEESR03D IEESZ03D IEEZA03D IEEZJ03D AMDPRUIM IFNX4M   IFNX4T
+```
+
+| | Δ length | Δ displacement |
+|---|---:|---:|
+| `IEESI03D` | 36 | 36 |
+| `IEEZA03D` | 24 | 24 |
+| `IEESE03D` | 12 | 12 |
+| `AMDPRUIM` | 8 | 8 |
+| `IFNX4M` | 4 | 4 |
+
+`as370`'s object is exactly N bytes shorter than IFOX00's and every displacement
+past the pool is exactly N lower — on all sixteen, with N always a multiple of 4.
+Thirteen of them diverge at **address 0x000005**, the displacement byte of the
+first instruction. The sources carry mixed literal widths (`IEESD03D` has `=A(`
+`=C'` `=F'` `=H'` `=X'`), so alignment padding inside the pool is the first thing
+to test.
+
+**L2 — same length, wrong offset.** `IFNX1J IFNX2A IFNX3N IFNX4D IFNX4N IFNX4S
+IFNX4V`: Δ length **0**, Δ displacement **exactly 8** (4 on `IFNX4S`). Same pool,
+different order within it.
+
+**What was deliberately left out, and why it matters.** `BNGI3270 BNGIDISP
+BNGT3270 BNGTDISP BNGTLOCL BNGTRMOT IFDOLT12 IFDOLT14 IFDOLT39` also first
+diverge at a literal reference — nine more modules, and it would have made the
+package half again as large. Their two deltas do not agree at all (`IFDOLT14` is
+−1216 bytes against −5). Grouping by *where* the divergence appears would have
+swept them in; grouping by *whether the numbers reconcile* keeps them out. The
+first cut of this cluster had all 35 modules in one package and was wrong.
+
+Data: `work/measurements/ifox-run/first-divergence.tsv`.
