@@ -1118,3 +1118,70 @@ list, and #289 made it noisier rather than quieter.
 |---:|---|
 | `as370` == IFOX00 | **5,348 of 5,528 (96.8 %)** |
 | still differing | **173** |
+
+## The first merge measured on the stricter goal — 2026-09-09
+
+`as370 == IFOX00` now means the deck **and** the return code. cc370#162 is the
+first change gated on it, and it prints a shape this gate has never produced:
+
+```
+as370 == IFOX00 : 5334 -> 5334   (+0)      gained 0  LOST 0  closer 0  FURTHER 0
+
+  return code agrees : 5377 -> 5493   (+116)
+    as370 alone flags : 33 -> 33
+    IFOX00 alone flags: 118 -> 2
+  DECK AND RC BOTH   : 5210 -> 5325   (+115)
+```
+
+**Not one of the 5,528 decks moved by a byte** — checked deck against deck, not by
+the counts. The decks were right and stayed right; the entire change is in the
+verdict. **+115 against a completely still deck comparison**, and it was invisible
+until the goal was stated properly.
+
+| | |
+|---:|---|
+| deck identical | **5,348 of 5,528 (96.7 %)** |
+| **deck and return code both** | **5,325 (96.3 %)** |
+| still differing in the deck | 176 — 84 silent, 64 both flag, 22 `as370` alone, 2 IFOX00 alone, 1 timing out |
+| byte-identical to IBM's object | 1,210 |
+| `deck_lint` complaints | 5, all the excluded CICS modules |
+
+The two left where IFOX00 flags and `as370` does not are `IEAVEXS` and
+`IEAVRTI0`, both `IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION`.
+
+### A new diagnostic makes silent caps loud
+
+The change alone read `as370 alone flags : 33 -> 60` — **27 modules newly flagged
+against macros that declare their keywords perfectly well.** `char pname[100][20]`
+against `SYS1.MACLIB(IDACB2)`'s **127** declared parameters, cc370#292.
+
+**It cost nothing for eleven months because a parameter nobody passes is a
+parameter nobody misses.** The moment an undeclared keyword became a *diagnostic*,
+every call passing one of the 27 raised `IFO092`.
+
+Fourth silent cap this week and **the first found by a fix rather than by a
+measurement**. It is also the mirror of the shape traded all evening — *the
+complaint goes and the module stays* — running backwards: here the module was
+already fine and the complaint was new and wrong.
+
+### Two near-misses on cc370's side, both worth the fix
+
+**A baseline that was not `main`.** The first gate ran against a tree that
+included the #290 code cc370 had withdrawn, and reported `IECVHDET(+2) FURTHER`
+against a state that does not exist. *A baseline is a claim about what is on
+`main`* — promoting after every merge is what keeps that claim true.
+
+**And an ecosystem worry that measured false.** `vsam_dcb` going `rc 0 → rc 8` read
+as libc370's vendored macros being a cut-down copy, which would have meant every
+`mbt` build failing at `rc >= 8`. Checkable only because this corpus assembles
+against the **distribution** libraries rather than a vendored subset — two
+independent macro paths, a property of the setup that nobody designed for this and
+that settled it.
+
+### And a number for the alarm
+
+`IFCEL155` is 41 s alone and over 150 s under `-P 8`: a **3.7× contention factor**.
+The alarm measures the module *plus seven neighbours*, so a bound picked from a
+solo run is wrong by about that much — which is how 20, 240 and 150 were all
+chosen and all wrong. 400 s is ten times the solo time, the first bound set with
+the factor in it rather than against it.
