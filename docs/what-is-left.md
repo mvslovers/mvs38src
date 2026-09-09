@@ -959,3 +959,73 @@ Every input correct, and the number looked at in the wrong shape:
 
 **Only the last was caught before it shipped**, and only because cc370
 re-measured the module while writing the commit message rather than after.
+
+## 96.6 %, and the eighth instrument answers the question cc370 asked for
+
+cc370#281 merged as #284: **+46, none lost, none further, `closer : 0`.**
+`AMASPZAP` plus **45 TSO command processors** — `IKJEBE*`, `IKJEG*`, `IKJCT*` —
+that reference their own constant sections before defining them. An idiom, not an
+accident, which is why one module's diagnosis carried a family.
+
+**`closer : 0` beside `+46` is the shape**: a filing defect has no partial state.
+The text is under the right id or it is not.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,340 of 5,528 (96.6 %)** |
+| still differing | **188** |
+| **silent** | **90** — from 166 this evening |
+| byte-identical to IBM's object | **1,209** |
+
+### `section_view.py` — three views, and the disagreements are the finding
+
+cc370 asked for *the sections that are empty on one side and not the other*.
+Built, and generalised: compare the deck at three layers and read where they part.
+
+| cards | (esdid, addr) | addr alone | what it is |
+|---|---|---|---|
+| differ | differ | **same** | **a filing defect** — right bytes, wrong section (cc370#281) |
+| differ | **same** | same | **the object is right and the deck is not** — cc370#199 |
+| differ | differ | differ | ordinary wrong content |
+
+Of the 188: **171 content, 10 object-right-deck-wrong, 7 excluded/absent.** And
+the empty-section question outright:
+
+```
+IECVHDET  IECVHIDT   as370      8 B   IFOX00      0 B
+ISTINCU7  IKJEGAPL   as370    182 B   IFOX00      0 B
+ISTINCU7  IKJEGAT    as370     50 B   IFOX00      0 B
+ISTNSC00  MSGCSECT   as370      0 B   IFOX00    429 B
+ISTNSC00  RWKAREAS   as370      0 B   IFOX00   3360 B
+```
+
+Five sections in three modules, and none of the seven earlier instruments asks it.
+
+### cc370#285 — #281's sibling one level down
+
+The ten in the middle row split: **six are one defect.** A section outranks an ER
+of the same name since #284; a **label definition does not**. `DC V(IKJEGIST)`
+registers an ER, `ENTRY IKJEGIST` and the label follow, and the `LD` entry gets
+the ER's address:
+
+```
+IKJEGCVT  IKJEGIST   IFOX00 0017A8   as370 000000
+IKJEBESA  IKJEBSA3   IFOX00 0014D8   as370 000000
+IKJEHREN  IKJEHSMG   IFOX00 001D7C   as370 0006A4
+```
+
+**Every TXT card is identical in all six.** One `LD` address per module is the
+entire divergence, and the two zeros say plainly which entry was written: the
+ER's, which carries no address at all.
+
+Two more are RLD address lists with entries both **missing and extra**
+(`IGC0E05A`, `IFFAHA16`), and two are ordinary content that had landed in the
+class by accident.
+
+### What the third witness proved about the silent group
+
+Of the five modules it settled and closed, **not one was a wrong byte of code
+generation.** Every one was a length, an origin, or a filing — the text `as370`
+emitted was already right, and what diverged was where it said the text belonged.
+That is the first structural statement anyone has been able to make about the
+silent divergences, and it is why the three-view comparison exists.
