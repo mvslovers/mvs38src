@@ -70,3 +70,70 @@ that `EER1400` ships **no AMACLIB at all** — so they were probably never
 `SYS1.MACLIB` members and live as `COPY` members inside the EREP source. Five
 wrong same-named macros were found and rejected; the tally of wrong `PROLOG`s is
 now eleven.
+
+## The macros settled a disagreement between two searches
+
+Two agents read IBM's BTAM cookbook and came back with different answers about
+whether `BTMHJN` and `BTMIOBWA` carry maintenance: one, reading the PDF through
+`pdftotext`, reported **no RMID** and concluded both were base-function; the
+other, reading the same PDF page by page, reported `RMID(UY65386)` and
+`RMID(UY85819)`.
+
+**The macro text decides it and neither agent had looked there.** Ours carry
+APAR markers in column 65:
+
+```
+BTMHJN     @OY36208  @OY42916
+BTMIOBWA   @OY49630  @OY57753
+```
+
+Maintenance has been applied to both, so the RMID reading is the right one. The
+PTF numbers themselves do not appear in the source — `RMID` is SMP's bookkeeping,
+`@OYnnnnn` is the source-level flag — which is why the absence of `UY65386` in
+the file is not evidence either way.
+
+## `IECPDSCB` names its own FMID
+
+The strongest provenance any of the four has, and it is inside the file:
+
+```
+.*$01=OZ74018,EDM1102,,FERJV: MAPPING MACRO OF PARTIAL DSCB       @01A*
+```
+
+`EDM1102` is exactly the SYSMOD that could not apply without it. After a `TABLE`
+that was the wrong macro five times and a `PROLOG` that was wrong eleven, a macro
+that cites the FMID it belongs to is a different quality of evidence.
+
+## Group B: a fourth independent negative, and the grammar
+
+All eight were found as **call sites** in `mainframe.eu`'s EREP folder, and a
+`grep` for `^\s+MACRO\s*$` across all **192** members of that folder found **no
+definition of any of them**. That is now four independent archives — Jay Moseley's
+tape, `moshix/osvs2src`, `mainframe.eu`, and this machine — agreeing that the
+`IFCE*`/`IFCS*` family calls these macros and none of them carries the source.
+
+The call grammar, captured verbatim, which is what a found definition will have to
+match:
+
+| macro | how it is called |
+|---|---|
+| `PROLOG` | `PROLOG NAME=IFCE0125` — **always** `NAME=`, never bare |
+| `SUMMARY` | `SUMMARY NAME=IFCS0115` — same shape, in the `IFCS*` half |
+| `ETEPILOG` | `ETEPILOG RLEN=190`, `ETEPILOG NODUMP` |
+| `CONVT` | `CONVT (IORETRY,2,5),(SIOCNT,4,8)` — field, offset, length |
+| `HEX` | `HEX (DLOG20,0,4B),(DLOG21,B1,4B)` — same triples |
+| `LINEND` `FREETAB` | bare, no operands |
+| `ENTRIES` | `ENTRIES PAGE` |
+
+**`PROLOG NAME=` is the discriminator.** Every wrong `PROLOG` found so far — and
+there have been eleven — is a register-save prologue generator with no `NAME=`
+keyword. A candidate that does not take `NAME=` is not this macro, and that can
+be decided from the prototype line alone.
+
+## The sharpest lead left
+
+`UY65386` and `UY85819` are, per Jay Moseley's PTF cross-reference, contained in
+`cumptfs.aws` — a cumulative-PTF AWS tape. A `++MAC` PTF carries the full macro
+source, so that tape holds the BTAM pair at their applied level. Not needed now
+that both are installed, but it is the shape of where the *eight* might also be:
+**a PTF tape, not a macro library.**
