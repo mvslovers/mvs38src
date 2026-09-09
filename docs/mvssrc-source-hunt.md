@@ -256,16 +256,27 @@ reason.
 `SYS1.SETUP.CNTL(MVS0200)` and Dave's document calls it `SYS1.UCAT.SRC`.
 **Do not import it and do not define an `MVSSRC` alias here.**
 
-`MVSCE-LAB` has **no user catalog at all**: `dslevel=SYS1.UCAT.**` returns zero
-rows, and so does a query for a VSAM data space. The 213 `MVSSRC.BLD.*` data
-sets that exist today are therefore catalogued in the **master catalog**. An
-alias `MVSSRC → SYS1.UCAT.SRC` would route every `MVSSRC.*` request to that user
-catalog and make all 213 unreachable — the build would fail on its own data sets
-instead of on IBM's.
+There is no `SYS1.UCAT.*` on `MVSCE-LAB`: `dslevel=SYS1.UCAT.**` returns zero
+rows, and the control `dslevel=SYS1.**` returns 97 with no `.UCAT` among them.
+So the catalog Dave's document names is not there.
 
-`DEFINE NONVSAM` into the master catalog puts the new entries where the existing
-ones already are. It needs no alias, no user catalog, and no decision about which
-catalog owns `MVSSRC`.
+**What could not be established:** whether `MVSCE-LAB` has *any* user catalog,
+or an `MVSSRC` alias. mvsMF's `dslevel` does not accept a leading wildcard —
+`*.VSAMDSPC.**`, `*.UCAT.**`, `SYSCTLG.**` all answer zero, but so do the
+controls `*.BLD.**` and `*.PARMLIB`, which must match. Those four zeros are the
+API refusing the pattern, not an empty system. An earlier draft of this document
+read them as a clean negative; they are not.
+
+That is why `DEFINE NONVSAM` is the recommendation and not `IMPORT CONNECT`. It
+puts each entry in whatever catalog `MVSSRC` already resolves to — master
+catalog or a user catalog, whichever it turns out to be — which is exactly where
+the 213 existing `MVSSRC.BLD.*` entries are. It is correct under either state,
+and needs no decision about which catalog owns `MVSSRC`.
+
+Importing `SRCCAT`'s catalog is not, under either state. An alias
+`MVSSRC → SYS1.UCAT.SRC` routes every `MVSSRC.*` request to that user catalog and
+makes the 213 existing entries unreachable — the build would then fail on its own
+data sets instead of on IBM's.
 
 `SRCCAT` still has to be **attached**, because eight of the 236 —
 `MVSSRC.SYM701.F06` through `.F13` — live on it. Only its catalog is left alone.
@@ -313,7 +324,8 @@ Read-only, and that is all:
 
 - `GET /zosmf/restfiles/ds?dslevel=` for `MVSSRC.**` (213 rows, all
   `MVSSRC.BLD.*`), `SYS1.**` (97 rows — the control: `LINKLIB`, `PROCLIB`,
-  `MACLIB`, `NUCLEUS` all present), `SYS1.UCAT.**` (0), `Z9999994.**` (0).
+  `MACLIB`, `NUCLEUS` all present), `SYS1.UCAT.**` (0), `Z9999994.**` (0),
+  and four leading-wildcard queries that turned out to be meaningless (§7.3).
 - `GET /zosmf/restfiles/ds/SYS1.PARMLIB(VATLST00)`.
 - Two console **display** commands, `D U,,,348,4` and `D U,,,150,4`.
 
