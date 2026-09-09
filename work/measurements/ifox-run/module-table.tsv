@@ -105,7 +105,6 @@ IFG0195U	8	1	8	Undefined symbol	0000				bytes	0x00169	904	912	length	as370 alone
 IFDOLT42	8	3	8	Undefined symbol	0000				bytes	0x00037	574	574	text	as370 alone flags	cc370	
 IFNX4S	8	3	8	MNOTE | Undefined symbol	0000				cards	0x00008	429	429	mixed	as370 alone flags	cc370	
 IGC0009D	8	1	8	Undefined operation code	0000				bytes	0x00013	279	275	length	as370 alone flags	cc370	
-BLSCAMOD	8	16	8	MNOTE	0000				identical				length	as370 alone flags	cc370	
 IEAVRTI0	0				0008	1	8	IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION	bytes	0x0002b	3792	3792	text	IFOX00 alone flags	cc370	
 IEAVEXS	0				0008	1	8	IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION	bytes	0x0002b	428	432	text	IFOX00 alone flags	cc370	
 IBCDASDI	8	8	8	Undefined operation code	0008	2	8	IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD	cards	0x00626	40912	40912	no-pair	both flag	cc370	source torn by an FTP transfer: record 10 is 61 characters and record 11 is 18, where IBM's tape has one 80-character record (an embedded binary REPRO deck). Not an assembler case.
@@ -1424,6 +1423,7 @@ BLSCAINT	0				0000				identical				text		source
 BLSCALOC	0				0000				identical				text		source	
 BLSCAMER	0				0000				identical				identical		source	
 BLSCAMIN	0				0000				identical				identical		source	
+BLSCAMOD	0				0000				identical				length		source	
 BLSCAMPR	0				0000				identical				identical		source	
 BLSCANAL	0				0000				identical				identical		source	
 BLSCANLE	0				0000				identical				text		source	

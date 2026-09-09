@@ -1281,3 +1281,47 @@ instruction — that is how an instruction is overridden deliberately. **Not
 checked against IFOX00**, and it is not in this cluster's path; recorded because
 it turned up while a fixture was named `M` by accident, and a fixture whose name
 collides with a mnemonic silently tests nothing.
+
+## A reduction can remove the defect while keeping everything you were looking at
+
+cc370#296 isolated `BLSCAMOD`, and the answer was the eighth candidate after our
+seven eliminations:
+
+```
+         BLSCAMM1 &DYRB(2)         COUNT FLAGS1 ENTRIES INTO &BLSCAGA
+```
+
+**`&DYRB(2)` substituted to nothing, and the operand took the remark's first
+word.** The counting macro was handed the string **`COUNT`**, called it a
+one-element list, and the `MNOTE` was a macro complaining — correctly — about
+input we had invented.
+
+`as370 alone flags 25 → 24`, `DECK AND RC BOTH 5333 → 5334`, **0 of 5,528 decks
+changed**, and the three-line reproducer goes from four MNOTEs to none.
+
+### Why neither of us could reduce it
+
+**The defect needs an operand that becomes empty *and* a remark behind it.** Every
+simplification either of us wrote dropped one of the two — the direct
+`BLSCAMM1` calls had no remark, the `INNER &P(2)` probe had none either. All seven
+eliminations were *correct measurements of something that was not the defect*.
+
+That belongs beside the aggregation failures and the tests that stop testing their
+subject:
+
+> A reduction can remove the defect while keeping everything you were looking at.
+
+What broke it was **instrumenting a local copy of the macro and printing what
+actually arrived**, rather than reasoning about what should. Every instrument in
+this repository reads the *output*; this was a question about the *input*.
+
+### And the mnemonic question, answered by the oracle against my premise
+
+`MACRO / M &A / MEND` then `M 1,2`: IFOX00 gives **`IFO043 MACRO PROTOTYPE
+STATEMENT HAS INVALID OP CODE` at rc 12**. Assembler XF does not give a source
+macro precedence over a mnemonic — **it refuses to let you name one that way**, so
+precedence never arises. `OPSYN` is HLASM's answer and XF has none.
+
+`as370`'s behaviour is therefore right and only its silence is wrong — cc370#297,
+filed with the reach stated as probably zero. **The premise I brought to it was
+wrong, which is exactly why it was worth an oracle run rather than an assumption.**
