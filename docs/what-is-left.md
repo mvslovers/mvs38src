@@ -16,23 +16,30 @@
 
 # The remaining 99 — as measured on 2026-09-09 against `1112488`
 
-**Derived against cc370 `2f90d47`; `git rev-list --count 2f90d47..main` = 0 at
-writing.** The previous derivation stood at `7a0cd90`, which had gone **6 merges**
-stale — the guard above is what caught it, and re-running took the count from 128
-to 125. Built from a `git worktree` at that commit, gated as `gdoc`, compared
-against the recorded IFOX00 decks.
+**Derived against cc370 `1112488`; `git rev-list --count 1112488..main` = 0 at
+writing.** The derivation has been re-cut three times today, each time because
+the guard above caught it stale: `7a0cd90` was 6 merges behind, then `2f90d47`,
+then `847aed7`. Promoted gate run `g323r`, compared against the recorded IFOX00
+decks.
 
 | | |
 |---:|---|
-| `as370` == IFOX00, **deck** | **5,379 of 5,528 (97.3 %)** |
-| `as370` == IFOX00, **deck and return code** | **5,377 (97.3 %)** |
-| `as370` alone flags | 19 — of which 2 have a byte-identical deck (`IFNX1K`, `IFNX3K`) |
-| IFOX00 alone flags | 2 — `IEAVEXS`, `IEAVRTI0` |
-| byte-identical to IBM's shipped object | 1,211 of 5,056 pairs |
-| `rc 0` | 4,565 |
+| `as370` == IFOX00, **deck** | **5,424 of 5,528 (98.1 %)** with the assembly stamp normalised; **5,404** raw |
+| `as370` == IFOX00, **deck and return code** | **5,403** |
+| flagged-or-silent agrees (rc 4 counted as flagged) | **5,517** |
+| `as370` alone flags | **3** — `IFCEL155`, `IFCSXXXF`, `IFCSXXXH` |
+| IFOX00 alone flags | **4** — `IBCDASDI` (deck identical), `IBCDMPRS`, `IEAVEXS`, `IEAVRTI0` |
+| byte-identical to IBM's shipped object | 1,209 of 5,056 pairs |
+| `rc 0` | 4,576 |
 
 From 3,465 (62.7 %) at `ee1090b` on 2026-09-07 — distance 130 — with **no deck
-identity lost** anywhere along the way. This is the map for the last 2.7 %.
+identity lost** anywhere along the way. This is the map for the last 1.9 %.
+
+**The DLIB figure fell from 1,211 and no deck moved away from IBM's object.** It
+is filtered on `as370 rc 0`, and #324 correctly took 14 modules out of that filter
+by teaching `as370` to raise `IFO220` where IFOX00 does — 7 of them
+DLIB-identical, against 1 joining. A control whose population moves reads exactly
+like one that regressed unless the filter is stated.
 
 **Say which identity.** On the deck the claim holds without exception. On the
 stricter goal it does not: cc370#304 took `IFNX1K`, `IFNX3K` and `IFNX5V` from

@@ -6,12 +6,12 @@
 > **every count in them is superseded.** Do not quote a figure from A, B, C or D
 > without re-deriving it.
 >
-> **Current, derived against `7a0cd90` (distance 0 at writing), from a worktree
-> build gated as `gdoc`:**
+> **Current, derived against `1112488` (distance 0 at writing), from the
+> promoted gate run `g323r`:**
 >
 > | | modules | this page said |
 > |---|---:|---:|
-> | still the assembler's problem | **128** | 2,021 |
+> | still the assembler's problem | **99** | 2,021 |
 > | A — `as370` rejects what XF assembles | **16** (19 on the return code) | 512 |
 > | B — both silent, object different | **48** | 1,169 |
 > | C — both flag, decks differ | **62** | 380 |
@@ -81,7 +81,8 @@ gate that used to cost a day costs a coffee.
 
 ## A. `as370` rejects what Assembler XF assembles — 512 modules
 
-> **On `7a0cd90` this class is 19 modules** (16 of them with a differing deck).
+> **On `1112488` this class is 3 modules** — `IFCEL155`, `IFCSXXXF`, `IFCSXXXH`.
+> It was 19 on `7a0cd90` and 512 on 2026-09-07.
 > Its message census: 12 `MNOTE`, 11 `Undefined symbol`, 10 `Invalid type
 > declared on DC/DS/DXD constant`, 2 addressability, 2 `IFO217`, 2 `IFO206`, and
 > one each of four more; counts overlap where a module carries several. The seven
@@ -129,7 +130,8 @@ ever had to kill, and they are why the count of packages is 2,021 and not 2,019.
 
 ## B. Both assemblers silent, the object different — 1,169 modules
 
-> **On `7a0cd90` this class is 48 modules.** It is no longer the largest package;
+> **On `1112488` this class is 36 modules**, and it no longer has families — the
+> largest cluster in it is two. It is no longer the largest package;
 > C is. It remains the one no instrument reaches — see
 > [`dave-environment-plan.md`](dave-environment-plan.md).
 
@@ -163,7 +165,8 @@ open, the rest of B is a data file to mine, not a ticket.
 
 ## C. Both flag, and the decks differ — 380 modules
 
-> **On `7a0cd90` this class is 62 modules and is now the largest of the four.**
+> **On `1112488` this class is 57 modules and is the largest of the four by far** —
+> well over half of the 99 that remain.
 > 46 of them name an undefined operation — 33 `IFC*`, 11 `IEC*`, one `IEA*`, one
 > `IEW*` — and are blocked on macros that are in none of our libraries
 > ([`missing-macros.md`](missing-macros.md)), not on `as370`.
@@ -179,7 +182,8 @@ class, not of the part where the decks differ.)
 
 ## D. IFOX00 flags, `as370` is silent — 96 modules — [cc370#162](https://github.com/mvslovers/cc370/issues/162)
 
-> **On `7a0cd90` this class is 2 modules**, `IEAVEXS` and `IEAVRTI0`, both
+> **On `1112488` this class is 4 modules** — `IBCDASDI` (whose deck is
+> identical), `IBCDMPRS`, `IEAVEXS` and `IEAVRTI0`, all
 > `IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION`. cc370#162 took
 > the class from 118 to 2 in one merge.
 

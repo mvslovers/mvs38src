@@ -4,9 +4,11 @@
 > superseded.** The method — ask IBM's object which deck it agrees with — is the
 > durable part; the populations are not.
 >
-> **Re-derived against cc370 `7a0cd90`, distance 0 at writing**, from a worktree
-> build gated as `gdoc`: the class is **48 modules** by the `signal()` reading,
-> **46** of them `rc 0` on both sides. Split by the third opinion, on those 46:
+> **Re-derived against cc370 `1112488`, distance 0 at writing**, from the promoted
+> gate run `g323r`: the class is **36 modules** by the `signal()` reading, and it
+> no longer has families — the largest cluster in it is **two**. It was 48 on
+> `7a0cd90` and 1,113 on 2026-09-07. Split by the third opinion, on the 46 of the
+> `7a0cd90` reading:
 >
 > | | modules | this page said |
 > |---|---:|---:|

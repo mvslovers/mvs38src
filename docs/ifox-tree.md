@@ -135,7 +135,7 @@ figure here is the same as at `879e86a` (distance 126). The run that established
 the method was against `ee1090b` (distance 130); both numbers are given where the
 change matters. **This is the founding run and its figures are kept as that
 record — none of them is current.** On `7a0cd90`, distance 0 at writing, the same
-comparison gives 5,379 of 5,528; the map is
+comparison gives 5,424 of 5,528 (98.1 %) on `1112488`; the map is
 [`what-is-left.md`](what-is-left.md).
 [`work/measurements/ifox-run/as370-baseline.txt`](../work/measurements/ifox-run/as370-baseline.txt)
 records which build every figure belongs to. The IFOX00 side does not move.*

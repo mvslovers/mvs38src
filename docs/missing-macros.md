@@ -6,6 +6,17 @@ pairs across the two source trees we build from.** Table:
 [`missing-macros.tsv`](../work/measurements/missing-macros/missing-macros.tsv),
 one row per operation with the module list.
 
+> **Checked 2026-09-09 against `1112488`**: **204 modules still carry an
+> `Undefined operation code` message**, so the headline has not decayed with the
+> assembler's progress — the macros are missing from the libraries, not from
+> `as370`. The *operation-level* breakdown below was not re-derived; treat the
+> 40 as the figure of record and the module lists as indicative.
+>
+> The first attempt at that check reported **zero** operations, because the
+> regex expected the operation name in a column that holds an aggregated
+> message. A scan with no hits is a claim about the instrument until a control
+> says otherwise; `grep -c` on the same file said 204 immediately.
+
 This is a hunting list. Every one of these was searched for and not found — the
 point of the document is that the searching is already done, so what is left is
 to find the material somewhere else.

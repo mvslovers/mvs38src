@@ -3,7 +3,7 @@
 **Status: written down, not started — and as of 2026-09-09 it is the recommended
 next work.** This document was written when Goal A stood at 87.0 % and was still
 yielding a defect per merge, so that the second goal would not be re-derived from
-scratch when the first stalled. Goal A is now at **97.3 %** — derived against
+scratch when the first stalled. Goal A is now at **98.1 %** — derived against
 cc370 `7a0cd90`, `git rev-list --count 7a0cd90..main` = 0 at writing — and the
 condition named above has arrived; see *When to start* at the end.
 
@@ -11,7 +11,7 @@ condition named above has arrived; see *When to start* at the end.
 
 | | |
 |---|---|
-| **Goal A** | `as370` == IFOX00 on identical input. **5,379 of 5,528 decks (97.3 %)**, 149 to go — 128 after the clock settles 14 and 7 are excluded. On the stricter goal, deck *and* return code, **5,377**. Derived against `7a0cd90`, distance 0. The row read *4,810 of 5,528, 711 to go* until 2026-09-09: the 87.0 % figure the document was written at, left standing beside a status line that already said 96.8 %. |
+| **Goal A** | `as370` == IFOX00 on identical input. **5,424 of 5,528 decks (98.1 %)** with the assembly stamp normalised, 5,404 raw, **99 to go**. On the stricter goal, deck *and* return code, **5,403**. Derived against `1112488`, distance 0. The row read *5,379 of 5,528 (97.3 %)* until the four merges of 2026-09-09 afternoon, and *4,810, 711 to go* before that — a figure left standing beside a status line that already disagreed with it. |
 | **Goal B** | Source that assembles to the object IBM shipped — Dave Kreiss' project. |
 
 **A reboot does not serve Goal A.** Every one of the 43 merges so far came from
@@ -104,7 +104,7 @@ MVS; step 4 is the measurement.
 
 ## When to start — 2026-09-09
 
-Goal A is at **97.3 %**, 128 modules differing, and the remainder no longer looks
+Goal A is at **98.1 %**, 99 modules differing, and the remainder no longer looks
 like assembler work. Derived against `7a0cd90`, distance 0 at writing, on the 128
 that survive the clock and the exclusions:
 
