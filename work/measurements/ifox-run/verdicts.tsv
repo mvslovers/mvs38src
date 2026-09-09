@@ -1538,7 +1538,7 @@ IECVDERP	8	0008	identical		length
 IECVDURP	0	0000	identical		length
 IECVERPL	0	0000	identical		text
 IECVESIO	0	0000	bytes	bytes	length
-IECVEXCP	8	0008	bytes	bytes	length
+IECVEXCP	8	0008	identical		length
 IECVEXPR	0	0000	identical		length
 IECVGENA	8	0008	identical		text
 IECVHDET	8	0012	bytes	bytes	length
@@ -3247,7 +3247,7 @@ IFNX4E	8	0000	bytes	bytes	text
 IFNX4M	8	0000	bytes	bytes	length
 IFNX4N	8	0000	bytes	bytes	mixed
 IFNX4S	8	0000	cards		mixed
-IFNX4T	8	0000	bytes	bytes	mixed
+IFNX4T	8	0000	cards		mixed
 IFNX4V	8	0000	bytes	bytes	text
 IFNX5A	0	0000	bytes	bytes	text
 IFNX5C	0	0000	bytes	bytes	text
@@ -3311,7 +3311,7 @@ IGC0008F	0	0000	identical		length
 IGC0008H	0	0000	identical		length
 IGC0009A	8	0008	identical		no-pair
 IGC0009C	0	0000	identical		length
-IGC0009D	8	0000	bytes	bytes	length
+IGC0009D	0	0000	identical		identical
 IGC0009G	0	0000	identical		no-pair
 IGC0009H	0	0000	identical		length
 IGC0010C	0	0000	identical		mixed
@@ -4066,7 +4066,7 @@ IGG019PN	0	0000	identical		identical
 IGG019PO	0	0000	identical		identical
 IGG019PP	0	0000	identical		identical
 IGG019PQ	0	0000	identical		identical
-IGG019Q0	8	0008	bytes	bytes	length
+IGG019Q0	8	0008	identical		length
 IGG019Q1	8	0008	identical		length
 IGG019Q2	8	0008	cards		length
 IGG019Q3	8	0008	cards		length
@@ -4175,7 +4175,7 @@ IGG0202N	0	0000	identical		length
 IGG02030	8	0008	identical		length
 IGG02035	8	0008	identical		text
 IGG02036	8	0008	identical		text
-IGG0203A	8	0000	cards		length
+IGG0203A	8	0000	bytes	bytes	length
 IGG0203B	8	0008	identical		length
 IGG0203K	0	0000	identical		length
 IGG0203M	0	0000	identical		length

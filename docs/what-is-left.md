@@ -1325,3 +1325,31 @@ precedence never arises. `OPSYN` is HLASM's answer and XF has none.
 `as370`'s behaviour is therefore right and only its silence is wrong — cc370#297,
 filed with the reach stated as probably zero. **The premise I brought to it was
 wrong, which is exactly why it was worth an oracle run rather than an assumption.**
+
+## A message count is a floor — the third way the key fails
+
+cc370#299 (`BNPR`, `BNMR`): **+3 decks and +3 return codes**, none lost. And two of
+the three — `IECVEXCP`, `IGG019Q0` — **were not in the `Undefined operation code`
+cluster at all.** They reach the missing mnemonics behind conditional assembly the
+message never got to, so they were sitting in the silent population.
+
+**The message column under-counted its own cause by two thirds.**
+
+That is a third, distinct failure of clustering by message:
+
+| | |
+|---|---|
+| `IFO026` | the message **was** the defect — the key worked |
+| `MNOTE` | the message is a downstream macro's opinion — the key selects a symptom |
+| **`Undefined operation code`** | **the message is right and its population is a lower bound** |
+
+The first two say the key is *wrong*. This one says it is **incomplete**, in a
+direction nothing here measures: **a module can carry a defect and never reach
+it.** Every reach figure quoted from a message count in this document is a floor
+for that reason, and none of them said so.
+
+| | |
+|---:|---|
+| deck identical | **5,351 of 5,528** |
+| **deck and return code both** | **5,337** |
+| still differing | 173 — 82 silent, 64 both flag, 23 `as370` alone, 2 IFOX00 alone, 1 timing out |
