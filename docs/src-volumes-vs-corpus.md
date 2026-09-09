@@ -115,7 +115,9 @@ the corpus default's 6,164:
 ```
    1|XEQ      TITLE 'HASP EXECUTION SERVICES PROLOG'                @OZ18212 40002000|
    2|*********************************************************************** 40004000|
+   …
    4|* MODULE NAME -- HASJES2 (HASPXEQ CSECT)                              * 40008000|
+   …
  199|* DESCRIPTIVE NAME -- JES2 JCL CONVERSION PROCESSOR                   * 40464000|
  200|*                                                                     * 40466000|
 ```
@@ -151,9 +153,23 @@ etc1102  rec 56  1-72 |*A343700                             @OY19848|  73-80 |03
 sym5     rec 56  1-72 |*A343700                             @OY19848|  73-80 |03078182|
 ```
 
-For an assembly that reads columns 1–72 these are the same member. The 43 names
-are listed in the sidecar with `verdict=identical-elsewhere` and identical 1–72
-hashes.
+For an assembly that reads columns 1–72 these are the same member — and because
+the comparison keys on columns 1–72, all 116 volume copies of these 43 names come
+back `identical-default`, matching the file in `ibm/` whichever tape they sit on.
+The names:
+
+```
+IEDAYI   IEDAYO   IEDAYP   IEDAYV   IEDBITN  IEDCMB   IEDFSSTB IEDQA5
+IEDQAQ   IEDQAU   IEDQBT   IEDQFSC  IEDQGQ   IEDQWB1  IEDQWI9  IEDQWIA
+IFCEMAD1 IGC0J05B IGCM510D IGCM610D IGCV110D IGCV410D IGCV510D IGCV610D
+IGE0204H IGE0404G IGE0504G IGE0504H IGE0604G IGG01942 IGG01946 IGG019Q1
+IGG019RI IGG019RM IGG02035 IGG02036 IGG02046 IOGENER  TCONV    TIOSBED
+TPECBD   TTECB    TXRTDD
+```
+
+The sidecar carries `sha256_cols_1_72` and `sha256_cols_1_80` per member, so the
+43/290 split is derivable from it: a name whose copies share the 1–72 hash and
+differ in the 1–80 hash is one of these 43.
 
 **The 290 are maintenance.** `IGG019Q9` is 743 records on `etc1102/FILE0005` and
 808 on `etc2402/FILE0002`; 726 records are common, in 14 hunks. What the longer
