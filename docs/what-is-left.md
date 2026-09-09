@@ -599,3 +599,54 @@ expanded `$0` in `[A-Z@#$0-9]`. Single quotes give 40.
 
 **A scan that returns zero reads exactly like a clean negative**, and this
 repository has spent real effort on recorded negatives today. Quote the regex.
+
+## cc370#153 localised to one COPY member, and a limit that is real but not the cause
+
+The 39 modules where `as370` alone reports `Undefined symbol` — 1,257 sites — are
+not 39 problems. Clustered by the *symbol* it cannot resolve:
+
+```
+  7  MPNM        5  JTTITLE     4  JTERROR JTPRINT JTSPACE JTREPRO JTPUNCH
+  4  JTUSING JTADJII            3  JTPUSH JTEJECT JTDROP JTPOP JTMNOTE JTSYMII
+```
+
+**Every `JT*` name comes from one statement.** `IFNX1A` line 188 is
+`COPY JTEXT`, and inside `JTEXT` the whole symbol set is defined by a single
+macro call spanning **86 cards — 85 continuations** — `JTIOP1 DBV ,` followed by
+some two hundred `NAME(expression),` operands.
+
+`IBMUSER.PVTMAC(JTEXT)` fetched from MVSCE-EXP: **182 cards, byte-identical** to
+our copy. The oracle read the same text.
+
+### What was found, and what it does not explain
+
+`as370` has a **64-operand limit** on positional macro operands, with its own
+diagnostic:
+
+```
+ERROR: More than 64 positional macro operands - the rest are not
+       addressable through &SYSLIST
+```
+
+Reproduced with a 56-card fixture (one call, 200 operands, 50 continuation
+cards). IBM's assembler has no such limit and IFOX00 assembles these modules
+cleanly, so the limit is wrong.
+
+**But it is not demonstrably the cause here: no module among the 331 raises that
+message.** `IFNX1A` has 13 `Undefined symbol` messages and not one "More than
+64". So either `DBV`'s operands are not counted as positional by the same path,
+or the symbols are lost somewhere else in an 86-card continuation.
+
+Recorded as a partial result. What it buys is that **cc370#153 is one statement
+in one COPY member**, not thirty-nine independent module problems — which is a
+much better starting point than the class list, and it is where the next person
+should begin.
+
+### Two scans that returned zero today
+
+The multi-register `USING` count said `0 of 331` because zsh expanded `$0` inside
+a double-quoted regex; the real figure is 40. The 64-operand count says `0 of 331`
+and this one is real — verified by running the same command on a module by hand.
+
+**A zero from a scan has to be confirmed against a case you already know the
+answer for**, and today one of two was an artefact.
