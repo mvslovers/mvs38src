@@ -253,6 +253,29 @@ def main():
         bo = [m for m in mods if vo[m] == "agree" and old[m] == "identical"]
         print(f"  DECK AND RC BOTH   : {len(bo)} -> {len(both)}   "
               f"({len(both) - len(bo):+d})")
+
+        # The 0-versus-4 boundary, which every line above is blind to.
+        #
+        # `rcverdict` asks whether both assemblers call the module clean, and
+        # counts 4 as clean.  That is right for its question and it hides a
+        # class: on 2026-09-09, 26 modules disagreed about rc 0 against rc 4 --
+        # 8 where as370 says 4 and IFOX00 says 0, 18 the other way -- and 25 of
+        # the 26 have a BYTE-IDENTICAL deck.  So they are invisible twice over:
+        # the deck measure calls them finished and the rc measure calls them
+        # agreed.  cc370 found them from the inside, working ISTNSC00.
+        #
+        # This is an ADDITIONAL line, not a redefinition of the one above.
+        # Changing `rcverdict` would silently move every figure recorded in
+        # this repository since 2026-09-09 and leave no way to compare against
+        # them.  A stricter measure earns its own row.
+        exact_n = sum(1 for m in mods
+                      if now.get(m) is not None and ifox.get(m) is not None
+                      and (now[m] == 0) == (ifox[m] == 0))
+        exact_o = sum(1 for m in mods
+                      if base.get(m) is not None and ifox.get(m) is not None
+                      and (base[m] == 0) == (ifox[m] == 0))
+        print(f"  flagged-or-silent agrees : {exact_o} -> {exact_n}   "
+              f"({exact_n - exact_o:+d})   <- counts rc 4 as flagged")
     else:
         print(f"\n  (no return-code comparison: {tsv} not found -- pass --rc)")
 
