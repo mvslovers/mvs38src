@@ -745,3 +745,59 @@ said it was fine.** Nothing in either assembler's output named it.
 That is a shape the 166 silent divergences may well contain more of: not a wrong
 rule, but a bound reached quietly by a construct large enough to cross it. It is
 the first candidate mechanism for that group since cc370#264 removed the last one.
+
+## 95.4 %, and the silent group falls for the first time — 2026-09-09
+
+cc370#269, the buffer sweep: **+46, none lost, `cards : 91 -> 56`.** The largest
+merge of the campaign, and thirty-five modules stopped being card-count
+differences in one step — that bucket was 2,063 when this comparison began.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,275 of 5,528 (95.4 %)** |
+| still differing | **253** |
+| byte-identical to IBM's object | **1,204** |
+| silent / `as370` alone / both flag / IFOX00 alone | **138 / 29 / 68 / 10** |
+
+**The silent group fell 166 → 138** — the first time it has dropped. It had grown
+through every merge before this one, and the thing that moved it was the shape
+this document proposed for it: a **cap rather than a rule**. Four buffers held a
+macro parameter at 96, a prototype default at 40, a `&SYSLIST` element at 128 and
+a `SETC` value at 96, where IFOX00 holds 255 and diagnoses `IFO042` past it. Each
+cut the value and then reported the *cut* length through `K'`, so a macro that
+measures its own operand was told a smaller number than it was handed, generated
+accordingly, and returned `rc 0`.
+
+**That is the first mechanism to reach into the silent population all week**, and
+it arrived from a hypothesis rather than from an instrument — none of the six
+instruments could see it, because all of them look at what differs rather than at
+what was quietly dropped.
+
+### The four decks that moved away, and the length column that settles them
+
+| | IFOX00 | before | after | |
+|---|---:|---:|---:|---|
+| `AMASPZAP` | 12,920 | 12,956 | **12,920** | exact |
+| `IASXSD82` | 3,943 | 3,976 | **3,943** | exact |
+| `IFCSXXXF` | 4,021 | 3,992 | 4,009 | closer |
+| `IFCSXXXH` | 8,251 | 8,195 | 8,227 | closer |
+
+**And two byte measures disagreed by 42 on `AMASPZAP`.** `retest.py`'s
+`distance()` keys the image by **section name** and says +6; a hand-rolled count
+keying by **ESDID** says −36. Section name is the better key and `retest.py` is
+the figure to quote — but anyone re-deriving a "further" line with their own
+script will get a different number from the gate's. Mine was the hand-rolled one.
+
+### cc370#270 — a real defect with no reach, and a zero that was confirmed
+
+A `DC` operand accepts at most **32 nominal values** and drops the rest silently;
+the cut is by value count, not by card count, which varying the values per card
+settles. **No module in `MVSBLD` has a `DC` operand with more than 32 values**, so
+it explains nothing here.
+
+**The zero was confirmed against a known case before being reported** — the same
+scanner finds 99 commas in a 100-value fixture. That is the rule this day
+produced, applied to my own negative: `$0` inside a double-quoted regex, `grep -P`
+absent from this `grep`, `$MACFLAGS` unsplit by zsh, a `rm -f` on an empty glob
+aborting a command line — **five instances in one day of a mistake that returns a
+plausible number instead of an error.**
