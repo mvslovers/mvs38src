@@ -12,7 +12,7 @@ Joins the four measurements into the table the work is steered by:
 Written to `module-table.tsv`; `module-table-flagged.tsv` is the same table
 reduced to the rows where at least one assembler had something to say.
 """
-import os, re
+import os, sys, re
 from collections import Counter
 
 RUN = os.path.expanduser("~/repos/mvs/mvs38src/work/measurements/ifox-run")
@@ -116,6 +116,23 @@ def excluded():
 
 def main():
     verd = tsv(f"{RUN}/verdicts.tsv")
+    # as370-messages.tsv is a CACHED input and nothing re-derived it for a day.
+    # On 2026-09-09 it was eleven merges behind the promoted decks, and every
+    # signal split reported from this table -- silent vs loud vs both-flag --
+    # was computed from yesterday's diagnostics. It said IEFVEA returned rc 8
+    # on a module whose deck had become byte-identical and whose gate row said
+    # rc 0. The gate row was right.
+    #
+    # Regenerate it with `as370_messages.py <binary>` after every promote, in
+    # the same breath as ifox_compare.py. This refuses to run on a file older
+    # than the gate it would be described against.
+    gate_mtime = os.path.getmtime(f"{RUN}/as370-gate.tsv")
+    msg_mtime = os.path.getmtime(f"{RUN}/as370-messages.tsv")
+    if msg_mtime < gate_mtime:
+        sys.exit(f"STALE: as370-messages.tsv is older than as370-gate.tsv.\n"
+                 f"  Run  python3 tools/as370_messages.py <as370-binary>  first.\n"
+                 f"  Every signal in this table would otherwise describe an "
+                 f"assembler that is no longer the one being measured.")
     a370 = tsv(f"{RUN}/as370-messages.tsv")
     state = tsv(f"{RUN}/state.tsv")
     diffs = {}

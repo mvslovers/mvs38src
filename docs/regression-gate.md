@@ -379,3 +379,70 @@ tool reading that column gets 531 and 524 for free. A script that compares the
 decks itself gets 539 and looks like it has found eight regressions. **Both were
 written in this repository, and for one evening they disagreed with no note
 saying why.** Quote 524, and name the filter whenever a figure is not it.
+
+## A cached input nobody re-derived — 2026-09-09
+
+`module_table.py` reads `as370-messages.tsv`, and **nothing regenerated it for a
+day.** It was eleven merges behind the promoted decks, so every signal split
+reported from that table — silent vs `as370` alone vs both flag — described
+yesterday's assembler.
+
+It surfaced through a single module. `module-table.tsv` said `IEFVEA` returned
+`rc 8` on a deck that had become byte-identical; the promoted `as370-gate.tsv`
+said `rc 0`. **The gate row was right and the derived table was a day old.**
+
+| what I reported | what it actually was |
+|---|---|
+| 149 silent / 62 `as370` alone / 76 both flag / 9 IFOX00 alone | **161 / 50 / 75 / 10** |
+
+And the claim that grew out of it — *the silent group has not moved through eleven
+merges* — was an artefact of a frozen file. It moved: 149 → 161, which is what a
+silent-success class does as loud modules lose their diagnostics and keep a deck
+difference.
+
+**`module_table.py` now refuses to run** when `as370-messages.tsv` is older than
+`as370-gate.tsv`:
+
+```
+STALE: as370-messages.tsv is older than as370-gate.tsv.
+  Run  python3 tools/as370_messages.py <as370-binary>  first.
+```
+
+**The promote sequence is four steps, not three:**
+
+```sh
+rsync -a --delete obj_<label>/ work/measurements/ifox-run/as370/
+cp <label>.tsv work/measurements/ifox-run/as370-gate.tsv
+python3 tools/as370_messages.py <binary>      # <-- the one that was missing
+python3 tools/ifox_compare.py <binary>
+python3 tools/module_table.py
+python3 tools/rebuild_classes.py <binary>
+```
+
+`rebuild_classes.py` is downstream of this too: it picks its population from
+`module-table.tsv`'s `signal` column, so a stale messages file quietly selects
+the wrong modules for every class.
+
+## A class list cannot see a false diagnostic on a correct deck
+
+`classes/*.txt` select modules where the deck **differs** *and* `as370` alone
+flags. Two failure modes are invisible to that, and both are real:
+
+| | example |
+|---|---|
+| the complaint goes, the deck stays | the eight `IFNX*` after cc370#262 |
+| the deck goes, the complaint stays | `IEAVTRTH`, `IEAVTRTR`, `IEAVTRTS` |
+
+The second needs a **census of the message across the whole tree with no deck
+filter**. Taken that way, on merged `9606b53`:
+
+| | modules |
+|---|---:|
+| IFOX00 clean and `as370` returns `rc 8+` | **62** |
+| …of which the deck is already byte-identical | **9** |
+| …of which the deck also differs | 53 |
+
+`continuation-consumed` (cc370#158) is the pure case: **8 modules, all 8 with
+byte-identical decks.** Fixing it gains no identities and removes a false `rc 8`
+from eight modules — which the identity count cannot show and which is still a
+divergence from the oracle.
