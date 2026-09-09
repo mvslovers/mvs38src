@@ -1589,3 +1589,47 @@ the problem was called.
 Still open with members: `section-one-side` (`IECVHDET ISTNSC00`), `prologue`
 (`IECVXMGN IECVXVRU IGG019RO`), `ifox-alone-flags` (`IBCDASDI IBCDMPRS IEAVEXS
 IEAVRTI0`).
+
+## The largest remaining class is not the assembler's — 2026-09-09
+
+`both flag, and the decks differ` is **57 of the 99**, and reading that as "the
+biggest package for cc370" would be wrong. Split by what the oracle objected to:
+
+| | modules |
+|---|---:|
+| blocked on the missing `COPY` member **`IFCMACS`** | **33** |
+| the rest | 24 |
+
+The 33 are the EREP family — `IFCE*` 27, `IFCS*` 6 — and IFOX00's own message is
+`IFO068 COPY MEMBER IFCMACS NOT FOUND IN LIBRARY`. **Neither assembler has it**,
+so both fail, both produce a wrong deck, and the two decks differ only in *how*
+they failed.
+
+**`IFCMACS` is on Dave Kreiss' own SMP tape** and already extracted to
+`work/macros/kreiss-smp/IFCMACS` — 77 cards defining `SYSRELN`. Putting it on
+`as370`'s path resolves the `COPY` and changes **nothing else**: `IFCSI115` still
+ends `rc 8` with the same 166 diagnostics and the same 480-byte deck, because what
+it then wants is `SUMMARY` and `DSGEN`, the EREP family from
+[`missing-macros.md`](missing-macros.md). `work/macros/erep-instream/` records
+that those five were measured and recover nothing.
+
+And the 24 are mostly the same story one level along. Both assemblers name the
+**same undefined symbols** — `BASER`, `RENTRY`, `UCBR`, `IOSBR`, `CWORK260` —
+which is a macro absent from both sides, not a divergence between them.
+`IFO195 INVALID USING OR DROP` on 22 of the 24 is what follows from a `USING` on
+a symbol that never got defined. `IECVOID` is the `MODID` maintenance-level case
+already in [`ifox-objections.md`](ifox-objections.md).
+
+**So the surface that is genuinely cc370's is about 46 modules, not 99:**
+
+| | modules | whose problem |
+|---|---:|---|
+| silent divergence | 36 | **cc370** — no families left, largest cluster is two |
+| `as370` alone flags | 3 | **cc370** — `IFCEL155 IFCSXXXF IFCSXXXH` |
+| IFOX00 alone flags, deck differs | 3 | **cc370** — `IBCDMPRS IEAVEXS IEAVRTI0` |
+| the 0-versus-4 boundary | 4 | **cc370** — `IFO026` ×3, an MNOTE ×1 |
+| both flag, deck differs | 57 | **macro hunt** — see above |
+
+Saying "the largest class is 57" without that split would send the next round of
+work at modules no assembler change can fix, and the fix would be measured
+against a reference IFOX00 itself flagged.
