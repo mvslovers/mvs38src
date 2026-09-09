@@ -125,46 +125,64 @@ Changed in `MVSSRC.BLD.SMP.JCL($01SMPAL)`, on `MVSCE-LAB` only:
 The other 85 `ALCPDS` allocations were checked against their live member counts
 in the same pass. Nothing else is near its limit.
 
-### Cause 2 — 5 SYSMODs, `SYSTEM UTILITY FAILURE`, still open
+### Cause 2 — two missing TCAM macros, and SMP's arithmetic on top of them
 
-`EBT1102B` and `EDM1102B` lose **42 and 119 macro copies**:
+Run 2 answered this, because the driver now keeps `COPPRINT` before the next job
+wipes it. **`EBT1102B` does not lose 42 macro copies. It loses two.**
 
 ```
-HMA4092 ** COPY FAILED - MAC=ACB - LIBRARY=MACLIB - SYSMOD=EDM1102 - RETURN CODE=04
+IEB177I  BTMHJN   WAS SELECTED BUT NOT FOUND IN ANY INPUT DATA SET
+IEB177I  BTMIOBWA WAS SELECTED BUT NOT FOUND IN ANY INPUT DATA SET
+IEB147I  END OF JOB -04 WAS HIGHEST SEVERITY CODE
 ```
 
-Every `SRC=` copy in the same job succeeds — 116 and 892 of them. The split is by
-target library, not by member. Ruled out, each by measurement rather than by
-reasoning:
+| | |
+|---|---:|
+| macros `SELECT`ed for `MACLIB` | 42 |
+| **`IEB154I ... SUCCESSFULLY COPIED`** | **40** |
+| `IEB177I ... NOT FOUND` | **2** |
+| what SMP then reported as `HMA4092 ** COPY FAILED` | **42** |
 
-| Suspected | Checked | Result |
+**IEBCOPY returns 04 for the step, and SMP attributes the step's return code to
+every element in it.** So one missing macro reads as forty-two failures, and the
+SYSMOD's APPLY is terminated as a `SYSTEM UTILITY FAILURE`. The run-1 entry here
+said "loses 42 and 119 macro copies" — that was SMP's accounting repeated back,
+and it is wrong. `EBT1102E` is the same two macros on the ACCEPT side.
+
+`EDM1102B` is the same shape an order of magnitude up:
+
+| | `EBT1102B` | `EDM1102B` |
+|---|---:|---:|
+| `IEB154I ... SUCCESSFULLY COPIED` | 40 | **1,007** |
+| `IEB177I ... NOT FOUND` | **2** | **4** |
+| SMP's `HMA4092 ** COPY FAILED` | 42 | **119** |
+
+**Six macros, not 161.** The whole list, across both jobs:
+
+| Macro | In `SYS1.AMACLIB`? | Anywhere else we hold? |
 |---|---|---|
-| the macros are not in the source library | `ACB ACBVS IFGEXLST IHADCB IHB01 OPEN NOTE POINT LOCATE MODCB PROTECT IMGLIB` in `SYS1.AMACLIB` | **all present** |
-| `MACLIB`'s directory is full | wrote a probe member into it | **accepted**, so not full |
-| `MACLIB` copies never work | `EDS1102` in the same run | **one succeeded** |
+| `BTMHJN` | no | **nowhere** |
+| `BTMIOBWA` | no | **nowhere** |
+| `IECPDSCB` | no | **nowhere** |
+| `IEZCTGPL` | no | web mirror |
+| `IHADECB` | no | web mirror |
+| `IHADVCT` | no | web mirror **and MVS/CE's own `SYS1.MACLIB`** |
 
-All 119 failures name `TXLIB(OMACLIB)`, which `SYS1.PROCLIB(BLDSMP)` maps to
-`SYS1.AMACLIB`. The library is there and holds the macros. **What IEBCOPY itself
-said is the missing evidence, and Dave's process throws it away** — see below.
+**Do not simply supply them.** `IHADVCT` is the warning: the copy in MVS/CE's
+target `SYS1.MACLIB` and the copy in the web mirror **differ in 11,648 of about
+16,646 bytes**. Two macros of the same name at unrelated levels, and nothing here
+says which one this build wants. `ISDAFSPC` made the same point from the other
+direction — a macro is usable when its expansion is right, not when the assembly
+falls silent — and supplying the wrong one would produce a build that looks
+correct and is not. These belong on the hunting list in
+[`missing-macros.md`](missing-macros.md), reached by a route nothing else on that
+list took: **the build asked for them, rather than an assembly failing on them.**
 
-### Why it could not be diagnosed, and what was changed instead
-
-`BLDCLR` empties `COPPRINT`, `UPDPRINT`, `ASMPRINT`, `LKDPRINT` and `SMPOUT` at
-the **start of every job**, and `BLDCOPY` archives only `SMPOUT`:
-
-```
-//SYSUT1   DD  DSN=MVSSRC.BLD.SMPOUT,DISP=SHR
-//*        DD  DSN=MVSSRC.BLD.COPPRINT,DISP=SHR      <- commented out
-//*        DD  DSN=MVSSRC.BLD.UPDPRINT,DISP=SHR      <- commented out
-```
-
-So the utility listing that would answer this is overwritten by the next job. The
-obvious repair is to uncomment those two cards — but that edits the running
-system's `SYS1.PROCLIB` and changes Dave's process, which is the thing being
-reproduced. `tools/bldrun.py` does it without either: the driver already waits
-for each job before submitting the next, so it is standing at the one moment the
-listings still exist. On a bad return code it now copies all five into
-`work/build/snapshots/` first.
+**This is why the snapshot was worth building.** Three plausible causes were
+ruled out by measurement first — the macros are in `SYS1.AMACLIB` (they were, for
+the 40), the `MACLIB` directory takes new members, and `EDS1102` copied one in
+successfully — and all three were true and none of them was the answer. The
+answer was in a listing Dave's process deletes.
 
 ## `SYS1.SORTLIB` does not exist on MVS/CE — the report jobs cannot run
 

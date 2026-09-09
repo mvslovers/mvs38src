@@ -170,3 +170,35 @@ tools/retest.py obj_<label>
 
 and the number that counts is modules reaching byte-identity with the DLIB
 object, not modules that stop complaining.
+
+## Six more, found by the build rather than by an assembly — 2026-09-09
+
+Every other entry on this list came from a module that would not assemble. These
+six came from SMP: Dave's chain terminates the APPLY of `EBT1102` and `EDM1102`
+with `SYSTEM UTILITY FAILURE`, and the IEBCOPY listing underneath says which
+members it could not find.
+
+| Macro | Wanted by | Anywhere we hold it? |
+|---|---|---|
+| `BTMHJN` | `EBT1102` (TCAM) | **nowhere** |
+| `BTMIOBWA` | `EBT1102` (TCAM) | **nowhere** |
+| `IECPDSCB` | `EDM1102` (DFP) | **nowhere** |
+| `IEZCTGPL` | `EDM1102` | web mirror |
+| `IHADECB` | `EDM1102` | web mirror |
+| `IHADVCT` | `EDM1102` | web mirror **and MVS/CE's own `SYS1.MACLIB`** |
+
+All six are absent from `SYS1.AMACLIB`, which is where the SYSMODs point
+(`++MAC( ... ) TXLIB(OMACLIB)`, and `SYS1.PROCLIB(BLDSMP)` maps `OMACLIB` to
+`SYS1.AMACLIB`).
+
+**`IHADVCT` is the reason none of them should just be dropped in.** MVS/CE's
+target `SYS1.MACLIB` has one and the web mirror has another, and they **differ in
+11,648 of about 16,646 bytes**. Same name, unrelated levels. The rule at the top
+of this file applies exactly: a macro is usable when its expansion is right, not
+when the copy succeeds.
+
+**And the counting is worth keeping.** SMP reported **161** failed copies across
+the two jobs — 42 and 119. IEBCOPY had actually copied **1,047** members and
+failed to find **6**: it returns 04 for the step, and SMP attributes the step's
+return code to every element in it. An earlier note here repeated SMP's figure.
+One missing macro reads as forty-two failures.
