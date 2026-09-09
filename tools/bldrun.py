@@ -29,7 +29,7 @@ and nothing here should cross that without someone deciding to.
 
     bldrun.py --start '$01SMPAL' [--until MAINT05F] [--dry-run]
 """
-import argparse, json, re, sys, time, urllib.parse, urllib.request, base64
+import argparse, json, os, re, sys, time, urllib.parse, urllib.request, base64
 
 HOST = "http://mvsdev:8082"
 USER, PW = "IBMUSER", "SYS1"
@@ -72,6 +72,48 @@ def req(method, url, body=None, ctype=None, extra=None, tries=6):
 
 def member(name):
     return req("GET", f"{HOST}/zosmf/restfiles/ds/{LIB}({urllib.parse.quote(name)})")
+
+
+SNAPDIR = os.path.expanduser("~/repos/mvs/mvs38src/work/build/snapshots")
+PRINTS = ("COPPRINT", "UPDPRINT", "ASMPRINT", "LKDPRINT", "SMPOUT")
+
+
+def snapshot(cur):
+    """Keep the utility listings of a failed job before the next job wipes them.
+
+    SMP writes the assembler, copy, update and link-edit listings to five flat
+    data sets, and Dave's BLDCLR proc empties all five at the START of every
+    job.  BLDCOPY archives only SMPOUT -- its COPPRINT and UPDPRINT cards are
+    commented out.  So the one listing that says WHY a utility failed is gone
+    by the time anyone reads the job that failed.
+
+    That is why `EDM1102B` and `EBT1102B` could not be diagnosed from run 1:
+    119 and 42 macro copies ended `HMA4092 ** COPY FAILED - LIBRARY=MACLIB -
+    RETURN CODE=04`, every SRC copy in the same job succeeded, the macros ARE
+    present in SYS1.AMACLIB, and the target directory does take new members --
+    all three checked -- while IEBCOPY's own message, the one thing that would
+    settle it, had been overwritten.
+
+    Uncommenting the two cards in SYS1.PROCLIB(BLDCOPY) would fix it at the
+    source, but that edits the running system's PROCLIB and changes Dave's
+    process.  This does not: the driver already waits for each job before
+    submitting the next, so the listings are still intact at exactly the moment
+    it notices a bad return code.  Read them there.
+    """
+    os.makedirs(SNAPDIR, exist_ok=True)
+    kept = []
+    for ds in PRINTS:
+        try:
+            t = req("GET", f"{HOST}/zosmf/restfiles/ds/MVSSRC.BLD.{ds}")
+        except Exception as e:
+            print(f"    snapshot {ds}: {type(e).__name__}", flush=True)
+            continue
+        if not t.strip():
+            continue
+        open(os.path.join(SNAPDIR, f"{cur}.{ds}.txt"), "w").write(t)
+        kept.append(f"{ds}({len(t.splitlines())})")
+    print(f"    kept: {' '.join(kept) if kept else 'nothing -- all five empty'}",
+          flush=True)
 
 
 def prepare(text):
@@ -144,6 +186,7 @@ def main():
             # IECSDSL4 do not define.  A TK3/MVS-CE macro-level difference, in
             # a member nothing needs.  So: carry on, and report every one.
             bad.append((cur, jn, ji, rc))
+            snapshot(cur)
         if lb:
             print(f"STOP: {cur} hands on to LIB={lb} ({nxt}). That is the "
                   f"Phase-{lb} boundary and it updates the running system.")
