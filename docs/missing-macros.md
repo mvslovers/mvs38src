@@ -203,3 +203,62 @@ the two jobs — 42 and 119. IEBCOPY had actually copied **1,047** members and
 failed to find **6**: it returns 04 for the step, and SMP attributes the step's
 return code to every element in it. An earlier note here repeated SMP's figure.
 One missing macro reads as forty-two failures.
+
+### Three of the seven are on IBM's own tape, and the pointer is what is wrong
+
+Searched all **254 `MVSSRC.*` source libraries** on the SRC volumes — IBM's
+distribution tapes as TK4- carries them:
+
+| Macro | Found |
+|---|---|
+| `IEZCTGPL` `IHADECB` `IHADVCT` | **`MVSSRC.SYM601.F01`** |
+| `BTMHJN` `BTMIOBWA` `IECPDSCB` `$ASXB` | nowhere |
+
+`MVSSRC.SYM601.F01` is not an outside source. `SYS1.PROCLIB(BLDSMP)` already
+mounts it, and Dave's own comment on the card says what it is:
+
+```
+//SYM60101 DD  DSN=MVSSRC.SYM601.F01,DISP=SHR              MACLIB
+```
+
+**And the same SYSMOD reads it 82 times without trouble.** `EDM1102` has 82
+`++MAC` elements naming `TXLIB(SYM60101)`, all of which copy; the four that fail
+are the four naming `TXLIB(OMACLIB)`, which `BLDSMP` maps to the running system's
+`SYS1.AMACLIB`:
+
+```
+++MAC( IHADECB  ) TXLIB(OMACLIB ) SYSLIB(MACLIB  ) DISTLIB(AMACLIB ) .
+```
+
+So this is not a missing macro at all for three of them: **it is a pointer at a
+library MVS/CE does not stock, for elements that are sitting in a RELFILE the job
+already has open.** On Dave's TK3, `SYS1.AMACLIB` evidently carried them.
+
+**Which copy is right is now answerable, and the web mirror is not the answer.**
+Normalised to columns 1–72:
+
+| | vs `SYM601.F01` |
+|---|---|
+| `IHADECB` mirror | **identical** |
+| `IEZCTGPL` mirror | differs |
+| `IHADVCT` mirror | differs |
+| `IHADVCT` in MVS/CE's `SYS1.MACLIB` | differs from both |
+
+Three copies of `IHADVCT`, three different levels. The tape is the one with the
+same provenance as everything else in this build, so it is the one to use — and
+the `ISDAFSPC` rule is satisfied by provenance rather than by hope.
+
+### But supplying them does not unblock anything, and that is the finding
+
+`EDM1102` also needs **`IECPDSCB`**, which is in none of the 254 libraries, none
+of our eight macro collections, `mvs38-ibmsrc`, either web mirror, or Dave's
+tape. `EBT1102` needs `BTMHJN` and `BTMIOBWA`; `EJE1103` needs `$ASXB`. All four
+are absent everywhere reachable.
+
+**So three SYSMODs cannot be applied from the material we hold**, and adding the
+three findable macros changes none of that. What it does change is the shape of
+the problem: it was "161 failed copies", then "seven missing macros", and it is
+now **four macros that do not exist here** — one for TCAM, one for JES2, one for
+DFP, and `IECPDSCB` unaccounted for.
+
+Not yet searched: the CBT tape collections, and any other MVS 3.8 distribution.
