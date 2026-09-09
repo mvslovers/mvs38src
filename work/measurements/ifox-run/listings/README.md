@@ -69,3 +69,26 @@ Three things cost attempts, all of them JCL rather than logic:
   say "too long".
 - **`DISP=(NEW,CATLG)` fails silently-ish on a name already catalogued** from a
   previous attempt. Use a fresh name per run.
+
+## `diag/<m>.txt` is a page, not a census
+
+`BLSR3270`'s diagnostics file lists `IFO197` on statements 1881 and 3194–3198 —
+six. The full listing has **twenty**: 1881 and 3194–3212 contiguously. `cmd_diag`
+cuts at the *first* occurrence of `ASSEMBLER DIAGNOSTICS AND STATISTICS`, which
+is right for keeping the earliest messages and wrong for counting them, because
+the header repeats per page and the file stops at the end of page one.
+
+**Count messages from a listing, never from a `diag` file.**
+
+## `--keep-full`, and why a capture stopped costing a round trip
+
+`ifox_run.py diag` was already fetching the whole listing, trimming it, and
+**deleting the rest**. So "a capture costs one MVS round trip" was true only
+because the round trip had been thrown away — `AHLSETEV` and `BLSR3270` had both
+already been fetched once. `diag --list <file> --keep-full` now files the whole
+listing here instead.
+
+The first thing it produced: `BLSR3270`'s eighteen severity-4 MNOTEs are one
+`BUFADTAB BLSRROTB 6,24,1` expansion, and `BLSRROTB` is on the oracle's
+`IBMUSER.PVTMAC` — so both assemblers have the macro and take different branches
+through it. The statement numbers alone could not have said that.

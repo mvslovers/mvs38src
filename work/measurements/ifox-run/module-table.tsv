@@ -1,10 +1,4 @@
 module	as370_rc	as370_flagged	as370_severity	as370_messages	ifox_rc	ifox_flagged	ifox_severity	ifox_messages	tool	first_diff	len_ifox	len_as370	dlib	signal	owner	excluded
-BNGTRMOT	0				0000				bytes	0x00094	11982	11991	length	silent divergence	cc370	
-BNGTDISP	0				0000				cards	0x011c9	11888	11904	length	silent divergence	cc370	
-BNGIDISP	0				0000				bytes	0x00117	10319	10329	length	silent divergence	cc370	
-BNGI3270	0				0000				bytes	0x000a0	10301	10311	length	silent divergence	cc370	
-BNGT3270	0				0000				bytes	0x00037	8337	8350	length	silent divergence	cc370	
-BNGTLOCL	0				0000				bytes	0x00095	6805	6814	length	silent divergence	cc370	
 IGC0001F	0				0000				bytes	0x01310	6088	6088	no-pair	silent divergence	cc370	
 IGARPT01	8	9	8	IFO026 Continuation card is empty - nothing between the continue column and 71 | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0004	8	4	IFO026 CHARACTERS APPEAR BETWEEN THE BEGIN AND CONTINUE COLUMNS ON CONTINUATION CARD	bytes	0x004bc	5756	5756	mixed	silent divergence	cc370	
 IFCEA155	0				0000				bytes	0x00161	5669	5661	length	silent divergence	cc370	
@@ -20,7 +14,6 @@ IFDOLT12	0				0000				cards	0x00050	2181	2957	length	silent divergence	cc370
 IFDOLT14	0				0000				bytes	0x00316	1737	2953	length	silent divergence	cc370	
 BLSR3270	0				0004	20	4	IFO197 *** MNOTE ***	bytes	0x00513	1736	1736	length	silent divergence	cc370	
 IKJEBELT	0				0000				bytes	0x001af	1568	1568	no-pair	silent divergence	cc370	
-IEESC03D	0				0000				bytes	0x0007f	714	720	no-pair	silent divergence	cc370	
 IFNX4S	0				0000				bytes	0x00063	429	429	text	silent divergence	cc370	
 HMASMTMD	0				0000				cards				identical	silent divergence	cc370	
 IFFAHA16	0				0000				bytes				identical	silent divergence	cc370	
@@ -41,8 +34,8 @@ IBCDASDI	0				0008	2	8	IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD	identical	
 IBCDMPRS	0				0008	2	8	IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD	bytes				no-pair	IFOX00 alone flags	cc370	
 IECIOSAM	8	149	8	Undefined operation code | IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol	0012	163	12	IFO078 UNDEFINED OP CODE | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO188 IRTRSC2 IS AN UNDEFINED SYMBOL | IFO188 CSTELP2 IS AN UNDEFINED SYMBOL | IFO188 CSTE IS AN UNDEFINED SYMBOL	bytes	0x00660	14913	14913	length	both flag	cc370	
 BNGCRMOT	8	38	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	42	8	IFO078 UNDEFINED OP CODE | IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO188 TCAFCAAA IS AN UNDEFINED SYMBOL	bytes	0x00000	11886	11887	length	both flag	cc370	calls CICS macros; not installed in any target library on MVS/CE
-BNGC3270	8	347	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0008	353	8	IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTLE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHFIOA NOT FOUND IN LIBRARY	cards	0x00000	8344	8180	length	both flag	cc370	calls CICS macros (DFHPC/DFHFC/DFHTC/DFHSC); no CICS here, and no member of any target library on MVS/CE
-BNGCDISP	8	480	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0008	486	8	IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTLE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHFIOA NOT FOUND IN LIBRARY	cards	0x00000	7344	7048	length	both flag	cc370	calls CICS macros; not installed in any target library on MVS/CE
+BNGC3270	8	347	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0008	353	8	IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTLE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHFIOA NOT FOUND IN LIBRARY	bytes	0x00000	8344	8180	length	both flag	cc370	calls CICS macros (DFHPC/DFHFC/DFHTC/DFHSC); no CICS here, and no member of any target library on MVS/CE
+BNGCDISP	8	480	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code	0008	486	8	IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTLE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHFIOA NOT FOUND IN LIBRARY	bytes	0x00000	7344	7048	length	both flag	cc370	calls CICS macros; not installed in any target library on MVS/CE
 IEWFETCH	8	8	8	Undefined symbol | Undefined operation code	0008	8	8	IFO188 DVC2305A IS AN UNDEFINED SYMBOL | IFO188 DVC2314 IS AN UNDEFINED SYMBOL | IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	bytes	0x00250	6930	6930	no-pair	both flag	cc370	
 BNGCLOCL	8	38	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0008	42	8	IFO078 UNDEFINED OP CODE | IFO068 COPY MEMBER DFHCSADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCTTE NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTCADS NOT FOUND IN LIBRARY | IFO068 COPY MEMBER DFHTIOA NOT FOUND IN LIBRARY | IFO188 TCAFCAAA IS AN UNDEFINED SYMBOL	bytes	0x00000	6693	6694	length	both flag	cc370	calls CICS macros; not installed in any target library on MVS/CE
 IFCE33XX	12	28	12	Undefined operation code | Undefined symbol | MNOTE	0012	4	12	IFO081 DECLARED TYPE FOR GLOBAL VARIABLE &ITEM IN MACRO SYSRELN IS INCONSISTENT | IFO081 DECLARED TYPE FOR GLOBAL VARIABLE &BITS IN MACRO SYSRELN IS INCONSISTENT | IFO081 DECLARED TYPE FOR GLOBAL VARIABLE &SHIFT IN MACRO SYSRELN IS INCONSISTENT | IFO236 ILLEGAL CHARACTER IN EXPRESSION NEAR OPERAND COLUMN 5 | IFO197 *** MNOTE *** | IFO078 UNDEFINED OP CODE	bytes	0x00133	5432	5432	length	both flag	cc370	
@@ -969,9 +962,16 @@ ISDASUM1	8	2	8	Undefined operation code	0008	2	8	IFO078 UNDEFINED OP CODE	identi
 ISDATYPE	8	3	8	Undefined operation code	0008	3	8	IFO078 UNDEFINED OP CODE	identical				holes	both flag	source	
 ISTCFCMM	8	110	8	IFO092 keyword parameter SUPP is not declared in the macro prototype	0008	163	8	IFO092 KEYWORD PARAMETER SUPP UNDEFINED IN MACRO DEFINITION | IFO197 *** MNOTE *** | IFO113 ILLEGAL REFERENCE MADE TO A PARAMETER THAT IS A SUBLIST | IFO108 CHARACTER STRING USED AS AN ARITHMETIC TERM CONTAINS NON-DECIMAL CHARACTERS	identical				text	both flag	source	
 ISTNSC00	0	1	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)	0000				identical	0x00000	12669	0	text		source	
+BNGTRMOT	0				0000				identical	0x00094	11982	11991	text		source	
+BNGTDISP	0				0000				identical	0x011c9	11888	11904	mixed		source	
+BNGIDISP	0				0000				identical	0x00117	10319	10329	length		source	
+BNGI3270	0				0000				identical	0x000a0	10301	10311	length		source	
+BNGT3270	0				0000				identical	0x00037	8337	8350	mixed		source	
+BNGTLOCL	0				0000				identical	0x00095	6805	6814	text		source	
 IFNX4N	0				0000				identical	0x008b1	2332	2332	text		source	
 IFNX4D	0				0000				identical	0x00669	1710	1710	text		source	
 IFNX5F	0				0000				identical	0x005d4	1630	1630	text		source	
+IEESC03D	0				0000				identical	0x0007f	714	720	no-pair		source	
 AHLCWRIT	0				0000				identical				length		source	
 AHLGTFI	0				0000				identical				length		source	
 AHLIWRIT	0				0000				identical				length		source	

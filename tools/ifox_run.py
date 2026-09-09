@@ -406,7 +406,17 @@ def cmd_diag(args):
                 # every message before the final page of a long list
                 cut = txt.find("ASSEMBLER DIAGNOSTICS AND STATISTICS")
                 open(f"{OUT}/diag/{m}.txt", "w").write(txt[cut:] if cut >= 0 else txt[-8000:])
-                os.remove(f"{OUT}/diag/{m}.full")
+                # The full listing is what a round trip actually produces, and
+                # throwing it away is why "a capture costs one MVS round trip"
+                # was true twice in one day -- cc370 needed AHLSETEV's and
+                # BLSR3270's, and both had already been fetched and deleted.
+                # Statement numbers alone do not name the library macro a
+                # message came from; the listing does.
+                if getattr(args, "keep_full", False):
+                    os.makedirs(f"{OUT}/listings", exist_ok=True)
+                    os.rename(f"{OUT}/diag/{m}.full", f"{OUT}/listings/{m}.txt")
+                else:
+                    os.remove(f"{OUT}/diag/{m}.full")
         print(f"[{b + len(batch)}/{len(todo)}]", flush=True)
 
 
@@ -430,7 +440,11 @@ if __name__ == "__main__":
     p.add_argument("--limit", type=int, default=0)
     p.add_argument("--only", help="a file of module names whose reference deck is to be replaced")
     p.set_defaults(fn=cmd_run)
-    p = sub.add_parser("diag"); p.add_argument("--list", required=True); p.set_defaults(fn=cmd_diag)
+    p = sub.add_parser("diag"); p.add_argument("--list", required=True)
+    p.add_argument("--keep-full", action="store_true",
+                   help="keep the whole listing in listings/, not just the "
+                        "diagnostics section")
+    p.set_defaults(fn=cmd_diag)
     p = sub.add_parser("status"); p.set_defaults(fn=cmd_status)
     a = ap.parse_args()
     a.fn(a)

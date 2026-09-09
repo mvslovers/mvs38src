@@ -475,13 +475,13 @@ BLSVSGTE	0	0000	identical		text
 BLSVTCB	0	0000	identical		identical
 BLSVUCB	0	0000	identical		identical
 BLSVXTLS	0	0000	identical		identical
-BNGC3270	8	0008	cards		length
-BNGCDISP	8	0008	cards		length
+BNGC3270	8	0008	bytes	bytes	length
+BNGCDISP	8	0008	bytes	bytes	length
 BNGCLOCL	8	0008	bytes	bytes	length
 BNGCMENU	8	0008	bytes	bytes	length
 BNGCRMOT	8	0008	bytes	bytes	length
-BNGI3270	0	0000	bytes	bytes	length
-BNGIDISP	0	0000	bytes	bytes	length
+BNGI3270	0	0000	identical		length
+BNGIDISP	0	0000	identical		length
 BNGIEXIT	8	0012	identical		length
 BNGILOCL	0	0000	identical		length
 BNGIMENU	0	0000	identical		length
@@ -490,13 +490,13 @@ BNGIREAD	0	0000	identical		length
 BNGIRMOT	0	0000	identical		length
 BNGISIMS	0	0000	identical		length
 BNGLOGR2	0	0000	identical		length
-BNGT3270	0	0000	bytes	bytes	length
-BNGTDISP	0	0000	cards		length
-BNGTLOCL	0	0000	bytes	bytes	length
+BNGT3270	0	0000	identical		mixed
+BNGTDISP	0	0000	identical		mixed
+BNGTLOCL	0	0000	identical		text
 BNGTMENU	0	0000	identical		text
 BNGTQEMA	0	0000	identical		length
 BNGTQEMF	0	0000	identical		mixed
-BNGTRMOT	0	0000	bytes	bytes	length
+BNGTRMOT	0	0000	identical		text
 ESRTABLE	8	0008	identical		text
 FCB3STD3	0	0000	identical		identical
 GENRMT	0	0000	identical		text
@@ -2043,7 +2043,7 @@ IEESB605	0	0000	identical		length
 IEESB606	0	0000	identical		holes
 IEESB665	0	0000	identical		length
 IEESB670	0	0000	identical		length
-IEESC03D	0	0000	bytes	bytes	no-pair
+IEESC03D	0	0000	identical		no-pair
 IEESD03D	0	0000	identical		no-pair
 IEESE03D	0	0000	identical		no-pair
 IEESF03D	0	0000	identical		no-pair
