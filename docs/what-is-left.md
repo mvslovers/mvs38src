@@ -550,3 +550,52 @@ been using:
 
 > **The checks worth running are not the ones most likely to fail, they are the
 > ones whose failure costs most.**
+
+## 94.0 %, and the reach question answered in the negative — 2026-09-09
+
+cc370#264 merged: **+7, none lost, none further.** Checked at deck level rather
+than by verdict count: **exactly 7 of 5,528 decks differ from the promoted run,
+and they are the 7 that became identical.**
+
+**That answers the open question, and the answer is no.** The ASCII-collating
+defect is present in 103 macros, and its whole reach is the seven modules where a
+macro was loud about it. It does *not* take wrong branches silently, so it reaches
+none of the 149 silent divergences. A wrong branch in conditional assembly was the
+most plausible silent mechanism left — it is the one thing that changes generated
+code with nothing to say about it — and it is excluded now. **It cost nothing to
+find out: the gate ran because it always runs, and a change made for another
+reason answered it.**
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,197 of 5,528 (94.0 %)** |
+| still differing | **331** |
+| byte-identical to IBM's object | **1,195** |
+| silent / `as370` alone / both flag | 149 / 81 / 84 |
+
+### cc370#154 has a mechanism: multi-register `USING`
+
+`USING sect,R1,R2,R3` covers three 4096-byte ranges. **`as370` honours `R1` and
+ignores the rest**, so every operand past 4095 gets no base:
+
+```
+         USING D,11,12,10
+         L     3,LOW      5830 B000   correct, within the first 4096
+         L     3,HIGH     0000 0000   should be 5830 C398
+         L     3,HIGH2    0000 0000   should be 5830 A33C
+```
+
+`BLSUPUT` line 20 is `USING BLSUPRAB,RB,RC`; `ZZ2TRMVP` at `X'1144'` gets no base
+while its neighbours at `X'E38'` and `X'28A'` assemble correctly — the split is
+visible in one listing.
+
+**28 of the class's 36 modules**, 40 of the 331 still differing, 50 in the tree.
+The 3,123 diagnostic sites are mostly cascade from one missing `USING` range.
+
+### And a scan that returned zero and was a shell bug
+
+The first count said **0 of 331**. The regex was inside double quotes and zsh
+expanded `$0` in `[A-Z@#$0-9]`. Single quotes give 40.
+
+**A scan that returns zero reads exactly like a clean negative**, and this
+repository has spent real effort on recorded negatives today. Quote the regex.
