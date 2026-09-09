@@ -1029,3 +1029,55 @@ generation.** Every one was a length, an origin, or a filing — the text `as370
 emitted was already right, and what diverged was where it said the text belonged.
 That is the first structural statement anyone has been able to make about the
 silent divergences, and it is why the three-view comparison exists.
+
+## 96.7 %, and a third silent cap — 2026-09-09
+
+cc370#285 merged as #286: **+6, exactly the six, none lost, `closer : 0` again.**
+The cause is better than the symptom I filed: every `S_ER` assignment is guarded
+by `if (!s->defined)`, so **the type is only ever set while the symbol is
+undefined and never taken back when the definition arrives.**
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,346 of 5,528 (96.7 %)** |
+| still differing | **175** |
+| **silent** | **85** — from 166 earlier this evening |
+
+**`closer : 0` is a diagnostic in its own right.** `+46 closer 0` and
+`+6 closer 0` say the defect was **binary before anyone read the code** — an
+ordinary content defect has partial states and essentially never produces that
+line. A gate line of that shape is a hint about the *kind* of defect, and it is
+free.
+
+### cc370#287 — a macro definition of 4,096 lines loses its tail
+
+`ISTNSC00` was the empty-section case on IFOX00's side, and it is one call:
+
+```
+266:          NETSOL SYSTEM=VS2
+```
+
+`SYS1.AMACLIB(NETSOL)` is **6,881 lines**. A macro body of **4,095 lines works and
+4,096 does not** — everything past the cut is absent, with no diagnostic of its
+own. `R12 EQU 12` sits at line 5,814, so `as370` reports `Undefined symbol - R12`
+on a `STM` the macro generates at line 404, and `RWKAREAS` and `MSGCSECT` never
+appear at all: one section and 5,007 bytes where IFOX00 has three and 12,506.
+
+Reach **6 of the 175** — `ISTNSC00` through `NETSOL`, and `IGG019Q2` `IGG019Q3`
+`IGG019Q4` `IGG019Q5` `IGG019R0` through `LINEEND` (5,828 lines).
+
+**Third silent cap**, after #269's four buffers and #271's `DC` value list. Each
+cuts at a bound and carries on as though nothing had been cut, so the failure
+surfaces somewhere else — here as an undefined register equate 5,400 lines from
+the cause.
+
+### `$0` again, and this time the control caught it
+
+My first reach scan reported **zero callers for all three macros** — `$0` expanded
+inside a double-quoted `[A-Z@#$0-9]`, the **second time today**. What differed is
+that I ran the control: the same command must find `ISTNSC00` for `NETSOL`,
+because that is the module the defect was diagnosed on. It did not, so the scan
+was wrong rather than the answer.
+
+**A known-answer control is the only thing that has caught any of these**, and it
+has now caught two of six. The other four were found by someone else.
