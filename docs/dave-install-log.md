@@ -214,3 +214,29 @@ EBCDIC data means sorting the raw bytes rather than a translated copy.
 document the Basic phase *does not alter the running system*; it writes under
 `MVSSRC.BLD`. Phase 1 onward updates `SYS1.LINKLIB` of the running system and is
 the point at which `MVSCE-LAB` stops being restorable from anything but a backup.
+
+## Run 2: the directory fix holds, and it uncovered a seventh macro
+
+At job 79 of 259, against run 1 at the same point:
+
+| | run 1 | run 2 |
+|---|---:|---:|
+| SYSMODs whose APPLY was terminated | 9 | **6** |
+| of those, `DIRECTORY SPACE EXCEEDED` | 3 | **0** |
+| of those, a missing macro | 6 | 6 |
+
+`EER1400B`, `EGA1102B` and `EIP1102B` — the first three of the 21 — now end
+`CC 0004`. **The SMPSCDS cascade is gone.**
+
+**And fixing it revealed a defect it had been hiding.** `EJE1103B` failed in run 1
+with `DIRECTORY SPACE EXCEEDED` before it ever reached the copy step. In run 2 it
+gets there and fails on
+
+```
+IEB177I  $ASXB    WAS SELECTED BUT NOT FOUND IN ANY INPUT DATA SET
+```
+
+one JES2 macro, absent from `SYS1.AMACLIB`, `SYS1.MACLIB` and `SYS1.HASPSRC`
+alike. So the list is seven, not six, and there is no way to know whether the
+remaining 18 SCDS casualties hide anything else until they run — which is the
+argument for a full rerun rather than re-driving the 21 failures in place.

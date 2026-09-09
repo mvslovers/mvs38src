@@ -171,7 +171,7 @@ tools/retest.py obj_<label>
 and the number that counts is modules reaching byte-identity with the DLIB
 object, not modules that stop complaining.
 
-## Six more, found by the build rather than by an assembly — 2026-09-09
+## Seven more, found by the build rather than by an assembly — 2026-09-09
 
 Every other entry on this list came from a module that would not assemble. These
 six came from SMP: Dave's chain terminates the APPLY of `EBT1102` and `EDM1102`
@@ -186,6 +186,7 @@ members it could not find.
 | `IEZCTGPL` | `EDM1102` | web mirror |
 | `IHADECB` | `EDM1102` | web mirror |
 | `IHADVCT` | `EDM1102` | web mirror **and MVS/CE's own `SYS1.MACLIB`** |
+| `$ASXB` | `EJE1103` (JES2) | **nowhere** — not in `AMACLIB`, `MACLIB` or `HASPSRC` |
 
 All six are absent from `SYS1.AMACLIB`, which is where the SYSMODs point
 (`++MAC( ... ) TXLIB(OMACLIB)`, and `SYS1.PROCLIB(BLDSMP)` maps `OMACLIB` to
