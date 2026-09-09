@@ -37,16 +37,37 @@ LIB = "MVSSRC.BLD.SMP.JCL"
 SUB = re.compile(r"^//(\S+)\s+EXEC\s+BLDSUB\s*,(.*)$", re.I)
 
 
-def req(method, url, body=None, ctype=None, extra=None):
-    r = urllib.request.Request(url, data=body, method=method)
-    r.add_header("Authorization", "Basic " +
-                 base64.b64encode(f"{USER}:{PW}".encode()).decode())
-    if ctype:
-        r.add_header("Content-Type", ctype)
-    for k, v in (extra or {}).items():
-        r.add_header(k, v)
-    with urllib.request.urlopen(r, timeout=120) as f:
-        return f.read().decode("latin-1")
+def req(method, url, body=None, ctype=None, extra=None, tries=6):
+    """Retrying, because a 259-job run meets transient failures by construction.
+
+    A DNS blip resolving `mvsdev` killed a run at job 58 of 259 -- the network
+    was back a minute later and MVS had carried on regardless.  A driver that
+    dies on the first hiccup turns a two-hour build into a babysitting job, and
+    worse, it stops *after* submitting, so the run and the log disagree about
+    where it got to.
+
+    Not retried: anything the server actually answers.  A 4xx or 5xx is a
+    result and must not be papered over.
+    """
+    for attempt in range(tries):
+        r = urllib.request.Request(url, data=body, method=method)
+        r.add_header("Authorization", "Basic " +
+                     base64.b64encode(f"{USER}:{PW}".encode()).decode())
+        if ctype:
+            r.add_header("Content-Type", ctype)
+        for k, v in (extra or {}).items():
+            r.add_header(k, v)
+        try:
+            with urllib.request.urlopen(r, timeout=120) as f:
+                return f.read().decode("latin-1")
+        except urllib.error.HTTPError:
+            raise
+        except Exception as e:
+            if attempt == tries - 1:
+                raise
+            print(f"    (transient: {type(e).__name__}, retry "
+                  f"{attempt + 1}/{tries - 1})", flush=True)
+            time.sleep(10 * (attempt + 1))
 
 
 def member(name):
