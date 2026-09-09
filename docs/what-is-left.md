@@ -1651,3 +1651,48 @@ into groups of one. Every case from here is its own case.
 The shape of what is left, by what differs in the deck: 25 only TXT, 21 a card
 count off by 2–9, 14 only ESD/TXT, 12 only RLD/TXT, 11 off by one card, 9
 ESD/RLD/TXT, 2 only RLD, 1 off by ten or more.
+
+## The silent class is 23, and four of them are RLD — 2026-09-09
+
+cc370 re-clustered it by a **numeric signature** — Δ length, differing bytes,
+first-divergence address, section count — instead of by the statement text, and
+the shape appeared at once: most of the class had Δ length 0 and two to four
+differing bytes, which is the width of `HH.MM`.
+
+Reconciled against this side, and the two instruments agree:
+
+| | |
+|---|---:|
+| cc370's 20 "clock" modules, in `module-table.tsv` | **all 20 `identical`** |
+| cc370's 4 "RLD" modules | **all 4 still `silent divergence`** |
+
+`ifox_compare.py` restamps, so the 20 had already left the class here — the
+figure was never inflated by them. The four had not.
+
+**Verified independently, at each module's own stamp** taken out of the reference
+deck's own TXT:
+
+```
+IFNX1J  at 02.58   TXT IDENTICAL   RLD DIFFERS
+IFNX3N  at 05.29   TXT IDENTICAL   RLD DIFFERS
+IFNX5C  at 02.40   TXT IDENTICAL   RLD DIFFERS
+IFNX5V  at 05.34   TXT IDENTICAL   RLD DIFFERS
+```
+
+The first attempt at that check used the gate's pinned `12.00` and reported *TXT
+differs* on all four — my instrument, not their claim. These modules carry the
+assembly time in a `PATCHDC` **inside the TXT**, not in the END card's IDR, so
+the pinned stamp moves TXT bytes.
+
+**So the silent class is 23, of which 4 are RLD-only and 19 are genuinely
+divergent.** The four belong with cc370#186, whose population is therefore larger
+than the 13 it records — and they never looked like RLD cases because
+`_image()` is TXT-keyed and reports zero differing bytes for them.
+
+**The method is the transferable part.** Clustering by statement text asks *do
+two modules fail at the same source construct*; clustering by
+`(Δlength, Δbytes, first address)` asks *do they fail the same way*. The second
+separated clock from RLD from real in one pass and the first could not have,
+because a `&SYSTIME` stamp is not a statement anyone wrote. Same lesson as the
+`IFO220` re-cut: group by what the measurement says, not by what the source looks
+like.
