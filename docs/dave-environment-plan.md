@@ -3,14 +3,15 @@
 **Status: written down, not started — and as of 2026-09-09 it is the recommended
 next work.** This document was written when Goal A stood at 87.0 % and was still
 yielding a defect per merge, so that the second goal would not be re-derived from
-scratch when the first stalled. Goal A is now at **96.8 %**, and the condition
-named above has arrived — see *When to start* at the end.
+scratch when the first stalled. Goal A is now at **97.3 %** — derived against
+cc370 `7a0cd90`, `git rev-list --count 7a0cd90..main` = 0 at writing — and the
+condition named above has arrived; see *When to start* at the end.
 
 ## The two goals, and why only one of them needs this
 
 | | |
 |---|---|
-| **Goal A** | `as370` == IFOX00 on identical input. 4,810 of 5,528, 711 to go. |
+| **Goal A** | `as370` == IFOX00 on identical input. **5,379 of 5,528 decks (97.3 %)**, 149 to go — 128 after the clock settles 14 and 7 are excluded. On the stricter goal, deck *and* return code, **5,377**. Derived against `7a0cd90`, distance 0. The row read *4,810 of 5,528, 711 to go* until 2026-09-09: the 87.0 % figure the document was written at, left standing beside a status line that already said 96.8 %. |
 | **Goal B** | Source that assembles to the object IBM shipped — Dave Kreiss' project. |
 
 **A reboot does not serve Goal A.** Every one of the 43 merges so far came from
@@ -103,36 +104,44 @@ MVS; step 4 is the measurement.
 
 ## When to start — 2026-09-09
 
-Goal A is at **96.8 %**, 173 modules differing, and the remainder no longer looks
-like assembler work:
+Goal A is at **97.3 %**, 128 modules differing, and the remainder no longer looks
+like assembler work. Derived against `7a0cd90`, distance 0 at writing, on the 128
+that survive the clock and the exclusions:
 
-| | modules | |
-|---|---:|---|
-| **silent divergence** | **84** | neither assembler says a word; **no lead, no instrument** — eight have been run over it |
-| **both flag** | **63** | of which **48 name an undefined operation** — a macro nobody here has |
-| `as370` alone flags | **22** | ordinary assembler work: 15 undefined-symbol, 6 MNOTE, 4 undefined-opcode, the duplication-factor pair |
-| IFOX00 alone flags | 3 | |
-| did not finish | 1 | |
+| | modules | was, at 96.8 % | |
+|---|---:|---:|---|
+| **both flag** | **62** | 63 | of which **46 name an undefined operation** — a macro nobody here has |
+| **silent divergence** | **48** | 84 | neither assembler says a word; **no lead, no instrument** — eight have been run over it |
+| `as370` alone flags | **16** | 22 | ordinary assembler work: 10 MNOTE, 9 undefined-symbol, 8 invalid `DC/DS/DXD` type, the duplication-factor group |
+| IFOX00 alone flags | 2 | 3 | `IEAVEXS`, `IEAVRTI0` |
+| did not finish | 0 | 1 | |
 
-**48 of the 173 cannot be moved by any assembler change at all.** They are the
-`IFC*` EREP family (33 of them) and the `IEC*` IOS mappings, blocked on the 27
-macros [`missing-macros.md`](missing-macros.md) has already searched for and not
-found. No amount of work on `as370` reaches them.
+**The silent block has halved and the both-flag block has not moved.** That is the
+whole argument of this document arriving: assembler work reaches the loud
+population and has been reaching it, while the block that needs a second
+reference stays where it is.
+
+**46 of the 128 cannot be moved by any assembler change at all.** They are the
+`IFC*` EREP family (33 of them), the `IEC*` IOS mappings (11), and one each of
+`IEA*` and `IEW*` — blocked on the 27 macros
+[`missing-macros.md`](missing-macros.md) has already searched for and not found.
+No amount of work on `as370` reaches them. `IFC*` and `IEC*` together are 51 of
+the 128 by name.
 
 So the order is:
 
-1. **Finish what is bounded** — the 22 loud modules, `IFCEA155`, and cc370#290's
-   named obstacle. A handful of merges, and it takes Goal A to roughly 97.5 %.
+1. **Finish what is bounded** — the 16 loud modules, `IFCEA155`, and cc370#290's
+   named obstacle.
 2. **Then this document.**
 
-### And it is not only the macros: it is the instrument for the 84
+### And it is not only the macros: it is the instrument for the silent block
 
-The silent 84 have defeated every instrument because both assemblers read the
+The silent 48 have defeated every instrument because both assemblers read the
 same input and neither complains. **A second, independent IFOX00 reference — one
 assembled under Dave's environment rather than `MVSCE-EXP`'s — splits them**: a
 module that differs against both references is `as370`'s, a module that differs
 against one is the environment's.
 
 That is the *two measurements beat one* argument, and it is the only proposal
-anyone has made for the largest remaining block. It happens to fall out of the
+anyone has made for the block no instrument reaches. It happens to fall out of the
 same work that supplies the macros.

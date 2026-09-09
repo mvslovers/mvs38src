@@ -29,8 +29,11 @@ How far the doubt reaches into what has been claimed:
 | 2,021 modules owned by the assembler | 476 |
 | **879 recovered — all three decks agree** | **0** |
 
-*Against `as370` at cc370 `879e86a`. The 933 does not move with an `as370`
-change: it is a property of the IFOX00 side.*
+*Against `as370` at cc370 `879e86a` — distance **126** from `main`. The 933 does
+not move with an `as370` change: it is a property of the IFOX00 side, and it is
+the one figure on this page that is still current. The three rows above it are
+not: on `7a0cd90`, distance 0 at writing, `as370` == IFOX00 on 5,379, the
+assembler owns 128, and 1,211 modules are byte-identical to IBM's object.*
 
 The last row is the important one: **the recovery figure is clean.** A module
 whose `as370` deck matches both IFOX00 *and* IBM's shipped object cannot be

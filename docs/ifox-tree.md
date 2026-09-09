@@ -128,11 +128,15 @@ finishes, and it does not move systematically as it completes.
 
 ## What it found
 
-*Figures below are against `as370` at cc370 **3d6a997** — #164, #165 and #166
-merged, re-baselined 2026-09-07. #166 changed the diagnostics path only and moved
-**no deck: 0 of 5,518 differ by sha256**, so every figure here is the same as at
-`879e86a`. The run that established the method was against
-`ee1090b`; both numbers are given where the change matters.
+*Figures below are against `as370` at cc370 **3d6a997** — distance **123** from
+`main` — #164, #165 and #166 merged, re-baselined 2026-09-07. #166 changed the
+diagnostics path only and moved **no deck: 0 of 5,518 differ by sha256**, so every
+figure here is the same as at `879e86a` (distance 126). The run that established
+the method was against `ee1090b` (distance 130); both numbers are given where the
+change matters. **This is the founding run and its figures are kept as that
+record — none of them is current.** On `7a0cd90`, distance 0 at writing, the same
+comparison gives 5,379 of 5,528; the map is
+[`what-is-left.md`](what-is-left.md).
 [`work/measurements/ifox-run/as370-baseline.txt`](../work/measurements/ifox-run/as370-baseline.txt)
 records which build every figure belongs to. The IFOX00 side does not move.*
 

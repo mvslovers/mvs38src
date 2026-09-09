@@ -1,5 +1,27 @@
 # Cases for cc370, in the order they pay
 
+> ⚠️ **The packages below are the hand-over as it stood on 2026-09-07, against
+> cc370 `879e86a` — `git rev-list --count 879e86a..main` is **126**.** They are
+> kept as the record of what was handed over and what each package was worth;
+> **every count in them is superseded.** Do not quote a figure from A, B, C or D
+> without re-deriving it.
+>
+> **Current, derived against `7a0cd90` (distance 0 at writing), from a worktree
+> build gated as `gdoc`:**
+>
+> | | modules | this page said |
+> |---|---:|---:|
+> | still the assembler's problem | **128** | 2,021 |
+> | A — `as370` rejects what XF assembles | **16** (19 on the return code) | 512 |
+> | B — both silent, object different | **48** | 1,169 |
+> | C — both flag, decks differ | **62** | 380 |
+> | D — IFOX00 flags, `as370` silent | **2** | 96 |
+> | no deck on one side / does not terminate | **0** | 8 / 2 |
+>
+> The map that replaces this page is [`what-is-left.md`](what-is-left.md).
+> `for-cc370.tsv` is **not** re-derived here: it is output of the promote
+> sequence, and the promoted state was not `main` when this banner was written.
+
 2026-09-07, re-baselined against `as370` at cc370 **879e86a** (the merge of #164
 and #165). Out of the tree-wide comparison against IFOX00
 ([`ifox-tree.md`](ifox-tree.md)), **2,021 of 5,528 modules are the assembler's
@@ -59,6 +81,13 @@ gate that used to cost a day costs a coffee.
 
 ## A. `as370` rejects what Assembler XF assembles — 512 modules
 
+> **On `7a0cd90` this class is 19 modules** (16 of them with a differing deck).
+> Its message census: 12 `MNOTE`, 11 `Undefined symbol`, 10 `Invalid type
+> declared on DC/DS/DXD constant`, 2 addressability, 2 `IFO217`, 2 `IFO206`, and
+> one each of four more; counts overlap where a module carries several. The seven
+> issues in the table below are closed or nearly so — the table is what was handed
+> over, not what is open.
+
 The strongest starting point: **`as370`'s own messages name the construct**, and
 IFOX00 assembling the same source with the same macros without a word says the
 construct is legal. Nothing else is needed to work on these — no listing, no MVS.
@@ -100,6 +129,10 @@ ever had to kill, and they are why the count of packages is 2,021 and not 2,019.
 
 ## B. Both assemblers silent, the object different — 1,169 modules
 
+> **On `7a0cd90` this class is 48 modules.** It is no longer the largest package;
+> C is. It remains the one no instrument reaches — see
+> [`dave-environment-plan.md`](dave-environment-plan.md).
+
 The class the comparison exists for. Both exit clean, neither flags a statement,
 and the generated code is not the same. Against the distribution libraries this
 was indistinguishable from a source defect; it is not one.
@@ -130,6 +163,11 @@ open, the rest of B is a data file to mine, not a ticket.
 
 ## C. Both flag, and the decks differ — 380 modules
 
+> **On `7a0cd90` this class is 62 modules and is now the largest of the four.**
+> 46 of them name an undefined operation — 33 `IFC*`, 11 `IEC*`, one `IEA*`, one
+> `IEW*` — and are blocked on macros that are in none of our libraries
+> ([`missing-macros.md`](missing-macros.md)), not on `as370`.
+
 Both assemblers object, so there is something in the source too; but they
 disagree about the result as well. Lower priority than A and B: the source side
 has to be untangled first, and part of it is ours.
@@ -140,6 +178,10 @@ anyway** — those are not cc370's at all, and they are booked to the source.
 class, not of the part where the decks differ.)
 
 ## D. IFOX00 flags, `as370` is silent — 96 modules — [cc370#162](https://github.com/mvslovers/cc370/issues/162)
+
+> **On `7a0cd90` this class is 2 modules**, `IEAVEXS` and `IEAVRTI0`, both
+> `IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION`. cc370#162 took
+> the class from 118 to 2 in one merge.
 
 In 41 of the 96 the decks are identical, so there it really is a missing
 diagnostic; in the other **55 the code differs too**. The class grew from 84

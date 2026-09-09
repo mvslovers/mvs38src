@@ -14,57 +14,136 @@
 > `cluster_remaining.py` has to be re-run before anything is planned around them.
 > **Derived against `7a0cd90`; run the command above before quoting anything here.**
 
-# The remaining 524 — as measured on 2026-09-09 against `89fb177`
+# The remaining 128 — as measured on 2026-09-09 against `7a0cd90`
 
-2026-09-09, re-derived against cc370 `89fb177`. **`as370` == IFOX00 on 4,997 of
-5,528 (90.4 %)**, from 3,465 (62.7 %) on 2026-09-07, across 49 merges with **no
-identity lost**. This is the map for the last 12.6 %.
-
-## The count, reconciled
-
-Three numbers have been used for "what is left" and they are all correct:
+**Derived against cc370 `7a0cd90`; `git rev-list --count 7a0cd90..main` = 0 at
+writing.** Built from a `git worktree` at that commit, gated as `gdoc`, compared
+against the recorded IFOX00 decks.
 
 | | |
 |---:|---|
-| **539** | modules whose deck differs card-for-card from IFOX00's |
-| **531** | after the clock — 8 of those carry only a `&SYSTIME` stamp, and `ifox_compare.py` settles them by re-assembling with IFOX00's own `ASMDATE`/`ASMTIME` |
-| **524** | after the 7 excluded: 5 CICS (`BNG*`), 2 whose source was torn by an FTP transfer (`IBCDASDI`, `IBCDMPRS`) |
+| `as370` == IFOX00, **deck** | **5,379 of 5,528 (97.3 %)** |
+| `as370` == IFOX00, **deck and return code** | **5,377 (97.3 %)** |
+| `as370` alone flags | 19 — of which 2 have a byte-identical deck (`IFNX1K`, `IFNX3K`) |
+| IFOX00 alone flags | 2 — `IEAVEXS`, `IEAVRTI0` |
+| byte-identical to IBM's shipped object | 1,211 of 5,056 pairs |
+| `rc 0` | 4,565 |
 
-`module-table.tsv`'s `tool` column already holds the effective verdict, so **524
+From 3,465 (62.7 %) at `ee1090b` on 2026-09-07 — distance 130 — with **no
+identity lost** anywhere along the way. This is the map for the last 2.7 %.
+
+**What this block said before it was re-derived, and why that was wrong.** It
+read *the remaining 524 … against `89fb177`*, 90.4 %. `89fb177` is **distance 29**
+from `main`: the block was twenty-nine commits behind while its mtime read as the
+current day, and the number it named had more than halved in the meantime. That
+is the failure the warning above exists for, and it is the second time this file
+has been caught in it.
+
+The 1,211 is the `dlib` verdict `identical` exactly. Fourteen further modules
+come back `identical|unpaired` — identical where the sections pair up, with a
+section on one side the comparison could not match — and they are **not** in the
+1,211.
+
+## The count, reconciled
+
+Three numbers have been used for "what is left" and they are all correct. On
+`7a0cd90`:
+
+| | |
+|---:|---|
+| **149** | modules whose deck differs card-for-card from IFOX00's |
+| **135** | after the clock — 14 of those carry only a `&SYSTIME` stamp, and `ifox_compare.py` settles them by re-assembling with IFOX00's own `ASMDATE`/`ASMTIME` |
+| **128** | after the 7 excluded: 5 CICS (`BNGC*`), 2 whose source was torn by an FTP transfer (`IBCDASDI`, `IBCDMPRS`) |
+
+The fourteen the clock settles:
+
+```
+BLSDMSGS BLSDSTAE IFCDIP00 IFCIOHND IFNX1S IFNX5L IFNX6A IFNX6C
+IFOX0B IFOX0C IFOX0E IFOX0G IFOX0I IGC0007F
+```
+
+`module-table.tsv`'s `tool` column already holds the effective verdict, so **128
 is the number to quote** and `cluster_remaining.py` is right to report it. Say
-which of the three any figure is before comparing it with another.
+which of the three any figure is before comparing it with another. The three were
+539 / 531 / 524 against `89fb177`, so a figure quoted without its commit is not
+merely imprecise here — it is wrong by a factor of four.
+
+**And the exclusion list has not kept up with the family it names.** It names
+five CICS modules, all `BNGC*`. Six further `BNG*` — `BNGI3270`, `BNGIDISP`,
+`BNGT3270`, `BNGTDISP`, `BNGTLOCL`, `BNGTRMOT` — are inside the 128. Whether they
+belong with the five is unmeasured: `BNGC3270` carries 34 `DFH*` references and
+these six carry between 0 and 3, which is not enough to put them in the same
+class or to keep them out of it. Recorded, not decided.
 
 ## Where they are
 
+On the 128, against `7a0cd90`:
+
 | signature | modules |
 |---|---:|
-| only TXT differs | 189 |
-| card count differs by 1 | 87 |
-| card count differs by 2–9 | 78 |
-| only ESD/TXT | 74 |
-| only ESD/RLD/TXT | 56 |
-| only RLD/TXT | 22 |
-| card count differs by 10+ | 16 |
-| only RLD, only ESD | 1 each |
+| only TXT differs | 30 |
+| card count differs by 2–9 | 22 |
+| card count differs by 1 | 21 |
+| only ESD/RLD/TXT | 17 |
+| only ESD/TXT | 17 |
+| only RLD/TXT | 12 |
+| card count differs by 10+ | 7 |
+| only RLD | 2 |
 
-By length, on the same 524: **216 too short, 75 too long, 233 the right shape with
+By length, on the same 128: **33 too short, 45 too long, 50 the right shape with
 wrong content.**
 
-## Three mechanisms named, with fixtures and measured reach
+**The too-short block has stopped being the bulk of the tail.** Against `89fb177`
+it was 216 of 524 and every named mechanism pointed into it; here it is 33 of 128,
+and the largest single length group is now *too long*. By signal, the same 128
+split **48 silent divergence, 62 both flag, 16 `as370` alone, 2 IFOX00 alone** —
+the `signal()` reading, which asks `as370` `rc >= 8` against IFOX00 `rc 0`. The 19
+in the table at the top is the *return-code* reading, `rc <= 4` against `rc > 4`
+over the whole tree; it includes two modules whose decks are identical and one
+whose IFOX00 return code is 4. Two definitions, both in use, and they differ by
+three.
 
-| | modules | what it is |
-|---|---:|---|
-| **cc370#247** | **68** | an RX displacement beginning with `(` is dropped along with its base — `L 15,(FIELD-BASE)(9)` gives `58F0 0000`, `L 15,FIELD-BASE(9)` gives `58F9 0010` |
-| **cc370#244** | **27**, 13 of them entirely | `L'` of a variable symbol returns `K'` — the `ENQ` macro's RNAME-length byte |
-| cc370#241 | 52 | modules that generate more than IFOX00; the multiple-of-eight signature is gone and the mechanism is not established |
+| family | modules |
+|---|---:|
+| `IFC*` | 37 |
+| `IFN*` | 21 |
+| `IEE*` | 15 |
+| `IEC*` | 14 |
+| `BNG*` | 6 |
+| `IGG*` | 6 |
+| everything else | 29 |
 
-#247 absorbed #246 and is the largest single mechanism left. Both it and #244 are
-**silent on both sides**: neither assembler says a word, so no diagnostic class
-points at either, and only the object comparison finds them.
+## No mechanism table has been re-derived for `7a0cd90`
+
+The three that stood here — cc370#247 (68 modules), #244 (27), #241 (52) — are
+merged. Their reach figures described `89fb177` and are not carried forward; the
+issues themselves are the record of what each was worth.
+
+**No replacement table is offered, because none was measured.** Producing one
+means running `cluster_remaining.py` and `rebuild_classes.py`, and both read and
+rewrite the promoted state in `work/measurements/ifox-run/`. That state did not
+belong to `main` when this was written, so the honest entry here is the absence
+rather than a table derived from the wrong build. Re-derive after the next clean
+promote; the recipe is the four steps in
+[`regression-gate.md`](regression-gate.md).
+
+What *was* measured on `7a0cd90`, read-only, is the small-delta cut: **16 of the
+128** differ in one to four bytes at addresses both assemblers agree exist.
+
+```
+IEAXPALL IECVESIO IECVHDET IECVXMGN IECVXT2S IECVXURT IECVXVRT IEDQWIE
+IFCS33XX IFDOLT39 IFNX5C IFNX5D IFOX0A IGC0001F IKJEBELT IKJEGMNL
+```
+
+That is down from 47 against `89fb177`, which is what the cut does as the modules
+above it are fixed — it is a *shrinking* instrument, not a stable class.
 
 ## Four instruments, and each found what the others could not
 
 This is the method statement, and it is worth more than any single class.
+
+*The counts in this table are each instrument's yield at the merge that closed
+it, not a current population. They are history and stay as they were measured.*
 
 | instrument | tool | found |
 |---|---|---|
@@ -107,8 +186,11 @@ listed last. It answered `IEEMB812 CSECT` for an address inside a macro-generate
 | #238 `EQU C''''` | +12 |
 | #237 `AIF` clamp | +9 |
 
-**The wide-reach mechanisms are gone**; what is left yields tens per fix. #247's
-68 is the largest single block with a fixture behind it.
+**The wide-reach mechanisms are gone**; what is left yields tens per fix. The
+table above is the record of merges that landed, not a forecast — every entry in
+it is closed. On `7a0cd90` the recent merges move single figures: cc370#299 was
++3 decks and +3 return codes, #296 and #294 moved **no deck at all** and were
+worth taking on the return code alone.
 
 ## What "100 %" would require
 
@@ -116,16 +198,23 @@ Nothing structural forbids it: the goal is `as370` == IFOX00 on identical input,
 and IFOX00's own return code does not enter into it. Two things make the tail
 expensive:
 
-- **291 length problems**, each "material missing or extra", and no named
-  mechanism covers them since #240 closed;
-- **233 shape-right modules**, correct sizes and wrong content, which is where
+On `7a0cd90` the two costs are no longer the same size they were:
+
+- **78 length problems** — 33 too short, 45 too long — each "material missing or
+  extra", and no named mechanism covers them since #240 closed;
+- **50 shape-right modules**, correct sizes and wrong content, which is where
   single-instruction defects live — small reach each, and the small-delta cut is
   the only instrument that has reached into them.
 
-The sequence is **#247 (68), then #244 (27, 13 outright), then re-run
-`small_delta.py`** — every merge changes what the cut catches, and the two
-mechanisms found on 2026-09-09 were both invisible until the modules above them
-were fixed.
+Against `89fb177` those were 291 and 233. The tail did not just get shorter; the
+*ratio* moved, and the shape-right group — the expensive one, one defect per
+module — is now well under half of what remains.
+
+There is no named sequence to give. The three mechanisms that ordered this
+section are merged, no re-derived cluster table exists for `7a0cd90` (above), and
+inventing an order from the last one would repeat exactly the error this file was
+caught in. Re-run `small_delta.py` and `cluster_remaining.py` after the next
+clean promote and order it from what they say then.
 
 ## The 19 that came off #205
 
@@ -141,7 +230,14 @@ and they are on the too-short block, not on a class of their own: the bit-length
 modifier was #205's mechanism and it is fixed. `IFCE0155` differs in exactly four
 bytes and is not a length case at all.
 
+**Re-derived on `7a0cd90`: eighteen of the nineteen are byte-identical now.** The
+one still differing is `IFCEA155`. The list above is kept because it is the
+record of what #240 left behind, not because it is still a population.
+
 ## Two in the small-delta cut that are the clock, not the assembler
+
+*Still true on `7a0cd90`: both come back `bytes`, and both are in the
+sixteen-module small-delta cut above.*
 
 `IFNX5V` and `IFOX0A` each differ in four bytes and all four are a `&SYSTIME`
 stamp — `PATCHDC DC C'IFNX5V00 00.13 09/09/26'` and its like. They are the two

@@ -378,7 +378,13 @@ and use the repo path for everything the gate does.
 tool reading that column gets 531 and 524 for free. A script that compares the
 decks itself gets 539 and looks like it has found eight regressions. **Both were
 written in this repository, and for one evening they disagreed with no note
-saying why.** Quote 524, and name the filter whenever a figure is not it.
+saying why.** Quote the third one, and name the filter whenever a figure is not
+it.
+
+**The three above are against `89fb177`, distance 29. On `7a0cd90` (distance 0 at
+writing) they are 149 / 135 / 128** — the clock settles fourteen there, not eight.
+The three-way shape is the durable part of this section; the values are not, and
+they moved by a factor of four in two days.
 
 ## A cached input nobody re-derived — 2026-09-09
 
@@ -563,7 +569,10 @@ figure in this repository counts them as finished.
 ```
 
 **`DECK AND RC BOTH` is the honest headline**: 5,210 of 5,528, against 5,348 on
-the deck alone.
+the deck alone. *Those two, and the 33/118 above, are the figures on the day the
+return code entered the goal. On `7a0cd90`, distance 0 at writing: **5,377** deck
+and return code, **5,379** on the deck alone, `as370` alone flags **19**, IFOX00
+alone flags **2**.*
 
 It takes the run's own `<label>.tsv` (or `--rc`), and compares *clean against not
 clean* rather than the exact number — IFOX00 counts in multiples of four and a
