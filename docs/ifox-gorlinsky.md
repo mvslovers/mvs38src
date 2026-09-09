@@ -46,6 +46,13 @@ machines was touched to get at it.
 
 File 8 is the one that mattered and had never been opened.
 
+The memo describes 16 files and the reader found 14. Files 1–8 align with the
+memo exactly — file 8's content and its 97-byte records match its `Update Logs`
+row — and every claim below rests on 6, 7 and 8. Beyond that the numbering may
+drift: the throwaway reader skips an empty file without incrementing its index,
+so a double tape mark shifts everything after it. The 9+ rows are named from
+their content, not from trusting the count.
+
 ## Member for member against the IBM tapes
 
 Normalised to columns 1–72 with trailing blanks stripped and trailing empty
@@ -112,6 +119,15 @@ nowhere else" is correct for `IFOXMACS` and too strong for the other two.
 `IFNX1A`–`IFNX6C`) are present in both sets. The module inventory is complete on
 both sides; only content differs.
 
+The IBM side here is the copy `mvs38-ibmsrc` *chose*, and 333 members have
+competing tape versions kept in `variants/`. **None of the 111 does** — no
+`IFOX*`, `IFNX*` or `IEZ*` member appears anywhere under `variants/tape/` or
+`variants/stben/`, so no row above is a verdict against one arbitrary choice.
+The first scan written for this returned zero because `variants/tape/` is nested
+by tape name and the scan listed directories; the control caught it. Re-run
+against all 526 variant files, `IDCCDEC` (a member known to be there) is found
+and the 39 still return zero.
+
 ## The 39 explained — the README's open item is closed
 
 `ext/ifox-gorlinsky/README.md` recorded 24 members carrying his `FX0000` marker
@@ -174,7 +190,10 @@ suffix on `WORKSIZE`. Both are directly observable.
 | 420 | CC 0016, `IFO264 TOO MANY ESD ENTRIES` |
 | 520 | CC 0016, `IFO264 TOO MANY ESD ENTRIES` |
 
-The limit is **exactly 400** — IBM's value. Gorlinsky's build would take 512.
+The measured bracket is 396–405. **400** is IBM's value and comes from the
+source, two ways: `ICOMMON` allocates `NOTELIST DS 25XL9` blocks of `16XL20`
+entries, 25 × 16 = 400, and `JERMSGCD` reads `ESDID NUMBER HAS EXCEEDED THE
+LIMIT OF 399`. Gorlinsky's build would take 512.
 And the message text is IBM's: his `IFNX6B` reads `MAXIMUM OF 512 ESD ENTRIES
 EXCEEDED`, IBM's reads `TOO MANY ESD ENTRIES`, and the oracle prints IBM's.
 
@@ -234,7 +253,8 @@ is in the memo's list.
 ## So: is it a better IFOX00 source than ours?
 
 **For matching MVS/CE's object, no — it is the wrong level, in both directions.**
-It is ahead of the oracle by 22 PTFs, behind it by the `ZP60025` usermod, and
+It is ahead of the oracle by his 22 PTFs (11 of them marked `S`, SUSP'd, in the
+memo), behind it by the `ZP60025` usermod, and
 apart from IBM entirely by two changes Gorlinsky made himself. A CSECT assembled
 from his source would not compare byte-identical against MVS/CE's distribution
 library, and that is this project's success criterion.
