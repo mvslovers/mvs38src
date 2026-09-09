@@ -1081,3 +1081,40 @@ was wrong rather than the answer.
 
 **A known-answer control is the only thing that has caught any of these**, and it
 has now caught two of six. The other four were found by someone else.
+
+## 96.8 %: `END` ends the assembly, and a worry that measured to nothing
+
+cc370#289 merged: **+2 (`IERRCJ`, `ISTINCU7`), none lost.** Cards after the first
+`END` are not read, not listed and not assembled — and **3,231 of the 5,528
+`MVSBLD` members carry non-blank cards behind theirs**, not stray comments but
+whole second and third modules concatenated into one member (`ICKDV03` has 17,503).
+
+**I expected that to have polluted every diagnostic class and it did not.**
+Measured across both binaries:
+
+| | |
+|---|---:|
+| total flagged statements | 21,370 → **21,087** |
+| modules whose count changed | **2** |
+| `ISTINCU7` | 329 → **0** |
+| `IBCDMPRS` | 10 → 8 |
+| `IECVHDET` | 68 → **116** |
+
+**283 fewer, and 329 of it is one module.** So the concern was real, checkable and
+false: a tail behind `END` almost never produced a diagnostic, because it almost
+never got far enough to. `ISTINCU7` was the exception and it was the module the
+defect was found on.
+
+And my first comparison **missed `ISTINCU7` entirely** — the filter required both
+counts to be digits, and the post-fix `flagged` field is *empty* when `rc` is 0.
+The totals disagreed by 283 and that is the only reason I looked. **A filter that
+drops the row you care about is the same shape as the six shell traps today**, and
+the check that caught it was arithmetic that had to add up.
+
+`IECVHDET` going **up** is worth passing on: it is the last of the empty-section
+list, and #289 made it noisier rather than quieter.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,348 of 5,528 (96.8 %)** |
+| still differing | **173** |
