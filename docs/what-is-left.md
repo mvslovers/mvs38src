@@ -12,9 +12,9 @@
 >
 > If that is not 0, the numbers under it are too large by an unknown amount and
 > `cluster_remaining.py` has to be re-run before anything is planned around them.
-> **Derived against `1112488`; run the command above before quoting anything here.**
+> **Derived against `ff783f6`; run the command above before quoting anything here.**
 
-# The remaining 99 — as measured on 2026-09-09 against `1112488`
+# The remaining 96 — as measured on 2026-09-09 against `ff783f6`
 
 **Derived against cc370 `1112488`; `git rev-list --count 1112488..main` = 0 at
 writing.** The derivation has been re-cut three times today, each time because
@@ -24,7 +24,7 @@ decks.
 
 | | |
 |---:|---|
-| `as370` == IFOX00, **deck** | **5,424 of 5,528 (98.1 %)** with the assembly stamp normalised; **5,404** raw |
+| `as370` == IFOX00, **deck** | **5,427 of 5,528 (98.2 %)** with the assembly stamp normalised; **5,404** raw |
 | `as370` == IFOX00, **deck and return code** | **5,403** |
 | flagged-or-silent agrees (rc 4 counted as flagged) | **5,517** |
 | `as370` alone flags | **3** — `IFCEL155`, `IFCSXXXF`, `IFCSXXXH` |
@@ -1633,3 +1633,21 @@ already in [`ifox-objections.md`](ifox-objections.md).
 Saying "the largest class is 57" without that split would send the next round of
 work at modules no assembler change can fix, and the fix would be measured
 against a reference IFOX00 itself flagged.
+
+## After #328 and the EREP adoption — 5,427 of 5,528 (98.2 %)
+
+| | |
+|---|---:|
+| decks differing | **96** |
+| silent divergence | **33** — and no cluster larger than **one** |
+| `as370` alone flags | 3 |
+| `IFOX00` alone flags | 4 |
+| both flag, decks differ | 57 — of which 33 are the EREP family |
+
+**The silent class has run out of pairs.** After the scale-modifier fix took
+`IFNX4D IFNX4N IFNX5F` together, `first_divergence.py` clusters the remaining 33
+into groups of one. Every case from here is its own case.
+
+The shape of what is left, by what differs in the deck: 25 only TXT, 21 a card
+count off by 2–9, 14 only ESD/TXT, 12 only RLD/TXT, 11 off by one card, 9
+ESD/RLD/TXT, 2 only RLD, 1 off by ten or more.

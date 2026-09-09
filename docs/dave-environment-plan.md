@@ -3,7 +3,7 @@
 **Status: written down, not started — and as of 2026-09-09 it is the recommended
 next work.** This document was written when Goal A stood at 87.0 % and was still
 yielding a defect per merge, so that the second goal would not be re-derived from
-scratch when the first stalled. Goal A is now at **98.1 %** — derived against
+scratch when the first stalled. Goal A is now at **98.2 %** — derived against
 cc370 `7a0cd90`, `git rev-list --count 7a0cd90..main` = 0 at writing — and the
 condition named above has arrived; see *When to start* at the end.
 
@@ -104,7 +104,7 @@ MVS; step 4 is the measurement.
 
 ## When to start — 2026-09-09
 
-Goal A is at **98.1 %**, 99 modules differing, and the remainder no longer looks
+Goal A is at **98.2 %**, 96 modules differing, and the remainder no longer looks
 like assembler work. Derived against `7a0cd90`, distance 0 at writing, on the 128
 that survive the clock and the exclusions:
 

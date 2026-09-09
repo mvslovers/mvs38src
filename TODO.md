@@ -32,15 +32,16 @@ real Assembler XF under MVS/CE, from the same source and the same 1,822 macros.
 That separates the tool question from the source question for every module, and
 it is done: [`docs/ifox-tree.md`](docs/ifox-tree.md).
 
-**Derived against cc370 `1112488`, distance 0 at writing** (check it:
-`git -C ~/repos/mvs/cc370 rev-list --count 1112488..main`), from the promoted
-gate run `g323r`:
+**Derived against cc370 `ff783f6`, distance 0 at writing** (check it:
+`git -C ~/repos/mvs/cc370 rev-list --count ff783f6..main`), from the promoted
+gate run `g328` — **and against the EREP-adopted oracle**, see
+[`docs/erep-adoption.md`](docs/erep-adoption.md):
 
-- **`as370` and IFOX00 agree on 5,424 of 5,528 decks (98.1 %)** once the assembly
+- **`as370` and IFOX00 agree on 5,427 of 5,528 decks (98.2 %)** once the assembly
   stamp is normalised, **5,404** on the raw bytes — the two instruments differ by
   the 20 decks that carry the date and nothing else. **5,403** when the return
   code has to agree too.
-- **99 modules still differ.** The map is
+- **96 modules still differ.** The map is
   [`docs/what-is-left.md`](docs/what-is-left.md); the largest cluster in the
   silent class is **two**.
 - `as370` alone flags **3**; IFOX00 alone flags **4**.
@@ -91,7 +92,7 @@ first:
 | | Modules | was, 2026-09-09 morning | was, 2026-09-07 |
 |---|---:|---:|---:|
 | both flag, **and the decks differ** | **57** | 62 | 393 |
-| silent divergence — both clean, object different | **36** | 48 | 1,113 |
+| silent divergence — both clean, object different | **33** | 48 | 1,113 |
 | `as370` rejects what Assembler XF assembles | **3** | 16 | 512 |
 | IFOX00 flags, `as370` is silent | **3** | 2 | 84 |
 | no deck on one side | 0 | 0 | 8 |
