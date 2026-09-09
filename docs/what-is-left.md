@@ -703,3 +703,45 @@ Both failure modes are now on the board with a named module each:
 
 Neither is visible in a gained list, and `rebuild_classes.py` can only see the
 first. Measure the diagnostic separately rather than inferring it.
+
+## 94.6 %, and a diagnostic that never fires is not a limit that is never reached
+
+cc370#153's `JT*` half is closed: **+2, none lost, `cards : 94 -> 91`.** The one
+deck that moved away, `IFNX2A`, was **117 bytes wrong and is now 118**, same total
+length on both sides, first divergence at `X'1D'` — noise inside an existing
+field, and the unchanged length is what rules out a layout regression.
+
+| | |
+|---:|---|
+| `as370` == IFOX00 | **5,227 of 5,528 (94.6 %)** |
+| still differing | **301** |
+| silent / `as370` alone / both flag / IFOX00 alone | **166 / 43 / 74 / 10** |
+| IFOX00 clean while `as370` returns `rc 8+` | **55**, nine with an identical deck |
+
+### The 64-operand limit was one of four caps, and three of them hid it
+
+I filed it as *wrong on its own account but explains nothing here, because no
+module raises the message.* The first half was right. The second was **a
+consequence of a defect one layer up**: `sysvar_sub` capped every source line at
+1022, `parse()` the operand field at 1023, and `vref` built `&SYSLIST` as one
+synthetic string in a 1024-byte buffer and then copied it into a second one. The
+statement reached the operand counter already cut to about 61 — **so the "more
+than 64" message could not fire.**
+
+**A diagnostic that never fires is indistinguishable from a limit that is never
+reached**, and no census of messages can tell them apart. That is the limit of the
+instrument I had just finished recommending.
+
+`join_cont` was flawless throughout: 116 cards, 1,492 characters, all 86 operands.
+I said an 85-line continuation was a suggestive place to look and was right about
+the location for the wrong reason.
+
+### And a silent divergence produced by a cap rather than a rule
+
+`DBV` read `&SYSLIST(62)` as empty, `K'` of it as 0, skipped its own tail and
+returned **`rc 0`**. **39 modules lost every late `JT*` symbol to a macro that
+said it was fine.** Nothing in either assembler's output named it.
+
+That is a shape the 166 silent divergences may well contain more of: not a wrong
+rule, but a bound reached quietly by a construct large enough to cross it. It is
+the first candidate mechanism for that group since cc370#264 removed the last one.
