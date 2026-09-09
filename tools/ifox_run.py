@@ -378,7 +378,23 @@ def cmd_diag(args):
             chunk = batch[k:k + 10]
             L = [f"//IFXD{k // 10:04d} JOB (ACCT),'MVS38SRC',CLASS=A,MSGCLASS=H,NOTIFY=IBMUSER"]
             for j, m in enumerate(chunk, 1):
-                L.append(f"//S{j:02d}     EXEC PGM=IFOX00,PARM='NODECK,NOLOAD,LIST',REGION=1024K")
+                # NOLIBMAC and NOMLOGIC are the defaults here and they hide
+                # exactly what a conditional-assembly question needs: with them
+                # a library macro's own AIF and T' tests never reach the
+                # listing.  --parm 'NODECK,NOLOAD,LIST,LIBMAC,MLOGIC,MCALL'
+                # shows them, at perhaps ten times the pages.
+                # JCL stops at column 71.  The default parm fits on one card;
+                # 'NODECK,NOLOAD,LIST,LIBMAC,MLOGIC' does not, and an over-long
+                # EXEC card is a JCL ERROR with no listing and no message that
+                # names the cause -- the first --parm run produced an empty
+                # IBMUSER.IFOXLST and nothing to explain it.
+                card = f"//S{j:02d}     EXEC PGM=IFOX00,PARM='{args.parm}',REGION=1024K"
+                if len(card) > 71:
+                    L.append(f"//S{j:02d}     EXEC PGM=IFOX00,")
+                    L.append(f"//             PARM='{args.parm}',")
+                    L.append(f"//             REGION=1024K")
+                else:
+                    L.append(card)
                 for x, lib in enumerate(SYSLIB):
                     L.append(f"//SYSLIB   DD  DSN={lib},DISP=SHR" if x == 0
                              else f"//         DD  DSN={lib},DISP=SHR")
@@ -441,6 +457,9 @@ if __name__ == "__main__":
     p.add_argument("--only", help="a file of module names whose reference deck is to be replaced")
     p.set_defaults(fn=cmd_run)
     p = sub.add_parser("diag"); p.add_argument("--list", required=True)
+    p.add_argument("--parm", default="NODECK,NOLOAD,LIST",
+                   help="IFOX00 options; add LIBMAC,MLOGIC,MCALL to see a "
+                        "library macro's own conditional assembly")
     p.add_argument("--keep-full", action="store_true",
                    help="keep the whole listing in listings/, not just the "
                         "diagnostics section")

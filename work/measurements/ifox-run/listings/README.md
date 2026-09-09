@@ -92,3 +92,16 @@ The first thing it produced: `BLSR3270`'s eighteen severity-4 MNOTEs are one
 `BUFADTAB BLSRROTB 6,24,1` expansion, and `BLSRROTB` is on the oracle's
 `IBMUSER.PVTMAC` — so both assemblers have the macro and take different branches
 through it. The statement numbers alone could not have said that.
+
+## `--parm` and the 71-column card
+
+`diag --parm 'NODECK,NOLOAD,LIST,LIBMAC,MLOGIC'` shows a library macro's own
+conditional assembly, which the default options hide: `BLSRESGC` is **806 lines**
+under them and **10,217** with them.
+
+The first attempt produced nothing at all and said nothing about why. **The EXEC
+card was 78 characters and JCL stops at column 71** — a JCL ERROR, an empty
+`IBMUSER.IFOXLST`, and no message naming the cause. `cmd_diag` now wraps the card
+when it does not fit. Second time in one evening that a JCL line past column 71
+or a continuation starting in column 15 cost a job with a message that did not
+say so.
