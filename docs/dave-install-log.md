@@ -241,7 +241,7 @@ alike. So the list is seven, not six, and there is no way to know whether the
 remaining 18 SCDS casualties hide anything else until they run — which is the
 argument for a full rerun rather than re-driving the 21 failures in place.
 
-## One root cause, not two: the MAINT jobs are downstream of `EDM1102`
+## One root cause, not two: the MAINT jobs are downstream of the terminated SYSMODs
 
 `MAINT01A`–`MAINT04F` all end `CC 0008` and I had them filed as a second, separate
 class of failure. They are not. `MAINT01A` selects 30 SYSMODs and reports
@@ -262,6 +262,21 @@ M024001 M024205 M024206 M024207 M026200
 SYSMOD whose APPLY was terminated for want of four macros, so the FMID is not
 installed, so no PTF that applies *to* it has an applicable `++VER`, so every
 maintenance job that selects one ends `CC 0008`.
+
+**Corrected, one job later.** I wrote the paragraph above from `MAINT01A` alone
+and generalised it to `EDM1102`. `MAINT02A` selects 148 SYSMODs and skips six —
+all of them Dave's own `DSK*` usermods rather than IBM PTFs — and they split:
+
+```
+DSK1053 EDM1102    DSK1096 EDM1102    DSK1108 EDM1102
+DSK1102 EBT1102    DSK1119 EBT1102    DSK1137 EBT1102
+```
+
+**Three name `EBT1102`, the TCAM SYSMOD**, which is terminated for its own two
+missing macros. So the mechanism is right and the attribution was too narrow: the
+`MAINT` jobs are downstream of *whichever* of the three terminated SYSMODs their
+selection touches, not of `EDM1102` alone. One job is not a class, and the second
+one is what said so.
 
 So the whole build's failure surface reduces to:
 
