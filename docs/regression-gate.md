@@ -490,3 +490,51 @@ git log --oneline origin/main --grep="<a phrase from the title>" | head -1
 
 Three lines, and they are the difference between a merge and the appearance of
 one.
+
+## The gate is not a well-formedness check — `deck_lint.py` — 2026-09-09
+
+cc370 built a change for #290 that produced a **structurally malformed deck**: a
+section chained at the wrong origin, its TXT landing on top of another section's,
+its ESD entry gone while the TXT remained. The gate line read
+
+```
++0    closer 1    LOST 0
+```
+
+**Green, on a deck no linkage editor would accept.** `retest.py` compares our
+bytes with IFOX00's; it has no opinion about whether the deck is a deck. Every
+merge tonight leaned on that line, and nothing anywhere was asking the other
+question.
+
+`deck_lint.py` asks it of one deck alone, with no reference:
+
+1. every TXT card names an ESDID the ESD defines as SD, PC or CM
+2. every TXT byte lies inside its section's declared origin..origin+length
+3. no two sections overlap
+4. every RLD position and relocation ESDID exists
+5. no ESDID is defined twice
+
+```
+work/measurements/ifox-run/decks   5528 decks, 0 with a complaint
+work/measurements/ifox-run/as370   5528 decks, 5 with a complaint
+                                     sections overlap: BNGC3270 BNGCDISP
+                                     BNGCLOCL BNGCMENU BNGCRMOT
+```
+
+**All five are the CICS modules in `excluded.tsv`**, which cannot resolve their
+macros at all. Every one of the other 5,523 decks `as370` produces is well formed.
+
+### The control caught two wrong rules before it caught anything real
+
+**IFOX00's 5,528 recorded decks must pass.** They did not, twice, and both times
+the rule was wrong rather than the deck:
+
+| version | "found" | the actual error |
+|---|---:|---|
+| first | 1,855 IFOX00 decks | RLD continuation: `RRPP FAAA`, and bit `0x01` of the flag means the next item repeats R/P and is `FAAA` alone |
+| second | 476 IFOX00 decks | an **LD** entry carries no ESDID and does not advance the counter, so every module with an `ENTRY` looked as though it defined an id twice |
+| third | **0** | — |
+
+Without the control, the first version reports 1,861 defective `as370` decks and
+every one of them is a lie. **A validator with no known-good corpus is a random
+number generator with good manners.**
