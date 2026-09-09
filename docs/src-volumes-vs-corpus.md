@@ -283,3 +283,19 @@ Two things carry over into that build:
    fact.** The volumes carry every version; which one a build should take is
    decided against the DLIB objects, and the sidecar says which tape file holds
    which.
+
+## The HASP caveat does not reach Dave's build — checked
+
+The write-up above flags one place where *read `SRC00x`* and *read `ibm/`* are not
+interchangeable: `MVSSRC.SYM301.F01` carries the eleven HASP CSECTs as **prologues
+only** — `HASPXEQ` is 200 records against the corpus default's 6,164, stopping
+mid-comment. A build assembling HASP from the volumes would get no code, and the
+corpus's substitution of stben's version is load-bearing rather than a preference.
+
+**`SYS1.PROCLIB(BLDSMP)` does not reference `MVSSRC.SYM301.F01`.** Its three
+`SYM301` DD statements are `F02`, `F03` and `F04`; `F01` is absent from the
+proc and absent from the 236-name required list derived from it.
+
+So the caveat stands as a property of the volumes and does **not** apply to the
+running build. Recorded because the two facts are easy to conflate: *the volumes
+carry a truncated HASP* is true, and *Dave's build reads a truncated HASP* is not.
