@@ -33,3 +33,12 @@ work/measurements/ifox-run/diag/
 
 # Aus Daves Installationsband extrahiert, reproduzierbar
 work/kreiss-newasm/
+
+# Gate runs: obj_<label>/ is 5,528 decks and <label>.tsv is their hashes.
+# Reproducible from tools/gate.sh in ten minutes, and 30 MB each.  A single
+# `git add -A` from the repo root put 11,565 of them into one commit on
+# 2026-09-10 and took .git from 92 MB to 131 MB.
+obj_*/
+/g[0-9]*.tsv
+/r[0-9]*.tsv
+/modules.txt

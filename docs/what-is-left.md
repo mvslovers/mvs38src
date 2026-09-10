@@ -1732,3 +1732,46 @@ statement is then malformed, and it says so about the statement too.
 note and not only as a count: grouping by *the oracle's message* separated two
 real cases out of a block I had written off, and it took one pass over files that
 were already on disk.
+
+## `#186`'s population is five, and `IGC0E05A` is the cleanest of them
+
+Verified here independently of cc370's count:
+
+| | TXT image | RLD bytes as370 / IFOX00 |
+|---|---|---|
+| **`IGC0E05A`** | **identical at the gate's own stamp** | **244 / 252** |
+| `IFNX1J` | identical at its own stamp | 8 / 8 |
+| `IFNX3N` | identical at its own stamp | 8 / 8 |
+| `IFNX5C` | identical at its own stamp | 20 / 32 |
+| `IFNX5V` | identical at its own stamp | 12 / 12 |
+
+`IGC0E05A` needs no restamping to see — the other four carry the assembly time in
+a `PATCHDC` inside their TXT, so they only read as "TXT identical" when
+re-assembled at the time their reference deck carries. That makes `IGC0E05A` the
+one to work: same class, no instrument caveat.
+
+as370 emits **fewer** relocation bytes in two of the five, so it is entries
+missing rather than entries reordered.
+
+**None of the five ever presented as an RLD case**, because `_image()` is
+TXT-keyed and reports zero differing bytes for a module whose TXT is right and
+whose RLD is not. Three separate instruments — the deck comparison, the distance
+metric and the statement clustering — all reported them as something else.
+
+## The bound was in the corpus, free
+
+cc370 asked how far a suspected DSECT-attribution defect might reach, having
+written "193 modules reference `OLTCB`" as a claim to measure. Measured:
+
+| | |
+|---|---:|
+| modules referencing `OLTCB` | 193 |
+| of those, deck differs today | **2** |
+| using `SYM(len)` **and byte-identical to IFOX00** | **54** |
+
+The 54 refute it. They open the same macro-generated DSECT, use the same form,
+and match — which they could not if the attribution were generally wrong.
+
+**A count of modules that use a construct is not a reach; a count of modules that
+use it *and still differ* is.** Both numbers were available and the first is the
+one that got quoted. It cost one script over files already on disk to replace it.

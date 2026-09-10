@@ -25,6 +25,11 @@ OUTDIR="$PWD/obj_$LABEL"
 rm -rf "$OUTDIR"; mkdir -p "$OUTDIR"
 : ${ASMDATE:=09/07/26}; : ${ASMTIME:=12.00}   # pin the stamp: 381 decks carry it
 export BIN OUTDIR MACFLAGS SRC ASMDATE ASMTIME
+# Record which commit the binary came from: retest.py prints it, and a gate
+# against a branch whose base has moved can manufacture LOST and
+# rc CLEAN -> FLAGGED lines that are not regressions at all.
+( cd "$(dirname "$BIN")/.." 2>/dev/null && git log --oneline -1 2>/dev/null ) \
+  > "$OUTDIR/.commit" || echo "unknown" > "$OUTDIR/.commit"
 ls "$SRC" | sed -n 's/\.ASM$//p' | sort > "$PWD/modules.txt"
 xargs -P 8 -n 1 "$here/gate-worker.sh" < "$PWD/modules.txt" | sort > "$PWD/$LABEL.tsv"
 printf '%s: %s modules, rc0=%s, decks=%s\n' "$LABEL" \

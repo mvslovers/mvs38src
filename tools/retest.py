@@ -254,6 +254,26 @@ def main():
                      f"or the rc rows would compare a different run than the "
                      f"deck rows do.")
         print(f"  (rc baseline: {os.path.basename(base_tsv)})")
+        # Name the commit the object directory was built from.
+        #
+        # Two PRs in a row on 2026-09-10 were gated against a base that had
+        # moved under them.  cc370#335 printed `LOST : 4` and
+        # `rc CLEAN -> FLAGGED: 3` -- the two lines that exist to stop a merge --
+        # and every one of those four was a gain from a merge its branch
+        # predated.  #339 printed 26 decks FURTHER for the same reason.  Both
+        # were flat or positive once rebased.
+        #
+        # A gate against a stale branch does not merely under-report: it can
+        # manufacture the most serious signal the instrument has.  The stacked-PR
+        # trap was already written down twice this week for merge conflicts and
+        # nobody noticed it applies to measurement too.  So the run says which
+        # commit it measured, and a reader can check it against main.
+        stamp = os.path.join(a.objdir, ".commit")
+        if os.path.exists(stamp):
+            print(f"  (objdir built from: {open(stamp).read().strip()})")
+        else:
+            print("  (objdir built from: UNRECORDED -- gate.sh writes .commit; "
+                  "an old run has none, and a stale base is invisible without it)")
         base = rcmap(base_tsv)
         vn = {m: rcverdict(now.get(m), ifox.get(m)) for m in mods}
         vo = {m: rcverdict(base.get(m), ifox.get(m)) for m in mods}
