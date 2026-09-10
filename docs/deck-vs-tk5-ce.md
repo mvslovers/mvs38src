@@ -118,6 +118,39 @@ Not one disagreement in 3,473. Where SMP says the object is the same, the
 comparator says so too, on both sides, without any date masking. The harness is
 measuring the systems and not itself.
 
+### The local TK5 is the TK5 `foo` measured
+
+Every RMID label in this document comes from `module-versions.tsv`, which `foo`
+collected from **`drnmig3a`** — a different machine from the `MVSTK5-REF` these
+bytes were read off. The stratified tables stand or fall on those labels being
+true of the system that supplied the bytes, and the 3,473-verdict control above
+does not test that: it tests consistency *given* the labels.
+
+`foo`'s `dlib-object-distance.tsv` records the member length as read from
+`drnmig3a`. Over the 750 of its 1,104 modules that are also in this corpus:
+
+| | modules | lengths agree |
+|---|--:|--:|
+| local `MVSTK5-REF` vs `drnmig3a` | 750 | **750** |
+| `MVSCE-LAB` vs `foo`'s CE run | 750 | **750** |
+
+Including all seven of the headline modules. The two TK5 systems are the same
+distribution member for member, so `foo`'s labels — and every figure in
+[`dlib-distance-tk5-ce.md`](dlib-distance-tk5-ce.md) — transfer to the local
+machine.
+
+### `foo`'s byte control, at eleven times the sample
+
+`foo` compared 300 same-RMID modules and found 297 byte-identical. This corpus
+carries 3,473 of them:
+
+| | modules |
+|---|--:|
+| same RMID, **byte-identical across the two systems** | **3,452** (99.4 %) |
+| same RMID, bytes differ (build date, aliases) | 21 |
+
+99.4 % against `foo`'s 99.0 %, on 11.6 times the sample.
+
 ### The headline, and it is a small number
 
 | Dave's source assembles byte-identical to… | modules | of 3,988 |
