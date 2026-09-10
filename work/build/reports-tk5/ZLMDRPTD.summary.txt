@@ -1,0 +1,66 @@
+Sep 10, 2026 16.08.20 Ver 01.21                 Original vs Build CSECT/LMOD Report                                         Page   1
+----------------- Original ----------------¦-------------------- Build -----------------------------¦
+  Library       LMOD      CSECT     Length ¦    Library       LMOD      CSECT     Length     Not EQ ¦
+Program version=LMDRPT38 - 01.21 09/10/26 13.33
+PARM=SUMMARY
+ 
+ AOSA0           178        178                                179*       178        142          0
+ AOSA1             2          2                                  2          2          0          0
+ AOSBN             1          1                                  1          1          0          0
+ AOSB0            10         14                                 10         14         13          0
+ AOSB3           392        392                                390*       390*       226          0
+ AOSCA            14         14                                 14         14          8          0
+ AOSCD           220        220                                220        220        118          0
+ AOSCE            61         63                                 61         63         28          0
+ AOSC2             2          2                                  2          2          0          0
+ AOSC5           538        573                                538        573        312          0
+ AOSC6            36         36                                 36         36         20          0
+ AOSD0           650        680                                650        680        352          0
+ AOSD7            43         43                                 43         43         25          0
+ AOSD8           116        116                                116        116         68          0
+ AOSG0            40         41                                 40         41         20          0
+ AOSH1             4          4                                  4          4          0          0
+ AOSH3            18         21                                 18         21          2          0
+ AOST3           104        105                                104        105         68          0
+ AOST4           132        165                                132        166*        93          0
+ AOSU0           470        571                                392*       493*       204          0
+ AOS00            17         18                                 17         18          8          0
+ AOS03            37         48                                 37         48          5          0
+ AOS04            22         24                                 22         24         24          0
+ AOS05             5          6                                  5          6          2          0
+ AOS06            87         87                                 87         87         20          0
+ AOS07            70         70                                 70         70         36          0
+ AOS11            39         40                                 39         40         22          0
+ AOS12           209        239                                208*       231*       152          0
+ AOS20           115        115                                115        115         61          0
+ AOS21           517        541                                517        541        294          0
+ AOS24           244        246                                244        246         69          0
+ AOS26           363        366                                363        366        113          0
+ AOS29            22         22                                 22         22         16          0
+ AOS32           350        393                                349*       393         98          0
+       34      5,128      5,456                      34      5,047*     5,369*     2,619          0
+ 
+Unequal difference 1-10               0
+Unequal difference 11-100             0
+Unequal difference 101-1000           0
+Unequal difference over 1000          0
+Length difference 1-10              502
+Length difference 11-100          1,100
+Length difference 101-1000          905
+Length difference over 1000         112
+ 
+Missing CSECTs              0
+Extra CSECTs                2
+Missing LMODs              81         8 Ignored
+Extra LMODs                 0
+Compared equal          2,748
+Module dif ignored          8
+Compare dif ignored         0
+ Total equal            2,756
+Compared not equal          0
+Sep 10, 2026 16.08.20 Ver 01.21                 Original vs Build CSECT/LMOD Report                                         Page   2
+----------------- Original ----------------¦-------------------- Build -----------------------------¦
+  Library       LMOD      CSECT     Length ¦    Library       LMOD      CSECT     Length     Not EQ ¦
+Length different        2,619
+ Total not equal        2,619
+  Total CSECTs          5,369

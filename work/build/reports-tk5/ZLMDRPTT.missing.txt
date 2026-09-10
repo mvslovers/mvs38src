@@ -1,0 +1,163 @@
+Sep 10, 2026 16.09.57 Ver 01.21                 Original vs Build CSECT/LMOD Report                                         Page   1
+----------------- Original ----------------¦-------------------- Build -----------------------------¦
+  Library       LMOD      CSECT     Length ¦    Library       LMOD      CSECT     Length     Not EQ ¦
+Program version=LMDRPT38 - 01.21 09/10/26 13.33
+PARM=MISSING
+ 
+ CMDLIB     HELP              0            ¦                                7*         0          0 ¦
+                                           ¦                                                        ¦
+ CMDLIB     TSOHELP    HELPPCL      0000E3 ¦                                                        ¦ No matching build library
+ CMDLIB     TSOHELP    IKJEFF02     001248 ¦                                                        ¦ No matching build library
+ CMDLIB     TSOHELP    IKJEFF2M     000186 ¦                                                        ¦ No matching build library
+ CMDLIB     TSOHELP    IKJEFH00     000413 ¦                                                        ¦ No matching build library
+ CMDLIB     TSOHELP    IKJEFH01     000D28 ¦                                                        ¦ No matching build library
+ CMDLIB     TSOHELP    IKJEFH02     000448 ¦                                                        ¦ No matching build library
+ CMDLIB     TSOHELP    IKJEFH03     0001F8 ¦                                                        ¦ No matching build library
+ CMDLIB     TSOHELP           7            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ CMDLIB          213        753            ¦                   213        753        230          0 ¦
+                                           ¦                                                        ¦
+ LINKLIB    ICHSEC00   CJYRCVT      00039A ¦                                                        ¦ Missing build CSECT
+ LINKLIB    ICHSEC00   ICHSEC00     0004DC ¦                                                        ¦ Missing build CSECT
+ LINKLIB    ICHSEC00          2            ¦                                1*         0          0 ¦
+                                           ¦                                                        ¦
+ LINKLIB    IFLOADRN   IFLOADRN     00026E ¦                                                        ¦ Missing build LMOD
+ LINKLIB    RACIND     RACIND       000FB5 ¦                                                        ¦ No matching build library
+ LINKLIB    AHLREADR          1            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ LINKLIB    RAKFPROF   CJYRPROF     000B40 ¦                                                        ¦ No matching build library
+ LINKLIB    AHLREADR          1            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ LINKLIB    RAKFPWUP   RAKFPWUP     000392 ¦                                                        ¦ No matching build library
+ LINKLIB    AHLREADR          1            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ LINKLIB    RAKFUSER   CJYRUIDS     0008DC ¦                                                        ¦ No matching build library
+ LINKLIB    RAKFUSER   RAKFPSAV     000412 ¦                                                        ¦ No matching build library
+ LINKLIB    AHLREADR          2            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ LINKLIB    VMCPCMD    DIAG08       000210 ¦                                                        ¦ No matching build library
+ LINKLIB    VMCPCMD    VMCPCMD      0002CE ¦                                                        ¦ No matching build library
+ LINKLIB    VMCPCMD           2            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ LINKLIB         666      1,692            ¦                   660*     1,721*       787          0 ¦
+                                           ¦                                                        ¦
+ LPALIB     BSPLMT02   BSPLMT02     001088 ¦                                                        ¦ Missing build LMOD
+ LPALIB     ETHLOGON   ETHLOGON     00041C ¦                                                        ¦ Missing build LMOD
+ LPALIB     ETHLOGVM   DIAG08       000220 ¦                                                        ¦ Missing build LMOD
+ LPALIB     ETHLOGVM   ETHLOGVM     000610 ¦                                                        ¦ Missing build LMOD
+ LPALIB     EXHRDFLT   EXHRDFLT     000394 ¦                                                        ¦ Missing build LMOD
+ LPALIB     ICHRIN00   ICHRIN00     000098 ¦                                                        ¦ Missing build LMOD
+ LPALIB     ICHRIN00   RAKF013A     000170 ¦                                                        ¦ Missing build LMOD
+ LPALIB     ICHRIN00   RAKF013C     000158 ¦                                                        ¦ Missing build LMOD
+ LPALIB     ICHRIN00   RAKF0130     00016C ¦                                                        ¦ Missing build LMOD
+ LPALIB     ICHSFR00   ICHSFR00     001000 ¦                                                        ¦ Missing build LMOD
+ LPALIB     IECLMSGC   IECLMSGC     00050E ¦                                                        ¦ Missing build LMOD
+ LPALIB     IEFVH1     IEFVPP       001721 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IEFVH1           24            ¦                               23*        20          0 ¦
+                                           ¦                                                        ¦
+ LPALIB     IEFW21SD   IEAVAP00     002DC8 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IEFW21SD   WILDCRD      000264 ¦                                                        ¦ Missing build LMOD
+ LPALIB     IEFW21SD        164            ¦                              162*        82          0 ¦ Ignored         1
+Sep 10, 2026 16.09.57 Ver 01.21                 Original vs Build CSECT/LMOD Report                                         Page   2
+----------------- Original ----------------¦-------------------- Build -----------------------------¦
+  Library       LMOD      CSECT     Length ¦    Library       LMOD      CSECT     Length     Not EQ ¦
+                                           ¦                                                        ¦
+ LPALIB     IGC0E05A   IGC0E05A     001B30 ¦                                                        ¦ Missing build LMOD
+ LPALIB     IGC0J05B   IGC0J05B     000264 ¦                                                        ¦ Missing build LMOD
+ LPALIB     IGC0009D   IKT09411     000210 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IGC0009D         34            ¦                               33*        16          0 ¦
+                                           ¦                                                        ¦
+ LPALIB     IGC0013{          0            ¦                                1*         0          0 ¦
+                                           ¦                                                        ¦
+ LPALIB     IGC0023C   CELLPOOL     000173 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IGC0023C   CORESRVC     0000B8 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IGC0023C   DDTDEL       000199 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IGC0023C   DDTLOAD      0002E0 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IGC0023C   DDTSCRN      000ADC ¦                                                        ¦ Missing build CSECT
+ LPALIB     IGC0023C   DDTSVC01     000178 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IGC0023C   DDTSVC02     000EF8 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IGC0023C   FINDCDE      0000F0 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IGC0023C   GETDA        000101 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IGC0023C   GETSYM       000334 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IGC0023C   PUTMESG      0000AD ¦                                                        ¦ Missing build LMOD
+ LPALIB     IGC0023C   QUEUEDA      000119 ¦                                                        ¦ Missing build LMOD
+ LPALIB     IGC0023C   SETDYNBP     000346 ¦                                                        ¦ Missing build LMOD
+ LPALIB     IGC0023C   TASKTERM     0001F0 ¦                                                        ¦ Missing build LMOD
+ LPALIB     IGC0023C   XCTLTERM     000230 ¦                                                        ¦ Missing build LMOD
+ LPALIB     IGC0023C         15            ¦                                1*         0          0 ¦ Ignored         5
+                                           ¦                                                        ¦
+ LPALIB     IKJEFLA    IKJEFLD      0001D6 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IKJEFLA          33            ¦                               32*        21          0 ¦
+                                           ¦                                                        ¦
+ LPALIB     IKJPTGT    IKJCT441     000548 ¦                                                        ¦ Missing build CSECT
+ LPALIB     IKJPTGT          14            ¦                               13*         9          0 ¦
+                                           ¦                                                        ¦
+ LPALIB        1,221      2,387            ¦                 1,200*     2,343*     1,366          0 ¦
+                                           ¦                                                        ¦
+ NUCLEUS    IEANUC01   IECVXTPT     00001C ¦                                                        ¦ Missing build CSECT
+ NUCLEUS    IEANUC01   IEEPFKEY     0014BE ¦                                                        ¦ Missing build CSECT
+ NUCLEUS    IEANUC01   SVCTABLE     000804 ¦                                                        ¦ Missing build CSECT
+ NUCLEUS    IEANUC01        314            ¦                              310*         4          0 ¦ Ignored         1
+                                           ¦                                                        ¦
+ NUCLEUS    IEAVNPF1   IEAVNPF1     000380 ¦                                                        ¦ Missing build LMOD
+ NUCLEUS    IEAVNP15   WILDCRD      000264 ¦                                                        ¦ Missing build LMOD
+ NUCLEUS          27        358            ¦                    26*       352*        30          0 ¦
+                                           ¦                                                        ¦
+ SVCLIB           59         60            ¦                    58*        59*         0          0 ¦
+                                           ¦                                                        ¦
+ TELCMLIB        188        192            ¦                   188        192         88          0 ¦
+                                           ¦                                                        ¦
+ VTAMLIB    BSPUDT01   BSPUDT01     000664 ¦                                                        ¦ Missing build LMOD
+ VTAMLIB    HLOWRLD    HLOWRLD      000040 ¦                                                        ¦ Missing build LMOD
+ VTAMLIB    N07R       N07R         0000CA ¦                                                        ¦ No matching build library
+ VTAMLIB    N07R              1            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ VTAMLIB    N08R       N08R         0001D2 ¦                                                        ¦ No matching build library
+ VTAMLIB    N08R              1            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ VTAMLIB    N10R       N10R         0000CA ¦                                                        ¦ No matching build library
+ VTAMLIB    N10R              1            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+Sep 10, 2026 16.09.57 Ver 01.21                 Original vs Build CSECT/LMOD Report                                         Page   3
+----------------- Original ----------------¦-------------------- Build -----------------------------¦
+  Library       LMOD      CSECT     Length ¦    Library       LMOD      CSECT     Length     Not EQ ¦
+ VTAMLIB    N11R       N11R         0001D2 ¦                                                        ¦ No matching build library
+ VTAMLIB    N11R              1            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ VTAMLIB    N12R       N12R         0000CA ¦                                                        ¦ No matching build library
+ VTAMLIB    N12R              1            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ VTAMLIB    N13R       N13R         0001D2 ¦                                                        ¦ No matching build library
+ VTAMLIB    N13R              1            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ VTAMLIB    N14R       N14R         0000CA ¦                                                        ¦ No matching build library
+ VTAMLIB    N14R              1            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ VTAMLIB    N15R       N15R         0001D2 ¦                                                        ¦ No matching build library
+ VTAMLIB    N15R              1            ¦                                0*         0          0 ¦
+                                           ¦                                                        ¦
+ VTAMLIB          28         75            ¦                    16*        63*        17          0 ¦
+                                           ¦                                                        ¦
+        7      2,402      5,517                       8*     2,361*     5,483*     2,518          0
+ 
+Unequal difference 1-10               0
+Unequal difference 11-100             0
+Unequal difference 101-1000           0
+Unequal difference over 1000          0
+Length difference 1-10              504
+Length difference 11-100          1,069
+Length difference 101-1000          825
+Length difference over 1000         120
+ 
+Missing CSECTs             20         1 Ignored
+Extra CSECTs                2
+Missing LMODs              24        15 Ignored
+Extra LMODs                 8        38 Ignored
+Compared equal          2,917
+Module dif ignored         54
+Compare dif ignored         0
+ Total equal            2,971
+Compared not equal          0
+Length different        2,518
+ Total not equal        2,518
+  Total CSECTs          5,483

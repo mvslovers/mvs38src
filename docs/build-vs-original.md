@@ -82,3 +82,13 @@ against what IBM shipped, and nothing more. It does not say the built system
 would IPL, and it does not distinguish a length difference that comes from the
 source from one that comes from the assembler. The `as370` work answers the
 second question for the modules it covers; this answers neither on its own.
+
+---
+
+## Superseded as the project's number — see the TK5 run
+
+2026-09-10. TK5 is the object baseline
+([`deck-vs-tk5-ce.md`](deck-vs-tk5-ce.md)), and the same two jobs have now run
+there: [`build-vs-original-tk5.md`](build-vs-original-tk5.md). The figures above
+stay as the MVS/CE measurement and as the comparison the TK5 run is read against
+— in particular the 599 missing load modules, which became 81.
