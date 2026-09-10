@@ -1016,6 +1016,43 @@ separately**, at cc370's request: every one of these tools reads a binary *and*
 stored state, and that is precisely where the two halves come from different
 commits without it being written anywhere.
 
+
+### The guard made it worse before it made it better
+
+cc370 checked instead of assuming, and found that `rebuild_classes.py` was now
+the more dangerous kind of reassuring: **a run that ends without complaint reads
+as "the directory is current"**, and the directory is mostly not.
+
+Counted: **33 class files, 10 derived, 23 older than the promoted gate and
+derived by nothing.** Several are linked straight from cc370 issues —
+`rld-flag` (#186, 08-09), `image-identical` (#199, 08-09), `too-long-mod8`
+(#241, 08-09), `base-register` (#193, cut at 02:10 before #341 and #344). Some
+are from 2026-09-07.
+
+`rebuild_classes.py` now prints them all, every run, with their age and a marker
+when they predate the gate. It cannot re-derive them — no tool in the repository
+can — so the only honest thing it can do is refuse to be silent about them.
+cc370's own figures out of `obj_g344` stand in the meantime: #186 = 11,
+#199 = 3, #241 = 36, #193 = 2.
+
+### The third failure form of the day, and it is not staleness
+
+Two of today's wrong numbers were neither stale files nor broken parsers:
+
+| | raw figure | after the rule | the unwritten rule |
+|---|---|---|---|
+| macro libraries | 242 of 242 `APVTMACS` differ | 45 differ | columns 73–80 are sequence numbers |
+| `ifox-alone-flags` | 4 here, 5 at cc370 | both correct | does `rc 4` count as *flagged*? |
+
+Neither instrument was broken and neither file was stale. **A normalisation rule
+existed in one place and not the other, and was written down in neither.** The
+figure is right on its own terms and wrong the moment it meets the other side —
+which is exactly when someone quotes both in one sentence.
+
+Named by cc370 and worth the entry: *state the rule with the figure*. Not "158
+macros differ" but "158 differ with columns 73–80 masked"; not
+"`ifox-alone-flags` is 4" but "4 at `rc >= 8`, 5 at `rc > 0`".
+
 ### One number that is two definitions
 
 `ifox-alone-flags` is 4. cc370 computed 5 for what sounds like the same

@@ -20,7 +20,7 @@ answer the first.
 
     rebuild_classes.py <as370-binary>
 """
-import os, subprocess, sys
+import os, subprocess, sys, time
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 
@@ -117,6 +117,28 @@ def main():
         if not ms:
             mark += "   EMPTY -- close the issue by hand"
         print(f"  {slug:26s} {len(ms):5d}{mark}")
+
+    # The classes directory holds more files than this tool writes, and the ones
+    # it does not write are invisible here -- which is worse than before the
+    # guard above existed, because a run that ends without complaint now reads
+    # as "the directory is current". It is not: on 2026-09-10 rld-flag.txt,
+    # image-identical.txt and too-long-mod8.txt were two days old and
+    # base-register.txt predated two merges, while this tool printed ten happy
+    # lines. Raised by cc370, who checked rather than assumed.
+    #
+    # Nothing here can re-derive them -- no tool in the repository does. So say
+    # so, every run, with the age, and let the number be read for what it is.
+    mine = set(b) | {"mnote-false-positive"}
+    others = sorted(f[:-4] for f in os.listdir(f"{RUN}/classes")
+                    if f.endswith(".txt") and f[:-4] not in mine)
+    if others:
+        print(f"\n  NOT derived by this tool -- no tool derives them:")
+        for slug in others:
+            f = f"{RUN}/classes/{slug}.txt"
+            age = gate - os.path.getmtime(f)
+            n = len(open(f).read().split())
+            flag = "  <- OLDER THAN THE GATE" if age > 0 else ""
+            print(f"  {slug:26s} {n:5d}   {time.strftime('%d.%m. %H:%M', time.localtime(os.path.getmtime(f)))}{flag}")
 
 
 if __name__ == "__main__":
