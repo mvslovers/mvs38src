@@ -48,3 +48,43 @@ around job 260, on the driver's phase-1 guard rather than on an error.
   `$08STG1A` needs the `BLKSIZE` fix after all.
 - Any new `IEB100I` / `IEB171I` on a compress → another torn member, meaning the
   space problem is not the whole story.
+
+---
+
+# Result
+
+## Predictions 1 and 2: confirmed, and 2 is the one that counts
+
+`MAINT03B` ended `CC 0004` at job 226 — where run 5 died. No `IEC031I`, no
+`D37`, no `IEB100I`, no `IEB171I`. The only non-zero step is the APPLY's own
+`CC 0004`.
+
+But prediction 2 is what makes it evidence rather than luck:
+
+```
+                        before (job 161)      after MAINT03B (job 226)
+MVSSRC.BLD.MVSSRC       75% full, 1 extent    96% full, 17,430 tracks, 2 extents
+MVSSRC.BLD.AMVSSRC      74% full, 1 extent    96% full, 17,430 tracks, 2 extents
+```
+
+**17,430 − 16,680 = 750 tracks = 50 cylinders.** Exactly the `S=50` supplied at
+submit time, taken exactly once. So the library did run out of its primary — the
+same wall run 5 hit — and this time MVS extended it instead of abending the
+step. The fix is proven in the only way that counts: the failing condition
+occurred and was survived.
+
+Had `MAINT03B` passed at `extx 1` this would have been recorded as unproven.
+It did not, so it is not.
+
+## Still open
+
+`ASMPRINT` is at 1 % in one extent, so its secondary is supplied but untested —
+it never needed to grow. Untested, not unproven; there is no evidence either way
+and the file should not claim more.
+
+Both source libraries are at 96 % of their *new* size and will extend again.
+`BLDSR1` has 15,330 tracks free, about 20 more extents of 50, against MVS's
+limit of 16 per volume for a PDS — so roughly 15 usable. That is comfortable for
+this run and is the number to watch if the chain is ever lengthened.
+
+Predictions 3 to 5 are still ahead: `ZSTAGE2` at job 239 and the phase-1 stop.
