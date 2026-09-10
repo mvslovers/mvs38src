@@ -28,3 +28,10 @@ field (`yyddd`) and sometimes a readable `MM/DD/YY` string. Differences confined
 to those are code-identical; a code change produces a diff run > 3 bytes or a
 length change. The 300 same-RMID control modules show zero genuine code
 differences under this rule.
+
+## TK5 PTF / USERMOD inventory ([`docs/tk5-ptfs-and-usermods.md`](../../../docs/tk5-ptfs-and-usermods.md))
+
+| file | contents |
+|---|---|
+| `tk5-ptf-list.tsv` | all 712 TK5 PTFs: ptf, component, fmid, tk5_applied, tk5_accepted, on_ce, n_modules, modules |
+| `tk5-usermod-list.tsv` | all 115 TK5 USERMODs: usermod, component, fmid, tk5_applied, tk5_accepted, on_ce, source, description (from the SMPPTS cover text where still resident) |

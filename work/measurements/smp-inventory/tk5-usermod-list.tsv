@@ -1,0 +1,116 @@
+usermod	component	fmid	tk5_applied	tk5_accepted	on_ce	source	description
+#DYP001	MVS Processor Support 2	FBB1221	yes	yes	yes	community	
+#DYP002	Base Control Program (BCP)	EBB1102	yes	yes	yes	community	
+#DYP003	Base Control Program (BCP)	EBB1102	yes	yes	yes	community	
+#DYP004	Base Control Program (BCP)	EBB1102	yes	yes	yes	community	
+#DYP005	Base Control Program (BCP)	EBB1102	yes	yes	yes	community	
+AY12275	Base Control Program (BCP)	EBB1102	yes	no	yes	IBM APAR fix	(S):                                                                  OY12275 - TCTRSZ INCORRECTLY REFLECTS SIZE OF PRIVATE AREA,                               RATHER THAN REGION SIZE REQUESTED.      
+M023000	Data Management	EDM1102	yes	yes	yes	3380 large-DASD support	
+M023100	Base Control Program (BCP)	EBB1102	yes	yes	yes	3380 large-DASD support	
+M023200	Data Management	EDM1102	yes	yes	yes	3380 large-DASD support	
+M023201	Data Management	EDM1102	yes	yes	yes	3380 large-DASD support	
+M023202	Data Management	EDM1102	yes	yes	yes	3380 large-DASD support	
+M023203	Data Management	EDM1102	yes	yes	yes	3380 large-DASD support	
+M023204	Data Management	EDM1102	yes	yes	yes	3380 large-DASD support	
+M023300	Data Management Support	EDS1102	yes	yes	yes	3380 large-DASD support	
+M023301	Data Management Support	EDS1102	yes	yes	yes	3380 large-DASD support	
+M023302	Data Management Support	EDS1102	yes	yes	yes	3380 large-DASD support	
+M023400	MVS Processor Support 2	FDS1122	yes	yes	yes	3380 large-DASD support	
+M023401	MVS Processor Support 2	FDS1122	yes	yes	yes	3380 large-DASD support	
+M023402	MVS Processor Support 2	FDS1122	yes	yes	yes	3380 large-DASD support	
+M023403	MVS Processor Support 2	FDS1122	yes	yes	yes	3380 large-DASD support	
+M023404	MVS Processor Support 2	FDS1122	yes	yes	yes	3380 large-DASD support	
+M023405	MVS Processor Support 2	FDS1122	yes	yes	yes	3380 large-DASD support	
+M024001	Data Management	EDM1102	yes	yes	yes	3390 large-DASD support	
+M024101	Base Control Program (BCP)	EBB1102	yes	yes	yes	3390 large-DASD support	
+M024205	Data Management	EDM1102	yes	yes	yes	3390 large-DASD support	
+M024206	Data Management	EDM1102	yes	yes	yes	3390 large-DASD support	
+M024207	Data Management	EDM1102	yes	yes	yes	3390 large-DASD support	
+M024303	Data Management Support	EDS1102	yes	yes	yes	3390 large-DASD support	
+M024304	Data Management Support	EDS1102	yes	yes	yes	3390 large-DASD support	
+M024305	Data Management Support	EDS1102	yes	yes	yes	3390 large-DASD support	
+M024406	MVS Processor Support 2	FDS1122	yes	yes	yes	3390 large-DASD support	
+M024407	MVS Processor Support 2	FDS1122	yes	yes	yes	3390 large-DASD support	
+M024408	MVS Processor Support 2	FDS1122	yes	yes	yes	3390 large-DASD support	
+MS00100	Base Control Program (BCP)	EBB1102	yes	no	no	Rob Prins	(S):                                                           DURING NIP PARMLIB LINK LIST CONCATENATION PROCESSING,                          LIBRARIES INCLUDED MUST BE CATALOGUED IN THE MASTER      
+RP00001	Base Control Program (BCP)	EBB1102	yes	no	no	Rob Prins (TK5)	AMDPRDMP DID NOT PRODUCE A VALID DUMP ON DDNAME=PRINTER,                          IF THE WORK DATASET WITH DDNAME=SYSUT1 IS ALLOCATED ON A                        D/3375, D/3380 OR D/3390, BECAUSE THE 
+RP00002	MVS Processor Support 2	FBB1221	yes	no	no	Rob Prins (TK5)	MODULE IEAVTSDH INCORRECTLY CALCULATES THE NUMBER OF DUMP                       RECORDS THAT CAN BE WRITTEN PER TRACK TO A SYS1.DUMPXX DATA                     SET IF THE SYS1.DUMPXX DATA SET IS ALLOC
+RP00003	Data Management	EDM1102	yes	no	no	Rob Prins (TK5)	THE NUMBER OF CYLINDERS FOR 3380 AND 3390 DASD VOLUMES IS                       DEPENDENT ON THE CHARACTERISTICS OF THE VARIOUS MODELS OF                       3380 AND 3390 DASD.                     
+RP00004	Utilities	EUT1102	yes	no	no	Rob Prins (TK5)	RAKF RETURNS AN RC=4, RSN=0 IN RACDEF OF A NEW ALLOCATED                        DATASET SAYING THAT THE RESOURE IS ALREADY DEFINED.                                                                     
+SLB0001	Base Control Program (BCP)	EBB1102	yes	no	yes	community	
+SLB0002	Base Control Program (BCP)	EBB1102	yes	no	yes	community	CONVERTER/INTERPRETER
+SLB0003	MVS Processor Support 2	FBB1221	yes	no	no	community	TIMER/STIMER ROUTINE
+SYZJ201	JES2 (with 3800 Enhancements)	EJE1103	yes	no	yes	Brian Westerman (Syzygy)	INSTALL THE MAXIMUM CONDITION CODE SYSMODS
+SYZJ202	JES2 (with 3800 Enhancements)	EJE1103	yes	no	yes	Brian Westerman (Syzygy)	INSTALL THE MAXIMUM CONDITION CODE SYSMODS
+SYZM001	Base Control Program (BCP)	EBB1102	yes	no	yes	Brian Westerman (Syzygy Inc.)	SEND COMMAND IMPROVEMENT
+TC01101	TCAM — Telecommunications Access Method	ETC0108	yes	no	no	TCAM/TSO 3270 fullscreen	SET TSB PRIMARY AND ALTERNATE
+TC01303	TCAM — Telecommunications Access Method	ETC0108	yes	no	no	TCAM/TSO 3270 fullscreen	3278 MOD 4 FULLSCREEN SUPPORT
+TC01402	TCAM — Telecommunications Access Method	ETC0108	yes	no	no	TCAM/TSO 3270 fullscreen	3278 MOD 4 FULLSCREEN SUPPORT
+TC01503	TCAM — Telecommunications Access Method	ETC0108	yes	no	no	TCAM/TSO 3270 fullscreen	3278 alternate screen size support
+TC01601	TCAM — Telecommunications Access Method	ETC0108	yes	no	no	TCAM/TSO 3270 fullscreen	SNA LU 2 full screen support
+TJES801	JES2 (with 3800 Enhancements)	EJE1103	yes	no	yes	community	REWORK(20050811)
+TMVS816	Base Control Program (BCP)	EBB1102	yes	no	yes	MVS/CE-lineage USERMOD	REWORK(20200415)
+TMVS817	MVS Processor Support 2	FBB1221	yes	no	yes	MVS/CE-lineage USERMOD	REWORK(20200415)
+TNIP800	Base Control Program (BCP)	EBB1102	yes	no	yes	community	REWORK(20061130)
+VS49603	MVS Processor Support 2	FBB1221	yes	no	yes	community	Symptom: IEE331A EXCESSIVE DISABLED SPIN LOOP DETECTED Fix: Apply IBM ZAP VS49603, which fixes excessive disabled spin loop conditions when MVS is running under VM
+WM00017	JES2 (with 3800 Enhancements)	EJE1103	yes	no	yes	community	$DP COMMAND AND $U COMMAND
+ZBP0003	JES2 (with 3800 Enhancements)	EJE1103	yes	no	no	VM/JES2 integration	VM CP CLOSE ON JES2 PRT/PUN
+ZBP0004	VTAM	EVT0108	yes	no	no	Juergen Winkelmann	ADD TWO VTAM LOGMODE TABLES.                                                      1. ETHLOGON - FOR 3270 TERMINALS FOR TSO                                        2. ETHLOGVM - FOR 3270 TERMINALS FOR T
+ZBP0005	Utilities	EUT1102	yes	no	no	VM/JES2 integration	ADD UTILITY "VMCPCMD" TO ALLOW VM CP COMMANDS TO BE ISSUED FROM                 THE MVS CONSOLE.
+ZJW0003	Base Control Program (BCP)	EBB1102	yes	no	yes	Juergen Winkelmann (TK4-/TK5)	
+ZJW0004	Base Control Program (BCP)	EBB1102	yes	no	no	Juergen Winkelmann (TK4-/TK5)	completion of Michael Koehne's Y2K patch ZUM0007
+ZJW0005	Base Control Program (BCP)	EBB1102	yes	no	no	Juergen Winkelmann	DESC: INSTALL USERMOD ZJW0005 TSO PRE LOGON PROMPT EXIT IKJEFLD: - OVERWRITE UNITNAMES WITH 'SYSDA'. - ISSUE WTO MESSAGE IDENTIFYING THE TERMINAL ON ON WHICH A TSO LOGON IS IN PROGRESS. - INITIALIZE T
+ZJW0006	Base Control Program (BCP)	EBB1102	yes	no	no	Juergen Winkelmann	Update IEECVXIT WTO message automation exit: o SNA LU1/2 terminals provided by the Hercules 3705 and 3791 emulations shoud be varied inactive and then back active between consecutive logons for severa
+ZJW0007	Base Control Program (BCP)	EBB1102	yes	no	no	Rob Prins	Desc: Install USERMOD ZJW0007 Regenerate the subsystem name table Update Rob Prins at 2022/01/19: add subsystem EDIT
+ZJW0008	JES2 (with 3800 Enhancements)	EJE1103	yes	no	no	Juergen Winkelmann (TK4-/TK5)	set TSO terminal name
+ZJW0009	TSO/VTAM	ETV0108	yes	no	no	Juergen Winkelmann (TK4-/TK5)	Fix SNA LU2 lost terminal condition occurring in TSO/VTAM when a 0-byte RU is about to be sent asynchronously after TGET NOWAIT was issued.
+ZJW0010	TSO/VTAM	ETV0108	yes	no	no	Juergen Winkelmann (TK4-/TK5)	Make TSO/VTAM SNA LU1 ASIS translation table fully transparent to support unprefixed file transfers through Kermit.
+ZJW0011	Data Management Support	EDS1102	no	yes	no	Juergen Winkelmann (TK4-/TK5)	
+ZJW0012	Base Control Program (BCP)	EBB1102	yes	no	no	Juergen Winkelmann (TK4-/TK5)	Support 24 PFKeys on 3270 consoles
+ZP60003	XF Assembler (Assembler F)	EAS1102	yes	no	yes	Greg Price (Prycroft Six)	XF ASSEMBLER
+ZP60004	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	3277 CONSOLE I/O
+ZP60005	MVS Processor Support 2	FBB1221	yes	no	yes	Greg Price (Prycroft Six)	IOS SIO COUNTERS
+ZP60006	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	DATA SET DEALLOCATION MESSAGES
+ZP60007	TSO/VTAM	ETV0108	yes	no	yes	Greg Price (Prycroft Six)	ADD CONFTXT SUPPORT TO TSO
+ZP60008	VTAM	EVT0108	yes	no	yes	Greg Price (Prycroft Six)	ADD VTAM EWA AND WSF SUPPORT
+ZP60009	TSO/VTAM	ETV0108	yes	no	yes	Greg Price (Prycroft Six)	ZP60009 - ADD TVWAALTS BIT.
+ZP60011	MVS Processor Support 2	FBB1221	yes	no	yes	Greg Price (Prycroft Six)	TRACE SIO CHANNEL PROGRAM
+ZP60012	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	REPORT PIC FOR S0CX OR SODX ABEND
+ZP60013	MVS Processor Support 2	FBB1221	yes	no	yes	Greg Price (Prycroft Six)	COUNT SVC EVENTS
+ZP60014	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	ADD CLIST EXTENSIONS
+ZP60015	JES2 (with 3800 Enhancements)	EJE1103	yes	no	yes	Greg Price (Prycroft Six)	EXTEND JES2 TSO STATUS SEARCH
+ZP60016	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	REPORT JES2 STATUS SEARCH RESULTS
+ZP60017	MVS Processor Support 2	FBB1221	yes	no	yes	Greg Price (Prycroft Six)	MASTER TRACE TABLE SUBPOOL
+ZP60018	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	REPORT SOME PLPA MODULE NAMES
+ZP60019	MVS Processor Support 2	FBB1221	yes	no	yes	Greg Price (Prycroft Six)	RECORD CPU TIME WHEN TIME=1440
+ZP60020	Program Management (Linkage Editor / Loader)	EPM1102	yes	no	yes	Greg Price (Prycroft Six)	REMOVE SYSLIN BLKSIZE 3200 LIMIT
+ZP60021	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	SHOW KEYBOARD CHARACTERS IN DUMP
+ZP60022	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	SUPPORT FORMAT 1 STAX PLIST
+ZP60023	MVS Processor Support 2	FBB1221	yes	no	no	Greg Price (Prycroft Six)	SUPPORT DAS AT THE TASK LEVEL
+ZP60024	XF Assembler (Assembler F)	EAS1102	yes	no	no	Greg Price (Prycroft Six)	INCREASE ASSEMBER XF ESD LIMIT
+ZP60025	XF Assembler (Assembler F)	EAS1102	yes	no	yes	Greg Price (Prycroft Six)	ADD BAS AND BASR TO ASSEMBLER XF
+ZP60026	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	ADD REUSE OPERAND TO ALLOCATE
+ZP60027	Program Management (Linkage Editor / Loader)	EPM1102	yes	no	yes	Tom Armstrong	ADD TIME OF DAY TO LINK EDIT IDR
+ZP60028	Base Control Program (BCP)	EBB1102	yes	no	yes	Tom Armstrong	IMPROVE MODULE HEADER FORMAT
+ZP60029	Data Management	EDM1102	yes	no	yes	Greg Price (Prycroft Six)	XLATE TRANSLATE TABLES
+ZP60030	MF/1 — System Activity Measurement Facility	EMF1102	yes	no	yes	Greg Price (Prycroft Six)	FIX MF/1 CHANNEL MEASUREMENT
+ZP60031	JES2 (with 3800 Enhancements)	EJE1103	yes	no	yes	Greg Price (Prycroft Six)	ALLOW STC SMF TYPE 6 AND 26
+ZP60032	TIOC — Terminal I/O Controller	ETI1106	yes	no	yes	Greg Price (Prycroft Six)	ADD TERMID TO THE GTTERM MACRO
+ZP60033	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	ADD LOC= TO THE GETMAIN MACRO
+ZP60034	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	RESOLVE &SYSUID IN JCL
+ZP60035	Base Control Program (BCP)	EBB1102	yes	no	yes	Tom Armstrong	FIX LOGREC DEVICE TYPE SUPPORT
+ZP60036	MVS Processor Support 2	FBB1221	yes	no	yes	Tom Armstrong	FIX LOGREC DEVICE TYPE SUPPORT
+ZP60037	EREP — Environmental Record Editing & Printing	EER1400	yes	no	yes	Tom Armstrong	FIX LOGREC DEVICE TYPE SUPPORT
+ZP60038	Base Control Program (BCP)	EBB1102	yes	no	yes	Greg Price (Prycroft Six)	ADD CLIST VARIABLE API
+ZP60039	MVS Processor Support 2	FBB1221	yes	no	yes	Tom Armstrong	MESSAGE TEXT SUPPLIED TO THE WTO AND WTOR MACROS MUST BE INLINE.                  APPLICATIONS ISSUING WTO MESSAGES CANNOT SPECIFY DISPLAY                        TEXT WHICH IS REMOTE, THAT IS, NOT PHY
+ZP60040	Base Control Program (BCP)	EBB1102	yes	no	yes	Tom Armstrong	MESSAGE TEXT SUPPLIED TO THE WTO AND WTOR MACROS MUST BE INLINE.                  APPLICATIONS ISSUING WTO MESSAGES CANNOT SPECIFY DISPLAY                        TEXT WHICH IS REMOTE, THAT IS, NOT PHY
+ZP60041	MVS Processor Support 2	FBB1221	yes	no	yes	Greg Price	ADD INDIRECT CATALOGING
+ZP60042	Data Management	EDM1102	yes	no	yes	Rob Prins	ADD INDIRECT CATALOGING
+ZP60043	Base Control Program (BCP)	EBB1102	yes	no	yes	Tom Armstrong	RESOLVE SYSRES FOR APF
+ZP60044	Base Control Program (BCP)	EBB1102	yes	no	no	Greg Price (Prycroft Six)	TEST ENHANCEMENTS
+ZUM0001	Base Control Program (BCP)	EBB1102	yes	no	no	community (Y2K etc.)	
+ZUM0002	Base Control Program (BCP)	EBB1102	yes	no	no	community (Y2K etc.)	
+ZUM0005	Base Control Program (BCP)	EBB1102	yes	no	no	community (Y2K etc.)	
+ZUM0007	Base Control Program (BCP)	EBB1102	yes	no	yes	community (Y2K etc.)	Y2K patch
+ZUM0014	Base Control Program (BCP)	EBB1102	yes	no	no	community (Y2K etc.)	
+ZUM0015	Base Control Program (BCP)	EBB1102	yes	no	no	community (Y2K etc.)	
