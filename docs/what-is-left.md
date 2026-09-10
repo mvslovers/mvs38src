@@ -1696,3 +1696,39 @@ separated clock from RLD from real in one pass and the first could not have,
 because a `&SYSTIME` stamp is not a statement anyone wrote. Same lesson as the
 `IFO220` re-cut: group by what the measurement says, not by what the source looks
 like.
+
+
+## The 24 non-EREP `both flag`, grouped by the oracle rather than by my assertion — 2026-09-10
+
+I had written that the 24 are macro-blocked because "both assemblers name the same
+undefined symbols", and handed cc370 the assertion with a note that I had checked
+most of them and not all. Grouped by what `diag/` actually says:
+
+| | modules | |
+|---|---:|---|
+| `IFO078` — undefined **op code** | 13 | a missing macro, the `IEC*` family |
+| `IFO188` alone — undefined **symbol** | 7 | `IFNX3A IFNX5D IFNX5M IFOX0A IFOX0D IKJEGAT IKJEGATD` |
+| those plus `IFO195`/`IFO231` | 2 | `IGG019RO IKJEGMNL` |
+| **neither** | **2** | **`IECVOID` `IEDQWIE`** |
+
+**Twenty-two of the 24 are macro-blocked. Two are not**, and they are an
+assembler case after all:
+
+```
+IECVOID   IFOX  IFO092 keyword DATE undefined  +  IFO178 SYNTAX ERROR near column 5
+          as370 IFO092 only
+
+IEDQWIE   IFOX  IFO117 x2                      +  IFO178 SYNTAX ERROR near column 3
+          as370 IFO117 x2 only
+```
+
+Verified here from `diag/` independently of cc370's count: `IECVOID` has one
+`IFO092` and one `IFO178`, `IEDQWIE` two `IFO117` and two `IFO178`. Both
+assemblers agree on the *first* message and `as370` misses the follow-on — IFOX00
+flags the consequence as well as the cause: the keyword is rejected, the generated
+statement is then malformed, and it says so about the statement too.
+
+**The assertion was 24, the measurement is 22 + 2.** Worth recording as a method
+note and not only as a count: grouping by *the oracle's message* separated two
+real cases out of a block I had written off, and it took one pass over files that
+were already on disk.
