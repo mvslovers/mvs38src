@@ -82,9 +82,33 @@ copy simply does not carry. Assembled with `as370`, **the two versions produce
 byte-identical decks**. For that class the archive has lost Dave's record of what
 he disabled, and nothing else.
 
-The 15 % that differ in code are a different matter, and some are large:
-`BLSSLPDE` has 556 code lines in the archive against 2,046 on the system,
-`ISTSDCSU` 828 against 2,936.
+The 15 % that differ in code are a different matter, and they are **not
+cosmetic**. Some are large — `BLSSLPDE` has 556 code lines in the archive against
+2,046 on the system, `ISTSDCSU` 828 against 2,936 — but size is not the test. The
+test is whether they assemble to the same object, and that was measured: a second
+sample of 300, restricted to modules IFOX00 assembles cleanly (`asm_ok`, so both
+sides can be put through `as370`):
+
+| | modules |
+|---|--:|
+| source identical | 164 |
+| differ only in comment lines | 95 |
+| **differ in code** | **41** |
+| — of those, **same deck** | 8 |
+| — of those, **different deck** | **31** |
+| — not comparable (one side `rc != 0`) | 2 |
+
+**Three quarters of the code differences change the object.** Over the tree that
+is on the order of one module in ten where *which copy of Dave's source you use*
+decides what comes out — including `BLSUPRTA`, `BLSFVRFY` and `IKJEFA42`, and a
+row of modules like `BLSFSD00` and `BLSEAUTH` where the line counts are identical
+and the decks still differ.
+
+**All 5,528 reference decks were assembled from the archive copy.** That does not
+invalidate them — they are a consistent reference and `as370` is measured against
+them fairly — but it does mean the figure "Dave's source assembles to 1,084 of
+3,988 shipped objects" is a statement about *the archive copy*, and the other
+copy has not been measured at all.
 
 ### What that means for the plan
 
