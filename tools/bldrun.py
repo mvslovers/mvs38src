@@ -38,8 +38,15 @@ import argparse, json, os, re, sys, time, urllib.parse, urllib.request, base64
 # retry loop was built for exactly this and could not help -- a name that
 # does not resolve does not start resolving because you ask again.  ssh
 # config has mapped mvsdev to mvsdev.lan all along.
-HOST = "http://mvsdev.lan:8082"
-USER, PW = "IBMUSER", "SYS1"
+# Which system the chain runs on.  Run 1-4 were MVSCE-LAB; from 2026-09-10 the
+# build belongs on MVSTK5-BLD, because TK5 is the object baseline
+# (docs/deck-vs-tk5-ce.md) and ZLMDRPTD only compares against the DLIBs of the
+# system it runs on.  The credential differs per system and the wrong one gives
+# a 401, which is indistinguishable from an outage from the outside.
+SYSTEMS = {"lab": ("http://mvsdev.lan:8082", "IBMUSER", "SYS1"),
+           "exp": ("http://mvsdev.lan:8083", "IBMUSER", "SYS1"),
+           "bld": ("http://mvsdev.lan:8085", "HERC01", "CUL8TR")}
+HOST, USER, PW = SYSTEMS["bld"]
 LIB = "MVSSRC.BLD.SMP.JCL"
 SUB = re.compile(r"^//(\S+)\s+EXEC\s+BLDSUB\s*,(.*)$", re.I)
 
@@ -190,8 +197,13 @@ def main():
     ap.add_argument("--start", required=True)
     ap.add_argument("--until", default=None)
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--max", type=int, default=200)
+    ap.add_argument("--max", type=int, default=300)
+    ap.add_argument("--system", default="bld", choices=sorted(SYSTEMS),
+                    help="which MVS the chain runs on (default: the TK5 build machine)")
     a = ap.parse_args()
+    global HOST, USER, PW
+    HOST, USER, PW = SYSTEMS[a.system]
+    print(f"chain on {a.system} -- {HOST} as {USER}", flush=True)
 
     cur, n, bad = a.start, 0, []
     while cur and n < a.max:
