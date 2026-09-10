@@ -1,5 +1,25 @@
 # The macros nobody here has
 
+> ## ⚠️ Nine of the thirteen are now here — 2026-09-10
+>
+> | | |
+> |---|---|
+> | **found and installed** | `BTMHJN` `BTMIOBWA` `IECPDSCB` `$ASXB` `IEZCTGPL` `IHADECB` `IHADVCT` — and `LINEND` `HEX` `CONVT` `DSGEN` `LINE` `ROUTINE` `SPECIAL` `SUM` `IFCMACS` on the EREP side |
+> | **still missing** | `ENTRIES` `ETEPILOG` `FREETAB` `SUMMARY` |
+> | **found but the wrong macro** | `PROLOG` — every local copy takes no operands, every EREP caller writes `PROLOG NAME=` |
+> | **still missing, unchanged** | `TABLE` (48 modules), `IQAERB`, and the single-module entries below |
+>
+> Where each one came from, and what it cost to establish, is in
+> [`work/macros/found-2026-09-09/README.md`](../work/macros/found-2026-09-09/README.md)
+> and [`work/macros/erep-instream2/README.md`](../work/macros/erep-instream2/README.md).
+> **Two of the four "Group A" names were on this machine all along** and had been
+> reported missing by a search that used exact names with no extension, over a
+> scope that excluded the largest archive, with no control.
+>
+> **The four blocking the build are closed.** `EBT1102` and `EJE1103` apply again;
+> `EDM1102` has its macros in place for the next run. That chain is in
+> [`dave-install-log.md`](dave-install-log.md).
+
 2026-09-07, measured against `as370` at the merge of cc370#174. **40 operations
 cannot be resolved by either assembler, and they block 204 module–operation
 pairs across the two source trees we build from.** Table:

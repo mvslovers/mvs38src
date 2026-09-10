@@ -570,8 +570,8 @@ figure in this repository counts them as finished.
 
 **`DECK AND RC BOTH` is the honest headline**: 5,210 of 5,528, against 5,348 on
 the deck alone. *Those two, and the 33/118 above, are the figures on the day the
-return code entered the goal. On `1112488`, distance 0 at writing: **5,403** deck
-and return code, **5,424** on the deck alone (5,404 raw), `as370` alone flags
+return code entered the goal. On `b67af3d`, distance 0 at writing: **5,403** deck
+and return code, **5,441** on the deck alone (5,404 raw), `as370` alone flags
 **3**, IFOX00 alone flags **4**, and `flagged-or-silent agrees` **5,517**.*
 
 It takes the run's own `<label>.tsv` (or `--rc`), and compares *clean against not

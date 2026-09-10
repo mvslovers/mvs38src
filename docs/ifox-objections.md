@@ -32,7 +32,7 @@ How far the doubt reaches into what has been claimed:
 *Against `as370` at cc370 `879e86a` — distance **126** from `main`. The 933 does
 not move with an `as370` change: it is a property of the IFOX00 side, and it is
 the one figure on this page that is still current. The three rows above it are
-not: on `1112488`, distance 0 at writing, `as370` == IFOX00 on 5,424, the
+not: on `b67af3d`, distance 0 at writing, `as370` == IFOX00 on 5,441, the
 assembler owns 128, and 1,211 modules are byte-identical to IBM's object.*
 
 The last row is the important one: **the recovery figure is clean.** A module

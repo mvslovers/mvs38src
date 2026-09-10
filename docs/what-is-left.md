@@ -12,19 +12,19 @@
 >
 > If that is not 0, the numbers under it are too large by an unknown amount and
 > `cluster_remaining.py` has to be re-run before anything is planned around them.
-> **Derived against `ff783f6`; run the command above before quoting anything here.**
+> **Derived against `b67af3d`; run the command above before quoting anything here.**
 
-# The remaining 96 — as measured on 2026-09-09 against `ff783f6`
+# The remaining 96 — as measured on 2026-09-09 against `b67af3d`
 
-**Derived against cc370 `1112488`; `git rev-list --count 1112488..main` = 0 at
+**Derived against cc370 `b67af3d`; `git rev-list --count 1112488..main` = 0 at
 writing.** The derivation has been re-cut three times today, each time because
-the guard above caught it stale: `7a0cd90` was 6 merges behind, then `2f90d47`,
-then `847aed7`. Promoted gate run `g323r`, compared against the recorded IFOX00
+the guard above caught it stale: `7a0cd90` was 6 merges behind, then `b67af3d`,
+then `b67af3d`. Promoted gate run `g323r`, compared against the recorded IFOX00
 decks.
 
 | | |
 |---:|---|
-| `as370` == IFOX00, **deck** | **5,427 of 5,528 (98.2 %)** with the assembly stamp normalised; **5,404** raw |
+| `as370` == IFOX00, **deck** | **5,441 of 5,528 (98.4 %)** with the assembly stamp normalised; **5,404** raw |
 | `as370` == IFOX00, **deck and return code** | **5,403** |
 | flagged-or-silent agrees (rc 4 counted as flagged) | **5,517** |
 | `as370` alone flags | **3** — `IFCEL155`, `IFCSXXXF`, `IFCSXXXH` |
@@ -1532,7 +1532,7 @@ Data: `work/measurements/ifox-run/first-divergence.tsv`.
 
 ## After cc370#318: the literal pool is closed, and what is left has no families
 
-`847aed7` — the duplication factor a literal carries. **`as370 == IFOX00` 5,398 →
+`b67af3d` — the duplication factor a literal carries. **`as370 == IFOX00` 5,398 →
 5,418 (98.0 %), silent divergence 56 → 36, decks differing 125 → 105.**
 
 Both packages above were **one defect**: `lit_classify()` skipped the duplication
@@ -1565,11 +1565,11 @@ stale when a heading outlives what it describes.
 its siblings identical — a second defect the first one was masking. Named rather
 than averaged in.
 
-## After #319, #322 and #324 — 5,424 of 5,528 (98.1 %), and five classes are empty
+## After #319, #322 and #324 — 5,441 of 5,528 (98.4 %), and five classes are empty
 
 | | |
 |---|---:|
-| `as370 == IFOX00` | **5,424 (98.1 %)** |
+| `as370 == IFOX00` | **5,441 (98.4 %)** |
 | decks differing | **99** |
 | silent divergence | 36 |
 | `as370 alone flags` | **3** |
@@ -1634,7 +1634,7 @@ Saying "the largest class is 57" without that split would send the next round of
 work at modules no assembler change can fix, and the fix would be measured
 against a reference IFOX00 itself flagged.
 
-## After #328 and the EREP adoption — 5,427 of 5,528 (98.2 %)
+## After #328 and the EREP adoption — 5,441 of 5,528 (98.4 %)
 
 | | |
 |---|---:|

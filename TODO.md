@@ -32,12 +32,12 @@ real Assembler XF under MVS/CE, from the same source and the same 1,822 macros.
 That separates the tool question from the source question for every module, and
 it is done: [`docs/ifox-tree.md`](docs/ifox-tree.md).
 
-**Derived against cc370 `ff783f6`, distance 0 at writing** (check it:
+**Derived against cc370 `b67af3d`, distance 0 at writing** (check it:
 `git -C ~/repos/mvs/cc370 rev-list --count ff783f6..main`), from the promoted
 gate run `g328` — **and against the EREP-adopted oracle**, see
 [`docs/erep-adoption.md`](docs/erep-adoption.md):
 
-- **`as370` and IFOX00 agree on 5,427 of 5,528 decks (98.2 %)** once the assembly
+- **`as370` and IFOX00 agree on 5,441 of 5,528 decks (98.4 %)** once the assembly
   stamp is normalised, **5,404** on the raw bytes — the two instruments differ by
   the 20 decks that carry the date and nothing else. **5,403** when the return
   code has to agree too.
@@ -86,7 +86,7 @@ in it is two modules.
 **1. Hand what is left to cc370 as cases, ordered.** The table gives each one the
 offset where the two decks part, both section lengths, and both assemblers'
 messages — [`module-table.tsv`](work/measurements/ifox-run/module-table.tsv), one
-row per module. The classes on `1112488`, over the 99 still differing, largest
+row per module. The classes on `b67af3d`, over the 99 still differing, largest
 first:
 
 | | Modules | was, 2026-09-09 morning | was, 2026-09-07 |
@@ -109,7 +109,7 @@ IFOX00 alone flags with a differing deck are `IBCDMPRS`, `IEAVEXS` and
 
 **2. The source work, now attributable with certainty.** Where `as370` == IFOX00
 and the DLIB member still differs, the difference belongs to the source or to
-IBM's maintenance and to nothing else. On `1112488` that is **3,734 modules** of
+IBM's maintenance and to nothing else. On `b67af3d` that is **3,734 modules** of
 the 4,960 that both agree on *and* have a DLIB pair — 2,292 differing in length,
 574 in `DS` holes only, 560 in text, 308 mixed. **1,209 are already
 byte-identical.**
