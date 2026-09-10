@@ -145,6 +145,59 @@ with the sister section. So whatever produces the difference is bound up with
 **how the ESD is numbered** in those modules, not with the constructs on their
 own. The next fixture has to reproduce the layout, not just the operands.
 
+
+### The cause, found by cc370 and confirmed against the oracle
+
+The narrowing above pointed at the ESD layout. It was not that either — cc370
+found that their `LD id 2` was a third parser artefact (**an `LD` entry has no
+ESDID of its own**; it carries an LDID naming its section, and their script
+counted it in the running ESDID sequence). The real construct is an **`EQU`
+alias on an external symbol**, which `mirror/JEXTRN` generates by the dozen:
+
+```
+         EXTRN IFNX6C01
+ERRMSGS  EQU   IFNX6C01
+```
+
+Their fixture, run here against IFOX00 on `MVSCE-LAB` and `as370` at `5f326b4`:
+
+```
+RELFIX3  CSECT
+         EXTRN EXTA
+ALIASA   EQU   EXTA
+         USING RELFIX3,15
+         L     1,=A(EXTA)
+         L     2,=A(ALIASA)
+         DC    A(EXTA)
+         DC    A(ALIASA)
+         LTORG
+         END
+```
+
+| address | | IFOX00 `R` | `as370` `R` | |
+|---|---|--:|--:|---|
+| `0x0008` | `DC A(EXTA)` | 2 | 2 | |
+| `0x000c` | `DC A(ALIASA)` | **2** | **1** | **wrong** |
+| `0x0010` | `=A(EXTA)` | 2 | 2 | |
+| `0x0014` | `=A(ALIASA)` | **2** | **1** | **wrong** |
+
+ESD identical on both sides: `1:RELFIX3/SD  2:EXTA/ER`.
+
+**It is not the literal** — both direct forms are right and both alias forms
+wrong, in the `DC` and in the literal pool alike. `add_reloc()` finds no
+`s->esdid` for the alias and falls through to `sect_esdid_of(s->sect)`, the
+CSECT.
+
+**And the binding-error half of the hypothesis stands after all, narrowed to the
+alias form**: the linker adds the section origin instead of resolving the
+external symbol. That is why the first fixture found nothing — it tested the
+constructs cc370 and I both suspected, and the defect is in a construct neither
+of us had written down.
+
+The fixture also carries its own control: `EXTA` and `ALIASA` are the same symbol
+by definition of `EQU`, so they must relocate identically. A wrong answer is
+visible without an oracle at all.
+
 ## Operational: `MVSCE-EXP` rejects submitted jobs
 
 Every job submitted to `MVSCE-EXP` (`:8083`) as `IBMUSER`/`SYS1` ends
