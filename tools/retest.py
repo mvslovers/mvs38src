@@ -98,6 +98,25 @@ def seclen(path):
     fixed address. A section's declared length cannot be faked by a shift.
     cc370 found this on #174, where the byte measures called 24 decks worse and
     the lengths called 136 of them right for the first time.
+
+    **The counting rule, written down because two instruments disagreed.**
+    cc370 re-derived #241's second rule with its own ESD parser and got 33
+    sections longer where this one gives 20. Both parsers are self-consistent;
+    they do not count the same thing. What this one counts:
+
+      * ESD cards only -- columns 2-4 are `ESD` in EBCDIC.
+      * item types SD (0x00), PC (0x04) and CM (0x05), and **only when the
+        name field is non-blank**.
+      * LD (0x01) skipped explicitly: it carries neither ESDID nor length.
+      * ER (0x02) and WX (0x0A) never counted: they have no length to compare.
+      * length is the three bytes at item[13:16], big-endian.
+
+    The blank-name condition is the one that bites. Across the 5,528 reference
+    decks it drops **404 unnamed SD/PC/CM items in 404 decks** -- unnamed
+    private code, one per deck -- which a parser that keys on ESDID instead of
+    name will happily count. Measured 2026-09-10. Name collisions within a
+    single deck, which the name-keyed dict would silently lose, do not occur:
+    zero across all 5,528.
     """
     out, names = {}, {}
     d = open(path, "rb").read()

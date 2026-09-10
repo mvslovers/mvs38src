@@ -156,14 +156,28 @@ more column. Run it against all three source states and read the number.
 
 | | |
 |---|---|
-| `as370` == IFOX00 | 5,418 of 5,528 decks; `as370` alone flags 0 |
+| `as370` == IFOX00 | **5,427 of 5,528 decks** at cc370 `fd287d3`; `as370` alone flags 0 |
 | Dave's source == shipped object (TK5) | 1,084 of 3,988 |
-| Dave's build, run 4 | **stalled** at `EDM1102A JOB00809`; the driver died with its session |
+| Dave's build, run 4 | superseded — run 5 is on `MVSTK5-BLD`, 3390-2 volumes |
 | EREP macros still missing | 4 — `ENTRIES` `ETEPILOG` `FREETAB` `SUMMARY` |
 
 Run 4 is not worth restarting on LAB. It was always going to move to
 `MVSTK5-BLD`, and restarting it there costs the same and produces the thing the
 next step needs.
+
+**The parity figure is pinned to a commit on purpose.** It was 5,418 at the
+promoted baseline (`f1cec11`, cc370#344) and is 5,427 at `fd287d3` — measured
+tree-wide by cc370 with a three-way control: `amaclib-live` last and
+`amaclib-live` absent give the *same set* of modules, +0/-0, while
+`amaclib-live` first gives 5,426. An unattributed parity number is a number
+that has already started going stale; see `docs/missing-macros.md` for what the
+macro path did to this one.
+
+**And the reference itself is no longer trustworthy on `MVSCE-LAB`.** Its
+`SYS1.AMACLIB` is not in the state that produced the 5,528 reference decks on
+2026-09-07 — proved from IFOX00's own diagnostics, not inferred. Re-running the
+oracle there would not reproduce the corpus we measure against. That is the
+argument for a pinned reference system, and `MVSTK5-REF` is it.
 
 ## 5. The stages
 
