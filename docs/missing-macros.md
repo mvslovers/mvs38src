@@ -429,22 +429,69 @@ our own systems the whole time. The provenance analysis that picked
 `SYM601.F01` over the mirror copy was right, and `found-2026-09-09` *is*
 `SYS1.AMACLIB` — which is why it was right.
 
-### What the asymmetry is worth, measured
+### What the asymmetry is worth, measured — and my first figure was blind
 
 Eighteen `MVSBLD` modules name `IEZCTGPL` or `IHADVCT` in their own source.
-Assembled with the `AMACLIB` copy ahead of `mirror`:
+Assembled with the `AMACLIB` copy ahead of `mirror`, compared with the project's
+own `ifox_compare.compare()` and the stamp pinned from `state.tsv`:
 
 | | modules |
 |---|--:|
-| deck unchanged | 17 |
-| **deck changed** | **1** (`IGC018`) |
-| gained identity with IFOX00 | **0** |
-| lost identity | **0** |
+| stays identical to IFOX00 | 17 |
+| **loses identity** | **1** — `IGC018` |
+| gains identity | 0 |
 
-`IGC018` fails `rc 8` either way. So the asymmetry is real, it has been carried
-in every gate run since 2026-09-07, and its measured effect on the corpus is one
-deck that was wrong before and is wrong differently now. **The instrument could
-have found more — it found that one.**
+**The change costs one identity, not zero.** My first attempt at this figure
+reported `0 / 0` and was measured with an instrument that could not see identity
+at all: no stamp normalisation and no exclusion of the `END` card, so **all 18
+came out "different"** — which should have been the tell, and was not. cc370
+caught it by measuring the same thing properly.
+
+`body()` in `ifox_compare.py` drops the `END` card entirely and truncates every
+card at column 72. That is the fourth place today where **columns 73–80 decide
+whether a number means anything**, after the macro comparison, the archive
+source comparison, and the `AMACLIB` member counts.
+
+### `IGC018` loses identity, and that is a finding rather than a regression
+
+Separated one macro at a time:
+
+| | `IGC018` |
+|---|---|
+| `mirror` only — today's gate | **identical** |
+| `IHADVCT` swapped alone | **bytes** |
+| `IEZCTGPL` swapped alone | identical |
+| both swapped | bytes |
+
+**`IHADVCT` is the whole effect and `IEZCTGPL` is none of it.**
+
+Today's identity therefore rests on `as370` using a macro *the oracle did not
+use*: `as370` + `mirror` agrees with IFOX00 + `AMACLIB`, and `as370` + `AMACLIB`
+does not. Two divergences cancelling. cc370's reading, and it is the right one —
+that is not identity, it is a coincidence hiding an `as370` defect. After the
+correction `IGC018` belongs in `settled-against-as370`, not on a regression list.
+
+### And the provenance claim does not hold for `IEZCTGPL`
+
+cc370 compared the three copies byte for byte, columns 1–72:
+
+| | `mirror` vs `found` |
+|---|---|
+| `IHADECB` | identical |
+| `IEZCTGPL` | **one byte**, line 40 column 15 |
+| `IHADVCT` | 204 lines against 197, **58 lines differ** |
+
+```
+mirror  *%IF CTGPL999 ^= ','      X'5E'
+found   *%IF CTGPL999 ¬= ','      X'AC'
+```
+
+A **comment card**, and the difference is the NOT sign — transliterated one way
+in one copy and the other way in the other. On MVS both are the same character.
+So `mirror/IEZCTGPL` is not a different maintenance level, it is the same macro
+down a different path off the host, and the measurement above confirms it: it
+moves no deck. `IHADVCT` is a genuine content difference — one copy documents
+`DVCBPSEC` and the other does not — and it is the one that matters.
 
 `BTMHJN`, `BTMIOBWA` and `IECPDSCB` are named by no module in the corpus and
 appear nowhere in `missing-macros.tsv`, so their absence costs nothing.
