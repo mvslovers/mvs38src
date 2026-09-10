@@ -1,0 +1,66 @@
+{
+  "_comment": [
+    "The MVS instances on mvsdev.lan, and which of them a tool may submit to.",
+    "",
+    "This exists because cc370 captured an oracle deck on port 8080 on 2026-09-10.",
+    "That is MVSCE-DEV, Mike's development machine, and it is off limits -- but",
+    "nothing in either repository said so. cc370 has no .env and neither does",
+    "mvs38src, so a tool needing a target borrows the nearest, and mvsmf/.env points",
+    "at 8080 because that is correct FOR MVSMF. The rule lived in one agent's memory",
+    "while every configuration in reach pointed the other way, and a prohibition",
+    "nobody can read is not a control.",
+    "",
+    "JSON and not TSV, and that is also cc370's finding. The first version of this",
+    "file was a positional TSV with a header, and the header carried one doubled tab.",
+    "Ten fields against nine: a consumer indexing by header position read `submit`",
+    "out of the `pass` column, never saw \"no\", and would have called MVSCE-DEV",
+    "submittable -- the exact failure this file exists to prevent, shipped inside it.",
+    "An off-by-one in a positional format is invisible and total. Named fields cannot",
+    "drift.",
+    "",
+    "No credentials here. They belong in a gitignored .env keyed by `name`.",
+    "The map is the part that must be readable by everyone; the credentials are the",
+    "part that must not.",
+    "",
+    "submit=false means: do not send work there. Reading may still be wrong -- read",
+    "the note -- but submitting is never right.",
+    "",
+    "msgclass is a CHOICE, not an observation: H everywhere because every tool here",
+    "reads job output back over REST, and class A is printed and purged before it can",
+    "be read. cc370 raised this -- capture.py defaults to A while mvsmf/.env sets H,",
+    "so a tool switching to this file would silently start putting its output",
+    "somewhere other than yesterday, which gets diagnosed as a missing job."
+  ],
+  "systems": {
+    "MVSCE-DEV": {
+      "host": "mvsdev.lan", "mvsmf": 8080, "ftp": null, "tn3270": null,
+      "console": null, "submit": false,
+      "jobclass": "A", "msgclass": "H",
+      "note": "Mike's development machine. Never submit. The default in the mvsmf, ftpd, httpd, nsf370 and rexx370 .env files, which is correct for those products and wrong for anything here."
+    },
+    "MVSCE-LAB": {
+      "host": "mvsdev.lan", "mvsmf": 8082, "ftp": 2122, "tn3270": 3272,
+      "console": 8282, "submit": true,
+      "jobclass": "A", "msgclass": "H",
+      "note": "Produced the 5,528 reference decks on 2026-09-07 and is NO LONGER in that state -- SYS1.AMACLIB(IHADVCT) drifted. Submitting is fine; using it as an oracle is not. See docs/missing-macros.md."
+    },
+    "MVSCE-EXP": {
+      "host": "mvsdev.lan", "mvsmf": 8083, "ftp": 2123, "tn3270": 3273,
+      "console": 8383, "submit": true,
+      "jobclass": "A", "msgclass": "H",
+      "note": "Untouched MVS/CE reference; the control that LAB was not mutated."
+    },
+    "MVSTK5-REF": {
+      "host": "mvsdev.lan", "mvsmf": 8084, "ftp": 2124, "tn3270": null,
+      "console": 8484, "submit": false,
+      "jobclass": "A", "msgclass": "H",
+      "note": "The object baseline. Read only until Mike pins it as the oracle."
+    },
+    "MVSTK5-BLD": {
+      "host": "mvsdev.lan", "mvsmf": 8085, "ftp": 2125, "tn3270": null,
+      "console": 8585, "submit": true,
+      "jobclass": "A", "msgclass": "H",
+      "note": "Dave's build chain runs here. bldrun.py forces MSGCLASS=H so output stays readable; spoolarch.py keeps the spool flat."
+    }
+  }
+}
