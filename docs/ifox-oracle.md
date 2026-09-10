@@ -264,3 +264,47 @@ not the same code.**
 so the assembler is not in question; and the single byte by which it differs from
 its DLIB member is the `DS` hole at `0x00AA`. Source correct, tool correct,
 difference explained — the first time all three could be said at once.
+
+## The oracle's IFOX00 is not stock Assembler XF — 2026-09-10
+
+`MVSCE-EXP` and `MVSCE-LAB` both carry **37 `ZP60*` USERMODs** in `SYS1.SMPPTS`
+— Greg Price's enhancements to Assembler XF. Three of them change the assembler's
+behaviour directly:
+
+| | |
+|---|---|
+| `ZP60003` | the `/* XF ASSEMBLER */` blank-line fix |
+| `ZP60024` | raises the ESD limit |
+| `ZP60025` | **adds `BAS` and `BASR`** |
+
+**Established by asking the oracle, not by reading the SMP catalog.** A lookup of
+the SYSMOD names in `SYS1.SMPCDS` reported all three as "received only", which is
+wrong — SMPCDS members are not named after the SYSMODs that put them there. The
+behavioural test settles it in one assembly:
+
+```
+ZPTEST   CSECT
+         USING ZPTEST,15
+         BAS   14,TGT
+TGT      BR    14
+         END
+
+IFOX00 on MVSCE-EXP:   000000 4DE0 F004    HIGHEST SEVERITY WAS 0
+```
+
+Stock Assembler XF has no `BAS`. **`ZP60025` is applied**, so the reference this
+project measures against is an *enhanced* XF.
+
+### What follows from it
+
+- **The comparison is unaffected and its meaning is narrower than it sounds.**
+  `as370 == IFOX00` has always meant *the IFOX00 on our system*, and that is the
+  right target — it is the assembler Dave's build uses and the one that produced
+  the 5,528 reference decks. But it is **not** IBM's 1974 Assembler XF, and a
+  figure from here is not comparable to one taken against a stock system.
+- **`as370` already implements it.** The same source gives `4d e0 f0 04 07 fe`
+  here, matching byte for byte — so this is a property the two share rather than
+  a divergence, and nobody had checked.
+- The finding comes from the `foo` session's TK5-vs-MVS/CE work
+  ([`smp-tk5-vs-ce.md`](smp-tk5-vs-ce.md)), which lists all 37. It was raised as a
+  caveat about TK5 and turns out to apply to our own oracle too.
