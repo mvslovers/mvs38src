@@ -404,8 +404,20 @@ def cmd_diag(args):
                 L.append("//SYSPUNCH DD  DUMMY")
                 L.append(f"//SYSIN    DD  DSN={DIAGSRC}({m}),DISP=SHR")
             n, i = submit("\n".join(L) + "\n")
-            wait(n, i)
-            purge(n, i)
+            rc = wait(n, i)
+            # Read the return code and KEEP the job when it is bad.  This line
+            # used to be `wait(n, i); purge(n, i)` -- the outcome discarded and
+            # the evidence deleted in the next statement.  On 2026-09-10 a
+            # capture of IECVOID and IEDQWIE produced no listing, no
+            # diagnostics and no message of any kind, and the only reason
+            # nothing could be said about why is that the job had been purged.
+            # A standalone job with identical options worked first time.
+            code = rc.get("retcode") if isinstance(rc, dict) else rc
+            if not str(code).startswith("CC 00"):
+                print(f"    job {n}/{i} ended {code} -- NOT purged, look at it",
+                      flush=True)
+            else:
+                purge(n, i)
         on_mvs = members(LSTPDS)
         for m in batch:
             if m not in on_mvs:

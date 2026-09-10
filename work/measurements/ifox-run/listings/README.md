@@ -105,3 +105,31 @@ card was 78 characters and JCL stops at column 71** — a JCL ERROR, an empty
 when it does not fit. Second time in one evening that a JCL line past column 71
 or a continuation starting in column 15 cost a job with a message that did not
 say so.
+
+## The capture tool had a silent-failure path, and it is half fixed
+
+On 2026-09-10 a two-module capture (`IECVOID`, `IEDQWIE`) produced **no listing,
+no diagnostics and no message of any kind**. A standalone job with identical
+options worked first time.
+
+The reason nothing could be said about why: `cmd_diag` did
+
+```python
+n, i = submit(...)
+wait(n, i)          # return value discarded
+purge(n, i)         # evidence deleted
+```
+
+**The outcome was thrown away and the job deleted in the next statement.** It now
+reads the return code and keeps the job when it is bad, printing the id to look
+at. (First version of that check compared `wait()`'s return — which is the whole
+job dict, not the code — against `"CC 00"`, and reported a perfectly good `CC
+0008` job as failed. Fixed.)
+
+**What is still not established** is why the two-module run failed at all. A
+single-module run with the same options now works: `IECVOID` lands in
+`IBMUSER.IFOXLST` and its diagnostics are written. Earlier two-module and
+one-module runs with `--keep-full` also worked (`BLSR3270`, `IFCSXXXF`). So the
+failure is not `--keep-full` and not multi-module as such, and I have not found
+it. It is recorded here rather than left as folklore: **if a capture comes back
+empty, the job id is now printed and the job is still on the system.**
