@@ -101,4 +101,125 @@ favour either column.
 
 ## Results
 
-*(pending — the pull is running)*
+3,988 modules: every one with a clean IFOX00 assembly of Dave Kreiss' source and
+a distribution-library member of that name on **both** systems. 7,976 member
+reads, none absent, none in error. Raw rows:
+[`deck-vs-tk5-ce.tsv`](../work/measurements/smp-inventory/deck-vs-tk5-ce.tsv).
+
+### Control — same RMID must give the same verdict
+
+| | modules |
+|---|--:|
+| same RMID on both systems | 3,473 |
+| verdicts agree | **3,473** |
+| verdicts disagree | **0** |
+
+Not one disagreement in 3,473. Where SMP says the object is the same, the
+comparator says so too, on both sides, without any date masking. The harness is
+measuring the systems and not itself.
+
+### The headline, and it is a small number
+
+| Dave's source assembles byte-identical to… | modules | of 3,988 |
+|---|--:|--:|
+| **TK5's object** | **1,084** | 27.2 % |
+| **MVS/CE's object** | **1,094** | 27.4 % |
+
+**Ten modules apart in 3,988.** Whatever else the baseline decision rests on, it
+is not this: 3,473 of the 3,988 carry the same object on both systems, so 87 % of
+the corpus cannot distinguish them even in principle.
+
+### Where they can differ — the 515 divergent modules
+
+| | modules |
+|---|--:|
+| hits **TK5** only | 22 |
+| hits **MVS/CE** only | 32 |
+| hits both | 2 |
+| hits **neither** | **459** |
+
+Read at face value that says MVS/CE, 32 to 22, and **the prediction above was
+TK5**. But the face value is the wrong grouping, and separating the modules by
+what SMP says about them reverses it.
+
+### Stratified by maintenance level — this is the finding
+
+Of the 515, MVS/CE sits at base FMID in 127 and TK5 sits at base in **none**
+(`foo`'s direction result, reproduced on a different sample). So the 515 split
+into "CE never applied the PTF" and "both applied one, to different levels", and
+those two groups answer different questions:
+
+| | modules | hits TK5 only | hits CE only |
+|---|--:|--:|--:|
+| **both systems PTFed**, to different levels | 388 | **15** | **1** |
+| MVS/CE still at base FMID | 127 | 7 | 31 |
+
+**Where both systems carry maintenance, Dave's source hits TK5 fifteen times to
+one.** MVS/CE's apparent lead is made almost entirely of the other group — 31 of
+its 32 wins are modules where CE never applied a PTF and Dave's source has not
+got it either. That is not the baseline being a better match; that is two
+unmaintained things agreeing.
+
+The same asymmetry stated the other way round:
+
+| Dave's source is byte-identical to a **maintained** object the other system does not carry at all | modules |
+|---|--:|
+| on TK5 (MVS/CE still at base) | **7** — `IASFCB26` `IASFCB28` `IEBVDM` `IECVOTBL` `IGC0206F` `IGGMSG02` `IKJRBBCM` |
+| on MVS/CE (TK5 still at base) | **0** |
+
+Seven to nothing. **Dave Kreiss' source demonstrably carries object-level
+maintenance that MVS/CE does not**, and there is no case of the reverse. That is
+the lineage argument, measured rather than asserted: his oracle was TK3, TK5 is
+what TK3 grew into.
+
+And on the 459 that hit neither, the near-miss goes the same way — of those that
+differ by an unequal number of bytes, TK5 is the nearer object in 58 and MVS/CE
+in 41 (360 differ by the same amount on both sides).
+
+### So the prediction was right, and the raw count was not
+
+Recorded as it happened: the prediction said TK5; the first table said MVS/CE by
+32 to 22; the stratified table says TK5 by 15 to 1 and 7 to 0. **The raw count
+was not wrong, it was the wrong grouping** — exactly the failure this project
+keeps meeting, and the reason the rule is to group by what the oracle says rather
+than by what the totals look like.
+
+## Two corrections to what was believed before this ran
+
+**1. "Length differs" is not by itself a code difference.** `dlib-distance-tk5-ce.md`
+classified 727 modules as `len-diff` and called that "a definite code difference —
+a date never changes the length". Dates do not, but the **member envelope** does.
+`IDA121CV` is 502 bytes on TK5 and 490 on MVS/CE, and its CSECT is byte-identical
+on both — and identical to ours. The twelve bytes are a **CESD entry**: MVS/CE's
+member carries the alias `IGC121`, TK5's does not.
+
+```
+tk5  ...  IDA121CV               IDA121A
+ce   ... &IDA121CV      IGC121   IDA121A
+```
+
+`IEBISMES` is the same shape, 1,686 against 1,674. That is a **floor of two**, not
+a rate — the method here can only see it where our own deck matches both sides.
+What it establishes is that whole-member length mixes code with aliases and
+identification records, and a count built on it is an upper bound on code
+differences, not a measurement of them.
+
+**2. TK5's IFOX00 is not a different assembler.** TK5 carries 115 USERMODs against
+MVS/CE's 37, which raised the question of whether the 5,528 recorded reference
+decks are MVS/CE-specific. `BAS 14,TGT` assembles to `4DE0 F004` at severity 0 on
+`MVSTK5-BLD` — the same as on MVS/CE, so `ZP60025` is applied on both
+([`ifox-lineage.md`](ifox-lineage.md)). One probe is not a proof for the whole
+assembler, and a deck-level comparison of the two is a Fahrplan item; but the
+cheap version of the question has been asked and the answer was reassuring.
+
+## What this does and does not settle
+
+**Settled:** the baseline choice is worth 10 modules out of 3,988 in raw match
+count, and TK5 by 15 : 1 and 7 : 0 wherever the two systems are both maintained.
+**TK5 is the baseline**, and the reason is not lineage-by-assertion but seven
+modules where Dave's source carries a PTF that MVS/CE has never seen.
+
+**Not settled, and much larger:** **459 of the 515 divergent modules hit neither
+system.** Concentrated in `AOSU0` (94), `AOSD0` (77), `AOSA0` (75), `AOS20` (42).
+Choosing a baseline does not move those; they are the actual recovery work, and
+they are where the maintenance that never reached any source still sits.
