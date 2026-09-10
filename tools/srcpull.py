@@ -48,6 +48,7 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     mods = [m for m in open(sys.argv[1]).read().split() if m]
     got = skip = miss = 0
+    empty = []
     t0 = time.time()
     for i, m in enumerate(mods, 1):
         p = os.path.join(OUT, m)
@@ -58,12 +59,30 @@ def main():
         if b is None:
             miss += 1
             continue
+        if not b:
+            # An empty 200 is not an empty member.  mvsMF answers a read error
+            # with HTTP 200 and no body -- the console says MVSMF106E I/O ERROR
+            # READING and the REST client sees success.  100 members came back
+            # like this on 2026-09-10 and were written as empty files; FTP
+            # answered `451 Read error on data set after 0 bytes` for the same
+            # ones, and IEHLIST said the volume had zero free tracks.
+            #
+            # So: never store one.  A member that is genuinely empty is
+            # indistinguishable here, and that is the right trade -- a wrongly
+            # kept empty file is a silent hole in a corpus, a wrongly reported
+            # one is a line in a log.
+            empty.append(m)
+            continue
         open(p, "wb").write(b)
         got += 1
         if i % 250 == 0:
             print(f"  {i}/{len(mods)} got={got} skip={skip} miss={miss} "
                   f"{time.time()-t0:.0f}s", flush=True)
-    print(f"{got} read, {skip} cached, {miss} absent ({time.time()-t0:.0f}s)")
+    print(f"{got} read, {skip} cached, {miss} absent, "
+          f"{len(empty)} EMPTY-200 ({time.time()-t0:.0f}s)")
+    if empty:
+        print("  empty 200 (read error, not an empty member): " + " ".join(empty[:20]))
+        open("/tmp/srcpull-empty.txt", "w").write("\n".join(empty))
     return 0
 
 
