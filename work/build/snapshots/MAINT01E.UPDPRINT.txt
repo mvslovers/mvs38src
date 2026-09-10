@@ -1,0 +1,252 @@
+1       SYSIN                            NEW MASTER                                        IEBUPDTE LOG PAGE 0001
+-       ./ CHANGE NAME=SGIFB600
+                         AIF   ('&RESTYPE' EQ '3375').D3375 +3375 ??             MVS38J 03925038     *          REPLACED*
+                         AIF   ('&RESTYPE' EQ '3375').D3375 +3375 ??            M024101 03925038     *       REPLACEMENT*
+                         AIF   ('&RESTYPE' EQ '3380').D3380 +3380 ??             MVS38J 03930038     *          REPLACED*
+                         AIF   ('&RESTYPE' EQ '3380').D3380 +3380 ??            M023100 03930038     *       REPLACEMENT*
+                         AIF   ('&RESTYPE' EQ '3390').D3390 +3390 ??             MVS38J 03940038     *          REPLACED*
+                         AIF   ('&RESTYPE' EQ '3390').D3390 +3390 ??            M023100 03940038     *       REPLACEMENT*
+                .D3375   ANOP                             +TRACK ALLOC PRMS      MVS38J 04401038     *          REPLACED*
+                .D3375   ANOP                             +TRACK ALLOC PRMS     M024101 04401038     *       REPLACEMENT*
+                         MNOTE *,'SGIFB600 - D3375 DIP probably wrong - MVS38J'  MVS38J 04402038     *          REPLACED*
+                        MNOTE *,'SGIFB600 - D3375 DIP probably wrong - M024101' M024101 04402038     *       REPLACEMENT*
+                &B       SETA  80                         + DEVICES/TRACK        MVS38J 04403038     *          REPLACED*
+                &B       SETA  80                         + DEVICES/TRACK       M024101 04403038     *       REPLACEMENT*
+                &C       SETA  03                         + 125K                 MVS38J 04404038     *          REPLACED*
+                &C       SETA  03                         + 125K                M024101 04404038     *       REPLACEMENT*
+                &D       SETA  02                         + RMS/SER1             MVS38J 04405038     *          REPLACED*
+                &D       SETA  02                         + RMS/SER1            M024101 04405038     *       REPLACEMENT*
+                &G       SETA  03                         + FRAMES               MVS38J 04406038     *          REPLACED*
+                &G       SETA  03                         + FRAMES              M024101 04406038     *       REPLACEMENT*
+                         AGO   .LOOP                      +                      MVS38J 04407038     *          REPLACED*
+                         AGO   .LOOP                      +                     M024101 04407038     *       REPLACEMENT*
+                .D3390   ANOP                             +TRACK ALLOC PRMS      MVS38J 04500038     *          REPLACED*
+                .D3390   ANOP                             +TRACK ALLOC PRMS     M023100 04500038     *       REPLACEMENT*
+                         MNOTE *,'SGIFB600 - D3390 probably wrong - MVS38J'      MVS38J 04500538     *          REPLACED*
+                         MNOTE *,'SGIFB600 - D3390 probably wrong - M023100'    M023100 04500538     *       REPLACEMENT*
+                &B       SETA  80                         + DEVICES/TRACK        MVS38J 04501038     *          REPLACED*
+                &B       SETA  80                         + DEVICES/TRACK       M023100 04501038     *       REPLACEMENT*
+                &C       SETA  03                         + 125K                 MVS38J 04502038     *          REPLACED*
+                &C       SETA  03                         + 125K                M023100 04502038     *       REPLACEMENT*
+                &D       SETA  02                         + RMS/SER1             MVS38J 04503038     *          REPLACED*
+                &D       SETA  02                         + RMS/SER1            M023100 04503038     *       REPLACEMENT*
+                &G       SETA  03                         + FRAMES               MVS38J 04504038     *          REPLACED*
+                &G       SETA  03                         + FRAMES              M023100 04504038     *       REPLACEMENT*
+                         AGO   .LOOP                      +                      MVS38J 04505038     *          REPLACED*
+                         AGO   .LOOP                      +                     M023100 04505038     *       REPLACEMENT*
+                .D3380   ANOP                             +TRACK ALLOC PRMS      MVS38J 04550038     *          REPLACED*
+                .D3380   ANOP                             +TRACK ALLOC PRMS     M023100 04550038     *       REPLACEMENT*
+                &B       SETA  80                         + DEVICES/TRACK        MVS38J 04551038     *          REPLACED*
+                &B       SETA  80                         + DEVICES/TRACK       M023100 04551038     *       REPLACEMENT*
+                &C       SETA  03                         + 125K                 MVS38J 04552038     *          REPLACED*
+                &C       SETA  03                         + 125K                M023100 04552038     *       REPLACEMENT*
+                &D       SETA  02                         + RMS/SER1             MVS38J 04553038     *          REPLACED*
+                &D       SETA  02                         + RMS/SER1            M023100 04553038     *       REPLACEMENT*
+                &G       SETA  03                         + FRAMES               MVS38J 04554038     *          REPLACED*
+                &G       SETA  03                         + FRAMES              M023100 04554038     *       REPLACEMENT*
+                         AGO   .LOOP                      +                      MVS38J 04555038     *          REPLACED*
+                         AGO   .LOOP                      +                     M023100 04555038     *       REPLACEMENT*
+ IEB816I MEMBER NAME (SGIFB600) FOUND IN NM DIRECTORY. TTR IS NOW ALTERED.
+ IEB818I HIGHEST CONDITION CODE WAS 00000000
+ IEB819I END OF JOB IEBUPDTE.
+1       SYSIN                            NEW MASTER                                        IEBUPDTE LOG PAGE 0001
+-       ./ CHANGE NAME=DATASET
+                .*       3330-1, 3340, 3350, 3375, 3380, or 3390                 MVS38J 01025037     *          REPLACED*
+                .*       3330-1, 3340, 3350, 3375, 3380, or 3390                M024303 01025037     *       REPLACEMENT*
+                .SWC     AIF   ('&VOL(2)' NE '3350' AND '&VOL(2)' NE '3380' AND        +01050037     *          REPLACED*
+                .SWC     AIF   ('&VOL(2)' NE '3350' AND '&VOL(2)' NE '3380' AND        +01050037     *       REPLACEMENT*
+                               '&VOL(2)' NE '3390' AND '&VOL(2)' NE '3375').E41  MVS38J 01052038     *          REPLACED*
+                               '&VOL(2)' NE '3390' AND '&VOL(2)' NE '3375').E41 M024303 01052038     *       REPLACEMENT*
+                .*       3330-1, 3340, 3350, 3375, 3380, or 3390                 MVS38J 03560037     *          REPLACED*
+                .*       3330-1, 3340, 3350, 3375, 3380, or 3390                M024303 03560037     *       REPLACEMENT*
+                .CONT1   AIF   ('&VOL(2)' NE '3350' AND '&VOL(2)' NE '3380' AND        +03806037     *          REPLACED*
+                .CONT1   AIF   ('&VOL(2)' NE '3350' AND '&VOL(2)' NE '3380' AND        +03806037     *       REPLACEMENT*
+                               '&VOL(2)' NE '3390' AND '&VOL(2)' NE '3375').E25  MVS38J 03807038     *          REPLACED*
+                               '&VOL(2)' NE '3390' AND '&VOL(2)' NE '3375').E25 M024303 03807038     *       REPLACEMENT*
+                         AIF   ('&VOL(2)' EQ '3380').DS42 VALID                  MVS38J 15505037     *          REPLACED*
+                         AIF   ('&VOL(2)' EQ '3380').DS42 VALID                 M023300 15505037     *       REPLACEMENT*
+                         AIF   ('&VOL(2)' EQ '3390').DS42 VALID                  MVS38J 15510038     *          REPLACED*
+                         AIF   ('&VOL(2)' EQ '3390').DS42 VALID                 M023300 15510038     *       REPLACEMENT*
+                         AIF   ('&VOL(2)' EQ '3375').DS42 VALID                  MVS38J 15520038     *          REPLACED*
+                         AIF   ('&VOL(2)' EQ '3375').DS42 VALID                 M024303 15520038     *       REPLACEMENT*
+ IEB816I MEMBER NAME (DATASET ) FOUND IN NM DIRECTORY. TTR IS NOW ALTERED.
+ IEB818I HIGHEST CONDITION CODE WAS 00000000
+ IEB819I END OF JOB IEBUPDTE.
+1       SYSIN                            NEW MASTER                                        IEBUPDTE LOG PAGE 0001
+-       ./ CHANGE NAME=SGIEI1SU
+                         AIF   ('&SGCTRLC(29)' EQ '3380' AND &SGGENDB(103)).SCH  MVS38J 01770006     *          REPLACED*
+                         AIF   ('&SGCTRLC(29)' EQ '3380' AND &SGGENDB(103)).SCH M023301 01770006     *       REPLACEMENT*
+                         AIF   ('&SGCTRLC(29)' EQ '3390' AND &SGGENDB(104)).SCH  MVS38J 01770008     *          REPLACED*
+                         AIF   ('&SGCTRLC(29)' EQ '3390' AND &SGGENDB(104)).SCH M023301 01770008     *       REPLACEMENT*
+                         AIF   ('&SGCTRLC(29)' EQ '3375' AND &SGGENDB(105)).SCH  MVS38J 01770010     *          REPLACED*
+                         AIF   ('&SGCTRLC(29)' EQ '3375' AND &SGGENDB(105)).SCH M024304 01770010     *       REPLACEMENT*
+ IEB816I MEMBER NAME (SGIEI1SU) FOUND IN NM DIRECTORY. TTR IS NOW ALTERED.
+ IEB818I HIGHEST CONDITION CODE WAS 00000000
+ IEB819I END OF JOB IEBUPDTE.
+1       SYSIN                            NEW MASTER                                        IEBUPDTE LOG PAGE 0001
+-       ./ CHANGE NAME=UNITNAME
+                .*               ASMF ONLY ALLOWS 2 CONTINUATIONS                MVS38J 16640038     *          REPLACED*
+                .*               ASMF ONLY ALLOWS 2 CONTINUATIONS               M023302 16640038     *       REPLACEMENT*
+                         AIF    ('&NAME' EQ '3380').VIOGNRC  3380, VIO=YES       MVS38J 16650038     *          REPLACED*
+                         AIF    ('&NAME' EQ '3380').VIOGNRC  3380, VIO=YES      M023302 16650038     *       REPLACEMENT*
+                         AIF    ('&NAME' EQ '3390').VIOGNRC  3390, VIO=YES       MVS38J 16660038     *          REPLACED*
+                         AIF    ('&NAME' EQ '3390').VIOGNRC  3390, VIO=YES      M023302 16660038     *       REPLACEMENT*
+                         AIF    ('&NAME' EQ '3375').VIOGNRC  3375, VIO=YES       MVS38J 16670038     *          REPLACED*
+                         AIF    ('&NAME' EQ '3375').VIOGNRC  3375, VIO=YES      M024305 16670038     *       REPLACEMENT*
+                .VIOGNRC ANOP                                                    MVS38J 16950038     *          REPLACED*
+                .VIOGNRC ANOP                                                   M023302 16950038     *       REPLACEMENT*
+ IEB816I MEMBER NAME (UNITNAME) FOUND IN NM DIRECTORY. TTR IS NOW ALTERED.
+ IEB818I HIGHEST CONDITION CODE WAS 00000000
+ IEB819I END OF JOB IEBUPDTE.
+1       SYSIN                            NEW MASTER                                        IEBUPDTE LOG PAGE 0001
+-       ./ CHANGE NAME=IODEVICE
+                               &CUNUMBR=,&TIMEOUT=,                              MVS38J+00165000     *          REPLACED*
+                               &CUNUMBR=,&TIMEOUT=,                             M023404+00165000     *       REPLACEMENT*
+ IEB816I MEMBER NAME (IODEVICE) FOUND IN NM DIRECTORY. TTR IS NOW ALTERED.
+ IEB818I HIGHEST CONDITION CODE WAS 00000000
+ IEB819I END OF JOB IEBUPDTE.
+1       SYSIN                            NEW MASTER                                        IEBUPDTE LOG PAGE 0001
+-       ./ CHANGE NAME=GENERATE
+                         AIF ('&RESVOL(2)' EQ '3375').CKRVOL4                    MVS38J 05535038     *          REPLACED*
+                         AIF ('&RESVOL(2)' EQ '3375').CKRVOL4                   M026408 05535038     *       REPLACEMENT*
+                         AIF ('&RESVOL(2)' EQ '3380').CKRVOL4                    MVS38J 05540038     *          REPLACED*
+                         AIF ('&RESVOL(2)' EQ '3380').CKRVOL4                   M026405 05540038     *       REPLACEMENT*
+                         AIF ('&RESVOL(2)' EQ '3390').CKRVOL4                    MVS38J 05550038     *          REPLACED*
+                         AIF ('&RESVOL(2)' EQ '3390').CKRVOL4                   M026405 05550038     *       REPLACEMENT*
+                .P5      AIF   ('&SGDSUNC(12)' NE '3340').P3375                  MVS38J 16200000     *          REPLACED*
+                .P5      AIF   ('&SGDSUNC(12)' NE '3340').P3375                 M026408 16200000     *       REPLACEMENT*
+                .P3375   AIF   ('&SGDSUNC(12)' NE '3375').P59                    MVS38J 16251038     *          REPLACED*
+                .P3375   AIF   ('&SGDSUNC(12)' NE '3375').P59                   M026408 16251038     *       REPLACEMENT*
+                &B       SETA  32760              3375 LPALIB BLKSIZE            MVS38J 16252038     *          REPLACED*
+                &B       SETA  32760              3375 LPALIB BLKSIZE           M026408 16252038     *       REPLACEMENT*
+                         AGO   .P6                                               MVS38J 16253038     *          REPLACED*
+                         AGO   .P6                                              M026408 16253038     *       REPLACEMENT*
+                .P59     AIF   ('&SGDSUNC(12)' NE '3350').P3380                  MVS38J 16260000     *          REPLACED*
+                .P59     AIF   ('&SGDSUNC(12)' NE '3350').P3380                 M026405 16260000     *       REPLACEMENT*
+                .P3380   AIF   ('&SGDSUNC(12)' NE '3380').P3390                  MVS38J 16273038     *          REPLACED*
+                .P3380   AIF   ('&SGDSUNC(12)' NE '3380').P3390                 M026405 16273038     *       REPLACEMENT*
+                &B       SETA  32760              3380 LPALIB BLKSIZE            MVS38J 16274038     *          REPLACED*
+                &B       SETA  32760              3380 LPALIB BLKSIZE           M026405 16274038     *       REPLACEMENT*
+                         AGO   .P6                                               MVS38J 16275038     *          REPLACED*
+                         AGO   .P6                                              M026405 16275038     *       REPLACEMENT*
+                .P3390   AIF   ('&SGDSUNC(12)' NE '3390').PERR                   MVS38J 16276038     *          REPLACED*
+                .P3390   AIF   ('&SGDSUNC(12)' NE '3390').PERR                  M026405 16276038     *       REPLACEMENT*
+                &B       SETA  32760              3390 LPALIB BLKSIZE            MVS38J 16277038     *          REPLACED*
+                &B       SETA  32760              3390 LPALIB BLKSIZE           M026405 16277038     *       REPLACEMENT*
+                         AGO   .P6                                               MVS38J 16278038     *          REPLACED*
+                         AGO   .P6                                              M026405 16278038     *       REPLACEMENT*
+                .L5      AIF   ('&SGDSUNC(6)' NE '3340').L3375                   MVS38J 32720000     *          REPLACED*
+                .L5      AIF   ('&SGDSUNC(6)' NE '3340').L3375                  M026408 32720000     *       REPLACEMENT*
+                .L3375   AIF   ('&SGDSUNC(6)' NE '3375').L59                     MVS38J 32771038     *          REPLACED*
+                .L3375   AIF   ('&SGDSUNC(6)' NE '3375').L59                    M026408 32771038     *       REPLACEMENT*
+                &B       SETA  32760              3375 LINKLIB BLKSIZE           MVS38J 32772038     *          REPLACED*
+                &B       SETA  32760              3375 LINKLIB BLKSIZE          M026408 32772038     *       REPLACEMENT*
+                         AGO   .L6                                               MVS38J 32773038     *          REPLACED*
+                         AGO   .L6                                              M026408 32773038     *       REPLACEMENT*
+                .L59     AIF   ('&SGDSUNC(6)' NE '3350').L3380                   MVS38J 32780000     *          REPLACED*
+                .L59     AIF   ('&SGDSUNC(6)' NE '3350').L3380                  M026405 32780000     *       REPLACEMENT*
+                .L3380   AIF   ('&SGDSUNC(6)' NE '3380').L3390                   MVS38J 32793038     *          REPLACED*
+                .L3380   AIF   ('&SGDSUNC(6)' NE '3380').L3390                  M026405 32793038     *       REPLACEMENT*
+                &B       SETA  32760              3380 LINKLIB BLKSIZE           MVS38J 32794038     *          REPLACED*
+                &B       SETA  32760              3380 LINKLIB BLKSIZE          M026405 32794038     *       REPLACEMENT*
+                         AGO   .L6                                               MVS38J 32795038     *          REPLACED*
+                         AGO   .L6                                              M026405 32795038     *       REPLACEMENT*
+                .L3390   AIF   ('&SGDSUNC(6)' NE '3390').LERR                    MVS38J 32796038     *          REPLACED*
+                .L3390   AIF   ('&SGDSUNC(6)' NE '3390').LERR                   M026405 32796038     *       REPLACEMENT*
+                &B       SETA  32760              3390 LINKLIB BLKSIZE           MVS38J 32797038     *          REPLACED*
+                &B       SETA  32760              3390 LINKLIB BLKSIZE          M026405 32797038     *       REPLACEMENT*
+                         AGO   .L6                                               MVS38J 32798038     *          REPLACED*
+                         AGO   .L6                                              M026405 32798038     *       REPLACEMENT*
+                .SD5     AIF   ('&SGDSUNC(&I)' NE '3340').SD3375                 MVS38J 45160000     *          REPLACED*
+1       SYSIN                            NEW MASTER                                        IEBUPDTE LOG PAGE 0002
+-               .SD5     AIF   ('&SGDSUNC(&I)' NE '3340').SD3375                M026408 45160000     *       REPLACEMENT*
+                .SD3375  AIF   ('&SGDSUNC(&I)' NE '3375').SD59                   MVS38J 45211038     *          REPLACED*
+                .SD3375  AIF   ('&SGDSUNC(&I)' NE '3375').SD59                  M026408 45211038     *       REPLACEMENT*
+                &B       SETA  32760              3375 SVCLIB BLKSIZE            MVS38J 45212038     *          REPLACED*
+                &B       SETA  32760              3375 SVCLIB BLKSIZE           M026408 45212038     *       REPLACEMENT*
+                         AGO   .SD6                                              MVS38J 45213038     *          REPLACED*
+                         AGO   .SD6                                             M026408 45213038     *       REPLACEMENT*
+                .SD59    AIF   ('&SGDSUNC(&I)' NE '3350').SD3380                 MVS38J 45220000     *          REPLACED*
+                .SD59    AIF   ('&SGDSUNC(&I)' NE '3350').SD3380                M026405 45220000     *       REPLACEMENT*
+                .SD3380  AIF   ('&SGDSUNC(&I)' NE '3380').SD3390                 MVS38J 45233038     *          REPLACED*
+                .SD3380  AIF   ('&SGDSUNC(&I)' NE '3380').SD3390                M026405 45233038     *       REPLACEMENT*
+                &B       SETA  32760              3380 SVCLIB BLKSIZE            MVS38J 45234038     *          REPLACED*
+                &B       SETA  32760              3380 SVCLIB BLKSIZE           M026405 45234038     *       REPLACEMENT*
+                         AGO   .SD6                                              MVS38J 45235038     *          REPLACED*
+                         AGO   .SD6                                             M026405 45235038     *       REPLACEMENT*
+                .SD3390  AIF   ('&SGDSUNC(&I)' NE '3390').SERR                   MVS38J 45236038     *          REPLACED*
+                .SD3390  AIF   ('&SGDSUNC(&I)' NE '3390').SERR                  M026405 45236038     *       REPLACEMENT*
+                &B       SETA  32760              3390 SVCLIB BLKSIZE            MVS38J 45237038     *          REPLACED*
+                &B       SETA  32760              3390 SVCLIB BLKSIZE           M026405 45237038     *       REPLACEMENT*
+                         AGO   .SD6                                              MVS38J 45238038     *          REPLACED*
+                         AGO   .SD6                                             M026405 45238038     *       REPLACEMENT*
+                         AIF   ('&SGDSUNC(&I)' NE '3340').D3375                  MVS38J 52640000     *          REPLACED*
+                         AIF   ('&SGDSUNC(&I)' NE '3340').D3375                 M026408 52640000     *       REPLACEMENT*
+                .D3375   AIF   ('&SGDSUNC(&I)' NE '3375').D59                    MVS38J 52691038     *          REPLACED*
+                .D3375   AIF   ('&SGDSUNC(&I)' NE '3375').D59                   M026408 52691038     *       REPLACEMENT*
+                &B       SETA  32760              3375 NUCLEUS BLKSIZE           MVS38J 52692038     *          REPLACED*
+                &B       SETA  32760              3375 NUCLEUS BLKSIZE          M026408 52692038     *       REPLACEMENT*
+                         AGO   .D6                                               MVS38J 52693038     *          REPLACED*
+                         AGO   .D6                                              M026408 52693038     *       REPLACEMENT*
+                .D59     AIF   ('&SGDSUNC(&I)' NE '3350').D3380                  MVS38J 52700000     *          REPLACED*
+                .D59     AIF   ('&SGDSUNC(&I)' NE '3350').D3380                 M026405 52700000     *       REPLACEMENT*
+                .D3380   AIF   ('&SGDSUNC(&I)' NE '3380').D3390                  MVS38J 52712138     *          REPLACED*
+                .D3380   AIF   ('&SGDSUNC(&I)' NE '3380').D3390                 M026405 52712138     *       REPLACEMENT*
+                &B       SETA  32760              3380 NUCLEUS BLKSIZE           MVS38J 52712238     *          REPLACED*
+                &B       SETA  32760              3380 NUCLEUS BLKSIZE          M026405 52712238     *       REPLACEMENT*
+                         AGO   .D6                                               MVS38J 52712338     *          REPLACED*
+                         AGO   .D6                                              M026405 52712338     *       REPLACEMENT*
+                .D3390   AIF   ('&SGDSUNC(&I)' NE '3390').DERR                   MVS38J 52712438     *          REPLACED*
+                .D3390   AIF   ('&SGDSUNC(&I)' NE '3390').DERR                  M026405 52712438     *       REPLACEMENT*
+                &B       SETA  32760              3390 NUCLEUS BLKSIZE           MVS38J 52712538     *          REPLACED*
+                &B       SETA  32760              3390 NUCLEUS BLKSIZE          M026405 52712538     *       REPLACEMENT*
+                         AGO   .D6                                               MVS38J 52712638     *          REPLACED*
+                         AGO   .D6                                              M026405 52712638     *       REPLACEMENT*
+                .MD5     AIF   ('&SGDSUNC(&I)' NE '3340').MD3375                 MVS38J 66440000     *          REPLACED*
+                .MD5     AIF   ('&SGDSUNC(&I)' NE '3340').MD3375                M026408 66440000     *       REPLACEMENT*
+                .MD3375  AIF   ('&SGDSUNC(&I)' NE '3375').MD59                   MVS38J 66521038     *          REPLACED*
+                .MD3375  AIF   ('&SGDSUNC(&I)' NE '3375').MD59                  M026408 66521038     *       REPLACEMENT*
+                &B       SETA  32760              3375 LOADLIB BLKSIZE           MVS38J 66522038     *          REPLACED*
+                &B       SETA  32760              3375 LOADLIB BLKSIZE          M026408 66522038     *       REPLACEMENT*
+                         AGO   .MP6                                              MVS38J 66523038     *          REPLACED*
+                         AGO   .MP6                                             M026408 66523038     *       REPLACEMENT*
+                .MD59    AIF   ('&SGDSUNC(&I)' NE '3350').MD3380                 MVS38J 66530000     *          REPLACED*
+1       SYSIN                            NEW MASTER                                        IEBUPDTE LOG PAGE 0003
+-               .MD59    AIF   ('&SGDSUNC(&I)' NE '3350').MD3380                M026405 66530000     *       REPLACEMENT*
+                .MD3380  AIF   ('&SGDSUNC(&I)' NE '3380').MD3390                 MVS38J 66551038     *          REPLACED*
+                .MD3380  AIF   ('&SGDSUNC(&I)' NE '3380').MD3390                M026405 66551038     *       REPLACEMENT*
+                &B       SETA  32760              3380 LOADLIB BLKSIZE           MVS38J 66552038     *          REPLACED*
+                &B       SETA  32760              3380 LOADLIB BLKSIZE          M026405 66552038     *       REPLACEMENT*
+                         AGO   .MP6                                              MVS38J 66553038     *          REPLACED*
+                         AGO   .MP6                                             M026405 66553038     *       REPLACEMENT*
+                .MD3390  AIF   ('&SGDSUNC(&I)' NE '3390').MERR                   MVS38J 66554038     *          REPLACED*
+                .MD3390  AIF   ('&SGDSUNC(&I)' NE '3390').MERR                  M026405 66554038     *       REPLACEMENT*
+                &B       SETA  32760              3390 LOADLIB BLKSIZE           MVS38J 66555038     *          REPLACED*
+                &B       SETA  32760              3390 LOADLIB BLKSIZE          M026405 66555038     *       REPLACEMENT*
+                         AGO   .MP6                                              MVS38J 66556038     *          REPLACED*
+                         AGO   .MP6                                             M026405 66556038     *       REPLACEMENT*
+                .MP5     AIF   ('&SGDSUNC(&I)' NE '3340').MP3375               @Z30RSTA 67120000     *          REPLACED*
+                .MP5     AIF   ('&SGDSUNC(&I)' NE '3340').MP3375                M026408 67120000     *       REPLACEMENT*
+                .MP3375  AIF   ('&SGDSUNC(&I)' NE '3375').MP59                   MVS38J 67171038     *          REPLACED*
+                .MP3375  AIF   ('&SGDSUNC(&I)' NE '3375').MP59                  M026408 67171038     *       REPLACEMENT*
+                &B       SETA  17600              3375 LRECL=80 BLKSIZE          MVS38J 67172038     *          REPLACED*
+                &B       SETA  17600              3375 LRECL=80 BLKSIZE         M026408 67172038     *       REPLACEMENT*
+                         AGO   .MP6                                              MVS38J 67173038     *          REPLACED*
+                         AGO   .MP6                                             M026408 67173038     *       REPLACEMENT*
+                .MP59    AIF   ('&SGDSUNC(&I)' NE '3350').MP3380                 MVS38J 67180000     *          REPLACED*
+                .MP59    AIF   ('&SGDSUNC(&I)' NE '3350').MP3380                M026405 67180000     *       REPLACEMENT*
+                .MP3380  AIF   ('&SGDSUNC(&I)' NE '3380').MP3390                 MVS38J 67193038     *          REPLACED*
+                .MP3380  AIF   ('&SGDSUNC(&I)' NE '3380').MP3390                M026405 67193038     *       REPLACEMENT*
+                &B       SETA  23440              3380 LRECL=80 BLKSIZE          MVS38J 67194038     *          REPLACED*
+                &B       SETA  23440              3380 LRECL=80 BLKSIZE         M026405 67194038     *       REPLACEMENT*
+                         AGO   .MP6                                              MVS38J 67195038     *          REPLACED*
+                         AGO   .MP6                                             M026405 67195038     *       REPLACEMENT*
+                .MP3390  AIF   ('&SGDSUNC(&I)' NE '3390').MERR                   MVS38J 67196038     *          REPLACED*
+                .MP3390  AIF   ('&SGDSUNC(&I)' NE '3390').MERR                  M026405 67196038     *       REPLACEMENT*
+                &B       SETA  27920              3390 LRECL=80 BLKSIZE          MVS38J 67197038     *          REPLACED*
+                &B       SETA  27920              3390 LRECL=80 BLKSIZE         M026405 67197038     *       REPLACEMENT*
+                         AGO   .MP6                                              MVS38J 67198038     *          REPLACED*
+                         AGO   .MP6                                             M026405 67198038     *       REPLACEMENT*
+ IEB816I MEMBER NAME (GENERATE) FOUND IN NM DIRECTORY. TTR IS NOW ALTERED.
+ IEB818I HIGHEST CONDITION CODE WAS 00000000
+ IEB819I END OF JOB IEBUPDTE.

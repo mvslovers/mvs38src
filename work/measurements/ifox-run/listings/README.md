@@ -69,3 +69,67 @@ Three things cost attempts, all of them JCL rather than logic:
   say "too long".
 - **`DISP=(NEW,CATLG)` fails silently-ish on a name already catalogued** from a
   previous attempt. Use a fresh name per run.
+
+## `diag/<m>.txt` is a page, not a census
+
+`BLSR3270`'s diagnostics file lists `IFO197` on statements 1881 and 3194–3198 —
+six. The full listing has **twenty**: 1881 and 3194–3212 contiguously. `cmd_diag`
+cuts at the *first* occurrence of `ASSEMBLER DIAGNOSTICS AND STATISTICS`, which
+is right for keeping the earliest messages and wrong for counting them, because
+the header repeats per page and the file stops at the end of page one.
+
+**Count messages from a listing, never from a `diag` file.**
+
+## `--keep-full`, and why a capture stopped costing a round trip
+
+`ifox_run.py diag` was already fetching the whole listing, trimming it, and
+**deleting the rest**. So "a capture costs one MVS round trip" was true only
+because the round trip had been thrown away — `AHLSETEV` and `BLSR3270` had both
+already been fetched once. `diag --list <file> --keep-full` now files the whole
+listing here instead.
+
+The first thing it produced: `BLSR3270`'s eighteen severity-4 MNOTEs are one
+`BUFADTAB BLSRROTB 6,24,1` expansion, and `BLSRROTB` is on the oracle's
+`IBMUSER.PVTMAC` — so both assemblers have the macro and take different branches
+through it. The statement numbers alone could not have said that.
+
+## `--parm` and the 71-column card
+
+`diag --parm 'NODECK,NOLOAD,LIST,LIBMAC,MLOGIC'` shows a library macro's own
+conditional assembly, which the default options hide: `BLSRESGC` is **806 lines**
+under them and **10,217** with them.
+
+The first attempt produced nothing at all and said nothing about why. **The EXEC
+card was 78 characters and JCL stops at column 71** — a JCL ERROR, an empty
+`IBMUSER.IFOXLST`, and no message naming the cause. `cmd_diag` now wraps the card
+when it does not fit. Second time in one evening that a JCL line past column 71
+or a continuation starting in column 15 cost a job with a message that did not
+say so.
+
+## The capture tool had a silent-failure path, and it is half fixed
+
+On 2026-09-10 a two-module capture (`IECVOID`, `IEDQWIE`) produced **no listing,
+no diagnostics and no message of any kind**. A standalone job with identical
+options worked first time.
+
+The reason nothing could be said about why: `cmd_diag` did
+
+```python
+n, i = submit(...)
+wait(n, i)          # return value discarded
+purge(n, i)         # evidence deleted
+```
+
+**The outcome was thrown away and the job deleted in the next statement.** It now
+reads the return code and keeps the job when it is bad, printing the id to look
+at. (First version of that check compared `wait()`'s return — which is the whole
+job dict, not the code — against `"CC 00"`, and reported a perfectly good `CC
+0008` job as failed. Fixed.)
+
+**What is still not established** is why the two-module run failed at all. A
+single-module run with the same options now works: `IECVOID` lands in
+`IBMUSER.IFOXLST` and its diagnostics are written. Earlier two-module and
+one-module runs with `--keep-full` also worked (`BLSR3270`, `IFCSXXXF`). So the
+failure is not `--keep-full` and not multi-module as such, and I have not found
+it. It is recorded here rather than left as folklore: **if a capture comes back
+empty, the job id is now printed and the job is still on the system.**

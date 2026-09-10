@@ -378,7 +378,23 @@ def cmd_diag(args):
             chunk = batch[k:k + 10]
             L = [f"//IFXD{k // 10:04d} JOB (ACCT),'MVS38SRC',CLASS=A,MSGCLASS=H,NOTIFY=IBMUSER"]
             for j, m in enumerate(chunk, 1):
-                L.append(f"//S{j:02d}     EXEC PGM=IFOX00,PARM='NODECK,NOLOAD,LIST',REGION=1024K")
+                # NOLIBMAC and NOMLOGIC are the defaults here and they hide
+                # exactly what a conditional-assembly question needs: with them
+                # a library macro's own AIF and T' tests never reach the
+                # listing.  --parm 'NODECK,NOLOAD,LIST,LIBMAC,MLOGIC,MCALL'
+                # shows them, at perhaps ten times the pages.
+                # JCL stops at column 71.  The default parm fits on one card;
+                # 'NODECK,NOLOAD,LIST,LIBMAC,MLOGIC' does not, and an over-long
+                # EXEC card is a JCL ERROR with no listing and no message that
+                # names the cause -- the first --parm run produced an empty
+                # IBMUSER.IFOXLST and nothing to explain it.
+                card = f"//S{j:02d}     EXEC PGM=IFOX00,PARM='{args.parm}',REGION=1024K"
+                if len(card) > 71:
+                    L.append(f"//S{j:02d}     EXEC PGM=IFOX00,")
+                    L.append(f"//             PARM='{args.parm}',")
+                    L.append(f"//             REGION=1024K")
+                else:
+                    L.append(card)
                 for x, lib in enumerate(SYSLIB):
                     L.append(f"//SYSLIB   DD  DSN={lib},DISP=SHR" if x == 0
                              else f"//         DD  DSN={lib},DISP=SHR")
@@ -388,8 +404,20 @@ def cmd_diag(args):
                 L.append("//SYSPUNCH DD  DUMMY")
                 L.append(f"//SYSIN    DD  DSN={DIAGSRC}({m}),DISP=SHR")
             n, i = submit("\n".join(L) + "\n")
-            wait(n, i)
-            purge(n, i)
+            rc = wait(n, i)
+            # Read the return code and KEEP the job when it is bad.  This line
+            # used to be `wait(n, i); purge(n, i)` -- the outcome discarded and
+            # the evidence deleted in the next statement.  On 2026-09-10 a
+            # capture of IECVOID and IEDQWIE produced no listing, no
+            # diagnostics and no message of any kind, and the only reason
+            # nothing could be said about why is that the job had been purged.
+            # A standalone job with identical options worked first time.
+            code = rc.get("retcode") if isinstance(rc, dict) else rc
+            if not str(code).startswith("CC 00"):
+                print(f"    job {n}/{i} ended {code} -- NOT purged, look at it",
+                      flush=True)
+            else:
+                purge(n, i)
         on_mvs = members(LSTPDS)
         for m in batch:
             if m not in on_mvs:
@@ -406,7 +434,17 @@ def cmd_diag(args):
                 # every message before the final page of a long list
                 cut = txt.find("ASSEMBLER DIAGNOSTICS AND STATISTICS")
                 open(f"{OUT}/diag/{m}.txt", "w").write(txt[cut:] if cut >= 0 else txt[-8000:])
-                os.remove(f"{OUT}/diag/{m}.full")
+                # The full listing is what a round trip actually produces, and
+                # throwing it away is why "a capture costs one MVS round trip"
+                # was true twice in one day -- cc370 needed AHLSETEV's and
+                # BLSR3270's, and both had already been fetched and deleted.
+                # Statement numbers alone do not name the library macro a
+                # message came from; the listing does.
+                if getattr(args, "keep_full", False):
+                    os.makedirs(f"{OUT}/listings", exist_ok=True)
+                    os.rename(f"{OUT}/diag/{m}.full", f"{OUT}/listings/{m}.txt")
+                else:
+                    os.remove(f"{OUT}/diag/{m}.full")
         print(f"[{b + len(batch)}/{len(todo)}]", flush=True)
 
 
@@ -430,7 +468,14 @@ if __name__ == "__main__":
     p.add_argument("--limit", type=int, default=0)
     p.add_argument("--only", help="a file of module names whose reference deck is to be replaced")
     p.set_defaults(fn=cmd_run)
-    p = sub.add_parser("diag"); p.add_argument("--list", required=True); p.set_defaults(fn=cmd_diag)
+    p = sub.add_parser("diag"); p.add_argument("--list", required=True)
+    p.add_argument("--parm", default="NODECK,NOLOAD,LIST",
+                   help="IFOX00 options; add LIBMAC,MLOGIC,MCALL to see a "
+                        "library macro's own conditional assembly")
+    p.add_argument("--keep-full", action="store_true",
+                   help="keep the whole listing in listings/, not just the "
+                        "diagnostics section")
+    p.set_defaults(fn=cmd_diag)
     p = sub.add_parser("status"); p.set_defaults(fn=cmd_status)
     a = ap.parse_args()
     a.fn(a)

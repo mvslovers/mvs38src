@@ -1,0 +1,291 @@
+                                               EXTERNAL SYMBOL DICTIONARY                                      PAGE    1
+SYMBOL   TYPE  ID   ADDR  LENGTH LDID                                                            ASM 0201 23.09 09/09/26
+          PC  0001 000000 0000B2
+IECVXPUR  ER  0002
+IECVXRES  ER  0003
+IECVEXTC  ER  0004
+IDA121A6  ER  0005
+IEWFTPRG  WX  0006
+IEWFTXCK  WX  0007
+                                                                                                               PAGE    2
+  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                       ASM 0201 23.09 09/09/26
+                                      1          IECDVOID CSECT=YES                                             00010000
+                                      2+         MACRO
+                                      3+         IECDVOID  &CSECT=NO
+ 
+                                      5+****************************************************************
+                                      6+*                                                              *
+                                      7+*    THIS IS THE VECTOR OF IOS DRIVERS CONTROL BLOCK. IT IS    *
+                                      8+*    ADDRESSABLE THROUGH THE IOCOM VIA IOCVOID.                *
+                                      9+*                                                              *
+                                     10+****************************************************************
+ 
+                                     12+         AIF   ('&CSECT' NE 'YES').VOI001
+000000                               13+IECVOID  DS    0F
+                                     14+*   DRIVER ID =0   RESERVED
+000000 0000009C                      15+         DC    A(IECVOB14)
+000004 0000009C                      16+         DC    A(IECVOB14)
+000008 0000009C                      17+         DC    A(IECVOB14)
+                            0000C    18+IECVOENT EQU   *
+                                     19+*   DRIVER ID =1  MISCELLANEOUS ID FOR I/O REQUESTS NOT NEEDING
+                                     20+*                 VOID SERVICES.
+00000C 0000009C                      21+         DC    A(IECVOB14)
+000010 0000009C                      22+         DC    A(IECVOB14)
+000014 0000009C                      23+         DC    A(IECVOB14)
+                                     24+*   DRIVER ID =2  EXCP
+000018 00000000                      25+         DC    V(IECVXPUR)         EXCP PURGE SUBROUTINE ADDRESS
+00001C 00000000                      26+         DC    V(IECVXRES)         RESTORE SUBROUTINE
+000020 00000000                      27+         DC    V(IECVEXTC)         EXTENT CHECK SUBROUTINE
+                                     28+*   DRIVER ID =3  VSAM
+000024 00000000                      29+         DC    V(IDA121A6)         ABP PURGE SUBROUTINE
+000028 0000009C                      30+         DC    A(IECVOB14)
+00002C 0000009C                      31+         DC    A(IECVOB14)
+                                     32+*   DRIVER ID =4  VTAM
+000030 0000009C                      33+         DC    A(IECVOB14)
+000034 0000009C                      34+         DC    A(IECVOB14)
+000038 0000009C                      35+         DC    A(IECVOB14)
+                                     36+*   DRIVER ID =5  TCAM
+00003C 0000009C                      37+         DC    A(IECVOB14)
+000040 0000009C                      38+         DC    A(IECVOB14)
+000044 0000009C                      39+         DC    A(IECVOB14)
+                                     40+*   DRIVER ID =6  OLTEP
+000048 0000009C                      41+         DC    A(IECVOB14)
+00004C 0000009C                      42+         DC    A(IECVOB14)
+000050 0000009C                      43+         DC    A(IECVOB14)
+                                     44+*   DRIVER ID =7  PCI FETCH
+000054 00000000                      45+         DC    V(IEWFTPRG)
+000058 0000009C                      46+         DC    A(IECVOB14)
+00005C 00000000                      47+         DC    V(IEWFTXCK)
+                                     48+         WXTRN IEWFTPRG,IEWFTXCK                               @ZA11363
+                                     49+*   DRIVER ID =8  JES3
+000060 0000009C                      50+         DC    A(IECVOB14)
+000064 0000009C                      51+         DC    A(IECVOB14)
+000068 0000009C                      52+         DC    A(IECVOB14)
+                                     53+*   DRIVER ID =9  SS1                                          @Y30LPLC
+00006C 0000009C                      54+         DC    A(IECVOB14)
+000070 0000009C                      55+         DC    A(IECVOB14)
+                                                                                                               PAGE    3
+  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                       ASM 0201 23.09 09/09/26
+000074 0000009C                      56+         DC    A(IECVOB14)
+                                     57+*   DRIVER ID =A  IECVIOPM PURGE                               @ZA04107
+000078 0000009C                      58+         DC    A(IECVOB14)         HI BYTE USED FOR USE COUNT  @ZA04107
+00007C 0000009C                      59+         DC    A(IECVOB14)
+000080 0000009C                      60+         DC    A(IECVOB14)
+                                     61+*   DUMMY  ID =B  VPSS                                         @G29ANLO
+000084 0000009C                      62+         DC    A(IECVOB14)                                     @G29ANLO
+000088 0000009C                      63+         DC    A(IECVOB14)                                     @G29ANLO
+00008C 0000009C                      64+         DC    A(IECVOB14)                                     @G29ANLO
+                                     65+*   DUMMY  ID =C  RESERVED
+000090 0000009C                      66+         DC    A(IECVOB14)
+000094 0000009C                      67+         DC    A(IECVOB14)
+000098 0000009C                      68+         DC    A(IECVOB14)
+ 
+                            0009C    70+IECVOEND EQU   *
+ 
+                                     72+*  DUMMY VOID TABLE ENTRY - ZERO REG 15 AND RETURN ON 14
+                                     73+*  MUST BE CONTIGUOUS TO LAST TABLE ENTRY FOR IOSGEN SETVOID FUNCTION
+ 
+00009C 1FFF                          75+IECVOB14 SLR   15,15               ZERO REG 15
+00009E 07FE                          76+         BR    14                  RETURN TO CALLER
+                                     77+         MEXIT
+                                     78          MODID BR=NO,DATE=11/21/78                                      00020000
+                                     79+         MACRO                                                          00050003
+                                     80+&LABEL   MODID   &BRANCH=,&BR=                                          00100003
+         *** ERROR ***
+                                     81+.*  CHANGE LEVEL OZ07193,OZ15314                               @ZA15314 00150003
+                                     82+.*  OZ07193- CHANGE DISTLIB FROM ATSOMACS TO AMACLIB           @ZA15314 00200003
+                                     83+.*  OZ15314- SUPPORT FOR ADDING THE PTF NUMBER TO THE          @ZA15314 00250003
+                                     84+.*           MODID MACRO.                                      @ZA15314 00300003
+                                     85+         LCLC  &LABELC,&PARMC                                           00350003
+                                     86+&LABELC  SETC  '&LABEL'                                                 00400003
+                                     87+&PARMC   SETC  'R03700'                                        @ZA15314 00450003
+                                     88+         AIF   ('&LABELC' NE '').CKPRM                                  00500003
+                                     89+&LABELC  SETC  '&SYSECT'                                                00550003
+                                     90+.CKPRM   AIF   ('&SYSPARM' EQ '').CKBR                                  00600003
+                                     91+.CKBR    AIF   (T'&BRANCH EQ 'O' AND T'&BR EQ 'O').BR                   00700003
+                                     92+         AIF   ('&BRANCH' EQ 'NO' OR '&BR' EQ 'NO').NOBR                00750003
+                                     93+.NOBR    DC    CL8'&LABELC'            MODULE NAME                      00900003
+0000A0                               94+.NOBR    DC    CL8''                   MODULE NAME                      00900003
+         *** ERROR ***
+                                     95+         DC    CL9'&PARMC'             RELEASE OR PTF NUMBER   @ZA15314 00950003
+0000A0 D9F0F3F7F0F04040              96+         DC    CL9'R03700'             RELEASE OR PTF NUMBER   @ZA15314 00950003
+                                     97+         DC    CL8'&SYSDATE'           DATE                             01000003
+0000A9 F0F961F0F961F2F6              98+         DC    CL8'09/09/26'           DATE                             01000003
+0000B2                               99+         DS    0H                                              @ZA15314 01050003
+                                    100+         MEXIT                                                          01100003
+                                    101          END   ,                                                        00030000
+                                    103          MACRO                                                          00050003
+                                    104 &LABEL   MODID   &BRANCH=,&BR=                                          00100003
+                                    105+.*  CHANGE LEVEL OZ07193,OZ15314                               @ZA15314 00150003
+                                    106+.*  OZ07193- CHANGE DISTLIB FROM ATSOMACS TO AMACLIB           @ZA15314 00200003
+                                    107+.*  OZ15314- SUPPORT FOR ADDING THE PTF NUMBER TO THE          @ZA15314 00250003
+                                    108+.*           MODID MACRO.                                      @ZA15314 00300003
+                                    109+         LCLC  &LABELC,&PARMC                                           00350003
+                                                                                                               PAGE    4
+  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                       ASM 0201 23.09 09/09/26
+                                    110+&LABELC  SETC  '&LABEL'                                                 00400003
+                                    111+&PARMC   SETC  'R03700'                                        @ZA15314 00450003
+                                    112+         AIF   ('&LABELC' NE '').CKPRM                                  00500003
+                                    113+&LABELC  SETC  '&SYSECT'                                                00550003
+                                    114+.CKPRM   AIF   ('&SYSPARM' EQ '').CKBR                                  00600003
+                                    115 &PARMC   SETC  '&SYSPARM'                                               00650003
+                                    116+.CKBR    AIF   (T'&BRANCH EQ 'O' AND T'&BR EQ 'O').BR                   00700003
+                                    117+         AIF   ('&BRANCH' EQ 'NO' OR '&BR' EQ 'NO').NOBR                00750003
+                                    118 .BR      ANOP                                                           00800003
+                                    119          B     *+30                                            @ZA15314 00850003
+                                    120+.NOBR    DC    CL8'&LABELC'            MODULE NAME                      00900003
+                                    121+         DC    CL9'&PARMC'             RELEASE OR PTF NUMBER   @ZA15314 00950003
+                                    122+         DC    CL8'&SYSDATE'           DATE                             01000003
+                                    123+         DS    0H                                              @ZA15314 01050003
+                                    124+         MEXIT                                                          01100003
+                                    125          MEND                                                           01150003
+                                    126 * %      GO TO VOIPLS;             /* GO TO THE PLS VERSION   */
+                                    127          MACRO
+                                    128          IECDVOID  &CSECT=NO
+                                    129          SPACE 1
+                                    130 ****************************************************************
+                                    131 *                                                              *
+                                    132 *    THIS IS THE VECTOR OF IOS DRIVERS CONTROL BLOCK. IT IS    *
+                                    133 *    ADDRESSABLE THROUGH THE IOCOM VIA IOCVOID.                *
+                                    134 *                                                              *
+                                    135 ****************************************************************
+                                    136          SPACE 1
+                                    137          AIF   ('&CSECT' NE 'YES').VOI001
+                                    138 IECVOID  DS    0F
+                                    139 *   DRIVER ID =0   RESERVED
+                                    140          DC    A(IECVOB14)
+                                    141          DC    A(IECVOB14)
+                                    142          DC    A(IECVOB14)
+                                    143 IECVOENT EQU   *
+                                    144 *   DRIVER ID =1  MISCELLANEOUS ID FOR I/O REQUESTS NOT NEEDING
+                                    145 *                 VOID SERVICES.
+                                    146          DC    A(IECVOB14)
+                                    147          DC    A(IECVOB14)
+                                    148          DC    A(IECVOB14)
+                                    149 *   DRIVER ID =2  EXCP
+                                    150          DC    V(IECVXPUR)         EXCP PURGE SUBROUTINE ADDRESS
+                                    151          DC    V(IECVXRES)         RESTORE SUBROUTINE
+                                    152          DC    V(IECVEXTC)         EXTENT CHECK SUBROUTINE
+                                    153 *   DRIVER ID =3  VSAM
+                                    154          DC    V(IDA121A6)         ABP PURGE SUBROUTINE
+                                    155          DC    A(IECVOB14)
+                                    156          DC    A(IECVOB14)
+                                    157 *   DRIVER ID =4  VTAM
+                                    158          DC    A(IECVOB14)
+                                    159          DC    A(IECVOB14)
+                                    160          DC    A(IECVOB14)
+                                    161 *   DRIVER ID =5  TCAM
+                                    162          DC    A(IECVOB14)
+                                    163          DC    A(IECVOB14)
+                                    164          DC    A(IECVOB14)
+                                                                                                               PAGE    5
+  LOC  OBJECT CODE    ADDR1 ADDR2  STMT   SOURCE STATEMENT                                       ASM 0201 23.09 09/09/26
+                                    165 *   DRIVER ID =6  OLTEP
+                                    166          DC    A(IECVOB14)
+                                    167          DC    A(IECVOB14)
+                                    168          DC    A(IECVOB14)
+                                    169 *   DRIVER ID =7  PCI FETCH
+                                    170          DC    V(IEWFTPRG)
+                                    171          DC    A(IECVOB14)
+                                    172          DC    V(IEWFTXCK)
+                                    173          WXTRN IEWFTPRG,IEWFTXCK                               @ZA11363
+                                    174 *   DRIVER ID =8  JES3
+                                    175          DC    A(IECVOB14)
+                                    176          DC    A(IECVOB14)
+                                    177          DC    A(IECVOB14)
+                                    178 *   DRIVER ID =9  SS1                                          @Y30LPLC
+                                    179          DC    A(IECVOB14)
+                                    180          DC    A(IECVOB14)
+                                    181          DC    A(IECVOB14)
+                                    182 *   DRIVER ID =A  IECVIOPM PURGE                               @ZA04107
+                                    183          DC    A(IECVOB14)         HI BYTE USED FOR USE COUNT  @ZA04107
+                                    184          DC    A(IECVOB14)
+                                    185          DC    A(IECVOB14)
+                                    186 *   DUMMY  ID =B  VPSS                                         @G29ANLO
+                                    187          DC    A(IECVOB14)                                     @G29ANLO
+                                    188          DC    A(IECVOB14)                                     @G29ANLO
+                                    189          DC    A(IECVOB14)                                     @G29ANLO
+                                    190 *   DUMMY  ID =C  RESERVED
+                                    191          DC    A(IECVOB14)
+                                    192          DC    A(IECVOB14)
+                                    193          DC    A(IECVOB14)
+                                    194          SPACE 1
+                                    195 IECVOEND EQU   *
+                                    196          SPACE 1
+                                    197 *  DUMMY VOID TABLE ENTRY - ZERO REG 15 AND RETURN ON 14
+                                    198 *  MUST BE CONTIGUOUS TO LAST TABLE ENTRY FOR IOSGEN SETVOID FUNCTION
+                                    199          SPACE 1
+                                    200 IECVOB14 SLR   15,15               ZERO REG 15
+                                    201          BR    14                  RETURN TO CALLER
+                                    202          MEXIT
+                                    203 .VOI001  ANOP
+                                    204 VOID     DSECT
+                                    205 VOIENTRY DS    0F
+                                    206 VOIPRG   DS    A                   ADDR OF DRIVER PURGE SUBR
+                                    207 VOIRSTR  DS    A                   ADDR OF DRIVER RESTORE SUBR
+                                    208 VOIEXTNT DS    A                   ADDR OF DRIVER EXTENT CHECK
+                                    209 *                                  SUBROUTINE
+                                    210 VOIEL    EQU   *-VOIENTRY          LENGTH OF VOID
+                                    211          MEND
+                                                  RELOCATION DICTIONARY                                        PAGE    6
+POS.ID   REL.ID   FLAGS   ADDRESS                                                                ASM 0201 23.09 09/09/26
+ 0001     0001      0C     000000
+ 0001     0001      0C     000004
+ 0001     0001      0C     000008
+ 0001     0001      0C     00000C
+ 0001     0001      0C     000010
+ 0001     0001      0C     000014
+ 0001     0001      0C     000028
+ 0001     0001      0C     00002C
+ 0001     0001      0C     000030
+ 0001     0001      0C     000034
+ 0001     0001      0C     000038
+ 0001     0001      0C     00003C
+ 0001     0001      0C     000040
+ 0001     0001      0C     000044
+ 0001     0001      0C     000048
+ 0001     0001      0C     00004C
+ 0001     0001      0C     000050
+ 0001     0001      0C     000058
+ 0001     0001      0C     000060
+ 0001     0001      0C     000064
+ 0001     0001      0C     000068
+ 0001     0001      0C     00006C
+ 0001     0001      0C     000070
+ 0001     0001      0C     000074
+ 0001     0001      0C     000078
+ 0001     0001      0C     00007C
+ 0001     0001      0C     000080
+ 0001     0001      0C     000084
+ 0001     0001      0C     000088
+ 0001     0001      0C     00008C
+ 0001     0001      0C     000090
+ 0001     0001      0C     000094
+ 0001     0001      0C     000098
+ 0001     0002      1C     000018
+ 0001     0003      1C     00001C
+ 0001     0004      1C     000020
+ 0001     0005      1C     000024
+ 0001     0006      1C     000054
+ 0001     0007      1C     00005C
+ 
+                                                  CROSS-REFERENCE                                              PAGE    7
+SYMBOL    LEN   VALUE   DEFN    REFERENCES                                                       ASM 0201 23.09 09/09/26
+IECVOB14 00002 0000009C 00075  00015 00016 00017 00021 00022 00023 00030 00031 00033 00034 00035 00037 00038 00039 00041
+                               00042 00043 00046 00050 00051 00052 00054 00055 00056 00058 00059 00060 00062 00063 00064
+                               00066 00067 00068
+                                                  ASSEMBLER DIAGNOSTICS AND STATISTICS                         PAGE    8
+STMT  ERROR CODE   MESSAGE                                                                       ASM 0201 23.09 09/09/26
+   80  IFO092      KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION
+   94  IFO178      SYNTAX ERROR NEAR OPERAND COLUMN 5
+NUMBER OF STATEMENTS FLAGGED IN THIS ASSEMBLY =     2
+HIGHEST SEVERITY WAS    8
+OPTIONS FOR THIS ASSEMBLY
+  ALIGN, ALOGIC, BUFSIZE(STD), NODECK, ESD, FLAG(0), LINECOUNT(55), LIST, NOMCALL, YFLAG, WORKSIZE(2097152)
+  MLOGIC, NONUMBER, NOOBJECT, NORENT, RLD, NOSTMT, LIBMAC, NOTERMINAL, NOTEST, XREF(SHORT)
+  SYSPARM()
+WORK FILE BUFFER SIZE/NUMBER =19066/ 1
+TOTAL RECORDS READ FROM SYSTEM INPUT          3
+TOTAL RECORDS READ FROM SYSTEM LIBRARY      109
+TOTAL RECORDS PUNCHED                         0
+TOTAL RECORDS PRINTED                       291

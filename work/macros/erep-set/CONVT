@@ -1,0 +1,81 @@
+         MACRO
+         CONVT ,
+         GBLA  &BITS(2600),&DB,&DT,&INITIAL
+         GBLA  &ITEMITR,&ITEMFST(20),&ITEMNBR,&ITEMMDX
+         GBLA  &ITEMNDX(2600),&ITEMXPT
+         GBLA  &LABELNR,&LASTCC,&LB,&LBLCTR(100),&LPTR,&LT
+         GBLA  &NRENTS,&SHIFT(2600)
+         GBLB  &DIAGITF,&DIAGLIN,&DIAGSET,&DIAGTST,&FSW,&TEST
+         GBLC  &CARRCON,&CSECT,&DSECT,&ITEM(2600)
+         GBLC  &LABELS(2600),&LBL(100),&NRENTSX
+         LCLB  &SUB
+         LCLA  &OP
+         LCLA  &OFFSET,&OUT,&IN,&IND,&IBITS,&ISHIFT
+.*
+.*       CONVERT BINARY TO DECIMAL
+.*             &NAME IS THE REFERENCE INTO THE DSECT RECORD
+.*             &OUT    IS THE NUMBER OF CHARS TO BE PUT ONTO PRINT LINE
+.*                                      DEFAULT IS FOUR MAXIMUM IS 8
+.*             &IN       IS THE NUMBER OF BYTES AS INPUT
+.*                                      ERROR DEFAULT IS 2 MAXIMUM IS 4
+.*
+         AIF   (&DIAGTST EQ 0).NOMSG
+         AIF   (&INITIAL EQ 0).NOMSG
+         AIF   (&DIAGLIN EQ 1).NOMSG
+         MNOTE '**NO LINE ASSOCIATED WITH THIS DATA**'
+*****THE FOLLOWING GENERATED FOR TEST PURPOSES*****
+*        LINE
+         LINE
+.NOMSG   ANOP
+         AIF   (K'&SYSLIST(1) EQ K'&SYSLIST(1,1)).LLOP
+&SUB     SETB  1
+.LLOP    ANOP
+&OP      SETA  &OP+1
+&OUT     SETA  4                        .BR NOT NULL ELSE SET TO 4
+         AIF   (&SUB EQ 1).SUBA
+         AIF   ('&SYSLIST(3)' EQ '').B  TEST FOR NULL INPUT
+&OUT     SETA  &SYSLIST(3)             SET &OUT FROM INPUT
+         AGO   .A
+.SUBA    AIF   ('&SYSLIST(&OP,3)' EQ '').B
+&OUT     SETA  &SYSLIST(&OP,3)          SET &OUT FROM INPUT
+.A       AIF   (&OUT GT 0 AND &OUT LT 9).B   TEST RANGE
+.AERR    MNOTE '*** BYTES OUT INCORRECTLY SPECIFIED DEFAULT USED ***'
+&OUT     SETA  4
+.B       AIF   (&SUB EQ 1).SUBB
+         AIF   ('&SYSLIST(2)' EQ '').LOOP    BRANCH IF NULL
+&IN      SETA  &SYSLIST(2)              .SET &IN FROM INPUT
+         AGO   .BB
+.SUBB    AIF   ('&SYSLIST(&OP,2)' EQ '').LOOP
+&IN      SETA  &SYSLIST(&OP,2)          .SET &IN FROM INPUT
+.BB      AIF   (&IN GT 0 AND &IN LT 5).D     TEST RANGE
+.BERR    MNOTE '*** BYTES IN INCORRECTLY SPECIFIED DEFAULT USED ***'
+&IN      SETA  2
+         AGO   .D
+.LOOP    ANOP                           .LOOP TO FIND &NAME IN DSECT
+&IND     SETA  &IND+1                   .SET UP LOOP COUNTER
+         AIF   ('&ITEM(&IND)' EQ '&SYSLIST(&OP,1)').FOUND
+         AIF   (&IND LT &ITEMNBR).LOOP  .TEST FOR END OF DSECT
+         MNOTE '*** LOG ITEM NOT DEFINED ***'
+         MEXIT
+.FOUND   ANOP
+&IBITS   SETA  &BITS(&IND)              .SET UP NUMBER OF BITS SPEC
+         AIF   (&IBITS-((&IBITS/8)*8) EQ 0).C  .TEST FOR MULTIPLE OF 8
+         MNOTE '*** DATA NOT DEFINED A MULTIPLE OF 8 BITS ***'
+         MEXIT
+.C       ANOP
+&IN      SETA  &IBITS/8                 .COMPUTE NUMBER OF BYTES
+         AIF   (&IN LT 1 OR &IN GT 4).BERR  .TEST RANGE B IF IN ERROR
+&ISHIFT  SETA  &SHIFT(&IND)             .SET UP FOR TEST OF BYTE BNDR
+         AIF   (&ISHIFT EQ 0).D         .TEST FOR BYTE BNDRY
+         MNOTE '*** DATA NOT ALIGNED ON A BYTE BOUNDARY ***'
+         MEXIT
+.*
+.D       ANOP
+&NRENTS  SETA  &NRENTS+1
+         DC    AL.12(&SYSLIST(&OP,1)-&DSECT),AL.4(9)
+         DC    X'&IN',X'&OUT'
+&IND     SETA  0
+         AIF   (&SUB EQ 0).OUTA
+         AIF   (&OP LT N'&SYSLIST).LLOP
+.OUTA    ANOP
+         MEND

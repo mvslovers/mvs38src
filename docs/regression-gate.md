@@ -342,3 +342,540 @@ the whole time. Six of the ten files were stale by up to a factor of four.
 That regenerates [`cc370-cases.md`](cc370-cases.md)'s figures. The IFOX side does
 not have to be re-run unless the *source* changes — and if it does, only for the
 modules that changed: `ifox_run.py` skips what it has.
+
+## `as370 -v` before believing a timing — 2026-09-09
+
+`~/.local/bin/as370` is an **installed copy** and it goes stale. The gate runs
+whatever binary it is given, which since the first tree run has been the freshly
+built `~/repos/mvs/cc370/as370/as370`; the one on `PATH` was three weeks of
+merges behind and nobody noticed, because nothing else uses it.
+
+It cost ten minutes and nearly cost a wrong verdict. Re-timing `HEWLDIOC` for
+cc370#163 with the `PATH` copy, it ran past 600 s — which would have said the
+issue was still open. The current build assembles it in **0.066 s**, and the deck
+the gate promoted at 23:17 that same evening is 8160 bytes with `rc 0`.
+
+```sh
+as370 -v                       # as370 V1.0 - Sep  7 2026   <- stale
+~/repos/mvs/cc370/as370/as370 -v   # as370 V1.0 - Sep  8 2026
+```
+
+**A stale install answers every question with yesterday's assembler**, and it
+answers confidently. Print the build date before any single-module measurement,
+and use the repo path for everything the gate does.
+
+## The three counts, and saying which one you mean — 2026-09-09
+
+"What is left" has three legitimate values and they differ by fifteen:
+
+| | |
+|---:|---|
+| 539 | decks that differ card-for-card |
+| 531 | after the `&SYSTIME` restamp settles 8 of them |
+| **524** | after the 7 excluded modules |
+
+`module-table.tsv`'s `tool` column already carries the restamped verdict, so a
+tool reading that column gets 531 and 524 for free. A script that compares the
+decks itself gets 539 and looks like it has found eight regressions. **Both were
+written in this repository, and for one evening they disagreed with no note
+saying why.** Quote the third one, and name the filter whenever a figure is not
+it.
+
+**The three above are against `89fb177`, distance 29. On `7a0cd90` (distance 0 at
+writing) they are 149 / 135 / 128** — the clock settles fourteen there, not eight.
+The three-way shape is the durable part of this section; the values are not, and
+they moved by a factor of four in two days.
+
+## A cached input nobody re-derived — 2026-09-09
+
+`module_table.py` reads `as370-messages.tsv`, and **nothing regenerated it for a
+day.** It was eleven merges behind the promoted decks, so every signal split
+reported from that table — silent vs `as370` alone vs both flag — described
+yesterday's assembler.
+
+It surfaced through a single module. `module-table.tsv` said `IEFVEA` returned
+`rc 8` on a deck that had become byte-identical; the promoted `as370-gate.tsv`
+said `rc 0`. **The gate row was right and the derived table was a day old.**
+
+| what I reported | what it actually was |
+|---|---|
+| 149 silent / 62 `as370` alone / 76 both flag / 9 IFOX00 alone | **161 / 50 / 75 / 10** |
+
+And the claim that grew out of it — *the silent group has not moved through eleven
+merges* — was an artefact of a frozen file. It moved: 149 → 161, which is what a
+silent-success class does as loud modules lose their diagnostics and keep a deck
+difference.
+
+**`module_table.py` now refuses to run** when `as370-messages.tsv` is older than
+`as370-gate.tsv`:
+
+```
+STALE: as370-messages.tsv is older than as370-gate.tsv.
+  Run  python3 tools/as370_messages.py <as370-binary>  first.
+```
+
+**The promote sequence is four steps, not three:**
+
+```sh
+rsync -a --delete obj_<label>/ work/measurements/ifox-run/as370/
+cp <label>.tsv work/measurements/ifox-run/as370-gate.tsv
+python3 tools/as370_messages.py <binary>      # <-- the one that was missing
+python3 tools/ifox_compare.py <binary>
+python3 tools/module_table.py
+python3 tools/rebuild_classes.py <binary>
+```
+
+`rebuild_classes.py` is downstream of this too: it picks its population from
+`module-table.tsv`'s `signal` column, so a stale messages file quietly selects
+the wrong modules for every class.
+
+## A class list cannot see a false diagnostic on a correct deck
+
+`classes/*.txt` select modules where the deck **differs** *and* `as370` alone
+flags. Two failure modes are invisible to that, and both are real:
+
+| | example |
+|---|---|
+| the complaint goes, the deck stays | the eight `IFNX*` after cc370#262 |
+| the deck goes, the complaint stays | `IEAVTRTH`, `IEAVTRTR`, `IEAVTRTS` |
+
+The second needs a **census of the message across the whole tree with no deck
+filter**. Taken that way, on merged `9606b53`:
+
+| | modules |
+|---|---:|
+| IFOX00 clean and `as370` returns `rc 8+` | **62** |
+| …of which the deck is already byte-identical | **9** |
+| …of which the deck also differs | 53 |
+
+`continuation-consumed` (cc370#158) is the pure case: **8 modules, all 8 with
+byte-identical decks.** Fixing it gains no identities and removes a false `rc 8`
+from eight modules — which the identity count cannot show and which is still a
+divergence from the oracle.
+
+## The other stacked-PR failure, and it is the quiet one — 2026-09-09
+
+This document already says: **check the base branch before merging a stacked PR**,
+because deleting the parent's branch on merge *closes* the child (cc370#213 →
+#214, which had to be re-opened from the same commit).
+
+Today the sibling happened, and it is worse because nothing complains.
+
+cc370#274 and #276 were stacked, #276 based on #274's branch. I merged #274 first
+— which is correct — **without** `--delete-branch`, so the child stayed
+mergeable. Merging it then squashed it **onto its parent branch**, not onto
+`main`. `gh pr view` said `state=MERGED`; `main` did not have the change.
+
+```sh
+git log --oneline origin/main --grep="USING operand beginning"   # empty
+```
+
+**A merged PR whose commit is not on `main` looks exactly like a merged PR.** The
+only thing that caught it was checking `origin/main` for the fix by name after
+merging — which I did because the promote step needs the binary, not because I
+suspected anything.
+
+Re-opening a PR from that branch does not work either: it comes up `CONFLICTING`,
+because the branch predates the parent's squash. The repair is a **clean branch
+cut from `main` with the same diff applied** — cc370#278, whose build was
+byte-identical to the tree the gate figures came from, which is what made it safe
+to merge on the existing measurement.
+
+**The rule, in the form that covers both failures**: *retarget a stacked child to
+`main` before merging its parent.* Deleting the branch loses the child loudly;
+keeping it loses the change silently. Same omission, and only one of the two tells
+you.
+
+### And check the fix is in `main` by name
+
+```sh
+gh pr merge <n> --squash
+git fetch -q origin
+git log --oneline origin/main --grep="<a phrase from the title>" | head -1
+```
+
+Three lines, and they are the difference between a merge and the appearance of
+one.
+
+## The gate is not a well-formedness check — `deck_lint.py` — 2026-09-09
+
+cc370 built a change for #290 that produced a **structurally malformed deck**: a
+section chained at the wrong origin, its TXT landing on top of another section's,
+its ESD entry gone while the TXT remained. The gate line read
+
+```
++0    closer 1    LOST 0
+```
+
+**Green, on a deck no linkage editor would accept.** `retest.py` compares our
+bytes with IFOX00's; it has no opinion about whether the deck is a deck. Every
+merge tonight leaned on that line, and nothing anywhere was asking the other
+question.
+
+`deck_lint.py` asks it of one deck alone, with no reference:
+
+1. every TXT card names an ESDID the ESD defines as SD, PC or CM
+2. every TXT byte lies inside its section's declared origin..origin+length
+3. no two sections overlap
+4. every RLD position and relocation ESDID exists
+5. no ESDID is defined twice
+
+```
+work/measurements/ifox-run/decks   5528 decks, 0 with a complaint
+work/measurements/ifox-run/as370   5528 decks, 5 with a complaint
+                                     sections overlap: BNGC3270 BNGCDISP
+                                     BNGCLOCL BNGCMENU BNGCRMOT
+```
+
+**All five are the CICS modules in `excluded.tsv`**, which cannot resolve their
+macros at all. Every one of the other 5,523 decks `as370` produces is well formed.
+
+### The control caught two wrong rules before it caught anything real
+
+**IFOX00's 5,528 recorded decks must pass.** They did not, twice, and both times
+the rule was wrong rather than the deck:
+
+| version | "found" | the actual error |
+|---|---:|---|
+| first | 1,855 IFOX00 decks | RLD continuation: `RRPP FAAA`, and bit `0x01` of the flag means the next item repeats R/P and is `FAAA` alone |
+| second | 476 IFOX00 decks | an **LD** entry carries no ESDID and does not advance the counter, so every module with an `ENTRY` looked as though it defined an id twice |
+| third | **0** | — |
+
+Without the control, the first version reports 1,861 defective `as370` decks and
+every one of them is a lie. **A validator with no known-good corpus is a random
+number generator with good manners.**
+
+## The gate measures the deck. It now measures the return code too — 2026-09-09
+
+`as370 == IFOX00` has always been read off the deck. Mike asked the obvious
+question — *if it is an error, as370 has to report it with the same RC as IFOX00*
+— and the measurement says that is not a detail:
+
+| | modules | of those, deck **byte-identical** |
+|---|---:|---:|
+| `as370` flags, IFOX00 clean | 33 | 9 |
+| **IFOX00 flags, `as370` clean** | **118** | **115** |
+
+**151 disagree and 124 of them have an identical deck**, so every deck-based
+figure in this repository counts them as finished.
+
+`retest.py` now prints both halves:
+
+```
+  return code agrees : 5377 -> 5377   (+0)
+    as370 alone flags : 33 -> 33
+    IFOX00 alone flags: 118 -> 118
+  DECK AND RC BOTH   : 5210 -> 5210   (+0)
+```
+
+**`DECK AND RC BOTH` is the honest headline**: 5,210 of 5,528, against 5,348 on
+the deck alone. *Those two, and the 33/118 above, are the figures on the day the
+return code entered the goal. On `b67af3d`, distance 0 at writing: **5,403** deck
+and return code, **5,441** on the deck alone (5,404 raw), `as370` alone flags
+**3**, IFOX00 alone flags **4**, and `flagged-or-silent agrees` **5,517**.*
+
+It takes the run's own `<label>.tsv` (or `--rc`), and compares *clean against not
+clean* rather than the exact number — IFOX00 counts in multiples of four and a
+severity is a severity.
+
+### The 118 are almost one thing
+
+```
+105  IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION
+103  IFO092 KEYWORD PARAMETER PTF  UNDEFINED IN MACRO DEFINITION
+  9  IFO092 KEYWORD PARAMETER ALIGN UNDEFINED IN MACRO DEFINITION
+```
+
+The source calls `MODID DATE=…,PTF=…` and `SYS1.AMACLIB(MODID)` has the prototype
+`&LABEL MODID &BRANCH=,&BR=`. IFOX00 is right to complain — the macro is an older
+maintenance level than the source. **`as370` swallows it without a word**, and
+that is cc370#162.
+
+**It is the largest single item on the board and it looks like nothing**: the gate
+will score it `+0` on decks, because 115 of the 118 are already byte-identical. It
+took a stricter definition of the goal to make it visible at all.
+
+## A net count cannot report a regression it is outnumbered by — 2026-09-09
+
+cc370#304 took three modules from `rc 0` to `rc 8` — `IFNX1K`, `IFNX3K`,
+`IFNX5V` — and **I merged it.** The gate line read
+
+```
+LOST : 0        as370 alone flags : 23 -> 19
+```
+
+and **both were true.** The three decks were already non-identical, so the deck
+measure could not see them; seven other modules improved in the same run, so the
+net moved the right way. Nothing in the output was wrong. It simply could not
+carry the signal.
+
+`retest.py` now prints, unconditionally and **by name**, next to `LOST`:
+
+```
+  rc CLEAN -> FLAGGED: 3  IFNX1K IFNX3K IFNX5V
+  rc flagged -> clean : 4
+```
+
+Two lines, off two `.tsv` files that were already on disk. **The control**: run
+against `g301.tsv` and `g303.tsv` — the gates either side of #304 — it names
+exactly those three. A check that cannot reproduce the failure it was written for
+is not a check.
+
+### The shape, third instance
+
+| | the aggregate that hid it |
+|---|---|
+| `AMASPZAP` | module totals, while one section was 16 bytes and two were absent |
+| `diag_cap` / `libmac_mend` | a green test that had stopped testing its subject |
+| **cc370#304** | **a net verdict count outnumbering three regressions** |
+
+Every input correct, every figure honest, and the thing you needed to see gone.
+cc370 found it by asking *when* the `IFNX` family broke, not *whether* — the
+family was suspiciously uniform, and uniformity is a question about history.
+
+## A PR worktree in `/tmp` breaks cc370's test suite, and it looks like a regression
+
+2026-09-09. Gating a PR from `git worktree add /tmp/wtNNN`, `tests/run.sh`
+reported five samples as `ASSEMBLE FAILED` — `sample2 sample7 sample8 sample9
+dcb` — where the same suite on `main` passed. That reads as a regression the PR
+introduced, and it is not one.
+
+```sh
+LIBC370=${LIBC370:-../../libc370}      # tests/run.sh, relative to the repo root
+```
+
+From `/Users/mike/repos/mvs/cc370/as370` that resolves to
+`/Users/mike/repos/mvs/libc370` and exists. From `/tmp/wt322/as370` it resolves
+to `/libc370` and does not, so the PDP macros are missing and five samples that
+need them fail. **Set it explicitly whenever the suite is run outside the
+checkout:**
+
+```sh
+cd /tmp/wtNNN/as370 && LIBC370=/Users/mike/repos/mvs/libc370 sh tests/run.sh
+```
+
+With that, all samples are byte-identical to IFOX00.
+
+**The control said "regression" because it varied more than one thing.** `main`
+passing and the PR failing looks decisive until you notice the two runs also
+differed in working directory — the very variable the failure depended on. A
+control has to differ from the test in exactly the one thing under examination,
+and this one differed in two. `run.sh`'s own comment names the symptom
+(*"the suite failed with `Undefined operation code ... PDPPRLG` wherever it was
+absent"*); reading the instrument would have been quicker than re-deriving it.
+
+## Build `main` from a worktree — the cc370 checkout belongs to the other session
+
+Same day, worse mistake. Promoting a merge, I ran `git checkout main` **in
+`~/repos/mvs/cc370` while cc370 was working in it** — the session had
+`feat/as370-ifo220-alignment` checked out with uncommitted changes to
+`as370/src/as370.c`. Git refused, which is the only reason nothing was lost.
+
+There was never a reason to touch it: every gate already builds from
+`git worktree add /tmp/wtNNN`, and the only thing the checkout was being used for
+was a current `main` binary for the measurement chain. So:
+
+```sh
+git -C ~/repos/mvs/cc370 worktree add /tmp/main-cc370 main
+cd /tmp/main-cc370 && git fetch -q origin && git checkout -q --detach origin/main
+```
+
+`--detach origin/main`, not the local `main` branch — the local ref lags whenever
+a pull was skipped, and moving it with `git branch -f` would reach into a ref the
+other session may be standing on. A detached worktree touches nothing shared.
+
+**Two sessions, one checkout, is a shared mutable resource with no lock.** The
+convention is: the checkout is cc370's, `/tmp` worktrees are mine.
+
+## Never pass a `gh` comment body inline
+
+`gh pr close 321 -c "... \`pool.s\` is already on main ..."` — the shell ran
+`pool.s` as a command and substituted its empty output, so the published comment
+read `** is already on main.**`. It had to be corrected in a follow-up.
+
+Use `--body-file` with a quoted heredoc (`<<'MDEOF'`) for every comment, without
+exception. Backticks are how one writes code in Markdown and how the shell
+substitutes commands, and a comment is published before anyone reads it back.
+
+## Never chain a promotion behind unrelated commands with `&&`
+
+2026-09-09, and it is the sharpest instance of *stale by content* yet, because
+nothing failed and nothing looked wrong.
+
+```sh
+gh pr close 321 -c "..." && git checkout -q main && git pull -q && \
+  make -C as370 && cd .../ifox-run && rm -rf as370 restamp && \
+  cp -R obj_g322 as370 && cp g322.tsv as370-gate.tsv && echo promoted
+```
+
+`git checkout` aborted — the other session had uncommitted work in that checkout
+— so **every command after it was skipped, including the promotion**. The word
+`promoted` never printed and I did not notice, because the failure message was
+about a checkout and I was reading it as a git problem, not as a promotion
+problem.
+
+Consequences, both silent:
+
+- the measurement chain launched next ran the **new binary against the previous
+  merge's decks**, which is precisely the two-builds-at-once figure this document
+  already warns about;
+- `retest.py`'s rc rows compared against `g319` while claiming to compare against
+  the promoted state — which is how the `flagged-or-silent` row read
+  `5494 -> 5503 (+9)` for a merge that had already landed.
+
+**It was caught by a control, not by noticing.** Re-running `retest.py` on the
+already-promoted run must print `+0` on every line; it printed `+9`, and the only
+explanation was that the baseline was not what it claimed to be.
+
+So: **a promotion is its own command, run on its own, and its output is read.**
+Never `&&`-chained behind a merge, a build, or anything that can fail for an
+unrelated reason. And after promoting, `retest.py <the same objdir>` should print
+zeros — a one-line check that the promoted state is the run it is supposed to be.
+
+## `gh issue close` has no `--body-file`
+
+It takes `-c/--comment` inline only, which collides directly with the rule above
+about never passing a body inline. Two issues appeared to close and did not,
+because `--body-file` was accepted as an unknown flag and the command did
+nothing visible.
+
+Two commands, not one:
+
+```sh
+gh issue comment 153 --body-file /tmp/c153.md && gh issue close 153
+```
+
+And **check the state afterwards** — `gh issue view <n> --json state -q .state`.
+A close that silently failed looks exactly like one that worked.
+
+## A flag chain in a shell variable is one argument, and it invalidated a result
+
+2026-09-09, and it is in my memory notes already, which is the annoying part.
+
+```sh
+extra=""
+[ "$lbl" = all ] && extra="-I $M/kreiss-smp -I $M/erep-instream"
+$B $MAC $extra -o /tmp/isi.$lbl.obj "$SRC/IFCSI115.ASM"
+```
+
+`$extra` reached `as370` as **one argument**, so both directories were ignored and
+the run was identical to the one without them. I reported that as *"supplying the
+EREP macros changes nothing — same rc, same 166 diagnostics, same 480-byte deck"*.
+
+Written out explicitly, the same module gives:
+
+| | rc | diagnostics | deck | still undefined |
+|---|---:|---:|---:|---|
+| through the variable | 8 | 166 | 480 B | `DSGEN LINE ROUTINE SPECIAL SUM` + 8 more |
+| paths written out | 12 | 172 | **1,680 B** | `LINEND CONVT HEX SUMMARY PROLOG FREETAB ETEPILOG ENTRIES` |
+
+**3.5× the object, and five of the thirteen undefined operations resolved.** The
+opposite of what I said.
+
+The control that should have run first is three lines:
+
+```sh
+printf 'T        CSECT\n         DSGEN (A,8)\n         END\n' > /tmp/dsg.s
+as370 -I .../erep-instream -o /tmp/dsg.obj /tmp/dsg.s   # rc 0
+as370                      -o /tmp/dsg.obj /tmp/dsg.s   # Undefined operation code - DSGEN
+```
+
+It takes seconds and it distinguishes *"the macro does not help"* from *"the macro
+was never on the path"*. **A negative result about a supplied file is a claim
+about the supply until the supply is demonstrated.** `gate.sh` is not affected —
+its `MACFLAGS` is expanded by `sh`, which does word-split — but every ad-hoc
+measurement typed at the prompt is.
+
+## A cleanup loop must not re-trigger on its own output
+
+The trim loop written to cap those listings behind a long-running driver tested
+`[ "$n" -gt 8000 ]` against files it had itself left at **8003** lines, so every
+pass re-cut every file it had already cut — head 4000 + marker + tail 4000 of an
+8003-line file, losing the three marker lines and writing three new ones,
+indefinitely. Harmless here and not always: the same shape on a file that shrinks
+by more than its marker is a slow grinder.
+
+The fix is to make the loop recognise its own work rather than to tune the
+threshold:
+
+```sh
+grep -q 'lines elided -- head and tail' "$f" && continue
+```
+
+**A predicate that stays true after the action is a loop, not a guard.**
+
+## A comparison whose inputs are missing must fail, not agree
+
+2026-09-09, verifying cc370#328. The check was
+
+```sh
+for spec in "IFNX4D 05.29" "IFNX4N 03.10"; do
+  set -- $spec; mod=$1; t=$2
+  a=$(shasum -a 256 /tmp/$mod.t.obj | cut -c1-16)
+  b=$(shasum -a 256 .../decks/$mod.obj | cut -c1-16)
+  [ "$a" = "$b" ] && echo IDENTICAL
+```
+
+`set -- $spec` did not split under this shell, so `$mod` was `IFNX4D 05.29`, both
+`shasum` calls failed, `$a` and `$b` were **both empty**, and the test printed
+`IDENTICAL` for three modules it had never compared. A false *pass* — the
+direction that does not get investigated.
+
+Rewritten in Python with `assert os.path.exists(...)` on both sides before
+hashing. **Any comparison that can be reached with an absent operand needs the
+operand asserted**, because "equal" is what two absent things look like.
+
+**And the second instrument was wrong too.** With the paths right, a whole-file
+`shasum` said all three *differ* — because `ifox_run.py`'s stored decks and
+`as370 -o` output are not framed identically. Card-wise with the END card set
+aside — the rule `ifox_compare.py` already applies, since each assembler writes
+its own name there — says identical, on all three. The same trap made `IBCDASDI`
+look different when it was not.
+
+Two wrong readings of one three-line check, in opposite directions. The project's
+own comparator exists precisely so that ad-hoc ones are not needed.
+
+## Distance is not a valid reading for a wholly displaced section
+
+cc370#330 gained 7 identities and its `decks FURTHER` line named three, two of
+them by a lot: `BNGCLOCL(+266)` and `BNGCRMOT(+503)`. Read as a regression that
+is alarming. Read from the ESD it is the opposite:
+
+```
+BNGCLOCL   before @0x000 len=6694    after @0x000 len=6685    IFOX @0x008 len=6685
+BNGCRMOT   before @0x000 len=11887   after @0x000 len=11878   IFOX @0x008 len=11878
+```
+
+The section reached **IFOX00's exact length** and sits **eight bytes below** its
+origin. A byte-for-byte distance over a displaced image measures the shift; the
+fix made the two images the same size, so *fewer* bytes coincided under it. The
+metric got worse because the code got right.
+
+**So `decks FURTHER` needs the ESD before it is believed.** Where origin and
+length both match and only content differs, distance is meaningful. Where the
+origins differ, the honest readings are the declared section length and the
+origin itself — and a module whose length now matches exactly, at a constant
+displacement, is one defect from identity rather than further away.
+
+The third on that line, `IFNX3A(+2)`, is not this shape: every section matches
+IFOX00 in origin *and* length, so its two bytes are content. Checking which
+of the two it was cost one script over the ESD records.
+
+## Verify the worktree's commit before starting anything that reads its binary
+
+Twice in one evening: the measurement chain was started against
+`/tmp/main-cc370/as370/as370` while that worktree was **one merge behind**, and
+once while the binary was being rebuilt underneath it. Both produce a figure from
+two commits with nothing in the output saying so.
+
+The order is: **fetch, detach, build, print `-v` and the commit, and only then
+start anything that reads it.**
+
+```sh
+cd /tmp/main-cc370 && git fetch -q origin && git checkout -q --detach origin/main \
+  && git log --oneline -1 && make -C as370 && ./as370/as370 -v
+```
+
+`as370 -v` prints a build *date*, which cannot distinguish two merges on the same
+day — so the commit line is the one that matters, and it has to be read, not just
+printed.

@@ -1,7 +1,19 @@
 # TODO — MVS 3.8j source recovery
 
-As of 2026-09-07, midday. The working list for [`docs/workplan.md`](docs/workplan.md).
-The plan says *why* and *where to*; this list says *what next*.
+The working list for [`docs/workplan.md`](docs/workplan.md). The plan says *why*
+and *where to*; this list says *what next*.
+
+> ⚠️ **Every count below carries the cc370 commit it was derived against, and the
+> commit alone is not enough** — check the distance before quoting it:
+>
+> ```sh
+> git -C ~/repos/mvs/cc370 rev-list --count <that-commit>..main
+> ```
+>
+> The handover block below read *3,466 of 5,528, 62.7 %* until 2026-09-09. That
+> was the founding measurement at `ee1090b`, **distance 130**, and it had stood in
+> the "where the project stands" position for two days while the real figure went
+> past 97 %. Dated entries further down are history and keep their own numbers.
 
 **Key:** 🔒 blocks other work · ⚡ runs in parallel, blocks nothing ·
 🚪 gate: the outcome decides how we proceed
@@ -20,54 +32,99 @@ real Assembler XF under MVS/CE, from the same source and the same 1,822 macros.
 That separates the tool question from the source question for every module, and
 it is done: [`docs/ifox-tree.md`](docs/ifox-tree.md).
 
-- **`as370` and IFOX00 agree on 3,466 of 5,528 modules (62.7 %).**
-- **2,112 modules are the assembler's problem** and are written out ready to hand
-  over: [`work/measurements/ifox-run/for-cc370.tsv`](work/measurements/ifox-run/for-cc370.tsv)
-  and `for-cc370.txt`.
-- **3,416 are ours** — the two assemblers agree and only IBM's shipped object
-  differs.
-- On the population the earlier figures are about (as370 rc 0, DLIB counterpart,
-  3,719 modules): source 1,357, tool 1,052, recovered 869, `DS` holes only 441.
+**Derived against cc370 `b67af3d`, distance 0 at writing** (check it:
+`git -C ~/repos/mvs/cc370 rev-list --count ff783f6..main`), from the promoted
+gate run `g328` — **and against the EREP-adopted oracle**, see
+[`docs/erep-adoption.md`](docs/erep-adoption.md):
+
+- **`as370` and IFOX00 agree on 5,441 of 5,528 decks (98.4 %)** once the assembly
+  stamp is normalised, **5,404** on the raw bytes — the two instruments differ by
+  the 20 decks that carry the date and nothing else. **5,403** when the return
+  code has to agree too.
+- **96 modules still differ.** The map is
+  [`docs/what-is-left.md`](docs/what-is-left.md); the largest cluster in the
+  silent class is **two**.
+- `as370` alone flags **3**; IFOX00 alone flags **4**.
+- **The 0-versus-4 boundary is nearly closed.** It was 26 modules this morning —
+  8 where `as370` said 4 and IFOX00 said 0, 18 the other way — and it is **4**:
+  `AHLMCER AHLSETEV IEEMB809` on `IFO026` and `BLSR3270` on an MNOTE.
+  `flagged-or-silent agrees` 5,517 of 5,528.
+
+| as370 → IFOX00 | | | |
+|---|---:|---:|---:|
+| | **rc 0** | **rc 4** | **rc 8+** |
+| **rc 0** | 4568 | 4 | 4 |
+| **rc 4** | 0 | 19 | 0 |
+| **rc 8+** | 3 | 1 | 929 |
+
+- **1,202 of the 5,056 DLIB pairs are byte-identical** to the object IBM shipped.
+  That figure was 1,211 and **no deck moved away from IBM's object**: the count is
+  filtered on `as370 rc 0`, and 14 modules correctly left that filter when #324
+  taught `as370` to raise `IFO220` where IFOX00 does — 7 of them DLIB-identical,
+  against 1 joining. A control whose population moves is not a control that
+  regressed, but it reads exactly like one if the filter is not stated.
+
+`for-cc370.tsv` and `for-cc370.txt` **are** current as of this derivation — they
+came out of the promote sequence in
+[`docs/regression-gate.md`](docs/regression-gate.md) against `g323r`.
 
 ### The class that only this comparison can see
 
-**1,113 modules are a silent divergence**: both assemblers exit clean, neither
-says a word, and the object code is different anyway. `IGG019PF` is the pattern —
+**36 modules are a silent divergence**: both assemblers exit clean, neither says a
+word, and the object code is different anyway. `IGG019PF` was the pattern —
 IFOX00 emits 144 bytes, `as370` emits 265, first difference at `0x89`. Against
 the distribution libraries alone this is indistinguishable from a source defect,
 which is why it was never counted before.
 
+**It was 1,113 when this section was written on 2026-09-07**, 56 this morning, 36
+now. The class is still the one the comparison exists for; it is no longer the
+largest thing in the tree, and **it no longer has families** — the biggest cluster
+in it is two modules.
+
 ### The next three things
 
-**1. Hand the 2,112 to cc370 as cases, ordered.** The table gives each one the
+**1. Hand what is left to cc370 as cases, ordered.** The table gives each one the
 offset where the two decks part, both section lengths, and both assemblers'
 messages — [`module-table.tsv`](work/measurements/ifox-run/module-table.tsv), one
-row per module, sorted so the hand-over block is contiguous. The classes, largest
+row per module. The classes on `b67af3d`, over the 99 still differing, largest
 first:
 
-| | Modules |
-|---|---:|
-| silent divergence — both clean, object different | 1,113 |
-| `as370` rejects what Assembler XF assembles | 512 |
-| both flag, **and the decks differ** (of 849 that both flag) | 393 |
-| IFOX00 flags, `as370` is silent | 84 |
-| no deck on one side | 8 |
-| `as370` does not terminate | 2 |
+| | Modules | was, 2026-09-09 morning | was, 2026-09-07 |
+|---|---:|---:|---:|
+| both flag, **and the decks differ** | **57** | 62 | 393 |
+| silent divergence — both clean, object different | **33** | 48 | 1,113 |
+| `as370` rejects what Assembler XF assembles | **3** | 16 | 512 |
+| IFOX00 flags, `as370` is silent | **3** | 2 | 84 |
+| no deck on one side | 0 | 0 | 8 |
+| `as370` does not terminate | 0 | 0 | 2 |
 
-The third class is already broken down by message
-([`as370-flags.tsv`](work/measurements/ifox-run/as370-flags.tsv)); on the first
-900 modules it was 68 `Undefined symbol`, 25 `Addressability error — no active
-USING covers the operand`, 6 `Undefined operation code`. Send the case, not the
-diagnosis.
+**"Both flag" is now well over half of what remains**, and it is the class where
+neither assembler is a trustworthy reference: 929 modules tree-wide rest on an
+IFOX00 assembly that IFOX00 itself flagged, which is what
+[`docs/ifox-objections.md`](docs/ifox-objections.md) is for.
+
+The three `as370` alone flags are `IFCEL155`, `IFCSXXXF` and `IFCSXXXH`. The three
+IFOX00 alone flags with a differing deck are `IBCDMPRS`, `IEAVEXS` and
+`IEAVRTI0`; `IBCDASDI` is the fourth and its deck is identical.
 
 **2. The source work, now attributable with certainty.** Where `as370` == IFOX00
 and the DLIB member still differs, the difference belongs to the source or to
-IBM's maintenance and to nothing else. That is 1,357 modules, plus 441 that
-differ only in `DS` holes. This no longer waits on the assembler.
+IBM's maintenance and to nothing else. On `b67af3d` that is **3,734 modules** of
+the 4,960 that both agree on *and* have a DLIB pair — 2,292 differing in length,
+574 in `DS` holes only, 560 in text, 308 mixed. **1,209 are already
+byte-identical.**
 
-**3. Re-run the comparison after every cc370 merge.** The pipeline is resumable
-and the order is a fixed shuffle, so a partial re-run is still an unbiased
-sample. `tools/ifox_run.py`, then `ifox_compare.py`, then `module_table.py`.
+The assembler side is **99 modules against these 3,734**. That ratio is the
+argument for where the next phase of work goes, and it has been widening every
+day: every module the assembler stops getting wrong moves *into* this class, not
+out of it.
+
+**3. Re-run the gate after every cc370 merge, and promote as its own command.**
+It no longer needs MVS: the 5,528 IFOX00 decks are recorded, so a full
+measurement is ten minutes on the host. The promote sequence and the traps —
+`&&`-chaining a promotion, a `/tmp` worktree breaking `LIBC370`, an rc baseline
+that does not match the deck baseline — are all in
+[`docs/regression-gate.md`](docs/regression-gate.md).
 
 ### What is settled and needs no more work
 

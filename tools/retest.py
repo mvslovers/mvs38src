@@ -131,6 +131,35 @@ def verdict(a, b):
     return "identical" if x == y else "bytes"
 
 
+def rcmap(tsv):
+    """{module: severity} from a gate run's tsv, or from IFOX00's state.tsv."""
+    out = {}
+    for line in open(tsv):
+        f = line.rstrip("\n").split("\t")
+        if len(f) < 2 or f[0] == "module":
+            continue
+        v = f[1].strip()
+        if v.lstrip("-").isdigit():
+            out[f[0]] = int(v)
+    return out
+
+
+def rcverdict(a, b):
+    """Do the two assemblers agree about whether the module is clean?
+
+    Not the exact number -- IFOX00 counts in multiples of four and a severity
+    is a severity. `as370 == IFOX00` has always meant the deck; on 2026-09-09
+    Mike pointed out that it has to mean the RETURN CODE too, and the measure
+    below is why that is not a detail: 151 modules disagree and 124 of them
+    have a byte-identical deck, so every deck-based figure in this repository
+    calls them finished.
+    """
+    clean_a, clean_b = a is not None and a <= 4, b is not None and b <= 4
+    if clean_a == clean_b:
+        return "agree"
+    return "as370 alone flags" if not clean_a else "IFOX00 alone flags"
+
+
 def measure(objdir, mods):
     return {m: verdict(f"{objdir}/{m}.obj", f"{IFOX}/{m}.obj") for m in mods}
 
@@ -141,6 +170,9 @@ def main():
     ap.add_argument("--baseline", default=f"{RUN}/as370",
                     help="the as370 decks the recorded figures come from")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--rc", default=None, metavar="TSV",
+                    help="the gate run's own tsv, to compare return codes as "
+                         "well as decks (default: <objdir minus 'obj_'>.tsv)")
     a = ap.parse_args()
 
     mods = sorted(f[:-4] for f in os.listdir(IFOX) if f.endswith(".obj"))
@@ -182,6 +214,101 @@ def main():
     for k in ("bytes", "cards", "no-as370-deck"):
         print(f"  {k:14s}: {sum(1 for m in mods if old[m] == k)} -> "
               f"{sum(1 for m in mods if new[m] == k)}")
+
+    # The other half of "as370 == IFOX00": the return code.
+    tsv = a.rc or (os.path.basename(a.objdir).replace("obj_", "", 1) + ".tsv")
+    if os.path.exists(tsv):
+        ifox = {m: (int(v) if v.strip().lstrip("-").isdigit() else None)
+                for m, v in ((l.split("\t")[0], l.split("\t")[1])
+                             for l in open(f"{RUN}/state.tsv").read().splitlines()[1:]
+                             if len(l.split("\t")) > 1)}
+        now = rcmap(tsv)
+        # The rc baseline must be the SAME run as the deck baseline.
+        #
+        # This read `{RUN}/as370-gate.tsv` unconditionally while the deck side
+        # read `--baseline`.  With the default baseline the two are the same run
+        # and nothing shows; override `--baseline` and every rc row silently
+        # keeps comparing against the promoted state instead.  cc370 caught it
+        # on 2026-09-09 gating #323 with `--baseline obj_g320`: the row printed
+        # `5494 -> 5517  (+23)` where g320's own value is 5503 and the delta is
+        # +14, and on the failed attempt it printed -69 where the truth was -78.
+        #
+        # Both errors were in the direction that flatters, which is the reason
+        # this is worth a hard failure rather than a fallback: `rc CLEAN ->
+        # FLAGGED` reads the same map, so a PR gated on a non-promoted baseline
+        # could have missed a return-code regression outright -- the exact
+        # failure the unconditional line was added for after #304.
+        #
+        # gate.sh writes `<label>.tsv` beside `obj_<label>`, so the companion is
+        # derivable.  If it is not there, stop: a baseline nobody can name is
+        # worse than no comparison.
+        if os.path.abspath(a.baseline) == os.path.abspath(f"{RUN}/as370"):
+            base_tsv = f"{RUN}/as370-gate.tsv"
+        else:
+            b = os.path.basename(a.baseline.rstrip("/"))
+            base_tsv = os.path.join(os.path.dirname(os.path.abspath(a.baseline)),
+                                    b.replace("obj_", "", 1) + ".tsv")
+        if not os.path.exists(base_tsv):
+            sys.exit(f"no return codes for the baseline: {base_tsv} not found.\n"
+                     f"  --baseline {a.baseline} needs its gate .tsv beside it, "
+                     f"or the rc rows would compare a different run than the "
+                     f"deck rows do.")
+        print(f"  (rc baseline: {os.path.basename(base_tsv)})")
+        base = rcmap(base_tsv)
+        vn = {m: rcverdict(now.get(m), ifox.get(m)) for m in mods}
+        vo = {m: rcverdict(base.get(m), ifox.get(m)) for m in mods}
+        an, ao = (sum(1 for m in mods if v[m] == "agree") for v in (vn, vo))
+        print(f"\n  return code agrees : {ao} -> {an}   ({an - ao:+d})")
+        for k in ("as370 alone flags", "IFOX00 alone flags"):
+            print(f"    {k:18s}: {sum(1 for m in mods if vo[m] == k)} -> "
+                  f"{sum(1 for m in mods if vn[m] == k)}")
+        # A NET count cannot report a regression it is outnumbered by.
+        # cc370#304 took three modules from rc 0 to rc 8 -- IFNX1K, IFNX3K,
+        # IFNX5V -- in a run whose gate line read `LOST : 0` and
+        # `as370 alone flags 23 -> 19`.  Both were true: the three decks were
+        # already non-identical so the deck measure could not see them, and
+        # seven other modules improved in the same run.  The net moved the
+        # right way while three modules got worse, and I merged it.
+        #
+        # So this is unconditional and by NAME, next to LOST.  Two lines, off
+        # two files that were already on disk.
+        broke = [m for m in mods
+                 if base.get(m) is not None and now.get(m) is not None
+                 and base[m] <= 4 < now[m]]
+        fixed = [m for m in mods
+                 if base.get(m) is not None and now.get(m) is not None
+                 and now[m] <= 4 < base[m]]
+        print(f"  rc CLEAN -> FLAGGED: {len(broke)}  {' '.join(broke[:10])}")
+        print(f"  rc flagged -> clean : {len(fixed)}  {' '.join(fixed[:8])}")
+        both = [m for m in mods if vn[m] == "agree" and new[m] == "identical"]
+        bo = [m for m in mods if vo[m] == "agree" and old[m] == "identical"]
+        print(f"  DECK AND RC BOTH   : {len(bo)} -> {len(both)}   "
+              f"({len(both) - len(bo):+d})")
+
+        # The 0-versus-4 boundary, which every line above is blind to.
+        #
+        # `rcverdict` asks whether both assemblers call the module clean, and
+        # counts 4 as clean.  That is right for its question and it hides a
+        # class: on 2026-09-09, 26 modules disagreed about rc 0 against rc 4 --
+        # 8 where as370 says 4 and IFOX00 says 0, 18 the other way -- and 25 of
+        # the 26 have a BYTE-IDENTICAL deck.  So they are invisible twice over:
+        # the deck measure calls them finished and the rc measure calls them
+        # agreed.  cc370 found them from the inside, working ISTNSC00.
+        #
+        # This is an ADDITIONAL line, not a redefinition of the one above.
+        # Changing `rcverdict` would silently move every figure recorded in
+        # this repository since 2026-09-09 and leave no way to compare against
+        # them.  A stricter measure earns its own row.
+        exact_n = sum(1 for m in mods
+                      if now.get(m) is not None and ifox.get(m) is not None
+                      and (now[m] == 0) == (ifox[m] == 0))
+        exact_o = sum(1 for m in mods
+                      if base.get(m) is not None and ifox.get(m) is not None
+                      and (base[m] == 0) == (ifox[m] == 0))
+        print(f"  flagged-or-silent agrees : {exact_o} -> {exact_n}   "
+              f"({exact_n - exact_o:+d})   <- counts rc 4 as flagged")
+    else:
+        print(f"\n  (no return-code comparison: {tsv} not found -- pass --rc)")
 
     # Named, both directions, because the count above cancels. On cc370#182
     # IFNX1A gained a deck and IFCEE155 lost one to a timeout race, so the line

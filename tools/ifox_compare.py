@@ -72,7 +72,18 @@ def asmdate(deckpath):
 
 def reassemble(m, date, tm, out):
     env = dict(os.environ, ASMDATE=date, ASMTIME=tm)
-    subprocess.run(["perl", "-e", "alarm 40; exec @ARGV", BIN] + MACS +
+    # The alarm is 400 s here for the same reason it is 400 s in gate-worker.sh,
+    # and it was NOT raised with it -- 2026-09-09.  gate-worker.sh went 150 -> 400
+    # when IFCEL155 turned out to assemble in 41 s alone; these three tools kept
+    # their 40/40/60 s and nobody looked.  IFCEL155 therefore came out of the GATE
+    # with rc 20 and a 43,200-byte deck, four gate runs in a row with the identical
+    # sha256, and out of THIS tool with rc -14 (SIGALRM) -- so module-table.tsv, the
+    # table cc370 actually reads, filed a module that finishes as `did not finish`.
+    # One alarm was raised, three were not, and the pipeline disagreed with itself.
+    # The rule from IFCEE155 needs the addition: an alarm belongs to the SLOWEST
+    # module in the corpus, not to the tool, so every instrument that assembles gets
+    # the same one.
+    subprocess.run(["perl", "-e", "alarm 400; exec @ARGV", BIN] + MACS +
                    ["-o", out, f"{SRC}/{m}.ASM"],
                    env=env, capture_output=True)
     return os.path.exists(out)
@@ -108,7 +119,7 @@ def dlib_verdict(args):
 def main():
     global BIN
     BIN = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser(
-        "~/.local/bin/as370")
+        "~/repos/mvs/cc370/as370/as370")
     state = {}
     for line in open(f"{RUN}/state.tsv"):
         f = line.rstrip("\n").split("\t")

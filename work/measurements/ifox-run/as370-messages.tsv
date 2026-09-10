@@ -2,14 +2,14 @@ module	rc	flagged	severity	messages
 AHLCWRIT	0			
 AHLGTFI	0			
 AHLIWRIT	0			
-AHLMCER	4	2	4	MNOTE
+AHLMCER	4	2	4	IFO026 Continuation card is empty - nothing between the continue column and 71
 AHLMCIH	0			
 AHLREADR	0			
 AHLSBLOK	0			
 AHLSBUF	0			
 AHLSCAN	0			
 AHLSETD	0			
-AHLSETEV	8	18	8	MNOTE | Undefined symbol
+AHLSETEV	4	2	4	IFO026 Continuation card is empty - nothing between the continue column and 71
 AHLSETMG	0			
 AHLT103	0			
 AHLTCTL1	0			
@@ -43,19 +43,19 @@ AKJLKL02	0
 AKJLKMSG	0			
 AMAPTF01	0			
 AMAPTF02	0			
-AMAPTFLE	8	592	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+AMAPTFLE	0			
 AMASPZAP	0			
-AMDPRAPP	12	4	12	MNOTE
-AMDPRCOM	12	4	12	MNOTE | Undefined symbol
+AMDPRAPP	0			
+AMDPRCOM	0			
 AMDPRCTL	0			
 AMDPRCVT	0			
 AMDPRDPS	0			
 AMDPREAD	0			
 AMDPRECT	0			
 AMDPREID	0			
-AMDPREXT	12	1	12	MNOTE
+AMDPREXT	0			
 AMDPRFAR	0			
-AMDPRFCB	12	2	12	MNOTE
+AMDPRFCB	0			
 AMDPRFDS	0			
 AMDPRFLT	0			
 AMDPRFMG	0			
@@ -68,7 +68,7 @@ AMDPRGCD	0
 AMDPRGET	0			
 AMDPRLOD	0			
 AMDPRLPA	0			
-AMDPRMST	0			
+AMDPRMST	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 AMDPRNUC	0			
 AMDPROOT	0			
 AMDPRPCR	0			
@@ -77,14 +77,14 @@ AMDPRPMG	0
 AMDPRPMS	0			
 AMDPRQCB	0			
 AMDPRRDC	0			
-AMDPRREC	12	4	12	MNOTE
+AMDPRREC	0			
 AMDPRSCN	0			
 AMDPRSEG	0			
 AMDPRSMG	0			
 AMDPRSN2	0			
 AMDPRSN3	8	1	8	Undefined symbol
 AMDPRSUM	0			
-AMDPRUIM	12	4	12	MNOTE
+AMDPRUIM	0			
 AMDSAAID	0			
 AMDSAAMR	0			
 AMDSAARD	0			
@@ -133,7 +133,7 @@ BLSCAINT	0
 BLSCALOC	0			
 BLSCAMER	0			
 BLSCAMIN	0			
-BLSCAMOD	8	16	8	MNOTE
+BLSCAMOD	0			
 BLSCAMPR	0			
 BLSCANAL	0			
 BLSCANLE	0			
@@ -233,7 +233,7 @@ BLSFTL00	0
 BLSFUD00	0			
 BLSFUP00	0			
 BLSFVRFY	0			
-BLSR3270	8	192	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | IFO117 first expression in substring notation exceeds the length of the string
+BLSR3270	0			
 BLSRACC	0			
 BLSRACCL	0			
 BLSRACCQ	0			
@@ -414,7 +414,7 @@ BLSUPROP	0
 BLSUPRTA	0			
 BLSUPRTN	0			
 BLSUPRTT	0			
-BLSUPUT	8	1	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+BLSUPUT	0			
 BLSUPUTA	0			
 BLSUPUTC	0			
 BLSUPUTD	0			
@@ -475,13 +475,13 @@ BLSVSGTE	0
 BLSVTCB	0			
 BLSVUCB	0			
 BLSVXTLS	0			
-BNGC3270	8	390	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code
-BNGCDISP	8	576	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code
+BNGC3270	8	347	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code
+BNGCDISP	8	480	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code
 BNGCLOCL	8	38	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 BNGCMENU	8	16	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined operation code
 BNGCRMOT	8	38	8	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-BNGI3270	8	166	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-BNGIDISP	8	496	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+BNGI3270	0			
+BNGIDISP	0			
 BNGIEXIT	8	30	8	Undefined symbol | Undefined operation code
 BNGILOCL	0			
 BNGIMENU	0			
@@ -489,15 +489,15 @@ BNGIPCBX	0
 BNGIREAD	0			
 BNGIRMOT	0			
 BNGISIMS	0			
-BNGLOGR2	8	18	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-BNGT3270	8	139	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-BNGTDISP	8	511	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+BNGLOGR2	0			
+BNGT3270	0			
+BNGTDISP	0			
 BNGTLOCL	0			
 BNGTMENU	0			
 BNGTQEMA	0			
 BNGTQEMF	0			
 BNGTRMOT	0			
-ESRTABLE	0			
+ESRTABLE	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 FCB3STD3	0			
 GENRMT	0			
 GRAF	0			
@@ -508,7 +508,7 @@ HEWLDREL	0
 HEWLDRGO	0			
 HEWLFADA	0			
 HEWLFAPT	0			
-HEWLFBTP	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
+HEWLFBTP	0	2	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
 HEWLFEND	0			
 HEWLFENS	0			
 HEWLFENT	0			
@@ -526,7 +526,7 @@ HEWLFRCG	0
 HEWLFREL	0			
 HEWLFROU	0			
 HEWLFSCD	0			
-HEWLFSCN	8	51	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+HEWLFSCN	0			
 HEWLFSYM	0			
 HMASMAAR	0			
 HMASMADD	0			
@@ -572,18 +572,18 @@ HMASMLC1	0
 HMASMLCC	0			
 HMASMLCD	0			
 HMASMLCP	0			
-HMASMLID	0			
+HMASMLID	4	3	4	Alignment error - ST needs a 4-byte boundary and the operand resolves to x'13B1' (IFOX00 IFO220
 HMASMLKD	0			
 HMASMLKI	0			
 HMASMLOG	0			
 HMASMMDR	0			
 HMASMMPA	0			
 HMASMMPD	0			
-HMASMMPE	0			
+HMASMMPE	8	315	8	IFO092 keyword parameter ALIGN is not declared in the macro prototype
 HMASMMPH	0			
-HMASMMPI	0			
+HMASMMPI	8	13	8	IFO092 keyword parameter ALIGN is not declared in the macro prototype
 HMASMMPL	0			
-HMASMMPV	0			
+HMASMMPV	8	17	8	IFO092 keyword parameter ALIGN is not declared in the macro prototype
 HMASMMSG	0			
 HMASMPGC	0			
 HMASMPIN	0			
@@ -633,20 +633,20 @@ HMASMTPS	0
 HMASMTR1	0			
 HMASMTRM	0			
 HMASMTSB	0			
-HMASMUC1	0			
-HMASMUC2	0			
-HMASMUC3	0			
-HMASMUC4	0			
+HMASMUC1	8	398	8	IFO092 keyword parameter ALIGN is not declared in the macro prototype
+HMASMUC2	8	123	8	IFO092 keyword parameter ALIGN is not declared in the macro prototype
+HMASMUC3	8	35	8	IFO092 keyword parameter ALIGN is not declared in the macro prototype
+HMASMUC4	8	12	8	IFO092 keyword parameter ALIGN is not declared in the macro prototype
 HMASMUCD	0			
 HMASMULI	0			
 HMASMULK	0			
-HMASMUPD	0			
+HMASMUPD	8	20	8	IFO092 keyword parameter ALIGN is not declared in the macro prototype
 HMASMUPI	0			
 HMASMUXC	0			
 HMASMUXD	0			
 HMASMVLU	0			
 HMASMXRF	0			
-HMASMZAP	0			
+HMASMZAP	8	13	8	IFO092 keyword parameter ALIGN is not declared in the macro prototype
 HMBLKCTL	0			
 HMBLKERR	0			
 HMBLKIDR	0			
@@ -667,9 +667,9 @@ IASFCB28	0
 IASXSD81	0			
 IASXSD82	0			
 IASXWR00	0			
-IBCDASDI	8	1459	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IBCDMPRS	8	1244	8	Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-ICAPRTBL	8	197	8	Undefined operation code | Symbol longer than 8 characters in name field (name rejected; MVS symbols are limited to 8) | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IBCDASDI	0			
+IBCDMPRS	0			
+ICAPRTBL	0			
 ICB2ACT	0			
 ICB2AEA	0			
 ICB2AIR	0			
@@ -714,7 +714,7 @@ ICBVUT01	0
 ICBVUT03	0			
 ICFBDF00	0			
 ICFBDX00	0			
-ICFBIF00	8	80	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+ICFBIF00	0			
 ICFBIX00	0			
 ICGDSA01	0			
 ICGDSA02	0			
@@ -851,10 +851,10 @@ IDA0192W	0
 IDA0192Y	0			
 IDA0192Z	0			
 IDA0195A	0			
-IDA019C1	8	322	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IDA019C1	0			
 IDA019R1	0			
 IDA019R2	0			
-IDA019R4	8	14	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IDA019R4	0			
 IDA019R5	0			
 IDA019R8	0			
 IDA019RA	0			
@@ -877,11 +877,11 @@ IDA019RQ	0
 IDA019RR	0			
 IDA019RS	0			
 IDA019RT	0			
-IDA019RU	8	2	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IDA019RU	0			
 IDA019RV	0			
 IDA019RW	0			
 IDA019RX	0			
-IDA019RY	8	6	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IDA019RY	0			
 IDA019RZ	0			
 IDA019S1	0			
 IDA019S2	0			
@@ -892,11 +892,11 @@ IDA019SB	0
 IDA019SE	0			
 IDA019SF	0			
 IDA019SG	0			
-IDA019SH	0			
-IDA019SL	0			
+IDA019SH	4	2	4	IFO220 Alignment error - L needs a 4-byte boundary and the operand resolves to x'586' | IFO220 Alignment error - L needs a 4-byte boundary and the operand resolves to x'2E6'
+IDA019SL	4	2	4	IFO220 Alignment error - L needs a 4-byte boundary and the operand resolves to x'27E' | IFO220 Alignment error - L needs a 4-byte boundary and the operand resolves to x'136'
 IDA019SM	0			
 IDA019SN	0			
-IDA019ST	8	308	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IDA019ST	0			
 IDA019SU	0			
 IDA0200B	0			
 IDA0200S	0			
@@ -1040,7 +1040,7 @@ IDCPR01	0
 IDCRC01	0			
 IDCRC02	0			
 IDCRC03	0			
-IDCRC04	8	2	8	Undefined symbol
+IDCRC04	0			
 IDCRD01	0			
 IDCRD02	0			
 IDCRD03	0			
@@ -1190,8 +1190,8 @@ IEAVAD51	0
 IEAVAD71	0			
 IEAVADFM	0			
 IEAVADUS	0			
-IEAVAMSI	8	10	8	Undefined symbol | Undefined operation code
-IEAVAP00	8	171	8	Undefined symbol | Undefined operation code
+IEAVAMSI	8	11	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVAP00	8	219	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
 IEAVAR00	0			
 IEAVAR01	0			
 IEAVAR02	0			
@@ -1201,94 +1201,94 @@ IEAVAR05	0
 IEAVAR06	0			
 IEAVAR07	0			
 IEAVAX00	0			
-IEAVBLDP	0			
+IEAVBLDP	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVCARR	0			
 IEAVCKEY	0			
 IEAVCKRR	0			
 IEAVCSEG	8	20	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code
-IEAVDELP	0			
-IEAVDLAS	8	10	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code
+IEAVDELP	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVDLAS	8	11	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined symbol | Undefined operation code
 IEAVDSEG	0			
 IEAVEAC0	0			
-IEAVEADV	0			
-IEAVEAT0	8	62	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEAVEADV	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVEAT0	0			
 IEAVECBV	0			
-IEAVECH0	0			
-IEAVEDR	0			
-IEAVEDS0	8	20	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
+IEAVECH0	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVEDR	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVEDS0	8	21	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVEDSR	0			
 IEAVEE1R	0			
 IEAVEE2R	0			
 IEAVEE3R	0			
-IEAVEED0	0			
+IEAVEED0	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVEEE0	0			
-IEAVEEE2	0			
+IEAVEEE2	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVEEEP	0			
 IEAVEEER	0			
-IEAVEES	0			
-IEAVEEXP	0			
+IEAVEES	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVEEXP	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVEEXT	0			
 IEAVEF00	0			
 IEAVEIO	0			
 IEAVEIOR	0			
-IEAVEIPR	0			
+IEAVEIPR	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IEAVELCR	0			
 IEAVELIT	0			
-IEAVELK	0			
+IEAVELK	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVELKR	0			
 IEAVEMCR	0			
 IEAVEMDL	0			
 IEAVEMIN	0			
 IEAVEMRQ	0			
-IEAVEMS0	0			
-IEAVENQ1	8	243	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IEAVEOR	0			
-IEAVEPC	0			
+IEAVEMS0	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IEAVENQ1	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IEAVEOR	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVEPC	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVEPCR	0			
 IEAVEPD0	0			
 IEAVEPDR	0			
-IEAVEQR	8	5	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code
+IEAVEQR	8	6	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol | Undefined operation code
 IEAVEQV0	0			
 IEAVERER	0			
-IEAVERES	8	2	8	Undefined symbol | Undefined operation code
-IEAVERI	0			
-IEAVERP	0			
-IEAVESC0	0			
+IEAVERES	8	3	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVERI	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVERP	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IEAVESC0	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVESCR	0			
 IEAVESPR	0			
-IEAVESVC	0			
+IEAVESVC	8	2	8	IFO026 Continuation card is empty - nothing between the continue column and 71 | IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVESVR	0			
-IEAVETCL	0			
+IEAVETCL	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IEAVEUPC	0			
-IEAVEVAL	0			
+IEAVEVAL	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVEVRR	0			
-IEAVEVT0	0			
+IEAVEVT0	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IEAVEXS	0			
-IEAVFP	0			
-IEAVFRCL	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
-IEAVFREE	0			
-IEAVFXLD	8	2	8	Undefined symbol | Undefined operation code
+IEAVFP	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVFRCL	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IEAVFREE	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVFXLD	8	3	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined symbol | Undefined operation code
 IEAVGCAS	0			
-IEAVGFA	8	8	8	Undefined symbol | Undefined operation code
+IEAVGFA	8	10	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined symbol | Undefined operation code
 IEAVGFRR	0			
-IEAVGM00	8	386	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IEAVGPRR	0			
-IEAVGTCL	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
+IEAVGM00	8	3	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IEAVGPRR	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVGTCL	0	2	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
 IEAVID00	0			
-IEAVINV	0			
-IEAVIOCP	0			
-IEAVITAS	0			
-IEAVLK00	8	2	8	Undefined symbol
-IEAVLK01	8	3	8	Undefined symbol
-IEAVLK02	0			
-IEAVLK03	0			
+IEAVINV	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVIOCP	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVITAS	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IEAVLK00	8	3	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol
+IEAVLK01	8	4	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol
+IEAVLK02	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVLK03	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IEAVMASV	0			
 IEAVMDOM	0			
 IEAVMDSV	8	1	8	Undefined symbol
 IEAVMED2	0			
 IEAVMFRR	0			
 IEAVMNTR	0			
-IEAVMODE	0			
+IEAVMODE	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVMQR0	0			
 IEAVMQWR	0			
 IEAVMSGS	0			
@@ -1296,64 +1296,64 @@ IEAVMWSV	0
 IEAVMWTL	0			
 IEAVMWTO	0			
 IEAVNIP0	8	31	8	Undefined symbol | Undefined operation code
-IEAVNIPM	8	253	8	Undefined symbol | Undefined operation code
-IEAVNIPX	8	70	8	Undefined symbol | Undefined operation code
-IEAVNP01	8	12	8	Undefined symbol | Undefined operation code
-IEAVNP02	8	42	8	Undefined symbol | Undefined operation code
-IEAVNP03	8	300	8	Undefined symbol | Undefined operation code
-IEAVNP05	8	352	8	Undefined symbol | Undefined operation code
-IEAVNP07	8	8	8	Undefined symbol | Undefined operation code
-IEAVNP08	8	65	8	Undefined symbol | Undefined operation code
-IEAVNP09	8	28	8	Undefined symbol | Undefined operation code
-IEAVNP10	8	61	8	Undefined symbol | Undefined operation code
-IEAVNP11	8	38	8	Undefined symbol | Undefined operation code
-IEAVNP12	8	18	8	Undefined symbol | Undefined operation code
-IEAVNP13	8	125	8	Undefined symbol | Undefined operation code
-IEAVNP16	8	74	8	Undefined symbol | Undefined operation code
-IEAVNP17	8	15	8	Undefined symbol | Undefined operation code
-IEAVNP19	8	18	8	Undefined symbol | Undefined operation code
-IEAVNP1A	8	9	8	Undefined symbol | Undefined operation code
+IEAVNIPM	8	274	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNIPX	8	76	8	IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVNP01	8	15	8	IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVNP02	8	55	8	IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVNP03	8	331	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNP05	8	422	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNP07	8	10	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNP08	8	76	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNP09	8	36	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNP10	8	69	8	IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVNP11	8	45	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNP12	8	20	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNP13	8	151	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNP16	8	79	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined operation code
+IEAVNP17	8	17	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNP19	8	22	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNP1A	8	10	8	IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined symbol | Undefined operation code
 IEAVNP1B	8	2	8	Undefined symbol
-IEAVNPA1	8	45	8	Undefined symbol | Undefined operation code
-IEAVNPA5	8	37	8	Undefined symbol | Undefined operation code
-IEAVNPA6	8	8	8	Undefined symbol | Undefined operation code
+IEAVNPA1	8	57	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNPA5	8	42	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNPA6	8	10	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
 IEAVNPB5	8	5	8	Undefined symbol | Undefined operation code
 IEAVNPB6	0			
-IEAVNPM2	8	54	8	Undefined symbol | Undefined operation code
-IEAVNPM3	8	123	8	Undefined symbol | Undefined operation code
-IEAVNPS5	8	10	8	Undefined symbol | Undefined operation code
-IEAVOUT	8	5	8	Undefined symbol | Undefined operation code
-IEAVPCB	0			
-IEAVPFTE	0			
+IEAVNPM2	8	61	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNPM3	8	143	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVNPS5	8	12	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+IEAVOUT	8	6	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVPCB	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVPFTE	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IEAVPIOI	8	2	8	Undefined symbol | Undefined operation code
-IEAVPIOP	8	7	8	Undefined symbol | Undefined operation code
+IEAVPIOP	8	8	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined symbol | Undefined operation code
 IEAVPIX	8	2	8	Undefined symbol | Undefined operation code
-IEAVPREF	0			
-IEAVPRSB	0			
-IEAVPRT0	0			
-IEAVPSI	0			
-IEAVRCF	0			
-IEAVRCV	0			
-IEAVRELS	8	5	8	Undefined symbol | Undefined operation code
-IEAVRFR	8	5	8	Undefined symbol | Undefined operation code
-IEAVRSM	0			
+IEAVPREF	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVPRSB	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IEAVPRT0	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IEAVPSI	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVRCF	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVRCV	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVRELS	8	6	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVRFR	8	6	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVRSM	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IEAVRT00	0			
 IEAVRT01	0			
-IEAVRT02	0			
+IEAVRT02	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVRTI0	0			
 IEAVRTI1	0			
 IEAVRTOD	0			
-IEAVSETS	0			
-IEAVSOUT	8	326	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | Undefined operation code
-IEAVSQA	0			
+IEAVSETS	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IEAVSOUT	8	107	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVSQA	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVSTA0	0			
 IEAVSTAA	0			
 IEAVSWCH	0			
-IEAVSWIN	8	85	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code
-IEAVSWPC	8	13	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code
-IEAVSY50	0			
+IEAVSWIN	8	86	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVSWPC	8	14	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IEAVSY50	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IEAVTABD	0			
-IEAVTABI	8	82	8	Undefined symbol | Undefined operation code
+IEAVTABI	8	91	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
 IEAVTACR	0			
 IEAVTADR	0			
 IEAVTAS1	0			
@@ -1377,27 +1377,27 @@ IEAVTMRM	0
 IEAVTMSI	0			
 IEAVTMTC	0			
 IEAVTMTR	0			
-IEAVTPER	8	18	8	Undefined symbol | Undefined operation code
+IEAVTPER	8	19	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol | Undefined operation code
 IEAVTPMT	0			
-IEAVTRCE	0			
+IEAVTRCE	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVTRER	0			
 IEAVTRET	0			
 IEAVTRML	0			
-IEAVTRT1	0			
+IEAVTRT1	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEAVTRT2	0			
 IEAVTRTC	0			
 IEAVTRTE	0			
-IEAVTRTH	8	5	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)
+IEAVTRTH	8	7	8	IFO092 keyword parameter PLS is not declared in the macro prototype | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)
 IEAVTRTM	0			
-IEAVTRTR	8	5	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)
-IEAVTRTS	8	5	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)
-IEAVTRV	0			
+IEAVTRTR	8	7	8	IFO092 keyword parameter PLS is not declared in the macro prototype | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)
+IEAVTRTS	8	7	8	IFO092 keyword parameter PLS is not declared in the macro prototype | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Relocatable displacement in machine instruction (explicit base requires an absolute displacement)
+IEAVTRV	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IEAVTSBP	0			
 IEAVTSDC	0			
 IEAVTSDF	0			
 IEAVTSDG	0			
-IEAVTSDH	12	1	12	MNOTE
-IEAVTSDI	8	78	8	Undefined symbol | Undefined operation code
+IEAVTSDH	0			
+IEAVTSDI	8	101	8	IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined symbol | Undefined operation code
 IEAVTSDL	0			
 IEAVTSDO	0			
 IEAVTSDR	0			
@@ -1416,8 +1416,8 @@ IEAVTSLR	0
 IEAVTSLS	0			
 IEAVTSSD	0			
 IEAVTSSE	0			
-IEAVVCRA	0			
-IEAVVCRX	0			
+IEAVVCRA	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype
+IEAVVCRX	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IEAVVCTR	8	1	8	Undefined symbol
 IEAVVINT	0			
 IEAVVRP1	0			
@@ -1432,7 +1432,7 @@ IEBBAM	8	7	8	Undefined symbol
 IEBBSCAN	0			
 IEBCANAL	0			
 IEBCCS02	0			
-IEBCMAIN	8	771	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEBCMAIN	0			
 IEBCNVT	0			
 IEBCOMPM	0			
 IEBCONH2	0			
@@ -1458,7 +1458,7 @@ IEBEDIT2	0
 IEBFDANL	0			
 IEBFDTBL	0			
 IEBGEN03	0			
-IEBGENR3	8	169	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEBGENR3	0			
 IEBGENRT	0			
 IEBGENS3	0			
 IEBGMESG	0			
@@ -1480,8 +1480,8 @@ IEBLDUL	0
 IEBLENP2	0			
 IEBMCM	0			
 IEBMOVE2	0			
-IEBPPAL1	8	427	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IEBPPCH1	8	847	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEBPPAL1	0			
+IEBPPCH1	0			
 IEBPPMSG	0			
 IEBPPUN1	0			
 IEBRSAM	0			
@@ -1489,9 +1489,9 @@ IEBSCN	8	7	8	Undefined symbol
 IEBTCR02	0			
 IEBTCR03	0			
 IEBTCR04	0			
-IEBTCR05	12	1	12	MNOTE
+IEBTCR05	0			
 IEBTCRIN	0			
-IEBUPDT2	8	270	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEBUPDT2	0			
 IEBUPDTE	0			
 IEBUPLOG	0			
 IEBUPNIT	0			
@@ -1509,7 +1509,7 @@ IECDAFT1	0
 IECIHIO	8	7	8	Undefined symbol | Undefined operation code
 IECIOFMT	0			
 IECIOFT1	0			
-IECIOSAM	8	148	8	Undefined operation code | Undefined symbol
+IECIOSAM	8	149	8	Undefined operation code | IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol
 IECLMSGC	0			
 IECLMSGD	0			
 IECLMSGG	0			
@@ -1531,51 +1531,51 @@ IECTTRNS	0
 IECVBRSV	0			
 IECVCINT	0			
 IECVCRHH	0			
-IECVDAVV	8	2	8	Undefined symbol | Undefined operation code
-IECVDDT0	0			
+IECVDAVV	8	3	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined symbol | Undefined operation code
+IECVDDT0	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IECVDDT1	8	11	8	Undefined symbol | Undefined operation code
-IECVDERP	8	154	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | Undefined operation code
+IECVDERP	8	31	8	Undefined symbol | Undefined operation code
 IECVDURP	0			
 IECVERPL	0			
 IECVESIO	0			
-IECVEXCP	8	4	8	Undefined symbol | Undefined operation code
+IECVEXCP	8	4	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol
 IECVEXPR	0			
 IECVGENA	8	7	8	Undefined operation code | Undefined symbol
-IECVHDET	8	68	8	Undefined symbol | Undefined operation code
+IECVHDET	8	117	8	Undefined symbol | Undefined operation code | IFO092 keyword parameter DSECT is not declared in the macro prototype
 IECVHIDT	0			
 IECVHREC	0			
 IECVIOPM	0			
 IECVIRST	8	61	8	Undefined symbol | Undefined operation code
 IECVITRP	0			
-IECVMAP	8	5	8	Undefined operation code | Undefined symbol
-IECVOID	0			
+IECVMAP	8	6	8	Undefined operation code | Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IECVOID	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype
 IECVOTBL	0			
 IECVPST	0			
-IECVPURG	0			
+IECVPURG	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IECVRDIO	0			
 IECVRRSV	0			
-IECVRSTI	8	27	8	Undefined symbol | Undefined operation code
+IECVRSTI	8	28	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined symbol | Undefined operation code
 IECVSMGR	0			
 IECVTCCW	8	5	8	Undefined symbol
 IECVURDT	0			
 IECVURSV	0			
-IECVXDAS	8	22	8	Undefined operation code | Undefined symbol
-IECVXDAT	8	9	8	Undefined operation code | Undefined symbol
-IECVXDAU	8	3	8	Undefined operation code | Undefined symbol
+IECVXDAS	8	23	8	Undefined operation code | Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IECVXDAT	8	10	8	Undefined operation code | Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype
+IECVXDAU	8	4	8	Undefined operation code | Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype
 IECVXDRS	8	105	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 IECVXDRT	8	22	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IECVXGRT	8	2	8	Undefined operation code
+IECVXGRT	8	3	8	Undefined operation code | IFO092 keyword parameter DATE is not declared in the macro prototype
 IECVXMGN	8	9	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IECVXPRE	8	9	8	Undefined operation code | Undefined symbol
-IECVXSKE	8	3	8	Undefined operation code | Undefined symbol
-IECVXSKN	8	3	8	Undefined operation code
-IECVXSKS	8	26	8	Undefined operation code | Undefined symbol
+IECVXPRE	8	10	8	Undefined operation code | Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype
+IECVXSKE	8	4	8	Undefined operation code | Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IECVXSKN	8	4	8	Undefined operation code | IFO092 keyword parameter DATE is not declared in the macro prototype
+IECVXSKS	8	27	8	Undefined operation code | Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype
 IECVXT2S	8	55	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IECVXT3S	8	6	8	Undefined operation code
-IECVXTAT	8	4	8	Undefined operation code | Undefined symbol
+IECVXT3S	8	7	8	Undefined operation code | IFO092 keyword parameter DATE is not declared in the macro prototype
+IECVXTAT	8	5	8	Undefined operation code | Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype
 IECVXTPT	8	3	8	Undefined symbol | Undefined operation code
-IECVXURS	8	3	8	Undefined operation code
-IECVXURT	8	11	8	Undefined operation code | Undefined symbol
+IECVXURS	8	4	8	Undefined operation code | IFO092 keyword parameter DATE is not declared in the macro prototype
+IECVXURT	8	12	8	Undefined operation code | Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype
 IECVXVRS	8	94	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 IECVXVRT	8	52	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
 IECVXVRU	8	8	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
@@ -1598,7 +1598,7 @@ IEDAYH	8	1	8	IFO117 first expression in substring notation exceeds the length of
 IEDAYHH	0			
 IEDAYI	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDAYII	0			
-IEDAYJ	8	225	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEDAYJ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDAYL	8	2	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO117 first expression in substring notation exceeds the length of the string
 IEDAYLL	0			
 IEDAYM	8	2	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO117 first expression in substring notation exceeds the length of the string
@@ -1606,7 +1606,7 @@ IEDAYN	8	2	8	IFO026 Characters appear between the begin and continue columns on 
 IEDAYO	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDAYOO	0			
 IEDAYP	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IEDAYQ	8	180	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEDAYQ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDAYQT	0			
 IEDAYS	8	2	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO117 first expression in substring notation exceeds the length of the string
 IEDAYT	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -1635,7 +1635,7 @@ IEDIAR	8	1	8	IFO117 first expression in substring notation exceeds the length of
 IEDIAS	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDIAU	0			
 IEDKHISC	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IEDLUS	8	398	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEDLUS	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDMVBFR	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDN25	0			
 IEDNCU	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -1645,7 +1645,7 @@ IEDNID	8	1	8	IFO117 first expression in substring notation exceeds the length of
 IEDNKA	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDNLT	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDNMG	0			
-IEDNSL	8	465	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEDNSL	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDNTR	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDOPTN	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDPCIN	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -1760,12 +1760,12 @@ IEDQFE30	8	1	8	IFO117 first expression in substring notation exceeds the length 
 IEDQFM	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQFSC	8	2	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO117 first expression in substring notation exceeds the length of the string
 IEDQFW	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IEDQGA	12	4	12	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
+IEDQGA	8	2	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQGH	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQGP	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQGQ	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQGR	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IEDQGT	12	2	12	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
+IEDQGT	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQHG	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQHI	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQHK	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -1857,8 +1857,8 @@ IEDQWS	8	1	8	IFO117 first expression in substring notation exceeds the length of
 IEDQWX	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQWY	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDQXA	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IEDQXB	8	381	8	IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
-IEDQXC	8	303	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | IFO117 first expression in substring notation exceeds the length of the string | Undefined symbol
+IEDQXB	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IEDQXC	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDRQIN	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDRSPIN	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IEDSAC	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -1882,7 +1882,7 @@ IEE00110	0
 IEE0303D	0			
 IEE0403D	0			
 IEE0503D	0			
-IEE0603D	0			
+IEE0603D	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEE0703D	0			
 IEE0803D	0			
 IEE10110	0			
@@ -1899,7 +1899,7 @@ IEE2903D	0
 IEE3103D	0			
 IEE3203D	0			
 IEE3303D	0			
-IEE3503D	0			
+IEE3503D	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEE3603D	0			
 IEE3703D	0			
 IEE40110	0			
@@ -1958,10 +1958,10 @@ IEECB912	0
 IEECB914	4	2	4	MNOTE
 IEECB915	0			
 IEECLEAN	0			
-IEECVET1	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol
+IEECVET1	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol
 IEECVET2	0			
 IEECVET3	0			
-IEECVET4	8	4	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
+IEECVET4	0			
 IEECVET6	0			
 IEECVET7	0			
 IEECVET8	0			
@@ -1988,11 +1988,11 @@ IEECVFTB	0
 IEECVFTD	0			
 IEECVFTG	0			
 IEECVFTL	0			
-IEECVFTM	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
+IEECVFTM	0	2	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
 IEECVFTN	0			
-IEECVFTO	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
+IEECVFTO	0	3	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
 IEECVFTP	0			
-IEECVFTQ	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
+IEECVFTQ	0	2	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
 IEECVFTR	0			
 IEECVFTT	0			
 IEECVGCI	0			
@@ -2004,7 +2004,7 @@ IEEMB805	0
 IEEMB806	0			
 IEEMB807	0			
 IEEMB808	0			
-IEEMB809	0			
+IEEMB809	4	1	4	IFO026 Continuation card is empty - nothing between the continue column and 71
 IEEMB810	0			
 IEEMB811	0			
 IEEMB812	0			
@@ -2017,7 +2017,7 @@ IEEMB821	0
 IEEMB822	0			
 IEEMB823	0			
 IEEMB824	0			
-IEEMB825	12	1	12	MNOTE
+IEEMB825	0			
 IEEMB826	0			
 IEEMB827	0			
 IEEMB828	0			
@@ -2060,11 +2060,11 @@ IEESP03D	0
 IEESQ03D	0			
 IEESR03D	0			
 IEESS03D	0			
-IEESTPRS	0			
+IEESTPRS	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEESZ03D	0			
 IEEVALST	0			
 IEEVCPU	0			
-IEEVDCCR	8	327	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEEVDCCR	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IEEVDEV	0			
 IEEVDUMY	0			
 IEEVDUS1	0			
@@ -2075,12 +2075,12 @@ IEEVLDWT	0
 IEEVMNT1	0			
 IEEVMNT2	0			
 IEEVPTH	0			
-IEEVSDIO	0			
+IEEVSDIO	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IEEVSEND	0			
 IEEVSMSG	0			
 IEEVSND2	0			
 IEEVSND3	0			
-IEEVSND4	0			
+IEEVSND4	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IEEVSND5	0			
 IEEVSND6	4	4	4	MNOTE
 IEEVSND8	0			
@@ -2096,7 +2096,7 @@ IEEZC03D	0
 IEEZJ03D	0			
 IEEZP03D	0			
 IEEZS03D	0			
-IEFAB421	8	1	8	Undefined symbol
+IEFAB421	0			
 IEFAB422	0			
 IEFAB423	0			
 IEFAB424	0			
@@ -2142,19 +2142,19 @@ IEFAB478	0
 IEFAB479	0			
 IEFAB480	0			
 IEFAB481	0			
-IEFAB485	0			
+IEFAB485	4	1	4	IFO220 Alignment error - ST needs a 4-byte boundary and the operand resolves to x'C7'
 IEFAB486	0			
-IEFAB487	0			
+IEFAB487	4	1	4	Alignment error - CVD needs a 8-byte boundary and the operand resolves to x'114' (IFOX00 IFO220
 IEFAB488	0			
 IEFAB489	0			
-IEFAB48A	0			
+IEFAB48A	4	1	4	IFO220 Alignment error - CVD needs a 8-byte boundary and the operand resolves to x'FB'
 IEFAB490	0			
 IEFAB491	0			
 IEFAB492	0			
 IEFAB493	0			
 IEFAB494	0			
-IEFAB495	0			
-IEFAB496	0			
+IEFAB495	4	1	4	Alignment error - STH needs a 2-byte boundary and the operand resolves to x'119' (IFOX00 IFO220
+IEFAB496	4	1	4	IFO220 Alignment error - ST needs a 4-byte boundary and the operand resolves to x'96'
 IEFAB498	0			
 IEFAB499	0			
 IEFAB49A	0			
@@ -2214,12 +2214,12 @@ IEFACT	0
 IEFACTRT	0			
 IEFAQTOP	0			
 IEFATECB	0			
-IEFBB401	0			
+IEFBB401	4	1	4	IFO220 Alignment error - ST needs a 4-byte boundary and the operand resolves to x'31A'
 IEFBB402	0			
 IEFBB404	0			
-IEFBB410	0			
+IEFBB410	4	4	4	Alignment error - CVD needs a 8-byte boundary and the operand resolves to x'142' (IFOX00 IFO220 | Alignment error - CVD needs a 8-byte boundary and the operand resolves to x'136' (IFOX00 IFO220 | IFO220 Alignment error - ST needs a 4-byte boundary and the operand resolves to x'13E'
 IEFBB412	0			
-IEFBB414	0			
+IEFBB414	4	1	4	IFO220 Alignment error - ST needs a 4-byte boundary and the operand resolves to x'B9'
 IEFBB416	0			
 IEFBB4M1	0			
 IEFBB4M2	0			
@@ -2314,7 +2314,7 @@ IEFSD089	0
 IEFSD094	0			
 IEFSD095	0			
 IEFSD101	0			
-IEFSD102	12	1	12	MNOTE
+IEFSD102	0			
 IEFSD103	0			
 IEFSD160	0			
 IEFSD161	0			
@@ -2339,10 +2339,10 @@ IEFUJV	0
 IEFUSI	0			
 IEFUSO	0			
 IEFUTL	0			
-IEFVDA	8	257	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol
+IEFVDA	0			
 IEFVDBSD	0			
-IEFVEA	8	112	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IEFVFA	8	288	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol
+IEFVEA	0			
+IEFVFA	0			
 IEFVFB	0			
 IEFVGI	0			
 IEFVGK	0			
@@ -2403,7 +2403,7 @@ IEFXB609	0
 IEFXB610	0			
 IEFXVNSL	0			
 IEHATLAS	0			
-IEHDANAL	8	134	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | Undefined operation code
+IEHDANAL	8	38	8	Undefined symbol | Undefined operation code
 IEHDAOUT	0			
 IEHDASDR	0			
 IEHDASDS	8	4	8	Undefined symbol | Undefined operation code
@@ -2426,7 +2426,7 @@ IEHDRVID	8	5	8	Undefined symbol | Undefined operation code
 IEHDSCAN	0			
 IEHDVTOC	8	9	8	Undefined symbol | Undefined operation code
 IEHINITT	0			
-IEHLIST1	8	334	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEHLIST1	0			
 IEHLIST2	0			
 IEHLIST3	0			
 IEHMESS	0			
@@ -2475,8 +2475,8 @@ IEHMVSTL	0
 IEHMVXSE	0			
 IEHMVXSF	0			
 IEHPRNT	0			
-IEHPROG1	8	3	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IEHPROG2	8	2	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IEHPROG1	0			
+IEHPROG2	0			
 IEHPROG3	0			
 IEHPROG4	0			
 IEHPROG5	0			
@@ -2743,7 +2743,7 @@ IFBDCB01	0
 IFBDCB02	0			
 IFCCRNDR	0			
 IFCDEVIC	0			
-IFCDIP00	8	368	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCDIP00	0			
 IFCE0115	12	311	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCE0125	12	616	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCE0135	0			
@@ -2790,11 +2790,11 @@ IFCEFBA5	12	82	12	Undefined operation code | Undefined symbol | MNOTE
 IFCEG155	0			
 IFCEGUS1	0			
 IFCEI135	0			
-IFCEI145	8	6	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCEI145	0			
 IFCEI155	0			
 IFCEIPL0	0			
 IFCEJ145	0			
-IFCEL155	-14			
+IFCEL155	0			
 IFCELEX1	0			
 IFCEM155	0			
 IFCEMAD1	0			
@@ -2824,7 +2824,7 @@ IFCET003	0
 IFCET004	0			
 IFCET005	0			
 IFCET006	0			
-IFCET008	8	7	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCET008	0			
 IFCET00B	0			
 IFCET00C	0			
 IFCET00D	0			
@@ -2873,7 +2873,7 @@ IFCFRAMC	0
 IFCFRAME	0			
 IFCFRAMM	0			
 IFCFRAMS	0			
-IFCIOHND	8	855	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IFCIOHND	0			
 IFCMSG01	0			
 IFCNFPDR	0			
 IFCOFFLD	0			
@@ -2896,7 +2896,7 @@ IFCS3032	0
 IFCS3033	0			
 IFCS33XX	12	29	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
 IFCS5424	12	344	12	Undefined operation code | Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0) | MNOTE
-IFCSAEXX	0			
+IFCSAEXX	4	2	4	Alignment error - CVD needs a 8-byte boundary and the operand resolves to x'2F4' (IFOX00 IFO220
 IFCSAXXX	0			
 IFCSCHAR	0			
 IFCSCRND	0			
@@ -2931,9 +2931,9 @@ IFCSXXXA	0
 IFCSXXXB	0			
 IFCSXXXD	0			
 IFCSXXXE	0			
-IFCSXXXF	20	3	20	MNOTE
+IFCSXXXF	0			
 IFCSXXXG	0			
-IFCSXXXH	20	6	20	MNOTE
+IFCSXXXH	0			
 IFCSXXXX	0			
 IFCSYMCD	0			
 IFCSYSUM	0			
@@ -2983,7 +2983,7 @@ IFDMSG61	0
 IFDMSG73	0			
 IFDMSG74	0			
 IFDMSGAJ	0			
-IFDOLT00	8	3	8	Undefined symbol
+IFDOLT00	0			
 IFDOLT03	0			
 IFDOLT04	0			
 IFDOLT05	0			
@@ -2994,13 +2994,13 @@ IFDOLT09	0
 IFDOLT0A	0			
 IFDOLT10	0			
 IFDOLT11	0			
-IFDOLT12	8	1	8	Undefined symbol
+IFDOLT12	0			
 IFDOLT13	0			
 IFDOLT14	0			
 IFDOLT15	0			
 IFDOLT16	0			
 IFDOLT17	0			
-IFDOLT18	8	1	8	Undefined symbol
+IFDOLT18	0			
 IFDOLT21	0			
 IFDOLT22	0			
 IFDOLT23	0			
@@ -3017,7 +3017,7 @@ IFDOLT37	0
 IFDOLT38	0			
 IFDOLT39	0			
 IFDOLT41	0			
-IFDOLT42	8	3	8	Undefined symbol
+IFDOLT42	0			
 IFDOLT43	0			
 IFDOLT44	0			
 IFDOLT46	0			
@@ -3128,7 +3128,7 @@ IFG0190P	0
 IFG0191X	0			
 IFG0191Y	8	1	8	Undefined symbol
 IFG0192A	0			
-IFG0193A	12	8	12	Undefined symbol | MNOTE
+IFG0193A	0			
 IFG0193C	0			
 IFG0193D	0			
 IFG0193E	0			
@@ -3146,18 +3146,18 @@ IFG0195J	0
 IFG0195K	0			
 IFG0195N	0			
 IFG0195T	0			
-IFG0195U	8	1	8	Undefined symbol
-IFG0195V	8	1	8	Undefined symbol
+IFG0195U	0			
+IFG0195V	0			
 IFG0196J	0			
 IFG0196K	0			
-IFG0196L	8	2	8	Undefined symbol
+IFG0196L	0			
 IFG0196M	0			
 IFG0196N	0			
 IFG0196O	0			
 IFG0196Q	0			
 IFG0196T	0			
 IFG0196U	0			
-IFG0196V	8	9	8	Undefined symbol
+IFG0196V	0			
 IFG0196W	0			
 IFG0196X	0			
 IFG0198N	0			
@@ -3170,12 +3170,12 @@ IFG019TR	0
 IFG0200N	0			
 IFG0200P	0			
 IFG0200V	0			
-IFG0200W	8	14	8	Undefined symbol
-IFG0200Y	8	4	8	Undefined symbol
+IFG0200W	0			
+IFG0200Y	0			
 IFG0200Z	0			
 IFG0201R	0			
 IFG0202A	0			
-IFG0202B	8	2	8	Undefined symbol
+IFG0202B	0			
 IFG0202C	0			
 IFG0202D	0			
 IFG0202E	0			
@@ -3196,7 +3196,7 @@ IFG0550P	0
 IFG0551B	0			
 IFG0551D	0			
 IFG0551F	0			
-IFG0551H	8	5	8	Undefined symbol
+IFG0551H	0			
 IFG0551L	0			
 IFG0551P	0			
 IFG0551R	0			
@@ -3218,7 +3218,7 @@ IFG0553Z	0
 IFG0554B	0			
 IFG0554L	0			
 IFG0554N	0			
-IFG0554P	12	3	12	Undefined symbol | MNOTE
+IFG0554P	0			
 IFG0554T	0			
 IFG0554Z	0			
 IFG0555B	0			
@@ -3228,40 +3228,40 @@ IFG0558X	0
 IFG0559C	0			
 IFG0EX0A	0			
 IFG0RR0A	0			
-IFG0RR0B	8	9	8	Undefined symbol
+IFG0RR0B	0			
 IFG0RR0E	0			
 IFG0RR0F	0			
 IFG0TC0A	0			
 IFHSTATR	0			
-IFNX1A	8	14	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
-IFNX1J	8	10	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol
-IFNX1K	8	11	8	Undefined symbol
-IFNX1S	8	7	8	MNOTE
-IFNX2A	8	41	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
-IFNX3A	8	66	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
-IFNX3B	8	11	8	MNOTE | Undefined symbol | IFO158 DSECT symbol JTSYMBL used in a relocatable address constant
-IFNX3K	8	9	8	Undefined symbol
-IFNX3N	8	28	8	Undefined symbol | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
-IFNX4D	8	7	8	MNOTE | Undefined symbol
-IFNX4E	8	28	8	MNOTE | Undefined symbol | IFO158 DSECT symbol JTSYMBL used in a relocatable address constant
-IFNX4M	8	52	8	MNOTE | Undefined symbol
-IFNX4N	8	7	8	MNOTE | Undefined symbol
-IFNX4S	8	3	8	MNOTE | Undefined symbol
-IFNX4T	8	53	8	MNOTE | Undefined symbol | Undefined operation code
-IFNX4V	8	16	8	MNOTE | Undefined symbol
-IFNX5A	8	49	8	Undefined symbol
-IFNX5C	8	14	8	Undefined symbol
-IFNX5D	8	15	8	Undefined symbol
-IFNX5F	8	5	8	MNOTE
-IFNX5L	8	3	8	Undefined symbol
-IFNX5M	8	589	8	Undefined symbol
-IFNX5P	8	4	8	Undefined symbol | MNOTE
-IFNX5V	0	13	0	
+IFNX1A	0			
+IFNX1J	0			
+IFNX1K	0			
+IFNX1S	0			
+IFNX2A	0			
+IFNX3A	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol
+IFNX3B	0			
+IFNX3K	0			
+IFNX3N	0			
+IFNX4D	0			
+IFNX4E	0			
+IFNX4M	0			
+IFNX4N	0			
+IFNX4S	0			
+IFNX4T	0			
+IFNX4V	0			
+IFNX5A	0			
+IFNX5C	0			
+IFNX5D	8	1	8	Undefined symbol
+IFNX5F	0			
+IFNX5L	8	2	8	Undefined symbol
+IFNX5M	8	585	8	Undefined symbol
+IFNX5P	0			
+IFNX5V	0			
 IFNX6A	0			
-IFNX6B	8	3	8	MNOTE
+IFNX6B	0			
 IFNX6C	0			
 IFOX0A	8	3	8	Undefined symbol
-IFOX0B	0	2	0	
+IFOX0B	0			
 IFOX0C	0			
 IFOX0D	8	2	8	Undefined symbol
 IFOX0E	0			
@@ -3270,10 +3270,10 @@ IFOX0G	0
 IFOX0H	0			
 IFOX0I	0			
 IFOX0J	0			
-IGARPT01	12	39	12	MNOTE | Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8) | Undefined symbol | IFO231 Duplication factor uses a symbol not previously defined  - IGAFS80 | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved
-IGC0001F	8	81	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IGARPT01	8	9	8	IFO026 Continuation card is empty - nothing between the continue column and 71 | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IGC0001F	0			
 IGC0001G	0			
-IGC0001I	8	1	8	Symbol longer than 8 characters in operand expression (instruction zeroed; MVS symbols are limited to 8)
+IGC0001I	0			
 IGC00020	0			
 IGC0002A	0			
 IGC0002B	0			
@@ -3282,10 +3282,10 @@ IGC0002D	0
 IGC0002E	0			
 IGC0002F	0			
 IGC0002G	0			
-IGC0002I	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
+IGC0002I	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IGC00030	0			
 IGC0003A	0			
-IGC0003B	0			
+IGC0003B	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IGC0003C	0			
 IGC0003I	0			
 IGC0005C	0			
@@ -3311,7 +3311,7 @@ IGC0008F	0
 IGC0008H	0			
 IGC0009A	8	9	8	Undefined symbol | Undefined operation code
 IGC0009C	0			
-IGC0009D	8	1	8	Undefined operation code
+IGC0009D	0			
 IGC0009G	0			
 IGC0009H	0			
 IGC0010C	0			
@@ -3328,7 +3328,7 @@ IGC0108B	8	13	8	Undefined symbol | Undefined operation code
 IGC0109H	0			
 IGC0110D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGC0112F	0			
-IGC017	0			
+IGC017	4	1	4	IFO220 Alignment error - L needs a 4-byte boundary and the operand resolves to x'22'
 IGC018	8	4	8	Undefined symbol
 IGC0203E	0			
 IGC0206F	0			
@@ -3355,7 +3355,7 @@ IGC058	0
 IGC0606F	0			
 IGC0606H	0			
 IGC0610D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGC070	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
+IGC070	0	2	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
 IGC0706F	0			
 IGC0706H	0			
 IGC0710D	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -3539,13 +3539,13 @@ IGE0000D	0
 IGE0000E	0			
 IGE0000G	0			
 IGE0000H	0			
-IGE0000I	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - PATCH | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved
+IGE0000I	0			
 IGE0001A	0			
 IGE0001C	0			
 IGE0001F	0			
 IGE0001G	0			
 IGE0001H	0			
-IGE0002A	12	1	12	IFO231 Duplication factor uses a symbol not previously defined  - PATCH1 | IFO217 Relocatable duplication factor - an absolute expression is required | IFO206 Duplication factor error - no storage reserved
+IGE0002A	0			
 IGE0002B	0			
 IGE0002C	0			
 IGE0002E	0			
@@ -3554,8 +3554,8 @@ IGE0004A	0
 IGE0004B	0			
 IGE0004C	0			
 IGE0004D	0			
-IGE0004G	12	2	12	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
-IGE0004H	12	2	12	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
+IGE0004G	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGE0004H	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGE0004I	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGE0010A	0			
 IGE0010B	0			
@@ -3622,7 +3622,7 @@ IGF2603D	0
 IGFC60	0			
 IGFC70	0			
 IGFC80	0			
-IGFCCHCR	8	10	8	Undefined symbol | Undefined operation code
+IGFCCHCR	8	11	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol | Undefined operation code
 IGFCCHED	8	9	8	Undefined symbol | Undefined operation code
 IGFCHDA	0			
 IGFCIC	0			
@@ -3648,7 +3648,7 @@ IGFDU1	0
 IGFDV0	0			
 IGFDV1	0			
 IGFDW0	0			
-IGFINTVL	0			
+IGFINTVL	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IGFPBUCR	8	1	8	Undefined operation code
 IGFPEXIT	0			
 IGFPINIT	8	4	8	Undefined symbol | Undefined operation code
@@ -3672,10 +3672,10 @@ IGFPTREC	0
 IGFPTSIG	0			
 IGFPWMSG	0			
 IGFPXMFA	0			
-IGFRINIT	8	14	8	Undefined symbol | Undefined operation code
+IGFRINIT	8	17	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
 IGFRWAC	0			
 IGFTMC00	0			
-IGFTMCHK	8	3	8	Undefined symbol | Undefined operation code
+IGFTMCHK	8	4	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined operation code
 IGG01910	0			
 IGG01911	0			
 IGG01912	0			
@@ -4020,7 +4020,7 @@ IGG019M4	0
 IGG019M5	0			
 IGG019M6	0			
 IGG019MA	0			
-IGG019MB	8	446	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IGG019MB	0			
 IGG019MC	0			
 IGG019MD	0			
 IGG019ME	0			
@@ -4066,18 +4066,18 @@ IGG019PN	0
 IGG019PO	0			
 IGG019PP	0			
 IGG019PQ	0			
-IGG019Q0	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | Undefined operation code
+IGG019Q0	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019Q1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGG019Q2	8	1302	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IGG019Q3	8	997	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
-IGG019Q4	8	583	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string
-IGG019Q5	8	755	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IGG019Q2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG019Q3	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG019Q4	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG019Q5	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019Q6	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019Q7	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGG019Q8	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG019Q8	8	2	8	IFO117 first expression in substring notation exceeds the length of the string | IFO220 Alignment error - O needs a 4-byte boundary and the operand resolves to x'13E'
 IGG019Q9	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGG019QE	12	2	12	IFO117 first expression in substring notation exceeds the length of the string | MNOTE
-IGG019R0	8	1551	8	Undefined symbol | IFO117 first expression in substring notation exceeds the length of the string | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+IGG019QE	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
+IGG019R0	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019R1	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019R2	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG019R3	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
@@ -4134,7 +4134,7 @@ IGG019UN	0
 IGG019UO	0			
 IGG019UP	0			
 IGG019V1	0			
-IGG019V2	12	1	12	MNOTE
+IGG019V2	0			
 IGG019V3	0			
 IGG019V4	0			
 IGG019V5	0			
@@ -4143,9 +4143,9 @@ IGG019VA	0
 IGG019VB	0			
 IGG019VC	0			
 IGG019VD	0			
-IGG019VE	12	1	12	MNOTE
+IGG019VE	0			
 IGG019VF	0			
-IGG019VG	12	1	12	MNOTE
+IGG019VG	0			
 IGG019VH	0			
 IGG019VI	0			
 IGG019VJ	0			
@@ -4175,7 +4175,7 @@ IGG0202N	0
 IGG02030	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG02035	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG02036	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGG0203A	8	2	8	Undefined operation code | Undefined symbol
+IGG0203A	0			
 IGG0203B	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG0203K	0			
 IGG0203M	0			
@@ -4183,60 +4183,60 @@ IGG0203Y	0
 IGG0203Z	0			
 IGG02041	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
 IGG02046	8	1	8	IFO117 first expression in substring notation exceeds the length of the string
-IGG020D0	0			
-IGG020D1	8	2	8	Undefined symbol
+IGG020D0	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG020D1	8	3	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
 IGG020FC	0			
 IGG020P1	8	2	8	Undefined symbol
-IGG020P2	8	1	8	Undefined symbol
-IGG020P3	0			
+IGG020P2	8	2	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG020P3	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IGG020T1	0			
 IGG0210A	0			
 IGG021AB	0			
 IGG026DU	0			
-IGG0290A	8	5	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol
-IGG0290B	8	2	8	Undefined symbol
-IGG0290C	8	2	8	Undefined symbol
-IGG0290D	8	1	8	Undefined symbol
-IGG0290E	0			
-IGG0290F	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
-IGG0299A	0			
+IGG0290A	8	6	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0290B	8	3	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0290C	8	3	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0290D	8	2	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0290E	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0290F	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0299A	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IGG029DM	0			
 IGG029DU	0			
 IGG03001	0			
 IGG03002	0			
 IGG030DU	0			
-IGG0325A	8	1	8	Undefined symbol
-IGG0325B	8	7	8	Undefined symbol
-IGG0325C	8	2	8	Undefined symbol
-IGG0325D	8	1	8	Undefined symbol
-IGG0325E	8	2	8	Undefined symbol
-IGG0325G	8	2	8	Undefined symbol
-IGG0325H	8	1	8	Undefined symbol
-IGG0325I	0			
-IGG0325K	8	1	8	Undefined symbol
-IGG0325P	0			
-IGG0325Q	0			
-IGG0325R	0			
-IGG0325T	8	1	8	Undefined symbol
-IGG0325U	0			
-IGG0325V	0			
-IGG0325W	8	1	8	Undefined symbol
-IGG0325Z	8	12	8	Undefined symbol | Undefined operation code
-IGG032I1	8	5	8	Undefined symbol | Undefined operation code
-IGG032I2	8	11	8	Undefined symbol
-IGG032I3	8	1	8	Undefined symbol
-IGG032I4	0			
-IGG032I5	8	3	8	Undefined symbol
-IGG032I6	8	2	8	Undefined symbol
-IGG032I7	8	14	8	Undefined symbol | Undefined operation code
-IGG032I8	8	1	8	Undefined symbol
-IGG0553A	8	1	8	Undefined symbol
-IGG0553B	8	3	8	Undefined symbol
-IGG0553C	8	8	8	Undefined symbol
-IGG0553D	8	2	8	Undefined symbol
-IGG0553E	8	1	8	Undefined symbol
-IGG0553F	0			
-IGG0553G	8	6	8	Undefined symbol
+IGG0325A	8	2	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325B	8	8	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325C	8	3	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325D	8	2	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325E	8	3	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325G	8	3	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325H	8	2	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325I	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325K	8	2	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325P	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325Q	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325R	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325T	8	2	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325U	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325V	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325W	8	2	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0325Z	8	13	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined operation code
+IGG032I1	8	6	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined operation code
+IGG032I2	8	12	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG032I3	8	2	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG032I4	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG032I5	8	4	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG032I6	8	3	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG032I7	8	15	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype | Undefined operation code
+IGG032I8	8	2	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0553A	8	2	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0553B	8	4	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0553C	8	9	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0553D	8	3	8	Undefined symbol | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0553E	8	2	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0553F	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IGG0553G	8	7	8	Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IGG08101	8	3	8	Undefined symbol
 IGG08102	8	3	8	Undefined symbol
 IGG08103	8	3	8	Undefined symbol
@@ -4255,7 +4255,7 @@ IGG0860B	0
 IGG0860C	8	1	8	Undefined symbol
 IGG0860D	0			
 IGG086AE	8	1	8	Undefined symbol
-IGG09300	0			
+IGG09300	4	5	4	IFO220 Alignment error - C needs a 4-byte boundary and the operand resolves to x'13A' | IFO220 Alignment error - C needs a 4-byte boundary and the operand resolves to x'13E' | IFO220 Alignment error - C needs a 4-byte boundary and the operand resolves to x'142' | IFO220 Alignment error - C needs a 4-byte boundary and the operand resolves to x'146' | IFO220 Alignment error - C needs a 4-byte boundary and the operand resolves to x'14A'
 IGG09301	0			
 IGG09302	0			
 IGG09303	0			
@@ -4311,7 +4311,7 @@ IGG0CLAU	0
 IGG0CLAV	0			
 IGG0CLAW	0			
 IGG0CLAX	0			
-IGG0CLAY	8	3	8	Undefined symbol
+IGG0CLAY	0			
 IGG0CLAZ	0			
 IGG0CLB0	0			
 IGG0CLB1	0			
@@ -4359,7 +4359,7 @@ IGG0CLCF	0
 IGG0CLDA	0			
 IGG0CLDC	0			
 IGG0CLDD	0			
-IGG0CLF2	0			
+IGG0CLF2	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IGG1AN	0			
 IGG1HN	0			
 IGG1PCAN	0			
@@ -4428,7 +4428,7 @@ IKJCT431	0
 IKJCT432	0			
 IKJCT433	0			
 IKJCT434	0			
-IKJCT435	0			
+IKJCT435	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IKJCT436	0			
 IKJCT460	0			
 IKJCT462	0			
@@ -4447,21 +4447,21 @@ IKJEBEAR	0
 IKJEBEAT	0			
 IKJEBEBO	0			
 IKJEBECH	0			
-IKJEBECI	0			
+IKJEBECI	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IKJEBECK	0			
-IKJEBECO	0			
-IKJEBEDA	0			
+IKJEBECO	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IKJEBEDA	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IKJEBEDC	0			
-IKJEBEDE	0			
-IKJEBEDO	0			
-IKJEBEDX	0			
+IKJEBEDE	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IKJEBEDO	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IKJEBEDX	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IKJEBEEN	0			
-IKJEBEEX	0			
-IKJEBEFC	0			
-IKJEBEFI	0			
+IKJEBEEX	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IKJEBEFC	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IKJEBEFI	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IKJEBEFO	0			
-IKJEBEHE	0			
-IKJEBEIA	8	46	8	Undefined symbol
+IKJEBEHE	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IKJEBEIA	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IKJEBEIP	0			
 IKJEBEIS	0			
 IKJEBELE	0			
@@ -4477,34 +4477,34 @@ IKJEBEM7	0
 IKJEBEMA	0			
 IKJEBEMC	0			
 IKJEBEME	0			
-IKJEBEMR	0			
-IKJEBEMS	0			
+IKJEBEMR	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IKJEBEMS	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IKJEBEPS	0			
 IKJEBERC	0			
-IKJEBERE	0			
+IKJEBERE	8	3	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IKJEBERN	0			
 IKJEBERU	0			
-IKJEBESA	8	141	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol
+IKJEBESA	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IKJEBESC	0			
-IKJEBESE	0			
+IKJEBESE	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IKJEBESU	0			
-IKJEBETA	0			
-IKJEBETO	0			
-IKJEBEUI	0			
+IKJEBETA	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IKJEBETO	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IKJEBEUI	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IKJEBEUN	0			
-IKJEBEUP	0			
-IKJEBEUT	0			
-IKJEBEVE	0			
+IKJEBEUP	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IKJEBEUT	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IKJEBEVE	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
 IKJEE100	0			
 IKJEE150	0			
 IKJEE1A0	0			
-IKJEES10	0			
-IKJEES11	0			
-IKJEES20	0			
+IKJEES10	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype
+IKJEES11	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IKJEES20	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IKJEES40	0			
-IKJEES70	0			
-IKJEES74	0			
-IKJEES75	0			
+IKJEES70	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IKJEES74	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+IKJEES75	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
 IKJEFA00	0			
 IKJEFA01	0			
 IKJEFA10	0			
@@ -4515,7 +4515,7 @@ IKJEFA20	0
 IKJEFA21	0			
 IKJEFA22	0			
 IKJEFA23	0			
-IKJEFA24	8	1	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
+IKJEFA24	0	1	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
 IKJEFA30	0			
 IKJEFA31	0			
 IKJEFA32	0			
@@ -4651,12 +4651,12 @@ IKJEGEQU	0
 IKJEGGO	0			
 IKJEGINT	0			
 IKJEGIO	0			
-IKJEGLDF	8	12	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol
+IKJEGLDF	8	1	8	Undefined symbol
 IKJEGLDR	0			
 IKJEGLSA	0			
 IKJEGLST	8	11	8	Undefined symbol
 IKJEGMAP	0			
-IKJEGMNL	8	2	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol
+IKJEGMNL	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | Undefined symbol | IFO092 keyword parameter DSECT is not declared in the macro prototype
 IKJEGMSG	0			
 IKJEGOFF	0			
 IKJEGPCH	0			
@@ -4747,13 +4747,13 @@ IKTTOMJR	0
 IKTTOMRT	0			
 IKTVTGET	0			
 IKTVTPUT	0			
-IKTXINIT	8	2	8	Undefined symbol
+IKTXINIT	0			
 IKTXLOG	0			
 IKTXMTPT	0			
 ILRACT	0			
-ILRASM00	0			
-ILRASRIM	8	86	8	Undefined symbol | Undefined operation code
-ILRCMP	8	24	8	Undefined symbol | Undefined operation code
+ILRASM00	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype
+ILRASRIM	8	89	8	Undefined symbol | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined operation code
+ILRCMP	8	25	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol | Undefined operation code
 ILRCMP01	8	6	8	Undefined symbol | Undefined operation code
 ILRFMT00	0			
 ILRFMTCV	0			
@@ -4763,19 +4763,19 @@ ILRFRR01	8	4	8	Undefined symbol | Undefined operation code
 ILRFRSLT	0			
 ILRGOS	8	2	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined operation code
 ILRGOS01	0			
-ILRIMMSG	8	19	8	Undefined symbol | Undefined operation code
+ILRIMMSG	8	23	8	IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined symbol | Undefined operation code
 ILRIOFRR	8	39	8	Undefined symbol | Undefined operation code
 ILRJTERM	0			
 ILRMSG00	8	6	8	Undefined symbol | Undefined operation code
-ILROPS00	8	14	8	Undefined symbol | Undefined operation code
+ILROPS00	8	15	8	IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined symbol | Undefined operation code
 ILRPAGCM	8	178	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code
-ILRPAGIO	8	44	8	Undefined symbol | Undefined operation code
+ILRPAGIO	8	45	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol | Undefined operation code
 ILRPEX	0			
 ILRPGEXP	0			
-ILRPOS	8	42	8	Undefined symbol | Undefined operation code
+ILRPOS	8	43	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol | Undefined operation code
 ILRPREAD	0			
 ILRPTM	8	14	8	Undefined symbol | Undefined operation code
-ILRQSRIT	8	10	8	Undefined symbol | Undefined operation code
+ILRQSRIT	8	13	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter PLS is not declared in the macro prototype | Undefined symbol | Undefined operation code
 ILRRLG	0			
 ILRSAV	0			
 ILRSLOTC	0			
@@ -4783,7 +4783,7 @@ ILRSRB01	8	12	8	Undefined symbol | Undefined operation code
 ILRSRBC	8	11	8	Undefined symbol | Undefined operation code
 ILRSRT	8	14	8	Undefined symbol | Undefined operation code
 ILRSRT01	8	7	8	Undefined symbol | Undefined operation code
-ILRSWAP	8	69	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code
+ILRSWAP	8	70	8	IFO026 Characters appear between the begin and continue columns on a continuation card | IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype | Undefined symbol | Undefined operation code
 ILRSWP01	8	10	8	Undefined symbol | Undefined operation code
 ILRSWPDR	0			
 ILRTERMR	8	31	8	IFO026 Characters appear between the begin and continue columns on a continuation card | Undefined symbol | Undefined operation code
@@ -4956,7 +4956,7 @@ ISTCC014	0
 ISTCC015	0			
 ISTCC016	0			
 ISTCFCDP	0			
-ISTCFCMM	0			
+ISTCFCMM	8	110	8	IFO092 keyword parameter SUPP is not declared in the macro prototype
 ISTCFCPC	0			
 ISTCFCPO	0			
 ISTCFCR1	0			
@@ -5115,7 +5115,7 @@ ISTINCU3	0
 ISTINCU4	0			
 ISTINCU5	0			
 ISTINCU6	0			
-ISTINCU7	8	329	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0) | Undefined symbol | Undefined operation code
+ISTINCU7	0			
 ISTINCU8	0			
 ISTINCUA	0			
 ISTINCUB	0			
@@ -5189,7 +5189,7 @@ ISTNMCCR	0
 ISTNMCCS	0			
 ISTNMCCT	0			
 ISTNMCCZ	0			
-ISTNSC00	8	854	8	Undefined symbol | Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+ISTNSC00	0	1	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
 ISTOCCCA	0			
 ISTOCCCB	0			
 ISTOCCCC	0			
@@ -5453,7 +5453,7 @@ ISTZFM1B	0
 ISTZFM1F	0			
 ISTZFM2B	0			
 ISTZFM3B	0			
-ISTZFMAA	8	1	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
+ISTZFMAA	0	1	0	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank)
 ISTZFMAB	0			
 ISTZFMAF	0			
 ISTZFMBB	0			
@@ -5464,7 +5464,7 @@ ISTZFMUA	0
 ISTZFMV0	0			
 ISTZFMV1	0			
 ISTZFSV0	0			
-ISTZGF0A	8	143	8	Addressability error - no active USING covers the operand's section (base and displacement set to 0)
+ISTZGF0A	0			
 ISTZGF0B	0			
 ISTZGF1A	0			
 ISTZGFAB	0			

@@ -1,15 +1,17 @@
 # Building Dave Kreiss' environment — the plan, and why it is not the current work
 
-**Status: written down, not started.** Goal A — `as370` byte-identical to IFOX00
-on all 5,528 modules — is at 87.0 % and still yielding a defect per merge. This
-document exists so the second goal is not re-derived from scratch when the first
-one stalls.
+**Status: written down, not started — and as of 2026-09-09 it is the recommended
+next work.** This document was written when Goal A stood at 87.0 % and was still
+yielding a defect per merge, so that the second goal would not be re-derived from
+scratch when the first stalled. Goal A is now at **98.4 %** — derived against
+cc370 `7a0cd90`, `git rev-list --count 7a0cd90..main` = 0 at writing — and the
+condition named above has arrived; see *When to start* at the end.
 
 ## The two goals, and why only one of them needs this
 
 | | |
 |---|---|
-| **Goal A** | `as370` == IFOX00 on identical input. 4,810 of 5,528, 711 to go. |
+| **Goal A** | `as370` == IFOX00 on identical input. **5,441 of 5,528 decks (98.4 %)** with the assembly stamp normalised, 5,404 raw, **99 to go**. On the stricter goal, deck *and* return code, **5,403**. Derived against `b67af3d`, distance 0. The row read *5,379 of 5,528 (97.3 %)* until the four merges of 2026-09-09 afternoon, and *4,810, 711 to go* before that — a figure left standing beside a status line that already disagreed with it. |
 | **Goal B** | Source that assembles to the object IBM shipped — Dave Kreiss' project. |
 
 **A reboot does not serve Goal A.** Every one of the 43 merges so far came from
@@ -98,3 +100,48 @@ assembler — and that is exactly when the second reference earns its cost.
 
 Steps 1 and 2 block nothing and can be done at any time; step 3 is an hour of
 MVS; step 4 is the measurement.
+
+
+## When to start — 2026-09-09
+
+Goal A is at **98.4 %**, 96 modules differing, and the remainder no longer looks
+like assembler work. Derived against `7a0cd90`, distance 0 at writing, on the 128
+that survive the clock and the exclusions:
+
+| | modules | was, at 96.8 % | |
+|---|---:|---:|---|
+| **both flag** | **62** | 63 | of which **46 name an undefined operation** — a macro nobody here has |
+| **silent divergence** | **48** | 84 | neither assembler says a word; **no lead, no instrument** — eight have been run over it |
+| `as370` alone flags | **16** | 22 | ordinary assembler work: 10 MNOTE, 9 undefined-symbol, 8 invalid `DC/DS/DXD` type, the duplication-factor group |
+| IFOX00 alone flags | 2 | 3 | `IEAVEXS`, `IEAVRTI0` |
+| did not finish | 0 | 1 | |
+
+**The silent block has halved and the both-flag block has not moved.** That is the
+whole argument of this document arriving: assembler work reaches the loud
+population and has been reaching it, while the block that needs a second
+reference stays where it is.
+
+**46 of the 128 cannot be moved by any assembler change at all.** They are the
+`IFC*` EREP family (33 of them), the `IEC*` IOS mappings (11), and one each of
+`IEA*` and `IEW*` — blocked on the 27 macros
+[`missing-macros.md`](missing-macros.md) has already searched for and not found.
+No amount of work on `as370` reaches them. `IFC*` and `IEC*` together are 51 of
+the 128 by name.
+
+So the order is:
+
+1. **Finish what is bounded** — the 16 loud modules, `IFCEA155`, and cc370#290's
+   named obstacle.
+2. **Then this document.**
+
+### And it is not only the macros: it is the instrument for the silent block
+
+The silent 48 have defeated every instrument because both assemblers read the
+same input and neither complains. **A second, independent IFOX00 reference — one
+assembled under Dave's environment rather than `MVSCE-EXP`'s — splits them**: a
+module that differs against both references is `as370`'s, a module that differs
+against one is the environment's.
+
+That is the *two measurements beat one* argument, and it is the only proposal
+anyone has made for the block no instrument reaches. It happens to fall out of the
+same work that supplies the macros.

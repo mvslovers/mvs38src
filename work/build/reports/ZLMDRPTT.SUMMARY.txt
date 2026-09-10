@@ -1,0 +1,36 @@
+Sep 9, 2026  18.09.39 Ver 01.21                 Original vs Build CSECT/LMOD Report                                         Page   1
+----------------- Original ----------------�-------------------- Build -----------------------------�
+  Library       LMOD      CSECT     Length �    Library       LMOD      CSECT     Length     Not EQ �
+Program version=LMDRPT38 - 01.21 09/09/26 14.48
+PARM=SUMMARY
+ 
+ CMDLIB          212        753                                125*       509*       131          0
+ LINKLIB         661      1,674                                 57*       373*       132          0
+ LPALIB        1,197      2,347                                 29*        35*        21          0
+ NUCLEUS          27        356                                 21*       329*        17          0
+ SVCLIB           58         59                                 50*        51*         0          0
+ TELCMLIB        188        192                                181*       185*        87          0
+ VTAMLIB          18         65                                 16*        63*        17          0
+        7      2,361      5,446                       8*       479*     1,545*       405          0
+ 
+Unequal difference 1-10               0
+Unequal difference 11-100             0
+Unequal difference 101-1000           0
+Unequal difference over 1000          0
+Length difference 1-10               86
+Length difference 11-100            176
+Length difference 101-1000          124
+Length difference over 1000          19
+ 
+Missing CSECTs             31
+Extra CSECTs                2
+Missing LMODs              47
+Extra LMODs                16
+Compared equal          1,122
+Module dif ignored          0
+Compare dif ignored         0
+ Total equal            1,122
+Compared not equal          0
+Length different          405
+ Total not equal          405
+  Total CSECTs          1,545

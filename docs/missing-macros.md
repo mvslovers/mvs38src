@@ -1,10 +1,41 @@
 # The macros nobody here has
 
+> ## ⚠️ Nine of the thirteen are now here — 2026-09-10
+>
+> | | |
+> |---|---|
+> | **found and installed** | `BTMHJN` `BTMIOBWA` `IECPDSCB` `$ASXB` `IEZCTGPL` `IHADECB` `IHADVCT` — and `LINEND` `HEX` `CONVT` `DSGEN` `LINE` `ROUTINE` `SPECIAL` `SUM` `IFCMACS` on the EREP side |
+> | **still missing** | `ENTRIES` `ETEPILOG` `FREETAB` `SUMMARY` |
+> | **found but the wrong macro** | `PROLOG` — every local copy takes no operands, every EREP caller writes `PROLOG NAME=` |
+> | **still missing, unchanged** | `TABLE` (48 modules), `IQAERB`, and the single-module entries below |
+>
+> Where each one came from, and what it cost to establish, is in
+> [`work/macros/found-2026-09-09/README.md`](../work/macros/found-2026-09-09/README.md)
+> and [`work/macros/erep-instream2/README.md`](../work/macros/erep-instream2/README.md).
+> **Two of the four "Group A" names were on this machine all along** and had been
+> reported missing by a search that used exact names with no extension, over a
+> scope that excluded the largest archive, with no control.
+>
+> **The four blocking the build are closed.** `EBT1102` and `EJE1103` apply again;
+> `EDM1102` has its macros in place for the next run. That chain is in
+> [`dave-install-log.md`](dave-install-log.md).
+
 2026-09-07, measured against `as370` at the merge of cc370#174. **40 operations
 cannot be resolved by either assembler, and they block 204 module–operation
 pairs across the two source trees we build from.** Table:
 [`missing-macros.tsv`](../work/measurements/missing-macros/missing-macros.tsv),
 one row per operation with the module list.
+
+> **Checked 2026-09-09 against `1112488`**: **204 modules still carry an
+> `Undefined operation code` message**, so the headline has not decayed with the
+> assembler's progress — the macros are missing from the libraries, not from
+> `as370`. The *operation-level* breakdown below was not re-derived; treat the
+> 40 as the figure of record and the module lists as indicative.
+>
+> The first attempt at that check reported **zero** operations, because the
+> regex expected the operation name in a column that holds an aggregated
+> message. A scan with no hits is a claim about the instrument until a control
+> says otherwise; `grep -c` on the same file said 204 immediately.
 
 This is a hunting list. Every one of these was searched for and not found — the
 point of the document is that the searching is already done, so what is left is
@@ -170,3 +201,147 @@ tools/retest.py obj_<label>
 
 and the number that counts is modules reaching byte-identity with the DLIB
 object, not modules that stop complaining.
+
+## Seven more, found by the build rather than by an assembly — 2026-09-09
+
+Every other entry on this list came from a module that would not assemble. These
+six came from SMP: Dave's chain terminates the APPLY of `EBT1102` and `EDM1102`
+with `SYSTEM UTILITY FAILURE`, and the IEBCOPY listing underneath says which
+members it could not find.
+
+| Macro | Wanted by | Anywhere we hold it? |
+|---|---|---|
+| `BTMHJN` | `EBT1102` (**BTAM**, not TCAM) | **nowhere** — `SYS1.ABTAMMAC` per IBM |
+| `BTMIOBWA` | `EBT1102` (**BTAM**) | **nowhere** — same |
+| `IECPDSCB` | `EDM1102` (DFP) | **nowhere** |
+| `IEZCTGPL` | `EDM1102` | web mirror |
+| `IHADECB` | `EDM1102` | web mirror |
+| `IHADVCT` | `EDM1102` | web mirror **and MVS/CE's own `SYS1.MACLIB`** |
+| `$ASXB` | `EJE1103` (JES2) | **nowhere** — not in `AMACLIB`, `MACLIB` or `HASPSRC` |
+
+All six are absent from `SYS1.AMACLIB`, which is where the SYSMODs point
+(`++MAC( ... ) TXLIB(OMACLIB)`, and `SYS1.PROCLIB(BLDSMP)` maps `OMACLIB` to
+`SYS1.AMACLIB`).
+
+**`IHADVCT` is the reason none of them should just be dropped in.** MVS/CE's
+target `SYS1.MACLIB` has one and the web mirror has another, and they **differ in
+11,648 of about 16,646 bytes**. Same name, unrelated levels. The rule at the top
+of this file applies exactly: a macro is usable when its expansion is right, not
+when the copy succeeds.
+
+**And the counting is worth keeping.** SMP reported **161** failed copies across
+the two jobs — 42 and 119. IEBCOPY had actually copied **1,047** members and
+failed to find **6**: it returns 04 for the step, and SMP attributes the step's
+return code to every element in it. An earlier note here repeated SMP's figure.
+One missing macro reads as forty-two failures.
+
+### Three of the seven are on IBM's own tape, and the pointer is what is wrong
+
+Searched all **254 `MVSSRC.*` source libraries** on the SRC volumes — IBM's
+distribution tapes as TK4- carries them:
+
+| Macro | Found |
+|---|---|
+| `IEZCTGPL` `IHADECB` `IHADVCT` | **`MVSSRC.SYM601.F01`** |
+| `BTMHJN` `BTMIOBWA` `IECPDSCB` `$ASXB` | nowhere |
+
+`MVSSRC.SYM601.F01` is not an outside source. `SYS1.PROCLIB(BLDSMP)` already
+mounts it, and Dave's own comment on the card says what it is:
+
+```
+//SYM60101 DD  DSN=MVSSRC.SYM601.F01,DISP=SHR              MACLIB
+```
+
+**And the same SYSMOD reads it 82 times without trouble.** `EDM1102` has 82
+`++MAC` elements naming `TXLIB(SYM60101)`, all of which copy; the four that fail
+are the four naming `TXLIB(OMACLIB)`, which `BLDSMP` maps to the running system's
+`SYS1.AMACLIB`:
+
+```
+++MAC( IHADECB  ) TXLIB(OMACLIB ) SYSLIB(MACLIB  ) DISTLIB(AMACLIB ) .
+```
+
+So this is not a missing macro at all for three of them: **it is a pointer at a
+library MVS/CE does not stock, for elements that are sitting in a RELFILE the job
+already has open.** On Dave's TK3, `SYS1.AMACLIB` evidently carried them.
+
+**Which copy is right is now answerable, and the web mirror is not the answer.**
+Normalised to columns 1–72:
+
+| | vs `SYM601.F01` |
+|---|---|
+| `IHADECB` mirror | **identical** |
+| `IEZCTGPL` mirror | differs |
+| `IHADVCT` mirror | differs |
+| `IHADVCT` in MVS/CE's `SYS1.MACLIB` | differs from both |
+
+Three copies of `IHADVCT`, three different levels. The tape is the one with the
+same provenance as everything else in this build, so it is the one to use — and
+the `ISDAFSPC` rule is satisfied by provenance rather than by hope.
+
+### But supplying them does not unblock anything, and that is the finding
+
+`EDM1102` also needs **`IECPDSCB`**, which is in none of the 254 libraries, none
+of our eight macro collections, `mvs38-ibmsrc`, either web mirror, or Dave's
+tape. `EBT1102` needs `BTMHJN` and `BTMIOBWA`; `EJE1103` needs `$ASXB`. All four
+are absent everywhere reachable.
+
+**So three SYSMODs cannot be applied from the material we hold**, and adding the
+three findable macros changes none of that. What it does change is the shape of
+the problem: it was "161 failed copies", then "seven missing macros", and it is
+now **four macros that do not exist here** — one for TCAM, one for JES2, one for
+DFP, and `IECPDSCB` unaccounted for.
+
+Not yet searched: the CBT tape collections, and any other MVS 3.8 distribution.
+
+## Which component each of the four belongs to — 2026-09-09, from IBM's own directory
+
+The mailing-list search found no macro text, and produced something better: the
+**MVS 3.8j Base Program Directory** and IBM's BTAM installation cookbook, which
+say where each one lived. That turns four blind searches into four aimed ones,
+and it corrected a claim of mine.
+
+| macro | FMID | component | where IBM shipped it |
+|---|---|---|---|
+| `BTMHJN` `BTMIOBWA` | `EBT1102` | **BTAM** — *not TCAM, which is what I said* | `SYS1.ABTAMMAC`, merged into `SYS1.MACLIB` at install |
+| `IECPDSCB` | `EDM1102` | Data Management | `EDM1102.F2`, an AMACLIB of 118 members |
+| `$ASXB` | `EJE1103` | JES2 | `EJE1103.F1` is a **HASPSRC** library, *not* a MACLIB |
+
+IBM's cookbook, verbatim:
+
+```
+++MAC(BTMHJN)   DISTLIB(ABTAMMAC) FROMDS(DSN(SYS1.ABTAMMAC) NUMBER(1))
+++MAC(BTMIOBWA) DISTLIB(ABTAMMAC) FROMDS(DSN(SYS1.ABTAMMAC) NUMBER(1))
+```
+
+**Measured here as a consequence:** there is no `ABTAMMAC` or `BTAMMAC` on either
+system, none in the build's own allocations, no BTAM DD in `SYS1.PROCLIB(BLDSMP)`,
+and no `BTM*` member in any macro library we hold. So the search moves to
+somebody else's complete `SYS1.MACLIB` — on a system where BTAM was installed,
+the merge has already happened.
+
+And Dave's own SYSMOD does not point at BTAM at all:
+
+```
+++MAC( BTMHJN   ) TXLIB(OMACLIB ) SYSLIB(MACLIB  ) DISTLIB(AMACLIB ) .
+```
+
+`DISTLIB(AMACLIB)` where IBM says `DISTLIB(ABTAMMAC)` — his reconstruction models
+the post-merge state, which is consistent and worth knowing before anyone reads
+that card as evidence of where the macro lives.
+
+**`$ASXB` changes shape too.** A HASPSRC library is source, not macros, so it is
+most likely a `MACRO` definition *inside* a HASP assembly member — the same shape
+as `DSGEN` inside `IFCE0135`, and not something a member-name search would ever
+find.
+
+**And the eight of Group B change shape most of all.** `EER1400` is EREP and its
+distribution files contain **no AMACLIB** — only object libraries, `APROCLIB` and
+`AGENLIB`. So `LINEND CONVT HEX SUMMARY PROLOG FREETAB ETEPILOG ENTRIES` were
+very likely never `SYS1.MACLIB` members: they are `COPY` members or in-stream
+definitions inside the EREP source itself. That is exactly how `DSGEN`, `LINE`,
+`ROUTINE`, `SPECIAL` and `SUM` were found, and it means the in-stream search is
+the main line rather than the fallback.
+
+Two named targets for it, from Dave Kreiss' own 2010 posts: **`EREPSY.F01`** and
+**`SYM104.F06`–`F09`**, the two EREP source variants he was diffing.

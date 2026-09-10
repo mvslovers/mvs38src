@@ -41,14 +41,25 @@ KEYS = {"undefined-symbol": "Undefined symbol",
 
 
 def main():
-    binary = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser("~/.local/bin/as370")
+    binary = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser("~/repos/mvs/cc370/as370/as370")
     head = open(f"{RUN}/module-table.tsv").readline().strip().split("\t")
     H = {h: i for i, h in enumerate(head)}
     rows = [l.split("\t") for l in open(f"{RUN}/module-table.tsv").read().splitlines()[1:]]
     loud = [r[0] for r in rows if r[H["signal"]] == "as370 alone flags"]
 
     def run(m):
-        p = subprocess.run(["perl", "-e", "alarm 60; exec @ARGV", binary] + MACS +
+        # The alarm is 400 s here for the same reason it is 400 s in gate-worker.sh,
+        # and it was NOT raised with it -- 2026-09-09.  gate-worker.sh went 150 -> 400
+        # when IFCEL155 turned out to assemble in 41 s alone; these three tools kept
+        # their 40/40/60 s and nobody looked.  IFCEL155 therefore came out of the GATE
+        # with rc 20 and a 43,200-byte deck, four gate runs in a row with the identical
+        # sha256, and out of THIS tool with rc -14 (SIGALRM) -- so module-table.tsv, the
+        # table cc370 actually reads, filed a module that finishes as `did not finish`.
+        # One alarm was raised, three were not, and the pipeline disagreed with itself.
+        # The rule from IFCEE155 needs the addition: an alarm belongs to the SLOWEST
+        # module in the corpus, not to the tool, so every instrument that assembles gets
+        # the same one.
+        p = subprocess.run(["perl", "-e", "alarm 400; exec @ARGV", binary] + MACS +
                            ["-o", "/dev/null", f"{SRC}/{m}.ASM"],
                            capture_output=True, text=True, errors="replace")
         return m, (p.stdout + p.stderr)

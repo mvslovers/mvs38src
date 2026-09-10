@@ -1,0 +1,118 @@
+         MACRO
+&NAME    DSGEN
+.*                            THIS MACRO GENERATES ONE DSECT WORD
+.*                                 FORMATTED FOR THE SUBJECT LOG RECORD
+.*                                 EACH OPERAND HAS TWO SUB LISTS. THE
+.*                                 FIRST IS THE NAME OF THE LOG ITEM
+.*                                 WHILE THE SECOND IS THE # OF BITS TO
+.*                                 ALLOCATE FOR THIS ITEM. ITEMS MUST
+.*                                 BE DEFINED CONTIGUOUSLY WITHOUT GAPS
+.*                                 UNUSED BIT GROUPS MUST BE GIVEN
+.*                                 DUMMY NAMES. THE NAMES PROVIDED FOR
+.*                                 THE LOG ITEMS MAY THEN BE USED IN
+.*                                 THE CONVERSION MACRO INSTRUCTIONS.
+         GBLC &ITEM(1000)
+         GBLA &ITEMNBR,&BITS(1000),&SHIFT(1000)
+         LCLB  &ONLY1,&CTIND
+         LCLA  &START1,&START2,&END1,&END2
+         LCLC  &SYMBOL,&EQUSYM
+         LCLA  &OP,&COUNT,&BYTE,&EQUCNT
+         ACTR  100000
+.START   AIF   (N'&SYSLIST(&OP+1) LT 3).LOOP
+         AIF   ('&SYSLIST(&OP+1,3)' EQ 'EQU').LOOP     TEST FOR EQU
+  AIF   ('&SYSLIST(&OP+1,3)' EQ '' AND '&SYSLIST(&OP+1,4)' EQ '').ERR1
+  AIF   ('&SYSLIST(&OP+1,3)' EQ '' OR '&SYSLIST(&OP+1,4)' EQ '').ERR1
+         AIF   ('&SYSLIST(&OP+1,3)' GT '&SYSLIST(&OP+1,4)').ERR3
+&START1  SETA  &SYSLIST(&OP+1,3)        GET START COUNT OF 1
+&START2  SETA  &SYSLIST(&OP+1,4)        GET FIRST END COUNT
+         AGO   .SET2A                   BRANCH AROUND
+.ERR1    MNOTE '**FIRST SYMBOL CONCATENATION INCOMPLETE**'
+         MEXIT
+.SET2A   AIF   ('&SYSLIST(&OP+1,5)' EQ ''AND '&SYSLIST(&OP+1,6)' EQ '' X
+               ).SET2                   TEST FOR NO SECOND
+  AIF   ('&SYSLIST(&OP+1,5)' EQ '' OR '&SYSLIST(&OP+1,6)' EQ '').ERR2
+         AIF   ('&SYSLIST(&OP+1,5)' GT '&SYSLIST(&OP+1,6)').ERR3
+&END1    SETA  &SYSLIST(&OP+1,5)        GET START COUNT OF 2
+&END2    SETA  &SYSLIST(&OP+1,6)        GET END COUNT OF 2
+         AGO   .LOOP
+.SET2    ANOP
+&ONLY1   SETB  1                        INDICATE ONLY ONE CONCATENATION
+         AGO   .LOOP
+.ERR2    MNOTE '**SECOND SYMBOL CONCATENATION INCOMPLETE**'
+         MEXIT
+.ERR3    MNOTE '**START GREATER THAN END CONCATENATION**'
+         MEXIT
+.LOOP    ANOP
+&OP      SETA  &OP+1
+         AIF   (&OP GT N'&SYSLIST).DONE      TEST IF ALL DONE
+&ITEMNBR SETA  &ITEMNBR+1
+         AIF   ('&SYSLIST(&OP,2)' NE '').OK1
+         MNOTE '**NULL BIT COUNT FIELD**'
+         MEXIT
+.OK1     ANOP
+&SYMBOL  SETC  '&SYSLIST(&OP,1)'
+         AIF   ('&SYMBOL' NE '').OK
+*              *****     LOG ITEM SYMBOL NOT PROVIDED     *****
+         AIF   ('&SYSLIST(&OP,3)' NE 'EQU').CNT
+         AGO   .START                   GET NEXT
+.OK      AIF   (N'&SYSLIST(&OP) LT 3).NO3    TEST FOR OLD FORMAT
+         AIF   ('&SYSLIST(&OP,3)' EQ 'EQU').EQU   TEST FOR EQU
+         AIF   (&ONLY1).OK2             TEST FOR ONLY ONE CONCAT
+&SYMBOL  SETC  '&SYMBOL.&START1.&END1'       GET 1 AND 2 CONCAT
+         AGO   .NO3                     BRANCH AROUND
+.OK2     ANOP
+&SYMBOL  SETC  '&SYMBOL.&START1'        GET 1 CONCATENATED
+.NO3     ANOP
+&SYMBOL  EQU   *+&BYTE
+&ITEM(&ITEMNBR) SETC '&SYMBOL'          GET LABEL IN GLOBAL
+&BITS(&ITEMNBR) SETA &SYSLIST(&OP,2)
+&SHIFT(&ITEMNBR) SETA &COUNT-&BYTE*8
+.CNT     ANOP
+&CTIND   SETB  1                        SET COUNT INDICATOR
+&COUNT   SETA  &COUNT+&SYSLIST(&OP,2)
+&BYTE    SETA  &COUNT/8
+         AIF   (N'&SYSLIST(&OP) LT 3).START  TEST FOR OLD FORMAT
+         AIF   (&ONLY1).TSTST           TEST FOR ONLY ONE CONCAT
+         AIF   (&END1 EQ &END2).TSTST   TEST FOR SECOND END
+&END1    SETA  &END1+1                  INCREMENT COUNT
+&OP      SETA  &OP-1                    DECREMENT INCREMENT
+         AGO   .LOOP                    GENERATE NEXT
+.TSTST   ANOP
+         AIF   (&START1 EQ &START2).LPDONE   TEST FOR END
+         AIF   (&ONLY1).NSET1           TEST FOR ONLY ONE CONCAT
+&END1    SETA  &SYSLIST(&OP,5)          RE-INIT SECOND START COUNT
+.NSET1   ANOP
+&OP      SETA  &OP-1                    DECREMENT INDEX
+&START1  SETA  &START1+1                INCREMENT FIRST COUNT
+         AGO   .LOOP                    GO DO NEXT
+.LPDONE  ANOP
+&ONLY1   SETB  0                        CLEAR INDICATOR
+         AGO   .START                   GO TEST FOR MORE SUB-LISTS
+.DONE    AIF   (&COUNT-&COUNT/8*8 NE 0).ERR  TEST FOR MULTIPLE OF EIGHT
+         AIF   (&CTIND EQ 0).END        NO DS IF NO COUNT
+&COUNT   SETA  &COUNT/8                 GET NUMBER OF BYTES
+&NAME    DS    &COUNT.C
+.END     MEXIT
+.ERR     MNOTE '**BIT COUNT FLDS DO NOT TOTAL MULTIPLE OF 8**'
+         MEXIT
+.EQU     AIF   ('&SYSLIST(&OP,4)' NE '').EQU1     TEST FOR NULL LABEL
+.ERR4    MNOTE '**EQU OPERAND OMITTED OR NOT FOUND**'
+         MEXIT
+.EQU1    AIF   (&SYSLIST(&OP,2) LT 16).EQU2  COUNT OVER FIFTEEN
+*****               THE FOLLOWING STATEMENT                *****
+*****     NUMBER OF BITS EXCEED 15 - DO NOT USE AS BIN     *****
+.EQU2    ANOP
+&EQUCNT  SETA  0                        CLEAR COUNTER
+&EQUSYM  SETC  '&SYSLIST(&OP,4)'        GET EQU OPERAND
+.EQULOP  ANOP
+&EQUCNT  SETA  &EQUCNT+1                INCREMENT INDEX
+         AIF   ('&ITEM(&EQUCNT)' EQ '&EQUSYM').EQUOUT  LABEL FOUND?
+         AIF   (&EQUCNT EQ &ITEMNBR).ERR4    ALL TESTED?
+         AGO   .EQULOP                  NO-GET NEXT
+.EQUOUT  ANOP
+&ITEM(&ITEMNBR) SETC '&SYMBOL'          GET LABEL NAME
+&BITS(&ITEMNBR) SETA &SYSLIST(&OP,2)    GET NUMBER OF BITS
+&SHIFT(&ITEMNBR) SETA &SHIFT(&EQUCNT)   GET SHIFT COUNT
+&SYMBOL  EQU   &EQUSYM                  THIS SYMBOL EQUATED
+         AGO   .START                   RETURN FOR NEXT
+         MEND

@@ -1,5 +1,27 @@
 # The 699 nobody can see — silent divergences, ranked
 
+> ⚠️ **The ranking below is against the state of 2026-09-08 and its counts are
+> superseded.** The method — ask IBM's object which deck it agrees with — is the
+> durable part; the populations are not.
+>
+> **Re-derived against cc370 `1112488`, distance 0 at writing**, from the promoted
+> gate run `g323r`: the class is **36 modules** by the `signal()` reading, and it
+> no longer has families — the largest cluster in it is **two**. It was 48 on
+> `7a0cd90` and 1,113 on 2026-09-07. Split by the third opinion, on the 46 of the
+> `7a0cd90` reading:
+>
+> | | modules | this page said |
+> |---|---:|---:|
+> | neither matches IBM | 26 | 464 |
+> | no distribution member | 17 | 82 |
+> | both match IBM | 2 | 27 |
+> | **IFOX00 matches IBM, `as370` does not** | **1** — `IFCEA155` | 136 |
+> | `as370` matches IBM, IFOX00 does not | 0 | 1 |
+>
+> **The sharp cell is down to one module.** The cell that "should have been
+> empty" is down to two and the explanation below still stands for them: two decks
+> can carry the same image and still differ.
+
 2026-09-08. Of the 1,242 modules handed to cc370, **710 are silent divergences**:
 both assemblers assemble without a word and the decks differ anyway. No
 diagnostic points at any of them. They are the majority of the remaining work,
