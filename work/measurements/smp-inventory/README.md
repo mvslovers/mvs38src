@@ -16,3 +16,15 @@ systems, output to a catalogued dataset, fetched via mvsMF restfiles).
 | `dlib-compare.txt` | per-DLIB module counts: total / at-base / PTFed, TK5 vs CE |
 
 `applied` = target zone (CDS); `accepted` = distribution-library zone (ACDS).
+
+## DLIB object distance ([`docs/dlib-distance-tk5-ce.md`](../../../docs/dlib-distance-tk5-ce.md))
+
+| file | contents |
+|---|---|
+| `dlib-object-distance.tsv` | for 804 divergent + 300 control modules: the DLIB member read from both systems (mvsMF binary) and compared. Columns: kind, module, dlib, tk5_rmid, ce_rmid, len_tk5, len_ce, verdict, ndiff. `verdict`: `identical` / `date-only` (code identical, build date differs) / `content-diff` / `len-diff`. |
+
+Build-date masking: the object embeds its build date as a packed 3-byte IDR
+field (`yyddd`) and sometimes a readable `MM/DD/YY` string. Differences confined
+to those are code-identical; a code change produces a diff run > 3 bytes or a
+length change. The 300 same-RMID control modules show zero genuine code
+differences under this rule.
