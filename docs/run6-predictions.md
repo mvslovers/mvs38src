@@ -188,3 +188,65 @@ Two things for later, neither urgent enough to do during a run:
 * **The retry message is misleading.** It prints `(transient: RemoteDisconnected,
   retry 6/11, 60s)` for a failure that will never succeed. A retry loop should
   say what it is retrying, not just that it is.
+
+## Predictions 4 and 5: confirmed. The run is complete.
+
+`$08STG1A` still ended `CC 0020` — the fix I did not make did not happen.
+
+And the chain stopped itself, on its own guard rather than on an error:
+
+```
+20 ZCMPSMP1   SMPCHK1/JOB00814  CC 0000
+STOP: ZCMPSMP1 hands on to LIB=1 (MAINT05@). That is the Phase-1 boundary
+      and it updates the running system.
+```
+
+All five predictions held. Two non-clean jobs in 260, both documented as
+harmless, and one manual intervention — `ZSTAGE2` by FTP, for a reason now fixed
+in `bldrun.py`.
+
+# What the build actually produced
+
+Dave's chain ends in its own comparison jobs, and they are the point of the
+whole exercise. Two instruments, and they must not be quoted as one number.
+
+## CSECT level — `LMDRPT38`, "Original vs Build CSECT/LMOD Report"
+
+| library | equal | **not equal** | length different | missing CSECT | missing LMOD | total |
+|---|---|---|---|---|---|---|
+| NUCLEUS | 344 | **0** | 10 | 1 (ignored) | 2 | 354 |
+| SVCLIB | 59 | **0** | 0 | 0 | 0 | 59 |
+
+**Not a single CSECT differs in content.** Every difference is a length, a
+missing CSECT, or a missing load module. The three that are missing are named:
+`IEANUC01/IECVXTPT` (28 bytes, ignored), `IEAVNPF1/IEAVNPF1`, `IEAVNP15/WILDCRD`.
+
+## Load-module byte level — `COMPLMD`, offset by offset
+
+| job | compared | identical | differing | difference records |
+|---|---|---|---|---|
+| NUCCHK1 | 155 | 29 | 126 | 2,085 |
+| NUCCHK2 | 156 | 36 | 120 | 1,279 |
+| NUCCHK3 | 51 | 7 | 44 | 2,238 |
+| NUCCHK4 | 163 | 31 | 132 | 496 |
+| NUCCHK5 | 162 | 57 | 105 | 311 |
+| SVCCHK | 116 | 54 | 62 | 224 |
+| JESCHK | 28 | 1 | 27 | 3,735 |
+| SMPCHK | 238 | 16 | 222 | 1,888 |
+| **total** | **1,069** | **231** | **838** | **12,256** |
+
+`COMPLMD` compares `SYS1.SVCLIB` against `MVSSRC.BLD.SVCLIB` and so on, at fixed
+offsets, with `CLEARRLD=NO`. A module whose code is right but sits at a different
+address scores as wrong throughout.
+
+## The two numbers are not in conflict, and the gap between them is the work
+
+`0` CSECTs unequal against `838` load modules differing is not a contradiction:
+one instrument compares what was assembled, the other compares where it landed
+after link-edit. The gap is displacement, maintenance stamps and alignment holes
+— exactly the material `docs/what-is-left.md` already classifies, and exactly
+what stage 5 is about.
+
+**Quote them together or not at all.** "21.6 % byte-identical" on its own is
+true and misleading; "no CSECT differs in content" on its own is true and
+flattering. The pair is the honest statement.
