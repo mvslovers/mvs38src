@@ -879,3 +879,41 @@ cd /tmp/main-cc370 && git fetch -q origin && git checkout -q --detach origin/mai
 `as370 -v` prints a build *date*, which cannot distinguish two merges on the same
 day — so the commit line is the one that matters, and it has to be read, not just
 printed.
+
+## A gate against a stale branch can manufacture `LOST`
+
+2026-09-10, twice in a row, and it is the sharpest form of the stacked-PR trap.
+
+cc370#335 gated as it stood printed:
+
+```
+as370 == IFOX00 : 5415 -> 5411   (-4)
+LOST : 4   IFCEA155 IFCEL155 IFCSXXXF IFCSXXXH
+rc CLEAN -> FLAGGED: 3
+```
+
+**`LOST` and `rc CLEAN -> FLAGGED` are the two lines that exist to stop a merge,
+and both fired on a change that breaks nothing.** Those four modules are exactly
+#337's gains; the branch was cut before #337 merged, so the gate was measuring
+*its absence*. Cherry-picked onto `main`, every line reads `+0`.
+
+#339 did the same thing one hour later with 26 decks on the `FURTHER` line, all
+of them artefacts of the same stale base.
+
+So the rule is not only "retarget is not rebase" for merging — **a measurement
+against a branch whose base has moved does not merely under-report; it can
+produce the most serious signal the instrument has.** The trap was written down
+twice this week for merge conflicts and nobody noticed it applies to the gate.
+
+`gate.sh` now records the binary's commit in `obj_<label>/.commit` and
+`retest.py` prints it, saying so explicitly when it is absent:
+
+```
+  (rc baseline: as370-gate.tsv)
+  (objdir built from: 8250810 fix(as370): an empty nominal value is rejected)
+```
+
+**Cherry-pick, do not patch.** `git diff main..branch` on an old branch also
+*deletes* what main gained meanwhile — the first attempt at relanding #335 that
+way removed #337's and #332's fixtures. `git cherry-pick <the branch's own
+commit>` takes the change and nothing else.
