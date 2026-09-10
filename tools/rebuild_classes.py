@@ -40,6 +40,51 @@ KEYS = {"undefined-symbol": "Undefined symbol",
         "symbol-over-8": "longer than 8 characters"}
 
 
+# ---------------------------------------------------------------------------
+# Two classes that used to have no derivation at all.  Written by the cc370
+# session, which owns the questions they answer (#199 and #186); integrated
+# here because this is where the class files are cut.
+#
+# Both compare CARDS, not RLD entries.  Stepping the RLD data field in fixed
+# 8-byte units is wrong -- an entry carries a continuation bit X'01' and the
+# next item is then 4 bytes, not 8.  cc370 lost a measurement to exactly that
+# on 2026-09-10; the tell was an address of 0x404040, three EBCDIC blanks.
+TXT, ESD, RLD = b"\xe3\xe7\xe3", b"\xc5\xe2\xc4", b"\xd9\xd3\xc4"
+
+
+def cards_by_type(path):
+    """{'ESD': [...], 'TXT': [...], 'RLD': [...]} -- cards without sequence numbers."""
+    out = {"ESD": [], "TXT": [], "RLD": []}
+    d = open(path, "rb").read()
+    for i in range(0, len(d), 80):
+        c = d[i:i + 80]
+        t = {ESD: "ESD", TXT: "TXT", RLD: "RLD"}.get(bytes(c[1:4]))
+        if t:
+            out[t].append(bytes(c[:72]))          # columns 73-80 stay out
+    return out
+
+
+def classify(as370_obj, ifox_obj, read):
+    """`image-identical` (#199) or `rld-flag` (#186), or neither.
+
+    Order matters and is a decision, not an accident: `IFFAHA16` qualifies for
+    both -- its RLD *entries* are identical and only the card encoding differs --
+    and image-identical wins.  Swap the two blocks to decide the other way.
+    """
+    sa, ia, ca = read(as370_obj)
+    si, ii, ci = read(ifox_obj)
+    if len(ca) == len(ci) and all(x == y for x, y in zip(ca, ci)):
+        return None                               # cards equal
+    flat_a = {a: v for (_, a), v in ia.items()}
+    flat_i = {a: v for (_, a), v in ii.items()}
+    if ia == ii and flat_a == flat_i:
+        return "image-identical"                  # cc370#199
+    A, I = cards_by_type(as370_obj), cards_by_type(ifox_obj)
+    if A["ESD"] == I["ESD"] and A["TXT"] == I["TXT"] and A["RLD"] != I["RLD"]:
+        return "rld-flag"                         # cc370#186
+    return None
+
+
 def main():
     binary = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser("~/repos/mvs/cc370/as370/as370")
     head = open(f"{RUN}/module-table.tsv").readline().strip().split("\t")
@@ -108,6 +153,28 @@ def main():
     b["prologue"] = {r[0] for r in d if r[6] == "prologue"}
     b["section-one-side"] = {r[0] for r in d if r[6] == "section only on one side"}
     b["ifox-alone-flags"] = {r[0] for r in rows if r[H["signal"]] == "IFOX00 alone flags"}
+
+    # image-identical and rld-flag, derived rather than left standing from
+    # 2026-09-08.  Only over modules whose decks actually differ -- and only
+    # where IFOX00's deck is an oracle, the rule tool-diffs.tsv now carries as
+    # a column of its own.
+    import importlib.util
+    sv = importlib.util.spec_from_file_location("sv", f"{os.path.dirname(os.path.abspath(__file__))}/section_view.py")
+    svm = importlib.util.module_from_spec(sv); sv.loader.exec_module(svm)
+    b["image-identical"], b["rld-flag"] = set(), set()
+    for r in rows:
+        m, tool = r[0], r[H["tool"]]
+        if tool not in ("bytes", "cards"):
+            continue
+        a, i = f"{RUN}/as370/{m}.obj", f"{RUN}/decks/{m}.obj"
+        if not (os.path.exists(a) and os.path.exists(i)):
+            continue
+        try:
+            k = classify(a, i, svm.read)
+        except Exception:
+            continue
+        if k:
+            b[k].add(m)
 
     for slug, ms in sorted(b.items()):
         p = f"{RUN}/classes/{slug}.txt"
