@@ -159,6 +159,34 @@ assembler.** The real test is the corpus: run `tools/ifox_run.py` on
 - decks differ → the reference belongs to MVS/CE and re-baselining costs a full
   corpus run, exactly as [`erep-adoption.md`](erep-adoption.md) had to pay.
 
+**Two things must move with the reference, not after it.**
+
+*The stamp table.* Every normalised figure — `as370 == IFOX00` at 5,444 rather
+than the raw 5,418 — is computed by re-assembling with the timestamp the IFOX00
+run itself recorded, per module, in `work/measurements/ifox-run/state.tsv`. Cut a
+new reference on TK5 without re-cutting that table and every normalised number
+afterwards quietly measures against MVS/CE's clock **and looks entirely
+plausible while doing it**. Raised by the cc370 session, which named the class
+correctly: a frozen file and a stable measurement are indistinguishable from the
+outside.
+
+*The macro libraries.* A deck difference between the two systems is only an
+assembler difference if both assembled the same macros. TK5 and MVS/CE have not
+been compared at the macro level at all, and `dlib-distance.md` already warns that
+319 of our private macros come from mirrors at an unestablished level. **Compare
+`AMACLIB`, `AMODGEN`, `AGENLIB`, `ATSOMAC`, `ATCAMMAC` and `APVTMACS` across the
+two systems before reading anything into a deck difference** — same instrument as
+the DLIB pull, `tools/dlibpull.py` with a different dataset list. If they are
+identical the confound is gone for everything downstream; if not, the macro delta
+is itself a result.
+
+**A cheap first probe exists.** cc370 offers eleven modules — `IFFAHA16`,
+`IFNX1A` `1J` `3N` `5A` `5C` `5D` `5V` `6B`, `IFOX0A` `0D` — where the two
+assemblers' output is image-identical and differs **only in RLD cards**, cause
+open. Same RLD entries out of TK5's IFOX00 as out of MVS/CE's ⇒ the divergence is
+`as370`'s; different ⇒ a lineage answer for a fraction of a corpus run. It is
+worth running *after* the macro comparison, not before, for the reason above.
+
 ### Stage 2 — run Dave's build on `MVSTK5-BLD`
 
 `tools/bldrun.py` with `HOST` pointed at `:8085`, from `$01SMPAL`. What run 4
