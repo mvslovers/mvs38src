@@ -939,3 +939,26 @@ directory corresponds to on `main` is what made it invisible from both ends.
 *deletes* what main gained meanwhile — the first attempt at relanding #335 that
 way removed #337's and #332's fixtures. `git cherry-pick <the branch's own
 commit>` takes the change and nothing else.
+
+## Keep the last gate run. Someone else is measuring against it
+
+2026-09-10. A cleanup took `obj_*` from 91 runs to 1 — 2.9 GB of reproducible
+output, and the right call for 89 of them. It also took **cc370's working
+baseline**, `obj_g338b`, out from under a session that was mid-measurement. Their
+next run reported
+
+```
+as370 == IFOX00 : 0 -> 5418     no-as370-deck: 5528 -> 0
+no return codes for the baseline: g338b.tsv not found.
+```
+
+which is the tool behaving correctly — it refused rather than comparing nonsense —
+and a ten-minute re-gate they should not have had to do.
+
+**A gate run is reproducible but not free, and it is not necessarily mine.** The
+policy is: keep the **promoted run and the two most recent** with their `.tsv`,
+and say in the cleanup which ones went. With `(objdir built from: …)` a surviving
+run describes itself, which is what makes keeping one worth anything.
+
+Same shape as the shared checkout and the `git add -A`: an action that is correct
+for my own state and destructive for someone else's.
