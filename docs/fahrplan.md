@@ -306,6 +306,54 @@ and the nine EREP macros staged.
 Expect new failures: run 4's fixes were made against MVS/CE, and TK5 is a
 different system. That is the point of running it.
 
+
+### The volume geometry, and the limit that decides it
+
+The first run died of space: `BLDSR1`, `BLDSR2`, `BLDLS1` and `BLDWK1` were at
+**zero free tracks**, `MAINT04E` ended `IEC031I D37-04` writing `AMVSSRC`, and
+about a hundred members of the source library became unreadable — `MVSMF106E I/O
+ERROR READING` on the console, `451 Read error on data set after 0 bytes` over
+FTP, two independent readers agreeing.
+
+**MVS 3.8j stores a track address in a signed halfword, so a volume may not
+exceed 32,767 tracks** ([Jay Moseley on modern
+DASD](https://www.jaymoseley.com/hercules/installMVS/modernDASD/modernDASD.htm)).
+That is the whole story:
+
+| model | cylinders | tracks | |
+|---|--:|--:|---|
+| 3390-1 | 1,113 | 16,695 | what Dave ships |
+| **3390-2, custom** | **2,184** | **32,760** | **seven under the limit** |
+| 3390-3 | 3,339 | 50,085 | **rejected by MVS** |
+
+A 3390-3 was tried first and MVS answered `IEF193I SPACE NOT OBTAINED BECAUSE OF
+PERMANENT I/O ERROR` on every allocation. The wrong limit (65,535, from a guess
+about halfword addressing) was in play for an hour before the source settled it
+at 32,767 signed.
+
+**And a `dasdinit` volume is not usable; a `dasdload` one is.** `dasdinit -a`
+produces the right geometry and MVS still refuses to allocate on it. `dasdload`
+with a two-line control file writes a VTOC MVS accepts:
+
+```
+BLDSR2 3390-2 2184
+sysvtoc vtoc trk 60
+```
+
+Neither ICKDSF can repair the difference: the base level answers
+`ICK30712I DEVICE TYPE VERIFICATION FAILED` for a 3390, and TK5's own
+`Packages/ICKDSF13` — release 13, installed as `ICKDSF13` in `SYS2.LINKLIB` —
+answers `ICK31851I EXTENDED CKD FUNCTIONS CANNOT BE ACTIVATED`, because ECKD
+channel programs arrived with MVS/XA and this system has none.
+
+`IEHLIST` reports **0 free cylinders** on a fresh `dasdload` volume, because
+`dasdload` writes no Format-5 free-space DSCBs. That is not the truth: an
+`IEFBR14` allocation of five cylinders succeeds. **Test the allocation, not the
+report.**
+
+The twelve 3390-1 originals are kept in `~/MVSTK5-BLD/dasd-3390-1-alt/` and
+Dave's pristine copies in `~/blddasd-orig/`.
+
 ### Stage 3 — `ZLMDRPTD` and `ZLMDRPTT` on `MVSTK5-BLD`
 
 **This closes the original ask.** `ZLMDRPTD` compares the build's DLIBs against
