@@ -67,3 +67,56 @@ control (`IDACB2`, certainly used, counted 0).
 
 Raw member bytes are cached under `work/measurements/macro-bytes/` and are not in
 git.
+
+---
+
+## The 158 do reach the corpus — 68 modules, measured
+
+2026-09-10. The open question above was whether any of the differing macros is
+actually expanded by a module in the corpus. cc370 had established that a source
+scan cannot answer it (a macro called from inside another macro appears on no
+module's card), and the proposed instrument was `-am`, a listing option that does
+not exist yet.
+
+**It did not need a new instrument.** Of the 158, **129 are in the six libraries
+`gate.sh` puts on the `-I` path** (`MACLIB`'s 29 are not). Put those 129 TK5
+copies first on the path and run the corpus against the recorded MVS/CE decks:
+
+```
+as370 == IFOX00 : 5417 -> 5350   (-67)
+  LOST    : 68        gained : 1
+  decks FURTHER from IFOX00 : 72
+  return code agrees : 5524 -> 5524   (+0)
+```
+
+**Sixty-eight modules change their object.** Not a handful — the utilities are
+hit hardest (`IEBGENRT` `IEBUPDTE` `IEHLIST1` `IEHDASDS` `IEBISF` …), then TSO
+(`IKJEFA00` `IKJCT436` `IKJEBEFC`), then Data Management (`IGG0325*` `IGG0553*`).
+Full list: `work/measurements/ifox-run/retest-obj_tk5macs.tsv`.
+
+Every return code stayed the same, so this is not a macro that fails to expand —
+these all assemble cleanly and produce **different code**.
+
+### What that settles
+
+**Stage 1's corpus run must hold the macros constant.** Running
+`tools/ifox_run.py` on TK5 against TK5's own libraries would put 68 modules on
+the difference list for macro reasons, and they would be indistinguishable from
+an assembler difference. The run has to carry MVS/CE's macro libraries across,
+the way the twelve-module probe carried `IBMUSER.PVTMAC`
+([`ifox-tk5-vs-ce.md`](ifox-tk5-vs-ce.md)).
+
+**And it makes the macro delta a first-class part of the baseline decision.**
+If the reference is ever re-cut on TK5, these 68 modules are where TK5's macro
+level, not TK5's object level, changes the answer.
+
+### For `-am` (cc370#345)
+
+The reach question is answered without it, and the list of affected modules came
+for free. What `-am` would add is **which** of the 129 macros is responsible for
+each of the 68 — useful for diagnosis, no longer the only way to know whether
+anything is affected. It is justified and it is not blocking.
+
+`IGC018` is the one module that goes the other way: TK5's `IHADVCT` matches the
+`mirror` copy, so it recovers the identity it lost when the correct `AMACLIB`
+copy went on the path. Two wrongs, again.
