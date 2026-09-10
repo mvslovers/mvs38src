@@ -345,3 +345,45 @@ the main line rather than the fallback.
 
 Two named targets for it, from Dave Kreiss' own 2010 posts: **`EREPSY.F01`** and
 **`SYM104.F06`–`F09`**, the two EREP source variants he was diffing.
+
+---
+
+## Correction, 2026-09-10: "found and installed" overstates it
+
+Prompted by the cc370 session, which noticed that `gate.sh`'s `-I` path carries
+`work/macros/mirror` but **not** `work/macros/found-2026-09-09`, and asked
+whether the two sides of the gate could be using different macros. Measured, on
+both sides at once:
+
+| macro | in the oracle's `IBMUSER.PVTMAC` (MVSCE-EXP) | on `gate.sh`'s `-I` path | oracle's copy equals |
+|---|---|---|---|
+| `IEZCTGPL` | yes, 286 records | `mirror` | **`mirror`** — not `found-2026-09-09` |
+| `IHADECB` | yes, 904 records | `mirror` | `mirror` = `found` = TK5, all three |
+| `IHADVCT` | yes, 203 records | `mirror` | **`mirror`** and TK5 — not `found` |
+| `BTMHJN` | **absent** | absent | — |
+| `BTMIOBWA` | **absent** | absent | — |
+| `IECPDSCB` | **absent** | absent | — |
+| `$ASXB` | **absent** | absent | — |
+
+**The gate is not asymmetric, and that was the thing worth checking.** Where the
+oracle has a macro at all it has the `mirror` copy, which is exactly what
+`gate.sh` passes. Where it does not, `gate.sh` does not either. Neither side has
+ever seen `found-2026-09-09`.
+
+**But "found and installed" is wrong for these four.** `BTMHJN`, `BTMIOBWA`,
+`IECPDSCB` and `$ASXB` were found and committed to `work/macros/found-2026-09-09/`
+and **installed into nothing**: not into the oracle's `IBMUSER.PVTMAC`, not onto
+the assembler's include path. A module that needs one still fails, on both sides
+equally. Found is not installed, and the word did the work of the deed for a day.
+
+`IEZCTGPL` is the sharper case. The provenance analysis above concluded the
+`SYM601.F01` copy — now `found-2026-09-09` — is the right one and the mirror copy
+is at a different level. **The oracle assembled all 5,528 modules against the
+mirror copy.** That is not a defect in the recorded decks — they are a consistent
+reference and `as370` is measured against them fairly — but it does mean the
+reference embeds a macro level this project has itself argued against, and
+changing it would cost a corpus re-run.
+
+TK5 does not settle it: `SYS1.MACLIB(IEZCTGPL)` on TK5 is 300 records against
+286 on both local copies, and matches neither. **A third level, not an
+arbiter.** For `IHADVCT` and `IHADECB` TK5 agrees with `mirror`.
