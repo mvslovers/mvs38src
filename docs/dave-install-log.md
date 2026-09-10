@@ -352,3 +352,60 @@ assembler's diagnostics are not recoverable from the job output, and the
 snapshot has nothing either because `BLDCLR` does not run in this job. Reading
 it needs a re-run with `SYSPRINT` routed to `SYSOUT`; it is on the list, not
 done.
+
+## The causal chain, predicted and then measured — 2026-09-10
+
+Run 3 carried `BTMHJN`, `BTMIOBWA`, `IECPDSCB` and `$ASXB`. Two of the three
+terminated SYSMODs applied:
+
+```
+EBT1102  HMA4180 INLINE JCLIN PROCESSING SUCCESSFUL   rc 04   0 failed copies
+EJE1103  HMA4180 INLINE JCLIN PROCESSING SUCCESSFUL   rc 04   0 failed copies
+EDM1102  still rc 12 -- IEZCTGPL, IHADECB, IHADVCT
+```
+
+`EDM1102`'s three were already known to be in `MVSSRC.SYM601.F01`, a RELFILE the
+job has open; they had not been installed because while `IECPDSCB` was missing,
+installing three of four would have unblocked nothing. They are in
+`SYS1.AMACLIB` now.
+
+### The prediction, written before the job ran
+
+`MAINT02A` skipped six SYSMODs in run 2 — three naming `FMID(EBT1102)`, three
+naming `FMID(EDM1102)`. With `EBT1102` applied and `EDM1102` not, **it should skip
+exactly three, and they should be the `EDM1102` three.**
+
+```
+run 2:  DSK1053 DSK1096 DSK1102 DSK1108 DSK1119 DSK1137
+run 3:  DSK1053 DSK1096         DSK1108
+```
+
+`DSK1102`, `DSK1119`, `DSK1137` are gone — the three with `FMID(EBT1102)`.
+**Predicted three, got three, and the right three.**
+
+So the chain is no longer a reading of the evidence, it is a measured mechanism:
+
+> a missing macro → the SYSMOD's APPLY is terminated → the FMID is not installed
+> → every PTF with that `++VER` is inapplicable → every `MAINT` job selecting one
+> ends `CC 0008`
+
+**Every link checked separately, and the number written down before the job ran.**
+That matters here because twice on 2026-09-09 the same chain was generalised too
+far — once from a single `MAINT` job, once from a report's summary page — and both
+times a second measurement corrected it. A prediction that could have come out at
+6, or at 3 with the wrong three, and came out at 3 with the right three, is worth
+more than either.
+
+### Run 3 against run 2, at the same point
+
+| | run 2 | run 3 |
+|---|---:|---:|
+| jobs at job 81 | 81 | 81 |
+| non-zero | 7 | **2** — `$02ASM`, `EDM1102B` |
+
+`$02ASM` is the `PRTTRK` / `DS4DEVCY` macro-level difference the driver already
+documents, in a utility the build does not use.
+
+**Still unestablished**, and deliberately: whether `ZSTAGE2`'s 92 `NO TEXT` and 36
+`NO ESD ENTRIES` come from these same SYSMODs. Run 4, with `EDM1102` applying,
+is the experiment that settles it.
