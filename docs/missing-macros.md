@@ -387,3 +387,75 @@ changing it would cost a corpus re-run.
 TK5 does not settle it: `SYS1.MACLIB(IEZCTGPL)` on TK5 is 300 records against
 286 on both local copies, and matches neither. **A third level, not an
 arbiter.** For `IHADVCT` and `IHADECB` TK5 agrees with `mirror`.
+
+---
+
+## Correction to the correction, 2026-09-10, later: the gate *is* asymmetric
+
+The section above says "the gate is not asymmetric, and that was the thing worth
+checking." **It is asymmetric, and I established the opposite by looking at the
+wrong library.**
+
+Mike pointed out that TK5 carries more macro libraries than the seven I had
+compared. Enumerating instead of assuming turned up eleven on both systems — and
+with them the actual answer.
+
+**The oracle's SYSLIB is a concatenation and the first DD wins.** It begins
+`SYS1.AMACLIB`; `IBMUSER.PVTMAC` is the **seventh and last**. I checked the last
+one. `SYS1.AMACLIB` on MVS/CE holds all six macros, and its copies are the ones
+in `found-2026-09-09`:
+
+| macro | `SYS1.AMACLIB` (CE) equals | on `gate.sh`'s path |
+|---|---|---|
+| `IEZCTGPL` | **`found-2026-09-09`** — not `mirror`, not `PVTMAC` | `mirror` — **different** |
+| `IHADVCT` | **`found-2026-09-09`** — not `mirror` | `mirror` — **different** |
+| `IHADECB` | `found` = `mirror` = `PVTMAC`, all the same | `mirror` — same |
+| `BTMHJN` | `found` | **absent** |
+| `BTMIOBWA` | `found` | **absent** |
+| `IECPDSCB` | `found` | **absent** |
+
+And the local macro tree is short by exactly those six:
+
+```
+AMACLIB   live 572   local 566   missing: BTMHJN BTMIOBWA IECPDSCB
+                                          IEZCTGPL IHADECB IHADVCT
+AMODGEN, AGENLIB, ATSOMAC, ATCAMMAC, APVTMACS   complete
+```
+
+**Six of 2,326 macro members are missing from the copy, and they are precisely
+the six that four agents spent a day hunting for across GitHub, bitsavers,
+Archive.org and the mailing lists in September.** They were in `SYS1.AMACLIB` on
+our own systems the whole time. The provenance analysis that picked
+`SYM601.F01` over the mirror copy was right, and `found-2026-09-09` *is*
+`SYS1.AMACLIB` — which is why it was right.
+
+### What the asymmetry is worth, measured
+
+Eighteen `MVSBLD` modules name `IEZCTGPL` or `IHADVCT` in their own source.
+Assembled with the `AMACLIB` copy ahead of `mirror`:
+
+| | modules |
+|---|--:|
+| deck unchanged | 17 |
+| **deck changed** | **1** (`IGC018`) |
+| gained identity with IFOX00 | **0** |
+| lost identity | **0** |
+
+`IGC018` fails `rc 8` either way. So the asymmetry is real, it has been carried
+in every gate run since 2026-09-07, and its measured effect on the corpus is one
+deck that was wrong before and is wrong differently now. **The instrument could
+have found more — it found that one.**
+
+`BTMHJN`, `BTMIOBWA` and `IECPDSCB` are named by no module in the corpus and
+appear nowhere in `missing-macros.tsv`, so their absence costs nothing.
+
+### What follows
+
+Copying the six from `SYS1.AMACLIB` into `work/macros/` removes a confound that
+should never have existed and moves no number. It **changes gate inputs**, so it
+is a coordinated change with a re-gate, not a quiet edit — and the figure above
+is what to expect from it.
+
+What deserves keeping is the shape of the mistake: **I checked the last library
+in a concatenation and reported on the first.** The correction above it, written
+four hours earlier, is right about `IBMUSER.PVTMAC` and wrong about the oracle.
