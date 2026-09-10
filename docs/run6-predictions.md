@@ -88,3 +88,25 @@ limit of 16 per volume for a PDS — so roughly 15 usable. That is comfortable f
 this run and is the number to watch if the chain is ever lengthened.
 
 Predictions 3 to 5 are still ahead: `ZSTAGE2` at job 239 and the phase-1 stop.
+
+## The damage is gone too, and by three independent signals
+
+`MAINT04@` — the `IEBCOPY` compress that failed in run 5 — ended `CC 0000`, and
+it genuinely ran rather than merely returning zero: `IEB161I` starting it,
+`IEB167I` reporting members actually moved, 203 × `IEB152I` compressed in place,
+and **zero `IEB100I`, zero `IEB171I`**. In run 5 those two were the unreadable
+member and the directory warning.
+
+And the member itself:
+
+```
+run 5   MVSSRC.BLD.MVSSRC(IEAVEE3R)   HTTP 200,      0 bytes   <- torn
+run 6   MVSSRC.BLD.MVSSRC(IEAVEE3R)   HTTP 200, 16,524 bytes
+```
+
+The empty-200 signature from `PM-2026-003` is absent. That is the damage
+indicator gone, which is not the same as the member being verified correct —
+there is no reference to check it against, and this file does not claim one.
+
+Space recovered by the compress is modest: 96 → 95 % and 96 → 91 %. The libraries
+are living off their secondary extent now, which is exactly what it is for.
