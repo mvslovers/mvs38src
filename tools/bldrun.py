@@ -141,11 +141,31 @@ def snapshot(cur):
         # where a utility puts its verdict.
         lines = t.splitlines()
         if len(lines) > 2 * HALF:
-            lines = (lines[:HALF]
-                     + [f"", f"*** {len(lines) - 2 * HALF} lines elided by "
-                        f"bldrun.py -- head and tail of {len(lines)} kept ***", ""]
-                     + lines[-HALF:])
-            note = f"{ds}({len(t.splitlines())}, capped)"
+            # Head and tail is the WRONG rule for a job with many assemblies.
+            # `$08STG1A` on MVSTK5-BLD returned CC 0020 from six sysgen steps;
+            # its ASMPRINT was 31,524 lines, the cap kept the first and last
+            # 4,000, and every severity line in what was kept read
+            # `HIGHEST SEVERITY WAS 0`.  The six failures were in the 23,524
+            # lines thrown away -- so the snapshot that exists to explain a bad
+            # return code explained the opposite.
+            #
+            # So: keep the head and tail AND every line that carries a verdict,
+            # with a little context.  A diagnostic that is not near an end is
+            # exactly the case this tool is for.
+            keep = set(range(HALF)) | set(range(len(lines) - HALF, len(lines)))
+            mark = re.compile(r"IFO\d\d\d|SEVERITY WAS +[1-9]|\*\*\* |"
+                              r"RETURN CODE|COPY FAILED|IEB\d\d\d|IEW\d\d\d|HMA\d\d\d")
+            for i, l in enumerate(lines):
+                if mark.search(l):
+                    keep |= set(range(max(0, i - 2), min(len(lines), i + 3)))
+            out, last = [], -1
+            for i in sorted(keep):
+                if i != last + 1:
+                    out.append(f"*** {i - last - 1} lines elided by bldrun.py ***")
+                out.append(lines[i])
+                last = i
+            note = f"{ds}({len(lines)} -> {len(out)}, filtered)"
+            lines = out
         else:
             note = f"{ds}({len(lines)})"
         open(os.path.join(SNAPDIR, f"{cur}.{ds}.txt"), "w").write("\n".join(lines) + "\n")

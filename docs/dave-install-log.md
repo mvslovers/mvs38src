@@ -440,3 +440,46 @@ causes.
 
 `ZSTAGE2` still ends `CC 0039` on `SG6` and `SG32`. Those two are now the whole
 of it, and they are a question for run 4.
+
+---
+
+## Run 5 — Dave's build on `MVSTK5-BLD`, 2026-09-10
+
+First run on the chosen baseline. Setup in
+[`fahrplan.md`](fahrplan.md) §5 stage 2; four things had to be built on TK5 that
+are not on Dave's tape.
+
+**44 jobs, two non-zero.** On `MVSCE-LAB` run 1 had 26 failed SYSMODs and even
+run 4 still had two.
+
+| | |
+|---|---|
+| `$02ASM` | `CC 0024` — the same `PRTTRK` case as on MVS/CE |
+| `$08STG1A` | `CC 0020` — **new**, six sysgen steps (`SG3`–`SG7`, `SG11`) |
+| everything else through `EDM1102D` | `CC 0000` / `CC 0004` |
+
+**`EDM1102B` returned `CC 0004` on the first run.** On MVS/CE that job failed 119
+macro copies in run 1 and was still one of only two non-zero jobs in run 4, after
+nine macros had been hunted down and installed. Here it went through clean. That
+is the single most encouraging number of the run, and it is one job — not a
+result about the whole chain.
+
+### `$08STG1A` is unexplained, and the snapshot is why
+
+`snapshot()` exists so a failing job's listing survives the next job's `BLDCLR`.
+It fired, kept `ASMPRINT`, and **explained the opposite of what happened**: the
+listing was 31,524 lines, the cap kept the first and last 4,000, and all fifteen
+severity lines in the kept part read `HIGHEST SEVERITY WAS 0`. The six failures
+are in the 23,524 lines that were thrown away.
+
+Head-and-tail is the wrong rule for a job that runs fifteen assemblies. It was
+written for `EBT1102B`, where four `IEB177I` lines sat in a 343-line `COPPRINT`,
+and it does not generalise. `snapshot()` now keeps the head, the tail, **and
+every line carrying a verdict** — `IFOnnn`, a non-zero severity, `IEBnnn`,
+`IEWnnn`, `HMAnnn`, `RETURN CODE`, `COPY FAILED` — with two lines of context
+each. Tested against a synthetic listing whose only `SEVERITY WAS 8` sits dead in
+the middle: the old rule loses it, the new one keeps it.
+
+`$08STG1A` has to be re-run on its own to get its listing back, and that is a
+to-do, not a blocker: Dave's chain carries no `COND` and runs on past a step
+failure by design.
