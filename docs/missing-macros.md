@@ -577,3 +577,51 @@ macro libraries of two systems, the oracle's private macro library, the calling
 modules themselves, TK5's full CBT and source download, and the EREP source
 distribution. **Twenty-two modules are blocked on four macros that are, so far,
 nowhere.**
+
+---
+
+## Correction, 2026-09-10: the six were found, and then put in the wrong place
+
+The six members `SYS1.AMACLIB` on `MVSCE-LAB` had all along — `BTMHJN`
+`BTMIOBWA` `IECPDSCB` `IEZCTGPL` `IHADECB` `IHADVCT` — were pulled into
+`work/macros/amaclib-live` and put at the **head** of `gate.sh`'s `-I` path, on
+the reasoning that `SYS1.AMACLIB` is the first library in the oracle's `SYSLIB`
+and its copies must therefore be the ones the oracle used.
+
+The premise is true. The conclusion cost an identity, and `cc370` found it:
+`IGC018` went from identical to DIFFER at an unchanged `as370` binary.
+
+**The evidence that settles it is IFOX00's own diagnostics.** For `IGC018` the
+oracle flagged `DVCMODU` and `DVCUFIX1` undefined and said nothing about
+`DVCBPSEC`, and emitted `48F0 9012` where `as370` now emits zeros. Only a
+203-line `@ZA40405`-level `IHADVCT` has that symbol profile. The live library
+holds the 196-line pre-APAR level.
+
+So the recorded decks and the live library disagree about what the live library
+contained. Three explanations were tested and all three fail:
+
+| hypothesis | test | result |
+|---|---|---|
+| the `SYSLIB` differed on 2026-09-07 | `git show` of `ifox_run.py` at that date | same seven, same order |
+| a later library supplied `IHADVCT` | fetched it from all seven on `MVSCE-LAB` | present only in `SYS1.AMACLIB` |
+| the read was truncated (`PM-2026-003`) | shape of the diff | three interleaved `@ZA40405` hunks, not a missing tail |
+
+What remains is that **`MVSCE-LAB`'s `SYS1.AMACLIB` is not in the state that
+produced the reference corpus.** Something changed it between 2026-09-07 06:37
+and 2026-09-10 13:55, and MVS 3.8j keeps no member statistics that would date
+it. The consequence is larger than one macro: re-running the oracle on
+`MVSCE-LAB` today would not reproduce the corpus that repository holds.
+
+`amaclib-live` now goes **last** on the `-I` path. The three members that exist
+nowhere else still resolve out of it; the three that collide come from `mirror`,
+which is what reproduces the oracle. Verified at one binary with its control:
+
+```
+amaclib-live last    IGC018 vs reference deck   IDENTICAL
+amaclib-live first   IGC018 vs reference deck   DIFFER, 7 bytes in 3 clusters
+```
+
+This is the third correction on this page, and the same shape as the second:
+a claim about which library the oracle read, made from the concatenation order
+instead of from the decks. **The decks are the record of what the oracle saw.
+Nothing else on this system is.**

@@ -20,12 +20,23 @@ M=$HOME/repos/mvs/mvs38src/work/macros
 # EXTRA_MACS adds libraries for a trial. Whatever is added here must also go up
 # to MVS before the IFOX00 side means anything -- the two sides seeing different
 # macros is the one inequality that makes every difference unattributable.
-# amaclib-live goes FIRST.  The oracle's SYSLIB begins with SYS1.AMACLIB and the
-# local copy of it is six members short -- BTMHJN BTMIOBWA IECPDSCB IEZCTGPL
-# IHADECB IHADVCT.  Until 2026-09-10 gate.sh gave as370 the `mirror` copy of
-# three of them and nothing for the other three, so the two sides of the gate
-# assembled different macros.  See work/macros/amaclib-live/README.md.
-MACFLAGS="-I $M/amaclib-live -I $M/mvsce-2.1.4-dlib/AMACLIB -I $M/mvsce-2.1.4-dlib/AMODGEN -I $M/mvsce-2.1.4-dlib/AGENLIB -I $M/mvsce-2.1.4-dlib/ATSOMAC -I $M/mvsce-2.1.4-dlib/ATCAMMAC -I $M/mvsce-2.1.4-dlib/APVTMACS -I $M/tape -I $M/mirror -I $M/erep-set ${EXTRA_MACS:-}"
+# amaclib-live goes LAST, and that placement is measured, not assumed.  It holds
+# the six members the local copy of SYS1.AMACLIB is short of -- BTMHJN BTMIOBWA
+# IECPDSCB IEZCTGPL IHADECB IHADVCT.  Three exist nowhere else on this path and
+# are found here whatever the order; the other three collide, and for IHADVCT
+# the live copy is the WRONG one to prefer:
+#
+#   IFOX00's own diagnostics for IGC018 (work/measurements/ifox-run/diag)
+#   flag DVCMODU and DVCUFIX1 undefined and do NOT flag DVCBPSEC.  Only a
+#   203-line @ZA40405-level IHADVCT has that profile.  MVSCE-LAB's live
+#   SYS1.AMACLIB holds the 196-line pre-APAR level, and IHADVCT is in no other
+#   library of the oracle's SYSLIB -- so the library is no longer in the state
+#   that produced the reference decks.  Preferring it cost the IGC018 identity.
+#
+# The decks are the ground truth for what the oracle saw.  Path order arbitrates
+# in their favour: unique members still resolve out of amaclib-live, colliding
+# ones come from `mirror`.  See work/macros/amaclib-live/README.md.
+MACFLAGS="-I $M/mvsce-2.1.4-dlib/AMACLIB -I $M/mvsce-2.1.4-dlib/AMODGEN -I $M/mvsce-2.1.4-dlib/AGENLIB -I $M/mvsce-2.1.4-dlib/ATSOMAC -I $M/mvsce-2.1.4-dlib/ATCAMMAC -I $M/mvsce-2.1.4-dlib/APVTMACS -I $M/tape -I $M/mirror -I $M/erep-set -I $M/amaclib-live ${EXTRA_MACS:-}"
 OUTDIR="$PWD/obj_$LABEL"
 rm -rf "$OUTDIR"; mkdir -p "$OUTDIR"
 : ${ASMDATE:=09/07/26}; : ${ASMTIME:=12.00}   # pin the stamp: 381 decks carry it
