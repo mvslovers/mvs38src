@@ -406,6 +406,37 @@ more than either.
 `$02ASM` is the `PRTTRK` / `DS4DEVCY` macro-level difference the driver already
 documents, in a utility the build does not use.
 
-**Still unestablished**, and deliberately: whether `ZSTAGE2`'s 92 `NO TEXT` and 36
-`NO ESD ENTRIES` come from these same SYSMODs. Run 4, with `EDM1102` applying,
-is the experiment that settles it.
+### Established: the empty object members were the terminated SYSMODs
+
+I wrote yesterday that `ZSTAGE2`'s `NO TEXT` and `NO ESD ENTRIES` had *the shape*
+of the terminated SYSMODs and that the link was **not established**. Run 3, with
+two of the three applying, settles it — and it did not need `EDM1102` after all:
+
+| linkage-editor message | run 2 | run 3 |
+|---|---:|---:|
+| `IEW0123 ERROR - NO ESD ENTRIES, EXECUTION IMPOSSIBLE` | 36 | **0** |
+| `IEW0143 ERROR - NO TEXT` | 92 | **0** |
+| `IEW0342` | 524 | **0** |
+| `IEW0461` — Dave's JCL says this one is expected | 67 | 264 |
+
+The empty object members are gone entirely. `IEW0461` rising is consistent rather
+than contrary: more modules link, so the one warning Dave documents as expected
+appears more often.
+
+And the step codes move with them:
+
+| | run 2 | run 3 |
+|---|---:|---:|
+| `CC 0000` | 93 | **100** |
+| `CC 0012` | 11 | **0** |
+| `CC 0008` | 4 | **1** |
+| steps above `CC 4` | 16 | **2** — `SG6`, `SG32` |
+
+**`ZSTAGE1` is `CC 0000`**, from `CC 0008` in both earlier runs. Its `SYSPRINT`
+never reached the spool, so the code could not be read at all — and it turned out
+not to need reading. Two of the seven failure classes in this build closed without
+anyone diagnosing them directly, because they were consequences rather than
+causes.
+
+`ZSTAGE2` still ends `CC 0039` on `SG6` and `SG32`. Those two are now the whole
+of it, and they are a question for run 4.

@@ -161,6 +161,116 @@
  **MODULE HAS BEEN MARKED REENTERABLE, AND REUSABLE.
 
 1
+ IEW0000     INCLUDE SMPWRK3(IGG019MA)              DSK2000
+ IEW0000     INCLUDE SVCLIB(IGG019MA)
+ IEW0000     NAME IGG019MA(R)
+0
+0                                                CROSS REFERENCE TABLE
+
+0  CONTROL SECTION                       ENTRY
+0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
+   IGG019MA      00    1000
+
+
+  ENTRY ADDRESS       00
+0 TOTAL LENGTH      1000
+ ****IGG019MA  NOW REPLACED IN DATA SET
+ AUTHORIZATION CODE IS         0.
+ **MODULE HAS BEEN MARKED REENTERABLE, AND REUSABLE.
+
+1
+ IEW0000     INCLUDE SMPWRK3(IGG019MB)              DSK2001
+ IEW0000     INCLUDE SVCLIB(IGG019MB)
+ IEW0000     NAME IGG019MB(R)
+0
+0                                                CROSS REFERENCE TABLE
+
+0  CONTROL SECTION                       ENTRY
+0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
+   IGG019MB      00    1B00
+
+
+  ENTRY ADDRESS       00
+0 TOTAL LENGTH      1B00
+ ****IGG019MB  NOW REPLACED IN DATA SET
+ AUTHORIZATION CODE IS         0.
+ **MODULE HAS BEEN MARKED REENTERABLE, AND REUSABLE.
+
+1
+ IEW0000     INCLUDE SMPWRK3(IGG019MC)              DSK2002
+ IEW0000     INCLUDE SVCLIB(IGG019MC)
+ IEW0000     NAME IGG019MC(R)
+0
+0                                                CROSS REFERENCE TABLE
+
+0  CONTROL SECTION                       ENTRY
+0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
+   IGG019MC      00     682
+
+0
+0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
+
+  ENTRY ADDRESS       00
+0 TOTAL LENGTH       688
+ ****IGG019MC  NOW REPLACED IN DATA SET
+ AUTHORIZATION CODE IS         0.
+ **MODULE HAS BEEN MARKED REENTERABLE, AND REUSABLE.
+
+1
+ IEW0000     INCLUDE SMPWRK3(IGG019MR)              DSK2003
+ IEW0000     INCLUDE SVCLIB(IGG019MR)
+ IEW0000     NAME IGG019MR(R)
+0
+0                                                CROSS REFERENCE TABLE
+
+0  CONTROL SECTION                       ENTRY
+0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
+   IGG019MR      00     CF8
+
+
+  ENTRY ADDRESS       00
+0 TOTAL LENGTH       CF8
+ ****IGG019MR  NOW REPLACED IN DATA SET
+ AUTHORIZATION CODE IS         0.
+ **MODULE HAS BEEN MARKED REENTERABLE, AND REUSABLE.
+
+1
+ IEW0000     INCLUDE SMPWRK3(IGG019MS)              DSK2004
+ IEW0000     INCLUDE SVCLIB(IGG019MS)
+ IEW0000     NAME IGG019MS(R)
+0
+0                                                CROSS REFERENCE TABLE
+
+0  CONTROL SECTION                       ENTRY
+0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
+   IGG019MS      00     1A4
+
+
+  ENTRY ADDRESS       00
+0 TOTAL LENGTH       1A8
+ ****IGG019MS  NOW REPLACED IN DATA SET
+ AUTHORIZATION CODE IS         0.
+ **MODULE HAS BEEN MARKED REENTERABLE, AND REUSABLE.
+
+1
+ IEW0000     INCLUDE SMPWRK3(IGG019PD)              DSK2005
+ IEW0000     INCLUDE SVCLIB(IGG019PD)
+ IEW0000     NAME IGG019PD(R)
+0
+0                                                CROSS REFERENCE TABLE
+
+0  CONTROL SECTION                       ENTRY
+0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
+   IGG019PD      00     438
+
+
+  ENTRY ADDRESS       00
+0 TOTAL LENGTH       438
+ ****IGG019PD  NOW REPLACED IN DATA SET
+ AUTHORIZATION CODE IS         0.
+ **MODULE HAS BEEN MARKED REENTERABLE, AND REUSABLE.
+
+1
  IEW0000     INCLUDE SMPWRK3(IGG019Q1)              DSK2009
  IEW0000     INCLUDE SVCLIB(IGG019Q1)
  IEW0000     NAME IGG019Q1(R)
@@ -719,29 +829,24 @@
 
 
 1
-  F64-LEVEL LINKAGE EDITOR OPTIONS SPECIFIED SIZE=(800K,80K),NCAL,LIST,LET,XREF,MAP,RENT,REUS
+  F64-LEVEL LINKAGE EDITOR OPTIONS SPECIFIED SIZE=(800K,80K),NCAL,LIST,LET,XREF,MAP,RENT
             VARIABLE OPTIONS USED -  SIZE=(788480,73728)
- IEW0000      ENTRY IEWFETCH                                                        00000100
- IEW0000      ALIAS IEWMSEPT                                                        00000200
- IEW0000      ALIAS IEWFBOSV                                                        00000300
- IEW0000     INCLUDE SMPWRK3(IEWFETCH)              DSK3002
- IEW0000     INCLUDE LPALIB(IEWFETCH)
- IEW0000     NAME IEWFETCH(R)
+ IEW0000     INCLUDE SMPWRK3(HASPSSSM)              DSK3000
+ IEW0000     INCLUDE LPALIB(HASPSSSM)
+ IEW0000     NAME HASPSSSM(R)
 0
 0                                                CROSS REFERENCE TABLE
 
 0  CONTROL SECTION                       ENTRY
 0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
-   IEWFETCH      00    1B12
-                                         IEWFBOSV      00    IEWMSEPT      00    IEWFTPRG    17FE    IEWFTXCK    1924
+   HASPSSSM      00    89FD
+
 0
 0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
 
   ENTRY ADDRESS       00
-0 TOTAL LENGTH      1B18
- ****IEWFETCH  NOW REPLACED IN DATA SET
- ****IEWFBOSV  IS AN ALIAS FOR THIS MEMBER
- ****IEWMSEPT  IS AN ALIAS FOR THIS MEMBER
+0 TOTAL LENGTH      8A00
+ ****HASPSSSM  NOW REPLACED IN DATA SET
  AUTHORIZATION CODE IS         0.
  **MODULE HAS BEEN MARKED REENTERABLE, AND REUSABLE.
 
@@ -749,6 +854,124 @@
 1
   F64-LEVEL LINKAGE EDITOR OPTIONS SPECIFIED SIZE=(800K,80K),NCAL,LIST,LET,XREF,MAP
             VARIABLE OPTIONS USED -  SIZE=(788480,73728)
+ IEW0000     ORDER HASPNUC                                                          00000100
+ IEW0000     ORDER HASPRDR                                                          00000200
+ IEW0000     ORDER HASPRDRO                                                         00000300
+ IEW0000     ORDER HASPRSCN                                                         00000400
+ IEW0000     ORDER HASPXEQ                                                          00000500
+ IEW0000     ORDER HASPPRPU                                                         00000600
+ IEW0000     ORDER HASPACCT                                                         00000700
+ IEW0000     ORDER HASPMISC                                                         00000800
+ IEW0000     ORDER HASPCON                                                          00000900
+ IEW0000     ORDER HASPRTAM                                                         00001000
+ IEW0000     ORDER HASPCOMM                                                         00001100
+ IEW0000     ORDER HASPCOMA                                                         00001200
+ IEW0000     ORDER HASPINIT(P)                                                      00001300
+ IEW0000     INCLUDE SMPWRK3(HASPINIT)              DSK3001
+ IEW0000     INCLUDE LINKLIB(HASJES20)
+ IEW0000     NAME HASJES20(R)
+0
+0                                                CROSS REFERENCE TABLE
+
+0  CONTROL SECTION                       ENTRY
+0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
+   HASPNUC       00    5375
+                                         HASP          00    $EXCPR       89C    $QINDEX      FFE    $RESERVE    10FE
+                                         $RELEASE    1134    $XMPOSTR    1158    $PGRLSER    11B0    $PGFREER    11C8
+                                         $PGFIXR     11E0    $TRACKR     1278    $GETBUFR    1400    $FREEBFR    1630
+                                         $BFRBLDR    1768    $GETCELR    1856    $FRECELR    189C    $GETLOKR    18B2
+                                         $FRELOKR    18DC    HASPATTN    190C    $IOAPPEN    19D4    $ASYNC      1F78
+                                         $TIMER      2268    $STIMER     2294    $TTIMER     231A    $#BLD       2490
+                                         $#ADD       2570    $#GET       2710    $#PUT       29D0    $#REM       2AA8
+                                         $#CAN       2B30    $JOECKPR    2DB4    $JOEOFF     2DBC    $#WTR       2DFA
+                                         $#JCTRDR    2E94    $#JCTWTR    3038    $#JCTFRE    30E8    $$WTOR      315A
+                                         $DYN        3200    $DSTERR     355C    $IOERRTN    35FC    $ERRORTN    37F4
+                                         $ABEND      3812    $ERRORSA    42F0    $HEXIT      4390    $ERCODET    48B0
+                                         $PCENAMT    4EE1    HASPINGO    4F9C    $REPTABL    5120    HOSALLOC    5248
+   HASPRDR     5378    1178
+   HASPRDRO    64F0    1988
+                                         $RDREND     64F0    HASPRDRI    64F0    HASPRDRT    6658    HASPRCCS    66D8
+                                         HASPRDDS    70E0    HASPRJCS    73A0
+   HASPRSCN    7E78     445
+                                         $RDROEND    7E78
+   HASPXEQ     82C0    3EFD
+                                         HASPCNVT    82D0    HOSCNVT     8910    HASPEXEC    9178    HASPHOLD    A8E8
+                                         HASPTIME    AC80    HASPPSO     AD88    HASPLIST    C048
+   HASPPRPU    C1C0    816D
+                                         HASPHOPE    C1D0    HASPPPI1    CA98    HASPIMAG   13EF8
+   HASPACCT   14330     13D
+   HASPMISC   14470    3AED
+                                         HASPVPRG   14480    HASPCKPT   14740    HASPGPRC   15EB0    HASPWARM   16000
+                                         HOSPOOL    176F0
+1
+0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
+   HASPCON    17F60     945
+                                         $WTOR      17F9E    HASPWQUE   18230    $WTOCR     182D4    $GETCMBR   18418
+                                         $DOMR      184AE    $FRECMBR   18502    $HASPWTO   18584
+   HASPRTAM   188A8    8A0D
+                                         HASPEXTP   188E0    MWRSPCCW   1A030    HASPMLLM   1D318    HASPMCON   20488
+                                         HASPVTAM   20C08
+   HASPCOMM   212B8    1EC0
+                                         $JCANR     22E78
+   HASPCOMA   23178    60F5
+                                         $COMMEND   23178
+   HASPINIT   2A000    AAE5
+
+0
+0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
+        38            $JCANR          HASPCOMM                      A4            $WTOR           HASPCON
+        A8            $WTOCR          HASPCON                       B0            $DOMR           HASPCON
+        B4            $GETCMBR        HASPCON                       B8            $FRECMBR        HASPCON
+        C8            HASPEXTP        HASPRTAM                     468            HASPCOMM        HASPCOMM
+       46C            HASPPSO         HASPXEQ                      470            HASPEXEC        HASPXEQ
+       474            HASPCNVT        HASPXEQ                      47C            HASPTIME        HASPXEQ
+       488            HASPMLLM        HASPRTAM                     48C            HASPMCON        HASPRTAM
+       490            HASPHOPE        HASPPRPU                     494            HASPHOLD        HASPXEQ
+       498            HASPVPRG        HASPMISC                     49C            HASPWARM        HASPMISC
+       4A0            HASPCKPT        HASPMISC                     4A4            HASPGPRC        HASPMISC
+      514C            HASPCOMM        HASPCOMM                    5158            HASPCOMM        HASPCOMM
+      5138            HASPACCT        HASPACCT                    5148            HASPCOMA        HASPCOMA
+      5168            HASPCON         HASPCON                     5178            HASPINIT        HASPINIT
+      5188            HASPMISC        HASPMISC                    51A8            HASPPRPU        HASPPRPU
+      51D8            HASPRSCN        HASPRSCN                    51E8            HASPRTAM        HASPRTAM
+      5218            HASPXEQ         HASPXEQ                     5220            HASPPPI1        HASPPRPU
+      5224            HOSPOOL         HASPMISC                    5228            $HASPWTO        HASPCON
+      522C            HASPIMAG        HASPPRPU                    5234            HASPVTAM        HASPRTAM
+      514C            $COMMEND        HASPCOMM                    51CC            $RDREND         HASPRDR
+      51DC            $RDREND         HASPRDR                     51DC            $RDROEND        HASPRDRO
+      51B8            HASPRDR         HASPRDR                     51CC            HASPRDR         HASPRDR
+      51DC            HASPRDR         HASPRDR                     51C8            HASPRDRO        HASPRDRO
+      51DC            HASPRDRO        HASPRDRO                    6460            HASPRDRO        HASPRDRO
+      6484            HASPRDRO        HASPRDRO                    6464            HASPRDRI        HASPRDRO
+      646C            HASPRCCS        HASPRDRO                    6474            HASPRDDS        HASPRDRO
+      647C            HASPRJCS        HASPRDRO                    6480            HASPRDRT        HASPRDRO
+      6488            HASPRSCN        HASPRSCN                    88FC            $QINDEX         HASPNUC
+      A898            $QINDEX         HASPNUC                     B838            $QINDEX         HASPNUC
+      9154            HASP            HASPNUC                     A8A8            HASPRJCS        HASPRDRO
+      A8AC            HASPRDR         HASPRDR                     C9BC            $QINDEX         HASPNUC
+     14304            HASP            HASPNUC                    158C8            $#WTR           HASPNUC
+     176D0            $QINDEX         HASPNUC                    17CE0            HASPNUC         HASPNUC
+     21298            HASPNUC         HASPNUC                    21484            $HEXIT          HASPNUC
+     21D58            HASPCOMA        HASPCOMA                   21D64            HASPCOMA        HASPCOMA
+     243D0            HASPCOMM        HASPCOMM                   243DC            HASPCOMM        HASPCOMM
+     24CA0            HASPCOMM        HASPCOMM                   24CA4            HASPCOMM        HASPCOMM
+1
+0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
+     25358            HASPCOMM        HASPCOMM                   25360            HASPCOMM        HASPCOMM
+     25370            HASPCOMM        HASPCOMM                   256A0            HASPCOMM        HASPCOMM
+     256A8            HASPCOMM        HASPCOMM                   25B70            HASPCOMM        HASPCOMM
+     25B80            HASPCOMM        HASPCOMM                   25F60            HASPCOMM        HASPCOMM
+     26E58            HASPCOMM        HASPCOMM                   26E64            HASPCOMM        HASPCOMM
+     26E68            HASPCOMM        HASPCOMM                   27950            HASPCOMM        HASPCOMM
+     243D8            $QINDEX         HASPNUC                    25388            HASPLIST        HASPXEQ
+     28854            HASPCOMM        HASPCOMM                   291BC            HASPCOMM        HASPCOMM
+     291D4            HASPCOMM        HASPCOMM
+  ENTRY ADDRESS       00
+0 TOTAL LENGTH     34AE8
+ ****HASJES20  NOW REPLACED IN DATA SET
+ AUTHORIZATION CODE IS         0.
+
+1
  IEW0000      ORDER   HMASMDRV                                                      00000100
  IEW0000      ORDER   HMASMDSU,HMASMDC2                                             00000200
  IEW0000      ORDER   HMASMDS1,HMASMBDL                                             00000300
@@ -802,9 +1025,9 @@
  IEW0000      ORDER   HMASMLKD                                                      00005100
  IEW0000      ORDER   HMASMBUE,HMASMBUR                                             00005200
  IEW0000      ORDER   HMASMUCD                                                      00005300
-1
  IEW0000      ORDER   HMASMUC1,HMASMULK                                             00005400
  IEW0000      ORDER   HMASMUC2                                                      00005500
+1
  IEW0000      ORDER   HMASMUC3,HMASMUC4                                             00005600
  IEW0000      ORDER   HMASMLID                                                      00005700
  IEW0000      ORDER   HMASMLCD,HMASMLCP                                             00005800
@@ -858,9 +1081,9 @@
  IEW0000     INCLUDE SMPWRK3(HMASMCPY)              DSK3030
  IEW0000     INCLUDE SMPWRK3(HMASMCP2)              DSK3031
  IEW0000     INCLUDE SMPWRK3(HMASMCRD)              DSK3032
-1
  IEW0000     INCLUDE SMPWRK3(HMASMCRW)              DSK3033
  IEW0000     INCLUDE SMPWRK3(HMASMDC1)              DSK3034
+1
  IEW0000     INCLUDE SMPWRK3(HMASMDLE)              DSK3035
  IEW0000     INCLUDE SMPWRK3(HMASMDRV)              DSK3036
  IEW0000     INCLUDE SMPWRK3(HMASMDR1)              DSK3037
@@ -914,9 +1137,9 @@
  IEW0000     INCLUDE SMPWRK3(HMASMTCR)              DSK3085
  IEW0000     INCLUDE SMPWRK3(HMASMTDD)              DSK3086
  IEW0000     INCLUDE SMPWRK3(HMASMTD1)              DSK3087
-1
  IEW0000     INCLUDE SMPWRK3(HMASMTEC)              DSK3088
  IEW0000     INCLUDE SMPWRK3(HMASMTL1)              DSK3089
+1
  IEW0000     INCLUDE SMPWRK3(HMASMTL2)              DSK3090
  IEW0000     INCLUDE SMPWRK3(HMASMTMD)              DSK3091
  IEW0000     INCLUDE SMPWRK3(HMASMXRF)              DSK3092
@@ -966,10 +1189,10 @@
    HMASMALC   12AA0     9BC
    HMASMSTA   13460     2D8
    HMASMSER   13738     3B6
-1
-0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
    HMASMEFR   13AF0     580
    HMASMREC   14070    3778
+1
+0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
    HMASMRCC   177E8     528
    HMASMRCD   17D10    1270
    HMASMRCF   18F80     6B0
@@ -1020,10 +1243,10 @@
    HMASMZAP   46628    127B
    HMASMCPL   478A8    2538
    HMASMCP2   49DE0     890
-1
-0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
    HMASMPGC   4A670     994
    HMASMIDU   4B008    23F8
+1
+0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
    HMASMSUP   4D400     AE8
    HMASMSEC   4DEE8     AC0
    HMASMCRW   4E9A8     624
@@ -1074,10 +1297,8 @@
    HMASMGTA   7EEA0    2274
    HMASMVLU   81118     5AE
    HMASMUXC   816C8     A68
-1
-0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
 
-0
+1
 0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
       2590            HMASMAAR        HMASMAAR                    2594            HMASMARL        HMASMARL
       2598            HMASMCRD        HMASMCRD                    259C            HMASMDR1        HMASMDR1
@@ -1126,13 +1347,13 @@
       4ED0            HMASMRCL        HMASMRCL                    5590            HMASMRCL        HMASMRCL
       4ED4            HMASMRDS        HMASMRDS                    5598            HMASMRDS        HMASMRDS
       4ED8            HMASMREC        HMASMREC                    55A0            HMASMREC        HMASMREC
-1
-0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
       4EDC            HMASMREJ        HMASMREJ                    55A8            HMASMREJ        HMASMREJ
       4EE0            HMASMRJD        HMASMRJD                    55B0            HMASMRJD        HMASMRJD
       4EE4            HMASMSCN        HMASMSCN                    55B8            HMASMSCN        HMASMSCN
       4EE8            HMASMSEC        HMASMSEC                    55C0            HMASMSEC        HMASMSEC
       4EEC            HMASMSER        HMASMSER                    55C8            HMASMSER        HMASMSER
+1
+0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
       4EF0            HMASMSTA        HMASMSTA                    55D0            HMASMSTA        HMASMSTA
       4EF4            HMASMSUB        HMASMSUB                    55D8            HMASMSUB        HMASMSUB
       4EF8            HMASMSUP        HMASMSUP                    55E0            HMASMSUP        HMASMSUP
@@ -1180,13 +1401,13 @@
       53B8            HMASMAAR        HMASMAAR                    4DEC            HMASMADD        HMASMADD
       53C0            HMASMADD        HMASMADD                    4DF0            HMASMALC        HMASMALC
       53C8            HMASMALC        HMASMALC                    4DF4            HMASMARL        HMASMARL
-1
-0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
       53D0            HMASMARL        HMASMARL                    4DF8            HMASMAR1        HMASMAR1
       53D8            HMASMAR1        HMASMAR1                    4DFC            HMASMAR2        HMASMAR2
       53E0            HMASMAR2        HMASMAR2                    4E00            HMASMAR3        HMASMAR3
       53E8            HMASMAR3        HMASMAR3                    4E04            HMASMAR4        HMASMAR4
       53F0            HMASMAR4        HMASMAR4                    4E08            HMASMASI        HMASMASI
+1
+0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
       53F8            HMASMASI        HMASMASI                    4E0C            HMASMASM        HMASMASM
       5400            HMASMASM        HMASMASM                    4E10            HMASMBDL        HMASMBDL
       5408            HMASMBDL        HMASMBDL                    4E14            HMASMBUE        HMASMBUE
@@ -1234,13 +1455,13 @@
      139A8            HMASMCPL        HMASMCPL                   139AC            HMASMRCL        HMASMRCL
      139B0            HMASMMSG        HMASMMSG                   13F10            HMASMGTA        HMASMGTA
      171EC            HMASMIO         HMASMIO                    171F0            HMASMMSG        HMASMMSG
-1
-0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
      171F4            HMASMSCN        HMASMSCN                   171F8            HMASMGTA        HMASMGTA
      171FC            HMASMMPD        HMASMMPD                   17200            HMASMCRD        HMASMCRD
      17204            HMASMSUB        HMASMSUB                   17208            HMASMRCC        HMASMRCC
      1720C            HMASMRCF        HMASMRCF                   17210            HMASMRCL        HMASMRCL
      17214            HMASMUXC        HMASMUXC                   17218            HMASMRCD        HMASMRCD
+1
+0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
      17C84            HMASMIO         HMASMIO                    17C88            HMASMMSG        HMASMMSG
      17C8C            HMASMRCF        HMASMRCF                   17C90            HMASMGTA        HMASMGTA
      17C94            HMASMSUB        HMASMSUB                   18CA8            HMASMIO         HMASMIO
@@ -1288,13 +1509,13 @@
      291B0            HMASMIO         HMASMIO                    291B4            HMASMMSG        HMASMMSG
      291B8            HMASMGTA        HMASMGTA                   291BC            HMASMTR1        HMASMTR1
      2A3E4            HMASMIO         HMASMIO                    2A3E8            HMASMBUR        HMASMBUR
-1
-0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
      2A3EC            HMASMCRD        HMASMCRD                   2A3F0            HMASMGTA        HMASMGTA
      2A3F4            HMASMMSG        HMASMMSG                   2A3F8            HMASMMPD        HMASMMPD
      2A3FC            HMASMTCR        HMASMTCR                   2A400            HMASMUPD        HMASMUPD
      2A404            HMASMSEC        HMASMSEC                   2A408            HMASMSUB        HMASMSUB
      2DB74            HMASMCRD        HMASMCRD                   2DB78            HMASMDLE        HMASMDLE
+1
+0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
      2DB7C            HMASMIO         HMASMIO                    2DB80            HMASMMPD        HMASMMPD
      2DB84            HMASMMSG        HMASMMSG                   2DB88            HMASMTAD        HMASMTAD
      2DB8C            HMASMTAI        HMASMTAI                   2DB90            HMASMTCR        HMASMTCR
@@ -1342,13 +1563,13 @@
      40F34            HMASMSEC        HMASMSEC                   40F38            HMASMPIN        HMASMPIN
      40F3C            HMASMMSG        HMASMMSG                   41F84            HMASMIO         HMASMIO
      41F88            HMASMSEC        HMASMSEC                   41F8C            HMASMCPL        HMASMCPL
-1
-0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
      41F90            HMASMPIN        HMASMPIN                   41F94            HMASMMSG        HMASMMSG
      4255C            HMASMASI        HMASMASI                   425CC            HMASMASI        HMASMASI
      42560            HMASMIO         HMASMIO                    42564            HMASMCPL        HMASMCPL
      42568            HMASMSEC        HMASMSEC                   42C48            HMASMIO         HMASMIO
      42C4C            HMASMPIN        HMASMPIN                   42C50            HMASMMSG        HMASMMSG
+1
+0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
      4369C            HMASMMSG        HMASMMSG                   436A0            HMASMIO         HMASMIO
      436A4            HMASMCPL        HMASMCPL                   436A8            HMASMSUB        HMASMSUB
      44F34            HMASMIO         HMASMIO                    44F38            HMASMCIL        HMASMCIL
@@ -1396,13 +1617,13 @@
      5B7D4            HMASMDS1        HMASMDS1                   5B7D8            HMASMIO         HMASMIO
      5B7DC            HMASMSCN        HMASMSCN                   5B7E0            HMASMMSG        HMASMMSG
      5B7E4            HMASMULK        HMASMULK                   5B7E8            HMASMVLU        HMASMVLU
-1
-0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
      5E59C            HMASMIO         HMASMIO                    5E5A0            HMASMCRD        HMASMCRD
      5E5A4            HMASMGTA        HMASMGTA                   5E5A8            HMASMMSG        HMASMMSG
      5E5AC            HMASMSCN        HMASMSCN                   60648            HMASMCRD        HMASMCRD
      6064C            HMASMDS1        HMASMDS1                   60650            HMASMIO         HMASMIO
      60654            HMASMSCN        HMASMSCN                   60658            HMASMMSG        HMASMMSG
+1
+0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
      6065C            HMASMVLU        HMASMVLU                   62120            HMASMCRD        HMASMCRD
      62124            HMASMIO         HMASMIO                    62128            HMASMMSG        HMASMMSG
      6212C            HMASMSCN        HMASMSCN                   62130            HMASMGTA        HMASMGTA
@@ -1450,13 +1671,13 @@
      76874            HMASMMSG        HMASMMSG                   76878            HMASMSCN        HMASMSCN
      7687C            HMASMVLU        HMASMVLU                   76870            HMASMCCA        HMASMDC2
      76FEC            HMASMCCA        HMASMDC2                   76FF0            HMASMMSG        HMASMMSG
-1
-0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
      76FF4            HMASMSCN        HMASMSCN                   777A8            HMASMSCN        HMASMSCN
      777AC            HMASMMSG        HMASMMSG                   777B0            HMASMGTA        HMASMGTA
      78934            HMASMSCN        HMASMSCN                   78938            HMASMMSG        HMASMMSG
      7893C            HMASMGTA        HMASMGTA                   79698            HMASMIO         HMASMIO
      7969C            HMASMSUB        HMASMSUB                   79694            HMASMCCA        HMASMDC2
+1
+0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
      796A0            DC1PMSG         HMASMDC1                   796A4            DC1SMSG         HMASMDC1
      7DC54            HMASMMSG        HMASMMSG                   7DC50            HMASMCCA        HMASMDC2
      7E45C            HMASMIO         HMASMIO                    7E460            HMASMUXC        HMASMUXC
@@ -1484,5 +1705,33 @@
 0 TOTAL LENGTH        38
  ****HMASMUXD  NOW REPLACED IN DATA SET
  AUTHORIZATION CODE IS         0.
+
+
+1
+  F64-LEVEL LINKAGE EDITOR OPTIONS SPECIFIED SIZE=(800K,80K),NCAL,LIST,LET,XREF,MAP,RENT,REUS
+            VARIABLE OPTIONS USED -  SIZE=(788480,73728)
+ IEW0000      ENTRY IEWFETCH                                                        00000100
+ IEW0000      ALIAS IEWMSEPT                                                        00000200
+ IEW0000      ALIAS IEWFBOSV                                                        00000300
+ IEW0000     INCLUDE SMPWRK3(IEWFETCH)              DSK3002
+ IEW0000     INCLUDE LPALIB(IEWFETCH)
+ IEW0000     NAME IEWFETCH(R)
+0
+0                                                CROSS REFERENCE TABLE
+
+0  CONTROL SECTION                       ENTRY
+0    NAME    ORIGIN  LENGTH                NAME   LOCATION     NAME   LOCATION     NAME   LOCATION     NAME   LOCATION
+   IEWFETCH      00    1B12
+                                         IEWFBOSV      00    IEWMSEPT      00    IEWFTPRG    17FE    IEWFTXCK    1924
+0
+0  LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION             LOCATION  REFERS TO SYMBOL  IN CONTROL SECTION
+
+  ENTRY ADDRESS       00
+0 TOTAL LENGTH      1B18
+ ****IEWFETCH  NOW REPLACED IN DATA SET
+ ****IEWFBOSV  IS AN ALIAS FOR THIS MEMBER
+ ****IEWMSEPT  IS AN ALIAS FOR THIS MEMBER
+ AUTHORIZATION CODE IS         0.
+ **MODULE HAS BEEN MARKED REENTERABLE, AND REUSABLE.
 
 
