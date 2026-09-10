@@ -29,7 +29,8 @@ and nothing here should cross that without someone deciding to.
 
     bldrun.py --start '$01SMPAL' [--until MAINT05F] [--dry-run]
 """
-import argparse, json, os, re, sys, time, urllib.parse, urllib.request, base64
+import argparse, base64, io, json, os, re, sys, time
+import urllib.error, urllib.parse, urllib.request
 
 # mvsdev.lan, not mvsdev.  The bare name resolves through the search
 # domain, and on 2026-09-09 that stopped working mid-run: the driver
@@ -230,10 +231,63 @@ def prepare(text):
     return "\n".join(lines) + "\n", nxt, lb
 
 
+# mvsMF builds a table of the JCL's lines before it hands the job to JES, and
+# for a big enough member it cannot get the storage:
+#
+#   MVSMF006E STORAGE ALLOCATION FAILED FOR THE JCL LINE TABLE
+#
+# It then drops the connection, so the client sees RemoteDisconnected and calls
+# it transient. It is not: ZSTAGE2 is 14,167 lines and failed identically on
+# every one of eleven retries, twice, on 2026-09-11. A retry loop against a
+# deterministic failure only spends the retries.
+#
+# FTP's internal reader builds no line table, so the same JCL goes in first try.
+# The fallback is automatic because the alternative is a run that stops at 3 a.m.
+# on one member out of 260, and the JCL sent is byte-identical either way --
+# prepare() has already done MSGCLASS and the BLDSUB card.
+FTPPORT = {"http://mvsdev.lan:8082": 2122, "http://mvsdev.lan:8083": 2123,
+           "http://mvsdev.lan:8085": 2125}
+JESJOB = re.compile(r"known to JES as (JOB\d+)", re.I)
+
+
+def submit_ftp(jcl):
+    """Submit through the internal reader. Returns (jobname, jobid)."""
+    import ftplib
+    port = FTPPORT.get(HOST)
+    if not port:
+        raise RuntimeError(f"no FTP port known for {HOST}")
+    name = jcl.split("\n", 1)[0].lstrip("/").split()[0][:8] or "JOB"
+    f = ftplib.FTP()
+    f.connect(HOST.split("//")[1].split(":")[0], port, timeout=60)
+    try:
+        f.login(USER, PW)
+        f.sendcmd("SITE FILETYPE=JES")
+        resp = f.storlines("STOR " + name,
+                           io.BytesIO(jcl.encode("latin-1").replace(b"\n", b"\r\n")))
+    finally:
+        try:
+            f.quit()
+        except Exception:
+            pass
+    m = JESJOB.search(resp or "")
+    if not m:
+        raise RuntimeError(f"FTP submit gave no job id: {resp!r}")
+    return name, m.group(1)
+
+
 def submit(jcl):
-    d = json.loads(req("PUT", f"{HOST}/zosmf/restjobs/jobs", jcl.encode("latin-1"),
-                       "text/plain", {"X-IBM-Intrdr-Mode": "TEXT"}))
-    return d["jobname"], d["jobid"]
+    try:
+        d = json.loads(req("PUT", f"{HOST}/zosmf/restjobs/jobs", jcl.encode("latin-1"),
+                           "text/plain", {"X-IBM-Intrdr-Mode": "TEXT"}))
+        return d["jobname"], d["jobid"]
+    except urllib.error.HTTPError:
+        raise                       # the server answered: that is a result
+    except Exception as e:
+        print(f"    mvsMF-Submit gescheitert ({type(e).__name__}), "
+              f"weiche auf FTP aus", flush=True)
+        jn, ji = submit_ftp(jcl)
+        print(f"    ueber FTP eingereicht: {jn}/{ji}", flush=True)
+        return jn, ji
 
 
 def wait(jobname, jobid, limit=7200):
