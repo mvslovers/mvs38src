@@ -515,3 +515,90 @@ the upstream cause and worth having when someone decides to chase it.
 
 Going the other way, **`IEAVNP14` exists on `MVSTK5-BLD` and not in the archive**
 — one member the system source has and the archive copy does not.
+
+---
+
+## Run 6, 2026-09-10: the three failures at the head of the chain
+
+Run 5 reached job 235 of 260 and was stopped deliberately. Three jobs had
+failed, and all three are now explained. Two are harmless; one destroyed data
+and is the reason the run was restarted rather than continued.
+
+### `$02ASM` `CC 0024` — one utility, used by nothing
+
+The job builds fifteen utilities. Fourteen assemble clean; `PRTTRK` does not:
+
+```
+1175  IFO188      DS4DEVCY IS AN UNDEFINED SYMBOL
+1181  IFO188      DS4DEVTR IS AN UNDEFINED SYMBOL
+HIGHEST SEVERITY WAS    8
+```
+
+`DS4DEVCY` and `DS4DEVTR` are Format-4 DSCB fields, and MVS 3.8j's `IECSDSL1`
+does not have them. It has `DS4DEVSZ`, the four-byte field IBM later split into
+exactly those two halfwords — the source is written against a **later** DSCB
+mapping than this system ships. Measured with a control: `SYS1.AMODGEN`'s
+`IECSDSL1` is 659 lines with 32 `DS4` fields and two `DS4DEVSZ`, so the absence
+is real and not an empty read.
+
+`PRTTRK` is a standalone track-printing diagnostic. Across all 274 members of
+`MVSSRC.BLD.SMP.JCL` it appears **only in `$02ASM`** — nothing in the chain
+links or calls it, and the utilities that are used (`COMPLMD` in nine members,
+`LMDXRF38` in six, `LMDRPT38` in four) all assemble clean. Its `LINK` step is
+skipped by `COND` and the build is unaffected.
+
+### `$08STG1A` `CC 0020` — the concatenation DCB trap, self-healing
+
+Six sysgen assemblies died with `IFO261 ... WRNG.LEN.RECORD` because `//SYSLIB`
+concatenates `SYS1.AMODGEN` (BLKSIZE 19,040) ahead of `SYS1.MACLIB` (27,920).
+Full write-up in the knowledge base as `MVS-JCL-0001`; exactly one concatenation
+in the 274 members is wrong this way. `ZSTAGE2` at position 239 re-assembles all
+six from libraries that are both 27,920, so the chain repairs itself — which is
+why several runs never noticed.
+
+### `MAINT03B` `CC 0016` — the one that mattered
+
+```
+IEC031I D37-04,IFG0554T,MAINT03B,SMP,MVSSRC,195,BLDSR1,MVSSRC.BLD.MVSSRC
+```
+
+Out of space, mid-write. The next job's `IEBCOPY` compress then could not read
+what the failed APPLY left behind:
+
+```
+IEB100I  I/O ERROR READING MEMBER IEAVEE3R
+IEB171I  ** WARNING ** DIRECTORY MAY NOT REFLECT VALID LOCATION OF MEMBER DATA
+```
+
+Over REST that member answers **HTTP 200 with zero bytes** while a genuinely
+absent member answers **404** — the `PM-2026-003` signature, and the difference
+between "damaged" and "not there". `MAINT04B` then repeated the `D37`, so each
+further APPLY was adding another torn member. That is why the chain was stopped.
+
+**The cause is four allocations out of 189.** `$01SMPAL` gives `MVSSRC`,
+`AMVSSRC`, `ASMPRINT` and `SMPACDS` no secondary quantity — `S=,` — and all four
+are the ones sized to fill a whole 3390-1 (`P=1112` cylinders). Dave had no
+choice: a primary that big leaves a 3390-1 with no room for a second extent.
+
+Our volumes are 3390-2, 2,184 cylinders, and **every one of them was standing
+half empty** while the library on it filled up. Making the volumes bigger did
+nothing for the datasets, because those come off Dave's tape and out of
+`$01SMPAL` at their original sizes. `tools/bldrun.py` now supplies the secondary
+at submit time, so the archive keeps its text.
+
+## An instrument note: the job return code is not the highest step code
+
+The driver records what mvsMF reports for the job, and that is not always the
+maximum over the steps:
+
+| job | highest step | mvsMF reports |
+|---|---|---|
+| `MAINT03B` | `0016` | `CC 0016` |
+| `$08STG1A` | `0020` | `CC 0020` |
+| `$02ASM` | `0008` | **`CC 0024`** |
+| `ZSTAGE2` (run 5) | `0012` | **`CC 0039`** |
+
+Two of four disagree, and neither difference is a sum or a count of anything in
+the job. Read the driver's code as "this job is worth looking at", never as the
+severity — the `IEF142I` lines are the severity. `$02ASM` looks four times worse
+than `MAINT04@` and is the harmless one.
