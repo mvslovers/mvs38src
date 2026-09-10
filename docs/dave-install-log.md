@@ -483,3 +483,35 @@ the middle: the old rule loses it, the new one keeps it.
 `$08STG1A` has to be re-run on its own to get its listing back, and that is a
 to-do, not a blocker: Dave's chain carries no `COND` and runs on past a step
 failure by design.
+
+### The 78 modules the run did not accept: ICKDSF
+
+`MVSSRC.BLD.AMVSSRC` on `MVSTK5-BLD` holds **5,451 members** against the archive
+copy's 5,528. The 78 that are missing are **77 `ICK*` plus one `IGG*`** —
+Device Support Facilities, FMID `FDZ1610` — and the chain says why in two
+messages:
+
+```
+FDZ1610A   13x  HMA4341  ASSEMBLY ICKEX02 - SYSMOD=FDZ1610 -
+                         WILL NOT UPDATE ANY SYSTEM LIBRARIES
+FDZ1610E   78x  HMA2471  BLDL FAILED IN LIBRARY AOSU0 FOR LOAD MODULE
+                         ICKAA01 IN SYSMOD FDZ1610
+```
+
+**Seventy-eight BLDL failures, seventy-eight missing source members.** The
+assemblies ran and their output went nowhere, so ACCEPT found no load modules to
+move and took neither them nor the `++SRC` elements. `MVSSRC.BLD.AOSU0` carries
+392 members and none of them begins `ICK`.
+
+This is the TK5 analogue of MVS/CE's `EDM1102` / `EBT1102` / `EJE1103` — one
+SYSMOD that does not complete, and a hole in the tree shaped exactly like it.
+The difference is the size: on MVS/CE it was three SYSMODs and 599 load modules,
+here one SYSMOD and 78.
+
+**ICKDSF is a separate program product**, not part of MVS 3.8j proper, so its
+absence does not touch the DLIB-level goal. It is written down because a source
+tree that is short 78 members should say why, and because the `HMA4341` line is
+the upstream cause and worth having when someone decides to chase it.
+
+Going the other way, **`IEAVNP14` exists on `MVSTK5-BLD` and not in the archive**
+— one member the system source has and the archive copy does not.
