@@ -25,6 +25,17 @@
     "submit=false means: do not send work there. Reading may still be wrong -- read",
     "the note -- but submitting is never right.",
     "",
+    "`oracle` is separate from `submit` and that separation is cc370's, from the",
+    "same failure one level up: submit is machine-readable and a note is not, so a",
+    "tool capturing a reference deck reads submit=true for MVSCE-LAB and proceeds",
+    "while the prohibition that matters for it sits in prose. LAB is exactly where",
+    "that bites -- genuinely fine to submit to, genuinely wrong to capture against.",
+    "",
+    "It is false on EVERY system, and that is not a placeholder: as of 2026-09-10 no",
+    "system here is a pinned oracle. LAB drifted, TK5-REF has not been pinned, and",
+    "pinning one is Mike's decision. Boolean rather than a tri-state so that a tool",
+    "which forgets to check fails closed instead of guessing.",
+    "",
     "msgclass is a CHOICE, not an observation: H everywhere because every tool here",
     "reads job output back over REST, and class A is printed and purged before it can",
     "be read. cc370 raised this -- capture.py defaults to A while mvsmf/.env sets H,",
@@ -34,31 +45,31 @@
   "systems": {
     "MVSCE-DEV": {
       "host": "mvsdev.lan", "mvsmf": 8080, "ftp": null, "tn3270": null,
-      "console": null, "submit": false,
+      "console": null, "submit": false, "oracle": false,
       "jobclass": "A", "msgclass": "H",
       "note": "Mike's development machine. Never submit. The default in the mvsmf, ftpd, httpd, nsf370 and rexx370 .env files, which is correct for those products and wrong for anything here."
     },
     "MVSCE-LAB": {
       "host": "mvsdev.lan", "mvsmf": 8082, "ftp": 2122, "tn3270": 3272,
-      "console": 8282, "submit": true,
+      "console": 8282, "submit": true, "oracle": false,
       "jobclass": "A", "msgclass": "H",
       "note": "Produced the 5,528 reference decks on 2026-09-07 and is NO LONGER in that state -- SYS1.AMACLIB(IHADVCT) drifted. Submitting is fine; using it as an oracle is not. See docs/missing-macros.md."
     },
     "MVSCE-EXP": {
       "host": "mvsdev.lan", "mvsmf": 8083, "ftp": 2123, "tn3270": 3273,
-      "console": 8383, "submit": true,
+      "console": 8383, "submit": true, "oracle": false,
       "jobclass": "A", "msgclass": "H",
       "note": "Untouched MVS/CE reference; the control that LAB was not mutated."
     },
     "MVSTK5-REF": {
       "host": "mvsdev.lan", "mvsmf": 8084, "ftp": 2124, "tn3270": null,
-      "console": 8484, "submit": false,
+      "console": 8484, "submit": false, "oracle": false,
       "jobclass": "A", "msgclass": "H",
       "note": "The object baseline. Read only until Mike pins it as the oracle."
     },
     "MVSTK5-BLD": {
       "host": "mvsdev.lan", "mvsmf": 8085, "ftp": 2125, "tn3270": null,
-      "console": 8585, "submit": true,
+      "console": 8585, "submit": true, "oracle": false,
       "jobclass": "A", "msgclass": "H",
       "note": "Dave's build chain runs here. bldrun.py forces MSGCLASS=H so output stays readable; spoolarch.py keeps the spool flat."
     }
