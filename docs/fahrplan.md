@@ -264,7 +264,41 @@ The DASD is 275 MB in `~/MVSTK5-BLD/dasd`; `cp -a` once Hercules has exited.
 `0:0` is `MVSCE-DEV` and stays untouched. Then `/S HTTPD` and `/S FTPD`.
 
 
-`tools/bldrun.py` with `HOST` pointed at `:8085`, from `$01SMPAL`. What run 4
+**Run the driver on `mvsdev`, not from a session here.** The chain is 259 jobs
+and hours long; a driver started as a background task on this machine is bound
+to the session's task lifetime and was killed at job 20 with `EBB1102D` still
+running. Copy `tools/bldrun.py` over, point `SNAPDIR` at a local directory, and
+start it under `nohup`:
+
+```sh
+scp tools/bldrun.py mvsdev:~/
+ssh mvsdev 'cd ~ && nohup python3 bldrun.py --start "$01SMPAL" --max 300 > bld.log 2>&1 &'
+```
+
+Restarting after an interruption: **do not restart on the member that is still
+`ACTIVE`** — that submits it twice. Read its `EXEC BLDSUB,MBR=` card and start
+from the successor.
+
+Four things had to exist on TK5 before the chain would run at all, none of them
+on Dave's tape:
+
+1. **His five procedures** — `BLDCLR` `BLDCOPY` `BLDPRT` `BLDSMP` `BLDSUB` — copied
+   from `MVSSRC.BLD.SMP.JCL` into `SYS2.PROCLIB`, which is in TK5's JES2
+   concatenation (`S SHUTDOWN` proves it).
+2. **The twelve build volumes**, in `local_conf/01`. `BLDDLB` carries address 192
+   in the package and 192 is TK5's `TSO003`; since Dave's JCL addresses volumes
+   only by `VOL=SER`, it sits at `19E` without consequence.
+3. **The IBM source distribution** — `BLDSMP` references **224 datasets** under
+   `MVSSRC.SYM*`, `EREPSY`, `TIOCOP`, `ES1102`, `ET1102`, `ET2402`. They live on
+   the source volumes, which TK5 ships as a separate download together with CBT
+   (`srccbt.zip`, and its `conf/source_dasd.cnf` names exactly `348`–`34B` plus
+   `0247`). TK5 gens those addresses; MVS/CE does not, which is why `MVSCE-LAB`
+   carries the same volumes at `350`–`353`.
+4. **A catalog entry for each of them.** They are in the *master* catalog on
+   `MVSCE-LAB`, not a user catalog, so 254 `DEFINE NONVSAM` statements. One
+   IDCAMS job, `CC 0000`.
+
+`tools/bldrun.py` with `--system bld`, from `$01SMPAL`. What run 4
 learned carries over: SMPSCDS `DR=4500`, SMPPTS `1000`, `MSGCLASS=H`, purge the
 spool before starting (`$HASP355 SPOOL VOLUMES ARE FULL` killed a run at job 41),
 and the nine EREP macros staged.
