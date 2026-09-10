@@ -241,6 +241,29 @@ exactly the family where a missing stamp table would silently poison the numbers
 
 ### Stage 2 — run Dave's build on `MVSTK5-BLD`
 
+**Back it up first.** TK5 brings its own shutdown, and it is the right way in:
+
+```
+/S SHUTFAST          the fast one -- use this
+/S SHUTDOWN          the same thing with a 30-second pause and a slower drain
+```
+
+Both drive `scripts/shutdown` under HAO: `$PJES2`, then `Z EOD`, then quiesce,
+then power off, each step triggered by the message the previous one produces. The
+console is reachable over the Hercules web server (`:8585` for `MVSTK5-BLD`,
+`:8484` for `REF`) — an MVS command goes in with a leading `/`:
+
+```sh
+curl -s -X POST --data-urlencode "command=/S SHUTFAST" \
+     --data "msgcount=8&norefresh=1" \
+     "http://mvsdev.lan:8585/cgi-bin/tasks/syslog"
+```
+
+The DASD is 275 MB in `~/MVSTK5-BLD/dasd`; `cp -a` once Hercules has exited.
+**Restart is `cd ~/MVSTK5-BLD && ./mvs` in tmux window `0:4`** — `0:3` is `REF`,
+`0:0` is `MVSCE-DEV` and stays untouched. Then `/S HTTPD` and `/S FTPD`.
+
+
 `tools/bldrun.py` with `HOST` pointed at `:8085`, from `$01SMPAL`. What run 4
 learned carries over: SMPSCDS `DR=4500`, SMPPTS `1000`, `MSGCLASS=H`, purge the
 spool before starting (`$HASP355 SPOOL VOLUMES ARE FULL` killed a run at job 41),
