@@ -44,7 +44,7 @@ LIB = "MVSSRC.BLD.SMP.JCL"
 SUB = re.compile(r"^//(\S+)\s+EXEC\s+BLDSUB\s*,(.*)$", re.I)
 
 
-def req(method, url, body=None, ctype=None, extra=None, tries=6):
+def req(method, url, body=None, ctype=None, extra=None, tries=12):
     """Retrying, because a 259-job run meets transient failures by construction.
 
     A DNS blip resolving `mvsdev` killed a run at job 58 of 259 -- the network
@@ -72,9 +72,16 @@ def req(method, url, body=None, ctype=None, extra=None, tries=6):
         except Exception as e:
             if attempt == tries - 1:
                 raise
+            # Backoff capped at 60 s, not 10*(n+1) unbounded: with tries=6
+            # the budget was 150 s and run 4 died at job 41 when mvsMF was
+            # unresponsive for longer than that.  The retry loop worked
+            # exactly as written -- the number was the thing that was wrong.
+            # 12 tries capped at 60 s is about 10 minutes, which is the right
+            # order for an outage in a run that takes two hours.
+            wait_s = min(60, 10 * (attempt + 1))
             print(f"    (transient: {type(e).__name__}, retry "
-                  f"{attempt + 1}/{tries - 1})", flush=True)
-            time.sleep(10 * (attempt + 1))
+                  f"{attempt + 1}/{tries - 1}, {wait_s}s)", flush=True)
+            time.sleep(wait_s)
 
 
 def member(name):
