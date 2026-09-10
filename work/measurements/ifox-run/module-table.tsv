@@ -13,13 +13,6 @@ BLSR3270	0				0004	20	4	IFO197 *** MNOTE ***	bytes	0x00513	1736	1736	length	sile
 IKJEBELT	0				0000				bytes	0x001af	1568	1568	no-pair	silent divergence	cc370	
 HMASMTMD	0				0000				cards				identical	silent divergence	cc370	
 IFFAHA16	0				0000				bytes				identical	silent divergence	cc370	
-IFNX1A	0				0000				bytes				length	silent divergence	cc370	
-IFNX1J	0				0000				bytes				text	silent divergence	cc370	
-IFNX3N	0				0000				bytes				text	silent divergence	cc370	
-IFNX5A	0				0000				bytes				text	silent divergence	cc370	
-IFNX5C	0				0000				bytes				text	silent divergence	cc370	
-IFNX5V	0				0000				bytes				text	silent divergence	cc370	
-IFNX6B	0				0000				bytes				length	silent divergence	cc370	
 IEAVRTI0	0				0008	1	8	IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION	bytes	0x0002b	3792	3792	text	IFOX00 alone flags	cc370	
 IEAVEXS	0				0008	1	8	IFO007 USAGE OF &CODE IS INCONSISTENT WITH ITS DECLARATION	bytes	0x0002b	428	432	text	IFOX00 alone flags	cc370	
 IBCDASDI	0				0008	2	8	IFO053 OP CODE NOT FOUND ON FIRST OR ONLY CARD	identical				no-pair	IFOX00 alone flags	cc370	
@@ -82,8 +75,6 @@ IECVXDRT	8	22	8	Undefined symbol | Undefined operation code | Addressability err
 IECVXURT	8	12	8	Undefined operation code | Undefined symbol | IFO092 keyword parameter DATE is not declared in the macro prototype	0012	12	12	IFO078 UNDEFINED OP CODE | IFO188 CHT IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 4 | IFO188 URT20 IS AN UNDEFINED SYMBOL | IFO188 CHTELP2 IS AN UNDEFINED SYMBOL | IFO188 CHTTYPE IS AN UNDEFINED SYMBOL	bytes	0x0001e	73	73	length	both flag	cc370	
 IECVXVRU	8	8	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	10	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO078 UNDEFINED OP CODE | IFO209 ADDRESSABILITY ERROR- BASE AND DISPLACEMENT CANNOT BE RESOLVED AND ARE SET TO 0	bytes	0x00000	49	49	length	both flag	cc370	
 IECVXMGN	8	9	8	Undefined symbol | Undefined operation code | Addressability error - no active USING covers the operand's section (base and displacement set to 0)	0012	10	12	IFO188 BASER IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 15 | IFO188 UCBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 9 | IFO188 IOSBR IS AN UNDEFINED SYMBOL | IFO195 INVALID USING OR DROP STATEMENT NEAR OPERAND COLUMN 11	bytes	0x0000c	45	45	length	both flag	cc370	
-IFOX0A	8	3	8	Undefined symbol	0008	3	8	IFO188 MINCORE IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
-IFOX0D	8	2	8	Undefined symbol	0008	2	8	IFO188 JWRKSIZE IS AN UNDEFINED SYMBOL	bytes				length	both flag	cc370	
 AMDPRMST	8	1	8	IFO092 keyword parameter PTF is not declared in the macro prototype | IFO092 keyword parameter DATE is not declared in the macro prototype	0008	1	8	IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION	identical				length	both flag	source	
 AMDPRSN3	8	1	8	Undefined symbol	0008	1	8	IFO188 SEGRD IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
 BNGIEXIT	8	30	8	Undefined symbol | Undefined operation code	0012	30	12	IFO188 IECTDECB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 9 | IFO188 CNT IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 4 | IFO188 CTB IS AN UNDEFINED SYMBOL | IFO188 SCD IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
@@ -579,6 +570,8 @@ IFFAJA02	8	15	8	Undefined symbol	0012	18	12	IFO188 GDSCB IS AN UNDEFINED SYMBOL 
 IFFAJA04	8	22	8	Undefined symbol	0012	27	12	IFO188 GDSCB IS AN UNDEFINED SYMBOL | IFO217 RELOCATABILITY ERROR NEAR OPERAND COLUMN 6 | IFO188 GDSGDSID IS AN UNDEFINED SYMBOL | IFO188 GDSGTMCB IS AN UNDEFINED SYMBOL | IFO188 GTMCB IS AN UNDEFINED SYMBOL | IFO188 GTMGSPCB IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
 IFG0191Y	8	1	8	Undefined symbol	0008	1	8	IFO188 DS4DEVTR IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
 IFNX5L	8	2	8	Undefined symbol	0008	2	8	IFO188 VPDUPERR IS AN UNDEFINED SYMBOL | IFO188 PDUPERR IS AN UNDEFINED SYMBOL | IFO188 ON IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
+IFOX0A	8	3	8	Undefined symbol	0008	3	8	IFO188 MINCORE IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
+IFOX0D	8	2	8	Undefined symbol	0008	2	8	IFO188 JWRKSIZE IS AN UNDEFINED SYMBOL	identical				length	both flag	source	
 IGC0002I	8	3	8	This card was consumed as a continuation and the statement on it discarded (IFOX00 does not even warn here; the card's columns 1-15 are blank) | IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				length	both flag	source	
 IGC0003B	8	1	8	IFO092 keyword parameter DATE is not declared in the macro prototype | IFO092 keyword parameter PTF is not declared in the macro prototype	0008	1	8	IFO092 KEYWORD PARAMETER PTF UNDEFINED IN MACRO DEFINITION | IFO092 KEYWORD PARAMETER DATE UNDEFINED IN MACRO DEFINITION	identical				text	both flag	source	
 IGC0008B	8	5	8	Undefined symbol | Undefined operation code	0008	5	8	IFO188 DVC3340 IS AN UNDEFINED SYMBOL | IFO188 DVC2305A IS AN UNDEFINED SYMBOL | IFO188 DVC23052 IS AN UNDEFINED SYMBOL | IFO188 DVC3350 IS AN UNDEFINED SYMBOL | IFO078 UNDEFINED OP CODE	identical				length	both flag	source	
@@ -3628,11 +3621,14 @@ IFG0RR0E	0				0000				identical				length		source
 IFG0RR0F	0				0000				identical				mixed		source	
 IFG0TC0A	0				0000				identical				length		source	
 IFHSTATR	0				0000				identical				holes		source	
+IFNX1A	0				0000				identical				length		source	
+IFNX1J	0				0000				identical				text		source	
 IFNX1K	0				0000				identical				length		source	
 IFNX1S	0				0000				identical				text		source	
 IFNX2A	0				0000				identical				text		source	
 IFNX3B	0				0000				identical				text		source	
 IFNX3K	0				0000				identical				length		source	
+IFNX3N	0				0000				identical				text		source	
 IFNX4D	0				0000				identical				text		source	
 IFNX4E	0				0000				identical				text		source	
 IFNX4M	0				0000				identical				length		source	
@@ -3640,8 +3636,12 @@ IFNX4N	0				0000				identical				text		source
 IFNX4S	0				0000				identical				text		source	
 IFNX4T	0				0000				identical				length		source	
 IFNX4V	0				0000				identical				text		source	
+IFNX5A	0				0000				identical				text		source	
+IFNX5C	0				0000				identical				text		source	
 IFNX5F	0				0000				identical				text		source	
+IFNX5V	0				0000				identical				text		source	
 IFNX6A	0				0000				identical				length		source	
+IFNX6B	0				0000				identical				length		source	
 IFNX6C	0				0000				identical				text		source	
 IFOX0B	0				0000				identical				text		source	
 IFOX0C	0				0000				identical				text		source	
