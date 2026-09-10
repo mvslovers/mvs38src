@@ -1,0 +1,18 @@
+Derived tables in this directory -- what they were cut against.
+
+  as370 binary   as370 V1.0 - Sep 10 2026
+  cc370 commit   5f326b4 fix(as370): a grouped parenthesis is descended into, not skipped (#344)
+  built from     /tmp/main-cc370, detached at origin/main
+  cut at         2026-09-10 12:27
+
+Binary and commit are recorded separately on purpose: these tools read a
+binary AND stored state, and that is exactly where the two halves come from
+different commits without it being written down anywhere (cc370, 2026-09-10).
+
+Regenerate the whole chain in this order -- each step feeds the next:
+
+  as370_messages.py <bin>   -> as370-messages.tsv
+  ifox_compare.py   <bin>   -> verdicts.tsv
+  ifox_cluster.py           -> tool-diffs.tsv
+  module_table.py           -> module-table.tsv
+  rebuild_classes.py <bin>  -> classes/*.txt

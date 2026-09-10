@@ -1548,7 +1548,7 @@ IECVIOPM	0	0000	identical		no-pair
 IECVIRST	8	0008	identical		text
 IECVITRP	0	0000	identical		identical
 IECVMAP	8	0012	bytes	bytes	text
-IECVOID	8	0008	bytes	bytes	unpaired
+IECVOID	8	0008	identical		unpaired
 IECVOTBL	0	0000	identical		text
 IECVPST	0	0000	identical		text
 IECVPURG	8	0008	identical		text
@@ -2732,7 +2732,7 @@ IERRPG	0	0000	identical		no-pair
 IERRPM	0	0000	identical		no-pair
 IERRPN	0	0000	identical		no-pair
 IERRPO	0	0000	identical		no-pair
-IEWFETCH	8	0008	bytes	bytes	no-pair
+IEWFETCH	8	0008	identical		no-pair
 IEWFTMIN	0	0000	identical		text
 IEWSUOVR	0	0000	identical		identical
 IEWSWOVR	0	0000	identical		no-pair
@@ -3270,7 +3270,7 @@ IFOX0G	0	0000	bytes	identical	text
 IFOX0H	0	0000	bytes	identical	mixed
 IFOX0I	0	0000	bytes	identical	mixed
 IFOX0J	0	0000	identical		identical
-IGARPT01	8	0004	bytes	bytes	mixed
+IGARPT01	4	0004	bytes	bytes	mixed
 IGC0001F	0	0000	bytes	bytes	no-pair
 IGC0001G	0	0000	identical		no-pair
 IGC0001I	0	0000	identical		length
@@ -3375,7 +3375,7 @@ IGC0C06F	0	0000	identical		holes
 IGC0C10D	8	0008	identical		length
 IGC0D06F	0	0000	identical		length
 IGC0D10D	8	0008	identical		length
-IGC0E05A	0	0000	bytes	bytes	length
+IGC0E05A	0	0000	identical		length
 IGC0E06F	0	0000	identical		length
 IGC0E10D	8	0008	identical		length
 IGC0F05A	0	0000	identical		length

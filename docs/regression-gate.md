@@ -962,3 +962,70 @@ run describes itself, which is what makes keeping one worth anything.
 
 Same shape as the shared checkout and the `git add -A`: an action that is correct
 for my own state and destructive for someone else's.
+
+---
+
+## The derivation chain, and the guard it was missing — 2026-09-10
+
+Five files feed each other, and only the first one had a staleness guard.
+
+```
+as370-gate.tsv        <- gate.sh, the promoted run
+  as370_messages.py <bin>  -> as370-messages.tsv
+  ifox_compare.py   <bin>  -> verdicts.tsv
+  ifox_cluster.py          -> tool-diffs.tsv
+  module_table.py          -> module-table.tsv     [guards as370-messages.tsv]
+  rebuild_classes.py <bin> -> classes/*.txt
+```
+
+`rebuild_classes.py` re-derives **seven** of its ten classes by running `as370`
+over the corpus. The other three — `prologue`, `section-one-side`,
+`ifox-alone-flags` — it **copies** out of `tool-diffs.tsv` and
+`module-table.tsv`, which it does not produce. On 2026-09-10 `tool-diffs.tsv`
+was from the previous evening, a dozen merges behind, and the tool reported
+`0 changed` for those three — which reads as *stable*.
+
+It was not stable. Cut against `5f326b4`, `section-one-side` went **2 → 1**:
+`ISTNSC00` had left the class and the file still named it. Its ESD entries are
+identical on both sides —
+
+```
+ISTNSC00   as370   NETSOL/00 MSGCSECT/02 RWKAREAS/00 MSGCSECT/00
+           IFOX00  NETSOL/00 MSGCSECT/02 RWKAREAS/00 MSGCSECT/00
+IECVHDET   as370   ... IEAMASCB/02  IECVHIDT/00     <- named SD
+           IFOX00  ... IEAMASCB/02  (unnamed)/04    <- private code
+```
+
+— so `IECVHDET` is the class and `ISTNSC00` was a leftover. **The tool written to
+stop stale class files was serving three of them from a stale file**, and the
+symptom was the reassuring one.
+
+`rebuild_classes.py` now refuses when either input is older than
+`as370-gate.tsv`, names the chain, and says which step makes which file. The
+refusal was tested by back-dating `tool-diffs.tsv` — a guard that has never
+fired is not a guard.
+
+`classes/mnote-false-positive.txt` is **deleted**. Nothing derived it; it had sat
+at 93 lines since 2026-09-08 while reading like a current population, and no rule
+in any tool produces it. Deriving it would have meant inventing the definition,
+which is how a plausible number gets made. If the class is wanted back it needs a
+written rule first.
+
+`PROVENANCE.txt` beside the tables now records the **binary and the commit
+separately**, at cc370's request: every one of these tools reads a binary *and*
+stored state, and that is precisely where the two halves come from different
+commits without it being written anywhere.
+
+### One number that is two definitions
+
+`ifox-alone-flags` is 4. cc370 computed 5 for what sounds like the same
+question and the extra module is `BLSR3270`. Both are right:
+
+| | rule | `BLSR3270` (IFOX rc 0004, `IFO197 *** MNOTE ***`, as370 rc 0) |
+|---|---|---|
+| `module_table.py` | `ifox_rc >= 8` — errors | `silent divergence` |
+| cc370 | `ifox_rc > 0` — errors and warnings | `IFOX00 alone flags` |
+
+An MNOTE is a warning, and whether a warning counts as *flagging* is a choice
+nobody had written down. Say which rule a figure uses, or the same module lands
+in two classes and both files look correct.

@@ -80,6 +80,30 @@ def main():
                 if key.lower() in t.lower():
                     b[slug].add(m)
 
+    # Three of the ten classes below are NOT derived here -- they are copied out
+    # of tool-diffs.tsv and module-table.tsv, which this tool does not produce.
+    # On 2026-09-10 tool-diffs.tsv was a day and a dozen merges old while this
+    # tool reported "0 changed", which reads as "stable": section-one-side still
+    # named ISTNSC00, whose ESD entries had become identical on both sides, and
+    # ifox-alone-flags was short one module. The tool written to prevent stale
+    # class files was quietly serving three from a stale file.
+    #
+    # So: refuse, and say what to run. Same guard module_table.py already
+    # carries for as370-messages.tsv, one level further down the chain.
+    gate = os.path.getmtime(f"{RUN}/as370-gate.tsv")
+    for f, how in (("tool-diffs.tsv", "python3 tools/ifox_cluster.py"),
+                   ("module-table.tsv", "python3 tools/module_table.py")):
+        if os.path.getmtime(f"{RUN}/{f}") < gate:
+            sys.exit(f"STALE: {f} is older than as370-gate.tsv.\n"
+                     f"  prologue, section-one-side and ifox-alone-flags are read "
+                     f"straight out of it and would describe an older assembler.\n"
+                     f"  Cut the chain first, in this order:\n"
+                     f"    python3 tools/as370_messages.py <as370-binary>\n"
+                     f"    python3 tools/ifox_compare.py   <as370-binary>\n"
+                     f"    python3 tools/ifox_cluster.py\n"
+                     f"    python3 tools/module_table.py\n"
+                     f"  then this one again.  ({how} is the step that makes {f}.)")
+
     d = [l.split("\t") for l in open(f"{RUN}/tool-diffs.tsv").read().splitlines()[1:]]
     b["prologue"] = {r[0] for r in d if r[6] == "prologue"}
     b["section-one-side"] = {r[0] for r in d if r[6] == "section only on one side"}
