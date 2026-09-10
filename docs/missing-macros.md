@@ -506,3 +506,74 @@ is what to expect from it.
 What deserves keeping is the shape of the mistake: **I checked the last library
 in a concatenation and reported on the first.** The correction above it, written
 four hours earlier, is right about `IBMUSER.PVTMAC` and wrong about the oracle.
+
+---
+
+## The four cost 22 modules, and neither assembler can assemble them
+
+2026-09-10, evening. Prompted by cc370's breakdown of the remaining divergence,
+which set 19 `IFCE*`/`IFCS*` modules aside as EREP. They were right to set them
+aside, and the reason is stronger than the family name.
+
+**Both assemblers return rc 12 on all 22 modules that call one of the four.**
+
+```
+22 modules call ENTRIES, ETEPILOG, FREETAB or SUMMARY in their operation field
+  18  as370 rc 12,  IFOX00 rc 0012,  decks differ in card count
+   4  as370 rc 12,  IFOX00 rc 0012,  decks differ in bytes
+  IFOX00 fails too: 22 of 22
+```
+
+So these are **not an `as370` defect**. The macros are absent from the oracle
+system as well — not in `SYS1.AMACLIB` on either MVS/CE or TK5, not in
+`IBMUSER.PVTMAC` on the oracle instance, and not defined in-stream by the modules
+themselves (checked: `IFCE0115`, `IFCS0115`, `IFCE1017` define no in-stream macros
+at all). Both assemblers produce a partial deck from a source they cannot
+complete, and the two partial decks differ. That is all the divergence means.
+
+**What that changes:** the four macros are worth **22 of roughly 110 remaining
+divergent modules — a fifth of what is left**, and no amount of work on `as370`
+recovers one of them. They are the single largest item on the list that is not an
+assembler question.
+
+**Where they are not**, established today rather than assumed:
+
+| searched | result |
+|---|--:|
+| eleven macro libraries on TK5 and MVS/CE | not present |
+| `IBMUSER.PVTMAC` on the oracle instance | not present |
+| in-stream in the calling modules | none |
+| TK5's CBT + source + SYSCPK download — 43,182 members over nine volumes | name collisions only |
+
+The CBT hits are worth naming so nobody re-finds them: `CBT249.FILE032/ENTRIES`
+is a general-purpose entry-point generator with the prototype
+`ENTRIES &ENTPARM,&BRANCH,&REGNAME=,&MF=`, and it validates that a branch point
+was supplied. Our modules call `ENTRIES PAGE` — one positional operand, no branch
+point. Three `SUMMARY` members exist and ours is called `SUMMARY NAME=IFCS0115`,
+a keyword form none of them takes. **Same name, different macro.**
+
+Call forms, for whoever searches next:
+
+```
+ENTRIES PAGE            ETEPILOG                FREETAB
+ENTRIES ,               ETEPILOG RLEN=70        SUMMARY NAME=IFCS0115
+                        ETEPILOG NODUMP
+```
+
+Counted in the operation field from column 10, comment lines excluded:
+`ETEPILOG` 22 modules, `ENTRIES` 14, `FREETAB` 6, `SUMMARY` 5. An earlier count
+of 22 for `ENTRIES` was a regex that matched comment prose ("ENTRIES FOR NEXT
+ROW").
+
+**And not in the EREP source either.** `EER1400` ships no `AMACLIB` and Dave's
+3,163-entry `++MAC` catalog lists none of the four, so the reasonable guess was
+that they come with the EREP source itself. `MVSSRC.EREPSY.F01/F02/F03` are now
+mounted on `MVSTK5-BLD` — **110 members across the three, and none of them is one
+of the four.** Searched immediately after writing that sentence, and the sentence
+is corrected rather than left standing.
+
+So the four are absent from every library this project can reach: the eleven
+macro libraries of two systems, the oracle's private macro library, the calling
+modules themselves, TK5's full CBT and source download, and the EREP source
+distribution. **Twenty-two modules are blocked on four macros that are, so far,
+nowhere.**
