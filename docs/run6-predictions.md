@@ -134,3 +134,57 @@ each looks like a result:
 **Probes taken while the chain is running need retries.** The baseline above was
 re-taken with five attempts and backoff, and two controls of different sizes —
 720 and 66,160 bytes — so a size-dependent failure would also show.
+
+## Prediction 3: confirmed, six of six
+
+`ZSTAGE2` ended `CC 0004` — run 5 gave `CC 0039` — and the six modules
+`$08STG1A` could not produce now exist:
+
+```
+                        before ZSTAGE2      after
+OBJPDS01  IEFEDTTB      HTTP 404            200,  7,440 bytes
+OBJPDS01  DCM010        HTTP 404            200,  4,800
+OBJPDS02  IEEMB850      HTTP 404            200,    240
+OBJPDS03  IEAVBK00      HTTP 404            200, 37,120
+OBJPDS03  IFGDEBCK      HTTP 404            200,  1,840
+OBJPDS03  IEECVSUB      HTTP 404            200,  1,120
+controls  IEFWMAS1      200, 720            200,    720
+          IEAASU00      200, 66,160         200, 66,160
+```
+
+Both baselines were taken with retries and two controls of different sizes, so
+neither reading is a load artefact. The self-healing claim holds, and leaving
+Dave's `$08STG1A` unfixed was the right call: a `BLKSIZE` fix there would have
+changed the archive to produce objects the chain produces anyway.
+
+## The chain did not finish on its own, and the reason is worth more than the interruption
+
+`bldrun.py` died submitting `ZSTAGE2`, twice, with `RemoteDisconnected` after
+exhausting all its retries. The retries were not the problem and the network was
+not either. The console says what is:
+
+```
+MVSMF006E STORAGE ALLOCATION FAILED FOR THE JCL LINE TABLE
+```
+
+`ZSTAGE2.jcl` is **14,167 lines**, the largest member in the chain that runs.
+mvsMF cannot build a line table for it, fails, and drops the connection — which
+reaches the client as a transport error and looks transient. It is not. Every
+resubmit fails identically, and a retry loop against a deterministic failure
+just spends the retries.
+
+**The route around it is FTP.** `SITE FILETYPE=JES` and `STOR` put the same JCL
+in as `JOB00793` on the first attempt, because the internal reader does not
+build a line table. Prepared with `bldrun.py`'s own `prepare()` so `MSGCLASS=H`
+and the disabled `BLDSUB` card are identical to what the driver would have sent.
+
+Sizes of the remaining 21 members: all under 2,700 lines, most under 1,000. So
+this is one member, not a pattern, and the driver handled the rest.
+
+Two things for later, neither urgent enough to do during a run:
+
+* **`bldrun.py` should fall back to FTP** when a submit fails this way, or at
+  minimum recognise `MVSMF006E` in the console and stop calling it transient.
+* **The retry message is misleading.** It prints `(transient: RemoteDisconnected,
+  retry 6/11, 60s)` for a failure that will never succeed. A retry loop should
+  say what it is retrying, not just that it is.
