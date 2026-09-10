@@ -130,3 +130,29 @@ That probe is the next step and needs the toolchain plus Dave's source staged; i
 is scoped but not yet run. This document establishes the ground truth it will be
 measured against: for these 800 modules, TK5 ≠ CE at the object level, and the
 only thing standing between "same RMID" and "same bytes" is the build date.
+
+---
+
+## Correction, 2026-09-10: `len-diff` is an upper bound, not a code count
+
+The table above calls the 727 `len-diff` modules "a definite code difference — a
+date never changes the length". Dates do not. **Aliases and identification
+records do**, and they live in the member envelope, outside any CSECT.
+
+[`deck-vs-tk5-ce.md`](deck-vs-tk5-ce.md) compared our own object deck against
+both members with `cmplmd370`, which compares CSECT text, and found two modules
+classified `len-diff` here whose code is byte-identical on both systems:
+
+```
+IDA121CV   TK5 502 B   CE 490 B   CSECT identical on both, and to our deck
+IEBISMES   TK5 1686 B  CE 1674 B  same
+```
+
+`IDA121CV`'s twelve bytes are a **CESD entry**: MVS/CE's member carries the alias
+`IGC121`, TK5's does not.
+
+That is a floor of two, not a rate — the newer measurement can only see this
+where our own deck matches both sides, which is rare by construction. **727
+remains the right number for "the members differ in length"; it is an upper
+bound on "the code differs", and how far above the truth it sits is unmeasured.**
+The 73 `content-diff` and the direction table are untouched by this.
