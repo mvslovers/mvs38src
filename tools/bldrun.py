@@ -95,7 +95,7 @@ def member(name):
     return req("GET", f"{HOST}/zosmf/restfiles/ds/{LIB}({urllib.parse.quote(name)})")
 
 
-SNAPDIR = os.path.expanduser("~/repos/mvs/mvs38src/work/build/snapshots")
+SNAPDIR = os.path.expanduser("~/bldsnap")
 PRINTS = ("COPPRINT", "UPDPRINT", "ASMPRINT", "LKDPRINT", "SMPOUT")
 HALF = 4000          # lines kept from each end of a capped listing
 
@@ -174,18 +174,59 @@ def snapshot(cur):
           flush=True)
 
 
+# Four of $01SMPAL's 189 allocations carry no secondary quantity -- `S=,` -- and
+# all four are the ones sized to fill a whole 3390-1 (P=1112 cylinders, or
+# SMPACDS with its 4,500 directory blocks).  Dave had no choice: on a 3390-1
+# there is no room for a second extent, so a primary that big must be the whole
+# dataset.
+#
+# Our build volumes are 3390-2, 2,184 cylinders, and half of every one of them
+# was standing empty while `MVSSRC.BLD.MVSSRC` filled up and died:
+#
+#   IEC031I D37-04,IFG0554T,MAINT03B,SMP,MVSSRC,195,BLDSR1,MVSSRC.BLD.MVSSRC
+#
+# and the APPLY that hit it left a member half written, which the next job's
+# IEBCOPY compress then could not read (IEB100I on IEAVEE3R, IEB171I on the
+# directory).  Two failures, one cause, and the second one damages data.
+#
+# So the secondary is supplied here rather than by editing Dave's member: the
+# archive keeps its text, and what we changed stays visible in one place. The
+# primary and the volume are left exactly as Dave had them.
+SECONDARY = {"MVSSRC": 50, "AMVSSRC": 50, "ASMPRINT": 50, "SMPACDS": 10}
+ALC = re.compile(r"^//(\S+)\s+EXEC\s+ALC(?:SEQ|PDS|LST),(.*)$")
+
+
+def space_fix(line):
+    """Give an ALC* allocation a secondary extent. Returns the line, changed or not."""
+    m = ALC.match(line)
+    if not m or "S=," not in m.group(2):
+        return line, None
+    name = re.search(r"D='?([A-Z0-9.]+)'?", m.group(2))
+    name = name.group(1) if name else m.group(1)
+    qty = SECONDARY.get(name)
+    if qty is None:                 # an S=, we did not plan for: leave it alone
+        return line, None           # and let it fail visibly rather than guess
+    return line.replace("S=,", f"S={qty},", 1), f"{name} S={qty}"
+
+
 def prepare(text):
-    """MSGCLASS=H, and the BLDSUB step commented out. Returns (jcl, next, lib)."""
+    """MSGCLASS=H, BLDSUB disabled, secondary extents supplied. -> (jcl, next, lib)."""
     lines = [l[:72].rstrip() for l in text.replace("\r\n", "\n").split("\n") if l.strip()]
     nxt, lb = None, None
+    fixed = []
     for i, l in enumerate(lines):
         if "MSGCLASS=" in l and i < 4:
             lines[i] = re.sub(r"MSGCLASS=\w", "MSGCLASS=H", l)
-        m = SUB.match(l)
+        lines[i], note = space_fix(lines[i])
+        if note:
+            fixed.append(note)
+        m = SUB.match(lines[i])
         if m:
             kv = dict(re.findall(r"(\w+)=([^,\s]+)", m.group(2)))
             nxt, lb = kv.get("MBR"), kv.get("LIB")
-            lines[i] = "//*" + l[2:]          # keep the card, disable the step
+            lines[i] = "//*" + lines[i][2:]   # keep the card, disable the step
+    if fixed:
+        print(f"    Sekundaerzuteilung ergaenzt: {', '.join(fixed)}", flush=True)
     return "\n".join(lines) + "\n", nxt, lb
 
 
