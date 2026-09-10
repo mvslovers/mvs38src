@@ -20,7 +20,12 @@ M=$HOME/repos/mvs/mvs38src/work/macros
 # EXTRA_MACS adds libraries for a trial. Whatever is added here must also go up
 # to MVS before the IFOX00 side means anything -- the two sides seeing different
 # macros is the one inequality that makes every difference unattributable.
-MACFLAGS="-I $M/mvsce-2.1.4-dlib/AMACLIB -I $M/mvsce-2.1.4-dlib/AMODGEN -I $M/mvsce-2.1.4-dlib/AGENLIB -I $M/mvsce-2.1.4-dlib/ATSOMAC -I $M/mvsce-2.1.4-dlib/ATCAMMAC -I $M/mvsce-2.1.4-dlib/APVTMACS -I $M/tape -I $M/mirror -I $M/erep-set ${EXTRA_MACS:-}"
+# amaclib-live goes FIRST.  The oracle's SYSLIB begins with SYS1.AMACLIB and the
+# local copy of it is six members short -- BTMHJN BTMIOBWA IECPDSCB IEZCTGPL
+# IHADECB IHADVCT.  Until 2026-09-10 gate.sh gave as370 the `mirror` copy of
+# three of them and nothing for the other three, so the two sides of the gate
+# assembled different macros.  See work/macros/amaclib-live/README.md.
+MACFLAGS="-I $M/amaclib-live -I $M/mvsce-2.1.4-dlib/AMACLIB -I $M/mvsce-2.1.4-dlib/AMODGEN -I $M/mvsce-2.1.4-dlib/AGENLIB -I $M/mvsce-2.1.4-dlib/ATSOMAC -I $M/mvsce-2.1.4-dlib/ATCAMMAC -I $M/mvsce-2.1.4-dlib/APVTMACS -I $M/tape -I $M/mirror -I $M/erep-set ${EXTRA_MACS:-}"
 OUTDIR="$PWD/obj_$LABEL"
 rm -rf "$OUTDIR"; mkdir -p "$OUTDIR"
 : ${ASMDATE:=09/07/26}; : ${ASMTIME:=12.00}   # pin the stamp: 381 decks carry it

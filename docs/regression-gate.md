@@ -1066,3 +1066,37 @@ question and the extra module is `BLSR3270`. Both are right:
 An MNOTE is a warning, and whether a warning counts as *flagging* is a choice
 nobody had written down. Say which rule a figure uses, or the same module lands
 in two classes and both files look correct.
+
+---
+
+## The macro path was asymmetric, and correcting it cost one identity
+
+2026-09-10. `gate.sh` now carries `work/macros/amaclib-live/` **first** on the
+`-I` path. The oracle's SYSLIB begins with `SYS1.AMACLIB`; the local copy of that
+library was six members short, and `gate.sh` supplied `mirror` copies for three of
+them and nothing for the other three. The two sides of the gate had been
+assembling different macros since 2026-09-07.
+
+Full re-gate at cc370 `5f326b4`, against the promoted `obj_g344`:
+
+```
+as370 == IFOX00 : 5418 -> 5417   (-1)
+  gained : 0        LOST : 1  IGC018
+  decks FURTHER from IFOX00 : 1  IGC018(+7)
+  return code agrees : 5524 -> 5524   (+0)
+```
+
+**Nothing else moved.** The figure was predicted before the change from an
+18-module probe and came out exactly.
+
+`IGC018`'s former identity rested on `as370` using a macro **the oracle did not
+use**: `as370` + `mirror` agreed with IFOX00 + `AMACLIB`, and `as370` + `AMACLIB`
+does not. Two divergences cancelling. It belongs in `settled-against-as370`, not
+on a regression list — the corrected input made a real `as370` defect visible
+that a coincidence had been hiding.
+
+**The rule this earns:** an `-I` path is an input to the measurement, and an input
+that differs from the oracle's is a defect in the instrument, not a property of
+the assembler. The one asymmetry `gate.sh`'s own header warns about had been
+there for three days, and it was found only because Mike asked why TK5 had macro
+libraries that had not been compared.
