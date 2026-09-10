@@ -195,7 +195,15 @@ correctly: a frozen file and a stable measurement are indistinguishable from the
 outside.
 
 *The macro libraries.* A deck difference between the two systems is only an
-assembler difference if both assembled the same macros. TK5 and MVS/CE have not
+assembler difference if both assembled the same macros. **They do not start from
+the same member list.** `SYS1.MACLIB` on TK5 carries five members MVS/CE has
+none of — `BTMHJN` `BTMIOBWA` `IECPDSCB` `IEZCTGPL` `IHADECB` — and `SYS1.AGENLIB`
+one more, `OLDCARD`. Four of those five are macros this project had to hunt for
+across GitHub, bitsavers and the mailing lists in September
+([`missing-macros.md`](missing-macros.md)); **TK5 had them all along.** The four
+EREP macros still outstanding — `ENTRIES` `ETEPILOG` `FREETAB` `SUMMARY` — are on
+neither system, which is a believable zero precisely because the same query found
+the five that are there. TK5 and MVS/CE have not
 been compared at the macro level at all, and `dlib-distance.md` already warns that
 319 of our private macros come from mirrors at an unestablished level. **Compare
 `AMACLIB`, `AMODGEN`, `AGENLIB`, `ATSOMAC`, `ATCAMMAC` and `APVTMACS` across the
@@ -204,12 +212,32 @@ the DLIB pull, `tools/dlibpull.py` with a different dataset list. If they are
 identical the confound is gone for everything downstream; if not, the macro delta
 is itself a result.
 
-**A cheap first probe exists.** cc370 offers eleven modules — `IFFAHA16`,
-`IFNX1A` `1J` `3N` `5A` `5C` `5D` `5V` `6B`, `IFOX0A` `0D` — where the two
-assemblers' output is image-identical and differs **only in RLD cards**, cause
-open. Same RLD entries out of TK5's IFOX00 as out of MVS/CE's ⇒ the divergence is
-`as370`'s; different ⇒ a lineage answer for a fraction of a corpus run. It is
-worth running *after* the macro comparison, not before, for the reason above.
+**A cheap first probe exists, and it is sharper than it first looked.** cc370
+offers ten modules — `IFNX1A` `1J` `3N` `5A` `5C` `5D` `5V` `6B`, `IFOX0A` `0D` —
+where the two assemblers produce an **image-identical** module and the same number
+of RLD entries at the same addresses, differing only in the **`R` field**: the
+ESDID the relocation points at. `as370` puts it on the enclosing `SD` where
+IFOX00 names the `LD` or `ER` entry, and the ESD cards are byte-identical on both
+sides, so both IDs exist either way. (`IFFAHA16` is not in this class — there only
+the card encoding differs — and `IFNX5C`/`IFNX5D` also differ in addresses, so it
+is 10 + 1, not 11 alike.)
+
+That is a **discrete value**, not a byte count: it does not depend on the stamp or
+the clock, which is what makes it a good first probe. Same `R` fields out of TK5's
+IFOX00 as out of MVS/CE's ⇒ the divergence is `as370`'s; different ⇒ a lineage
+answer for a fraction of a corpus run. Still worth running *after* the macro
+comparison, for the reason above.
+
+Corrected from cc370's first report, which said `as370` emitted *fewer* RLD
+entries. Their parser stepped a fixed 8 bytes and ignored the **RLD continuation
+bit `X'01'`**; `as370` uses the continuation form and IFOX00 here does not, so the
+stride drifted and invented entries. The tell was `@0x404040` in the output —
+three EBCDIC blanks, not an address.
+
+**One family will need `state.tsv` most.** 21 of the 26 stamp-dependent modules in
+the whole corpus are `IFNX*`/`IFOX*`: **Assembler XF assembles itself** and stamps
+its own build time into its own object. If the reference moves to TK5, that is
+exactly the family where a missing stamp table would silently poison the numbers.
 
 ### Stage 2 — run Dave's build on `MVSTK5-BLD`
 
