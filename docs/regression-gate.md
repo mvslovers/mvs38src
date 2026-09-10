@@ -1100,3 +1100,51 @@ that differs from the oracle's is a defect in the instrument, not a property of
 the assembler. The one asymmetry `gate.sh`'s own header warns about had been
 there for three days, and it was found only because Mike asked why TK5 had macro
 libraries that had not been compared.
+
+---
+
+## `tool-diffs.tsv` now says per row whether it is comparable at all
+
+2026-09-10. The remaining population read as 54 modules of work. Measured, it is
+**12** — and only 10 of those are `as370`'s to fix.
+
+```
+IFOX rc  as370 rc    n   what it is
+     12        12   19   both fail -- the four missing macros
+     12         8   10   IFOX severe, as370 errors
+      8         8   11   both flag -- five of them CICS COPY members missing
+      0         0   10   BOTH CLEAN, decks differ          <- the work
+      8         0    2   IEAVEXS IEAVRTI0  (#140)
+      4         0    1   BLSR3270          (#333)
+      4         4    1   IGARPT01
+```
+
+**A difference is only a difference when IFOX00's deck is an oracle.** Where
+IFOX00 itself returned 8 or 12 its deck is a partial artefact of a failed
+assembly, and the byte table of a failed assembly looks exactly like the byte
+table of a real divergence — same columns, same plausible numbers.
+
+That cost two reasoned-through wrong turns in one afternoon. I gave cc370
+`IECV*` as the next family on the strength of "equal lengths mean one encoding
+cause"; seven of the nine have `ifox_rc 0012`. cc370 filed #348 on three `BNGC*`
+modules being byte-identical but displaced, with the offset matching the storage
+defined before the first `CSECT` card exactly — and withdrew it an hour later:
+all three are `rc 8` on both sides, with five CICS `COPY` members missing
+(`DFHCSADS`, `DFHTCTTE`, `DFHTCTLE`, `DFHTIOA`, `DFHTCADS`). The *measurement*
+stands; the *reading* of it does not, because the missing members are exactly
+what would have decided where that storage lands.
+
+Neither of us forgot the rule. It just is not the kind of rule that survives
+being remembered. So `ifox_cluster.py` now writes `as370_rc`, `ifox_rc` and
+`comparable` into every row, and the file states it instead:
+
+```
+module  section  len_ifox  len_as370  first_diff  diff_bytes  kind  as370_rc  ifox_rc  comparable
+```
+
+`comparable` is `yes` when IFOX00 finished — rc 0 or 4, a warning still being an
+oracle. Control: all 34 `IFCE*`/`IFCS*` rows come out `no` at `ifox_rc 0012`, and
+the file yields exactly the 12 modules cc370 arrived at independently.
+
+**The rule this generalises to:** when a rule has to be remembered before a
+number can be read, it belongs in the file that carries the number.

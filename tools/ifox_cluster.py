@@ -85,8 +85,26 @@ def diff(a, b):
 def main():
     rows = [l.split("\t") for l in open(f"{RUN}/verdicts.tsv").read().splitlines()[1:]]
     bad = [r for r in rows if (r[4] or r[3]) in ("bytes", "cards")]
+
+    # Every row carries both return codes, because a difference is only a
+    # difference when IFOX00's deck is an oracle at all.  On 2026-09-10 the
+    # remaining population read as 54 modules of work; measured, only 12 had an
+    # IFOX00 rc of 0 or 4, and the other 42 were source neither assembler can
+    # finish -- 19 of them blocked on four macros that exist nowhere, five on
+    # CICS COPY members.  Two of us in turn reasoned about byte tables from
+    # decks IFOX00 had itself flagged, because the byte table of a failed
+    # assembly looks exactly like the byte table of a real divergence.
+    #
+    # The rule ("read IFOX00's return code before reasoning about a difference")
+    # kept having to be remembered.  Now the file states it per row.
+    rc = {}
+    for l in open(f"{RUN}/verdicts.tsv").read().splitlines()[1:]:
+        f = l.split("\t")
+        rc[f[0]] = (f[1], f[2])
+
     out = open(f"{RUN}/tool-diffs.tsv", "w")
-    out.write("module\tsection\tlen_ifox\tlen_as370\tfirst_diff\tdiff_bytes\tkind\n")
+    out.write("module\tsection\tlen_ifox\tlen_as370\tfirst_diff\tdiff_bytes\tkind"
+              "\tas370_rc\tifox_rc\tcomparable\n")
     kinds = defaultdict(list)
     for r in bad:
         m = r[0]
@@ -103,7 +121,12 @@ def main():
                     "section only on one side" if 0 in (li, la) else
                     "length" if li != la else
                     "prologue" if first < 16 else "text")
-            out.write(f"{m}\t{name}\t{li}\t{la}\t{first:#07x}\t{n}\t{kind}\n")
+            a_rc, i_rc = rc.get(m, ("", ""))
+            # comparable: IFOX00 finished.  rc 4 is a warning and still an
+            # oracle; 8 and up is not.
+            comp = "yes" if i_rc.isdigit() and int(i_rc) <= 4 else "no"
+            out.write(f"{m}\t{name}\t{li}\t{la}\t{first:#07x}\t{n}\t{kind}"
+                      f"\t{a_rc}\t{i_rc}\t{comp}\n")
             kinds[kind].append((m, name, li, la, first, n))
     out.close()
     print(f"{len(bad)} modules where as370 and IFOX00 differ")
