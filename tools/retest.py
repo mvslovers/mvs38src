@@ -117,6 +117,27 @@ def seclen(path):
     name will happily count. Measured 2026-09-10. Name collisions within a
     single deck, which the name-keyed dict would silently lose, do not occur:
     zero across all 5,528.
+
+    **Where this filter is not merely narrower but wrong: cc370#290.** Over the
+    101 differing decks at cc370 `fd287d3` the filter drops twelve modules from
+    the longer-set and ADDS one -- and a filter that only discards items cannot
+    add a module, so that one is a defect, not a difference of scope. It is
+    `IECVHDET`:
+
+        IFOX00   id=5 PC (unnamed)  org=0x000408 len=8
+        as370    id=5 SD IECVHIDT   org=0x000408 len=8
+
+    Same origin, same length. The source has `EXTRN IECVHIDT` at line 412 and
+    `IECVHIDT CSECT` at 617, and IFOX00 resolves the clash by leaving the
+    section unnamed -- `617 IFO196 IECVHIDT HAS BEEN PREVIOUSLY DEFINED` in
+    diag/IECVHDET.txt. Keyed on name, IFOX00's section vanishes and as370's
+    does not, so seclen reports as370 eight bytes longer where the object is
+    the same size. **On a #290-shaped module this instrument manufactures a
+    difference the object does not have.**
+
+    The filter stays: it is safe for the comparison it was built for, and the
+    unsafe class is small and now named. Do not read a seclen "longer" verdict
+    on a module whose diagnostics carry IFO196 without looking at the ESD.
     """
     out, names = {}, {}
     d = open(path, "rb").read()
