@@ -58,6 +58,32 @@ corrections out would recover an OS that IBM had already superseded. The
 recommendation is to take the PTF set wholesale; the only real work is ensuring
 each stays installable (see [`smp-tk5-vs-ce.md`](smp-tk5-vs-ce.md)).
 
+### Getting per-PTF descriptions — what works and what does not
+
+The obvious source, Jay Moseley's
+[PTF cross-reference](https://www.jaymoseley.com/hercules/mvs_ptfs/ptfxref.htm),
+**does not work for this**, and the control says why. It is a *multi-release*
+index (MVS 3.8, MVS/SP, MVS/ESA, OS/390, z/OS): each row is `PTF | FMID |
+records | tape`, one FMID per PTF, and for our PTF numbers that FMID is usually a
+**later release's**. Joining TK5's 712 PTFs by number: 409 appear in the index,
+but only **86** carry an FMID that matches the MVS 3.8 FMID measured on TK5 — the
+other 323 resolve to `HBB2102`, `JBB1313`, `JDM1138`, … (MVS/SP and later). So
+`UZ61346`, which TK5 holds against `EDM1102` (MVS 3.8 Data Management), shows in
+the index under `JDM1138`. Matching by PTF number alone pulls the wrong release's
+row four times out of five; a description taken from it would be wrong. The join
+was attempted and discarded.
+
+What *is* authoritative is already in the list: the **component** and the
+**modules each PTF replaces** are read from TK5's own SMP zones
+([`tk5-ptf-list.tsv`](../work/measurements/smp-inventory/tk5-ptf-list.tsv)), so
+"which part of the OS, which modules" is answered per PTF. What is missing is the
+APAR prose, and the only reliable source for it is the **++PTF cover letter** on
+the original IBM MVS 3.8 PTF tapes — purged from both running systems on ACCEPT
+(only the 3 RAKF `RRKF00x` still carry theirs). Recovering the prose means
+obtaining those tapes and reading the cover letters out; that is a separate
+acquisition task, not a lookup, and is deliberately left open rather than filled
+with a mismatched index.
+
 ## The USERMODs — community modification
 
 Here the "take all, or leave to the user" question is real, because these are
