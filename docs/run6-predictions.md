@@ -110,3 +110,27 @@ there is no reference to check it against, and this file does not claim one.
 
 Space recovered by the compress is modest: 96 → 95 % and 96 → 91 %. The libraries
 are living off their secondary extent now, which is exactly what it is for.
+
+## A third costume for the same trap: `HTTP 000`
+
+Taking the baseline for prediction 3 with a plain shell loop, all six members
+came back `HTTP 000, 0 Bytes` — while the control in the same loop returned
+`200, 720`. I nearly wrote that down as "absent".
+
+`HTTP 000` is not a server answer. It is curl reporting that it never got one:
+six rapid requests with a 20-second timeout, against a REST endpoint the build
+chain is hammering at the same moment. Repeated with `-sS` and a longer timeout,
+the same member answers `404` in 0.22 s.
+
+So the family now has three members, and they are worth naming together because
+each looks like a result:
+
+| signature | means |
+|---|---|
+| `HTTP 200`, 0 bytes | read error reported as success — `PM-2026-003` |
+| `HTTP 404` | genuinely not there |
+| `HTTP 000` | no answer at all; the measurement failed, not the thing measured |
+
+**Probes taken while the chain is running need retries.** The baseline above was
+re-taken with five attempts and backoff, and two controls of different sizes —
+720 and 66,160 bytes — so a size-dependent failure would also show.
