@@ -602,3 +602,73 @@ Two of four disagree, and neither difference is a sum or a count of anything in
 the job. Read the driver's code as "this job is worth looking at", never as the
 severity — the `IEF142I` lines are the severity. `$02ASM` looks four times worse
 than `MAINT04@` and is the harmless one.
+
+---
+
+## The chain past the phase-1 boundary, mapped — 2026-09-11
+
+Run 6 stopped where `ZCMPSMP1` hands on to `LIB=1`, and that was read for a day
+as "the boundary that updates the running system". It is more specific than
+that, and the specifics decide what is safe.
+
+### `LIB=n` is a JCL library, and there are six
+
+`MAINT05@` is **not** in `MVSSRC.BLD.SMP.JCL`. The `BLDSUB` card's `LIB=n` names
+`MVSSRC.BLD.SMP.JCL<n>` — no suffix for the first, then `JCL1`…`JCL5`, 275 + 43
++ 17 + 23 + 15 + 46 members. `bldrun.py` had the library as a constant, so it
+could not follow the chain past the boundary at all. It now takes `--lib` and
+`--follow-lib`, and treats a boundary as a **change** of library rather than the
+presence of a `LIB=` card — every card in `JCL1`…`JCL5` carries one.
+
+### `MAINT05@`…`MAINT05F`: run 2026-09-11, and it moves nothing here
+
+Seven jobs, `JOB00817`–`JOB00823`, all `CC 0000` except `MAINT05E` at `CC 0004`
+(the `ACCEPT`, which is its normal code). Every `DSN=` in all seven begins with
+`MVSSRC.` — **no `SYS1`, no `SYS2`** — so this needed no backup.
+
+**And it applies exactly one SYSMOD: `DSK6000`**, three elements
+(`3 × HMA2160 UPDATE SUCCESSFUL` in both the `APPLY` and the `ACCEPT`). By
+Dave's own scheme `DSK6000` is *"the SMP modification itself"*, not the
+`DSK9nnn` body. Twelve of the 40 modules that lost identity were re-read off the
+system afterwards: **all twelve byte-identical to before**. The source did not
+move, so no re-measurement was taken.
+
+That also corrects a label: `JCL1` is the second *JCL library*, not Dave's
+*phase 2*. His phase numbering (`DSK5000`/`6000`/`7000`/`8000` = phase 1,
+`DSK9000` = phase 2, `DSKCxxx`/`DSKKxxx`/`DSKLxxx` = phases 3/4/5) and the
+library numbering are two different sequences.
+
+### Past Dave's own stop: 83 jobs, one of which touches the system
+
+`MAINT05F` is five lines and its only continuation card is commented out **by
+him**:
+
+```
+//*SUB    EXEC BLDSUB,LIB=1,MBR=MAINT05Z          COPY SMP TO LINKLIB
+```
+
+Enabling it yields a chain of **83 jobs**, `MAINT05Z` → `MAINT15G` across
+`JCL1`…`JCL5`, every member named `MAINT*`, ending cleanly where `MAINT15G`'s
+own continuation card is likewise commented out (to `MAINT15?`, a placeholder
+that does not exist).
+
+**Exactly one of the 83 writes outside `MVSSRC.*`, and it is the first:**
+
+| job | targets |
+|---|---|
+| `MAINT05Z` | **`SYS1.LINKLIB`** |
+| the other 82 | `MVSSRC.*` only |
+
+Scanned across all 144 members of `JCL1`…`JCL5`: 31 do name `SYS1`/`SYS2` data
+sets — `TK4IO1O`, `ZCPYCMD`, `ZCPYLPA`, `ZCPYNET`, `ZCPYDASD`, and the `Z335*` /
+`Z339*` families — but **none of them is in the chain**. They are the separate
+"copy the build onto the running system" and IPL-volume utilities, run
+deliberately and never reached by `BLDSUB`.
+
+**So the decision is one job wide.** Skipping `MAINT05Z` and starting at
+`MAINT06@` runs 82 jobs that touch nothing but Dave's own build libraries — and
+that is the route to `DSKC*`, `DSKK*` and `DSKL*` reaching `AMVSSRC`, which is
+what the 619 marker-losing modules are waiting for. What is not known is whether
+any later `APPLY` depends on `MAINT05Z` having refreshed `SYS1.LINKLIB` first;
+Dave disabled it, which is evidence about his intent and not about that
+dependency.
