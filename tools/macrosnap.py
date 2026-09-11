@@ -34,7 +34,7 @@ not exist on every system; a library that is not there is recorded as absent
 rather than skipped, because "the library is gone" is exactly the kind of change
 worth catching.
 """
-import argparse, base64, hashlib, json, os, sys, time, urllib.error, urllib.request
+import argparse, base64, hashlib, json, os, re, sys, time, urllib.error, urllib.request
 
 def _nl(b):
     """CRLF -> LF. The one difference between a dataset read and a local file."""
@@ -95,12 +95,26 @@ def take(name, sysinfo, cred):
     return rows, absent
 
 
+MEMBER = re.compile(r"^[A-Z@#$][A-Z0-9@#$]{0,7}$", re.I)
+
+
 def take_dir(root):
-    """Same shape, for a local -I directory. Members are the files in it."""
+    """Same shape, for a local -I directory. Members are the files in it.
+
+    Only files whose names could BE PDS members: 1-8 characters, first
+    alphabetic or national. cc370 caught the first version snapshotting
+    `amaclib-live/README.md`, which a cross-side diff then reports as
+    present-locally-absent-on-the-system -- a false row in the one output whose
+    whole job is that nobody learns to skim rows.
+    """
     rows = []
     name = os.path.basename(os.path.normpath(root))
-    files = sorted(f for f in os.listdir(root)
-                   if os.path.isfile(os.path.join(root, f)) and not f.startswith("."))
+    allf = sorted(f for f in os.listdir(root)
+                  if os.path.isfile(os.path.join(root, f)) and not f.startswith("."))
+    files = [f for f in allf if MEMBER.match(f)]
+    if len(files) != len(allf):
+        print(f"  {name:16} skipping {len(allf)-len(files)}: "
+              f"{', '.join(sorted(set(allf)-set(files))[:4])}", flush=True)
     print(f"  {name:16} {len(files):5} files", flush=True)
     for f in files:
         b = open(os.path.join(root, f), "rb").read()
