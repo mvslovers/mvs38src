@@ -1101,6 +1101,40 @@ the assembler. The one asymmetry `gate.sh`'s own header warns about had been
 there for three days, and it was found only because Mike asked why TK5 had macro
 libraries that had not been compared.
 
+### Correction, 2026-09-11: the path was put the wrong way round, and this whole section measured the wrong configuration
+
+Everything above is a faithful record of what was measured, and the configuration
+it measured is **reversed**. `amaclib-live` now goes **LAST** on the `-I` path,
+not first, and the `-1 / LOST: IGC018` result above does not stand.
+
+The reasoning that put it first — `SYS1.AMACLIB` is the oracle's first SYSLIB, so
+its copies must be what the oracle read — has a true premise and a false
+conclusion. IFOX00's own diagnostics for `IGC018`
+(`work/measurements/ifox-run/diag/IGC018.txt`) flag `DVCMODU` and `DVCUFIX1`
+undefined and say nothing about `DVCBPSEC`. Only a 203-line `@ZA40405`-level
+`IHADVCT` has that symbol profile. `MVSCE-LAB`'s live `SYS1.AMACLIB` holds the
+196-line pre-APAR level, and `IHADVCT` is in none of the other six libraries of
+the oracle's SYSLIB — so the live library is **no longer in the state that
+produced the reference decks**, and preferring it fed `as370` something the oracle
+never saw.
+
+Measured at one binary, with its control:
+
+```
+amaclib-live last    IGC018 vs reference deck   IDENTICAL
+amaclib-live first   IGC018 vs reference deck   DIFFER, 7 bytes / 3 clusters
+```
+
+Tree-wide at cc370 `fd287d3`, with a three-way control: `amaclib-live` last and
+`amaclib-live` absent give the **same set** of modules, +0/-0, while
+`amaclib-live` first gives one fewer. **5,427, not 5,417.**
+
+So the paragraph above about `IGC018`'s identity resting on a macro the oracle
+did not use is exactly backwards: it rested on the macro the oracle **did** use,
+and the change took that away. The rule the section earns is still right — an
+`-I` path is an input to the measurement — and it is what the correction was
+found by. See `missing-macros.md`, third correction, and `tools/gate.sh`.
+
 ---
 
 ## `tool-diffs.tsv` now says per row whether it is comparable at all

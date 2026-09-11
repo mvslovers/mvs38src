@@ -625,3 +625,45 @@ This is the third correction on this page, and the same shape as the second:
 a claim about which library the oracle read, made from the concatenation order
 instead of from the decks. **The decks are the record of what the oracle saw.
 Nothing else on this system is.**
+
+---
+
+## Correction to the correction, 2026-09-11: LAB did not drift — somebody put it there
+
+Yesterday's conclusion was that `MVSCE-LAB`'s `SYS1.AMACLIB` "is no longer in the
+state that produced the reference corpus". That is too weak and slightly wrong
+about the mechanism. The measurement that settles it is one the `fahrplan`'s own
+system table promised and nobody had ever run: **ask `MVSCE-EXP`**, the untouched
+MVS/CE reference that exists precisely to say whether LAB was modified.
+
+```
+                              SYS1.AMACLIB(IHADVCT)
+MVSCE-EXP  (untouched MVS/CE)  HTTP 404  -- the member is NOT THERE
+MVSCE-LAB  (cut the corpus)    196 lines, no DVCBPSEC, no @ZA40405
+MVSTK5-REF (object baseline)   203 lines, DVCBPSEC, @ZA40405 x9
+```
+
+Control in the same batch: `SYS1.AMACLIB(ABEND)` on EXP returns 200 with 5,832
+bytes, so the reader and the library are both fine and the 404 is real.
+
+**Stock MVS/CE does not ship `IHADVCT` in `SYS1.AMACLIB` at all.** So LAB's copy
+is not original and did not degrade — it was *added*, at the pre-APAR level, by
+something or someone, at a date MVS 3.8j gives us no way to recover.
+
+Two consequences, and the second is the useful one:
+
+**The oracle cannot have read it from `SYS1.AMACLIB` on 2026-09-07** if the member
+was not yet there. It resolved `IHADVCT` from somewhere further down the SYSLIB —
+and the only writable candidate in that concatenation is `IBMUSER.PVTMAC`, which
+does not contain it today either. That remains a hypothesis: it is consistent
+with every measurement taken, and nothing here proves it.
+
+**`MVSTK5-REF` carries exactly the level the reference decks demand** — 203 lines,
+`@ZA40405` nine times, the profile IFOX00's own diagnostics for `IGC018` require.
+That is a concrete argument for pinning TK5 as the oracle rather than a
+process-of-elimination one, and it is new information for that decision.
+
+The rule this earns, and it is the third time this page has earned a version of
+it: **a control that is never run is not a control.** `MVSCE-EXP` was set up to
+detect exactly this and sat unused through a full day of chasing the question it
+answers in one request.

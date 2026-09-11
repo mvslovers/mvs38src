@@ -127,7 +127,9 @@ against the TK5 deck and the CE deck. The deck it hits byte-identical (build dat
 masked, exactly as here) is the baseline that matches Dave's work.
 
 That probe is the next step and needs the toolchain plus Dave's source staged; it
-is scoped but not yet run. This document establishes the ground truth it will be
+is scoped but not yet run. **[Run on 2026-09-10 — see `deck-vs-tk5-ce.md`, and
+the correction at the end of this file, which uses its result. The baseline
+decision it was meant to settle is settled: TK5.]** This document establishes the ground truth it will be
 measured against: for these 800 modules, TK5 ≠ CE at the object level, and the
 only thing standing between "same RMID" and "same bytes" is the build date.
 

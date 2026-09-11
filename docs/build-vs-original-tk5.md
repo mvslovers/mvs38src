@@ -98,6 +98,14 @@ Two jobs in the run are unexplained: `$08STG1A` (`CC 0020`, six sysgen steps) an
 snapshot's head-and-tail cap discarded the diagnostics, and the fix for that was
 written but not deployed to the machine the driver runs on until afterwards.
 
+> **Both are explained as of 2026-09-11, and neither needed a re-run in the end.**
+> `$08STG1A` is a concatenation-DCB trap — `SYS1.AMODGEN` at BLKSIZE 19,040 ahead
+> of `SYS1.MACLIB` at 27,920 — and it self-heals, because `ZSTAGE2` re-assembles
+> the same six modules from libraries that are both 27,920. Verified: 404 before,
+> 200 with content after. `ZSTAGE2`'s `CC 0039` was never a step code at all; its
+> highest step was `0012`. See `dave-install-log.md`, `run6-predictions.md` and
+> the knowledge base entry `MVS-JCL-0001`.
+
 The seventeen `CC 0008`/`CC 0016` codes in the maintenance phase are not
 failures: `MAINT01@` reports 30 × `HMA3930 SYSMOD ... SUCCESSFULLY RECEIVED`, and
 `MAINT02E` 14 × `HMA2160 UPDATE SUCCESSFUL - LIBRARY=AMVSSRC - SYSMOD=DSK1003`.
