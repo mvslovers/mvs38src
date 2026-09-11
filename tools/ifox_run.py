@@ -57,8 +57,16 @@ AS370 = os.path.join(OUT, "as370")
 STATE = os.path.join(OUT, "state.tsv")
 ORDER = os.path.join(OUT, "order.txt")
 
-SYSLIB = ["SYS1.AMACLIB", "SYS1.AMODGEN", "SYS1.AGENLIB", "SYS1.ATSOMAC",
-          "SYS1.ATCAMMAC", "SYS1.APVTMACS", "IBMUSER.PVTMAC"]
+# The macro libraries, and on the oracle they are NOT the system's own.
+# macro-tk5-vs-ce.md measured 129 of the differing macros on the -I path moving
+# 68 corpus modules: assembling against TK5's SYS1.A* would put those 68 on the
+# difference list for a reason no assembler question can explain. MVS/CE's six
+# were copied member by member onto MVSTK5-REF as IBMUSER.* -- which also leaves
+# the frozen SYS1 libraries untouched, so the pin's macro snapshot still proves
+# what it is there to prove.
+_CEMAC = ["AMACLIB", "AMODGEN", "AGENLIB", "ATSOMAC", "ATCAMMAC", "APVTMACS"]
+SYSLIB = ([f"SYS1.{x}" for x in _CEMAC] if _sys != "ref"
+          else [f"IBMUSER.{x}" for x in _CEMAC]) + ["IBMUSER.PVTMAC"]
 # The FTP server wedged mid-run on 2026-09-07: it accepted connections and never
 # sent a banner again, and the session it left behind held IBMUSER.IFOXOBJ, so
 # every DISP=OLD allocation on it waited for ever. The transfers now go through

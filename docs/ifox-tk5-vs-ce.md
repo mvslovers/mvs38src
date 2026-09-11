@@ -268,7 +268,15 @@ exactly what `systems.json` says the guarantee is.
 ### The result
 
 Ten modules assembled by TK5's IFOX00, against the decks MVS/CE's IFOX00 cut on
-2026-09-07. Same source, same `SYSLIB`, columns 1–72, `END` card excluded.
+2026-09-07. Same source, columns 1–72, `END` card excluded.
+
+> **The `SYSLIB` was not the same, and that has to be said.** The probe ran
+> against TK5's own `SYS1.A*` plus the carried-across `IBMUSER.PVTMAC`, because
+> the macro carry-across was not finished yet. It is valid for *these ten*
+> because none of them is among the 68 modules
+> [`macro-tk5-vs-ce.md`](macro-tk5-vs-ce.md) measured the macro delta to move —
+> checked before the run, not after. For the corpus run the six MVS/CE libraries
+> were copied across, and `ifox_run.py` names them on `--system ref`.
 
 | | |
 |---|---:|
