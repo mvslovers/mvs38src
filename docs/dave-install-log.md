@@ -672,3 +672,39 @@ what the 619 marker-losing modules are waiting for. What is not known is whether
 any later `APPLY` depends on `MAINT05Z` having refreshed `SYS1.LINKLIB` first;
 Dave disabled it, which is evidence about his intent and not about that
 dependency.
+
+### `MAINT06@` `ABEND SB37` — the 16-extent limit, and `BLDCLR` cannot help
+
+The first job past Dave's stop died immediately:
+
+```
+IEC030I B37-04,IFG0554T,MAINT06@,SMP,SMPOUT,19D,BLDWK2,MVSSRC.BLD.SMPOUT
+HMA432I ** ABNORMAL TERMINATION - CODE = SYSTEM 0B37 - PROGRAM = HMASMP
+```
+
+`MVSSRC.BLD.SMPOUT` stood at **`extx 16`** — MVS's extent limit for a sequential
+data set. `B37` is that limit, not a full volume: `BLDWK2` had 1,145 of its 2,184
+cylinders free at the time.
+
+**And `MAINT06@` does run `BLDCLR` first** — the job's own `//CLR` step, exactly
+as `MAINT05@` does. Clearing empties the data set; it does not give back
+extents. So Dave's own housekeeping step cannot prevent this one, and every job
+in the chain writes to `SMPOUT`, which is why it surfaced on the first one rather
+than somewhere unpredictable later.
+
+A scan of all `MVSSRC.BLD.*` found **one** data set at or near the limit — this
+one — so the fix was one job, `SMPOUTRA/JOB00825`, `CC 0000`: delete and
+re-allocate on the same volume in a single extent, 450 → 800 cylinders,
+`RECFM=FBA LRECL=121 BLKSIZE=27951` unchanged.
+
+This is a third distinct space failure in this build, and the three are not the
+same thing:
+
+| | |
+|---|---|
+| run 1 | volume out of tracks — the 3390-1 geometry, fixed by 3390-2 volumes |
+| run 5 | `D37` — four allocations in `$01SMPAL` with no secondary quantity, fixed by `bldrun.py` supplying `S=50` |
+| **run 7** | **`B37` — 16-extent limit on a work data set that every job appends to** |
+
+A secondary quantity is what causes this one: each job's writes take another
+extent, and sixteen jobs of growth is all it takes.
