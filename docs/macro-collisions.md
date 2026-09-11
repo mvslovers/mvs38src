@@ -32,6 +32,67 @@ tape  mirror  erep-set  amaclib-live
 | `IHADECB` | mirror, amaclib-live | mirror | **yes** — see below |
 | `IHADVCT` | mirror, amaclib-live | mirror | **yes, and it was measured** |
 
+## All ten are adjudicated. None is open.
+
+cc370 closed the remaining nine, and the outcome is better than the table above
+predicted: **ten of ten**, not seven-by-construction plus two arguments.
+
+| | members | how it was settled |
+|---|---|---|
+| **cannot affect any assembly** | `IEZCOM` `IHASHDR` `IKJEGSIO` `IKJOCMTB` `IHADECB` | identical in columns 1–71 |
+| | `IHASPCT` `IEZCTGPL` | differ **only inside comment cards** |
+| **settled against the recorded decks** | `IECDIPIB` `IECDRQE` | the `DVCBPSEC` route; `as370` agrees with the oracle |
+| **mattered, and is closed** | `IHADVCT` | cost `IGC018`; fixed by the path order |
+
+**The two entries this document called "argued rather than measured" are now
+measured, and both are the same artefact.** Verified here, not taken on report:
+
+```
+IHADECB    905 lines,  0 differing in columns 1-71
+IEZCTGPL   287 lines,  1 differing -- line 40, a COMMENT card:
+             mirror        *%IF CTGPL999 ^= ','
+             amaclib-live  *%IF CTGPL999 ¬= ','      (0xAC)
+IHASPCT    132 lines,  1 differing -- line 41, a COMMENT card:
+             APVTMACS      *%SPCTPLS1: SPCTDUM=SPCTLEVL <1A><1A>' SPCT';
+             mirror        *%SPCTPLS1: SPCTDUM=SPCTLEVL ||' SPCT';
+```
+
+Both are PL/S transcription artefacts — the NOT operator and the concatenation
+operator, rendered differently by whatever produced each copy — and both sit in
+comment cards the assembler never reads. That accounts for them completely.
+
+### How `IECDIPIB` and `IECDRQE` were settled with no system involved
+
+The route that settled `IHADVCT`, applied to the `AMODGEN`/`APVTMACS` pair:
+
+```
+IECDIPIB   5 symbols exist only in AMODGEN -- IPIBARG2 IPIBIPIB IPIBPASS
+           IPIBPBUV IPIBTIME -- referenced by 3, 1, 1, 3 and 1 corpus modules.
+           IFOX00 flags NONE of them undefined, so the oracle read AMODGEN.
+           The -I order takes AMODGEN. Agreement, measured.
+IECDRQE    RQEK0BYP only in AMODGEN, referenced by 2 modules, never flagged.
+           Same conclusion.
+```
+
+`RQEPRT6R` exists only in `APVTMACS` and is referenced by nobody, so it cannot
+distinguish the two — which is worth stating, because a symbol that no module
+references proves nothing either way and it would have been easy to count it.
+
+## Two method notes from closing this, both about instruments that lie
+
+**A parser that matches nothing reports agreement.** cc370's first comparison
+parsed labelled `DS`/`DC`/`EQU` cards, and `IHASPCT` came back "0 symbols on both
+sides, identical". The regex matched nothing in either file, and nothing equals
+nothing. It reads exactly like a clean result. What settled all ten was the blunt
+instrument — normalise CRLF, truncate at column 71, strip trailing blanks,
+compare bytes — **because it cannot fail to observe**. Five constructions were
+nearly filed on the back of a parser that was not looking at anything.
+
+**Comparing symbol names cannot prove two mapping macros equivalent.** An
+unlabelled `DS` card shifts every offset after it, so two copies can carry the
+same symbols at different displacements. The byte comparison does not have that
+hole.
+
 ## Why each verdict holds
 
 **The seven involving a `mvsce-2.1.4-dlib` library are settled by construction.**
@@ -57,16 +118,9 @@ maintenance level.
 
 ## What is not settled
 
-**Nine of the ten have never been looked at.** The order is defensible for all
-of them and measured for one. The three `AMODGEN`/`APVTMACS` collisions are the
-ones to open first, and cc370's reason is the right one: that pair sits inside
-the oracle's own SYSLIB in that order, so whatever IFOX00 resolved is answerable
-**from the recorded decks, with no system involved** — the same route that
-settled `IHADVCT`.
-
-It costs one question per member: does any corpus module reference a symbol that
-only one of the two copies defines? If yes, the decks say which copy the oracle
-read, exactly as `DVCBPSEC` did.
+Nothing, on this question. The `-I` order arbitrates ten names, seven of them
+cannot reach an object at all, two are measured to agree with the oracle, and
+the one that ever mattered is fixed.
 
 ## The rule this earns
 
