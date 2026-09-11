@@ -89,8 +89,25 @@ change the object.
 40 lost), and **100 closer to IBM's object against 51 further**. The two
 measures point opposite ways and are not reconcilable into one number — the
 identity measure is the success criterion, the distance measure predicts where
-work pays. **Which weighs more is Mike's call, and the 40 lost are the evidence
-to read first.** [`docs/source-states.md`](docs/source-states.md).
+work pays. [`docs/source-states.md`](docs/source-states.md).
+
+**And then it reversed.** Two controls: all 72 modules that moved are ones where
+`as370` == IFOX00, so the tool is not in question for any of them — and **38 of
+the 40 lost identities are modules whose `DSK` marker is in the archive and gone
+in `AMVSSRC`**: 21 `DSKK` (phase 4), 15 `DSKC` (phase 3), 3 `DSKL` (phase 5).
+**Run 6 stopped at the phase-1 boundary**, so those phases were never applied.
+
+> ⚠️ **`AMVSSRC` is at Dave's phase 1, not his full maintenance level.**
+> Tree-wide, **1,357 modules carry a `DSK` marker in the archive and 619 of them
+> — 46 % — lose it on the system.** "Dave's PTFs have been applied to the
+> source" is true only through phase 1. The archive being ahead by 8 identities
+> is evidence that his later-phase repairs *reach the object*, not that his
+> maintenance hurts.
+
+**The decision this opens:** running the chain past `MAINT05@` applies phases
+3–5 and puts the system's source at his full level — and it updates the running
+system. Back up `MVSTK5-BLD` first. It is the only route to measuring Dave's
+*complete* maintenance against TK5's object.
 
 Two corrections came out of it. **Dave's install tape carries no source tree** —
 `BLDMVS.AWS` is 45 files of `SMP.JCL`/`SMP.LIB`/`NEW.ASM`/`MVT.ASM`/`UTL.ASM`,
