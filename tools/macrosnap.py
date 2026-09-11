@@ -13,8 +13,21 @@ suspected, snapshot it again and compare. The output is a TSV a human can read
 and `diff` can chew.
 
     macrosnap.py --system ref                  take one, write it under work/snapshots/
-    macrosnap.py --system ref --out foo.tsv
+    macrosnap.py --dir work/macros/mirror      the same, for a local -I directory
     macrosnap.py --compare a.tsv b.tsv         what moved between two snapshots
+
+**Two hashes per member, and the second is the one that compares across sides.**
+cc370's point, and it is the right one: the drift that reaches `as370` is not
+between two systems, it is between a live library and the local `work/macros/`
+directory the gate actually feeds it. Those must be diffable member by member.
+
+They are not byte-comparable raw. Measured on `SYS1.AMACLIB(IHADVCT)`: the REST
+read is 16,443 bytes with 203 LF; the local copy is 16,646 with 203 CRLF. The
+difference is exactly 203 bytes, one CR per line, and after CRLF -> LF the two
+are **identical** -- sequence numbers in columns 73-80 included, so no further
+normalisation is needed or wanted. `sha256` is the raw bytes and catches any
+change at all; `sha256_nl` is after that one substitution and is what a
+cross-side diff must use.
 
 `IBMUSER.PVTMAC` is in the list because it was in the oracle's SYSLIB. It does
 not exist on every system; a library that is not there is recorded as absent
@@ -22,6 +35,11 @@ rather than skipped, because "the library is gone" is exactly the kind of change
 worth catching.
 """
 import argparse, base64, hashlib, json, os, sys, time, urllib.error, urllib.request
+
+def _nl(b):
+    """CRLF -> LF. The one difference between a dataset read and a local file."""
+    return b.replace(b"\x0d\x0a", b"\x0a").replace(b"\x0d", b"\x0a")
+
 
 # The oracle's SYSLIB, in its order, plus SYS1.MACLIB -- which is not in the
 # concatenation but is where the maintained level of a macro lives, and is
@@ -68,12 +86,27 @@ def take(name, sysinfo, cred):
             if not isinstance(d, bytes):
                 # An unreadable member is a finding, not a gap to skip over:
                 # PM-2026-003 is exactly this, reported as HTTP 200 with no body.
-                rows.append((lib, m, -1, f"UNREADABLE:{d if d else 'no answer'}"))
+                rows.append((lib, m, -1, f"UNREADABLE:{d if d else 'no answer'}", "-"))
                 continue
-            rows.append((lib, m, len(d), hashlib.sha256(d).hexdigest()))
+            rows.append((lib, m, len(d), hashlib.sha256(d).hexdigest(),
+                         hashlib.sha256(_nl(d)).hexdigest()))
             if i % 250 == 0:
                 print(f"    {i}/{len(members)}", flush=True)
     return rows, absent
+
+
+def take_dir(root):
+    """Same shape, for a local -I directory. Members are the files in it."""
+    rows = []
+    name = os.path.basename(os.path.normpath(root))
+    files = sorted(f for f in os.listdir(root)
+                   if os.path.isfile(os.path.join(root, f)) and not f.startswith("."))
+    print(f"  {name:16} {len(files):5} files", flush=True)
+    for f in files:
+        b = open(os.path.join(root, f), "rb").read()
+        rows.append((name, f, len(b), hashlib.sha256(b).hexdigest(),
+                     hashlib.sha256(_nl(b)).hexdigest()))
+    return rows, []
 
 
 def write(path, name, rows, absent):
@@ -81,7 +114,7 @@ def write(path, name, rows, absent):
         f.write(f"# macro snapshot of {name}, {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
         for lib, why in absent:
             f.write(f"# absent\t{lib}\t{why}\n")
-        f.write("library\tmember\tbytes\tsha256\n")
+        f.write("library\tmember\tbytes\tsha256\tsha256_nl\n")
         for r in sorted(rows):
             f.write("\t".join(str(x) for x in r) + "\n")
 
@@ -91,8 +124,9 @@ def load(path):
     for line in open(path):
         if line.startswith("#") or line.startswith("library\t"):
             continue
-        lib, mem, size, sha = line.rstrip("\n").split("\t")
-        out[(lib, mem)] = (size, sha)
+        f = line.rstrip("\n").split("\t")
+        lib, mem, size, sha = f[0], f[1], f[2], f[3]
+        out[(lib, mem)] = (size, f[4] if len(f) > 4 else sha)
     return out
 
 
@@ -116,6 +150,7 @@ def compare(a, b):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--system")
+    ap.add_argument("--dir", help="a local -I directory instead of a system")
     ap.add_argument("--cred", help="user:pass; else taken from the environment")
     ap.add_argument("--out")
     ap.add_argument("--compare", nargs=2, metavar=("OLD", "NEW"))
@@ -123,8 +158,17 @@ def main():
 
     if a.compare:
         return compare(*a.compare)
+    if a.dir:
+        rows, absent = take_dir(a.dir)
+        name = os.path.basename(os.path.normpath(a.dir))
+        out = a.out or os.path.join(HERE, "work", "snapshots",
+                                    f"dir-{name}-{time.strftime('%Y%m%d-%H%M')}.tsv")
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        write(out, name, rows, absent)
+        print(f"\n{len(rows)} files\n{out}")
+        return 0
     if not a.system:
-        ap.error("--system or --compare")
+        ap.error("--system, --dir or --compare")
 
     s = systems()
     key = [k for k in s if k.lower().endswith(a.system.lower())]
