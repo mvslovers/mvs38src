@@ -237,8 +237,41 @@ def main():
 
     dn = {m: distance(f"{a.objdir}/{m}.obj", f"{IFOX}/{m}.obj") for m in mods}
     do = {m: distance(f"{a.baseline}/{m}.obj", f"{IFOX}/{m}.obj") for m in mods}
-    closer = [m for m in mods if dn[m] is not None and do[m] is not None and dn[m] < do[m]]
-    further = [m for m in mods if dn[m] is not None and do[m] is not None and dn[m] > do[m]]
+
+    # A DISTANCE verdict needs the reference to be a statement, and a deck from
+    # a run IFOX00 abandoned is not one. 933 of the 5,528 modules have an
+    # ifox_rc above 4 -- a sixth of the corpus -- and any of them can produce a
+    # closer/further line that means nothing.
+    #
+    # #361 is why this is here. Its gate line read `decks FURTHER from it: 9`,
+    # and all nine were &CSECT modules whose IFOX00 reference came from an rc 12
+    # run. tool-diffs.tsv already marked every one comparable=no; the gate did
+    # not, and the gate's number is the one a human reads in a PR description.
+    #
+    # IDENTITY is different and deliberately not filtered. Reproducing a flagged
+    # run's deck byte for byte means reproducing its error behaviour too, which
+    # is the stronger agreement, not the weaker -- cc370's distinction and it is
+    # right. So `gained` and `LOST` still count every module; only the distance
+    # lines are restricted.
+    scoreable = set()
+    unscoreable = 0
+    try:
+        for l in open(f"{RUN}/state.tsv").read().splitlines()[1:]:
+            f = l.split("\t")
+            if len(f) >= 2:
+                try:
+                    (scoreable.add(f[0]) if int(f[1]) <= 4 else None)
+                except ValueError:
+                    pass
+    except OSError:
+        scoreable = set(mods)          # no state.tsv: filter nothing, say so
+        print("  (no state.tsv -- distance lines are unfiltered)")
+    cmpable = [m for m in mods if m in scoreable]
+    unscoreable = len(mods) - len(cmpable)
+    closer = [m for m in cmpable if dn[m] is not None and do[m] is not None and dn[m] < do[m]]
+    further = [m for m in cmpable if dn[m] is not None and do[m] is not None and dn[m] > do[m]]
+    moved_unsc = [m for m in mods if m not in scoreable and dn[m] is not None
+                  and do[m] is not None and dn[m] != do[m]]
 
     n_new = sum(1 for m in mods if new[m] == "identical")
     n_old = sum(1 for m in mods if old[m] == "identical")
@@ -251,6 +284,11 @@ def main():
     print(f"  decks closer to IFOX00 : {len(closer)}")
     print(f"  decks FURTHER from it  : {len(further)}  "
           f"{' '.join(f'{m}(+{dn[m]-do[m]})' for m in further[:8])}")
+    print(f"  (distance measured over {len(cmpable)} modules; {unscoreable} have "
+          f"an IFOX00 reference from a run at rc>4 and cannot be scored)")
+    if moved_unsc:
+        print(f"  {len(moved_unsc)} of those moved and are NOT counted above:  "
+              f"{' '.join(moved_unsc[:8])}")
     for k in ("bytes", "cards", "no-as370-deck"):
         print(f"  {k:14s}: {sum(1 for m in mods if old[m] == k)} -> "
               f"{sum(1 for m in mods if new[m] == k)}")
