@@ -104,10 +104,23 @@ in `AMVSSRC`**: 21 `DSKK` (phase 4), 15 `DSKC` (phase 3), 3 `DSKL` (phase 5).
 > is evidence that his later-phase repairs *reach the object*, not that his
 > maintenance hurts.
 
-**The decision this opens:** running the chain past `MAINT05@` applies phases
-3–5 and puts the system's source at his full level — and it updates the running
-system. Back up `MVSTK5-BLD` first. It is the only route to measuring Dave's
-*complete* maintenance against TK5's object.
+**The decision this opens, and it is smaller and sharper than it looked.**
+Mapped out on 2026-09-11 by dry-run:
+
+* `MAINT05@` is **not** in `MVSSRC.BLD.SMP.JCL`. It is in `SMP.JCL1` — that is
+  what `LIB=1` on the `BLDSUB` card means, and the chain is six JCL libraries,
+  not one. `bldrun.py` knew only the first, so it could not follow the chain
+  past the boundary at all rather than merely declining to. It now takes
+  `--lib` and `--follow-lib`.
+* Phase 2 is **seven jobs**, `MAINT05@`…`MAINT05F`. Then **Dave's own chain
+  stops**: `MAINT05F` is five lines and its only continuation card is
+  `//*SUB … MBR=MAINT05Z  COPY SMP TO LINKLIB` — commented out by him.
+* Going further means **re-enabling that step** and then ~83 more jobs through
+  phases 3, 4 and 5 to `MAINT15G`. *That* is what updates the running system.
+
+So there are two decisions, not one: run phase 2 (seven jobs, ends where Dave
+ended it), and separately whether to cross his own stop. `MVSTK5-BLD` wants a
+backup before either.
 
 Two corrections came out of it. **Dave's install tape carries no source tree** —
 `BLDMVS.AWS` is 45 files of `SMP.JCL`/`SMP.LIB`/`NEW.ASM`/`MVT.ASM`/`UTL.ASM`,

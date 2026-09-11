@@ -55,7 +55,20 @@ SYSTEMS = {"lab": ("http://mvsdev.lan:8082", "MVSCE-LAB"),
 HOST, _SYS = SYSTEMS["bld"]
 USER, PW = _cred(_SYS).split(":", 1)
 LIB = "MVSSRC.BLD.SMP.JCL"
-SUB = re.compile(r"^//(\S+)\s+EXEC\s+BLDSUB\s*,(.*)$", re.I)
+# `//*SUB` is a card DAVE disabled, and following it resumes a chain he stopped.
+# There are exactly two in the six JCL libraries and both matter:
+#
+#   JCL1 MAINT05F  //*SUB EXEC BLDSUB,LIB=1,MBR=MAINT05Z   COPY SMP TO LINKLIB
+#   JCL5 MAINT15G  //*SUB EXEC BLDSUB,LIB=5,MBR=MAINT15?
+#
+# MAINT05F is five lines and that card is its only one, so his chain ENDS there.
+# The old pattern matched `//(\S+)` with \S+ = `*SUB`, took the successor, and
+# would have re-enabled a step that copies SMP over LINKLIB without anyone
+# deciding to -- and then crashed at the end of phase 5 on MAINT15?, a
+# placeholder member that does not exist. Neither reached run 6, which stopped
+# before phase 2; both are on the path of any run that goes further.
+SUB = re.compile(r"^//(?!\*)(\S+)\s+EXEC\s+BLDSUB\s*,(.*)$", re.I)
+SUBOFF = re.compile(r"^//\*(\S*)\s*EXEC\s+BLDSUB\s*,(.*)$", re.I)
 
 
 def req(method, url, body=None, ctype=None, extra=None, tries=12):
@@ -98,8 +111,21 @@ def req(method, url, body=None, ctype=None, extra=None, tries=12):
             time.sleep(wait_s)
 
 
+# Dave's chain is not one JCL library, it is six. The BLDSUB card's LIB=n names
+# which: no suffix for phase 1, then MVSSRC.BLD.SMP.JCL1 for phase 2 and so on
+# to JCL5 -- and MAINT05@, the member ZCMPSMP1 hands on to, is in JCL1 and in no
+# other. A driver that knows only MVSSRC.BLD.SMP.JCL cannot follow the chain
+# past the phase-1 boundary at all; it does not merely decline to.
+CURLIB = [None]          # set in main() from LIB
+
+
+def libname(n):
+    return LIB if not n or n in ("0", "") else f"{LIB}{n}"
+
+
 def member(name):
-    return req("GET", f"{HOST}/zosmf/restfiles/ds/{LIB}({urllib.parse.quote(name)})")
+    ds = CURLIB[0] or LIB
+    return req("GET", f"{HOST}/zosmf/restfiles/ds/{ds}({urllib.parse.quote(name)})")
 
 
 SNAPDIR = os.path.expanduser("~/bldsnap")
@@ -227,6 +253,11 @@ def prepare(text):
         lines[i], note = space_fix(lines[i])
         if note:
             fixed.append(note)
+        mo = SUBOFF.match(lines[i])
+        if mo:
+            kv = dict(re.findall(r"(\w+)=([^,\s]+)", mo.group(2)))
+            print(f"    Fortsetzungskarte ist auskommentiert -- Daves Kette endet "
+                  f"hier (waere: LIB={kv.get('LIB')} MBR={kv.get('MBR')})", flush=True)
         m = SUB.match(lines[i])
         if m:
             kv = dict(re.findall(r"(\w+)=([^,\s]+)", m.group(2)))
@@ -321,7 +352,13 @@ def main():
     ap.add_argument("--max", type=int, default=300)
     ap.add_argument("--system", default="bld", choices=sorted(SYSTEMS),
                     help="which MVS the chain runs on (default: the TK5 build machine)")
+    ap.add_argument("--lib", default=None,
+                    help="JCL library suffix to start in: 1..5 for MVSSRC.BLD.SMP.JCL1..5")
+    ap.add_argument("--follow-lib", action="store_true",
+                    help="cross a LIB= phase boundary instead of stopping there. "
+                         "Phases 2-5 UPDATE THE RUNNING SYSTEM -- back it up first.")
     a = ap.parse_args()
+    CURLIB[0] = libname(a.lib)
     global HOST, USER, PW, _SYS
     HOST, _SYS = SYSTEMS[a.system]
     USER, PW = _cred(_SYS).split(":", 1)
@@ -333,7 +370,11 @@ def main():
         jcl, nxt, lb = prepare(member(cur))
         if a.dry_run:
             print(f"{n:3d} {cur:10s} -> {nxt or 'END'}" + (f"  LIB={lb}" if lb else ""))
-            cur = nxt if not lb else None
+            if lb:
+                if not a.follow_lib:
+                    cur = None; continue
+                CURLIB[0] = libname(lb)
+            cur = nxt
             continue
         jn, ji = submit(jcl)
         rc = wait(jn, ji)
@@ -353,9 +394,15 @@ def main():
             bad.append((cur, jn, ji, rc))
             snapshot(cur)
         if lb:
-            print(f"STOP: {cur} hands on to LIB={lb} ({nxt}). That is the "
-                  f"Phase-{lb} boundary and it updates the running system.")
-            return 0 if not bad else report(bad)
+            if not a.follow_lib:
+                print(f"STOP: {cur} hands on to LIB={lb} ({nxt}). That is the "
+                      f"Phase-{lb} boundary and it updates the running system.")
+                print(f"      --follow-lib crosses it. Back the system up first.")
+                return 0 if not bad else report(bad)
+            nl = libname(lb)
+            print(f"     crossing into LIB={lb} ({nl}) -- phase boundary, "
+                  f"--follow-lib is set", flush=True)
+            CURLIB[0] = nl
         if a.until and cur == a.until:
             print(f"STOP: reached --until {cur}.")
             return 0 if not bad else report(bad)
