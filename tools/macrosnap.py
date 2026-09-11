@@ -134,21 +134,35 @@ def write(path, name, rows, absent):
 
 
 def load(path):
+    """-> {(library, member): (bytes, raw_sha, nl_sha or None)}"""
     out = {}
     for line in open(path):
         if line.startswith("#") or line.startswith("library\t"):
             continue
         f = line.rstrip("\n").split("\t")
-        lib, mem, size, sha = f[0], f[1], f[2], f[3]
-        out[(lib, mem)] = (size, f[4] if len(f) > 4 else sha)
+        out[(f[0], f[1])] = (f[2], f[3], f[4] if len(f) > 4 else None)
     return out
 
 
 def compare(a, b):
+    """Compare two snapshots on a hash BOTH of them carry.
+
+    The trap this avoids: snapshots taken before the sha256_nl column exists
+    have four fields, newer ones have five. Reading "the last column" from each
+    compares raw bytes against CRLF-normalised bytes and reports every member as
+    changed -- a false alarm in the one tool whose entire job is to be believed
+    when it says something moved. So: normalised only when BOTH sides have it,
+    raw otherwise, and say which was used.
+    """
     A, B = load(a), load(b)
+    both_nl = (all(v[2] for v in A.values()) and all(v[2] for v in B.values())
+               and A and B)
+    idx = 2 if both_nl else 1
+    print(f"comparing on {'sha256_nl' if both_nl else 'raw sha256'}"
+          f"{'' if both_nl else '  (one side predates the sha256_nl column)'}")
     gone = sorted(set(A) - set(B))
     new = sorted(set(B) - set(A))
-    moved = sorted(k for k in set(A) & set(B) if A[k][1] != B[k][1])
+    moved = sorted(k for k in set(A) & set(B) if A[k][idx] != B[k][idx])
     print(f"{os.path.basename(a)} -> {os.path.basename(b)}")
     print(f"  {len(set(A) & set(B)) - len(moved)} unchanged")
     print(f"  {len(moved)} CHANGED, {len(gone)} gone, {len(new)} new")
