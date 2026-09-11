@@ -708,3 +708,61 @@ same thing:
 
 A secondary quantity is what causes this one: each job's writes take another
 extent, and sixteen jobs of growth is all it takes.
+
+### Run 7: all 82 jobs run, 54 non-zero, and one mechanism behind almost all of them
+
+2026-09-11, after the `SMPOUT` reallocation. The chain `MAINT06@`…`MAINT15G`
+completed end to end — every job submitted, `MAINT15G` reached, the driver
+stopping on Dave's own commented card. **54 of the 82 ended `CC 0008` or
+`CC 0012`**, and they are overwhelmingly one failure with a long tail of
+consequences.
+
+**`MAINT06@` is a RECEIVE with 485 DD cards in one concatenation**, Dave's
+collected `DSK5xxx`/`DSK6xxx` PTFs. JES allocated all 485 without complaint
+(881 × `IEF237I`, no `IEF212I`), so the concatenation is not the problem. SMP
+rejected the *content*:
+
+```
+----------./ DELETE SEQ1=00151902,SEQ2=00151902
+HMA3462 ** INVALID IEBUPDTE CONTROL STATEMENT
+```
+
+**487,641 times**, followed by `HMA3902 ** SYSMOD … SELECTED BUT COULD NOT BE
+RECEIVED` for 485 SYSMODs. Every later `APPLY` that selected one of them then
+failed with `HMA4012 ** … NOT FOUND ON SMPPTS LIBRARY`. That is the whole tail.
+
+#### The mechanism, isolated
+
+Sampled against the one SYSMOD that *was* received — `DSK6000`, via `MAINT05@`
+at `CC 0000`:
+
+| SYSMOD | `./` statements | received |
+|---|---|---|
+| `DSK6000` | `CHANGE` × 3 | **yes** |
+| `DSK5081` | `CHANGE` × 1, **`DELETE` × 13** | no |
+| `DSK6002` | `CHANGE` × 1, **`DELETE` × 133** | no |
+| `DSK6010` | `CHANGE` × 1, **`DELETE` × 1,280** | no |
+| `DSK6050` | `CHANGE` × 1, **`DELETE` × 1,246** | no |
+
+**The only SYSMOD without a `./ DELETE` is the only one that came through.**
+Four of four the other way. That fits Dave's own scheme exactly: `DSK5000`–
+`DSK8000` is *phase 1, "remove commented-out code"*, and removing lines by
+sequence number is what `./ DELETE SEQ1=,SEQ2=` is for.
+
+What is **not** established is *why* SMP rejects it — whether its IEBUPDTE
+subset has no `DELETE` at all, or whether these particular operands are wrong
+for these members. That needs a controlled case through the oracle: a minimal
+`++PTF` with one `./ DELETE` against a member with known sequence numbers. Not
+run yet.
+
+#### What did get through
+
+Not nothing, and it confirms the route is right:
+
+- `HMA2270 APPLY PROCESSING SUCCESSFULLY COMPLETED FOR SYSMOD DSKK001`, `DSKK016`
+- `MAINT12B`: 30 × `HMA2160 UPDATE SUCCESSFUL`
+- Of 15 of the 40 identity-losing modules re-read afterwards, **two changed** —
+  `AMDPRECT` and `IEAVTFTM` — and each now carries exactly the `DSKK` marker it
+  was missing (`DSKK015`, `DSKK053`).
+
+Where a SYSMOD arrives, Dave's repair lands in the source. Very few arrive.
