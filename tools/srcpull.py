@@ -19,7 +19,13 @@ import base64, http.client, os, sys, time
 HOST, PORT = "mvsdev.lan", 8085
 CRED = _cred("MVSTK5-BLD").encode()
 DS = "MVSSRC.BLD.AMVSSRC"
-OUT = os.path.expanduser("~/repos/mvs/mvs38src/work/measurements/amvssrc-tk5")
+# SRCPULL_OUT names the directory, because "Dave's source on the system" is not
+# one state. The pull of 2026-09-11 08:10 caught it after run 6, which had
+# applied his chain only as far as MAINT05F; a pull after the MAINT06@..MAINT15G
+# chain is a DIFFERENT tree, and overwriting the first with the second would
+# destroy the only before-picture there is.
+OUT = os.environ.get("SRCPULL_OUT") or os.path.expanduser(
+    "~/repos/mvs/mvs38src/work/measurements/amvssrc-tk5")
 conn = [None]
 
 
