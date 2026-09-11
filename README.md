@@ -1,7 +1,24 @@
 # mvs38src — MVS 3.8j from source
 
-Recovering the MVS 3.8j source at **DLIB level**, so that MVS/CE can be built
-from that source in future.
+**MVS 3.8j at maintenance level 8505, built from source.**
+
+The object code IBM shipped carries maintenance the shipped source never
+received. Recovering that source therefore means answering one question, module
+by module — **which sources do not yet assemble to the object in TK5's
+distribution libraries?** — and then closing the gap. Dave Kreiss got part of
+the way; this continues his work rather than restarting it.
+
+Success is machine-decidable and nothing else counts: the assembled CSECT is
+byte-identical to its counterpart in the distribution library, or it is not.
+
+> **`8505` is the target as stated by Mike on 2026-09-11, and it is not yet
+> measured.** Nothing in this repository establishes which maintenance level
+> TK5's distribution libraries actually carry, so the number is a goal and not a
+> baseline. The route to checking it is machine-readable and already described:
+> each load module's IDR data carries a per-module maintenance identifier — PTF
+> numbers such as `UZ79011` and IBM `RSI` stamps — see
+> [`docs/dlib-distance.md`](docs/dlib-distance.md). Reading it across TK5's
+> DLIBs would turn the goal into a measured one.
 
 Built on **Dave Kreiss'** *Build MVS from Source* — his reconstructed source,
 his `DSK*` PTFs, his build jobstreams and his utilities. He answered on
@@ -16,10 +33,15 @@ would be nothing here to recover.
    so not "source for our MVS/CE" but source for MVS 3.8j. That is the trunk;
    everything beyond — a BREXX integration, 3390 extensions, whatever comes — is
    development branching off from there.
-2. **Building MVS/CE from that source.** The seam is in the MVS-sysgen project's
+2. **Building a distribution from that source.** The seam is in the MVS-sysgen project's
    `sysgen.py`: `step_03_build_dlibs` produces the DLIBs from IBM's `zdlib1.het`
    tape, and everything after it derives from those DLIBs. If the DLIB content
-   comes from our source, the rest of the chain builds on unchanged.
+   comes from our source, the rest of the chain builds on unchanged. MVS/CE is
+   the distribution that seam was written for; **the object baseline this
+   project measures against is TK5**, decided on 2026-09-10 in
+   [`docs/fahrplan.md`](docs/fahrplan.md). Those are not in conflict — the
+   source tree is meant to be distribution-independent, and TK5 is the
+   yardstick, not the destination.
 
 ## Why this is work at all
 

@@ -1,5 +1,23 @@
 # Open decisions
 
+> **Items 1 and 2 were resolved within hours of this being written, on the
+> morning of 2026-09-11, and the file was not updated.** It was read as current
+> later the same day and both were reported to Mike as still open — which is
+> what a decision list costs when it does not say when it was last true.
+>
+> * **1 — decided.** `MVSTK5-REF` is the oracle. Frozen, DASD copied to
+>   `~/MVSTK5-REF-frozen-20260911`, macro snapshots 2,332 of 2,332 identical
+>   across three assemblies; `tools/systems.json` carries `oracle: true` there
+>   and nowhere else.
+> * **2 — decided, as option B and by the merge itself.** cc370 PR **#359**
+>   („the implicit private-code section is chained") was merged 06:03 UTC, and
+>   issue **#290**, the `EXTRN`-naming-a-CSECT case it fixes, was closed 06:58.
+> * **3 — decided**, as the section already says.
+> * **4 — `TODO.md` was translated** rather than made an exception (`cd73684`).
+>
+> What is genuinely still open from this file: the two spool entries on
+> `MVSCE-DEV`, and `$02ASM` / `$08STG1A` — both documented harmless.
+
 2026-09-11, after the night shift. Everything here needs Mike, not me — because
 it is his machine, because it reaches outside, or because it is a question of
 direction. Ordered by how much it blocks.

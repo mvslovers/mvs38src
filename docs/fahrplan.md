@@ -1,5 +1,11 @@
 # Fahrplan — the baseline is decided, and what follows from it
 
+> **Overtaken in three places on 2026-09-11, corrected inline below rather than
+> rewritten.** Stage 1's capture system, §4's account of run 5, and stage 3's
+> status all moved after this was written. Each correction is marked
+> **`2026-09-11:`** where it applies. The direction — TK5 as the object
+> baseline, and the five stages — stands.
+
 2026-09-10. **Supersedes the direction of [`workplan.md`](workplan.md)** (2026-09-04)
 on one point only: that document left the object baseline open and assumed MVS/CE.
 Its host-side recovery machinery — the extract / assemble / compare cycle on the
@@ -165,6 +171,13 @@ Run 4 is not worth restarting on LAB. It was always going to move to
 `MVSTK5-BLD`, and restarting it there costs the same and produces the thing the
 next step needs.
 
+> **2026-09-11: the table's "runs 4 and 5 died of space" is wrong about run 5.**
+> Run 5 reached job **235 of 260 and was stopped deliberately**
+> ([`dave-install-log.md`](dave-install-log.md)). What happened in it was worse
+> than dying: `MAINT03B` ended `IEC031I D37-04` mid-write and every later APPLY
+> added another torn member, so the run produced a *complete-looking* build on
+> damaged libraries — and every TK5 figure taken before run 6 rests on it.
+
 **The parity figure is pinned to a commit on purpose.** It was 5,418 at the
 promoted baseline (`f1cec11`, cc370#344) and is 5,427 at `fd287d3` — measured
 tree-wide by cc370 with a three-way control: `amaclib-live` last and
@@ -192,6 +205,29 @@ The cheap version has been asked: `BAS 14,TGT` assembles to `4DE0 F004` at
 severity 0 on both, so `ZP60025` is applied on both. **One instruction is not an
 assembler.** The real test is the corpus: run `tools/ifox_run.py` on
 `MVSTK5-BLD` and compare the decks against the recorded 5,528.
+
+> **2026-09-11: the capture system is `MVSTK5-REF`, not `MVSTK5-BLD`.** REF was
+> pinned as the oracle that day — frozen, DASD copied to
+> `~/MVSTK5-REF-frozen-20260911`, macro snapshots 2,332 of 2,332 identical
+> across three assemblies — and `tools/systems.json` carries `oracle: true` on
+> it and nowhere else. `ifox_run.py --system ref` writes to
+> `work/measurements/ifox-run-tk5ref/`. §6's "nothing is submitted to REF" is
+> superseded by the same decision: an oracle that takes no work cannot produce a
+> deck, and what keeps it honest is the frozen copy plus `tools/macrosnap.py`.
+>
+> **A first attempt ran at 10:33 and died in its first job**, `IEF212I IFX0000
+> S01 SYSLIB +006 - DATA SET NOT FOUND`: `IBMUSER.PVTMAC`, the 444 private
+> macros, exists on `MVSCE-EXP` and not on REF. `IBMUSER.IFOXOB2`, `IFOXLST` and
+> `SRCD` are missing there too, and `IBMUSER.SRC2` holds only the 25 members of
+> the abandoned first batch.
+>
+> **And the `SYSLIB` in that job would have given a wrong answer even so.** It
+> names the six `SYS1.A*` libraries, which on REF are *TK5's own*.
+> [`macro-tk5-vs-ce.md`](macro-tk5-vs-ce.md) measured that 129 of the differing
+> macros sit on the `-I` path and move **68 modules**, and states the rule this
+> run has to obey: the corpus run must hold the macros constant and carry MVS/CE's
+> across. Uploading them as `IBMUSER.*` data sets leaves REF's frozen `SYS1`
+> libraries and the macro snapshot untouched.
 
 - decks identical → the reference is not MVS/CE-specific, everything transfers;
 - decks differ → the reference belongs to MVS/CE and re-baselining costs a full
@@ -379,6 +415,14 @@ The twelve 3390-1 originals are kept in `~/MVSTK5-BLD/dasd-3390-1-alt/` and
 Dave's pristine copies in `~/blddasd-orig/`.
 
 ### Stage 3 — `ZLMDRPTD` and `ZLMDRPTT` on `MVSTK5-BLD`
+
+> **2026-09-11: done, on run 6.** `RPTDLB/JOB00815` and `RPTTGT/JOB00816`, both
+> `CC 0000`, against the clean build. 81 missing load modules became 2, and
+> equal CSECTs went 1,003 → 1,420 on the distribution side and 1,286 → 1,419 on
+> the targets. The run-5 figures it replaces came off the `D37`-damaged build,
+> and the published `equal` row on both was counted from the `SUMMARY` page
+> rather than the detail — see
+> [`build-vs-original-tk5.md`](build-vs-original-tk5.md).
 
 **This closes the original ask.** `ZLMDRPTD` compares the build's DLIBs against
 the system's own DLIBs, and on `MVSTK5-BLD` those are TK5's — so it is the same
