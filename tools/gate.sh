@@ -10,7 +10,10 @@
 set -e
 BIN=$1; LABEL=$2
 here=$(cd "$(dirname "$0")" && pwd)
-SRC="/Users/mike/repos/MVSSRC/Dave Kreiss - MVS from Source/MVSBLD"
+# SRC_TREE overrides the source tree. The macro path, the pinned stamp and the
+# deck handling below must NOT move with it: the point of assembling a second
+# source state is that everything except the source is held fixed.
+SRC="${SRC_TREE:-/Users/mike/repos/MVSSRC/Dave Kreiss - MVS from Source/MVSBLD}"
 M=$HOME/repos/mvs/mvs38src/work/macros
 # erep-set is NOT a trial: those six macros were uploaded to IBMUSER.PVTMAC on
 # MVSCE-EXP on 2026-09-09 and the 33 affected reference decks were replaced, so

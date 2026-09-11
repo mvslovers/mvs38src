@@ -1,0 +1,21 @@
+# The instruments for the three-source-state run, pinned 2026-09-11
+#
+# One binary through all three columns. That is the property that matters:
+# a difference between columns is then the source and nothing else.
+#
+as370      sha256    affc90e3717dc42f917a201d4bbf1287bc51ff98f356f144f8355379faeb1b5d
+as370      source    /Users/mike/repos/mvs/cc370/as370/as370
+as370      built     2026-09-11 10:01
+as370      copied    2026-09-11 11:46
+cmplmd370  sha256    c907e52c93b099a60cfa06ac7221f8a878322d30c5b1bb33cb4e1958c8237d43
+cc370 HEAD at copy time: 4ca0353 docs: #26 closed, and #362 is a USING defect rather than a diagnostic gap
+#
+# NOT PROVEN: that this binary was built from that commit. It came out of a
+# working tree another session rebuilds continuously -- 14 of its as370
+# processes were running as this was written. The commit is context; the
+# sha256 is the identity.
+#
+# The first version of this file recorded the build time as 11:46, which was
+# the moment cp created the copy. cp -p now, and the line says 'built' and
+# 'copied' separately. A provenance file that records its own creation as
+# the artefact's age is worse than none.

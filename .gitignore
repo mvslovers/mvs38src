@@ -52,3 +52,9 @@ work/measurements/amvssrc-tk5/
 
 # Credentials -- see .env.example and tools/creds.py
 .env
+
+# The three-source-state run: the pinned binaries and the symlink tree are
+# reproducible, PROVENANCE.txt is the part that must survive.
+work/src-states/bin/as370
+work/src-states/bin/cmplmd370
+work/src-states/applied/
