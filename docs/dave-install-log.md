@@ -766,3 +766,41 @@ Not nothing, and it confirms the route is right:
   was missing (`DSKK015`, `DSKK053`).
 
 Where a SYSMOD arrives, Dave's repair lands in the source. Very few arrive.
+
+### The `./ DELETE` case, put to the system — 2026-09-11
+
+The isolation across real SYSMODs was correlational: everything with `./ DELETE`
+failed and the one thing without it did not. This is the controlled version.
+
+**Two SYSMODs, line for line identical except one, in one `RECEIVE`:**
+
+```
+++PTF(DSKTSTA) /* control - CHANGE only */ .        ++PTF(DSKTSTB) /* case */ .
+++VER(Z038) FMID(EUT1102) .                         ++VER(Z038) FMID(EUT1102) .
+++MACUPD(SGIEH402) .                                ++MACUPD(SGIEH402) .
+./ CHANGE NAME=SGIEH402                             ./ CHANGE NAME=SGIEH402
+*TEST LINE                              00151902    *TEST LINE           00151902
+                                                    ./ DELETE SEQ1=00155299,SEQ2=00155299
+```
+
+`SMPDELTS/JOB00909`, `CC 0008`. The result is read where it cannot be argued
+with — the contents of `SMPPTS` afterwards:
+
+| SYSMOD | in `SMPPTS` |
+|---|---|
+| `DSKTSTA` — `CHANGE` only | **yes** |
+| `DSKTSTB` — the same plus one `./ DELETE` | **no** |
+
+**So MVS 3.8's SMP does not accept `./ DELETE` on `RECEIVE`.** One statement in
+an otherwise-valid SYSMOD is enough to lose the whole SYSMOD, and that is why
+485 of Dave's went missing and 54 jobs went red behind them. Established by a
+case with a known answer on both sides, not inferred from a correlation.
+
+The control SYSMOD was rejected again afterwards (`SMPDELCL/JOB00909`,
+`CC 0000`); `SMPPTS` carries no `DSKTST*`.
+
+**What this does not answer** is why Dave's own build worked for him. His PTFs
+are written in a form the SMP on this system rejects, so either he ran a
+different SMP level, or a step exists that rewrites them, or his own runs lost
+these SYSMODs too and the build was never complete in that respect. Nothing
+here decides between those, and the correspondence is the cheapest way to ask.
