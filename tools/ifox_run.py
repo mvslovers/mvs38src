@@ -34,11 +34,24 @@ from concurrent.futures import ThreadPoolExecutor
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-HOST, PORT, FTPPORT = "mvsdev", 8083, 2123          # MVSCE-EXP
-USER, PW = _cred("MVSCE-EXP").split(":", 1)
+# Which system cuts the reference. MVSCE-EXP cut the recorded 5,528 and is the
+# default so nothing that reads this directory changes meaning. --system names
+# another, and it REDIRECTS THE OUTPUT with it: a second reference must never be
+# able to overwrite the first, because the whole point of cutting one elsewhere
+# is comparing the two. Stage 1 of docs/fahrplan.md is exactly that run.
+SYSTEMS = {
+    "exp": ("mvsdev", 8083, 2123, "MVSCE-EXP", "ifox-run"),
+    "ref": ("mvsdev", 8084, 2124, "MVSTK5-REF", "ifox-run-tk5ref"),
+    "bld": ("mvsdev", 8085, 2125, "MVSTK5-BLD", "ifox-run-tk5bld"),
+}
+_sys = os.environ.get("IFOX_SYSTEM", "exp")
+if _sys not in SYSTEMS:
+    sys.exit(f"IFOX_SYSTEM={_sys!r}: one of {', '.join(sorted(SYSTEMS))}")
+HOST, PORT, FTPPORT, _SYSNAME, _OUTDIR = SYSTEMS[_sys]
+USER, PW = _cred(_SYSNAME).split(":", 1)
 BASE = f"http://{HOST}:{PORT}/zosmf/restjobs/jobs"
 SRC = "/Users/mike/repos/MVSSRC/Dave Kreiss - MVS from Source/MVSBLD"
-OUT = os.path.expanduser("~/repos/mvs/mvs38src/work/measurements/ifox-run")
+OUT = os.path.expanduser(f"~/repos/mvs/mvs38src/work/measurements/{_OUTDIR}")
 DECKS = os.path.join(OUT, "decks")
 AS370 = os.path.join(OUT, "as370")
 STATE = os.path.join(OUT, "state.tsv")

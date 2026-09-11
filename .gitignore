@@ -39,9 +39,14 @@ work/kreiss-newasm/
 # `git add -A` from the repo root put 11,565 of them into one commit on
 # 2026-09-10 and took .git from 92 MB to 131 MB.
 obj_*/
-/g[0-9]*.tsv
-/r[0-9]*.tsv
 /modules.txt
+
+# The repository root is scratch for gate runs: every <label>.tsv beside an
+# obj_<label>/ is 5,528 hashes from a ten-minute run.  The pattern used to be
+# /g[0-9]*.tsv and /r[0-9]*.tsv, which caught g343 and missed gblank, amaclib,
+# tattrexpr and twenty more -- a label is a word, not a number.  Measurements
+# that are meant to be kept live under work/measurements/, never here.
+/*.tsv
 work/measurements/dlib-bytes/
 work/measurements/amvssrc-tk5/
 
