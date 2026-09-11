@@ -22,6 +22,7 @@ defect". Line numbers carry the same warning: `line_org` folds every
 macro-generated diagnostic onto the macro call card, so all 75 of `IFG0190P`'s
 say "in line 1".
 """
+import time
 import os, re, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
 
@@ -71,11 +72,48 @@ def one(m):
     return m, p.returncode, flagged, sev, " | ".join(order[:6])
 
 
+def provenance(binary):
+    """Which assembler this actually was, recorded in the file it produces.
+
+    `gate.sh` has always written a `.commit` beside its decks; this did not, and
+    on 2026-09-11 that cost a whole run. The default path points into a working
+    copy another session builds in, so the binary changed under a run already in
+    progress: the output carried IFO213 and IFO217 messages that `origin/main`
+    has no source for, and there is no way afterwards to say which of the 5,528
+    modules were measured with which assembler.
+
+    A timestamp cannot catch that -- the staleness guard in module_table.py
+    compares mtimes, and both files were new. Only the identity can.
+    """
+    import hashlib, subprocess
+    binary = os.path.realpath(binary)
+    try:
+        sha = hashlib.sha256(open(binary, "rb").read()).hexdigest()[:16]
+    except OSError:
+        sha = "unreadable"
+    src = os.path.dirname(os.path.dirname(binary))
+    try:
+        head = subprocess.run(["git", "log", "--oneline", "-1"], cwd=src,
+                              capture_output=True, text=True, timeout=20).stdout.strip()
+        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"],
+                               cwd=src, capture_output=True, text=True,
+                               timeout=20).stdout.strip()
+    except Exception:
+        head, dirty = "", ""
+    return (f"# as370 {binary}\n"
+            f"# sha256 {sha}\n"
+            f"# commit {head or 'unknown'}{'  [WORKING TREE DIRTY]' if dirty else ''}\n"
+            f"# taken  {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+
+
 def main():
     os.environ["AS370"] = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser(
         "~/repos/mvs/cc370/as370/as370")
     mods = sorted(f[:-4] for f in os.listdir(SRC) if f.endswith(".ASM"))
+    prov = provenance(os.environ["AS370"])
+    print(prov, end="")
     with open(f"{RUN}/as370-messages.tsv", "w") as f:
+        f.write(prov)
         f.write("module\trc\tflagged\tseverity\tmessages\n")
         with ThreadPoolExecutor(8) as ex:
             for i, r in enumerate(ex.map(one, mods), 1):

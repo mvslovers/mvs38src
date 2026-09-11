@@ -12,6 +12,7 @@ Joins the four measurements into the table the work is steered by:
 Written to `module-table.tsv`; `module-table-flagged.tsv` is the same table
 reduced to the rows where at least one assembler had something to say.
 """
+import time
 import os, sys, re
 from collections import Counter
 
@@ -91,7 +92,15 @@ def tsv(path, keycol=0):
     out = {}
     if not os.path.exists(path):
         return out
-    lines = open(path).read().splitlines()
+    lines = [l for l in open(path).read().splitlines() if not l.startswith("#")]
+    # Leading `#' lines are a provenance header -- which assembler, which commit,
+    # when. as370_messages.py writes one since 2026-09-11, after a run measured
+    # two different binaries because the default path points into a working copy
+    # another session builds in. A reader that takes line 0 as the header would
+    # turn that record into a parse error, so the record is skipped here rather
+    # than not written there.
+    if not lines:
+        return out
     head = lines[0].split("\t")
     for l in lines[1:]:
         f = l.split("\t")
@@ -112,6 +121,63 @@ def excluded():
         return {}
     return {l.split("\t")[0]: l.split("\t")[1]
             for l in open(p).read().splitlines()[1:] if "\t" in l}
+
+
+def _deck_commit():
+    """Which as370 built the decks -- NOT necessarily the one that ran the messages.
+
+    gate.sh writes a .commit beside its output and the two halves genuinely come
+    from different commits: on 2026-09-11 the decks were cut from a PR head and
+    the messages from origin/main after it merged. Same assembler code, different
+    commits, and the first version of this file reported only one of them -- the
+    precise failure the paragraph below has warned about since 2026-09-10.
+    """
+    try:
+        return open(f"{RUN}/as370/.commit").read().strip() or "unknown"
+    except OSError:
+        return "unknown"
+
+
+def write_provenance():
+    """Record what this cut was made against, beside the tables it produces."""
+    binhdr = {}
+    try:
+        for l in open(f"{RUN}/as370-messages.tsv"):
+            if not l.startswith("#"):
+                break
+            k, _, v = l[1:].strip().partition(" ")
+            binhdr[k] = v.strip()
+    except OSError:
+        pass
+    body = [
+        "Derived tables in this directory -- what they were cut against.",
+        "",
+        f"  as370 binary   {binhdr.get('as370', 'unknown')}",
+        f"  binary sha256  {binhdr.get('sha256', 'unknown')}",
+        f"  messages from  {binhdr.get('commit', 'unknown')}",
+        f"  decks from     {_deck_commit()}",
+        f"  cut at         {time.strftime('%Y-%m-%d %H:%M')}",
+        "",
+        "Binary and commit are recorded separately on purpose: these tools read a",
+        "binary AND stored state, and that is exactly where the two halves come from",
+        "different commits without it being written down anywhere (cc370, 2026-09-10).",
+        "",
+        "Written by module_table.py, from the header as370_messages.py leaves in",
+        "as370-messages.tsv. Both were hand-maintained until 2026-09-11 and both",
+        "had drifted; a provenance record only helps if the thing it describes",
+        "writes it.",
+        "",
+        "Regenerate the whole chain in this order -- each step feeds the next:",
+        "",
+        "  as370_messages.py <bin>   -> as370-messages.tsv",
+        "  ifox_compare.py   <bin>   -> verdicts.tsv",
+        "  ifox_cluster.py           -> tool-diffs.tsv",
+        "  module_table.py           -> module-table.tsv  (and this file)",
+        "  rebuild_classes.py <bin>  -> classes/*.txt",
+        "",
+    ]
+    with open(f"{RUN}/PROVENANCE.txt", "w") as f:
+        f.write("\n".join(body))
 
 
 def main():
@@ -164,6 +230,14 @@ def main():
     # everything below it can go in a single stroke
     rows.sort(key=lambda r: (RANK.get(r[15], 3), SIGRANK.get(r[14], 9),
                              -int(r[11] or 0) if r[11].isdigit() else 0, r[0]))
+    # PROVENANCE.txt is read by module_table_html.py to stamp the page with what
+    # the tables were cut against. It used to be maintained by hand, so it drifted:
+    # on 2026-09-11 it was a day behind a recut and the page fell back to the
+    # as370 binary's own .commit -- which was SIXTEEN commits ahead of the data,
+    # and would have printed a fix as the commit behind rows that predate it.
+    # A provenance file nobody writes is the thing it exists to prevent. So the
+    # step that cuts the tables writes it, from what it can actually see.
+    write_provenance()
     with open(f"{RUN}/module-table.tsv", "w") as f:
         f.write("\t".join(head) + "\n")
         for r in rows:

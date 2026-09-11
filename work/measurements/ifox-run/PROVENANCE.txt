@@ -1,18 +1,24 @@
 Derived tables in this directory -- what they were cut against.
 
-  as370 binary   as370 V1.0 - Sep 10 2026
-  cc370 commit   e629808 fix(as370): an attribute apostrophe is not a delimiter in two more scans (#347)
-  built from     /tmp/main-cc370, detached at origin/main
-  cut at         2026-09-10 15:59
+  as370 binary   /Users/mike/repos/mvs/cc370-review/as370/as370
+  binary sha256  552ada389450814b
+  messages from  836ccc0 docs: it was fourteen of fourteen, not nine
+  decks from     1f1e6a0 fix(as370): a blank CSECT card resumes the private code
+  cut at         2026-09-11 10:11
 
 Binary and commit are recorded separately on purpose: these tools read a
 binary AND stored state, and that is exactly where the two halves come from
 different commits without it being written down anywhere (cc370, 2026-09-10).
+
+Written by module_table.py, from the header as370_messages.py leaves in
+as370-messages.tsv. Both were hand-maintained until 2026-09-11 and both
+had drifted; a provenance record only helps if the thing it describes
+writes it.
 
 Regenerate the whole chain in this order -- each step feeds the next:
 
   as370_messages.py <bin>   -> as370-messages.tsv
   ifox_compare.py   <bin>   -> verdicts.tsv
   ifox_cluster.py           -> tool-diffs.tsv
-  module_table.py           -> module-table.tsv
+  module_table.py           -> module-table.tsv  (and this file)
   rebuild_classes.py <bin>  -> classes/*.txt
