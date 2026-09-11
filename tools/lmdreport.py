@@ -1,3 +1,6 @@
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from creds import cred as _cred      # credentials live in .env, not here
 #!/usr/bin/env python3
 """Run Dave's load-module cross-reference report without a sort product.
 
@@ -25,7 +28,7 @@ Dave's, and the report is his program reading his input.
 import argparse, json, os, re, subprocess, sys, time, urllib.parse, urllib.request, base64
 
 HOST = "http://mvsdev.lan:8082"          # see bldrun.py on why not the bare name
-USER, PW = "IBMUSER", "SYS1"
+USER, PW = _cred("MVSCE-LAB").split(":", 1)
 LIB = "MVSSRC.BLD.SMP.JCL"
 HERE = os.path.dirname(os.path.abspath(__file__))
 

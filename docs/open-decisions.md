@@ -66,23 +66,28 @@ Separately: `#290` is implemented, `IECVHDET` is byte-identical, and the
 private-code fix gains **+3** with nothing lost. Parity on cc370's branch is
 **5,431 of 5,528**. Both wait on a human merge.
 
-## 3. Credentials in tracked files — convention, not exposure
+## 3. Credentials in tracked files — DECIDED 2026-09-11: pulled into `.env`
 
-Nine tracked files here carry `HERC01/CUL8TR` or `IBMUSER:SYS1` — four documents,
-five tools, all predating yesterday.
+Mike chose to pull them out rather than leave them with a note. Done.
 
-The facts: these are the **published default credentials** of TK5 and MVS/CE on a
-LAN-local emulator. Nothing is exposed that a reader could not look up in either
-distribution's own documentation. Not an incident.
+`tools/creds.py` resolves a credential from `MVS_CRED`, then `MVS_CRED_<SYSTEM>`,
+then `<SYSTEM>_CRED` in a gitignored `.env`, then `DEFAULT_CRED` — with no
+built-in fallback, so a tool that cannot find one stops instead of producing a
+401 loop that looks like an outage. `.env.example` is tracked and carries the
+shape without the values. Short names resolve through `systems.json`, so `ref`
+and `MVSTK5-REF` reach the same entry.
 
-Still open, because `CLAUDE.md` gitignores `.env` for a reason, publication of
-this repo still waits on a licensing answer, and history keeps the strings
-whatever a later commit does.
+**The count in the audit was wrong, and finding that out is the useful part.**
+It said nine tracked files. It was **twelve**: `ifox_run.py`, `lmdreport.py` and
+`lmdsort.py` write the pair as `USER, PW = "IBMUSER", "SYS1"`, which the search
+pattern `IBMUSER:SYS1` does not match. A grep for one spelling of a secret finds
+one spelling of a secret. The seven tools now take theirs from `.env`; the
+documents show `see .env` in their tables and `-u "$MVS_CRED"` in their examples.
 
-**To decide:** pull them into an ignored `.env` (five tools, four documents to
-touch) — or leave them, on the record that they are published defaults. I did not
-do it unprompted because it is convention rather than urgency, and because
-rewriting five tools during a build run is how a running build stops.
+What this does **not** do: history keeps every string. These are the published
+defaults of TK5 and MVS/CE on a LAN-local emulator, so that is a tidiness
+question and not an exposure — but if the repository is ever published, that is
+the sentence to remember.
 
 ## 4. Smaller things
 

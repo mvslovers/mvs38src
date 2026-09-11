@@ -1,3 +1,6 @@
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from creds import cred as _cred      # credentials live in .env, not here
 #!/usr/bin/env python3
 """Sort an MVS FB/80 data set off-host, because MVS/CE has no sort product.
 
@@ -46,7 +49,7 @@ import argparse, base64, sys, urllib.request
 # does not resolve does not start resolving because you ask again.  ssh
 # config has mapped mvsdev to mvsdev.lan all along.
 HOST = "http://mvsdev.lan:8082"
-USER, PW = "IBMUSER", "SYS1"
+USER, PW = _cred("MVSCE-LAB").split(":", 1)
 KEY = (0, 40)                      # SORT FIELDS=(1,40,CH,A)
 
 

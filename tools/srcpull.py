@@ -1,3 +1,6 @@
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from creds import cred as _cred      # credentials live in .env, not here
 #!/usr/bin/env python3
 """Pull MVSSRC.BLD.AMVSSRC off MVSTK5-BLD, member by member, resumably.
 
@@ -13,7 +16,8 @@ time, not here.
 """
 import base64, http.client, os, sys, time
 
-HOST, PORT, CRED = "mvsdev.lan", 8085, b"HERC01:CUL8TR"
+HOST, PORT = "mvsdev.lan", 8085
+CRED = _cred("MVSTK5-BLD").encode()
 DS = "MVSSRC.BLD.AMVSSRC"
 OUT = os.path.expanduser("~/repos/mvs/mvs38src/work/measurements/amvssrc-tk5")
 conn = [None]

@@ -141,13 +141,13 @@ more column. Run it against all three source states and read the number.
 
 | system | mvsMF | Hercules | credentials | role |
 |---|---|---|---|---|
-| `MVSCE-DEV` | `:8080` | — | `IBMUSER`/`SYS1` | **tabu** — the user's own |
-| `MVSCE-LAB` | `:8082` | — | `IBMUSER`/`SYS1` | the IFOX00 oracle that produced the 5,528 reference decks; build runs 1–4 |
-| `MVSCE-EXP` | `:8083` | — | `IBMUSER`/`SYS1` | untouched MVS/CE reference. **Run it.** On 2026-09-11 one request to it settled a question a full day of work had not: stock MVS/CE ships no `IHADVCT` in `SYS1.AMACLIB` at all, so LAB's pre-APAR copy was added rather than degraded. A control that is never run is not a control |
-| `MVSTK5-REF` | `:8084` | `:8484` | `HERC01`/`CUL8TR` | **the object baseline. Read-only.** |
-| `MVSTK5-BLD` | `:8085` | `:8585` | `HERC01`/`CUL8TR` | where Dave's build runs from here on |
+| `MVSCE-DEV` | `:8080` | — | `see .env` | **tabu** — the user's own |
+| `MVSCE-LAB` | `:8082` | — | `see .env` | the IFOX00 oracle that produced the 5,528 reference decks; build runs 1–4 |
+| `MVSCE-EXP` | `:8083` | — | `see .env` | untouched MVS/CE reference. **Run it.** On 2026-09-11 one request to it settled a question a full day of work had not: stock MVS/CE ships no `IHADVCT` in `SYS1.AMACLIB` at all, so LAB's pre-APAR copy was added rather than degraded. A control that is never run is not a control |
+| `MVSTK5-REF` | `:8084` | `:8484` | `see .env` | **the object baseline. Read-only.** |
+| `MVSTK5-BLD` | `:8085` | `:8585` | `see .env` | where Dave's build runs from here on |
 
-`HERC01`/`CUL8TR` for TK5, `IBMUSER`/`SYS1` for MVS/CE — the wrong pair returns
+The pair differs by system and lives in `.env`; see `tools/creds.py`. The wrong pair returns
 401, and a 401 loop is indistinguishable from an outage from the outside.
 
 **After every IPL: `/S HTTPD` and `/S FTPD`.**

@@ -1,3 +1,6 @@
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from creds import cred as _cred      # credentials live in .env, not here
 #!/usr/bin/env python3
 """Drive Dave Kreiss' build chain one job at a time, through mvsMF.
 
@@ -44,10 +47,13 @@ import urllib.error, urllib.parse, urllib.request
 # (docs/deck-vs-tk5-ce.md) and ZLMDRPTD only compares against the DLIBs of the
 # system it runs on.  The credential differs per system and the wrong one gives
 # a 401, which is indistinguishable from an outage from the outside.
-SYSTEMS = {"lab": ("http://mvsdev.lan:8082", "IBMUSER", "SYS1"),
-           "exp": ("http://mvsdev.lan:8083", "IBMUSER", "SYS1"),
-           "bld": ("http://mvsdev.lan:8085", "HERC01", "CUL8TR")}
-HOST, USER, PW = SYSTEMS["bld"]
+# Host only. The credential comes from .env through creds.py, so this file can
+# be read by anyone without handing them a login.
+SYSTEMS = {"lab": ("http://mvsdev.lan:8082", "MVSCE-LAB"),
+           "exp": ("http://mvsdev.lan:8083", "MVSCE-EXP"),
+           "bld": ("http://mvsdev.lan:8085", "MVSTK5-BLD")}
+HOST, _SYS = SYSTEMS["bld"]
+USER, PW = _cred(_SYS).split(":", 1)
 LIB = "MVSSRC.BLD.SMP.JCL"
 SUB = re.compile(r"^//(\S+)\s+EXEC\s+BLDSUB\s*,(.*)$", re.I)
 
@@ -316,8 +322,9 @@ def main():
     ap.add_argument("--system", default="bld", choices=sorted(SYSTEMS),
                     help="which MVS the chain runs on (default: the TK5 build machine)")
     a = ap.parse_args()
-    global HOST, USER, PW
-    HOST, USER, PW = SYSTEMS[a.system]
+    global HOST, USER, PW, _SYS
+    HOST, _SYS = SYSTEMS[a.system]
+    USER, PW = _cred(_SYS).split(":", 1)
     print(f"chain on {a.system} -- {HOST} as {USER}", flush=True)
 
     cur, n, bad = a.start, 0, []

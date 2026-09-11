@@ -12,7 +12,7 @@ This is how.
 | `MVSCE-LAB` | `mvsdev:8082` | 2122 | |
 | `MVSCE-EXP` | `mvsdev:8083` | 2123 | |
 
-Credentials `IBMUSER`/`SYS1`. If mvsMF misbehaves on one, fall back to `:8080`.
+Credentials come from `.env` via `tools/creds.py`. If mvsMF misbehaves on one, fall back to `:8080`.
 
 ## The recipe
 
@@ -27,14 +27,14 @@ TESTS    CSECT
 /*
 JCL
 
-curl -s -u IBMUSER:SYS1 -H "X-CSRF-ZOSMF-HEADER: x" \
+curl -s -u "$MVS_CRED" -H "X-CSRF-ZOSMF-HEADER: x" \
      -H "Content-Type: text/plain" -H "X-IBM-Intrdr-Mode: TEXT" \
      --data-binary @t.jcl -X PUT "http://mvsdev:8083/zosmf/restjobs/jobs"
 
-curl -s -u IBMUSER:SYS1 -H "X-CSRF-ZOSMF-HEADER: x" \
+curl -s -u "$MVS_CRED" -H "X-CSRF-ZOSMF-HEADER: x" \
      "http://mvsdev:8083/zosmf/restjobs/jobs/IFOXTST1/JOB00001/files"
 
-curl -s -u IBMUSER:SYS1 -H "X-CSRF-ZOSMF-HEADER: x" \
+curl -s -u "$MVS_CRED" -H "X-CSRF-ZOSMF-HEADER: x" \
      ".../files/102/records" > ifox.lst
 ```
 
@@ -159,7 +159,7 @@ source questions.
 //SYSIN    DD  *          … the source, columns 1-71
 
 # 2. fetch it byte-exact
-printf "user IBMUSER SYS1\nbinary\nget 'IBMUSER.IFOXOBJ.MEMBER' ifox.obj\nquit\n" \
+printf "user ${MVS_CRED%%:*} ${MVS_CRED#*:}\nbinary\nget 'IBMUSER.IFOXOBJ.MEMBER' ifox.obj\nquit\n" \
   | ftp -n mvsdev 2123
 ```
 

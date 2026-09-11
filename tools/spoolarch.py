@@ -1,3 +1,6 @@
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from creds import cred as _cred      # credentials live in .env, not here
 #!/usr/bin/env python3
 """Copy job output off the JES2 spool onto disk, and optionally purge what was
 copied.
@@ -25,9 +28,9 @@ no change and no restart for this.
 import argparse, base64, json, os, sys, time, urllib.request
 
 SYSTEMS = {
-    "lab": dict(host="mvsdev.lan", port=8082, cred="IBMUSER:SYS1"),
-    "ref": dict(host="mvsdev.lan", port=8084, cred="HERC01:CUL8TR"),
-    "bld": dict(host="mvsdev.lan", port=8085, cred="HERC01:CUL8TR"),
+    "lab": dict(host="mvsdev.lan", port=8082, cred=None),
+    "ref": dict(host="mvsdev.lan", port=8084, cred=None),
+    "bld": dict(host="mvsdev.lan", port=8085, cred=None),
 }
 
 
@@ -49,7 +52,7 @@ def main():
 
     s = SYSTEMS[a.system]
     host = f"http://{s['host']}:{s['port']}"
-    auth = base64.b64encode(s["cred"].encode()).decode()
+    auth = base64.b64encode((s["cred"] or _cred(a.system)).encode()).decode()
     out = os.path.join(a.out, a.system)
     os.makedirs(out, exist_ok=True)
 

@@ -200,7 +200,7 @@ visible without an oracle at all.
 
 ## Operational: `MVSCE-EXP` rejects submitted jobs
 
-Every job submitted to `MVSCE-EXP` (`:8083`) as `IBMUSER`/`SYS1` ends
+Every job submitted to `MVSCE-EXP` (`:8083`) with the MVS/CE credential from `.env` ends
 `JCL ERROR` / `IEF722I ... INVALID PASSWORD GIVEN`. **Reads with the same
 credential succeed** — `IBMUSER.PVTMAC` was copied off it member by member, 453
 of 453, no failures — so mvsMF authenticates the request and the job card is

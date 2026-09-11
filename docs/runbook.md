@@ -264,11 +264,11 @@ session, plus an older `~/MVSCE`.
 All eight ports answer from the Mac. mvsMF responds on both HTTP ports:
 
 ```
-$ curl -u IBMUSER:SYS1 -H "X-CSRF-ZOSMF-HEADER: x" http://mvsdev:8082/zosmf/info
+$ curl -u "$MVS_CRED" -H "X-CSRF-ZOSMF-HEADER: x" http://mvsdev:8082/zosmf/info
 {"zosmf_version":"1.0.0-dev","api_version":"1","zos_version":"MVS 3.8j", ...}
 ```
 
-Credentials are the MVS/CE defaults: `IBMUSER`/`SYS1`, `MVSCE01`/`CUL8TR`,
+Credentials are the distributions' published defaults and live in `.env`; see `tools/creds.py`. They are
 `MVSCE02`/`PASS4U`. Without them `/zosmf/info` answers 401, which is a useful
 liveness signal in itself — 401 means mvsMF is registered, 404 means only HTTPD
 is up.

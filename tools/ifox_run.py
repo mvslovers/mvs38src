@@ -1,3 +1,6 @@
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from creds import cred as _cred      # credentials live in .env, not here
 #!/usr/bin/env python3
 """Assemble MVSBLD modules with the real IFOX00 under MVS/CE and bring the decks back.
 
@@ -32,7 +35,7 @@ from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 HOST, PORT, FTPPORT = "mvsdev", 8083, 2123          # MVSCE-EXP
-USER, PW = "IBMUSER", "SYS1"
+USER, PW = _cred("MVSCE-EXP").split(":", 1)
 BASE = f"http://{HOST}:{PORT}/zosmf/restjobs/jobs"
 SRC = "/Users/mike/repos/MVSSRC/Dave Kreiss - MVS from Source/MVSBLD"
 OUT = os.path.expanduser("~/repos/mvs/mvs38src/work/measurements/ifox-run")

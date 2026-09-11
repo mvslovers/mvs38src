@@ -94,10 +94,10 @@ favour either column.
 
 | system | mvsMF | Hercules console | credentials |
 |---|---|---|---|
-| `MVSCE-LAB` | `mvsdev.lan:8082` | — | `IBMUSER`/`SYS1` |
-| `MVSCE-EXP` | `mvsdev.lan:8083` | — | `IBMUSER`/`SYS1` |
-| `MVSTK5-REF` | `mvsdev.lan:8084` | `mvsdev.lan:8484` | `HERC01`/`CUL8TR` |
-| `MVSTK5-BLD` | `mvsdev.lan:8085` | `mvsdev.lan:8585` | `HERC01`/`CUL8TR` |
+| `MVSCE-LAB` | `mvsdev.lan:8082` | — | `see .env` |
+| `MVSCE-EXP` | `mvsdev.lan:8083` | — | `see .env` |
+| `MVSTK5-REF` | `mvsdev.lan:8084` | `mvsdev.lan:8484` | `see .env` |
+| `MVSTK5-BLD` | `mvsdev.lan:8085` | `mvsdev.lan:8585` | `see .env` |
 
 ## Results
 

@@ -1,3 +1,6 @@
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from creds import cred as _cred      # credentials live in .env, not here
 #!/usr/bin/env python3
 """Pull distribution-library members off a live MVS, byte for byte, resumably.
 
@@ -17,18 +20,20 @@ reads take the better part of an hour and a driver that starts over after a
 network blip is a driver nobody runs twice.
 
     dlibpull.py --system tk5 --modules mods.tsv
-    dlibpull.py --system ce  --modules mods.tsv
+    dlibpull.py --system ce  --modules mods.tsv [--cache macro-bytes]
 
-`mods.tsv` is `module<TAB>distlib`, no header.
+`mods.tsv` is `member<TAB>library`, no header, and the library is the part after
+`SYS1.` -- so it reads distribution libraries (`AOSD0`) and macro libraries
+(`AMACLIB`) with the same code.  `--cache` keeps the two kinds apart on disk.
 """
 import argparse, base64, http.client, json, os, sys, time
 
 SYSTEMS = {
-    # Credentials differ by system and that is not a detail: IBMUSER/SYS1 is
-    # MVS/CE, HERC01/CUL8TR is TK5.  IBMUSER/SYS1 against TK5 returns 401, and
+    # Credentials differ by system and that is not a detail; they come from .env is
+    # MVS/CE and another for TK5; see .env.  The wrong pair returns 401, and
     # a 401 loop looks exactly like an outage from the outside.
-    "ce":  dict(host="mvsdev.lan", port=8082, cred="IBMUSER:SYS1",   label="MVSCE-LAB"),
-    "tk5": dict(host="mvsdev.lan", port=8084, cred="HERC01:CUL8TR",  label="MVSTK5-REF"),
+    "ce":  dict(host="mvsdev.lan", port=8082, cred=None, label="MVSCE-LAB"),
+    "tk5": dict(host="mvsdev.lan", port=8084, cred=None, label="MVSTK5-REF"),
 }
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 CACHE = os.path.join(ROOT, "work", "measurements", "dlib-bytes")
@@ -75,10 +80,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--system", required=True, choices=sorted(SYSTEMS))
     ap.add_argument("--modules", required=True)
+    ap.add_argument("--cache", default="dlib-bytes",
+                    help="subdirectory of work/measurements to cache into")
     a = ap.parse_args()
 
     cfg = SYSTEMS[a.system]
-    out = os.path.join(CACHE, a.system)
+    out = os.path.join(os.path.dirname(CACHE), a.cache, a.system)
     rd = Reader(cfg)
 
     todo = []
