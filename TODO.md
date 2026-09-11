@@ -23,108 +23,113 @@ and *where to*; this list says *what next*.
 ## Start here tomorrow
 
 *Written as a handover: a fresh session should be able to start from this section
-alone.*
+alone. Last rewritten **2026-09-11, afternoon**. Everything below the horizontal
+rule that follows it is dated history and keeps its own numbers.*
+
+### The goal, so it does not get lost again
+
+**MVS 3.8j at maintenance level 8505, built from source.** The working question
+is one question, module by module: **which sources do not yet assemble to the
+object in TK5's distribution libraries?** Success is machine-decidable —
+`cmplmd370` exits 0 or it does not. Full statement at the head of
+[`README.md`](README.md); `8505` is Mike's stated target and **is not yet
+measured** against what TK5 actually carries.
+
+New here? [`docs/README.md`](docs/README.md) is the map of the 44 documents and
+says which of them is current.
 
 ### Where the project stands
 
-**The whole tree has been assembled twice** — once by `as370` here, once by the
-real Assembler XF under MVS/CE, from the same source and the same 1,822 macros.
-That separates the tool question from the source question for every module, and
-it is done: [`docs/ifox-tree.md`](docs/ifox-tree.md).
+| | |
+|---|---|
+| `as370` == IFOX00 | **5,427 of 5,528 decks** at cc370 `fd287d3` — ⚠️ **distance 13** as of 2026-09-11 afternoon, so this figure is already behind |
+| Dave's build on TK5 | **run 6 complete and clean**, 260 jobs to the phase-1 boundary |
+| Dave's build == TK5's DLIB object | **1,420 of 5,448 CSECTs**, and **1,419 of 5,485** on the targets |
+| Object baseline | **TK5**, decided 2026-09-10 |
+| Assembler oracle | **`MVSTK5-REF`**, pinned and frozen 2026-09-11 |
 
-**Derived against cc370 `b67af3d`, distance 0 at writing** (check it:
-`git -C ~/repos/mvs/cc370 rev-list --count ff783f6..main`), from the promoted
-gate run `g328` — **and against the EREP-adopted oracle**, see
-[`docs/erep-adoption.md`](docs/erep-adoption.md):
+Check the distance before quoting the first row:
 
-- **`as370` and IFOX00 agree on 5,441 of 5,528 decks (98.4 %)** once the assembly
-  stamp is normalised, **5,404** on the raw bytes — the two instruments differ by
-  the 20 decks that carry the date and nothing else. **5,403** when the return
-  code has to agree too.
-- **96 modules still differ.** The map is
-  [`docs/what-is-left.md`](docs/what-is-left.md); the largest cluster in the
-  silent class is **two**.
-- `as370` alone flags **3**; IFOX00 alone flags **4**.
-- **The 0-versus-4 boundary is nearly closed.** It was 26 modules this morning —
-  8 where `as370` said 4 and IFOX00 said 0, 18 the other way — and it is **4**:
-  `AHLMCER AHLSETEV IEEMB809` on `IFO026` and `BLSR3270` on an MNOTE.
-  `flagged-or-silent agrees` 5,517 of 5,528.
+```sh
+git -C ~/repos/mvs/cc370 rev-list --count fd287d3..main
+```
 
-| as370 → IFOX00 | | | |
-|---|---:|---:|---:|
-| | **rc 0** | **rc 4** | **rc 8+** |
-| **rc 0** | 4568 | 4 | 4 |
-| **rc 4** | 0 | 19 | 0 |
-| **rc 8+** | 3 | 1 | 929 |
+### What moved on 2026-09-11
 
-- **1,202 of the 5,056 DLIB pairs are byte-identical** to the object IBM shipped.
-  That figure was 1,211 and **no deck moved away from IBM's object**: the count is
-  filtered on `as370 rc 0`, and 14 modules correctly left that filter when #324
-  taught `as370` to raise `IFO220` where IFOX00 does — 7 of them DLIB-identical,
-  against 1 joining. A control whose population moves is not a control that
-  regressed, but it reads exactly like one if the filter is not stated.
+**Dave's PTFs went onto the source, on a build that did not run out of space.**
+That is the day's substance. Run 5 had looked complete and was not: `MAINT03B`
+ended `IEC031I D37-04` mid-write and every later APPLY added another torn
+member, so every TK5 figure taken before run 6 rests on damaged libraries. Run 6
+carries the secondary-quantity fix and reached the phase-1 boundary clean.
 
-`for-cc370.tsv` and `for-cc370.txt` **are** current as of this derivation — they
-came out of the promote sequence in
-[`docs/regression-gate.md`](docs/regression-gate.md) against `g323r`.
+`ZLMDRPTD` and `ZLMDRPTT` re-run against it (`JOB00815`/`JOB00816`, both
+`CC 0000`): **81 missing load modules became 2**, and equal CSECTs went
+1,003 → 1,420 on the distribution side, 1,286 → 1,419 on the targets.
+[`docs/build-vs-original-tk5.md`](docs/build-vs-original-tk5.md).
 
-### The class that only this comparison can see
+**And the published `equal` figures were counted from the wrong page.** 2,756
+and 2,971 came off `LMDRPT38`'s `SUMMARY`, whose `Compared not equal` is 0 on
+every run taken here — so its `Total equal` counts the CSECTs that differ in
+content at the same length as equal. The document had written the warning down
+itself and then walked into it. `tools/lmdrpt_count.py` reproduces both numbers,
+which is what makes it a counting difference and not two different runs.
 
-**36 modules are a silent divergence**: both assemblers exit clean, neither says a
-word, and the object code is different anyway. `IGG019PF` was the pattern —
-IFOX00 emits 144 bytes, `as370` emits 265, first difference at `0x89`. Against
-the distribution libraries alone this is indistinguishable from a source defect,
-which is why it was never counted before.
-
-**It was 1,113 when this section was written on 2026-09-07**, 56 this morning, 36
-now. The class is still the one the comparison exists for; it is no longer the
-largest thing in the tree, and **it no longer has families** — the biggest cluster
-in it is two modules.
+**`MVSSRC.BLD.AMVSSRC` on `MVSTK5-BLD` is now Dave's source at his full
+maintenance level**, 5,529 members, for the first time on an undamaged build.
+That is a *different left-hand side* from the archive copy all 5,528 reference
+decks were cut from — [`docs/fahrplan.md`](docs/fahrplan.md) §2 measured 15 % of
+modules differing in code between the two states, and three quarters of those
+change the object.
 
 ### The next three things
 
-**1. Hand what is left to cc370 as cases, ordered.** The table gives each one the
-offset where the two decks part, both section lengths, and both assemblers'
-messages — [`module-table.tsv`](work/measurements/ifox-run/module-table.tsv), one
-row per module. The classes on `b67af3d`, over the 99 still differing, largest
-first:
+**1. The three source states, one comparator.** `fahrplan.md` §2 already
+specifies this and it has never been run. Same macros, same pinned `as370`
+binary, against TK5's DLIB object — which is local, 3,989 modules in
+`work/measurements/dlib-bytes/tk5`:
 
-| | Modules | was, 2026-09-09 morning | was, 2026-09-07 |
-|---|---:|---:|---:|
-| both flag, **and the decks differ** | **57** | 62 | 393 |
-| silent divergence — both clean, object different | **33** | 48 | 1,113 |
-| `as370` rejects what Assembler XF assembles | **3** | 16 | 512 |
-| IFOX00 flags, `as370` is silent | **3** | 2 | 84 |
-| no deck on one side | 0 | 0 | 8 |
-| `as370` does not terminate | 0 | 0 | 2 |
+| column | state | pin it by |
+|---|---|---|
+| archive | `MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/`, 5,528 | the path |
+| **applied** | **`MVSSRC.BLD.AMVSSRC` after run 6**, 5,529 | **library + SYSMOD list** |
+| tape | `BLDMVS.AWS`, via `tools/awstape.py` | the data set name |
 
-**"Both flag" is now well over half of what remains**, and it is the class where
-neither assembler is a trustworthy reference: 929 modules tree-wide rest on an
-IFOX00 assembly that IFOX00 itself flagged, which is what
-[`docs/ifox-objections.md`](docs/ifox-objections.md) is for.
+It answers the question the whole re-basing idea rests on: **does Dave's applied
+maintenance move the object towards IBM's?** Pure host work, nothing
+irreversible. A source snapshot without its SMP state is unpinned — record the
+library *and* the SYSMOD list, every time.
 
-The three `as370` alone flags are `IFCEL155`, `IFCSXXXF` and `IFCSXXXH`. The three
-IFOX00 alone flags with a differing deck are `IBCDMPRS`, `IEAVEXS` and
-`IEAVRTI0`; `IBCDASDI` is the fourth and its deck is identical.
+**2. Stage 1 — cut the assembler reference on `MVSTK5-REF`.** It died at 10:33
+in its first job and needs two things before a retry, not one:
 
-**2. The source work, now attributable with certainty.** Where `as370` == IFOX00
-and the DLIB member still differs, the difference belongs to the source or to
-IBM's maintenance and to nothing else. On `b67af3d` that is **3,734 modules** of
-the 4,960 that both agree on *and* have a DLIB pair — 2,292 differing in length,
-574 in `DS` holes only, 560 in text, 308 mixed. **1,209 are already
-byte-identical.**
+* `IBMUSER.PVTMAC` does not exist on REF (`IEF212I ... SYSLIB +006`), and
+  neither do `IFOXOB2`, `IFOXLST`, `SRCD`. `IBMUSER.SRC2` holds 25 members.
+* **The `SYSLIB` names the six `SYS1.A*`, which on REF are TK5's own.**
+  [`docs/macro-tk5-vs-ce.md`](docs/macro-tk5-vs-ce.md) measured that this moves
+  **68 modules** — indistinguishable from an assembler difference. MVS/CE's
+  macro libraries have to be carried across as `IBMUSER.*` data sets, which also
+  leaves REF's frozen `SYS1` libraries and the macro snapshot untouched.
 
-The assembler side is **99 modules against these 3,734**. That ratio is the
-argument for where the next phase of work goes, and it has been widening every
-day: every module the assembler stops getting wrong moves *into* this class, not
-out of it.
+Then: the 10-module RLD `R`-field probe first (a discrete value, independent of
+the stamp), and re-cut `state.tsv` with the reference — 21 of the 26
+stamp-dependent modules are `IFNX*`/`IFOX*`, the family a stale stamp table
+poisons silently.
 
-**3. Re-run the gate after every cc370 merge, and promote as its own command.**
-It no longer needs MVS: the 5,528 IFOX00 decks are recorded, so a full
-measurement is ten minutes on the host. The promote sequence and the traps —
-`&&`-chaining a promotion, a `/tmp` worktree breaking `LIBC370`, an rc baseline
-that does not match the deck baseline — are all in
-[`docs/regression-gate.md`](docs/regression-gate.md).
+**3. Hand what is left to cc370 as cases, ordered.**
+[`module-table.tsv`](work/measurements/ifox-run/module-table.tsv), one row per
+module, with the offset where the decks part and both assemblers' messages.
+
+### Open, and needing Mike
+
+* **Fourteen `as370` processes have been spinning since 2026-09-07** at ~60 % CPU
+  each, on `IFNX1A` and `HEWLDIOC`, out of cc370's scratchpads. Roughly eight
+  cores for four days. Almost certainly hung — but they are another session's
+  processes.
+* **`work/measurements/ifox-run/*.tsv` are modified and uncommitted** from the
+  morning's module-table recut, by a session that is not this one.
+* 26 `obj_*/` gate directories and 25 label TSVs in the repository root, the most
+  recent from 09:51 on 2026-09-11. Reproducible in ten minutes each; now ignored
+  rather than deleted.
 
 ### What is settled and needs no more work
 
@@ -132,12 +137,20 @@ that does not match the deck baseline — are all in
   decks differ was re-assembled locally with the date and time *that* IFOX run
   used; **exactly one of 1,334 byte differences is the stamp**. No `--sysdate`
   option, no `difin` masking.
-- **The macro question, for this comparison.** Both sides see the same libraries:
-  equal member counts in all six distribution libraries, the 444 private macros
-  identical by name, 25 members drawn at random identical byte for byte. It does
-  not settle the *provenance* of the 319 mirror macros — that still waits on Dave
-  Kreiss' tape — but no difference in this run can be blamed on the two sides
-  reading different macros.
+- **The macro question, for the MVS/CE comparison.** Both sides see the same
+  libraries: equal member counts in all six distribution libraries, the 444
+  private macros identical by name, 25 members drawn at random identical byte for
+  byte. It does not settle the *provenance* of the 319 mirror macros — that still
+  waits on Dave Kreiss' tape — but no difference in that run can be blamed on the
+  two sides reading different macros. **It says nothing about TK5**, which is a
+  separate measurement and is done: `macro-tk5-vs-ce.md`.
+- **The object baseline**, and the three arguments it deliberately does not rest
+  on. `fahrplan.md` §1.
+- **Licensing.** Freeware, no copyright, no terms; credit by name and email.
+
+---
+
+## History — dated entries, each keeping the numbers it was written with
 
 ### Dave Kreiss' install tape holds source we were not measuring
 
