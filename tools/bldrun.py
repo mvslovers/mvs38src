@@ -370,10 +370,11 @@ def main():
         jcl, nxt, lb = prepare(member(cur))
         if a.dry_run:
             print(f"{n:3d} {cur:10s} -> {nxt or 'END'}" + (f"  LIB={lb}" if lb else ""))
-            if lb:
+            nl = libname(lb)
+            if lb and nl != CURLIB[0]:
                 if not a.follow_lib:
                     cur = None; continue
-                CURLIB[0] = libname(lb)
+                CURLIB[0] = nl
             cur = nxt
             continue
         jn, ji = submit(jcl)
@@ -393,15 +394,18 @@ def main():
             # a member nothing needs.  So: carry on, and report every one.
             bad.append((cur, jn, ji, rc))
             snapshot(cur)
-        if lb:
+        nl = libname(lb)
+        if lb and nl != CURLIB[0]:
+            # A boundary is a CHANGE of library, not the presence of a LIB= card.
+            # Every card in phases 2-5 carries LIB=n, so testing `if lb` stopped
+            # the chain on its own first job: MAINT05@ names LIB=1 while already
+            # in JCL1, which is not a crossing of anything.
             if not a.follow_lib:
-                print(f"STOP: {cur} hands on to LIB={lb} ({nxt}). That is the "
-                      f"Phase-{lb} boundary and it updates the running system.")
-                print(f"      --follow-lib crosses it. Back the system up first.")
+                print(f"STOP: {cur} hands on from {CURLIB[0]} to {nl} ({nxt}). "
+                      f"That is a phase boundary.")
+                print(f"      --follow-lib crosses it.")
                 return 0 if not bad else report(bad)
-            nl = libname(lb)
-            print(f"     crossing into LIB={lb} ({nl}) -- phase boundary, "
-                  f"--follow-lib is set", flush=True)
+            print(f"     crossing {CURLIB[0]} -> {nl} ({nxt})", flush=True)
             CURLIB[0] = nl
         if a.until and cur == a.until:
             print(f"STOP: reached --until {cur}.")
