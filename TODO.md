@@ -277,261 +277,271 @@ cp037 and never went through FTP, and `ICAPRTBL` carries a third encoding
 (X'9B') that no substitution can repair — it has to come from the tape.
 `caret_fix.py` cannot touch any of the three, which was checked and not assumed.
 
-### #195: +4 an Identitäten, −27 an Meldungen, und ein „Rückschritt", der keiner war
+### #195: +4 in identities, −27 in messages, and a "regression" that wasn't one
 
-`vref()` stellt `&SYSLIST` als `(op1,op2,...)` dar und kopiert 95 Bytes; `N'`
-zählte Kommas in dieser abgeschnittenen Zeichenkette. Die Antwort fiel also mit
-der **Länge** der Operanden statt mit ihrer Anzahl — bei 13 Operanden sagte `N'`
-zehn, während `&SYSLIST(11)`–`(13)` den richtigen Text lieferten. `IFNX1K` ist
-ein **Drei-Karten-Modul**, und `JTEXT`s Schleife über 39 Einträge sah sieben.
+`vref()` represents `&SYSLIST` as `(op1,op2,...)` and copies 95 bytes; `N'`
+counted commas in that truncated string. So the answer tracked the **length**
+of the operands rather than their count — at 13 operands, `N'` said ten, while
+`&SYSLIST(11)`–`(13)` delivered the correct text. `IFNX1K` is a **three-card
+module**, and `JTEXT`'s loop over 39 entries saw seven.
 
-Dazu drei Tabellengrenzen, die beim Weiterlaufen sichtbar wurden (global SET
-4.096 → 32.768, local SET 256 → 512, `&SYSLIST` 32 → 64). **Jede war doppelt
-notiert** — Felddeklaration und Prüfung getrennt —, sodass das Anheben nur einer
-von beiden nichts ändert und trotzdem so aussieht.
+Plus three table limits that became visible as the work went on (global SET
+4,096 → 32,768, local SET 256 → 512, `&SYSLIST` 32 → 64). **Each was recorded
+twice** — field declaration and check kept separate — so raising only one of
+the two changes nothing and still looks like it does.
 
-**+4 ist die Identitätszahl, −27 die eigentliche:** `undefined-symbol` fällt von
-110 auf **83**, fünf Module bekommen überhaupt erst ein Deck (rc 2 → rc 0).
+**+4 is the identity count, −27 is the real one:** `undefined-symbol` drops
+from 110 to **83**, five modules get a deck at all for the first time
+(rc 2 → rc 0).
 
-**Und die 17 „weiter" sind 16 plus ein Missverständnis.** Sechzehn davon sind
-1–4 Bytes in Decks, die 537 bis 13.200 Bytes falsch sind. Der siebzehnte ist
-`IKJEGMNL` mit **+295** — und auf dem Längeninstrument gelesen:
+**And the 17 "further" are 16 plus one misunderstanding.** Sixteen of them are
+1–4 bytes in decks that are 537 to 13,200 bytes wrong. The seventeenth is
+`IKJEGMNL` with **+295** — and read on the length instrument:
 
-| Sektion | vorher | nachher | IFOX00 |
+| Section | before | after | IFOX00 |
 |---|---:|---:|---:|
 | `IKJEGSCD` | 97 | **390** | 390 |
 | `IKJEGSCU` | 0 | **1** | 1 |
 
-Zwei Sektionen treffen IFOX00s Länge jetzt **exakt**. Der Byteabstand steigt, weil
-293 Bytes Inhalt dort stehen, wo vorher ein Loch war — genau die #174-Lehre, dass
-ein Bytevergleich an festen Adressen Inhalt verurteilt, der ein Loch gefüllt hat.
-Es ist die größte Einzelverbesserung des Merges und stand in der Rückschritt-Zeile.
+Two sections now hit IFOX00's length **exactly**. The byte distance grows
+because 293 bytes of content now sit where a hole used to be — exactly the
+#174 lesson, that a byte comparison at fixed addresses condemns content that
+filled a hole. It is the largest single improvement of the merge and stood in
+the regression line.
 
-### #205: vier Hypothesen geprüft, vier tot — und das ist das Ergebnis
+### #205: four hypotheses tested, four dead — and that is the result
 
-An `IFCE0155` weitergearbeitet, mit IFOX00s vollständigem Listing als Orakel
-(`work/measurements/ifox-run/ifox-155.txt`, von cc370 vom Band geholt). **Vier
-Vermutungen empirisch widerlegt**, darunter die übergebene und zwei eigene:
+Continued work on `IFCE0155`, with IFOX00's complete listing as the oracle
+(`work/measurements/ifox-run/ifox-155.txt`, pulled from tape by cc370). **Four
+hypotheses empirically disproved**, including the one handed over and two of
+my own:
 
-| Hypothese | Test | Ergebnis |
+| Hypothesis | Test | Result |
 |---|---|---|
-| globale SET-Arrays laufen bei 3.000 über | `&ITEM(1)`, `(2999)`, `(3000)` gesetzt und gelesen | **alle korrekt** |
-| `K'&SYSLIST(1)` gegen `K'&SYSLIST(1,1)` falsch | `(ABC,3)` → 7 gegen 3, `ABC` → 3 gegen 3 | **beide Richtungen richtig** |
-| ausgelassenes erstes Sublisten-Element | `SHOW (,4)`, `(AB,4)`, `(,4,EQU)` | **leerer Zweig jedes Mal korrekt** |
-| Makro ruft später definiertes Makro | äußeres Makro ruft inneres, danach definiert | **korrekt expandiert** |
+| global SET arrays overflow at 3,000 | `&ITEM(1)`, `(2999)`, `(3000)` set and read | **all correct** |
+| `K'&SYSLIST(1)` vs `K'&SYSLIST(1,1)` wrong | `(ABC,3)` → 7 vs 3, `ABC` → 3 vs 3 | **both directions correct** |
+| omitted first sublist element | `SHOW (,4)`, `(AB,4)`, `(,4,EQU)` | **empty branch correct every time** |
+| macro calls a macro defined later | outer macro calls inner, defined afterward | **expands correctly** |
 
-**Und eine Beobachtung, die als Beweis gehandelt wurde, ist keiner.** „as370
-erzeugt mehr Anweisungen und weniger Bytes" (1.099 gegen 1.037) — der Überschuss
-sind **innere Makroaufrufzeilen, die IFOX00 nicht listet**. Eine
-Listing-Konvention, kein inhaltlicher Unterschied. Das gehört aus der
-Fallbeschreibung heraus.
+**And an observation that was treated as proof is not one.** "as370 generates
+more statements and fewer bytes" (1,099 against 1,037) — the excess is **inner
+macro-call lines that IFOX00 does not list**. A listing convention, not a
+difference in content. That belongs out of the case description.
 
-**Und die schärfste Beobachtung ist widerrufen.** „IFOX00 erreicht
-`LOG ITEM SYMBOL NOT PROVIDED` 28-mal, `as370` nie" — die Karte ist ein
-**Kommentar im Makrorumpf**, und `as370` listet generierte Kommentarkarten
-überhaupt nicht. Ein Unterschied zweier Listing-Konventionen, kein
-Verzweigungsunterschied. Damit fällt auch die Zählung generierter Anweisungen in
-beide Richtungen weg.
+**And the sharpest observation is retracted.** "IFOX00 reaches
+`LOG ITEM SYMBOL NOT PROVIDED` 28 times, `as370` never" — the card is a
+**comment inside the macro body**, and `as370` does not list generated
+comment cards at all. A difference between two listing conventions, not a
+branching difference. That also removes the count of generated statements in
+both directions.
 
-Was bleibt, ist ausschließlich Deck-Evidenz: Sektion 2.550 gegen 2.832, Abbilder
-identisch bis `0x340` und danach durchgehend verschieden, beide Assembler still,
-der Instruktionsstrom korrekt bis er auf nicht vorhandene Daten zeigt.
+What remains is exclusively deck evidence: section 2,550 against 2,832, images
+identical up to `0x340` and then diverging throughout, both assemblers
+silent, the instruction stream correct until it points at data that isn't
+there.
 
-**Die Klasse ist damit sauber begrenzt und hat weder Mechanismus noch lebende
-Spur.** Das ist der ehrliche Stand.
+**The class is thus cleanly bounded and has neither mechanism nor a live
+trail.** That is the honest state of it.
 
-**Und es ist das zweite Mal an einem Tag, dass ein Instrument nicht sehen konnte,
-was man ihm zugetraut hat** — nach dem kartenbasierten Deck-Vergleich, der für
-einen Ein-Byte-Fehler „269 von 274 Karten" ausgab. Beide Male sah die Zahl
-gewichtig aus, beide Male zeigte der Fehler Richtung interessanterer Schluss.
+**And it is the second time in one day that an instrument could not see what
+it was trusted to see** — after the card-based deck comparison, which
+reported "269 of 274 cards" for a one-byte error. Both times the number
+looked significant, both times the error pointed toward a more interesting
+conclusion.
 
-**Vier tote Hypothesen sind ein Ergebnis, kein Fehlschlag.** Zwei davon hätten
-plausibel ausgesehen und jeweils eine Sitzung gekostet.
+**Four dead hypotheses are a result, not a failure.** Two of them would have
+looked plausible and would each have cost a session.
 
-### 90,4 % — und die „Ausrichtungsklasse" war keine
+### 90.4 % — and the "alignment class" wasn't one
 
-**#241: ein Vergleichsoperator ohne Leerzeichen wird nicht erkannt.**
+**#241: a comparison operator with no surrounding space is not recognized.**
 
 ```
          AIF   ('&EVENT'EQ'USERRDY').EOK
 ```
 
-Der Tokenizer beendet ein Token, wenn ein Buchstabe an ein **schließendes**
-Anführungszeichen stößt — damit trennt er `'&EVENT'` von `EQ` richtig. Für den
-Spiegelfall gab es keine Regel: ein Operator, der an das **öffnende**
-Anführungszeichen seines rechten Operanden stößt. `EQ'USERRDY'` wurde **ein**
-Token, kein Vergleich fand statt, das `AIF` fiel durch. Dieselbe Regel existierte
-für einen Operator an `(` — **siebter Fall einer Syntax mit zwei Lesern.**
+The tokenizer ends a token when a letter runs into a **closing** quote — that
+correctly separates `'&EVENT'` from `EQ`. There was no rule for the mirror
+case: an operator running into the **opening** quote of its right operand.
+`EQ'USERRDY'` became **one** token, no comparison took place, the `AIF` fell
+through. The same rule existed for an operator against `(` — **the seventh
+case of a syntax with two readers.**
 
-In `IEAVESC0` lief `SYSEVENT` damit an seinem Treffer vorbei *und* ignorierte
-`ENTRY=BRANCH`: falscher Ereigniscode, falsche Anbindung, vier Bytes länger —
-**eine ausrichtungsförmige Differenz ohne Ausrichtung darin.**
+In `IEAVESC0`, `SYSEVENT` thereby ran past its own match *and* ignored
+`ENTRY=BRANCH`: wrong event code, wrong linkage, four bytes longer — **an
+alignment-shaped difference with no alignment in it.**
 
-**+67, keine verloren.** Die drei „weiter"-Decks sind in der **Größe näher**
-(Überschuss +16→+12, +16→+12, +8→+6) — hier nachgemessen.
+**+67, none lost.** The three "further" decks are **closer in size** (excess
++16→+12, +16→+12, +8→+6) — measured here.
 
-**Und meine Klasse ist damit widerlegt, wie sie sollte.** Die 136 „zu langen"
-fallen auf **52**, und die Mehrheit der Vielfachen von acht ist **weg**: jetzt 17
-von 52 durch acht teilbar, 18 durch vier, 15 ungerade. Die Verteilung ist flach.
+**And my class is thereby disproved, as it should be.** The 136 "too long"
+fall to **52**, and the majority of the multiples of eight are **gone**: now
+17 of 52 divisible by eight, 18 by four, 15 odd. The distribution is flat.
 
-Ich hatte die Klasse als Ausrichtungsfrage eingestellt — aus der
-Differenzverteilung gelesen, mit dem ausdrücklichen Vermerk, kein Modul geöffnet
-zu haben. Der kleinste Zeuge (`IFCETRN7`, ein `MNOTE`-Pfad) hat die Hypothese
-zuerst gebrochen, und der Fix hat gezeigt, dass die Vielfachen von acht ein
-*Symptom* waren. **Die Beschriftung hat getan, wofür sie da war.**
+I had filed the class as an alignment question — read off the distribution of
+differences, with the explicit note that I had not opened a single module.
+The smallest witness (`IFCETRN7`, an `MNOTE` path) was the first to break the
+hypothesis, and the fix showed that the multiples of eight were a *symptom*.
+**The label did what it was there for.**
 
-### 89,2 % — der letzte dreistellige Block ist zu
+### 89.2 % — the last three-digit block closes
 
-**#240: `DC AL.12(1)` reservierte nichts.** Der Längenparser liest `L` und
-erwartet Ziffern; `.` ist keine, also blieb die Länge 0 — keine Bytes, kein
-Fortschalten des Ortszählers, rc 0, keine Meldung auf beiden Seiten. Jedes Symbol
-danach lag um genau das zu früh, was nie reserviert wurde.
+**#240: `DC AL.12(1)` reserved nothing.** The length parser reads `L` and
+expects digits; `.` is not one, so the length stayed 0 — no bytes, no
+advance of the location counter, rc 0, no message on either side. Every
+symbol after it sat exactly as far too early as whatever was never reserved.
 
-**+99, keine verloren, 124 Decks näher** — der größte Gewinn seit #175. Und
-**byte-identisch mit IBMs Objekt: 1.080 → 1.124.**
+**+99, none lost, 124 decks closer** — the largest gain since #175. And
+**byte-identical to IBM's object: 1,080 → 1,124.**
 
-**Meine beiden Gate-Bedingungen haben sich gelohnt, und die zweite mehr als die
-erste.** Die Kontrollfälle (`AL1(1)`, `XL1'F'`, `AL2(1)`, `CL3'AB'`, `F'7'`)
-kommen aus beiden Binaries byte-gleich heraus — hier nachgeprüft, nicht
-übernommen. cc370 hat die Implementierung so geformt, dass sie es können: **der
-Bit-Pfad ist ein Zweig vor der Typverteilung**, ein Operand ohne `L.` erreicht
-exakt den Code wie vorher.
+**Both of my gate conditions paid off, and the second one more than the
+first.** The control cases (`AL1(1)`, `XL1'F'`, `AL2(1)`, `CL3'AB'`, `F'7'`)
+come out byte-equal from both binaries — checked here, not taken on trust.
+cc370 shaped the implementation so that they can: **the bit path is a branch
+ahead of the type dispatch**, an operand without `L.` reaches exactly the
+same code as before.
 
-**Und cc370 hat das Orakel ein zweites Mal gefragt, bevor sie geschrieben haben.**
-Die erste Erfassung fixierte Packen und Auffüllen; die zweite fragte die Fälle,
-die *nicht* gemessen waren — Mischung von Bit- und Nicht-Bit-Operanden, den
-Duplikationsfaktor, das Ende eines Laufs. **Drei der fünf Antworten hätten sie
-falsch geraten**: `AL.12(1),AL2(3)` spült auf `0010 0003` statt durchzupacken,
-`3AL.4(1)` multipliziert *in* den Lauf hinein, und `AL.4(1),C'A',AL.4(2)` spült
-**mitten in der Anweisung** zweimal. Aus der ersten Erfassung geschrieben wäre ein
-Feature entstanden, das seine eigene Testvorrichtung besteht.
+**And cc370 asked the oracle a second time before they wrote it.** The
+first pass fixed packing and padding; the second asked the cases that were
+*not* measured — mixing bit and non-bit operands, the duplication factor,
+the end of a run. **They would have guessed three of the five answers
+wrong**: `AL.12(1),AL2(3)` flushes to `0010 0003` instead of packing
+through, `3AL.4(1)` multiplies *into* the run, and `AL.4(1),C'A',AL.4(2)`
+flushes **mid-statement**, twice. Written from the first pass, the result
+would have been a feature that passes its own test fixture.
 
-**Der eine „weiter"-Fall vorher geprüft**: `IGG0193S` war schon vor der Änderung
-13 Bytes zu lang und ist jetzt 20 — vorbestehender Überschuss, andere Ursache.
+**The one "further" case checked in advance**: `IGG0193S` was already 13
+bytes too long before the change and is now 20 — pre-existing excess,
+different cause.
 
-### 87,4 % — und ein Instrumentendefekt, der ein Ergebnis umgedreht hat
+### 87.4 % — and an instrument defect that flipped a result
 
-**#235: eine `AIF`-Bedingung länger als 126 Zeichen wurde mitten im Term
-abgeschnitten**, während beide Aufrufstellen einen 512-Byte-Puffer übergeben. Ein
-Makro mit langer, mehrgliedriger Wächterbedingung nahm damit seinen Fehlerpfad —
-**egal, was man ihm übergab.** `AMACLIB(IKJIDENT)`s Typprüfung ist 153 Zeichen
-lang über drei Karten; jeder Aufruf fiel auf `.BAD`, meldete
-`MNOTE 8,'PARAMETER TYPE NAME MISSING BUT REQUIRED'` und erzeugte **gar nichts**.
+**#235: an `AIF` condition longer than 126 characters was truncated
+mid-term**, while both call sites pass a 512-byte buffer. A macro with a
+long, multi-part guard condition thereby took its error path — **no matter
+what was passed to it.** `AMACLIB(IKJIDENT)`'s type check is 153 characters
+long across three cards; every call fell through to `.BAD`, reported
+`MNOTE 8,'PARAMETER TYPE NAME MISSING BUT REQUIRED'`, and produced
+**nothing at all**.
 
-**Und damit war meine Makromessung falsch herum.** Dieselben Makros, dieselben
-Module:
+**And that meant my macro measurement had it backwards.** Same macros,
+same modules:
 
-| | vor #235 | nach #235 |
+| | before #235 | after #235 |
 |---|---:|---:|
-| geänderte Decks | 33 | **107** |
-| Module, die rc 0 erreichen | 0 | **47** |
-| **näher an IBMs Objekt** | **0** | **25** |
-| weiter weg | 0 | **0** |
-| byte-identisch mit IBMs Objekt | 0 | **1** (`IEAVPIOI`) |
+| decks changed | 33 | **107** |
+| modules reaching rc 0 | 0 | **47** |
+| **closer to IBM's object** | **0** | **25** |
+| further away | 0 | **0** |
+| byte-identical to IBM's object | 0 | **1** (`IEAVPIOI`) |
 
-Ich hatte „sie greifen und stellen nichts wieder her" gemeldet und in zwei
-Dokumente geschrieben. **Zurückgenommen.** Jeder andere Instrumentendefekt dieser
-Woche hat eine Zahl falsch gemacht; **dieser hat aus „stellen 25 wieder her"
-„stellen nichts wieder her" gemacht**, und beide Lesarten waren in sich stimmig.
+I had reported "they engage and restore nothing" and written it into two
+documents. **Retracted.** Every other instrument defect this week got one
+number wrong; **this one turned "restores 25" into "restores nothing"**,
+and both readings were internally consistent.
 
-cc370s Verallgemeinerung ist die brauchbare Form davon: **man kann nicht messen,
-ob ein Makro passt, auf einem Assembler, der dessen Wächter nicht auswerten
-kann.** Das gilt für jede Messung, deren Gegenstand genau das ist, worin das
-Instrument kaputt ist — und es ist der Grund, warum #39 der ganzen Makroarbeit
-vorgelagert war statt parallel.
+cc370's generalization is the useful form of this: **you cannot measure
+whether a macro fits, on an assembler that cannot evaluate its guard.**
+That holds for any measurement whose subject is exactly the thing the
+instrument is broken at — and it is why #39 had to come before all the
+macro work instead of running alongside it.
 
-**Und ich habe cc370s zwölf „weiter" zuerst falsch geprüft.** Eine Sektionslänge
-verglichen: „1 näher, 7 unverändert" — las sich wie ein widerlegter Anspruch. Auf
-**erzeugte Gesamtbytes** gerechnet: **6 näher, 2 unverändert, 0 weiter**.
-Ein Sektionslängenvergleich an einem Modul, dessen Sektionen überwiegend stimmen,
-verbirgt die eine, die gewachsen ist.
+**And I first checked cc370's twelve "further" cases wrong.** Compared on
+section length: "1 closer, 7 unchanged" — read like a disproved claim.
+Computed on **total generated bytes**: **6 closer, 2 unchanged, 0
+further**. A section-length comparison on a module whose sections are
+mostly right hides the one that grew.
 
-### #238: `EQU C''''` — und es waren drei Leser, nicht einer
+### #238: `EQU C''''` — and there were three readers, not one
 
-Das Selbstdefinitions-Konstrukt `C'..'` wird an **drei** Stellen gelesen —
-Operandenauswerter, `SETA`-Leser, Auswerter der bedingten Assemblierung. **Alle
-drei falten `&&` zu einem `&`. Keiner faltete das verdoppelte Apostroph.**
-`DC C''''` stimmte die ganze Zeit, weil der `DC`-Pfad seinen eigenen Scanner hat
-und *der* es wusste — **der Pfad, den jeder zuerst prüft, funktionierte.**
+The self-defining construct `C'..'` is read in **three** places — the
+operand evaluator, the `SETA` reader, the conditional-assembly evaluator.
+**All three fold `&&` to a single `&`. None of them folded the doubled
+apostrophe.** `DC C''''` was right the whole time, because the `DC` path
+has its own scanner and *that one* knew about it — **the path everyone
+checks first was the one that worked.**
 
-Gefunden aus den Bytes: ein Histogramm der Bytepaare über die verbleibenden
-Abweichungen, `0x7D → 0x00` als größte Gruppe, und `0x7D` ist EBCDIC `'`.
-**+12, keine verloren.** Sechster Fall des Musters — und cc370 hat aufgehört,
-jeden einzeln als Fehler zu behandeln, und behandelt jetzt **die Verdopplung** als
-den Fehler.
+Found from the bytes: a histogram of byte pairs over the remaining
+divergences, `0x7D → 0x00` as the largest group, and `0x7D` is EBCDIC `'`.
+**+12, none lost.** Sixth instance of the pattern — and cc370 has stopped
+treating each one as an individual defect, and now treats **the doubling**
+itself as the defect.
 
-### #39: 182 Module assemblierten sauber, während ein Makro sich beschwerte
+### #39: 182 modules assembled cleanly while a macro was complaining
 
-`as370` gab für ein `MNOTE` **nichts** aus — keine Zeile, keine Meldung, rc 0, wo
-IFOX00 die Schwere durchreicht (ungedeckelt: `MNOTE 20` ergibt rc 20). Gegated:
-**0 von 5.528 Decks geändert, 224 rc-Änderungen, davon 182 von rc 0 aus.**
+`as370` produced **nothing** for an `MNOTE` — no line, no message, rc 0,
+where IFOX00 passes the severity through (uncapped: `MNOTE 20` yields
+rc 20). Gated: **0 of 5,528 decks changed, 224 rc changes, 182 of them from
+rc 0.**
 
-**182 Module assemblierten sauber, während ein Makro sich beschwerte und nichts
-es hören konnte.** Das ist die Größe des Lochs, durch das jede Makro-Messung
-dieser Woche gelesen hat — vor jedem neuen Makro auf dem Pfad.
+**182 modules assembled cleanly while a macro was complaining and nothing
+could hear it.** That is the size of the hole every macro measurement this
+week has been read through — ahead of every new macro on the path.
 
-Für meine Seite heißt das: **ein Modul, das unter #39 von rc 0 auf rc 8 geht, ist
-kein Rückschritt eines neuen Makros**, sondern ein `MNOTE`, das immer da war.
-Die beiden zu trennen braucht einen Basislauf mit #39 und ohne neue Makros — der
-ist jetzt `m234`.
+For my side that means: **a module that goes from rc 0 to rc 8 under #39
+is not a regression from a new macro**, but an `MNOTE` that was always
+there. Separating the two needs a baseline run with #39 and without new
+macros — that is now `m234`.
 
-**Und eine Zahl, die noch nicht vergleichbar ist:** `as370` meldet jetzt `MNOTE`
-in **304** Modulen, IFOX00 in **26**. Das ist kein Befund, sondern eine
-Instrumentendifferenz — meine IFOX-Meldungsspalte kommt aus dem
-Diagnoseabschnitt des Listings, und ein `MNOTE *` oder mit Schwere 0 steht dort
-gar nicht. Die beiden Zahlen zählen Verschiedenes, bis das geprüft ist.
+**And a number that is not comparable yet:** `as370` now reports `MNOTE`
+in **304** modules, IFOX00 in **26**. That is not a finding but an
+instrument difference — my IFOX message column comes from the diagnostics
+section of the listing, and an `MNOTE *` or one with severity 0 does not
+appear there at all. The two numbers count different things until that is
+checked.
 
-### 87,0 % — und ein Histogramm fand, was zwei Tage Zählen nicht fand
+### 87.0 % — and a histogram found what two days of counting did not
 
-**#231, der größte Gewinn seit #175: +57, keine verloren, 88 näher, null weiter.**
-Zwei Defekte in einem fünfzeiligen Handler:
+**#231, the largest gain since #175: +57, none lost, 88 closer, zero
+further.** Two defects in a five-line handler:
 
 ```c
 if (nn > 0) while ((lc % nn) != b && g++ < 64) { put(lc, 0x0700, 2); lc += 2; }
 ```
 
-**`CNOP` richtet nie auf ein Halbwort aus.** Von einem ungeraden Zähler ist
-`lc % 4` immer ungerade, erreicht also nie einen geraden Rest — 64 No-ops, der
-Zähler 128 Bytes weiter, **rc 0 und keine Meldung auf beiden Seiten**, und jede
-folgende Adresse im Abschnitt falsch. Und **es definiert das Namensfeld nie**.
+**`CNOP` never aligns to a halfword.** From an odd counter, `lc % 4` is
+always odd, so it never reaches an even remainder — 64 no-ops, the counter
+128 bytes further on, **rc 0 and no message on either side**, and every
+subsequent address in the section wrong. And **it never defines the name
+field.**
 
-Damit war `NOREL1` in `IEAVSTAA` undefiniert — der Name eines `LOAD EP=`, den
-`AMACLIB(LOAD)` mit `&NAME CNOP 0,4` setzt.
+That left `NOREL1` in `IEAVSTAA` undefined — the name of a `LOAD EP=` that
+`AMACLIB(LOAD)` sets with `&NAME CNOP 0,4`.
 
-**Die neun Module, die vom Längen- in den Byte-Eimer wechselten, sind der Beweis
-von der anderen Seite.** Hier nachgemessen:
+**The nine modules that moved from the length bucket into the byte bucket
+are the proof from the other side.** Measured here:
 
-| Modul | Distanz vorher → nachher | Längen |
+| Module | Distance before → after | Lengths |
 |---|---|---|
-| `IECIOSAM` | 1.351 → **43** | == IFOX00 |
-| `IKTMSGS` | 1.316 → **112** | noch verschieden |
+| `IECIOSAM` | 1,351 → **43** | == IFOX00 |
+| `IKTMSGS` | 1,316 → **112** | still different |
 | `IGG019Q0` | 514 → **55** | == IFOX00 |
 | `IGG019PD` | 140 → **12** | == IFOX00 |
 
-Sechs der neun treffen jetzt IFOX00s Sektionslängen **exakt**. Ein zerstörter
-Abschnitt, von der anderen Seite gesehen.
+Six of the nine now hit IFOX00's section lengths **exactly**. A wrecked
+section, seen from the other side.
 
-**Und `HEWLDIOC` ist jetzt byte-identisch mit IFOX00.** Das Modul, das elf Monate
-lang in beiden Runbooks als „terminiert unter keiner Schranke" stand.
+**And `HEWLDIOC` is now byte-identical to IFOX00.** The module that stood
+in both runbooks for eleven months as "terminates under no alarm."
 
-**Die Lehre ist cc370s, und sie trifft mich:** *„Eine Zahl sagte mir nichts, ein
-Histogramm sagte mir alles."* „83 Module melden undefinierte Symbole" ist eine
-Zahl, die zwei Tage lang dastand. Die **Symbolnamen** anzusehen — `R5`, `R15`,
-`R1`, Registerequates — kostete zehn Minuten und zeigte direkt auf den
-Mechanismus. Ich habe das Neuableiten der Population für die Arbeit gehalten; es
-war der Aufbau.
+**The lesson is cc370's, and it lands on me:** *"A number told me nothing,
+a histogram told me everything."* "83 modules report undefined symbols" is
+a number that stood for two days. Looking at the **symbol names** — `R5`,
+`R15`, `R1`, register equates — cost ten minutes and pointed straight at
+the mechanism. I had taken re-deriving the population for the work; it was
+the setup.
 
-Und es zeigt, dass meine Eimer „stille Abweichung" und „nur as370 meldet" weniger
-unabhängig sind, als sie aussehen: **ein Defekt hat Module in beide gelegt**, und
-die neun Längenwechsel saßen im ersten, während die Diagnose, die sie erklärt
-hätte, im zweiten stand.
+And it shows that my buckets "silent divergence" and "as370 alone flags"
+are less independent than they look: **one defect put modules into both**,
+and the nine length changes sat in the first while the diagnostic that
+would have explained them sat in the second.
 
-### #227 — und die dritte Frage fand den einzigen Byte-Defekt
+### #227 — and the third question found the only byte-touching defect
 
-Dieselbe Ursache eine Anweisung früher: `lrecs[].loc` wird gestempelt, **bevor**
-die Anweisung läuft, also listet alles, was den Ortszähler bewegt oder ersetzt,
-den Stand von vorher. IFOX00 macht es umgekehrt — LOC behält den Zähler davor,
-der **neue** steht in ADDR2:
+The same cause, one statement earlier: `lrecs[].loc` is stamped **before**
+the statement runs, so anything that moves or replaces the location
+counter lists the value from before. IFOX00 does it the other way round —
+LOC keeps the counter from before, the **new** value sits in ADDR2:
 
 ```
 ohne Fix   00000A                21   ORG   *-4
@@ -539,36 +549,37 @@ mit Fix    00000A        00006   21   ORG   *-4
 IFOX00     00000A        00006   21   ORG   *-4
 ```
 
-**Die fortgesetzten Fälle sind die ganze Testvorrichtung.** Ohne sie geben „der
-Ursprung des Abschnitts" und „der eigene Zähler des Abschnitts" dieselbe Antwort,
-und cc370 hätte die eine oder die andere Regel mit grünem Test ausgeliefert.
+**The continued cases are the whole test fixture.** Without them, "the
+section's origin" and "the section's own counter" give the same answer,
+and cc370 would have shipped one rule or the other with a green test.
 
-**Und die dritte Frage fand den einzigen Defekt der drei, der Bytes berührt.**
-`COM` war nur in der Sonde, weil cc370 alle zählerbewegenden Anweisungen in einem
-Zug erfassen wollte: **`as370` unterstützt `COM` überhaupt nicht** — kein
-ESD-Eintrag, der Zähler springt nicht zurück, und danach deklarierter Speicher
-landet im vorigen Abschnitt. Als #229 eingestellt.
+**And the third question found the only one of the three defects that
+touches bytes.** `COM` was in the probe only because cc370 wanted to
+capture every counter-moving statement in one pass: **`as370` does not
+support `COM` at all** — no ESD entry, the counter does not jump back, and
+storage declared afterward lands in the previous section. Filed as #229.
 
-Hier nachgezählt, feldweise tokenisiert: **`COM` kommt im Korpus 0-mal vor.**
-Deshalb hat es nie gestört — und deshalb wäre es aus keiner Baummessung je
-gefallen. Ein Defekt, den nur eine Frage findet, die man aus Gründlichkeit
-mitgestellt hat.
+Recounted here, tokenized field by field: **`COM` occurs 0 times in the
+corpus.** That is why it never caused trouble — and why it would never
+have fallen out of any tree-wide measurement. A defect that only a
+question asked out of thoroughness could find.
 
-**Der Prüfer behauptet die Divergenz** — die `COM`-Karte und alles danach ist
-über **Quelltext** ausgeschlossen, nicht über Anweisungsnummern, weil der
-Kommentarblock am Kopf jeder Vorrichtung sonst alles verschiebt. Der Fall
-scheitert, **wenn `COM` aufhört zu divergieren**: #229s Gate existiert, bevor die
-Arbeit beginnt. Und `equlist`s Liste bekannter Divergenzen ist jetzt **leer** —
-das Leerwerden ist selbst die Prüfung, dass #226 gelandet ist.
+**The checker asserts the divergence** — the `COM` card and everything
+after it is excluded by **source text**, not by statement numbers, because
+the comment block at the head of every fixture would otherwise shift
+everything. The case fails **the moment `COM` stops diverging**: #229's
+gate exists before the work begins. And `equlist`'s list of known
+divergences is now **empty** — the emptying is itself the proof that #226
+landed.
 
-### #226: zwei zurückgezogene Befunde, ein Rendering-Fehler
+### #226: two retracted findings, one rendering bug
 
-Mein `PREFL`-Fehllesen und cc370s `L'4.0'`-Fehllesen waren **derselbe Defekt**,
-und er ist jetzt behoben statt bloß benannt.
+My `PREFL` misreading and cc370's `L'4.0'` misreading were **the same
+defect**, and it is now fixed rather than merely named.
 
-Ein `EQU` steht nicht am Ortszähler — es benennt einen **Wert**, und IFOX00
-listet es so: LOC leer, der Wert in ADDR2. `as370` druckte den laufenden Zähler
-in LOC und ließ ADDR2 leer.
+An `EQU` does not sit at the location counter — it names a **value**, and
+IFOX00 lists it that way: LOC blank, the value in ADDR2. `as370` printed
+the running counter in LOC and left ADDR2 blank.
 
 ```
 ohne Fix   00000A                         18 E1  EQU  A1
@@ -578,74 +589,76 @@ mit Fix                            00000  18 E1  EQU  A1
 IFOX00                             00000 / 00004
 ```
 
-**Beide Symbole zeigten ohne den Fix dieselbe Zahl** — die Signatur einer Spalte,
-die etwas anderes meldet als behauptet. Genau daran bin ich hängengeblieben.
+**Without the fix, both symbols showed the same number** — the signature
+of a column reporting something other than what it claims to. That is
+exactly what I got hung up on.
 
-**Ein falsches Listing informiert nicht nur falsch, es erzeugt Arbeit:** zwei
-Sitzungen, zwei zurückgezogene Befunde, ein Rendering-Fehler. Damit hat die
-Tabelle aus dem Runbook eine vierte Zeile — Instrumentendefekt, und beide
-Fehllesungen lasen dieselbe lügende Spalte, während #223 bestand, weil es eine
-Meldung las.
+**A wrong listing does not just inform wrongly, it creates work:** two
+sessions, two retracted findings, one rendering bug. That gives the
+runbook's table a fourth row — instrument defect, and both misreadings
+read the same lying column, while #223 held up because it read a message.
 
-**Und kein Test konnte es fangen:** keiner der fünf `listref`-Fälle enthielt je
-ein `EQU`. Die Suite ist seit ihrer Entstehung spaltengenau und hatte diese
-Anweisung schlicht nie gesehen. `equlist.s` trägt jetzt unter anderem ein
-DSECT-relatives Equate — die `PREFL`-Form — als Regressionstest.
+**And no test could catch it:** none of the five `listref` cases ever
+contained an `EQU`. The suite has been column-exact since it was created
+and had simply never seen this statement. `equlist.s` now carries, among
+other things, a DSECT-relative equate — the `PREFL` form — as a regression
+test.
 
-Die Testvorrichtung fand dabei zwei weitere Divergenzen (`ORG`, `DSECT`, aus
-derselben Ursache eine Anweisung früher), die cc370 **nicht** mitbehoben hat:
-eigenes Issue, damit die Messung zuordenbar bleibt. Der Prüfer **behauptet die
-Divergenz**, statt sie zu dulden — wer sie behebt, bricht den Test laut, statt
-ihn still bestehen zu lassen.
+In doing so the test fixture found two more divergences (`ORG`, `DSECT`,
+from the same cause one statement earlier) that cc370 did **not** fix
+along with it: filed as its own issue, so the measurement stays
+attributable. The checker **asserts the divergence** instead of tolerating
+it — whoever fixes it breaks the test loudly, instead of letting it pass
+quietly.
 
-### #223 — und ein Widerspruch, den ich erfunden hatte
+### #223 — and a contradiction I had invented
 
-`attr_apos` trug ein `E` in der Attribut-Buchstabenmenge, das IFOX' eigener
-Quelltext nicht kennt (`T L I S N K`, `ifnx1a.asm:4862`). `E` ist in Assembler XF
-kein Attribut, wohl aber ein **Konstantentyp** — also öffnet `DC E'1.0'` gar
-keine Zeichenkette, das schließende Anführungszeichen schaltet den Quote-Zustand
-*ein*, der Operand endet nicht mehr am Leerzeichen, und die Bemerkung wandert
-hinein. Ein Komma darin macht daraus eine zweite Konstante:
+`attr_apos` carried an `E` in the attribute-letter set that IFOX's own
+source does not know (`T L I S N K`, `ifnx1a.asm:4862`). `E` is not an
+attribute in Assembler XF, but it is a **constant type** — so `DC E'1.0'`
+does not open a string at all, the closing quote switches the quote state
+*on*, the operand no longer ends at the blank, and the remark gets pulled
+in. A comma inside it then turns it into a second constant:
 
 | | rc | Bytes |
 |---|---|---|
-| IFOX00 | **0**, keine Diagnose | `41100000` |
-| `as370` vorher | **8**, „Invalid type declared" | `41100000` |
+| IFOX00 | **0**, no diagnostic | `41100000` |
+| `as370` before | **8**, "Invalid type declared" | `41100000` |
 
-**Gleiche Bytes, und `as370` lehnt die Anweisung ab.** Ein Fehlalarm, kein
-übersehener Fehler — und unter `COND=(8,LT)` scheitert damit ein Build, den
-IFOX00 sauber assembliert.
+**Same bytes, and `as370` rejects the statement.** A false alarm, not a
+missed error — and under `COND=(8,LT)` that fails a build that IFOX00
+assembles cleanly.
 
-**Der Fall scheitert am rc-Gate, nicht am Bytevergleich.** Jedes Instrument, das
-ich diese Woche gebaut habe, liest Bytes; dieser Defekt hat nie eines berührt.
-Sichtbar war er nur, weil der Rückgabecode eine eigene Achse ist, die wir
-mitschreiben.
+**The case fails at the rc gate, not at the byte comparison.** Every
+instrument I have built this week reads bytes; this defect never touched
+one. It was visible only because the return code is its own axis, one we
+also record.
 
-**Und ich habe cc370 einen Widerspruch gemeldet, den es nicht gab.** Ich hatte
-berichtet, ihre Anweisung ergebe bei mir „rc 0, in drei Formen". Nachgeprüft:
-ihre Datei ergibt rc 8 — und **meine eigene ebenfalls**, dieselbe Datei, die ich
-als sauber gemeldet hatte. Zusätzlich die Lücke vor der Bemerkung von 1 bis 24
-Zeichen durchgefahren: **überall rc 8.** Es gab keinen Unterschied im Eingang,
-den zu suchen ich sie gebeten hatte. Wie ich zu rc 0 kam, kann ich nicht
-rekonstruieren.
+**And I reported a contradiction to cc370 that did not exist.** I had
+reported that their statement came out "rc 0, in three forms" for me.
+Checked again: their file yields rc 8 — and **so does my own**, the same
+file I had reported as clean. I also ran the gap before the remark from 1
+to 24 characters: **rc 8 everywhere.** There was no difference in the
+input for them to go looking for, which is what I had asked them to do. I
+cannot reconstruct how I arrived at rc 0.
 
-cc370s Antwort darauf ist die Regel: **die Datei schicken, nicht die
-Beschreibung.** Sie haben `attre.s` committet statt die Karte zu beschreiben, und
-es war in einem Lauf erledigt.
+cc370's response to that is the rule: **send the file, not the
+description.** They committed `attre.s` instead of describing the card,
+and it was settled in one run.
 
-### #221: ein Fix, den dieser Baum weder belegen noch widerlegen kann
+### #221: a fix this tree can neither prove nor disprove
 
-`L'` eines `EQU` ist die Länge des linkesten Terms. `equ_len_of` prüfte das erste
-Zeichen auf einen Buchstaben, also fiel eine führende Klammer auf 1 durch.
+The `L'` of an `EQU` is the length of its leftmost term. `equ_len_of`
+checked the first character for a letter, so a leading parenthesis fell
+through to 1.
 
-**Baumlauf: null. Kein Byte von 5.528 Decks bewegt.** Und das Konstrukt ist nicht
-selten — **`EQU (` steht 135-mal in 75 Modulen** (cc370 zählt 126 Karten bei
-denselben 75; die neun Karten Differenz ist ungeklärt und betrifft nur die
-Zählung, nicht den Fix). Der Baum *trägt* es und **verbraucht** es nie: niemand
-liest `L'` eines solchen Symbols.
+**Tree run: zero. Not one byte of 5,528 decks moved.** And the construct
+is not rare — **`EQU (` occurs 135 times in 75 modules** (cc370 counts 126
+cards across the same 75; the nine-card difference is unresolved and
+affects only the count, not the fix). The tree *carries* it and **never
+consumes** it: nobody reads the `L'` of such a symbol.
 
-**Also ist die Testvorrichtung die einzige Absicherung.** Gegen beide Binaries
-gefahren:
+**So the test fixture is the only safeguard.** Run against both binaries:
 
 ```
 ohne Fix   01 01 01 01 01 01 01
@@ -653,224 +666,228 @@ mit Fix    07 01 07 07 03 01 01
 IFOX00     07 01 07 07 03 01 01
 ```
 
-Drei der sieben Fälle sind Kontrollen, die in **beiden** Binaries `01` bleiben —
-`(4+S1)` gegen „erstes Symbol irgendwo", `(X'04'+S1)` gegen „erstes
-alphabetisches Token", `( S1+4)` gegen „auch Leerzeichen überspringen". Ein
-übereifriger Fix fällt dort durch.
+Three of the seven cases are controls that stay `01` in **both**
+binaries — `(4+S1)` against "first symbol anywhere", `(X'04'+S1)` against
+"first alphabetic token", `( S1+4)` against "also skip blanks". An
+over-eager fix would fail there.
 
-Das ist die erste Änderung, bei der „bewegt nichts" **die Erwartung** war und
-nicht der Befund — und cc370 hat das in den PR-Text geschrieben, statt jemanden
-später finden zu lassen, dass die Änderung nichts bewegt, und daraus zu
-schließen, sie sei unnötig.
+This is the first change where "moves nothing" **was the expectation**
+rather than the finding — and cc370 put that in the PR text, instead of
+leaving someone to find later that the change moves nothing and conclude
+from that that it was unnecessary.
 
-### 86,0 % — die Ortsklasse liefert, bevor die Aufzählung fertig ist
+### 86.0 % — the site class delivers before the enumeration is finished
 
-**#218:** drei Leser trennen an Kommas auf oberster Ebene. Zwei prüfen auf das
-Attribut-Apostroph, `dc_split` nie. Nach ungerader Zahl von `L'`/`K'` hält es
-sich für innerhalb einer Zeichenkette, und das nächste Komma trennt nicht mehr:
+**#218:** three readers split on top-level commas. Two check for the
+attribute apostrophe, `dc_split` never does. After an odd number of
+`L'`/`K'`, it considers itself inside a string, and the next comma no
+longer splits:
 
 ```
 DC AL1(L'FLD),X'FF'   ->  07        IFOX00: 07FF
 ```
 
-**Das `X'FF'` fällt weg — bei rc 0, ohne Meldung, und IFOX00 assembliert es
-ebenfalls bei rc 0 ohne Diagnose.** Weder Rückgabecode noch Meldung hätten das je
-gesehen; nur die Bytes. +2, keine verloren.
+**The `X'FF'` drops out — at rc 0, with no message, and IFOX00 also
+assembles it at rc 0 with no diagnostic.** Neither the return code nor a
+message would ever have seen this; only the bytes. +2, none lost.
 
-**Und cc370s Quelltextscan war eine Schranke auf der falschen Population.** Er
-fand zwei Module mit dem Konstrukt — **keins der beiden ist unter den Gewinnern.**
-Der Operand erreichte `IEAVNP11`/`IEAVNP12` über ein Makro, und ein Kartenscan
-sieht keinen erzeugten Text. Dieselbe Lehre wie bei den 35 gegen 79 vom ersten
-Tag, nur eine Ebene subtiler: ein Attribut-Apostroph in einem DC-Operanden ist
-lexikalisch, die Zeichen stehen auf einer Karte — nur nicht auf einer, die
-gelesen wurde.
+**And cc370's source-text scan was a bound on the wrong population.** It
+found two modules with the construct — **neither of the two is among the
+gainers.** The operand reached `IEAVNP11`/`IEAVNP12` through a macro, and
+a card scan sees no generated text. The same lesson as the 35 against 79
+from the first day, only one level subtler: an attribute apostrophe in a
+DC operand is lexical, the characters sit on a card — just not on one
+that was read.
 
-**Ein Kandidatenpaar war ausdrücklich kein Defekt.** Sechs Leser entscheiden „ist
-dieses Apostroph ein Attribut", mit drei verschiedenen Buchstabenmengen
-(`KNLT`, `LTKNIS`, `LTKNISE`). Sieht nach Vernachlässigung aus, ist aber richtig:
-IFOX00 liest `S'` und `I'` in einem gewöhnlichen Ausdruck als öffnendes
-Anführungszeichen. **Verschiedene Mengen nach Kontext.** Ohne das Orakel wäre das
-als fünfter Fall der Ortsklasse eingestellt worden.
+**One candidate pair was explicitly not a defect.** Six readers decide "is
+this apostrophe an attribute", with three different letter sets (`KNLT`,
+`LTKNIS`, `LTKNISE`). Looks like neglect, but is correct: IFOX00 reads
+`S'` and `I'` in an ordinary expression as an opening quote. **Different
+sets depending on context.** Without the oracle this would have been
+filed as the fifth case of the site class.
 
-**#217, der Skalenmodifikator — und meine Zahl schrumpft ihn.** `DC FS3'1.25'`
-gibt bei IFOX00 `0000000A` und bei `as370` `00000001`; der Modifikator wird
-ignoriert. Sechs Module tragen ihn, alle sechs weichen ab — aber:
+**#217, the scale modifier — and my number shrinks it.** `DC FS3'1.25'`
+gives `0000000A` on IFOX00 and `00000001` on `as370`; the modifier is
+ignored. Six modules carry it, all six diverge — but:
 
-| Modul | Sektionslänge | abweichende Bytes | zuordenbar |
+| Module | Section length | diverging bytes | attributable |
 |---|---|---:|---|
-| **`IFFPEAGR`** | **gleich** | 18 | **ja** |
-| `IFFPIAPG` | 3.692 gegen 3.844 | 63 | nein |
-| `IFFPJAPV` | 3.214 gegen 3.366 | 59 | nein |
-| `IFFPCAAR` | 2.150 gegen 2.288 | 49 | nein |
-| `IFFPFAVA` | 2.616 gegen 2.754 | 62 | nein |
-| `IFNX5M` | gleich | **647** in 126 Läufen | nein |
+| **`IFFPEAGR`** | **equal** | 18 | **yes** |
+| `IFFPIAPG` | 3,692 vs 3,844 | 63 | no |
+| `IFFPJAPV` | 3,214 vs 3,366 | 59 | no |
+| `IFFPCAAR` | 2,150 vs 2,288 | 49 | no |
+| `IFFPFAVA` | 2,616 vs 2,754 | 62 | no |
+| `IFNX5M` | equal | **647** across 126 runs | no |
 
-**Ein Skalenmodifikator ändert den Wert, nicht die Breite.** Ein Modul, dessen
-Sektion 138 bis 152 Bytes zu kurz ist, ist es aus einem anderen Grund. `IFNX5M`
-trägt **ein** `HS14` und weicht in 647 Bytes ab. Gemessene Reichweite des
-Defekts in diesem Baum: **ein Modul, sechzehn Bytes.** Sechstes Mal, dass „N
-Module tragen das Konstrukt" wie eine Reichweite von N gelesen wird.
+**A scale modifier changes the value, not the width.** A module whose
+section is 138 to 152 bytes too short is that for a different reason.
+`IFNX5M` carries **one** `HS14` and diverges in 647 bytes. Measured reach
+of the defect in this tree: **one module, sixteen bytes.** Sixth time
+that "N modules carry the construct" gets read as a reach of N.
 
-### Alle 5.528 Module erzeugen ein Deck — zum ersten Mal
+### All 5,528 modules produce a deck — for the first time
 
-**`HEWLDIOC` war nie langsam. Es hing, seit elf Monaten, auf `main`.**
-`expr_sect`s Ausdruckslauf verbraucht Leerzeichen, Operatoren und Klammern und
-hält einen Namen am Komma an — ohne Zweig dafür. Ein Komma lässt den Zeiger
-stehen, und die Schleife läuft ewig. Erreichbar aus einem ganz gewöhnlichen
-Maschinenoperanden; gefunden erst, als cc370 denselben Lauf von einer zweiten
-Seite ansprach.
+**`HEWLDIOC` was never slow. It has been hanging, for eleven months, on
+`main`.** `expr_sect`'s expression pass consumes blanks, operators, and
+parentheses and stops a name at a comma — with no branch for that. A
+comma leaves the pointer standing still, and the loop runs forever.
+Reachable from a perfectly ordinary machine operand; found only when
+cc370 approached the same pass from a second angle.
 
-Einzeln nachgemessen, nachdem der Schutz drin war:
+Measured individually, once the guard was in place:
 
 | `HEWLDIOC` | |
 |---|---|
-| Laufzeit | **0,04 s** |
-| Sektionslänge | **5.224 gegen IFOX00s 5.224** |
-| Abstand zum Abbild | **4 Bytes von 5.056** |
+| Runtime | **0.04 s** |
+| Section length | **5,224 against IFOX00's 5,224** |
+| Distance to the image | **4 bytes out of 5,056** |
 
-Elf Monate „terminiert nie" — und es war vier Bytes von der Identität entfernt.
+Eleven months of "never terminates" — and it was four bytes from
+identity.
 
-**Und mein Runbook hat das mitgetragen.** Ich hatte in `gate-worker.sh` und im
-Gate-Dokument stehen: „terminiert nicht in 300 s und wird es unter keiner
-Schranke". Die 300 s waren gemessen, das „nie" war ein Schluss — und er begründete
-den Schrankenwert, wodurch niemand mehr nachfragte. **Eine Zeitschranke kann nicht
-zwischen langsam und kaputt unterscheiden**; sie meldet, wo das Messen aufhörte.
-Beide Stellen korrigiert.
+**And my runbook carried that along.** I had written in `gate-worker.sh`
+and in the gate document: "does not terminate in 300 s and will not under
+any alarm". The 300 s were measured, the "never" was an inference — and
+it justified the alarm value, which is why nobody questioned it further.
+**A time alarm cannot distinguish slow from broken**; it reports where
+the measuring stopped. Both places corrected.
 
-**Die Schranke ist jetzt 150 s statt 240.** Das langsamste Modul, das durchläuft,
-ist `IFCEL155` mit 72 s — doppelte Reserve —, und seit #215 wird **kein einziges**
-mehr abgeschossen. Der Lauf kostet 2:02 statt 4:04. Als No-op kalibriert:
-5.528/5.528, null verschieden.
+**The alarm is now 150 s instead of 240.** The slowest module that gets
+through is `IFCEL155` at 72 s — double margin — and since #215 **not a
+single one** has been shot down any more. The run costs 2:02 instead of
+4:04. Calibrated as a no-op: 5,528/5,528, zero different.
 
-**Und die Relokationsseite ist zu.** `IEDCSA` ist identisch, und die Zeile, die
-seit gestern die interessanteste war:
+**And the relocation side is closed.** `IEDCSA` is identical, and the
+line that has been the most interesting one since yesterday:
 
 ```
 image identical AND RLD different: 0
 ```
 
-**Jedes Modul, dessen Bytes stimmen, hat jetzt auch ein richtiges Relocation
-Dictionary.** Das war der Fehlermodus, der am schwersten zu sehen war — richtiger
-Wert, richtiges Abbild, und ein Binder, der nicht relokiert.
+**Every module whose bytes are right now also has a correct Relocation
+Dictionary.** That was the failure mode hardest to see — right value,
+right image, and a binder that does not relocate.
 
-### CI war rot, und zwei Fehler davon waren meine
+### CI was red, and two of the failures were mine
 
-**#208 wurde mit rotem CI gemerged.** `gcc -Werror` weist
-`strncpy(r->name, b, 19)` als mögliche Verkürzung zurück; der Lauf auf dem
-PR-Branch war um 13:46 gescheitert, der Merge war um 13:56. Mein Gate schaut auf
-Objektdecks und hat nie in die CI gesehen. **#212** repariert es mit `scopy`,
-dem Helfer, den die Datei schon hatte.
+**#208 was merged with red CI.** `gcc -Werror` rejects
+`strncpy(r->name, b, 19)` as a possible truncation; the run on the PR
+branch had failed at 13:46, the merge was at 13:56. My gate looks at
+object decks and never looked at CI. **#212** fixes it with `scopy`, the
+helper the file already had.
 
-**Ich habe geschrieben, mein Gate sei für diese Klasse „strukturell blind". Das
-stimmt nicht.** `/opt/homebrew/bin/gcc-16` liegt auf dieser Maschine und
-reproduziert den Fehler exakt. Ich hatte `gcc-14`, `gcc-13`, `gcc-12` und
-`/usr/bin/gcc` probiert und aufgehört. **Ein Werkzeug, das unter drei geratenen
-Namen fehlt, ist kein fehlendes Werkzeug** — dieselbe Form wie alles andere, was
-diese Woche schiefging: aus einer Beschreibung geschlossen statt nachgesehen.
+**I wrote that my gate was "structurally blind" for this class. That is
+not true.** `/opt/homebrew/bin/gcc-16` sits on this machine and
+reproduces the error exactly. I had tried `gcc-14`, `gcc-13`, `gcc-12`,
+and `/usr/bin/gcc` and stopped. **A tool that is missing under three
+guessed names is not a missing tool** — the same shape as everything else
+that went wrong this week: concluded from a description instead of
+checked.
 
-**Und der zweite Fehler:** #213 hing als gestapelter PR an #212. Mein
-`--delete-branch` beim Merge von #212 hat dessen Branch entfernt und #213 damit
-**geschlossen**. GitHub öffnet keinen PR wieder, dessen Basis fehlt, und die
-Basis eines geschlossenen lässt sich nicht ändern — er musste als **#214** neu
-aufgemacht werden, gleicher Commit. Beides steht jetzt im Runbook.
+**And the second failure:** #213 hung as a stacked PR off #212. My
+`--delete-branch` on the merge of #212 removed its branch and thereby
+**closed** #213. GitHub will not reopen a PR whose base is missing, and
+the base of a closed one cannot be changed — it had to be reopened as
+**#214**, same commit. Both are now in the runbook.
 
-### #214: die CCW-Datenadresse `*`, +7
+### #214: the CCW data address `*`, +7
 
-Eine CCW, deren Datenadresse als `*` geschrieben ist, ist relokierbar, und
-`as370` ließ den Eintrag fallen: `reloc_sym` liefert `"*"`, `sym_find` findet
-nichts. Der `DC`-Pfad sechs Zeilen darunter behandelt den Ortszähler seit jeher
-in seinem `tgtreal`-Prädikat — zwei Pfade, derselbe Term, einer richtig.
+A CCW whose data address is written as `*` is relocatable, and `as370`
+dropped the entry: `reloc_sym` returns `"*"`, `sym_find` finds nothing.
+The `DC` path six lines below has always handled the location counter in
+its `tgtreal` predicate — two paths, the same term, one right.
 
-**Und cc370 hat meine 78 aufgeteilt und die Größenfrage umgedreht.** Von 410
-fehlenden Einträgen sind 390 nachgelagert: 43 Module melden undefinierte Symbole
-(ein undefiniertes Symbol assembliert als absolute Null und trägt per Definition
-keine Relokation), bei 28 weicht das `TXT`-Abbild schon ab. **Übrig bleiben 7
-Module mit 20 Einträgen**, und 18 davon sind dieser eine CCW-Defekt.
+**And cc370 split my 78 and turned the size question around.** Of 410
+missing entries, 390 are downstream: 43 modules report undefined symbols
+(an undefined symbol assembles as absolute zero and by definition carries
+no relocation), for 28 the `TXT` image already diverges. **That leaves 7
+modules with 20 entries**, and 18 of those are this one CCW defect.
 
-Mein Eintragsvergleich **kann eine fehlende Relokation nicht von einem fehlenden
-Symbol unterscheiden** und meldet beides gleich. Ich hatte vermutet, neben der
-kleinen Änderung liege eine größere mit zwanzigfacher Reichweite. Es war
-umgekehrt: die kleine war die richtige, und die 178 `R == P` waren keine
-Population.
+My entry comparison **cannot distinguish a missing relocation from a
+missing symbol** and reports both the same way. I had suspected that,
+alongside the small change, a bigger one with twenty times the reach was
+sitting there. It was the other way round: the small one was the right
+one, and the 178 `R == P` were not a population.
 
-### #209: fehlende Relokationseinträge — 78 Module, und der Mechanismus ist eins
+### #209: missing relocation entries — 78 modules, and the mechanism is one of them
 
-cc370 fand in #199s Rest, dass sechs Module **gar kein** Relocation Dictionary
-erzeugen, und diagnostizierte es: `DC A(IEDIAP05-IEDIAP04)` über zwei
-Kontrollsektionen ist netto absolut, also gibt `as370` nichts aus, während IFOX00
-ein **negatives** und ein positives Paar setzt — `as370`s RLD-Emitter hat kein
-Richtungsbit.
+In #199's remainder, cc370 found that six modules produce **no**
+Relocation Dictionary at all, and diagnosed it: `DC A(IEDIAP05-IEDIAP04)`
+across two control sections is net absolute, so `as370` emits nothing,
+while IFOX00 sets a **negative** and a positive pair — `as370`'s RLD
+emitter has no direction bit.
 
-Ich habe die Reichweite baumweit gemessen, Eintrag für Eintrag (`R`, `P`,
-Adresse) über alle 5.527 Decks:
+I measured the reach tree-wide, entry by entry (`R`, `P`, address) across
+all 5,527 decks:
 
-| | Module |
+| | Modules |
 |---|---:|
-| IFOX00 hat **mehr** RLD-Einträge als `as370` | **78** |
-| davon: `as370` erzeugt **gar keinen** RLD | **6** |
-| davon: IFOX00 hat einen Eintrag mit **Richtungsbit** | **1** |
+| IFOX00 has **more** RLD entries than `as370` | **78** |
+| of those: `as370` produces **no** RLD at all | **6** |
+| of those: IFOX00 has an entry with the **direction bit** | **1** |
 
-Die sechs sind exakt cc370s sechs — unabhängig aus dem Eintragsvergleich statt
-aus dem Rest abgeleitet, also von zwei Seiten bestätigt. **Aber der Mechanismus
-betrifft eines davon.** `IEDCSA` ist das einzige Modul im ganzen Baum, in dem
-IFOX00 ein Flag mit `0x02` setzt.
+The six are exactly cc370's six — derived independently from the entry
+comparison rather than from the remainder, so confirmed from two sides.
+**But the mechanism applies to only one of them.** `IEDCSA` is the only
+module in the whole tree where IFOX00 sets a flag with `0x02`.
 
-Die anderen 77 vermissen 410 gewöhnliche positive Einträge — 178 davon mit
-`R == P`, also Adresskonstanten, die in die eigene Kontrollsektion zeigen.
-`IGG019R0`: IFOX00 14 Einträge, `as370` 3.
+The other 77 are missing 410 ordinary positive entries — 178 of them with
+`R == P`, i.e. address constants that point into their own control
+section. `IGG019R0`: IFOX00 14 entries, `as370` 3.
 
-**Eine richtige Diagnose und eine richtige Population, aber auf verschiedene
-Fragen.** Sechs Module erzeugen keinen RLD; eines davon aus dem gefundenen Grund.
-Das Richtungsbit als Ursache der sechs zu führen hieße, einen
-Ein-Modul-Mechanismus hinter eine Sechs-Modul-Überschrift zu setzen — die Form,
-die uns diese Woche fünfmal begegnet ist, und das erste Mal bei einem Defekt, der
-zweifelsfrei echt ist.
+**A correct diagnosis and a correct population, but for different
+questions.** Six modules produce no RLD; one of them for the reason
+found. Crediting the direction bit as the cause of the six would mean
+putting a one-module mechanism behind a six-module heading — the shape
+we have run into five times this week, and the first time on a defect
+that is unquestionably real.
 
-### #208: eine Änderung, beide Probleme, keine Grenze angehoben
+### #208: one change, both problems, no limit raised
 
-Ein subskribiertes SET-Symbol ist jetzt **eine** Tabellenzeile mit Vektor statt N
-benannter Zeilen. `MAXLSET` bleibt 512, `MAXGSET` bleibt 32.768 — die Grenzfrage
-hat sich aufgelöst, wie vorhergesagt.
+A subscripted SET symbol is now **one** table row with a vector instead
+of N named rows. `MAXLSET` stays at 512, `MAXGSET` stays at 32,768 — the
+limit question dissolved, as predicted.
 
-**Das dreiteilige Gate, in der Reihenfolge, in der ich es festgelegt hatte:**
+**The three-part gate, in the order I had fixed it in:**
 
-1. **0 von 5.524 gemeinsamen Decks geändert.** Die einzigen Decks, die sich
-   bewegen, sind die drei, die vorher keins hatten.
-2. **Alle drei erzeugen ein Deck.** `no-as370-deck` 4 → 1.
-3. **Laufzeit:** `IFCE0155` 1,441 s → **0,339 s** (Faktor 4,2), `IFCEE155`
-   5,796 s → **2,254 s** (Faktor 2,6).
+1. **0 of 5,524 shared decks changed.** The only decks that move are the
+   three that had none before.
+2. **All three produce a deck.** `no-as370-deck` 4 → 1.
+3. **Runtime:** `IFCE0155` 1.441 s → **0.339 s** (factor 4.2), `IFCEE155`
+   5.796 s → **2.254 s** (factor 2.6).
 
-**Punkt 3 war der, den ich nicht weglassen wollte, und er ist der einzige, der
-etwas ergab, das die anderen nicht zeigen.** cc370 misst Faktor 9,8, ich 4,2 —
-verschiedene Maschinen, dasselbe Vorzeichen. Wäre er flach gewesen, hätten
-identische Decks und drei gerettete Module trotzdem wie Erfolg ausgesehen.
+**Point 3 was the one I did not want to leave out, and it is the only one
+that produced something the others do not show.** cc370 measures a
+factor of 9.8, I measure 4.2 — different machines, the same sign. Had it
+come out flat, identical decks and three rescued modules would still have
+looked like success.
 
-**Und mein Gate war beim ersten Durchlauf falsch — an meiner eigenen
-Zeitschranke.** `IFCEL155` starb nicht mehr an der Tabelle, sondern lief 72 s
-allein und unter `-P 8` über die 90-s-Schranke: `rc 2 → rc 142`. Die Regel aus
-dem `IFCEE155`-Fall, eine Größenordnung höher — **ein Modul nahe der Schranke ist
-ein Modul, das kommt und geht.** Schranke auf 240 s, danach alle drei stabil.
-Der Lauf kostet jetzt 4:04 statt 1:40, weil `HEWLDIOC` die vollen 240 s zieht.
-Ein Gate, das einen Unterschied meldet, den kein Code erzeugt hat, ist schlimmer
-als ein langsames.
+**And my gate was wrong on the first pass — against my own time alarm.**
+`IFCEL155` no longer died at the table, but ran 72 s alone and, under
+`-P 8`, went over the 90 s alarm: `rc 2 → rc 142`. The rule from the
+`IFCEE155` case, one order of magnitude higher — **a module near the
+alarm is a module that comes and goes.** Alarm set to 240 s, after which
+all three are stable. The run now costs 4:04 instead of 1:40, because
+`HEWLDIOC` draws the full 240 s. A gate that reports a difference no code
+produced is worse than a slow one.
 
-**Eine Verwechslung von mir gehört auch dazu.** Ich hatte cc370 als Prüfpunkt
-genannt: „`IFCE0155` läuft heute in 6,50 s". Gemessen hatte ich `IFCEE155` — ein
-Buchstabe, in der Spezifikation des Gates, das ich selbst gefordert hatte.
-`IFCE0155` lief 1,44 s.
+**A mix-up of my own belongs here too.** I had named a checkpoint to
+cc370: "`IFCE0155` runs today in 6.50 s". What I had measured was
+`IFCEE155` — one letter, in the specification of the gate I had demanded
+myself. `IFCE0155` ran in 1.44 s.
 
-**+0 Identitäten, keine verloren.** Die drei neuen Decks sind 7.528, 3.104 und
-7.087 Bytes falsch — EREP-Module, also ab jetzt #205s Gebiet. #173 ging um ihr
-Sterben, nicht um ihre Richtigkeit.
+**+0 identities, none lost.** The three new decks are 7,528, 3,104, and
+7,087 bytes wrong — EREP modules, so from here on #205's territory. #173
+was about them dying, not about their correctness.
 
-### #173: die Diagnose — nicht die Grenze, sondern das Speichermodell
+### #173: the diagnosis — not the limit, but the storage model
 
-cc370 hat profiliert statt geschätzt und mich korrigiert: die **lokale** Tabelle
-gipfelt in `IFCE0155` bei **elf** Einträgen. Die Kosten liegen im **globalen**
-Scan — 98 Millionen Vergleiche über 6.757 Einträge.
+cc370 profiled instead of estimating and corrected me: the **local**
+table peaks in `IFCE0155` at **eleven** entries. The cost sits in the
+**global** scan — 98 million comparisons over 6,757 entries.
 
-Ich habe daraufhin die andere Hälfte gemessen. Die drei Module, die an
-`local SET-symbol table full (512)` sterben, deklarieren jeweils **eine** Sache:
+I then measured the other half. The three modules that die at
+`local SET-symbol table full (512)` each declare **one** thing:
 
 ```
 IFCEL155 Zeile 1336:   LCLB   &SW(4000)
@@ -878,110 +895,116 @@ IFCSXXXF Zeile  377:   LCLB   &SW(4000)
 IFCSXXXH Zeile  378:   LCLB   &SW(4000)
 ```
 
-Ihre distinkten `LCL`-Symbole zählen 45, 52 und 52 — nirgends nahe 512.
+Their distinct `LCL` symbols number 45, 52, and 52 — nowhere near 512.
 
-**Mit Testfällen festgestellt: ein subskribiertes Array kostet einen
-Tabelleneintrag pro *zugewiesenem* Subskript.**
+**Established with test cases: a subscripted array costs one table entry
+per *assigned* subscript.**
 
-| Testfall | Ergebnis |
+| Test case | Result |
 |---|---|
-| `LCLB &SW(4000)` deklariert, nie zugewiesen | rc 0 |
-| 400 distinkte Subskripte zugewiesen | rc 0 |
-| **600 distinkte Subskripte** | **Tabelle voll (512)** |
-| 5.000 Zuweisungen an zwei Symbole | rc 0 — kein Duplikatfehler |
-| 60 verschachtelte Expansionen mit je 20 Locals | rc 0 — kein Leck |
+| `LCLB &SW(4000)` declared, never assigned | rc 0 |
+| 400 distinct subscripts assigned | rc 0 |
+| **600 distinct subscripts** | **table full (512)** |
+| 5,000 assignments to two symbols | rc 0 — no duplicate error |
+| 60 nested expansions with 20 locals each | rc 0 — no leak |
 
-**Und damit sind cc370s Befund und meiner dieselbe Sache von zwei Seiten.**
-`DSGEN`s `GBLC &ITEM(3000)` und `GBLA &BITS(3000),&SHIFT(3000)` sind ebenfalls
-subskribierte Arrays, ebenso gespeichert — deshalb existieren dort überhaupt
-6.757 Einträge, und deshalb reicht 512 für *ein* Array nicht.
+**And with that, cc370's finding and mine are the same thing seen from
+two sides.** `DSGEN`'s `GBLC &ITEM(3000)` and `GBLA &BITS(3000),&SHIFT(3000)`
+are likewise subscripted arrays, stored the same way — which is why
+6,757 entries exist there at all, and why 512 is not enough for *one*
+array.
 
-Ein Array mit N Elementen ist N einzeln benannte Zeilen in einer linear
-durchsuchten Tabelle. **Das Speichermodell zu ändern erledigt beides und lässt
-die Grenzfrage weitgehend verschwinden.** Nur die globale Suche zu reparieren
-ließe die drei Module an einer Grenze scheitern, die dann willkürlich wäre.
+An array with N elements is N individually named rows in a linearly
+searched table. **Changing the storage model fixes both and makes the
+limit question largely disappear.** Fixing only the global search would
+leave the three modules failing at a limit that would then be arbitrary.
 
-### #207: die erste Änderung ohne Deck-Gewinn, absichtlich genommen
+### #207: the first change with no deck gain, taken deliberately
 
-`struct ctx` und das `seqn`/`seqi`-Paar liegen nicht mehr auf dem Stapel.
-**Gemessen mit `sizeof`: 78.240 + 49.152 = 127.392 Bytes pro Ebene, 4,86 MB bei
-Tiefe 40** — meine gerechneten Werte lagen elf Bytes daneben.
+`struct ctx` and the `seqn`/`seqi` pair no longer live on the stack.
+**Measured with `sizeof`: 78,240 + 49,152 = 127,392 bytes per level, 4.86
+MB at depth 40** — my calculated figures were off by eleven bytes.
 
-**Strikter No-op, und genau so geprüft:** 0 von 5.524 Decks geändert (per Hash),
-0 rc-Änderungen, `+0 / 0 verloren / 0 näher / 0 weiter`. Zusätzlich die Laufzeit
-gemessen, weil eine Haufenzuteilung pro Makroexpansion etwas kosten könnte:
+**Strict no-op, and checked exactly that way:** 0 of 5,524 decks changed
+(by hash), 0 rc changes, `+0 / 0 lost / 0 closer / 0 further`. Also
+measured the runtime, because a heap allocation per macro expansion could
+cost something:
 
-| Modul | vor #207 | nach #207 |
+| Module | before #207 | after #207 |
 |---|---:|---:|
-| `IFCEE155` | 6,58 s | 6,50 s |
-| `IEAVNP01` | 0,06 s | 0,04 s |
-| `IEAVAP00` | 0,11 s | 0,11 s |
+| `IFCEE155` | 6.58 s | 6.50 s |
+| `IEAVNP01` | 0.06 s | 0.04 s |
+| `IEAVAP00` | 0.11 s | 0.11 s |
 
-Kein messbarer Unterschied. Der Gate-Lauf war 1:38 statt 1:18 — Maschinenlast,
-nicht die Änderung.
+No measurable difference. The gate run was 1:38 instead of 1:18 —
+machine load, not the change.
 
-**Der Wert liegt nicht im Deck.** Es entkoppelt *jede* kontextlokale Tabelle von
-der Rekursionstiefe und macht #173 überhaupt erst lösbar. Eine Änderung ohne
-Deck-Gewinn gewinnt nie ein Argument gegen ein „+47" — sie passiert nur
-absichtlich oder gar nicht.
+**The value does not sit in the deck.** It decouples *every*
+context-local table from recursion depth and is what makes #173 solvable
+at all. A change with no deck gain never wins an argument against a
+"+47" — it only happens deliberately, or not at all.
 
-**Und cc370s erster No-op-Vergleich meldete 13 geänderte Decks.** Sieben waren
-#206s eigene Gewinne, drei meine Kartenpackungs-Wechsel: die Basis war einen
-Merge alt. Die Zwei-Builds-Falle in ihrer gewöhnlichsten Form — nicht zwei
-Binaries in einer Zahl, sondern ein herumliegendes Vergleichsverzeichnis. **Beim
-No-op ist dieser Fehler sichtbar**, was ein weiteres Argument dafür ist, No-ops
-absichtlich zu fahren.
+**And cc370's first no-op comparison reported 13 changed decks.** Seven
+were #206's own gains, three were my card-packing changes: the baseline
+was one merge old. The two-builds trap in its most ordinary form — not
+two binaries in one number, but a stale comparison directory lying
+around. **On a no-op this error is visible**, which is one more argument
+for running no-ops deliberately.
 
-### 85,8 % — zwei Populationen, die sich nur scheinbar widersprachen
+### 85.8 % — two populations that only seemed to contradict each other
 
-**#206:** ein `ENTRY`, das eine Kontrollsektion benennt, bekommt kein `LD` — die
-`SD` *ist* dieser Einsprungpunkt. `as370` gab trotzdem eines aus, und zwar
-**zuerst**, weil die `ENTRY`-Karte der `CSECT` vorausgeht (in `IERABW` 104 Karten
-davor). +7, keine verloren.
+**#206:** an `ENTRY` that names a control section gets no `LD` — the `SD`
+*is* that entry point. `as370` emitted one anyway, and **first**, because
+the `ENTRY` card precedes the `CSECT` (in `IERABW`, 104 cards earlier).
++7, none lost.
 
-**Und eine Zahlendifferenz, die keine Definitionsfrage war.** cc370 leitete den
-#199-Rest mit **17** ab, ich mit **32**, und wir wollten schon die Definitionen
-abgleichen. Die Modulnamen nebeneinandergelegt: ihre vier Signaturen sind
-Teilmengen meiner sieben, Modul für Modul identisch, und es fehlen genau die drei
-Kategorien, in denen sich **`TXT`-Karten** unterscheiden (8 + 6 + 1 = 15).
-17 + 15 = 32.
+**And a discrepancy in numbers that was not a question of definitions.**
+cc370 derived the #199 remainder as **17**, I derived **32**, and we
+were already about to reconcile the definitions. Laid side by side by
+module name: their four signatures are subsets of my seven, identical
+module for module, and exactly the three categories in which **`TXT`
+cards** differ are missing (8 + 6 + 1 = 15). 17 + 15 = 32.
 
-Also kein Definitionsunterschied, sondern eine fehlende Kategorie — dieselben
-Bytes, andere Kartengrenzen. **Namen vergleichen, nicht Zahlen** hätte das sofort
-gezeigt, und es ist billiger als jede Definitionsdebatte.
+So not a difference in definitions, but a missing category — the same
+bytes, different card boundaries. **Comparing names, not numbers**, would
+have shown that immediately, and it is cheaper than any debate about
+definitions.
 
-Nach #206 sind es **25**:
+After #206 it is **25**:
 
-| Signatur | Module |
+| Signature | Modules |
 |---|---:|
-| nur `TXT` | 8 |
-| Kartenzahl −1 | 6 |
+| `TXT` only | 8 |
+| card count −1 | 6 |
 | `RLD`/`TXT` | 6 |
-| nur `RLD` | 2 |
-| Kartenzahl +1, nur `ESD`, `ESD`/`RLD`/`TXT` | je 1 |
+| `RLD` only | 2 |
+| card count +1, `ESD` only, `ESD`/`RLD`/`TXT` | 1 each |
 
-`AMDPRPJB` und `AMDPRPMS` stehen darin — dieselben zwei, die cc370 aus #186s Rest
-als „nie das Flag-Byte" herausgehoben hatte. Sie gehören hierher.
+`AMDPRPJB` and `AMDPRPMS` are in there — the same two that cc370 had
+picked out of #186's remainder as "never the flag byte." They belong
+here.
 
-### 85,7 % — der größte verbleibende Block ist EREP
+### 85.7 % — the largest remaining block is EREP
 
-**cc370#205: 84 Module, fast alle `IFC*`, in denen `as370` aus derselben Quelle
-Hunderte Bytes weniger erzeugt als IFOX00 — und beide Assembler schweigen.**
+**cc370#205: 84 modules, almost all `IFC*`, in which `as370` produces
+hundreds of bytes less than IFOX00 from the same source — and both
+assemblers stay silent.**
 
-| Modul | `as370` | IFOX00 | Δ |
+| Module | `as370` | IFOX00 | Δ |
 |---|---:|---:|---:|
-| `IFCE0145` | 10.432 | 11.635 | **−1.203** |
-| `IFCE0135` | 6.975 | 8.017 | **−1.042** |
-| `IFCE0155` | 2.550 | 2.832 | −282 |
+| `IFCE0145` | 10,432 | 11,635 | **−1,203** |
+| `IFCE0135` | 6,975 | 8,017 | **−1,042** |
+| `IFCE0155` | 2,550 | 2,832 | −282 |
 
-**Es ist nicht die Makrolücke.** `IFCE0155` ruft `DSGEN` 59-mal, `LINE` 17-mal,
-`HEX` 16-mal — alles Namen von der Suchliste — und **definiert sie selbst**: acht
-`MACRO`-Definitionen im Quelltext. Deshalb schweigen beide. Es ist bedingte
-Assemblierung in eingebetteten Makros (`AIF` 27-mal, `SETA` 10-mal in dem einen
-Modul), die in `as370` weniger Material erzeugt.
+**It is not the macro gap.** `IFCE0155` calls `DSGEN` 59 times, `LINE` 17
+times, `HEX` 16 times — all names from the search list — and **defines
+them itself**: eight `MACRO` definitions in the source. That is why both
+stay silent. It is conditional assembly inside nested macros (`AIF` 27
+times, `SETA` 10 times, in that one module) that generates less material
+in `as370`.
 
-Der Befund in zwei Zeilen — der Instruktionsstrom stimmt bis `0x24`, dann eine
-`LA`-**Distanz**:
+The finding in two lines — the instruction stream matches up to `0x24`,
+then an `LA` **distance**:
 
 ```
 IFOX   41 50 93 96      LA R5,X'396'(,R9)
@@ -990,113 +1013,118 @@ IFOX   41 60 96 61      LA R6,X'661'(,R9)
 as370  41 60 95 47      LA R6,X'547'(,R9)      Ziel 282 Bytes früher
 ```
 
-**Der Code stimmt, und die Daten, die er adressiert, sind nicht da.** Die beiden
-Differenzen sind verschieden (32 und 282), es fehlt also an **mehr als einer
-Stelle**.
+**The code is right, and the data it addresses is not there.** The two
+differences are different (32 and 282), so something is missing in
+**more than one place**.
 
-**Und die Klasse ist über eine Schwelle definiert, nicht über einen Mechanismus
-— das war mein Fehler in der Fallbeschreibung.** Über alle 84 gemessen:
+**And the class is defined by a threshold, not by a mechanism — that was
+my mistake in the case description.** Measured across all 84:
 
-| | Module |
+| | Modules |
 |---|---:|
-| Δ Vielfaches von 8 | 27 |
-| Vielfaches von 4 | 27 |
-| gerade | 17 |
-| ungerade | 13 |
+| Δ a multiple of 8 | 27 |
+| multiple of 4 | 27 |
+| even | 17 |
+| odd | 13 |
 
-Praktisch gleichverteilt; der häufigste Einzelwert kommt **3-mal von 84** vor. Und
-`IFCE0155` ist das **untypischste** Modul der Klasse: 78 der 84 weichen schon in
-den ersten 32 Bytes ab, mit 50–93 % Abweichung danach, während `IFCE0155` 832
-Bytes identischen Vorlauf und einen einzigen späten Bruchpunkt hat.
+Practically an even distribution; the most common single value occurs
+**3 times out of 84**. And `IFCE0155` is the **least typical** module in
+the class: 78 of the 84 already diverge within the first 32 bytes, with
+50–93 % divergence after that, while `IFCE0155` has 832 bytes of
+identical lead-in and a single, late break point.
 
-Ich hatte den saubersten Zeugen ausgewählt — und **den saubersten Zeugen zu
-wählen ist genau, wie aus einer Schwellenklasse eine Mechanismusklasse wird.**
-„Eine Ursache plausibel, weil EREP ein zusammenhängendes Produkt ist" war ein
-Schluss aus einem Familiennamen und einem Modul. Die Messung trägt ihn nicht.
+I had picked the cleanest witness — and **picking the cleanest witness is
+exactly how a threshold class turns into a mechanism class.** "One cause
+plausible because EREP is a coherent product" was an inference from a
+family name and one module. The measurement does not support it.
 
-Vierter Rest dieser Woche, der über eine Zugehörigkeitsregel statt über eine
-Ursache definiert war — und der erste, bei dem ich die Mechanismus-Deutung selbst
-ins Issue geschrieben habe.
+Fourth remainder this week that was defined by a membership rule instead
+of a cause — and the first one where I wrote the mechanism
+interpretation into the issue myself.
 
-### 84,8 % — der Rest, nach Form sortiert
+### 84.8 % — the remainder, sorted by form
 
-Die 832 verbliebenen Abweichungen, aufgeteilt danach, ob die **Sektionslängen**
-stimmen — „richtige Form, falscher Inhalt" ist eine andere Arbeit als „falsche
-Form":
+The 832 remaining divergences, split by whether the **section lengths**
+are right — "right form, wrong content" is a different job from "wrong
+form":
 
-| | Module |
+| | Modules |
 |---|---:|
-| genau **eine** Sektion mit falscher Länge | **471** |
-| alle Längen stimmen | **328** |
-| zwei Sektionen falsch | 14 |
-| drei oder mehr | 11 |
-| andere Sektionsmenge | 4 |
+| exactly **one** section with the wrong length | **471** |
+| all lengths correct | **328** |
+| two sections wrong | 14 |
+| three or more | 11 |
+| different section count | 4 |
 
-Die 471 zerfallen nicht weiter: die Längendifferenzen streuen (häufigste −8 mit
-21 Modulen, +16 mit 20, +8 mit 17), also sind es viele Ursachen und nicht eine.
-Bei den 328 ist der Median acht abweichende Bytes, und 173 haben höchstens acht.
+The 471 do not break down further: the length differences are scattered
+(most common −8 with 21 modules, +16 with 20, +8 with 17), so there are
+many causes and not one. Among the 328, the median is eight diverging
+bytes, and 173 have at most eight.
 
-**Daraus fiel cc370#203: das Spiegelbild von #190.** Dort schrieb `as370` `B=0`,
-wo IFOX00 ein Basisregister setzt. Hier **gibt `as370` ein Basisregister, wo
-IFOX00 `B=0` schreibt** — eine blanke Distanz in den niedrigen Speicher. 49
-Module rein, 18 teilweise, und von 164 abweichenden Bytes sind **161 das
-`B1`-Feld des ersten Operanden einer SS-Instruktion**. Keines ist RX.
+**cc370#203 fell out of this: the mirror image of #190.** There, `as370`
+wrote `B=0` where IFOX00 sets a base register. Here **`as370` gives a
+base register where IFOX00 writes `B=0`** — a blank distance into low
+storage. 49 modules pure, 18 partial, and of 164 diverging bytes, **161
+are the `B1` field of the first operand of an SS instruction**. None is
+RX.
 
 ```
 AHLTPID   0x058   IFOX  d5 01 00 8e      as370  d5 01 20 8e     B1 0 -> 2
 AMDSAPGE  0x06a   IFOX  d2 27 00 58      as370  d2 27 80 58     B1 0 -> 8
 ```
 
-**Und #191s eigener Kontrollfall behauptet genau die Regel, die hier verletzt
-wird**: ein relokierbares `USING *,15` über der ganzen CSECT, und IFOX00 benutzt
-R15 nie für einen absoluten Operanden. Der Kontrollfall steht auf einem
-**RX**-Operanden und greift deshalb hier nicht.
+**And #191's own control case asserts exactly the rule violated here**: a
+relocatable `USING *,15` over the whole CSECT, and IFOX00 never uses R15
+for an absolute operand. The control case stands on an **RX** operand and
+so does not reach here.
 
-**Was ich vorher ausgeschlossen habe:** dass es ein Rückschritt aus #191 ist.
-Acht dieser Module gegen den Stand *vor* #191 gemessen — Abweichungszahl und
-Basis-0→n identisch, Modul für Modul. Die Klasse ist älter und unabhängig. Das
-war das Erste, was auszuschließen war, weil #191s erste Fassung genau in diese
-Richtung danebenlag.
+**What I ruled out beforehand:** that this is a regression from #191.
+Eight of these modules measured against the state *before* #191 —
+divergence count and base 0→n identical, module for module. The class is
+older and independent. That was the first thing to rule out, because
+#191's first version was off in exactly this direction.
 
-### 84,6 % — Übergabeliste 927
+### 84.6 % — hand-over list at 927
 
-**#200: eine ESDID gehört dem ESD-Eintrag, nicht dem Symbol.** Ein Name kann zwei
-tragen — eine CSECT, die einen `V`-Con auf den eigenen Namen enthält, hat einen
-`SD`- **und** einen `ER`-Eintrag, und IFOX00 nummeriert sie getrennt. `as370`
-hielt die ID an `struct sym`, also überschrieb die `ER`-Vergabe die der `SD`.
+**#200: an ESDID belongs to the ESD entry, not to the symbol.** A name
+can carry two — a CSECT that contains a `V`-con on its own name has an
+`SD` **and** an `ER` entry, and IFOX00 numbers them separately. `as370`
+kept the ID on `struct sym`, so the `ER` assignment overwrote the `SD`'s.
 
-**Meine Deutung war nah und die Sache kleiner und bösartiger.** Ich hatte
-geschrieben, es sei eine Frage der Reihenfolge — *wann* der Eintrag der Sektion
-gegenüber den Externverweisen vergeben wird. Die Reihenfolge war bereits richtig:
-`HMASMDC2` steht in `esdord` auf Position 0 **und** 117, und die Nummerierung gab
-demselben `struct sym` erst 1 und dann 116. Weil eine ESD-Karte *eine*
-Start-ID trägt und die Einträge positionsweise folgen, verschob das die ganze
-erste Karte — daher stimmten die Einträge 1–3 nicht und ab dem vierten alles.
+**My interpretation was close, and the actual issue was smaller and
+nastier.** I had written that it was a question of order — *when* the
+section's entry is assigned relative to the external references. The
+order was already correct: `HMASMDC2` sits in `esdord` at position 0
+**and** 117, and the numbering gave the same `struct sym` first 1 and
+then 116. Because an ESD card carries *one* starting ID and the entries
+follow positionally, that shifted the entire first card — which is why
+entries 1–3 were wrong and, from the fourth on, everything was.
 
-**Und die Hälfte, die kaputt ausgeliefert worden wäre.** Der `R`-Zeiger war
-*zufällig* richtig: er will ohnehin die ID des `ER`-Eintrags, und genau die stand
-nach dem Überschreiben da. Der `P`-Zeiger war in jedem RLD-Eintrag falsch. Wer
-nur die Nummerierung repariert, bekommt `P=1` und **macht `R` zu 1 kaputt**, wo
-IFOX00 `0x74` hat. cc370 hat `R` erst zerbrochen, es gesehen, und der Kontrollfall
-ist, was die Testvorrichtung davon behalten hat.
+**And the half that would have shipped broken.** The `R` pointer was
+*accidentally* correct: it wants the ID of the `ER` entry anyway, and
+that is exactly what stood there after the overwrite. The `P` pointer
+was wrong in every RLD entry. Fixing only the numbering gets you `P=1`
+and **breaks `R` into 1**, where IFOX00 has `0x74`. cc370 broke `R`
+first, saw it, and the control case is what the test fixture kept from
+that.
 
-**+53, keine verloren, null weiter.** Die Klasse „Abbild identisch, Deck nicht"
-fällt von 83 auf **31**, und keiner der 31 ist neu hinzugekommen.
+**+53, none lost, zero further.** The class "image identical, deck not"
+falls from 83 to **31**, and none of the 31 are newly added.
 
-### 83,7 % — der Fall ohne inhaltlichen Fehler
+### 83.7 % — the case with no defect in content
 
-**83 Module, deren Objektabbild byte-identisch mit IFOX00 ist und deren Deck es
-nicht ist.** Gleiche Sektionen, gleiche Bytes an jeder Adresse, gleiche Längen —
-und die Karten, die das tragen, unterscheiden sich. cc370#199.
+**83 modules whose object image is byte-identical to IFOX00 and whose
+deck is not.** Same sections, same bytes at every address, same
+lengths — and the cards that carry them differ. cc370#199.
 
-| was abweicht | Module |
+| what diverges | Modules |
 |---|---:|
-| **ESD-Nummerierung** — gleiche Symbole, andere ESDIDs | **56** |
-| nur `RLD`, Abbild identisch | 13 |
-| Kartenzahl um eins verschieden | 7 |
-| nur `TXT`, Abbild identisch | 3 |
+| **ESD numbering** — same symbols, different ESDIDs | **56** |
+| `RLD` only, image identical | 13 |
+| card count off by one | 7 |
+| `TXT` only, image identical | 3 |
 
-`HMASMDC2`, 118 ESD-Einträge, dieselben 118 Symbole:
+`HMASMDC2`, 118 ESD entries, the same 118 symbols:
 
 ```
 IFOX00                        as370
@@ -1105,243 +1133,259 @@ id=0x0002 HMASMAAR  ER        id=0x0075 HMASMAAR  ER
 id=0x0004 HMASMALC  ER        id=0x0004 HMASMALC  ER
 ```
 
-Der Eintrag der Kontrollsektion selbst bekommt von IFOX00 die **1** und von
-`as370` die **0x74**; ab dem vierten Eintrag stimmen beide wieder überein. Also
-eine Reihenfolgefrage, kein Nummernschema.
+The control section's own entry gets **1** from IFOX00 and **0x74** from
+`as370`; from the fourth entry on, both agree again. So a question of
+order, not a numbering scheme.
 
-**Das ist die Umkehrung aller bisherigen Fälle.** Hier gibt es keinen
-inhaltlichen Fehler: das Abbild ist richtig, das Objekt lädt, IBMs Modul stimmt
-mit beiden Decks überein. 83 Module, die **korrekt** sind und nicht
-**identisch** — und nur ein Bytevergleich der Karten sieht das. Nach dem Ziel
-dieses Projekts zählen sie trotzdem.
+**This is the reverse of every case so far.** There is no defect in
+content here: the image is right, the object loads, IBM's module matches
+both decks. 83 modules that are **correct** and not **identical** — and
+only a byte comparison of the cards sees that. By this project's goal
+they still count.
 
-**Und es erklärt einen Rest.** `HMASMTMD` war der Zeuge für #194; sein Abbild
-erreichte unter #198 null abweichende Bytes, sein Deck nicht, weil es eine Karte
-mehr trägt als IFOX00. Wer einen Klassenrest am Abbild misst, nennt so ein Modul
-erledigt; wer ihn am Deck misst, nicht. Beide haben recht, und die Zahl muss
-sagen welche.
+**And it explains a remainder.** `HMASMTMD` was the witness for #194; its
+image reached zero diverging bytes under #198, its deck did not, because
+it carries one more card than IFOX00. Whoever measures a class remainder
+on the image calls such a module done; whoever measures it on the deck
+does not. Both are right, and the number has to say which.
 
-**Anders als #190 gibt es hier keinen Selbstwiderspruch**, an den man appellieren
-könnte — `as370` ist in sich stimmig und ordnet nur anders. Hier ist das Orakel
-das ganze Argument, und das gehört dazugesagt.
+**Unlike #190, there is no self-contradiction here** to appeal to —
+`as370` is internally consistent and simply orders differently. Here the
+oracle is the whole argument, and that needs to be said along with it.
 
-### Der überstandene Fall: die implizite SS-Länge — und der Zeuge zeigte tiefer
+### The case that survived: the implicit SS length — and the witness pointed deeper
 
-cc370#194/#198: Nicht der SS-Pfad war falsch, sondern **`L'` eines
-`EQU`-Symbols war 1**. Der SS-Pfad liest das Längenattribut korrekt. `HMASMTMD`s
-Kontrollfall leistete also mehr, als er aussah: die ausdrückliche Form war nicht
-deshalb richtig, weil der SS-Pfad anders ist, sondern weil eine ausdrückliche
-Länge das Attribut gar nicht befragt.
+cc370#194/#198: it was not the SS path that was wrong, but **the `L'` of
+an `EQU` symbol was 1**. The SS path reads the length attribute
+correctly. `HMASMTMD`'s control case therefore delivered more than it
+looked like: the explicit form was not right because the SS path is
+different, but because an explicit length never queries the attribute at
+all.
 
-Die Regel, gemessen: **linkester Term, und nur wenn dieser Term ein Symbol ist.**
-`1+A` ergibt 1, nicht 4 — der Fall, der die Regel festlegt statt sie nur zu
-bestätigen, denn überall sonst fallen „linkester Term" und „erstes Symbol im
-Ausdruck" zusammen.
+The rule, as measured: **leftmost term, and only if that term is a
+symbol.** `1+A` gives 1, not 4 — the case that establishes the rule
+rather than merely confirming it, because everywhere else "leftmost
+term" and "first symbol in the expression" coincide.
 
-**+38, keine verloren, 57 näher, null weiter.** Von den 54 der Klasse sind 34
-deck-identisch, 12 tragen weiterhin das SS-Längenmuster (eine zweite Ursache,
-z. B. `IGC121`) und 8 haben ein identisches Abbild bei abweichendem Deck — die
-gehören jetzt zu #199.
+**+38, none lost, 57 closer, zero further.** Of the 54 in the class, 34
+are deck-identical, 12 still carry the SS-length pattern (a second
+cause, e.g. `IGC121`), and 8 have an identical image with a diverging
+deck — those now belong to #199.
 
-### Der ursprüngliche Fall: die implizite SS-Länge, 54 Module rein und 59 teilweise
+### The original case: the implicit SS length, 54 modules pure and 59 partial
 
-cc370#194. **Eine SS-Instruktion ohne ausdrückliche Länge bekommt von `as370`
-Länge 1**, wo IFOX00 das Längenattribut des ersten Operanden heranzieht. Das
-Längenbyte geht als `0x00` hinaus statt als `L'operand − 1`.
+cc370#194. **An SS instruction with no explicit length gets length 1 from
+`as370`**, where IFOX00 uses the length attribute of the first operand.
+The length byte goes out as `0x00` instead of as `L'operand − 1`.
 
-| | Module |
+| | Modules |
 |---|---:|
-| **alle** Abweichungen des Decks sind SS-Längenbytes auf 0 | **54** |
-| SS-Längenbyte **plus** anderes | **59** |
+| **all** of the deck's divergences are SS length bytes at 0 | **54** |
+| SS length byte **plus** something else | **59** |
 
-31 der 54 unterscheiden sich in genau diesem einen Byte im ganzen Deck. Opcodes:
-`D1` MVN, `D2` MVC, `D4` NC, `D5` CLC, `D6` OC, `D7` XC — und **immer** `as370`
-mit 0 gegen eine echte Länge, nie umgekehrt.
+31 of the 54 differ in exactly this one byte across the whole deck.
+Opcodes: `D1` MVN, `D2` MVC, `D4` NC, `D5` CLC, `D6` OC, `D7` XC — and
+**always** `as370` with 0 against a real length, never the other way
+round.
 
-**Der Zeuge trägt seinen eigenen Kontrollfall.** `HMASMTMD`, Offset `0x3020`, das
-einzige abweichende Byte im Deck:
+**The witness carries its own control case.** `HMASMTMD`, offset
+`0x3020`, the only diverging byte in the deck:
 
 ```
 IFOX00 : D2 03 C507 1000     MVC @PC00031,0(R1)     Länge 4
 as370  : D2 00 C507 1000                            Länge 1
 ```
 
-`@PC00031 EQU A003520`. Und 135 Karten früher schreibt dasselbe Modul dasselbe
-Feld richtig:
+`@PC00031 EQU A003520`. And 135 cards earlier, the same module writes the
+same field correctly:
 
 ```
 6774     MVC   @PC00031(4),0(R1)      ausdrücklich -- as370 gibt D2 03 aus
 6909     MVC   @PC00031,0(R1)         impliziert   -- as370 gibt D2 00 aus
 ```
 
-Gleiches Symbol, gleiche Instruktion, gleiches Modul. **Der Assembler hat die
-Länge und benutzt sie nicht.** Das ist wieder das Selbstwiderspruch-Argument, und
-diesmal ist es zulässig: das richtige Verhalten ist im selben Modul vorhanden.
+Same symbol, same instruction, same module. **The assembler has the
+length and does not use it.** This is again the self-contradiction
+argument, and this time it holds: the correct behaviour is present in
+the same module.
 
-**Eine Prüfung, die nicht optional war.** `D1`, `D2`, `D5`, `D6`, `D7` sind auch
-EBCDIC-Buchstaben (`J`, `K`, `N`, `O`, `P`), also hätte die ganze Klasse
-Textkonstanten sein können. Jeder Zeuge wurde durch Lesen der Nachbarbytes
-geprüft — alle stehen zwischen einem Ladebefehl und einem Sprung, keiner in einer
-Zeichenkette.
+**A check that was not optional.** `D1`, `D2`, `D5`, `D6`, `D7` are also
+EBCDIC letters (`J`, `K`, `N`, `O`, `P`), so the whole class could have
+been text constants. Every witness was checked by reading the
+neighbouring bytes — all sit between a load instruction and a branch,
+none in a string.
 
-### #191: 82,9 %, und zweimal falsch geraten, bevor es stimmte
+### #191: 82.9 %, and guessed wrong twice before it was right
 
-`ISDACVT EQU 0` mit absoluten `EQU`-Feldern ist die Art, ein Steuerblock vor
-DSECTs abzubilden; `USING ISDACVT,2` macht R2 zur Basis dieser Offsets. `as370`
-hat solche `USING` registriert und **nie konsultiert** — es hat überhaupt keine
-Auflösung absoluter Domänen. **+57, keine verloren, 69 näher, null weiter.**
+`ISDACVT EQU 0` with absolute `EQU` fields is the way to map a control
+block ahead of its DSECTs; `USING ISDACVT,2` makes R2 the base for those
+offsets. `as370` had registered such `USING`s and **never consulted
+them** — it had no resolution of absolute domains at all. **+57, none
+lost, 69 closer, zero further.**
 
-Nach dem Merge nachgerechnet:
+Recomputed after the merge:
 
 | | |
 |---|---:|
-| von den 54 identisch geworden | **52** |
-| gewonnen, aber **nicht** in den 54 | **5** |
-| von den 54 übrig | **2** — `IECVXURT`, `IDA019S6` |
+| of the 54, became identical | **52** |
+| gained, but **not** among the 54 | **5** |
+| of the 54, remaining | **2** — `IECVXURT`, `IDA019S6` |
 
-**Die Untergrenze war echt, und zwar um 5.** Der Scan sah nur Module mit
-höchstens acht abweichenden Adressen; fünf trugen diesen Defekt *und* etwas
-anderes. Und die beiden Überlebenden sind genau die zwei, die nie das Muster
-`B → 0` hatten — der Rest einer Klasse besteht aus dem, was nie zur Klasse
-gehörte. Dieselbe Warnung hatte ich cc370 für den Rest von #186 gegeben; sie gilt
-hier für meine eigene.
+**The lower bound was real, and short by 5.** The scan only saw modules
+with at most eight diverging addresses; five carried this defect *and*
+something else. And the two survivors are exactly the two that never had
+the `B → 0` pattern — the remainder of a class consists of what never
+belonged to the class. I had given cc370 that same warning about the
+remainder of #186; it applies here to my own.
 
-**Und meine Prognose war falsch.** Ich hatte cc370 geschrieben, sie bräuchten das
-Orakel nicht: wenn `as370` Basis 0 nimmt, wo ein `USING` gilt, widerspricht es
-sich selbst, und das entscheide die Sache. Sie brauchten IFOX00 zweimal, und
-beide Male hat es die Antwort geändert:
+**And my forecast was wrong.** I had written to cc370 that they would
+not need the oracle: if `as370` takes base 0 where a `USING` applies, it
+contradicts itself, and that settles the matter. They needed IFOX00
+twice, and both times it changed the answer:
 
-1. Ob eine blanke `256` eine Basis bekommt — cc370s Instinkt sagte nein, IFOX00
-   löst alle sechs Formen auf. Die erwartete Ausnahme hätte die Klasse halb
-   bewegt und der Test wäre grün gewesen.
-2. Die erste Fassung ergab **+0 und −52**. Das Unterscheidungsmerkmal ist nicht
-   „nicht relokierbar", sondern **„definiert und absolut"**: ein *undefiniertes*
-   Symbol wertet ebenfalls zu 0 und nicht-relokierbar aus, also wurde
-   `USING GSPCB,R2WRK` in `IFFAAA01` zur absoluten Domäne und `L R4WRK,16` griff
-   auf R2+16 statt auf absolut 16 — den CVT-Zeiger.
+1. Whether a bare `256` gets a base — cc370's instinct said no, IFOX00
+   resolves all six forms. The expected exception would have moved the
+   class halfway and the test would have been green.
+2. The first version came out **+0 and −52**. The distinguishing feature
+   is not "not relocatable" but **"defined and absolute"**: an
+   *undefined* symbol also evaluates to 0 and non-relocatable, so
+   `USING GSPCB,R2WRK` in `IFFAAA01` became the absolute domain and
+   `L R4WRK,16` reached R2+16 instead of absolute 16 — the CVT pointer.
 
-**Selbstwiderspruch beweist, dass ein Assembler falsch liegt, sagt aber nicht,
-was richtig ist.** Das ist die Grenze des Arguments, das bei `IEAVELCR`
-funktioniert hat, und ich hatte sie zu weit gezogen.
+**Self-contradiction proves that an assembler is wrong, but it does not
+say what is right.** That is the limit of the argument that worked for
+`IEAVELCR`, and I had stretched it too far.
 
-### Neu ausgerichtet: die 940, nach Mechanismus sortiert
+### Realigned: the 940, sorted by mechanism
 
-**Das Ziel ist `as370 == IFOX00` auf allen 5.528.** Ob IBMs ausgeliefertes Objekt
-dazu passt, ist eine eigene Frage und ordnet diese Arbeit nicht — eine Abweichung
-ist eine Abweichung, ob eine Wiederherstellung dahintersteht oder nicht. Die
-Sortierung nach IBM-Urteil in `docs/silent-divergences.md` bleibt als Nebenbefund
-stehen, ist aber nicht mehr die Reihenfolge.
+**The goal is `as370 == IFOX00` on all 5,528.** Whether IBM's shipped
+object matches that is a separate question and does not order this
+work — a divergence is a divergence, whether a recovery stands behind it
+or not. The sort by IBM's verdict in `docs/silent-divergences.md`
+remains as a side finding, but it is no longer the ordering.
 
-`tools/cluster_remaining.py`, gegen `928454b` (in Klammern der Stand vor #191):
+`tools/cluster_remaining.py`, against `928454b` (in parentheses, the
+state before #191):
 
-| Kartentyp-Signatur | Module |
+| Card-type signature | Modules |
 |---|---:|
-| nur `TXT` | **277** (335) |
-| Kartenzahl verschieden (Δ2–9) | 161 |
-| Kartenzahl verschieden (Δ10+) | 141 |
-| Kartenzahl verschieden (Δ1) | 128 |
-| nur `ESD`/`RLD`/`TXT` | 124 |
-| nur `ESD`/`TXT` | 56 |
-| nur `RLD`/`TXT` | 20 |
-| nur `RLD` | 13 |
-| nur `ESD` | 7 |
-| nur `ESD`/`RLD` | 4 |
+| `TXT` only | **277** (335) |
+| card count different (Δ2–9) | 161 |
+| card count different (Δ10+) | 141 |
+| card count different (Δ1) | 128 |
+| `ESD`/`RLD`/`TXT` only | 124 |
+| `ESD`/`TXT` only | 56 |
+| `RLD`/`TXT` only | 20 |
+| `RLD` only | 13 |
+| `ESD` only | 7 |
+| `ESD`/`RLD` only | 4 |
 
-**69 Module unterscheiden sich in genau einem Byte** (vor #191: 101), und daraus
-fiel der Fall, den #191 erledigt hat: **54 Module, deren einzige Abweichung das Basisregister einer
-RX-Instruktion ist**, bei 52 davon schreibt `as370` **B=0**, wo IFOX00 ein echtes
-Basisregister setzt. Die Distanz ist identisch, jedes andere Byte des Decks ist
-identisch.
+> **These rows sum to 931, and the heading says 940.** Noticed 2026-09-11 while
+> translating this file; the discrepancy is in the original entry and neither
+> number is changed here, because there is nothing left to say which is right —
+> the table may be a subset, or the 940 may have been read from a different cut.
+> A figure that disagrees with its own table is worth a line saying so rather
+> than a silent correction to whichever looks tidier.
 
-`ISDAAPR1`, Sektionsoffset `0x2e`, ein Byte im ganzen Deck:
+**69 modules differ in exactly one byte** (before #191: 101), and out of
+that fell the case #191 dealt with: **54 modules whose only divergence
+is the base register of an RX instruction**, and in 52 of them `as370`
+writes **B=0** where IFOX00 sets a real base register. The distance is
+identical, every other byte of the deck is identical.
+
+`ISDAAPR1`, section offset `0x2e`, one byte in the whole deck:
 
 ```
 IFOX00 : 4110 2100     LA R1,256(,R2)
 as370  : 4110 0100     LA R1,256(,R0)
 ```
 
-27 der 54 sind `ISDA*` mit derselben Signatur — eine Auflösungsstelle, nicht 27
-Quelltextfragen. **B=0 ist kein falsches Basisregister, sondern gar keins**: die
-Instruktion adressiert dann die blanke Distanz, also niedrigen Speicher.
+27 of the 54 are `ISDA*` with the same signature — one resolution site,
+not 27 separate source-text questions. **B=0 is not a wrong base
+register, it is no base register at all**: the instruction then
+addresses the blank distance, i.e. low storage.
 
-**Und es ist nicht #154.** Null der 54 stehen in der `addressability`-Klasse —
-`as370` meldet hier nichts, es löst den Operanden auf, nimmt still Basis 0 und
-erzeugt eine Instruktion, die sauber assembliert und woandershin zeigt. 23 der 54
-sind vollständig stille Abweichungen. Als cc370#190 eingestellt.
+**And it is not #154.** Zero of the 54 are in the `addressability`
+class — `as370` reports nothing here, it resolves the operand, silently
+takes base 0, and produces an instruction that assembles cleanly and
+points somewhere else. 23 of the 54 are complete silent divergences.
+Filed as cc370#190.
 
-Untergrenze: der Scan sieht nur Module mit höchstens 8 abweichenden Adressen.
+Lower bound: the scan only sees modules with at most 8 diverging
+addresses.
 
-### #188: +2 an Identitäten, und ein Modul, das die Überschrift nicht zeigt
+### #188: +2 in identities, and a module the heading does not show
 
-`join_cont()`, der dritte und letzte Kartenzerleger, mit demselben
-Attribut-Apostroph-Guard. Als Identitätszahl **+2** — eine fortgesetzte Anweisung
-mit Attributverweis vor einer Bemerkung ist schlicht selten. cc370 hat sie
-trotzdem genommen, „weil einer von drei Zerlegern falsch stehen zu lassen genau
-die Art ist, wie der nächste Leser die Familie für erledigt hält". Richtig.
+`join_cont()`, the third and last card splitter, with the same
+attribute-apostrophe guard. As an identity count, **+2** — a continued
+statement with an attribute reference ahead of a remark is simply rare.
+cc370 took it anyway, "because leaving one of three splitters wrong is
+exactly how the next reader takes the family for done." Right.
 
-**Die Zeile `length -> bytes : 1` war das Interessantere.** Sie liest sich wie ein
-Wechsel und ist eine Verbesserung:
+**The line `length -> bytes : 1` was the more interesting part.** It
+reads like a swap and is actually an improvement:
 
-| `IEDQOB` | vorher | nachher | IFOX00 |
+| `IEDQOB` | before | after | IFOX00 |
 |---|---:|---:|---:|
-| Distanz zu IFOX00 | 3.345 | **2.963** | — |
-| Sektionslänge | 4.068 | **3.928** | 3.936 |
+| Distance to IFOX00 | 3,345 | **2,963** | — |
+| Section length | 4,068 | **3,928** | 3,936 |
 
-382 Bytes näher, und die Sektionslänge von 132 zu lang auf 8 zu kurz. Die
-Übergabeliste zeigt das Modul weiterhin, die Überschrift zeigt es nicht, und
-ohne das dritte Instrument wäre es als „ein Modul hat den Eimer gewechselt"
-durchgelaufen.
+382 bytes closer, and the section length went from 132 too long to 8 too
+short. The hand-over list still shows the module, the heading does not,
+and without the third instrument it would have gone through as "a
+module switched buckets."
 
-Die drei „weiter" (`IFNX1J` +3, `IFNX2A` +7, `IFNX3N` +2) sind 2–7 Bytes in
-Decks, die 2.325 bis 3.136 Bytes falsch sind — hier nachgemessen, nicht
-übernommen.
+The three "further" (`IFNX1J` +3, `IFNX2A` +7, `IFNX3N` +2) are 2–7 bytes
+in decks that are 2,325 to 3,136 bytes wrong — measured here, not taken
+on trust.
 
-### Erledigt: ein Bit im RLD, +160 — und die Ursache stand im Idiom
+### Done: one bit in the RLD, +160 — and the cause was in the idiom
 
-`docs/silent-divergences.md`, cc370#186, behoben in #187. **173 der 1.242
-übergebenen Module unterschieden sich von IFOX00 in nichts als ihrem Relocation
-Dictionary** — gleiches `ESD`, gleiches `TXT`, 163 von 175 abweichenden Einträgen
-allein im Flag-Byte, jeder um genau ein Bit (`0x04`), und **152 davon der letzte
-Eintrag des Decks**.
+`docs/silent-divergences.md`, cc370#186, fixed in #187. **173 of the
+1,242 handed-over modules differed from IFOX00 in nothing but their
+Relocation Dictionary** — same `ESD`, same `TXT`, 163 of 175 diverging
+entries in the flag byte alone, each off by exactly one bit (`0x04`), and
+**152 of those the deck's last entry**.
 
-**Die Ursache war ein Idiom, kein Rechenfehler.** Jede Aufrufstelle schrieb die
-Breite *nach* dem Aufruf:
+**The cause was an idiom, not a computation error.** Every call site
+wrote the width *after* the call:
 
 ```c
 add_reloc(lc, r, 1); rels[nrel - 1].len = blen;
 ```
 
-`add_reloc` steigt bei `in_dsect` aus — und die Zuweisung landet dann auf dem
-**vorherigen** Eintrag. In `IEAVELCR` 24 echte Aufrufe gegen 138 aus
-Dummy-Sections: die letzte echte Relokation wurde 138-mal überschrieben und
-behielt die Breite der letzten DSECT-Konstanten. Daher das eine Bit, und daher
-„152 von 163 sind der letzte Eintrag" — das Ziel der Überschreibung ist immer
-`rels[nrel-1]`. `len` ist jetzt Parameter, das Idiom ist an allen fünf Stellen
-weg und kann nicht durch Kopieren zurückkommen.
+`add_reloc` bails out on `in_dsect` — and the assignment then lands on
+the **previous** entry. In `IEAVELCR`, 24 real calls against 138 from
+dummy sections: the last real relocation got overwritten 138 times and
+kept the width of the last DSECT constant. Hence the one bit, and hence
+"152 of 163 are the last entry" — the target of the overwrite is always
+`rels[nrel-1]`. `len` is now a parameter, the idiom is gone from all
+five sites and cannot come back through copying.
 
-**+160 Identitäten, keine verloren, null näher, null weiter.** Die Null in beiden
-Richtungen ist die Signatur eines Defekts, der nie teilweise war: jedes betroffene
-Deck wich in genau diesem einen Bit ab, wanderte also direkt auf identisch oder
-gar nicht. RLD-only ist von 173 auf **13** gefallen, die unmögliche Zelle von 27
-auf **1**.
+**+160 identities, none lost, zero closer, zero further.** The zero in
+both directions is the signature of a defect that was never partial:
+every affected deck diverged in exactly this one bit, so it moved
+straight to identical or not at all. RLD-only fell from 173 to **13**,
+the impossible cell from 27 to **1**.
 
-**Welcher Assembler recht hat, war ohne das Orakel zu klären.** `IEAVELCR`s
-Tabelle sind `VL3`-Konstanten; `as370` gab für 23 davon Länge 3 aus und für die
-letzte 4. Es war sich selbst uneins, also hat IFOX00 recht und für
-`ifox-objections.md` bleibt nichts. Genau deshalb war „es ist sich selbst uneins"
-die tragfähige Beobachtung und nicht „IFOX00 ist das Orakel".
+**Which assembler was right could not be settled without the oracle.**
+`IEAVELCR`'s table is `VL3` constants; `as370` gave 23 of them length 3
+and the last one 4. It disagreed with itself, so IFOX00 is right and
+nothing remains for `ifox-objections.md`. That is exactly why "it
+disagrees with itself" was the sound observation, and not "IFOX00 is the
+oracle."
 
-Kein Diagnosewerkzeug hätte darauf zeigen können: beide Assembler schweigen, und
-beide Decks laden zu einem Abbild, das mit IBMs ausgeliefertem Objekt
-byte-identisch ist. Gefunden über eine Zelle, die es nicht geben kann — 27 Module,
-bei denen *beide* Decks IBMs Objekt treffen und sich voneinander unterscheiden.
+No diagnostic tool could have pointed at this: both assemblers stay
+silent, and both decks load to an image that is byte-identical to IBM's
+shipped object. Found through a cell that cannot exist — 27 modules
+where *both* decks hit IBM's object and differ from each other.
 
-**Und daraus eine Grenze für eine Zahl, die hier oft steht:** „byte-identisch mit
-dem ausgelieferten Objekt" heißt, das **Abbild** ist identisch, nicht das Deck.
-`cmplmd370` baut das ladbare Abbild. Einige der 1.015 tragen ein Relocation
-Dictionary, das von IBMs abweicht. Keine Rücknahme — das Abbild ist, was läuft —
-aber das Deck ist damit nicht bewiesen, und die zwei Gedanken teilten sich hier
-bisher einen Satz.
+**And out of that, a limit on a number that appears often here:**
+"byte-identical to the shipped object" means the **image** is identical,
+not the deck. `cmplmd370` builds the loadable image. Some of the 1,015
+carry a Relocation Dictionary that diverges from IBM's. Not a
+retraction — the image is what runs — but the deck is not thereby
+proven, and the two ideas have so far shared one sentence here.
 
 ### Twelve fixes in — 62.7 % to 78.7 %, and the first class emptied outright
 
@@ -1366,31 +1410,31 @@ against IBM's shipped object **902**, hand-over list **1,841** (from 2,107).
 | #188 (the same guard in the third splitter) | +2 | 0 | 4 | 3 |
 | #189 (a character comparison ordered by length first) | +9 | 0 | 12 | 1 |
 | #191 (an absolute `USING` domain was never consulted) | **+57** | 0 | 69 | **0** |
-| #192 (Dokumentation: Kontrollfall und Rest-Regel) | 0 | 0 | 0 | 0 |
-| #195 (`N'&SYSLIST` zählte eine Darstellung, plus drei Tabellengrenzen) | +4 | 0 | 77 | 17 |
-| #198 (`L'` eines `EQU`-Symbols war 1) | **+38** | 0 | 57 | **0** |
-| #197 (Kommentarkorrektur) | 0 | 0 | 0 | 0 |
-| #200 (eine ESDID gehört dem ESD-Eintrag, nicht dem Symbol) | **+53** | 0 | 9 | **0** |
-| #202 (ausgelassene SS-Länge, plus die absolute DSECT-Differenz) | +11 | 0 | 19 | 1 |
-| #204 (`sub[0]` einer SS-Instruktion ist die Länge, nie eine Basis) | **+47** | 0 | 52 | 2 |
-| #206 (ein `ENTRY` auf eine Kontrollsektion erzeugt kein `LD`) | +7 | 0 | 0 | 0 |
-| #207 (Makrorahmen vom Stapel auf den Haufen) | 0 | 0 | 0 | 0 |
-| #208 (ein SET-Array ist eine Zeile mit Vektor) | 0 | 0 | 0 | 0 |
-| #212 (gebundene Kopie in `set_put` — CI-Reparatur) | 0 | 0 | 0 | 0 |
-| #214 = #213 (CCW-Datenadresse `*` ist relokierbar) | **+7** | 0 | 0 | 0 |
-| #215 (`expr_sect` terminierte nie an einem Komma) | 0 | 0 | 0 | 0 |
-| #209 (vorzeichenbehaftetes Relokationspaar) | +1 | 0 | 0 | 0 |
-| #218 (`dc_split` las jedes Apostroph als Anführungszeichen) | +2 | 0 | 4 | 0 |
-| #221 (Gruppierungsklammer verbarg den linkesten Term) | 0 | 0 | 0 | 0 |
-| #223 (`E` gehört nicht in die Attribut-Buchstabenmenge) | 0 | 0 | 0 | 0 |
-| #226 (ein `EQU` steht nicht am Ortszähler) | 0 | 0 | 0 | 0 |
-| #227 (`ORG`/`CSECT`/`DSECT` listeten den Zähler von vorher) | 0 | 0 | 0 | 0 |
-| #231 (`CNOP` von ungeradem Zähler, und ohne Namensfeld) | **+57** | 0 | 88 | **0** |
-| #39 (`MNOTE` erzeugte gar nichts) | 0 | 0 | 0 | 0 |
-| #235 (`AIF`-Bedingung bei 126 Zeichen abgeschnitten) | +9 | 0 | 104 | 12 |
-| #238 (`EQU C''''` wertet zu null aus) | +12 | 0 | 26 | 1 |
-| #240 (Bit-Längenmodifikator reservierte nichts) | **+99** | 0 | 124 | 1 |
-| #241 (Vergleichsoperator ohne Leerzeichen nicht erkannt) | **+67** | 0 | 84 | 3 |
+| #192 (documentation: control case and remainder rule) | 0 | 0 | 0 | 0 |
+| #195 (`N'&SYSLIST` counted a representation, plus three table limits) | +4 | 0 | 77 | 17 |
+| #198 (the `L'` of an `EQU` symbol was 1) | **+38** | 0 | 57 | **0** |
+| #197 (comment fix) | 0 | 0 | 0 | 0 |
+| #200 (an ESDID belongs to the ESD entry, not the symbol) | **+53** | 0 | 9 | **0** |
+| #202 (omitted SS length, plus the absolute DSECT difference) | +11 | 0 | 19 | 1 |
+| #204 (`sub[0]` of an SS instruction is the length, never a base) | **+47** | 0 | 52 | 2 |
+| #206 (an `ENTRY` on a control section produces no `LD`) | +7 | 0 | 0 | 0 |
+| #207 (macro frames moved from the stack to the heap) | 0 | 0 | 0 | 0 |
+| #208 (a SET array is one row with a vector) | 0 | 0 | 0 | 0 |
+| #212 (bounded copy in `set_put` — CI repair) | 0 | 0 | 0 | 0 |
+| #214 = #213 (the CCW data address `*` is relocatable) | **+7** | 0 | 0 | 0 |
+| #215 (`expr_sect` never terminated at a comma) | 0 | 0 | 0 | 0 |
+| #209 (signed relocation pair) | +1 | 0 | 0 | 0 |
+| #218 (`dc_split` read every apostrophe as a quote) | +2 | 0 | 4 | 0 |
+| #221 (a grouping parenthesis hid the leftmost term) | 0 | 0 | 0 | 0 |
+| #223 (`E` does not belong in the attribute-letter set) | 0 | 0 | 0 | 0 |
+| #226 (an `EQU` does not sit at the location counter) | 0 | 0 | 0 | 0 |
+| #227 (`ORG`/`CSECT`/`DSECT` listed the counter from before) | 0 | 0 | 0 | 0 |
+| #231 (`CNOP` from an odd counter, and with no name field) | **+57** | 0 | 88 | **0** |
+| #39 (`MNOTE` produced nothing at all) | 0 | 0 | 0 | 0 |
+| #235 (`AIF` condition truncated at 126 characters) | +9 | 0 | 104 | 12 |
+| #238 (`EQU C''''` evaluates to zero) | +12 | 0 | 26 | 1 |
+| #240 (bit length modifier reserved nothing) | **+99** | 0 | 124 | 1 |
+| #241 (comparison operator with no space not recognized) | **+67** | 0 | 84 | 3 |
 
 **#180's +24 is the smaller half, and the larger half is a bracket, not a
 number.** The mis-joined continuation was inventing operations out of
