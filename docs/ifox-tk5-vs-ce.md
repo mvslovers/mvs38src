@@ -223,3 +223,82 @@ are rejected — and the reason is open.
 which matters the moment stage 1's corpus run is attempted. `MVSCE-LAB`
 (`:8082`) and both TK5 systems submit normally, which is why the fixture above
 ran on LAB.
+
+---
+
+## The probe, run on the pinned oracle — 2026-09-12
+
+[`fahrplan.md`](fahrplan.md) stage 1 proposed a cheap first probe before the
+corpus run: ten modules — `IFNX1A 1J 3N 5A 5C 5D 5V 6B`, `IFOX0A 0D` — where
+`as370` and IFOX00 produce an image-identical module and differ only in the
+**`R` field** of the RLD entries. A discrete value, independent of the clock,
+which is what makes it a good first question.
+
+It has been run, on `MVSTK5-REF`.
+
+### What had to exist first
+
+The run that died on 2026-09-11 at 10:33 needed three things, and the third is
+the one that matters:
+
+1. `IBMUSER.IFOXOB2`, `IBMUSER.IFOXLST`, `IBMUSER.SRCD` allocated
+   (`IFOXALO2/JOB00040`, `CC 0000`). The first attempt drew `IEF618I OPERAND
+   FIELD DOES NOT TERMINATE IN COMMA OR BLANK` — a continuation line 74
+   characters long. JCL operands end before column 72.
+2. `IBMUSER.PVTMAC` allocated with **the same DCB as the copy on `MVSCE-EXP`**
+   (`FB/80/19040`).
+3. **Its 453 members copied from `MVSCE-EXP`, not rebuilt from the local macro
+   directories.** Locally `tape` + `mirror` is 444; `MVSCE-EXP` carries 453,
+   the extra nine being the EREP macros adopted on 2026-09-09
+   ([`erep-adoption.md`](erep-adoption.md)). The authority for what the
+   reference decks saw is the library they were assembled against, not a
+   reconstruction of it. Round-trip control: 15 of 15 members fetched back and
+   hashed byte-identical.
+
+**And the freeze held.** `tools/macrosnap.py` before and after:
+
+```
+2332 unchanged
+0 CHANGED, 0 gone, 453 new      <- all 453 are IBMUSER.PVTMAC
+```
+
+No `SYS1` macro library moved. The oracle took work and stayed frozen, which is
+exactly what `systems.json` says the guarantee is.
+
+### The result
+
+Ten modules assembled by TK5's IFOX00, against the decks MVS/CE's IFOX00 cut on
+2026-09-07. Same source, same `SYSLIB`, columns 1–72, `END` card excluded.
+
+| | |
+|---|---:|
+| decks differing on raw bytes | **10 of 10** |
+| **differing RLD cards** | **0** |
+| **differing ESD cards** | **0** |
+| differing TXT cards | 20 |
+| differing END cards | 10 |
+
+**Every one of those differences is the assembly timestamp.** The TXT cards
+carry `&SYSTIME`/`&SYSDATE` — `05.20 09/07/26` against `23.53 09/11/26` — and
+the `END` card carries the Julian day, `6250` against `6254`. Masking date and
+time leaves three cards, and all three are the same thing: the date straddles a
+card boundary (`09/0` + `7/26`), which the mask could not see.
+
+This family is the worst possible one for a naive byte comparison and the best
+one for this question, and both for the same reason: **Assembler XF assembles
+itself and stamps its own build time into its own object.** 21 of the 26
+stamp-dependent modules in the whole corpus are `IFNX*`/`IFOX*`, which is why
+the fahrplan named the `R` field rather than the bytes.
+
+### What it says, and what it does not
+
+**TK5's IFOX00 and MVS/CE's IFOX00 produce the same object code for these ten
+modules.** No instruction differs, no ESD entry, no relocation. The 115 USERMODs
+against 37 do not show here.
+
+**Ten modules are not an assembler**, exactly as one instruction was not. What
+this buys is the right to expect the corpus run to agree rather than to fear it
+— and a measured reason to spend the run. The full cut is the next step, and it
+now needs only the macro carry-across
+([`macro-tk5-vs-ce.md`](macro-tk5-vs-ce.md): TK5's own libraries would move 68
+modules), because the work data sets and `PVTMAC` are in place.
