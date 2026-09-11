@@ -202,3 +202,65 @@ source at Dave's full level — and it updates the running system, which is why 
 has not been done. That is a decision, not a step: it needs `MVSTK5-BLD`
 backed up first, and it is the only way to measure Dave's *complete* maintenance
 against TK5's object.
+
+---
+
+## A third state: after the chain past Dave's stop — 2026-09-11
+
+`MAINT06@`…`MAINT15G` ran on `MVSTK5-BLD` — 82 jobs, Dave's phases 3, 4 and 5,
+skipping the one job of the 83 that writes to `SYS1.LINKLIB`. 54 ended non-zero
+for a single reason documented in
+[`dave-install-log.md`](dave-install-log.md): SMP rejects `./ DELETE` and 485
+SYSMODs were never received. It still delivered.
+
+**144 modules changed**, carrying markers that had been missing: `DSKC*` on 111,
+`DSKK*` on 30, `DSKL*` on 2, `DSK6*` on 3.
+
+### The three states, one instrument
+
+Same pinned `as370` (`sha256 affc90e3…`), same macro path, same stamp, same
+comparator, same 3,988-module reference population.
+
+| source state | `rc 0` of 5,528 | **identical to TK5's object**, of 3,988 |
+|---|---:|---:|
+| archive (`MVSBLD`) | 4,576 | 1,084 |
+| applied, phase 1 (run 6) | **4,676** | 1,076 |
+| **applied, phases 3–5 (run 7)** | 4,649 | **1,089** |
+
+**Phase 1 → run 7: +13 identities and nothing lost.** Not a net figure — the
+`LOST` column is empty.
+
+```
+AMDPRECT IEAVTFTM IEBVMS  IEHDMSGS IFCETUL1 IFCSXXX4 IFCSXXX6
+IFDMSG00 IKJCT435 IKJEBEAA IKJEBEBO IKJEHMEM IKJRBBCM
+```
+
+**Ten of those are modules from the original list of 40** that the phase-1 state
+had lost against the archive. Three — `IKJCT435`, `IKJEBEBO`, `IKJEHMEM` — were
+never on that list: the applied state reaches IBM's object where the archive
+does not.
+
+**Archive → run 7: +5 identities (35 gained, 30 lost), and 100 closer against
+48 further.** This is the **first state that beats the archive on both
+measures**, and it settles the question the −8 raised: Dave's later-phase
+repairs do reach the object, and the phase-1 state was behind because the
+repairs had not been applied, not because they were wrong.
+
+### And the marker count moves with it
+
+| | modules |
+|---|---:|
+| carrying a `DSK` marker in the archive | 1,357 |
+| marker missing after run 6 (phase 1) | 619 — 46 % |
+| **marker missing after run 7** | **486 — 36 %** |
+| recovered | **133** |
+
+486 still missing is the size of what the `./ DELETE` rejection is costing.
+
+### The one thing that went the other way
+
+`rc 0` fell from 4,676 to 4,649, **−27 modules that no longer assemble
+cleanly**. That is not a contradiction — a return code is not the success
+criterion here, and identity rose over the same population — but it is
+unexplained and is not being presented as harmless. Those 27 are the first thing
+to look at if the applied state is ever adopted as the base.
