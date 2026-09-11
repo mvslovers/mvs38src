@@ -194,6 +194,31 @@ argument for a pinned reference system, and `MVSTK5-REF` is it.
 
 ## 5. The stages
 
+> **Status, 2026-09-12.** Stages 2 and 3 are done; stage 1 is the only blocker
+> in the plan and it holds stage 4; stage 5 has not begun and is, by this
+> document's own words, "the actual project".
+>
+> | | stage | state |
+> |---|---|---|
+> | 1 | is TK5's IFOX00 the same assembler? | **open** — the run died in its first job on a missing `IBMUSER.PVTMAC`, and its `SYSLIB` would have named TK5's own macro libraries, which moves 68 modules for reasons no assembler question can explain |
+> | 2 | Dave's build on `MVSTK5-BLD` | ✅ runs 5, 6, 7 |
+> | 3 | `ZLMDRPTD`/`ZLMDRPTT` against TK5 | ✅ 2026-09-11, on the clean run-6 build: 1,420 of 5,448 CSECTs equal |
+> | 4 | re-cut the reference against TK5 | not begun; depends on 1 |
+> | 5 | the 459 matching neither system | not begun |
+>
+> **And §2's question is half answered.** The three source states were measured
+> against TK5's object on one instrument
+> ([`source-states.md`](source-states.md)): archive 1,084, applied-phase-1 1,076,
+> **applied-phases-3-5 1,089** — the applied state wins on identity *and* on
+> distance. Two of §2's assumptions fell with it: the third column does not
+> exist off the tape (`BLDMVS.AWS` carries no source tree), and 486 modules
+> still lack their `DSK` markers because SMP rejects `./ DELETE` on RECEIVE
+> ([`dave-install-log.md`](dave-install-log.md)).
+>
+> **Distance to the goal, stated plainly: 1,089 of 3,988 reference modules are
+> byte-identical. 2,899 are not.** That is the work.
+
+
 ### Stage 1 — is TK5's IFOX00 the same assembler? *(blocks stage 4, not stage 2)*
 
 Every recorded figure is against **MVS/CE's** IFOX00, which is IBM's XF plus part
