@@ -130,7 +130,7 @@ gives for the same 236 files.
   granularity are wrong for `BLDSMP` — it cannot supply `MVSSRC.SYM101.F14` —
   and its user catalog cataloges `MVSSRC.SYM1-1`, which would collide with the
   names we need. Content-complete, route-inferior.
-- **`~/repos/MVSSRC/www.stben.net/`, `mvssrc/mainframe.eu/`, Dave's `MVSBLD/`**
+- **`~/repos/MVSSRC/ALLSRC/stben.net/`, `ALLSRC/mainframe.eu/`, Dave's `MVSBLD/`**
   are mirrors and reconstructions, not distribution libraries.
 - **`work/macros/`** holds macro libraries only.
 

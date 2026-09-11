@@ -143,7 +143,7 @@ more column. Run it against all three source states and read the number.
 |---|---|---|---|---|
 | `MVSCE-DEV` | `:8080` | — | `IBMUSER`/`SYS1` | **tabu** — the user's own |
 | `MVSCE-LAB` | `:8082` | — | `IBMUSER`/`SYS1` | the IFOX00 oracle that produced the 5,528 reference decks; build runs 1–4 |
-| `MVSCE-EXP` | `:8083` | — | `IBMUSER`/`SYS1` | untouched MVS/CE reference — the control that says LAB was not mutated |
+| `MVSCE-EXP` | `:8083` | — | `IBMUSER`/`SYS1` | untouched MVS/CE reference. **Run it.** On 2026-09-11 one request to it settled a question a full day of work had not: stock MVS/CE ships no `IHADVCT` in `SYS1.AMACLIB` at all, so LAB's pre-APAR copy was added rather than degraded. A control that is never run is not a control |
 | `MVSTK5-REF` | `:8084` | `:8484` | `HERC01`/`CUL8TR` | **the object baseline. Read-only.** |
 | `MVSTK5-BLD` | `:8085` | `:8585` | `HERC01`/`CUL8TR` | where Dave's build runs from here on |
 
@@ -158,7 +158,7 @@ more column. Run it against all three source states and read the number.
 |---|---|
 | `as370` == IFOX00 | **5,427 of 5,528 decks** at cc370 `fd287d3`; `as370` alone flags 0 |
 | Dave's source == shipped object (TK5) | 1,084 of 3,988 |
-| Dave's build, run 4 | superseded — run 5 is on `MVSTK5-BLD`, 3390-2 volumes |
+| Dave's build | **run 6 completed** 2026-09-11 on `MVSTK5-BLD` — 260 jobs to the phase-1 boundary, two non-clean and both documented harmless. Runs 4 and 5 died of space; see `run6-predictions.md` |
 | EREP macros still missing | 4 — `ENTRIES` `ETEPILOG` `FREETAB` `SUMMARY` |
 
 Run 4 is not worth restarting on LAB. It was always going to move to
@@ -328,6 +328,16 @@ The first run died of space: `BLDSR1`, `BLDSR2`, `BLDLS1` and `BLDWK1` were at
 about a hundred members of the source library became unreadable — `MVSMF106E I/O
 ERROR READING` on the console, `451 Read error on data set after 0 bytes` over
 FTP, two independent readers agreeing.
+
+> **Correction, 2026-09-11: volume geometry was half the story.** The same
+> `IEC031I D37-04` came back on the new 3390-2 volumes at `MAINT03B`, for a
+> different reason: four of `$01SMPAL`'s 189 allocations carry no secondary
+> quantity — `S=,` — at a primary sized to fill a whole 3390-1. Making the
+> volumes bigger did nothing for the datasets, because those come off Dave's tape
+> and out of `$01SMPAL` at their original sizes, and every build volume stood
+> exactly half empty while the library on it filled up. `tools/bldrun.py` now
+> supplies `S=50` at submit time. The geometry below is necessary and was not
+> sufficient.
 
 **MVS 3.8j stores a track address in a signed halfword, so a volume may not
 exceed 32,767 tracks** ([Jay Moseley on modern

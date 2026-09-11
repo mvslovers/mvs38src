@@ -78,8 +78,8 @@ So 433 of 436 are recovered. They are in
 [`../work/macros/mirror/`](../work/macros/mirror), kept apart on purpose: the
 tape set has Dave Kreiss' provenance, the mirror set does not.
 
-**Caveat on the mirror set.** These macros come from `www.stben.net` and
-`mvssrc/mainframe.eu`; nothing establishes that they sit at the maintenance
+**Caveat on the mirror set.** These macros come from `ALLSRC/stben.net` and
+`ALLSRC/mainframe.eu`; nothing establishes that they sit at the maintenance
 level of our DLIB object code. They are good enough to answer *"does as370
 assemble this"*. They are **not** good enough for a byte-identity verdict — a
 macro one PTF older generates a different instruction sequence. Where the

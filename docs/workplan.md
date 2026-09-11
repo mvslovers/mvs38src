@@ -114,7 +114,7 @@ build plan.*
 > everything. **It is not any more.** It remains useful as a proving ground,
 > because Dave's 2024 CSECT compare gives known targets of varying difficulty
 > there — but it is not a goal of this project.
-> `IKJ/REXX_INTEGRATION_PLAN.md` is history now, not direction.
+> `WORK/IKJ/REXX_INTEGRATION_PLAN.md` is history now, not direction.
 
 ### Why this routes around the blocker
 
@@ -793,7 +793,7 @@ are generated, not hand-maintained. The main output of M1.
 | `IDR_LKED` | link-edit date | linkage-editor IDR (§10.2) |
 | `IDR_ZAP` | zap history | HMASPZAP IDR (§10.1) — **the trail for PTFs, usermods and sysmods** |
 | `SYSMOD` | associated SMP sysmod | SMP CDS on `smp000` |
-| `SRC_CANDIDATE` | where found in the raw material | index over `MVSBLD/`, `IKJ/`, `www.stben.net/`, `mvssrc/mainframe.eu/`, `NEW.ASM`, `MVT.ASM` |
+| `SRC_CANDIDATE` | where found in the raw material | index over `MVSBLD/`, `WORK/IKJ/`, `ALLSRC/stben.net/`, `ALLSRC/mainframe.eu/`, `NEW.ASM`, `MVT.ASM` |
 | `CASE` | `A`/`B`/`C`/`D` | derived from the first compare |
 | `VERDICT` | `IDENTICAL` / `IDENTICAL-RAW` / `DIFF-USERMOD` / `DIFF-UNKNOWN` / `NO-SOURCE` / `ESCALATED` | `cmplmd370` |
 | `DIFF_DLIB` | bytes differing from the DLIB object deck — **the primary measure** | `cmplmd370` |
@@ -930,7 +930,7 @@ own toolchain. That diffs are noisy in columns 73–80 is a display problem, sol
 in the diff tool, not in storage.
 
 **Stays out:** `BLDMVS.AWS` (190 MB), the DASD volumes, the web mirrors
-(`www.stben.net` 856 MB, `mvssrc/mainframe.eu` 125 MB). They remain in MVSSRC. If
+(`ALLSRC/stben.net` 856 MB, `ALLSRC/mainframe.eu` 125 MB). They remain in MVSSRC. If
 versioned after all: Git LFS.
 
 **Private** until the licensing question is settled.
@@ -978,7 +978,7 @@ MVS/CE it is known whether a source candidate exists.
 ### M2 — as370 gap analysis (feasibility gate)
 
 - [ ] Run as370 over a representative cross-section of real system source:
-      `MVSBLD/*.ASM` and `IKJ/*.asm`, with the real MACLIBs.
+      `MVSBLD/*.ASM` and `WORK/IKJ/*.asm`, with the real MACLIBs.
 - [ ] Categorize failures: missing directive, macro problem, expression syntax,
       addressing, other.
 - [ ] Prioritized gap list; close the "frequent and cheap" ones in as370 straight

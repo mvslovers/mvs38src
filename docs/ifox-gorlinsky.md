@@ -17,6 +17,10 @@ and it is not a build of Gorlinsky's tree.
 `~/repos/mvs/ifox-src/ifoxdist.tgz` **is** Moseley's archive. Downloaded fresh,
 its MD5 is `ddd13c5feaa83fe951f989d8eb35cb39` — the checksum in the release
 notes, byte for byte. `ifoxjcl.tgz` also verifies
+
+> **`ifoxjcl.tgz` is not on this machine** (searched under `~/repos`, 2026-09-11);
+> only `ifoxdist.tgz` is in `~/repos/mvs/ifox-src/`. The MD5 beside it records
+> what was verified once; it is not something a reader can re-check today.
 (`fe4320e6de3250d30878d08627e8c680`). Nothing had to be re-fetched, and the two
 copies of the extracted source we hold are byte-identical to each other:
 

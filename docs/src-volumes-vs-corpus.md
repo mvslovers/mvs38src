@@ -248,6 +248,11 @@ own FTP server. Its 7,206 `(data set, member)` pairs are exactly the 7,206 that
 
 **Both sides descend from the same tapes.** The corpus was extracted from
 `mvs38_sources/tapes/*.aws.gz` with `xmi.py`; the volumes were loaded into MVS by
+
+> **`xmi.py` is not in any repository** (searched under `~/repos`, 2026-09-11).
+> The corpus it produced is here and the tool that produced it is not, so this
+> extraction is currently **not reproducible**. Recorded rather than quietly
+> left as a name that reads like something one could run.
 whoever built `tk4-source.zip`, years earlier and by other means. The two paths
 are independent of each other, and their agreement is evidence that both are
 faithful. It is not evidence that the tape images are IBM's — a defect in the

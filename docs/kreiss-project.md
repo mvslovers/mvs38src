@@ -199,9 +199,9 @@ Changes are marked `*DSKnnnn` in column 1 or `DSKnnnn` in column 65.
 | `DSK5000`/`6000`/`7000`/`8000` | Phase 1: remove commented-out code |
 | `DSK6000` | the SMP modification itself (see below) |
 | `DSK9000` | Phase 2: replace inline macro expansions with real macro calls |
-| `DSKCxxx` | Phase 3: SYS1.CMDLIB |
-| `DSKKxxx` | Phase 4: SYS1.LINKLIB |
-| `DSKLxxx` | Phase 5: SYS1.LPALIB |
+| `DSKCxxx` | Phase 3: `SYS1.CMDLIB` |
+| `DSKKxxx` | Phase 4: `SYS1.LINKLIB` |
+| `DSKLxxx` | Phase 5: `SYS1.LPALIB` |
 
 ### SMP extension 4.48 → 4.49
 
