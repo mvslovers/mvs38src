@@ -118,9 +118,43 @@ Mapped out on 2026-09-11 by dry-run:
 * Going further means **re-enabling that step** and then ~83 more jobs through
   phases 3, 4 and 5 to `MAINT15G`. *That* is what updates the running system.
 
-So there are two decisions, not one: run phase 2 (seven jobs, ends where Dave
-ended it), and separately whether to cross his own stop. `MVSTK5-BLD` wants a
-backup before either.
+**Both were run on 2026-09-11, and the question is answered.**
+
+The seven jobs to Dave's own stop moved nothing — one SYSMOD, `DSK6000`, three
+elements, and not one of the 40 modules changed. Past his stop, 82 jobs ran
+(skipping the single one of 83 that writes `SYS1.LINKLIB`); 54 ended non-zero
+for one reason, and it still delivered 144 changed modules.
+
+| source state | `rc 0` /5,528 | **identical to TK5's object** /3,988 |
+|---|---:|---:|
+| archive | 4,576 | 1,084 |
+| applied, phase 1 | **4,676** | 1,076 |
+| **applied, phases 3–5** | 4,649 | **1,089** |
+
+**Phase 1 → run 7 is +13 with an empty lost column**, and archive → run 7 is +5
+identities plus 100 closer against 48 further — **the first state that beats the
+archive on both measures.** So Dave's later-phase repairs do reach IBM's object;
+the −8 was the phase-1 state being *behind*, not his maintenance being wrong.
+Markers: 619 modules were missing theirs, now 486. [`docs/source-states.md`](docs/source-states.md).
+
+### 🔒 The blocker, and it is one statement
+
+`HMA3462 ** INVALID IEBUPDTE CONTROL STATEMENT` on `./ DELETE SEQ1=,SEQ2=`,
+**487,641 times** in `MAINT06@`'s RECEIVE — so 485 SYSMODs were never received
+and every later `APPLY` selecting one failed `HMA4012 … NOT FOUND ON SMPPTS`.
+
+Isolated with a control in both directions: `DSK6000` uses only `./ CHANGE` and
+came through; `DSK5081`, `DSK6002`, `DSK6010`, `DSK6050` carry 13 to 1,280
+`./ DELETE` statements and none did. And run 6's phase-1 snapshots contain zero
+`HMA3462` against 907 `HMA2160 UPDATE SUCCESSFUL` — a scan that could have found
+it and did not.
+
+**Why SMP rejects it is not established.** The next step is a controlled case
+through the oracle: one `++PTF` with one `./ DELETE` against a member with known
+sequence numbers. The remaining 486 missing markers are what it is worth.
+
+**Also unexplained, and not harmless:** `rc 0` fell 4,676 → 4,649 between the two
+applied states — 27 modules that no longer assemble cleanly while identity rose.
 
 Two corrections came out of it. **Dave's install tape carries no source tree** —
 `BLDMVS.AWS` is 45 files of `SMP.JCL`/`SMP.LIB`/`NEW.ASM`/`MVT.ASM`/`UTL.ASM`,
