@@ -180,8 +180,24 @@ maintenance move the object towards IBM's?** Pure host work, nothing
 irreversible. A source snapshot without its SMP state is unpinned — record the
 library *and* the SYSMOD list, every time.
 
-**2. Stage 1 — cut the assembler reference on `MVSTK5-REF`.** It died at 10:33
-in its first job and needs two things before a retry, not one:
+**2. Stage 1 — RUNNING as of 2026-09-12, 01:40.** The corpus cut is in flight on
+`MVSTK5-REF`: `nohup ifox_run.py run` with `IFOX_SYSTEM=ref`, writing to
+`work/measurements/ifox-run-tk5ref/`. About 150 modules per five minutes, so
+roughly three hours; it is resumable — re-run the same command and it skips what
+already has a deck.
+
+Everything it needed is in place: the three work data sets, `IBMUSER.PVTMAC`
+(453 members copied **from `MVSCE-EXP`**, 15/15 round-trip identical), and
+MVS/CE's six macro libraries carried across as `IBMUSER.*` (1,578 members, 8/8
+control each). `ifox_run.py` names those on `--system ref`. The freeze held
+through all of it: `macrosnap` says 2,332 unchanged, 0 changed, 0 gone.
+
+**And the probe already answered in the good direction.** Ten modules,
+`IFNX*`/`IFOX*`: **0 differing RLD cards, 0 ESD** — every byte difference is
+the assembly stamp. [`docs/ifox-tk5-vs-ce.md`](docs/ifox-tk5-vs-ce.md).
+
+*The original entry, for the record:* it died at 10:33
+in its first job and needed two things before a retry, not one:
 
 * `IBMUSER.PVTMAC` does not exist on REF (`IEF212I ... SYSLIB +006`), and
   neither do `IFOXOB2`, `IFOXLST`, `SRCD`. `IBMUSER.SRC2` holds 25 members.
