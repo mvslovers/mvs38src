@@ -83,7 +83,24 @@ change the object.
 
 ### The next three things
 
-**1. The three source states, one comparator.** `fahrplan.md` §2 already
+**1. ✅ Done — and the answer is two answers.** The archive copy against
+`MVSSRC.BLD.AMVSSRC` as run 6 left it, everything else held fixed:
+**+100 modules assembling, −8 net byte-identities** (1,084 → 1,076; 32 gained,
+40 lost), and **100 closer to IBM's object against 51 further**. The two
+measures point opposite ways and are not reconcilable into one number — the
+identity measure is the success criterion, the distance measure predicts where
+work pays. **Which weighs more is Mike's call, and the 40 lost are the evidence
+to read first.** [`docs/source-states.md`](docs/source-states.md).
+
+Two corrections came out of it. **Dave's install tape carries no source tree** —
+`BLDMVS.AWS` is 45 files of `SMP.JCL`/`SMP.LIB`/`NEW.ASM`/`MVT.ASM`/`UTL.ASM`,
+the PTFs and not the base, so `fahrplan.md` §2's third column does not exist in
+that form; the honest third state is IBM's delivery level in
+`~/repos/mvs/mvs38-ibmsrc`. And the **archive column reproduces 1,084 of 3,988
+exactly**, the figure `deck-vs-tk5-ce.md` derived from IFOX00 decks — an
+independent pipeline landing on a recorded number it was not tuned to.
+
+*The original entry, for the record:* `fahrplan.md` §2 already
 specifies this and it has never been run. Same macros, same pinned `as370`
 binary, against TK5's DLIB object — which is local, 3,989 modules in
 `work/measurements/dlib-bytes/tk5`:
