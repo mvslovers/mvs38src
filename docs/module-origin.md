@@ -63,6 +63,16 @@ column, and they drop out of `for-cc370.tsv` — **2,112 owned by the assembler,
 2,107 handed over.** Nothing is deleted: a figure that quietly loses rows stops
 being checkable.
 
+> **Superseded, and it already was on the day this was written.** `ifox-tree.md`,
+> same date but pinned to cc370 `3d6a997` (distance 123), carries these two as a
+> before/after pair: **2,021** owned by the assembler now, 2,112 *before the
+> merge*. The 2,107 is 2,112 less the five CICS exclusions named above, so both
+> numbers here come from the same superseded `for-cc370.tsv`.
+>
+> The sentence above is right about the principle and wrong about the count. A
+> reader of this file alone had no way to see that, because the figure carries a
+> calendar date and no commit — which is the whole argument for pinning one.
+
 The other 17 `BNG*` modules are not affected — 9 of them are already byte-identical.
 
 ## What the inventory says about the rest

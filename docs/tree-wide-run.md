@@ -138,6 +138,20 @@ The full result, one JSON record per module with every cluster, is in
 
 2026-09-06, evening. Same corpus, same method, current tools.
 
+> **This file pins no commit, and the anchor cannot be recovered.** Every figure
+> below — 829 and 832 byte-identical, 4,510 assembling, 1,259 identical-or-holes
+> at 30.7 % — is anchored to the words "current tools" and a calendar day.
+> `as370` took **twelve commits that evening**, between 18:36 and 22:56, so
+> "current" names a window and not a state, and no later reading can narrow it.
+>
+> These numbers are kept as the historical record they are. They must **not** be
+> compared against a present-day gate, and a difference against one is not a
+> regression — it is two measurements of different things. Where a figure from
+> this run is quoted forward, quote this caveat with it.
+>
+> Found by audit, 2026-09-11: this is the document the 832 figure traces back to,
+> which is exactly why its own missing pin was the expensive one.
+
 | | first run | **second run** |
 |---|---:|---:|
 | modules assembling | 4,270 | **4,510** |
