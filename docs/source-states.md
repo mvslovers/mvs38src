@@ -134,3 +134,71 @@ level in `~/repos/mvs/mvs38-ibmsrc`, and it is a separate run.
 SRC_TREE=<tree> tools/gate.sh work/src-states/bin/as370 <label>
 tools/srcstate_vs_dlib.py --decks obj_<label> --out <label>-vs-tk5.tsv
 ```
+
+---
+
+## The mechanism, and it reverses the reading — 2026-09-11, later
+
+The −8 is not Dave's maintenance moving modules away from IBM's object. It is
+the opposite: **`AMVSSRC` after run 6 is not Dave's full maintenance level, and
+for the modules in question it is *behind* the archive.**
+
+### Two controls first
+
+**The tool is not in question for any of the 72 modules that moved.** Joined
+against [`../work/measurements/ifox-run/module-table.tsv`](../work/measurements/ifox-run/module-table.tsv):
+all 40 lost and all 32 gained sit in the class where `as370`'s deck is
+**byte-identical to IFOX00's**. So none of these verdicts can be an `as370` gap
+scoring as a source difference — the movement is source and nothing else.
+
+**And Dave's own change markers say what moved.** Of the 40 that lost identity,
+**38 are modules whose `DSKnnnn` marker is present in the archive and gone in
+`AMVSSRC`.** Not changed — gone. By his own phase scheme
+([`kreiss-project.md`](kreiss-project.md)):
+
+| vanished marker | Dave's phase | count, of the 40 |
+|---|---|---:|
+| `DSKK*` | phase 4 — `SYS1.LINKLIB` | 21 |
+| `DSKC*` | phase 3 — `SYS1.CMDLIB` | 15 |
+| `DSKL*` | phase 5 — `SYS1.LPALIB` | 3 |
+| `DSK0*` | fix source so it assembles | 1 |
+
+**Run 6 stopped at the phase-1 boundary.** Its own last line says so:
+`ZCMPSMP1 hands on to LIB=1 (MAINT05@)`. Phases 3, 4 and 5 were never applied,
+so the library holds the *unrepaired* level for every module those phases touch,
+while the archive — Dave's working copy, where he had already made those
+repairs — holds the repaired one.
+
+### How large the effect is tree-wide
+
+| | |
+|---|---:|
+| modules carrying a `DSK*` marker in the archive | **1,357** |
+| of those, marker **gone** in `AMVSSRC` after run 6 | **619 (46 %)** |
+
+**Nearly half of everything Dave marked is not in the system's source.** The −8
+is the small visible corner of that, restricted to the 3,988 modules the TK5
+reference holds and to the ones where the difference happens to cross the
+identity threshold.
+
+### What this corrects
+
+- **"Dave's PTFs have been applied to the source" is not true of run 6.** They
+  have been applied *through phase 1*. The chain's remaining phases update the
+  running system, which is why the driver guards that boundary.
+- **The column heading `applied` in the table above oversells it.** It is
+  `applied, phase 1`. Kept as it was written, with this section as the
+  correction.
+- **The comparison is still sound and still worth having** — it is a true
+  measurement of the two states that exist today. What changes is the
+  conclusion drawn from it: the archive being ahead by 8 identities is evidence
+  that **Dave's later-phase repairs are real and reach the object**, not evidence
+  that his maintenance hurts.
+
+### The question it opens
+
+Running the chain past `MAINT05@` would apply phases 3–5 and put the system's
+source at Dave's full level — and it updates the running system, which is why it
+has not been done. That is a decision, not a step: it needs `MVSTK5-BLD`
+backed up first, and it is the only way to measure Dave's *complete* maintenance
+against TK5's object.

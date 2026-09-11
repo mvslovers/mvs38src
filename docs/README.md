@@ -83,7 +83,7 @@ The project measures two different things and they must never be quoted as one.
 | [`tk5-ptfs-and-usermods.md`](tk5-ptfs-and-usermods.md) | what TK5 carries that MVS/CE does not |
 | [`accept-status.md`](accept-status.md) | was the maintenance ACCEPTed into the distribution libraries? |
 | [`archive-vs-system-source.md`](archive-vs-system-source.md) | Dave's archived source against what his own build left behind — **the two states are not equal** |
-| [`source-states.md`](source-states.md) | **and which of those two states reaches TK5's object.** +100 assembling, −8 identities, 100 closer against 51 further |
+| [`source-states.md`](source-states.md) | **and which of those two states reaches TK5's object.** The −8 turns out to be run 6 stopping at the phase-1 boundary: 619 of 1,357 `DSK`-marked modules are not in the system's source at all |
 | [`module-origin.md`](module-origin.md) | where each module comes from |
 | [`mvssrc-source-hunt.md`](mvssrc-source-hunt.md) | where the 236 `MVSSRC.*` source libraries come from |
 | [`src-volumes-vs-corpus.md`](src-volumes-vs-corpus.md) | the source volumes the build reads, against our corpus |
