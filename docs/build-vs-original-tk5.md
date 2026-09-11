@@ -110,3 +110,82 @@ The seventeen `CC 0008`/`CC 0016` codes in the maintenance phase are not
 failures: `MAINT01@` reports 30 × `HMA3930 SYSMOD ... SUCCESSFULLY RECEIVED`, and
 `MAINT02E` 14 × `HMA2160 UPDATE SUCCESSFUL - LIBRARY=AMVSSRC - SYSMOD=DSK1003`.
 Those are **Dave's own reconstructed source going into the tree.**
+
+---
+
+## Run 6, 2026-09-11: the same comparison on a build that did not run out of space
+
+The run above is **run 5**, and run 5 is the run in which `MAINT03B` ended
+`IEC031I D37-04` — out of space mid-write, tearing members of `MVSSRC.BLD.MVSSRC`
+that every later APPLY then added to. Run 6 carries the secondary-quantity fix
+(`tools/bldrun.py` supplies `S=50` at submit time) and reached the phase-1
+boundary clean, so this is the first tree-wide comparison on a TK5 build that is
+not damaged.
+
+`ZLMDRPTD` ran as `RPTDLB/JOB00815` and `ZLMDRPTT` as `RPTTGT/JOB00816`, both
+`CC 0000`. Reports in `work/build/reports-tk5-run6/`. Run 6's own pass through
+these two jobs (`JOB00802`/`JOB00804`, also `CC 0000`) was never fetched and the
+spool has since been purged, so they were re-submitted against the same
+unchanged build libraries — nothing has run past the phase-1 boundary.
+
+### The counts
+
+Both runs counted by `tools/lmdrpt_count.py`, one script over all four reports.
+
+| `ZLMDRPTD` — distribution libraries | run 5 | **run 6** |
+|---|---:|---:|
+| CSECTs built | 5,369 | **5,448** |
+| length differs | 2,620 | **2,350** |
+| content differs at the same length | 1,745 | **1,677** |
+| **missing build LMODs** | **81** | **2** |
+| extra CSECT in LMOD | 1 | 1 |
+| **equal to the original** | **1,003** | **1,420** |
+
+| `ZLMDRPTT` — target libraries | run 5 | **run 6** |
+|---|---:|---:|
+| CSECTs built | 5,483 | **5,485** |
+| length differs | 2,519 | **2,400** |
+| content differs at the same length | 1,676 | **1,664** |
+| missing build LMODs | 24 | 24 |
+| missing build CSECTs | 20 | **18** |
+| **equal to the original** | **1,286** | **1,419** |
+
+**The 81 missing load modules are the `D37` damage, and they are gone** — 81 → 2.
+That is what the space fix bought, and it is the clearest single number in the
+pair. Everything else moves the right way by a few per cent: +417 equal CSECTs on
+the distribution side, +133 on the targets.
+
+### A correction to the figures above, and it is this document's own trap
+
+The run-5 table at the head of this document reports **"equal to the original
+2,619 / 2,756"** and **"2,971"** for the targets. Those numbers come from the
+`SUMMARY` page — and this document already says, one paragraph later, that they
+must not:
+
+> The counts come from the per-CSECT `ERRORS` report, not the `SUMMARY` page.
+> `SUMMARY` prints `Compared not equal 0` on both runs and it is not what it
+> looks like. The authority is the detail.
+
+The warning was written and then not followed. `SUMMARY`'s own totals block says
+why:
+
+```
+Compared equal          3,038        Compared not equal          0
+ Total equal            3,092        Length different        2,399
+                                      Total not equal        2,399
+                                       Total CSECTs          5,485
+```
+
+`Compared not equal` is **0 on every run anyone here has taken**, so `Total
+equal` is `Total CSECTs` minus the *length* differences alone. The 1,664 CSECTs
+the `ERRORS` detail annotates `CSECTs don't match` — same length, different
+content — are inside that `Total equal`. They are not equal.
+
+`tools/lmdrpt_count.py` reproduces the published figures exactly from the
+`SUMMARY` page (2,756 and 2,971) and the stricter ones from the detail, which is
+what establishes that this is a counting difference and not two different runs.
+Both numbers are kept in the tables above so the correction stays visible.
+
+**What this does not change:** every other figure in the run-5 table —
+5,369 built, 1,745 content differences, 81 missing LMODs, 0 missing CSECTs —
+reproduces exactly. Only the `equal` row moved.

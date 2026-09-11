@@ -1,0 +1,214 @@
+IEF236I ALLOC. FOR RPTTGT SORT1
+IEF237I 390  ALLOCATED TO SORTLIB
+IEF237I 290  ALLOCATED TO SORTWK01
+IEF237I 291  ALLOCATED TO SORTWK02
+IEF237I 293  ALLOCATED TO SORTWK03
+IEF237I 19D  ALLOCATED TO SORTIN
+IEF237I VIO  ALLOCATED TO SORTOUT
+IEF237I JES2 ALLOCATED TO SYSOUT
+IEF237I JES2 ALLOCATED TO SYSIN
+IEF142I RPTTGT SORT1 - STEP WAS EXECUTED - COND CODE 0000
+IEF285I   SYS1.SORTLIB                                 KEPT          *--------0
+IEF285I   VOL SER NOS= TK5RES.
+IEF285I   SYS26254.T101928.RA000.RPTTGT.R0000001       DELETED       *--------0
+IEF285I   VOL SER NOS= WORK01.
+IEF285I   SYS26254.T101928.RA000.RPTTGT.R0000002       DELETED       *--------0
+IEF285I   VOL SER NOS= WORK02.
+IEF285I   SYS26254.T101928.RA000.RPTTGT.R0000003       DELETED       *-------34
+IEF285I   VOL SER NOS= WORK04.
+IEF285I   MVSSRC.BLD.NEW.LMDXRF.TGT                    KEPT          *-------21
+IEF285I   VOL SER NOS= BLDWK2.
+IEF285I   SYS26254.T101928.RA000.RPTTGT.BLD            PASSED        *------108
+IEF285I   JES2.JOB00816.SO0103                         SYSOUT
+IEF285I   JES2.JOB00816.SI0101                         SYSIN
+IEF373I STEP /SORT1   / START 26254.1019
+IEF374I STEP /SORT1   / STOP  26254.1019 CPU    0MIN 00.10SEC SRB    0MIN 00.01SEC VIRT   580K SYS   308K
+************************************************************************************************************************************
+*     1. Jobstep of job: RPTTGT      Stepname: SORT1       Program name: SORT       Executed on 11.09.26 from 10.19.28 to 10.19.28 *
+*         elapsed time  00:00:00,20                      CPU-Identifier:  TK5R           Page-in:      0                           *
+*             CPU time  00:00:00,11               Virtual Storage used:    580K         Page-out:      0                           *
+*           corr. CPU:  00:00:00,11   CPU time has been corrected by  1 / 1,0  multiplier                                          *
+*                                                                                                                                  *
+*     I/O Operation                                                                                                                *
+*     Number of records read via DD * or DD DATA:      1                                                                           *
+*     390.......0 290.......0 291.......0 293......34 19D......21 FFF.....108 DMY.......0 DMY.......0                              *
+*                                                                                                                                  *
+*                                          Charge for step (w/o SYSOUT):          0,18                                             *
+************************************************************************************************************************************
+IEF236I ALLOC. FOR RPTTGT SORT2
+IEF237I 390  ALLOCATED TO SORTLIB
+IEF237I 293  ALLOCATED TO SORTWK01
+IEF237I 290  ALLOCATED TO SORTWK02
+IEF237I 291  ALLOCATED TO SORTWK03
+IEF237I 19D  ALLOCATED TO SORTIN
+IEF237I VIO  ALLOCATED TO SORTOUT
+IEF237I JES2 ALLOCATED TO SYSOUT
+IEF237I JES2 ALLOCATED TO SYSIN
+IEF142I RPTTGT SORT2 - STEP WAS EXECUTED - COND CODE 0000
+IEF285I   SYS1.SORTLIB                                 KEPT          *--------0
+IEF285I   VOL SER NOS= TK5RES.
+IEF285I   SYS26254.T101928.RA000.RPTTGT.R0000004       DELETED       *--------0
+IEF285I   VOL SER NOS= WORK04.
+IEF285I   SYS26254.T101928.RA000.RPTTGT.R0000005       DELETED       *--------0
+IEF285I   VOL SER NOS= WORK01.
+IEF285I   SYS26254.T101928.RA000.RPTTGT.R0000006       DELETED       *-------34
+IEF285I   VOL SER NOS= WORK02.
+IEF285I   MVSSRC.BLD.ORG.LMDXRF.TGT                    KEPT          *-------21
+IEF285I   VOL SER NOS= BLDWK2.
+IEF285I   SYS26254.T101928.RA000.RPTTGT.ORG            PASSED        *------109
+IEF285I   JES2.JOB00816.SO0104                         SYSOUT
+IEF285I   JES2.JOB00816.SI0102                         SYSIN
+IEF373I STEP /SORT2   / START 26254.1019
+IEF374I STEP /SORT2   / STOP  26254.1019 CPU    0MIN 00.11SEC SRB    0MIN 00.01SEC VIRT   580K SYS   308K
+************************************************************************************************************************************
+*     2. Jobstep of job: RPTTGT      Stepname: SORT2       Program name: SORT       Executed on 11.09.26 from 10.19.28 to 10.19.29 *
+*         elapsed time  00:00:00,23                      CPU-Identifier:  TK5R           Page-in:      0                           *
+*             CPU time  00:00:00,12               Virtual Storage used:    580K         Page-out:      0                           *
+*           corr. CPU:  00:00:00,12   CPU time has been corrected by  1 / 1,0  multiplier                                          *
+*                                                                                                                                  *
+*     I/O Operation                                                                                                                *
+*     Number of records read via DD * or DD DATA:      1                                                                           *
+*     390.......0 293.......0 290.......0 291......34 19D......21 FFF.....109 DMY.......0 DMY.......0                              *
+*                                                                                                                                  *
+*                                          Charge for step (w/o SYSOUT):          0,20                                             *
+************************************************************************************************************************************
+IEF236I ALLOC. FOR RPTTGT SUMMARY
+IEF237I 194  ALLOCATED TO STEPLIB
+IEF237I JES2 ALLOCATED TO SYSPRINT
+IEF237I VIO  ALLOCATED TO ORG
+IEF237I VIO  ALLOCATED TO BLD
+IEF237I 194  ALLOCATED TO SYSIN
+IEF237I 194  ALLOCATED TO DIFIN
+IEF142I RPTTGT SUMMARY - STEP WAS EXECUTED - COND CODE 0000
+IEF285I   MVSSRC.BLD.LOAD                              KEPT          *--------0
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   JES2.JOB00816.SO0105                         SYSOUT
+IEF285I   SYS26254.T101928.RA000.RPTTGT.ORG            PASSED        *------110
+IEF285I   SYS26254.T101928.RA000.RPTTGT.BLD            PASSED        *------109
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *--------2
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *-------14
+IEF285I   VOL SER NOS= BLDSMP.
+IEF373I STEP /SUMMARY / START 26254.1019
+IEF374I STEP /SUMMARY / STOP  26254.1019 CPU    0MIN 00.07SEC SRB    0MIN 00.00SEC VIRT   236K SYS   368K
+************************************************************************************************************************************
+*     3. Jobstep of job: RPTTGT      Stepname: SUMMARY     Program name: LMDRPT38   Executed on 11.09.26 from 10.19.29 to 10.19.29 *
+*         elapsed time  00:00:00,09                      CPU-Identifier:  TK5R           Page-in:      0                           *
+*             CPU time  00:00:00,07               Virtual Storage used:    236K         Page-out:      0                           *
+*           corr. CPU:  00:00:00,07   CPU time has been corrected by  1 / 1,0  multiplier                                          *
+*                                                                                                                                  *
+*     I/O Operation                                                                                                                *
+*     Number of records read via DD * or DD DATA:      0                                                                           *
+*     194.......0 DMY.......0 FFF.....110 FFF.....109 194.......2 194......14                                                      *
+*                                                                                                                                  *
+*                                          Charge for step (w/o SYSOUT):          0,11                                             *
+************************************************************************************************************************************
+IEF236I ALLOC. FOR RPTTGT MISSING
+IEF237I 194  ALLOCATED TO STEPLIB
+IEF237I JES2 ALLOCATED TO SYSPRINT
+IEF237I VIO  ALLOCATED TO ORG
+IEF237I VIO  ALLOCATED TO BLD
+IEF237I 194  ALLOCATED TO SYSIN
+IEF237I 194  ALLOCATED TO DIFIN
+IEF142I RPTTGT MISSING - STEP WAS EXECUTED - COND CODE 0000
+IEF285I   MVSSRC.BLD.LOAD                              KEPT          *--------0
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   JES2.JOB00816.SO0106                         SYSOUT
+IEF285I   SYS26254.T101928.RA000.RPTTGT.ORG            PASSED        *------110
+IEF285I   SYS26254.T101928.RA000.RPTTGT.BLD            PASSED        *------109
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *--------2
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *-------14
+IEF285I   VOL SER NOS= BLDSMP.
+IEF373I STEP /MISSING / START 26254.1019
+IEF374I STEP /MISSING / STOP  26254.1019 CPU    0MIN 00.10SEC SRB    0MIN 00.00SEC VIRT   236K SYS   368K
+************************************************************************************************************************************
+*     4. Jobstep of job: RPTTGT      Stepname: MISSING     Program name: LMDRPT38   Executed on 11.09.26 from 10.19.29 to 10.19.29 *
+*         elapsed time  00:00:00,12                      CPU-Identifier:  TK5R           Page-in:      0                           *
+*             CPU time  00:00:00,10               Virtual Storage used:    236K         Page-out:      0                           *
+*           corr. CPU:  00:00:00,10   CPU time has been corrected by  1 / 1,0  multiplier                                          *
+*                                                                                                                                  *
+*     I/O Operation                                                                                                                *
+*     Number of records read via DD * or DD DATA:      0                                                                           *
+*     194.......0 DMY.......0 FFF.....110 FFF.....109 194.......2 194......14                                                      *
+*                                                                                                                                  *
+*                                          Charge for step (w/o SYSOUT):          0,16                                             *
+************************************************************************************************************************************
+IEF236I ALLOC. FOR RPTTGT ERRORS
+IEF237I 194  ALLOCATED TO STEPLIB
+IEF237I JES2 ALLOCATED TO SYSPRINT
+IEF237I VIO  ALLOCATED TO ORG
+IEF237I VIO  ALLOCATED TO BLD
+IEF237I 194  ALLOCATED TO SYSIN
+IEF237I 194  ALLOCATED TO DIFIN
+IEF237I 390  ALLOCATED TO OCMDLIB
+IEF237I 390  ALLOCATED TO ONUCLEUS
+IEF237I 390  ALLOCATED TO OLINKLIB
+IEF237I 390  ALLOCATED TO OLPALIB
+IEF237I 390  ALLOCATED TO OSVCLIB
+IEF237I 390  ALLOCATED TO OTELCMLI
+IEF237I 390  ALLOCATED TO OVTAMLIB
+IEF237I 193  ALLOCATED TO BCMDLIB
+IEF237I 193  ALLOCATED TO BNUCLEUS
+IEF237I 193  ALLOCATED TO BLINKLIB
+IEF237I 193  ALLOCATED TO BLPALIB
+IEF237I 193  ALLOCATED TO BSVCLIB
+IEF237I 193  ALLOCATED TO BTELCMLI
+IEF237I 193  ALLOCATED TO BVTAMLIB
+IEF142I RPTTGT ERRORS - STEP WAS EXECUTED - COND CODE 0000
+IEF285I   MVSSRC.BLD.LOAD                              KEPT          *--------0
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   JES2.JOB00816.SO0107                         SYSOUT
+IEF285I   SYS26254.T101928.RA000.RPTTGT.ORG            PASSED        *------110
+IEF285I   SYS26254.T101928.RA000.RPTTGT.BLD            PASSED        *------109
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *--------2
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *-------14
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   SYS1.CMDLIB                                  KEPT          *---13,929
+IEF285I   VOL SER NOS= TK5RES.
+IEF285I   SYS1.NUCLEUS                                 KEPT          *--245,401
+IEF285I   VOL SER NOS= TK5RES.
+IEF285I   SYS1.LINKLIB                                 KEPT          *---52,147
+IEF285I   VOL SER NOS= TK5RES.
+IEF285I   SYS1.LPALIB                                  KEPT          *---22,372
+IEF285I   VOL SER NOS= TK5RES.
+IEF285I   SYS1.SVCLIB                                  KEPT          *------627
+IEF285I   VOL SER NOS= TK5RES.
+IEF285I   SYS1.TELCMLIB                                KEPT          *------876
+IEF285I   VOL SER NOS= TK5RES.
+IEF285I   SYS1.VTAMLIB                                 KEPT          *----1,312
+IEF285I   VOL SER NOS= TK5RES.
+IEF285I   MVSSRC.BLD.CMDLIB                            KEPT          *---10,643
+IEF285I   VOL SER NOS= BLDTGT.
+IEF285I   MVSSRC.BLD.NUCLEUS                           KEPT          *--231,837
+IEF285I   VOL SER NOS= BLDTGT.
+IEF285I   MVSSRC.BLD.LINKLIB                           KEPT          *---46,888
+IEF285I   VOL SER NOS= BLDTGT.
+IEF285I   MVSSRC.BLD.LPALIB                            KEPT          *---20,388
+IEF285I   VOL SER NOS= BLDTGT.
+IEF285I   MVSSRC.BLD.SVCLIB                            KEPT          *------438
+IEF285I   VOL SER NOS= BLDTGT.
+IEF285I   MVSSRC.BLD.TELCMLIB                          KEPT          *------813
+IEF285I   VOL SER NOS= BLDTGT.
+IEF285I   MVSSRC.BLD.VTAMLIB                           KEPT          *----1,238
+IEF285I   VOL SER NOS= BLDTGT.
+IEF373I STEP /ERRORS  / START 26254.1019
+IEF374I STEP /ERRORS  / STOP  26254.1024 CPU    2MIN 19.81SEC SRB    0MIN 32.13SEC VIRT   488K SYS   368K
+************************************************************************************************************************************
+*     5. Jobstep of job: RPTTGT      Stepname: ERRORS      Program name: LMDRPT38   Executed on 11.09.26 from 10.19.29 to 10.24.02 *
+*         elapsed time  00:04:33,39                      CPU-Identifier:  TK5R           Page-in:      0                           *
+*             CPU time  00:02:51,94               Virtual Storage used:    488K         Page-out:      0                           *
+*           corr. CPU:  00:02:51,94   CPU time has been corrected by  1 / 1,0  multiplier                                          *
+*                                                                                                                                  *
+*     I/O Operation                                                                                                                *
+*     Number of records read via DD * or DD DATA:      0                                                                           *
+*     194.......0 DMY.......0 FFF.....110 FFF.....109 194.......2 194......14 390...13929 390..245401 390...52147 390...22372      *
+*     390.....627 390.....876 390....1312 193...10643 193..231837 193...46888 193...20388 193.....438 193.....813 193....1238      *
+*                                                                                                                                  *
+*                                          Charge for step (w/o SYSOUT):        286,56                                             *
+************************************************************************************************************************************
+IEF285I   SYS26254.T101928.RA000.RPTTGT.BLD            DELETED
+IEF285I   SYS26254.T101928.RA000.RPTTGT.ORG            DELETED
+IEF375I  JOB /RPTTGT  / START 26254.1019
+IEF376I  JOB /RPTTGT  / STOP  26254.1024 CPU    2MIN 20.19SEC SRB    0MIN 32.15SEC

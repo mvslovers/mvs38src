@@ -1,0 +1,382 @@
+IEF236I ALLOC. FOR RPTDLB SORT1
+IEF237I 390  ALLOCATED TO SORTLIB
+IEF237I 290  ALLOCATED TO SORTWK01
+IEF237I 291  ALLOCATED TO SORTWK02
+IEF237I 293  ALLOCATED TO SORTWK03
+IEF237I 19D  ALLOCATED TO SORTIN
+IEF237I VIO  ALLOCATED TO SORTOUT
+IEF237I JES2 ALLOCATED TO SYSOUT
+IEF237I JES2 ALLOCATED TO SYSIN
+IEF142I RPTDLB SORT1 - STEP WAS EXECUTED - COND CODE 0000
+IEF285I   SYS1.SORTLIB                                 KEPT          *--------0
+IEF285I   VOL SER NOS= TK5RES.
+IEF285I   SYS26254.T101738.RA000.RPTDLB.R0000001       DELETED       *--------0
+IEF285I   VOL SER NOS= WORK01.
+IEF285I   SYS26254.T101738.RA000.RPTDLB.R0000002       DELETED       *--------0
+IEF285I   VOL SER NOS= WORK02.
+IEF285I   SYS26254.T101738.RA000.RPTDLB.R0000003       DELETED       *-------34
+IEF285I   VOL SER NOS= WORK04.
+IEF285I   MVSSRC.BLD.NEW.LMDXRF.DLIB                   KEPT          *-------42
+IEF285I   VOL SER NOS= BLDWK2.
+IEF285I   SYS26254.T101738.RA000.RPTDLB.BLD            PASSED        *------107
+IEF285I   JES2.JOB00815.SO0103                         SYSOUT
+IEF285I   JES2.JOB00815.SI0101                         SYSIN
+IEF373I STEP /SORT1   / START 26254.1017
+IEF374I STEP /SORT1   / STOP  26254.1017 CPU    0MIN 00.13SEC SRB    0MIN 00.01SEC VIRT   580K SYS   308K
+************************************************************************************************************************************
+*     1. Jobstep of job: RPTDLB      Stepname: SORT1       Program name: SORT       Executed on 11.09.26 from 10.17.38 to 10.17.38 *
+*         elapsed time  00:00:00,36                      CPU-Identifier:  TK5R           Page-in:      0                           *
+*             CPU time  00:00:00,14               Virtual Storage used:    580K         Page-out:      0                           *
+*           corr. CPU:  00:00:00,14   CPU time has been corrected by  1 / 1,0  multiplier                                          *
+*                                                                                                                                  *
+*     I/O Operation                                                                                                                *
+*     Number of records read via DD * or DD DATA:      1                                                                           *
+*     390.......0 290.......0 291.......0 293......34 19D......42 FFF.....107 DMY.......0 DMY.......0                              *
+*                                                                                                                                  *
+*                                          Charge for step (w/o SYSOUT):          0,23                                             *
+************************************************************************************************************************************
+IEF236I ALLOC. FOR RPTDLB SORT2
+IEF237I 390  ALLOCATED TO SORTLIB
+IEF237I 293  ALLOCATED TO SORTWK01
+IEF237I 291  ALLOCATED TO SORTWK02
+IEF237I 290  ALLOCATED TO SORTWK03
+IEF237I 19D  ALLOCATED TO SORTIN
+IEF237I VIO  ALLOCATED TO SORTOUT
+IEF237I JES2 ALLOCATED TO SYSOUT
+IEF237I JES2 ALLOCATED TO SYSIN
+IEF142I RPTDLB SORT2 - STEP WAS EXECUTED - COND CODE 0000
+IEF285I   SYS1.SORTLIB                                 KEPT          *--------0
+IEF285I   VOL SER NOS= TK5RES.
+IEF285I   SYS26254.T101738.RA000.RPTDLB.R0000004       DELETED       *--------0
+IEF285I   VOL SER NOS= WORK04.
+IEF285I   SYS26254.T101738.RA000.RPTDLB.R0000005       DELETED       *--------0
+IEF285I   VOL SER NOS= WORK02.
+IEF285I   SYS26254.T101738.RA000.RPTDLB.R0000006       DELETED       *-------34
+IEF285I   VOL SER NOS= WORK01.
+IEF285I   MVSSRC.BLD.ORG.LMDXRF.DLIB                   KEPT          *-------42
+IEF285I   VOL SER NOS= BLDWK2.
+IEF285I   SYS26254.T101738.RA000.RPTDLB.ORG            PASSED        *------107
+IEF285I   JES2.JOB00815.SO0104                         SYSOUT
+IEF285I   JES2.JOB00815.SI0102                         SYSIN
+IEF373I STEP /SORT2   / START 26254.1017
+IEF374I STEP /SORT2   / STOP  26254.1017 CPU    0MIN 00.13SEC SRB    0MIN 00.01SEC VIRT   580K SYS   316K
+************************************************************************************************************************************
+*     2. Jobstep of job: RPTDLB      Stepname: SORT2       Program name: SORT       Executed on 11.09.26 from 10.17.38 to 10.17.39 *
+*         elapsed time  00:00:00,21                      CPU-Identifier:  TK5R           Page-in:      0                           *
+*             CPU time  00:00:00,14               Virtual Storage used:    580K         Page-out:      0                           *
+*           corr. CPU:  00:00:00,14   CPU time has been corrected by  1 / 1,0  multiplier                                          *
+*                                                                                                                                  *
+*     I/O Operation                                                                                                                *
+*     Number of records read via DD * or DD DATA:      1                                                                           *
+*     390.......0 293.......0 291.......0 290......34 19D......42 FFF.....107 DMY.......0 DMY.......0                              *
+*                                                                                                                                  *
+*                                          Charge for step (w/o SYSOUT):          0,23                                             *
+************************************************************************************************************************************
+IEF236I ALLOC. FOR RPTDLB SUMMARY
+IEF237I 194  ALLOCATED TO STEPLIB
+IEF237I JES2 ALLOCATED TO SYSPRINT
+IEF237I VIO  ALLOCATED TO ORG
+IEF237I VIO  ALLOCATED TO BLD
+IEF237I 194  ALLOCATED TO SYSIN
+IEF237I 194  ALLOCATED TO DIFIN
+IEF142I RPTDLB SUMMARY - STEP WAS EXECUTED - COND CODE 0000
+IEF285I   MVSSRC.BLD.LOAD                              KEPT          *--------0
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   JES2.JOB00815.SO0105                         SYSOUT
+IEF285I   SYS26254.T101738.RA000.RPTDLB.ORG            PASSED        *------108
+IEF285I   SYS26254.T101738.RA000.RPTDLB.BLD            PASSED        *------108
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *--------2
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *-------14
+IEF285I   VOL SER NOS= BLDSMP.
+IEF373I STEP /SUMMARY / START 26254.1017
+IEF374I STEP /SUMMARY / STOP  26254.1017 CPU    0MIN 00.09SEC SRB    0MIN 00.00SEC VIRT   236K SYS   448K
+************************************************************************************************************************************
+*     3. Jobstep of job: RPTDLB      Stepname: SUMMARY     Program name: LMDRPT38   Executed on 11.09.26 from 10.17.39 to 10.17.39 *
+*         elapsed time  00:00:00,12                      CPU-Identifier:  TK5R           Page-in:      0                           *
+*             CPU time  00:00:00,09               Virtual Storage used:    236K         Page-out:      0                           *
+*           corr. CPU:  00:00:00,09   CPU time has been corrected by  1 / 1,0  multiplier                                          *
+*                                                                                                                                  *
+*     I/O Operation                                                                                                                *
+*     Number of records read via DD * or DD DATA:      0                                                                           *
+*     194.......0 DMY.......0 FFF.....108 FFF.....108 194.......2 194......14                                                      *
+*                                                                                                                                  *
+*                                          Charge for step (w/o SYSOUT):          0,15                                             *
+************************************************************************************************************************************
+IEF236I ALLOC. FOR RPTDLB MISSING
+IEF237I 194  ALLOCATED TO STEPLIB
+IEF237I JES2 ALLOCATED TO SYSPRINT
+IEF237I VIO  ALLOCATED TO ORG
+IEF237I VIO  ALLOCATED TO BLD
+IEF237I 194  ALLOCATED TO SYSIN
+IEF237I 194  ALLOCATED TO DIFIN
+IEF142I RPTDLB MISSING - STEP WAS EXECUTED - COND CODE 0000
+IEF285I   MVSSRC.BLD.LOAD                              KEPT          *--------0
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   JES2.JOB00815.SO0106                         SYSOUT
+IEF285I   SYS26254.T101738.RA000.RPTDLB.ORG            PASSED        *------108
+IEF285I   SYS26254.T101738.RA000.RPTDLB.BLD            PASSED        *------108
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *--------2
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *-------14
+IEF285I   VOL SER NOS= BLDSMP.
+IEF373I STEP /MISSING / START 26254.1017
+IEF374I STEP /MISSING / STOP  26254.1017 CPU    0MIN 00.11SEC SRB    0MIN 00.00SEC VIRT   236K SYS   448K
+************************************************************************************************************************************
+*     4. Jobstep of job: RPTDLB      Stepname: MISSING     Program name: LMDRPT38   Executed on 11.09.26 from 10.17.39 to 10.17.39 *
+*         elapsed time  00:00:00,13                      CPU-Identifier:  TK5R           Page-in:      0                           *
+*             CPU time  00:00:00,11               Virtual Storage used:    236K         Page-out:      0                           *
+*           corr. CPU:  00:00:00,11   CPU time has been corrected by  1 / 1,0  multiplier                                          *
+*                                                                                                                                  *
+*     I/O Operation                                                                                                                *
+*     Number of records read via DD * or DD DATA:      0                                                                           *
+*     194.......0 DMY.......0 FFF.....108 FFF.....108 194.......2 194......14                                                      *
+*                                                                                                                                  *
+*                                          Charge for step (w/o SYSOUT):          0,18                                             *
+************************************************************************************************************************************
+IEF236I ALLOC. FOR RPTDLB ERRORS
+IEF237I 194  ALLOCATED TO STEPLIB
+IEF237I JES2 ALLOCATED TO SYSPRINT
+IEF237I VIO  ALLOCATED TO ORG
+IEF237I VIO  ALLOCATED TO BLD
+IEF237I 194  ALLOCATED TO SYSIN
+IEF237I 194  ALLOCATED TO DIFIN
+IEF237I 392  ALLOCATED TO OAOSA0
+IEF237I 392  ALLOCATED TO OAOSA1
+IEF237I 392  ALLOCATED TO OAOSBN
+IEF237I 392  ALLOCATED TO OAOSB0
+IEF237I 392  ALLOCATED TO OAOSB3
+IEF237I 392  ALLOCATED TO OAOSCA
+IEF237I 392  ALLOCATED TO OAOSCD
+IEF237I 392  ALLOCATED TO OAOSCE
+IEF237I 392  ALLOCATED TO OAOSC2
+IEF237I 392  ALLOCATED TO OAOSC5
+IEF237I 392  ALLOCATED TO OAOSC6
+IEF237I 392  ALLOCATED TO OAOSD0
+IEF237I 392  ALLOCATED TO OAOSD7
+IEF237I 392  ALLOCATED TO OAOSD8
+IEF237I 392  ALLOCATED TO OAOSG0
+IEF237I 392  ALLOCATED TO OAOSH1
+IEF237I 392  ALLOCATED TO OAOSH3
+IEF237I 392  ALLOCATED TO OAOST3
+IEF237I 392  ALLOCATED TO OAOST4
+IEF237I 392  ALLOCATED TO OAOSU0
+IEF237I 392  ALLOCATED TO OAOS00
+IEF237I 392  ALLOCATED TO OAOS03
+IEF237I 392  ALLOCATED TO OAOS04
+IEF237I 392  ALLOCATED TO OAOS05
+IEF237I 392  ALLOCATED TO OAOS06
+IEF237I 392  ALLOCATED TO OAOS07
+IEF237I 392  ALLOCATED TO OAOS11
+IEF237I 392  ALLOCATED TO OAOS12
+IEF237I 392  ALLOCATED TO OAOS20
+IEF237I 392  ALLOCATED TO OAOS21
+IEF237I 392  ALLOCATED TO OAOS24
+IEF237I 392  ALLOCATED TO OAOS26
+IEF237I 392  ALLOCATED TO OAOS29
+IEF237I 392  ALLOCATED TO OAOS32
+IEF237I 19E  ALLOCATED TO BAOSA0
+IEF237I 19E  ALLOCATED TO BAOSA1
+IEF237I 19E  ALLOCATED TO BAOSBN
+IEF237I 19E  ALLOCATED TO BAOSB0
+IEF237I 19E  ALLOCATED TO BAOSB3
+IEF237I 19E  ALLOCATED TO BAOSCA
+IEF237I 19E  ALLOCATED TO BAOSCD
+IEF237I 19E  ALLOCATED TO BAOSCE
+IEF237I 19E  ALLOCATED TO BAOSC2
+IEF237I 19E  ALLOCATED TO BAOSC5
+IEF237I 19E  ALLOCATED TO BAOSC6
+IEF237I 19E  ALLOCATED TO BAOSD0
+IEF237I 19E  ALLOCATED TO BAOSD7
+IEF237I 19E  ALLOCATED TO BAOSD8
+IEF237I 19E  ALLOCATED TO BAOSG0
+IEF237I 19E  ALLOCATED TO BAOSH1
+IEF237I 19E  ALLOCATED TO BAOSH3
+IEF237I 19E  ALLOCATED TO BAOST3
+IEF237I 19E  ALLOCATED TO BAOST4
+IEF237I 19E  ALLOCATED TO BAOSU0
+IEF237I 19E  ALLOCATED TO BAOS00
+IEF237I 19E  ALLOCATED TO BAOS03
+IEF237I 19E  ALLOCATED TO BAOS04
+IEF237I 19E  ALLOCATED TO BAOS05
+IEF237I 19E  ALLOCATED TO BAOS06
+IEF237I 19E  ALLOCATED TO BAOS07
+IEF237I 19E  ALLOCATED TO BAOS11
+IEF237I 19E  ALLOCATED TO BAOS12
+IEF237I 19E  ALLOCATED TO BAOS20
+IEF237I 19E  ALLOCATED TO BAOS21
+IEF237I 19E  ALLOCATED TO BAOS24
+IEF237I 19E  ALLOCATED TO BAOS26
+IEF237I 19E  ALLOCATED TO BAOS29
+IEF237I 19E  ALLOCATED TO BAOS32
+IEF142I RPTDLB ERRORS - STEP WAS EXECUTED - COND CODE 0000
+IEF285I   MVSSRC.BLD.LOAD                              KEPT          *--------0
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   JES2.JOB00815.SO0107                         SYSOUT
+IEF285I   SYS26254.T101738.RA000.RPTDLB.ORG            PASSED        *------108
+IEF285I   SYS26254.T101738.RA000.RPTDLB.BLD            PASSED        *------108
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *--------2
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   MVSSRC.BLD.UTILITY.ASM                       KEPT          *-------14
+IEF285I   VOL SER NOS= BLDSMP.
+IEF285I   SYS1.AOSA0                                   KEPT          *------308
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSA1                                   KEPT          *-------14
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSBN                                   KEPT          *--------8
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSB0                                   KEPT          *--------8
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSB3                                   KEPT          *----1,341
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSCA                                   KEPT          *-------65
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSCD                                   KEPT          *------983
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSCE                                   KEPT          *------429
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSC2                                   KEPT          *-------17
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSC5                                   KEPT          *----3,618
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSC6                                   KEPT          *------137
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSD0                                   KEPT          *----2,635
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSD7                                   KEPT          *------131
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSD8                                   KEPT          *------342
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSG0                                   KEPT          *------177
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSH1                                   KEPT          *-------40
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSH3                                   KEPT          *------299
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOST3                                   KEPT          *------301
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOST4                                   KEPT          *------637
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOSU0                                   KEPT          *----3,892
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS00                                   KEPT          *-------83
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS03                                   KEPT          *------712
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS04                                   KEPT          *--------0
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS05                                   KEPT          *-------41
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS06                                   KEPT          *------542
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS07                                   KEPT          *------257
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS11                                   KEPT          *------148
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS12                                   KEPT          *----1,727
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS20                                   KEPT          *------493
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS21                                   KEPT          *----2,951
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS24                                   KEPT          *----1,295
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS26                                   KEPT          *----2,002
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS29                                   KEPT          *-------58
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   SYS1.AOS32                                   KEPT          *----2,498
+IEF285I   VOL SER NOS= TK5DLB.
+IEF285I   MVSSRC.BLD.AOSA0                             KEPT          *------354
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSA1                             KEPT          *-------14
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSBN                             KEPT          *--------7
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSB0                             KEPT          *--------9
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSB3                             KEPT          *----1,448
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSCA                             KEPT          *-------66
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSCD                             KEPT          *----1,589
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSCE                             KEPT          *------438
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSC2                             KEPT          *-------18
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSC5                             KEPT          *----5,085
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSC6                             KEPT          *------124
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSD0                             KEPT          *----2,907
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSD7                             KEPT          *------131
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSD8                             KEPT          *------410
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSG0                             KEPT          *------209
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSH1                             KEPT          *------200
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSH3                             KEPT          *------808
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOST3                             KEPT          *------295
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOST4                             KEPT          *----1,029
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOSU0                             KEPT          *----5,694
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS00                             KEPT          *-------86
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS03                             KEPT          *------669
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS04                             KEPT          *--------0
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS05                             KEPT          *-------42
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS06                             KEPT          *------592
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS07                             KEPT          *------258
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS11                             KEPT          *------175
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS12                             KEPT          *----2,715
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS20                             KEPT          *------477
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS21                             KEPT          *----2,760
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS24                             KEPT          *----1,392
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS26                             KEPT          *----2,337
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS29                             KEPT          *------121
+IEF285I   VOL SER NOS= BLDDLB.
+IEF285I   MVSSRC.BLD.AOS32                             KEPT          *----2,669
+IEF285I   VOL SER NOS= BLDDLB.
+IEF373I STEP /ERRORS  / START 26254.1017
+IEF374I STEP /ERRORS  / STOP  26254.1019 CPU    1MIN 22.99SEC SRB    0MIN 03.65SEC VIRT   652K SYS   448K
+************************************************************************************************************************************
+*     5. Jobstep of job: RPTDLB      Stepname: ERRORS      Program name: LMDRPT38   Executed on 11.09.26 from 10.17.39 to 10.19.23 *
+*         elapsed time  00:01:43,93                      CPU-Identifier:  TK5R           Page-in:      0                           *
+*             CPU time  00:01:26,64               Virtual Storage used:    652K         Page-out:      0                           *
+*           corr. CPU:  00:01:26,64   CPU time has been corrected by  1 / 1,0  multiplier                                          *
+*                                                                                                                                  *
+*     I/O Operation                                                                                                                *
+*     Number of records read via DD * or DD DATA:      0                                                                           *
+*     194.......0 DMY.......0 FFF.....108 FFF.....108 194.......2 194......14 392.....308 392......14 392.......8 392.......8      *
+*     392....1341 392......65 392.....983 392.....429 392......17 392....3618 392.....137 392....2635 392.....131 392.....342      *
+*     392.....177 392......40 392.....299 392.....301 392.....637 392....3892 392......83 392.....712 392.......0 392......41      *
+*     392.....542 392.....257 392.....148 392....1727 392.....493 392....2951 392....1295 392....2002 392......58 392....2498      *
+*     19E.....354 19E......14 19E.......7 19E.......9 19E....1448 19E......66 19E....1589 19E.....438 19E......18 19E....5085      *
+*     19E.....124 19E....2907 19E.....131 19E.....410 19E.....209 19E.....200 19E.....808 19E.....295 19E....1029 19E....5694      *
+*     19E......86 19E.....669 19E.......0 19E......42 19E.....592 19E.....258 19E.....175 19E....2715 19E.....477 19E....2760      *
+*     19E....1392 19E....2337 19E.....121 19E....2669                                                                              *
+*                                                                                                                                  *
+*                                          Charge for step (w/o SYSOUT):        144,40                                             *
+************************************************************************************************************************************
+IEF285I   SYS26254.T101738.RA000.RPTDLB.BLD            DELETED
+IEF285I   SYS26254.T101738.RA000.RPTDLB.ORG            DELETED
+IEF375I  JOB /RPTDLB  / START 26254.1017
+IEF376I  JOB /RPTDLB  / STOP  26254.1019 CPU    1MIN 23.45SEC SRB    0MIN 03.67SEC
