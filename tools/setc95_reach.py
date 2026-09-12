@@ -15,8 +15,12 @@ from collections import defaultdict
 
 SRC = "/Users/mike/repos/MVSSRC/Dave Kreiss - MVS from Source/MVSBLD"
 M   = os.environ['HOME'] + '/repos/mvs/mvs38src/work/macros'
-LIBS = [f'{M}/mvsce-2.1.4-dlib/{d}' for d in
-        ('AMACLIB','AMODGEN','AGENLIB','ATSOMAC','ATCAMMAC','APVTMACS')] + [f'{M}/tape', f'{M}/mirror']
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from macpath import dirs as _macdirs
+# From macpath.py, which reads gate.sh. This file used to restate the list and
+# was short of erep-set and amaclib-live -- see macpath.py for what that costs.
+LIBS = _macdirs()
 
 sys.argv = ['x']
 exec(open('setc95.py').read().split('for root in sys.argv')[0].split('"""', 2)[2])

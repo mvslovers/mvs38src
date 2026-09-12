@@ -71,6 +71,7 @@ The project measures two different things and they must never be quoted as one.
 | [`ifox-tk5-vs-ce.md`](ifox-tk5-vs-ce.md) | is TK5's IFOX00 the same assembler? — fahrplan stage 1 |
 | [`ifox-gorlinsky.md`](ifox-gorlinsky.md) | Paul Gorlinsky's IFOX00 source against ours |
 | [`macro-tk5-vs-ce.md`](macro-tk5-vs-ce.md) | **93 % of the macro surface is identical, and the residue moves 68 modules.** The reason stage 1 must carry MVS/CE's macros across |
+| [`macro-path.md`](macro-path.md) | **`gate.sh` decides the `-I` path and eight tools had drifted from it.** 33 EREP decks differ between the two paths; the short one starves them |
 | [`macro-collisions.md`](macro-collisions.md) | the ten places where `-I` order decides what gets assembled |
 | [`missing-macros.md`](missing-macros.md) | the 40 operations neither assembler can resolve, and where each has been hunted |
 | [`private-macros.md`](private-macros.md) | the private macros, and what they are worth |

@@ -35,11 +35,16 @@ DLIB = os.path.expanduser("~/repos/mvs/mvs38src/work/measurements/dlib")
 SRC = "/Users/mike/repos/MVSSRC/Dave Kreiss - MVS from Source/MVSBLD"
 BIN = None          # set from argv: the pinned as370
 M = os.path.expanduser("~/repos/mvs/mvs38src/work/macros")
-MACS = sum([["-I", p] for p in [
-    f"{M}/mvsce-2.1.4-dlib/AMACLIB", f"{M}/mvsce-2.1.4-dlib/AMODGEN",
-    f"{M}/mvsce-2.1.4-dlib/AGENLIB", f"{M}/mvsce-2.1.4-dlib/ATSOMAC",
-    f"{M}/mvsce-2.1.4-dlib/ATCAMMAC", f"{M}/mvsce-2.1.4-dlib/APVTMACS",
-    f"{M}/tape", f"{M}/mirror"]], [])
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from macpath import flags as _macflags
+# The -I path comes from macpath.py, which reads it out of gate.sh.
+# This file used to restate it and was two directories short -- erep-set
+# and amaclib-live, which the gate gained on 2026-09-09. cc370 measured
+# the reach: 33 decks differ between the two paths, all EREP, and the
+# short path starves them (IFCE0115: 15 cards against a 107-card
+# reference). See macpath.py and docs/erep-adoption.md.
+MACS = _macflags()
 
 
 def cards(path):

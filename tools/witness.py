@@ -21,9 +21,15 @@ import os, re, subprocess, sys
 SRC = "/Users/mike/repos/MVSSRC/Dave Kreiss - MVS from Source/MVSBLD"
 M = os.path.expanduser("~/repos/mvs/mvs38src/work/macros")
 BIN = os.environ.get("AS370", os.path.expanduser("~/repos/mvs/cc370/as370/as370"))
-MACS = sum([["-I", f"{M}/mvsce-2.1.4-dlib/{d}"] for d in
-            ("AMACLIB", "AMODGEN", "AGENLIB", "ATSOMAC", "ATCAMMAC", "APVTMACS")],
-           []) + ["-I", f"{M}/tape", "-I", f"{M}/mirror"]
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from macpath import flags as _macflags
+# The -I path comes from macpath.py, which reads it out of gate.sh. This file
+# used to restate it and was two directories short -- erep-set and
+# amaclib-live, which the gate gained on 2026-09-09. cc370 measured the reach:
+# 33 decks differ between the two paths, all EREP, and the short path starves
+# them (IFCE0115: 15 cards against a 107-card reference).
+MACS = _macflags()
 
 
 def listing(m):
