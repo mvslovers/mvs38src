@@ -31,7 +31,20 @@ from concurrent.futures import ThreadPoolExecutor
 
 RUN = os.path.expanduser("~/repos/mvs/mvs38src/work/measurements/ifox-run")
 DECKS, AS370 = f"{RUN}/decks", f"{RUN}/as370"
-DLIB = os.path.expanduser("~/repos/mvs/mvs38src/work/measurements/dlib")
+# The object baseline. TK5 since 2026-09-10 (docs/fahrplan.md §1) -- this used
+# to point at work/measurements/dlib, which is MVS/CE's: of the divergent
+# members, 491 match `ce` and ZERO match `tk5`. So the attribution below scored
+# the SOURCE against the superseded baseline while the scoreboard scored it
+# against TK5, and the two figures sat side by side meaning different things.
+# Measured with the baseline as the only variable: 1,084 identical against TK5
+# against 1,094 against CE, with 81 modules changing verdict -- which is the
+# founding measurement of the baseline decision (docs/deck-vs-tk5-ce.md).
+# The TOOL question above -- as370 against IFOX00 -- involves no DLIB and is
+# unaffected either way. IFOX_DLIB=ce reproduces the old figures.
+_BASE = os.environ.get("IFOX_DLIB", "tk5")
+DLIB = os.path.expanduser(
+    "~/repos/mvs/mvs38src/work/measurements/dlib" if _BASE == "legacy"
+    else f"~/repos/mvs/mvs38src/work/measurements/dlib-bytes/{_BASE}")
 SRC = "/Users/mike/repos/MVSSRC/Dave Kreiss - MVS from Source/MVSBLD"
 BIN = None          # set from argv: the pinned as370
 M = os.path.expanduser("~/repos/mvs/mvs38src/work/macros")
@@ -98,8 +111,11 @@ def dlib_index():
     ix = {}
     for root, _, fs in os.walk(DLIB):
         for f in fs:
-            if f.endswith(".dlib"):
-                ix[f[:-5]] = os.path.join(root, f)
+            # .dlib in the legacy tree, .bin in dlib-bytes/*
+            for ext in (".dlib", ".bin"):
+                if f.endswith(ext):
+                    ix[f[:-len(ext)]] = os.path.join(root, f)
+                    break
     return ix
 
 

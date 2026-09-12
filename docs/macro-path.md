@@ -144,3 +144,52 @@ attribution numbers are CE numbers. Switching it is a larger decision than the
 macro path was: it changes what `module-table.tsv` means about the source rather
 than about the tool, and the tool question — `as370` against IFOX00, 5,471 of
 5,528 — does not involve a DLIB at all and is unaffected either way.
+
+### The baseline switched, 2026-09-12 — and it costs coverage
+
+Mike's call: *"TK5 ist das Ziel."* `ifox_compare.py` now scores against
+`dlib-bytes/tk5`; `IFOX_DLIB=ce` and `IFOX_DLIB=legacy` reproduce the old
+figures.
+
+| attribution | against CE | **against TK5** |
+|---|---:|---:|
+| recovered | 1,202 | **1,075** |
+| source | 2,363 | 1,897 |
+| source, `DS` holes only | 567 | 506 |
+| tool | 4 | 2 |
+
+| `dlib` verdict | CE | TK5 |
+|---|---:|---:|
+| identical | 1,213 | **1,084** |
+| holes | 575 | 506 |
+| length | 2,344 | 1,826 |
+| text | 575 | 355 |
+| mixed | 317 | 207 |
+| **no-pair** | **472** | **1,540** |
+
+**The figures fall because the population does, and that has to be said plainly.**
+`no-pair` goes 472 → 1,540. Of the 1,398 modules whose verdict changed, 1,150
+changed *to* `no-pair`.
+
+| | members |
+|---|---:|
+| `work/measurements/dlib` — the full MVS/CE extraction | **5,252** |
+| `dlib-bytes/tk5` | **3,988** |
+| `dlib-bytes/ce` | 3,988 — **the same 3,988 module names** |
+
+So 3,988 is not an incomplete pull, it is the **paired set** cut deliberately for
+the TK5-vs-CE comparison ([`deck-vs-tk5-ce.md`](deck-vs-tk5-ce.md), "over 3,988
+modules"). Switching baseline therefore trades **1,365 pairs** for a correct
+right-hand side.
+
+**That is the right trade and it is still a trade.** 1,075 measured against the
+chosen baseline beats 1,202 measured against the superseded one — a smaller,
+true number over a larger, wrong one. But the 1,365 are not nothing, and the
+scoreboard's own 1,089 sits on the same 3,988.
+
+**The follow-up that removes the trade**, named rather than done: extend the TK5
+pull to the full 5,252 with `tools/dlibpull.py` against `MVSTK5-REF`, which is
+read-only and therefore cheap. **What is not known is how many of the 1,365
+exist on TK5 at all** — `dlib-distance-tk5-ce.md` established that neither
+system's deck is a superset of the other's, so some of that 1,365 will come back
+absent, and *that* is a result rather than a gap.
