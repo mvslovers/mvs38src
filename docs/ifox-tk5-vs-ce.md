@@ -351,6 +351,32 @@ own.
 
 Per-module list: [`../work/measurements/tk5ref-differences.txt`](../work/measurements/tk5ref-differences.txt).
 
+### Which side does `as370` take?
+
+Asked because it decides whether any of this is cc370's problem. It is not:
+
+| module | `as370` == MVS/CE | `as370` == TK5 |
+|---|---|---|
+| `IEAVSETS` | **yes** | no |
+| `IBCDASDI` | yes | yes |
+| `ICAPRTBL` | yes | yes |
+
+**`as370` reproduces MVS/CE's ESD ordering**, which is the reference this
+project measures against, so there is nothing here for cc370 to fix and no
+ticket to open. What it does mean: **if the reference ever moved to TK5,
+`IEAVSETS` would become an `as370` difference** — one module, named in advance.
+
+`IBCDASDI` and `ICAPRTBL` fall in a class cc370 already named:
+[cc370#314](https://github.com/mvslovers/cc370/issues/314), *"REPRO is not
+implemented — `ICAPRTBL`'s IPL text is three cards the deck never gets"*. `REPRO`
+copies the card that follows it into the deck verbatim, which is how a standalone
+utility gets its IPL text — and it is why these two carry cards outside the four
+normal types. **Why the two systems' raw cards differ in their trailing bytes is
+not explained by that**, and is not explained here either. Both are also on
+[cc370#140](https://github.com/mvslovers/cc370/issues/140) and
+[cc370#199](https://github.com/mvslovers/cc370/issues/199) for unrelated reasons.
+
+
 ### What follows
 
 - **Stage 4 is unblocked and cheap.** If the assemblers agree, only the

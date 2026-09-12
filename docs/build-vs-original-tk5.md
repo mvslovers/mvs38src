@@ -189,3 +189,53 @@ Both numbers are kept in the tables above so the correction stays visible.
 **What this does not change:** every other figure in the run-5 table —
 5,369 built, 1,745 content differences, 81 missing LMODs, 0 missing CSECTs —
 reproduces exactly. Only the `equal` row moved.
+
+---
+
+## Why 98 % and 26 % are both true — 2026-09-12
+
+Asked because the two headline figures look irreconcilable, and because Dave
+Kreiss' own account of what he had finished has to be checked against ours
+rather than assumed to disagree.
+
+**They answer different questions.**
+
+| figure | what it measures |
+|---|---|
+| **5,427 of 5,528 — 98 %** | `as370` produces the same deck as IFOX00. **A tool figure.** It says our assembler is trustworthy; it says nothing about whether the source is at the object's maintenance level |
+| **1,422 of 5,485 — 26 %** | the build's CSECT is byte-identical to the one IBM shipped. **The project figure** |
+
+A module can be in the 98 % and not in the 26 %: the assembler is right and the
+source is still an older maintenance level. That is the entire premise of the
+project.
+
+**Two independent instruments agree on the 26 %.** The build's own `LMDRPT38`
+reports 1,422 of 5,485 target CSECTs equal, and the host-side measurement
+against TK5's distribution libraries reports 1,089 of 3,988
+([`source-states.md`](source-states.md)) — 25.9 % and 27.3 %, over different
+populations, from different programs on different machines.
+
+### And Dave's account is confirmed, library by library
+
+He wrote that `SYS1.NUCLEUS` was finished and that `SYS1.LPALIB` and
+`SYS1.LINKLIB` were not — and that those two are very large. Measured on run 6's
+`ZLMDRPTT`:
+
+| target library | CSECTs built | equal | |
+|---|---:|---:|---:|
+| **`SVCLIB`** | 59 | **59** | **100 %** |
+| **`NUCLEUS`** | 354 | **334** | **94.4 %** |
+| `CMDLIB` | 753 | 229 | 30.4 % |
+| **`LINKLIB`** | 1,721 | 468 | **27.2 %** |
+| **`LPALIB`** | 2,343 | 290 | **12.4 %** |
+| `TELCMLIB` | 192 | 32 | 16.7 % |
+| `VTAMLIB` | 63 | 10 | 15.9 % |
+
+**`SVCLIB` is complete and `NUCLEUS` is at 94 %** — exactly what he said. And the
+two he named as outstanding hold **4,064 of the 5,485 CSECTs, 74 % of the whole
+target population**, which is exactly what "super viele Module" means.
+
+So there is no contradiction to resolve. The 26 % is dominated by `LPALIB` and
+`LINKLIB` because *they* are where the work is, and he had already told us so.
+The distribution side says the same thing in its own vocabulary: `AOSB3` at
+6.7 %, `AOS26` at 12.0 %, `AOS21` at 16.3 % against `AOSC5` at 56.5 %.
