@@ -228,3 +228,48 @@ against IBM's shipped object belongs to the source or to IBM's maintenance.
 **The assembly stamp.** It was suspected of explaining hundreds of differences.
 Every differing module was re-assembled locally with the date and time that IFOX
 run used: **one difference of 1,242 is the stamp.**
+
+---
+
+## The list, re-cut 2026-09-12 — and it is five
+
+`tools/case_list.py`, run against the binary from cc370 PR #365 over all 5,528
+MVSBLD modules. Two filters, and the second is the one that changes the picture:
+
+| | modules |
+|---|---:|
+| excluded because the IFOX00 reference came from a run IFOX00 abandoned (`ifox_rc > 4`) | **933** |
+| excluded as stamp-only | 0 — the mask is applied inside the comparison |
+| **remaining cases** | **5** |
+
+So over the **4,595 modules whose reference is a statement**, `as370` and IFOX00
+agree on **4,590**.
+
+| module | cards | same count | differing | first | rc as370/IFOX00 |
+|---|---|---|---:|---|---|
+| `IFNX2A` | 105/105 | Y | **2** | 49 TXT | 0 / 0 |
+| `IFNX4M` | 65/65 | Y | **2** | 61 TXT | 0 / 0 |
+| `IFFAHA16` | 76/76 | Y | 5 | 70 RLD | 0 / 0 |
+| `BLSR3270` | 156/156 | Y | 88 | 0 ESD | 0 / **4** |
+| `HMASMTMD` | 275/274 | **N** | 270 | 4 ESD | 0 / 0 |
+
+Ordered smallest-first on purpose: a two-card difference in a module nobody has
+examined is where a mechanism gets found. That is how the `^`/`¬` code-page
+substitution turned up and recovered ten modules at once, and how `IGARPT01`'s
+parenthesised `USING` base turned out to be a whole evaluator path.
+
+**Two are worth naming beyond their size.** `BLSR3270` is the severity-4 module
+[cc370#140](https://github.com/mvslovers/cc370/issues/140) already knows —
+IFOX00 flags it and `as370` does not, so its reference is weak even though it is
+under the rc-4 cut. And **`HMASMTMD` is SMP**, which is second on Mike's
+priority list ([`tso-and-smp.md`](tso-and-smp.md)) and the only one of the five
+where the card counts differ at all.
+
+### Why this figure is not the same as `5,432 of 5,528`
+
+Both are right and they count different populations. cc370's parity figure
+deliberately includes the 933 flagged modules, because reproducing a flagged
+run's deck byte for byte means reproducing its error behaviour too — the
+stronger agreement rather than the weaker. This list deliberately excludes them,
+because a *case* needs a reference worth diagnosing against. Quote either, never
+both as if they measured the same thing.

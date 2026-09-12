@@ -203,9 +203,21 @@ def main():
     if len(key) != 1:
         ap.error(f"--system {a.system!r} matches {key or 'nothing'}")
     name = key[0]
+    # Through creds.py, like every other tool here. This used to read --cred or
+    # MVS_CRED and nothing else, so the MVSTK5_REF_CRED key that creds.py
+    # resolves for `--system ref` was invisible to it and the caller got
+    # "credentials: pass --cred" while the credential sat in .env. Found by the
+    # cc370 session on 2026-09-12 -- not a defect, a trap for the next caller,
+    # and the next caller is the argument for fixing it.
     cred = a.cred or os.environ.get("MVS_CRED")
     if not cred:
-        ap.error("credentials: pass --cred user:pass or set MVS_CRED")
+        try:
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            from creds import cred as _cred
+            cred = _cred(name)
+        except Exception as e:
+            ap.error(f"credentials: --cred user:pass, MVS_CRED, or an entry in "
+                     f".env that creds.py can resolve for {name} ({e})")
 
     print(f"snapshot of {name}")
     rows, absent = take(name, s[name], cred)
