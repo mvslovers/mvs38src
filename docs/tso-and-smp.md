@@ -98,3 +98,66 @@ does not say what any individual difference *is*. The next step on TSO is the
 22 same-length cases, smallest first, because a 1-byte difference in a module
 nobody has looked at is where a mechanism gets found — that is exactly how the
 `^`/`¬` code-page substitution turned up and recovered ten modules at once.
+
+---
+
+## The first TSO repair: `IKJEHREN`, one character — 2026-09-12
+
+Re-cut on the full 5,353-module reference: TSO is **256 modules, 50 identical
+(19.5 %), 30 holes-only, 173 differing, 3 without a deck — and still zero cases
+where `as370` disagrees with IFOX00.** 35 differ at the same length.
+
+The two smallest were `IKJEFLLM` and `IKJEHREN`, one differing text byte each.
+
+### What it was
+
+`IKJEHREN`'s first CSECT differs in exactly one byte, at `0x23`: we emit `00`,
+IBM has `X'F0'` — EBCDIC `'0'`. The source, and the marker on it is Dave's own:
+
+```
+265 |         B     BRID                BRANCH AROUND ID            @ZA01485 |
+266 |         DC    C'IKJEHREN'         MODULE ID                   @ZA01485 |
+267 |         DC    C' UZ45173 08/27/85'                             DSKC022 |
+268 |BRID     DC    0H'0'                                            DSKC022 |
+```
+
+`C'IKJEHREN'` lands at `0x0A`–`0x11`, the stamp at `0x12`–`0x22` — **17
+characters** — and `BRID DC 0H'0'` then aligns to `0x24`, padding `0x23` with
+`00`. **Section lengths are equal**, so 17 characters plus one pad byte is as
+long as 18 characters with none: the stamp is one character short and the
+missing one is what IBM initialised `0x23` with.
+
+### Measured rather than argued
+
+Three candidates for the 18th character, assembled and compared against IBM's
+object:
+
+| 18th character | differing text bytes |
+|---|---:|
+| `' '` | 1 |
+| `'5'` | 1 |
+| **`'0'`** | **0** |
+
+`DC C' UZ45173 08/27/850'`. It reads oddly and the object is not interested in
+that. Deposited at [`../src/ACMDLIB/IKJEHREN.ASM`](../src/ACMDLIB/IKJEHREN.ASM),
+one line changed, columns 73–80 untouched, 2,510 CRLF and no bare LF, byte count
+unchanged at 205,820.
+
+**What the object cannot tell us** is whether Dave's constant is one character
+short or whether a following `DC C'0'` was dropped. Both produce the same bytes,
+so both are consistent with the evidence and the source cannot be recovered
+beyond the object's own resolution.
+
+### What it is worth, stated exactly
+
+| CSECT | before | after |
+|---|---|---|
+| `IKJEHREN` | text, 1 byte | **identical** |
+| `IKJEHRN2` | holes, 4 | holes, 4 |
+| `IKJEHRN4` | holes, 2 | holes, 2 |
+| `IKJEHRN3` `IKJEHPDL` `IKJEHMSG` | identical | identical |
+
+**The module does not become recovered.** Its verdict goes from `text` to
+`holes`, because six bytes in two other CSECTs are still uninitialised where
+IBM's object carries content — and [`ds-holes.md`](ds-holes.md) established that
+those are real. One of eight CSECTs closed, and the scoreboard will not move.
