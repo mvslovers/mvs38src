@@ -14,7 +14,7 @@ The module -> library map is taken from the reference tree itself
 so a module can never be scored against the wrong library's member, and the
 population is exactly what the reference actually holds.
 """
-import argparse, concurrent.futures, json, os, subprocess, sys
+import argparse, collections, concurrent.futures, json, os, subprocess, sys
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 TK5 = os.path.join(ROOT, "work", "measurements", "dlib-bytes", "tk5")
@@ -41,19 +41,32 @@ def reference_map():
 def one(job):
     mod, lib, ref, deck = job
     if not os.path.exists(deck):
-        return [mod, lib, "no-deck", 0, -1, ""]
+        return [mod, lib, "no-deck", 0, -1, "", 0, 0]
     p = subprocess.run([CMPLMD, "--json", deck, ref], capture_output=True, text=True)
     if p.returncode == 2 or not p.stdout.strip():
-        return [mod, lib, "error", 0, -1, ""]
+        return [mod, lib, "error", 0, -1, "", 0, 0]
     try:
         d = json.loads(p.stdout)
     except json.JSONDecodeError:
-        return [mod, lib, "error", 0, -1, ""]
+        return [mod, lib, "error", 0, -1, "", 0, 0]
     secs = d.get("sections") or []
     diff = sum(s.get("diff_bytes") or 0 for s in secs)
+    hole = sum(s.get("diff_in_holes") or 0 for s in secs)
+    text = sum(s.get("diff_in_text") or 0 for s in secs)
     lend = any(s.get("length_differs") for s in secs)
-    return [mod, lib, "identical" if d.get("identical") else "differs",
-            len(secs), diff, "Y" if lend else "N"]
+    # cmplmd370 already separates a difference in a DS hole from one in text,
+    # and the first version of this tool threw that away -- the exact failure
+    # this repository keeps catching in itself. A hole is uninitialised storage:
+    # IBM's object carries whatever was in the buffer, so a difference there
+    # cannot be a source defect. `verdict` is cmplmd370's own word for the
+    # section: identical / holes / differs.
+    if d.get("identical"):
+        v = "identical"
+    elif not lend and text == 0 and hole > 0:
+        v = "holes"
+    else:
+        v = "differs"
+    return [mod, lib, v, len(secs), diff, "Y" if lend else "N", hole, text]
 
 
 def main():
@@ -74,17 +87,18 @@ def main():
         rows = list(ex.map(one, jobs))
 
     with open(a.out, "w") as fh:
-        fh.write("module\tdlib\tverdict\tsections\tdiff_bytes\tlength_differs\n")
+        fh.write("module\tdlib\tverdict\tsections\tdiff_bytes\t"
+                 "length_differs\tdiff_in_holes\tdiff_in_text\n")
         for r in rows:
             fh.write("\t".join(str(x) for x in r) + "\n")
 
     n = len(rows)
-    ident = sum(1 for r in rows if r[2] == "identical")
-    diff = sum(1 for r in rows if r[2] == "differs")
-    nodeck = sum(1 for r in rows if r[2] == "no-deck")
-    err = sum(1 for r in rows if r[2] == "error")
+    c = collections.Counter(r[2] for r in rows)
     print(f"{a.decks}: {n} reference modules  "
-          f"identical {ident}  differs {diff}  no-deck {nodeck}  error {err}")
+          f"identical {c['identical']}  holes-only {c['holes']}  "
+          f"differs {c['differs']}  no-deck {c['no-deck']}  error {c['error']}")
+    print(f"  identical or holes-only: {c['identical'] + c['holes']}"
+          f"  ({100 * (c['identical'] + c['holes']) / n:.1f} %)")
 
 
 if __name__ == "__main__":

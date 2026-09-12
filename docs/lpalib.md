@@ -74,10 +74,13 @@ storage, where IBM's object carries whatever was in the buffer. `IEFJDSNA` is
 the documented pattern: source correct, tool correct, and the single differing
 byte is the `DS` hole at `0x00AA` ([`ifox-oracle.md`](ifox-oracle.md)).
 
-**Those are not defects, and the scoreboard counts them as such.** Tree-wide the
-hole class is 281 modules. A figure of 25.9 % that includes them is honest but
-pessimistic, and the number worth having beside it is the one that excludes
-them.
+> **Retracted the same day.** This said the hole differences are not defects and
+> the scoreboard wrongly counts them as such. They **are** defects — see
+> [`ds-holes.md`](ds-holes.md). The hole bytes are byte-identical between TK5 and
+> MVS/CE in 309 of 309 sampled clusters, which linkage-editor residue could not
+> be, and they carry structured content (`0ATSOMAC`, `OS 218IGFMCH17`). IBM's
+> source initialises them and ours does not. **25.9 % is right as it stands**, and
+> all 147 of the cheapest candidates below are real work, not 74.
 
 The remaining **74 of the 147** are the genuinely cheapest open work in the
 largest library. List: [`../work/measurements/lpalib-smallest.tsv`](../work/measurements/lpalib-smallest.tsv).
