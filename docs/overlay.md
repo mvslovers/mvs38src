@@ -67,6 +67,38 @@ file is left as it is, the measurement is on this page, and the call is Mike's.
 
 One module, and the overlay figure already accounts for it: +34 −1 = +33.
 
+## `src/` means finished, and three modules were not — 2026-09-12, later
+
+Mike's correction, and it is the right one: **`src/` holds source where the text
+matches the TK5 module.** Measured against that criterion, `tools/srccheck.py`:
+
+```
+src/: 37 modules, 34 byte-identical to TK5
+  FAILS  IKJEHREN   text=0 holes=6
+  FAILS  IDA019S4   text=0 holes=0 length differs
+  FAILS  IKJRBBCM   text=3 holes=0
+```
+
+34 of 37 met it. The three that did not are now in
+[`../work/src-pending/`](../work/src-pending/README.md) with a measurement each,
+and `srccheck.py` exits 0 over the remaining 34 — so **the tree called finished
+is now finished**, and a guard says so on every run.
+
+| module | archive → TK5 | its text → TK5 | its text → MVS/CE |
+|---|---|---|---|
+| `IKJEHREN` | text 1, holes 6 | **text 0**, holes 6 | text 37 |
+| `IDA019S4` | text 5 | **text 0**, length differs | **identical** |
+| `IKJRBBCM` | **identical** | text 3 | **identical** |
+
+Two of the three are *right against MVS/CE*, which is the same story as the
+regression above: repairs made before the baseline moved, never re-checked
+because nothing read the tree they were in. `IKJEHREN` is the exception — 37
+differing bytes against CE, so that one was always a TK5 repair, and it is
+simply unfinished.
+
+**A tree called "finished" containing unfinished work is worse than no tree**,
+which is why the criterion now has an executable form rather than a convention.
+
 ## The two figures are both wanted
 
 The archive measurement says **how far Dave Kreiss got**: 1,221 of 5,353.
