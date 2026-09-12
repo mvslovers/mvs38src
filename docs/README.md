@@ -47,6 +47,7 @@ The project measures two different things and they must never be quoted as one.
 | [`regression-gate.md`](regression-gate.md) | **re-testing an `as370` change.** The gate, the promote sequence, and its traps. Ten minutes on the host, no MVS |
 | [`complmd-spec.md`](complmd-spec.md) | `COMPLMD` read as the specification for `cmplmd370` |
 | [`what-is-left.md`](what-is-left.md) | the map of what still differs, by block and by mechanism |
+| [`tso-and-smp.md`](tso-and-smp.md) | **the two components Mike prioritises**, profiled. TSO 44 of 228, SMP 19 of 109, zero tool cases in either, and SMP's 82 same-length differences are the most tractable block found so far |
 | [`ds-holes.md`](ds-holes.md) | **a class of 495 modules that was labelled "cannot be our fault", refuted.** The two object baselines agree on the hole bytes 309 times out of 309 |
 | [`lpalib.md`](lpalib.md) | **the largest and reddest library, sorted by mechanism.** 93 % of it carries no `DSK` marker — it was never reached, not failed |
 

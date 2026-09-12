@@ -85,7 +85,29 @@ git -C ~/repos/mvs/cc370 rev-list --count fd287d3..main    # before quoting row 
   finding carry **no `DSK` marker**; exactly **one** is an `as370` case
   (`IGARPT01`, handed to cc370). [`docs/lpalib.md`](docs/lpalib.md).
 
-### The next three things
+### 🔒 Priority, set by Mike on 2026-09-12
+
+**TSO first — he intends to build his own development on top of it. SMP second**,
+because it is the maintenance vehicle the whole project design rests on.
+Profiled in [`docs/tso-and-smp.md`](docs/tso-and-smp.md):
+
+| | modules | identical | same-length differences | `as370` cases |
+|---|---:|---:|---:|---:|
+| TSO (`IKJ*`/`IKT*`) | 228 | 44 — 19.3 % | 22 | **0** |
+| SMP (`HMA*`) | 109 | 19 — 17.4 % | **82** | **0** |
+
+Both are **pure source work** and both are **already recovered at base level**
+(TSO 36 identical against 21 open at 1978; SMP 11 against 1). What is open is
+maintenance, concentrated in 1985 for TSO (43 modules) and in 1981 + 1985 for
+SMP (28 each). **SMP's 82 same-length differences are the most tractable block
+found anywhere so far.**
+
+Start with TSO's 22 same-length cases, smallest first — `IKJEFA42` and
+`IKJEFLLM` differ by **one byte**. A one-byte difference in a module nobody has
+examined is where a mechanism gets found; that is how the `^`/`¬` code-page
+substitution turned up and took ten modules at once.
+
+### Then, and no longer first
 
 **1. `AOSB3` and `AOSA0`, by library rather than by module.** 441 open CSECTs
 between them, both over 80 % open, against `AOSC5` and `AOSD0` which are
