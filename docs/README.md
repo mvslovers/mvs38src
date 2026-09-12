@@ -32,6 +32,7 @@ banner, that means nobody has *found* it to be stale — not that it is current.
 | [`fahrplan.md`](fahrplan.md) | **the current direction.** TK5 is the object baseline, and the five stages that follow. Corrected inline 09-11 in three places |
 | [`workplan.md`](workplan.md) | 09-04, the founding plan. Superseded on the baseline question by `fahrplan.md`; its host-side method — extract, assemble, compare, everything machine-decidable — still governs |
 | [`open-decisions.md`](open-decisions.md) | what needs Mike. Items 1–4 are decided; see the banner |
+| [`kreiss-reply-2026-09-12.md`](kreiss-reply-2026-09-12.md) | **his answer, and it reverses two of our decisions.** Compare against TARGET not DLIB; `MAINT05Z` is required and is the likely cause of the `./ DELETE` failures |
 | [`kreiss-project.md`](kreiss-project.md) | **what we are building on.** Dave Kreiss' project, his `DSK*` PTF scheme, and why his PTFs are not IBM's |
 | [`dave-environment-plan.md`](dave-environment-plan.md) | how his environment gets built, and why that is not the current work |
 | [`mail-kreiss-2026-09-12.md`](mail-kreiss-2026-09-12.md) | draft: status, the scoreboard, and the `./ DELETE` question |
