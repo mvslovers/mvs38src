@@ -84,6 +84,54 @@ For what it is worth, where a SYSMOD *does* arrive, your repairs land and they
 reach IBM's object: applying what did get through moved 13 modules to
 byte-identical and lost none.
 
+## And a short list about macros, since you are cutting a tape anyway
+
+These are all cases where a module exists and has a shipped object to be
+compared against, and the only thing in the way is a macro we cannot find. Each
+one was searched for across your `SMP.LIB` elements, the IBM RELFILEs, stben.net,
+mainframe.eu, Jay Moseley's set and your `NEW.ASM` — about 1,800 macros — so
+these are "not on this machine" rather than "we have not looked".
+
+**1. `TABLE` — and this is the big one, 45 modules.** The `XTB*` translate
+tables in `NEW.ASM` all have a DLIB object, so they are measurable, and they
+call
+
+```
+TABLE CGMID=(82),LOC=((40,00,0),(4B,0B,0),...)
+```
+
+with keyword operands, alongside a `NAME` macro. There *is* a macro called
+`TABLE` in five places — `IGARPT01`, Jay's set, `mvs38-ibmsrc`, both mirrors —
+and it is the same wrong one every time: `&TABLE TABLE &A`, one positional
+operand. Three of the 48 turned out to be shipped in already-expanded form
+(`DC`/`DS`/`ORG`, no macro call) and all three assemble byte-identical to IBM's
+object, which is what makes us think the other 45 would too. **Do you have the
+`TABLE`/`NAME` pair, or do you remember where those came from?**
+
+**2. Four EREP macros:** `ENTRIES`, `ETEPILOG`, `FREETAB`, `SUMMARY`. 22 modules
+call them. We found nine of the thirteen EREP macros in the end — several were
+in-stream `MACRO` definitions inside other modules — but these four are on
+neither of our systems.
+
+**3. `PROLOG` is a near-miss worth mentioning**, because it may be the same
+story as `TABLE`. Eight copies exist and every one is a prototype taking no
+operands, while every EREP caller writes `PROLOG NAME=`. So the name is common
+and the right version is not.
+
+**4. Three macros are used but have no `++MAC` element** in `SMP.LIB`:
+`IHANVT`, `UCBDADVC` and `IECDCST`. We resolve them from libraries we already
+have, so nothing is blocked — but if they are supposed to come from somewhere
+specific, we would rather know than assume.
+
+**5. And one that is simply absent everywhere:** `IQAERB`, 9 modules from
+`NEW.ASM`; plus `ACCESS`, `IQAMOD`, `IQAQAL`.
+
+If your `PVTMAC` and `APVTMAC` come along on the new tape, several of these
+probably answer themselves — 319 of the macros we assemble against came from web
+mirrors at a maintenance level we cannot establish, and that is the one
+unknown we introduced ourselves rather than inherited. Every length difference
+in those modules currently has two explanations, and yours would remove one.
+
 ## Small things
 
 * The two jobs at the head of the chain that end non-zero — `$02ASM` (`CC 0024`,
