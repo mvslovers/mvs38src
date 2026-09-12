@@ -193,3 +193,58 @@ read-only and therefore cheap. **What is not known is how many of the 1,365
 exist on TK5 at all** — `dlib-distance-tk5-ce.md` established that neither
 system's deck is a superset of the other's, so some of that 1,365 will come back
 absent, and *that* is a result rather than a gap.
+
+### The pull, run — and the coverage gap was never a TK5 inventory difference
+
+`dlibpull.py --system tk5` over the 1,365 members `dlib-bytes/tk5` was short of,
+then the same list for `ce` so the paired set stays paired:
+
+```
+tk5: 1365 read, 0 absent, 0 already cached (132s)
+ce : 1365 read, 0 absent, 0 already cached (126s)
+```
+
+**Zero absent on either side.** TK5 carries every one of them, so the gap was an
+unfinished pull and nothing about what TK5 ships. That was the open question and
+it has the cheap answer rather than the interesting one. Both caches now hold
+**5,353**.
+
+`dlibpull.py` needed a fix first, and it is the **third instance of the same
+shape in two days**: `SYSTEMS` carried a literal `cred=None` with `creds.py`
+imported and never called, so the first read died on `NoneType.encode`. Resolved
+through `creds.py` now, like `macrosnap.py` before it.
+
+### The attribution, on the full set
+
+| `dlib` verdict | CE / 5,252 | TK5 / 3,988 | **TK5 / 5,353** |
+|---|---:|---:|---:|
+| identical | 1,213 | 1,084 | **1,221** |
+| holes | 575 | 506 | 576 |
+| length | 2,344 | 1,826 | 2,407 |
+| text | 575 | 355 | 591 |
+| mixed | 317 | 207 | 333 |
+| **no-pair** | 472 | 1,540 | **371** |
+
+**The trade is gone**: 1,221 against the chosen baseline over 5,353 pairs beats
+1,213 against the superseded one over 5,252. Correct right-hand side *and* more
+coverage than before the switch.
+
+**And the two instruments now agree exactly.** `ifox_compare.py` and the
+host-side `srcstate_vs_dlib.py` both report **1,221** — two programs, two code
+paths, one figure, once the baseline and the population match. Before this they
+reported 1,202 and 1,089 and neither was wrong; they were answering against
+different objects over different sets.
+
+### The scoreboard's second figure fell, and that is the honest direction
+
+**1,089 of 3,988 (27.3 %) became 1,221 of 5,353 (22.8 %).** The numerator grew
+by 132 and the denominator by 1,365, so the newly pulled modules are recovered
+at **9.7 %** against 27.3 % in the set that was already there.
+
+That is worth stating rather than explaining away: **the 3,988 were not a random
+sample.** They were cut for the TK5-vs-CE comparison, which needed modules with
+a source and an object on both systems, and that selection favoured modules that
+assemble. 22.8 % over everything the reference holds is the truer figure, and it
+is lower.
+
+`no-deck` is 196 — reference modules for which `as370` produced nothing at all.

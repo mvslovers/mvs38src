@@ -37,7 +37,7 @@ The assembled CSECT is byte-identical to IBM's, or it is not. Nothing else count
 | `SYS1.SVCLIB` | 59 | **59** | 100.0 % |
 | **total** | **5,485** | **1,422** | **25.9 %** |
 
-Measured a second time from the other side, on the host against TK5's distribution libraries: **1,089 of 3,988** — 27.3 %. Two different programs, two different populations, two machines.
+Measured a second time from the other side, on the host against TK5's distribution libraries: **1,221 of 5,353** — 22.8 %. Two different programs, two different populations, two machines.
 
 > **Not to be confused with the tool figure.** `as370` reproduces IFOX00's deck for **5,427 of 5,528** modules — that says our assembler is trustworthy, not that the source carries the object's maintenance level. A module is routinely in that 98 % and not in the table above, and that gap is what this project is about.
 

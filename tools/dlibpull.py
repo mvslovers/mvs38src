@@ -32,9 +32,19 @@ SYSTEMS = {
     # Credentials differ by system and that is not a detail; they come from .env is
     # MVS/CE and another for TK5; see .env.  The wrong pair returns 401, and
     # a 401 loop looks exactly like an outage from the outside.
-    "ce":  dict(host="mvsdev.lan", port=8082, cred=None, label="MVSCE-LAB"),
-    "tk5": dict(host="mvsdev.lan", port=8084, cred=None, label="MVSTK5-REF"),
+    # cred is resolved from .env through creds.py at use time, keyed on `label`.
+    # It used to be a literal None with creds.py imported and never called, so
+    # the first read died on `NoneType.encode`. Third instance of the same shape
+    # in two days -- macrosnap.py, then this -- so it is resolved here rather
+    # than restated: see docs/macro-path.md on rules stated in a second place.
+    "ce":  dict(host="mvsdev.lan", port=8082, label="MVSCE-LAB"),
+    "tk5": dict(host="mvsdev.lan", port=8084, label="MVSTK5-REF"),
 }
+def _credof(cfg):
+    """user:pass for a SYSTEMS entry, from .env via creds.py."""
+    return cfg.get("cred") or _cred(cfg["label"])
+
+
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 CACHE = os.path.join(ROOT, "work", "measurements", "dlib-bytes")
 
@@ -44,7 +54,7 @@ class Reader:
 
     def __init__(self, cfg):
         self.cfg, self.c = cfg, None
-        self.auth = "Basic " + base64.b64encode(cfg["cred"].encode()).decode()
+        self.auth = "Basic " + base64.b64encode(_credof(cfg).encode()).decode()
 
     def _conn(self):
         if self.c is None:
@@ -117,7 +127,7 @@ def main():
                   f"{el:.0f}s", flush=True)
 
     man = dict(system=a.system, label=cfg["label"],
-               endpoint=f"http://{cfg['host']}:{cfg['port']}", user=cfg["cred"].split(":")[0],
+               endpoint=f"http://{cfg['host']}:{cfg['port']}", user=_credof(cfg).split(":")[0],
                modules=len(todo), read=got, absent=miss,
                finished=time.strftime("%Y-%m-%dT%H:%M:%S"))
     os.makedirs(out, exist_ok=True)
