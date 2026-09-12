@@ -1948,9 +1948,15 @@ missing-macro list is only as good as the assembler that produced it.
 
 ### Waiting on other people
 
-- **Dave Kreiss' rebuilt install tape** with his built `PVTMAC`/`APVTMAC`. That
-  is the only route to settling the maintenance level of 319 of our macros, and
-  until it is settled every length difference has two explanations.
+- **Dave Kreiss — mail sent 2026-09-12**
+  ([`docs/mail-kreiss-2026-09-12.md`](docs/mail-kreiss-2026-09-12.md)). Three
+  asks, and **none of them blocks host-side work**:
+  * **the `./ DELETE` question** — SMP here refuses it, which costs 485 of his
+    SYSMODs and leaves 486 modules without their `DSK` markers;
+  * **five macro items**, the largest `TABLE` at 45 measurable `XTB*` modules;
+  * **his rebuilt `PVTMAC`/`APVTMAC`**, still the only route to settling the
+    maintenance level of 319 of our macros — until then every length difference
+    in those modules has two explanations.
 - **mainframed767** on an MVS/CE 3.0.1 — sent 2026-09-06, follow up in ~4 weeks.
 
 ### Controls that must not be dropped
