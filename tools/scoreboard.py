@@ -19,6 +19,7 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 TGT = os.path.join(ROOT, "work/build/reports-tk5-run6/RPTTGT")
 DLB = os.path.join(ROOT, "work/build/reports-tk5-run6/RPTDLB")
 HOST = os.path.join(ROOT, "work/measurements/src-states/ss-run7-vs-tk5.tsv")
+OVERLAY = os.path.join(ROOT, "work/measurements/src-states/ss-overlay-vs-tk5.tsv")
 START, END = "<!-- scoreboard:start -->", "<!-- scoreboard:end -->"
 
 
@@ -51,9 +52,9 @@ def per_library(prefix):
     return {lib: (n, n - bad.get(lib, 0)) for lib, n in built.items() if n}
 
 
-def host_identity():
+def host_identity(path=None):
     n = ident = 0
-    for row in open(HOST, encoding="utf-8"):
+    for row in open(path or HOST, encoding="utf-8"):
         f = row.rstrip("\n").split("\t")
         if len(f) < 3 or f[0] == "module":
             continue
@@ -66,6 +67,9 @@ def render():
     tgt = per_library(TGT)
     tb = sum(v[0] for v in tgt.values()); te = sum(v[1] for v in tgt.values())
     hi, hn = host_identity()
+    oi = on = None
+    if os.path.exists(OVERLAY):
+        oi, on = host_identity(OVERLAY)
     L = [START, "",
          "### How much of MVS 3.8j rebuilds byte-identical to what IBM shipped",
          "",
@@ -78,7 +82,13 @@ def render():
     L += [f"| **total** | **{tb:,}** | **{te:,}** | **{100*te/tb:.1f} %** |", "",
           f"Measured a second time from the other side, on the host against TK5's "
           f"distribution libraries: **{hi:,} of {hn:,}** — {100*hi/hn:.1f} %. Two "
-          f"different programs, two different populations, two machines.", "",
+          f"different programs, two different populations, two machines.", ""]
+    if oi is not None:
+        L += [f"**With the source recovered so far**, the same measurement reads "
+              f"**{oi:,} of {on:,}** — {100*oi/on:.1f} %. The first figure says how far "
+              f"Dave Kreiss got; this one says where the project is. Both are wanted, "
+              f"and the difference is exactly the number of modules in `src/`.", ""]
+    L += [
           "> **Not to be confused with the tool figure.** `as370` reproduces IFOX00's "
           "deck for **5,427 of 5,528** modules — that says our assembler is "
           "trustworthy, not that the source carries the object's maintenance level. "
