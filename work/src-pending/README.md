@@ -33,7 +33,32 @@ almost certainly made against that baseline.
 while Dave's archive text is identical against TK5. The repair was correct when
 it was made and the baseline moved underneath it on 2026-09-10.
 
-**It is not a candidate for `src/` at all** — the archive already satisfies the
-criterion. It is kept here as the record of a retracted recovery, and because
-the message number may have been changed for a reason that is not
-byte-identity. Deciding that is Mike's, not this file's.
+The change is line 49 of 54, a message table:
+
+```
+archive  M20D0    IKJTSMSG  ('IKJ56589I BROADCAST DATA SET INITIALIZED AND SYNCHX
+ours     M20D0    IKJTSMSG  ('IKJ55083I BROADCAST DATA SET INITIALIZED AND SYNCHX
+```
+
+Its neighbours are `IKJ55081I`, `IKJ55082I`, then this one, then `IKJ56593I`.
+Dave's `IKJ56589I` breaks the local run where `IKJ55083I` would continue it, so
+the change looks exactly like the repair of a transcription slip. **It is not
+one.** The two systems carry different numbers here: TK5's object says
+`IKJ56589I`, MVS/CE's says `IKJ55083I`, and the three differing bytes are
+`6`/`5`, `5`/`0`, `9`/`3`.
+
+**And this module is one of the seven that chose the baseline.**
+[`../../docs/deck-vs-tk5-ce.md`](../../docs/deck-vs-tk5-ce.md) names it in the
+table *"Dave's source is byte-identical to a maintained object the other system
+does not carry at all"* — seven on TK5, zero the other way, which is the lineage
+argument for TK5 stated as a measurement. So the repair moved the *evidence for
+the decision* toward the rejected baseline.
+
+**It is not a candidate for `src/` at all**: the archive already satisfies the
+criterion, so `IKJRBBCM` is recovered and always was. Nothing needs to change
+for it to count.
+
+**Kept rather than deleted**, and not out of caution — the variant is itself a
+measurement. It establishes that MVS/CE's object carries `IKJ55083I` where TK5's
+carries `IKJ56589I`, which is a fact about the two systems worth having written
+down with the bytes that prove it.
