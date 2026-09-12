@@ -126,5 +126,51 @@ succeed"*, 16 modules of it. **Whether this project writes such lines is a
 decision about what the deliverable is**, not a technique to be applied because
 it works.
 
-Until that is decided, `IKJEFLLM` sits here: one real repair in it, 14 bytes
-that byte-identity could buy and meaning could not.
+**Mike decided, the same day: option A, the way Dave does it.** So the bytes are
+transcribed and marked, and `IKJEFLLM` is finished — it moved to
+[`../../src/AOST4/IKJEFLLM.ASM`](../../src/AOST4/IKJEFLLM.ASM) and
+`tools/srccheck.py` passes over it.
+
+Dave's marker, copied exactly rather than reinvented: the text
+`!!! SOURCE COMPARE FIX !!!` in **columns 46–71**, which is where he puts it in
+`BLSVCVT2` and `AMDSYS06`. (`ICFBDF00`'s rows of `!!!` are IBM's own comment
+banners and not a marker — worth checking before imitating.)
+
+Nine lines carry it:
+
+```
+         DC    X'F01610C9D2D1'               !!! SOURCE COMPARE FIX !!!
+         DC    X'F2'                         !!! SOURCE COMPARE FIX !!!
+         DC    X'A0'                         !!! SOURCE COMPARE FIX !!!
+         DC    X'F0'                         !!! SOURCE COMPARE FIX !!!
+         DC    X'E0'                         !!! SOURCE COMPARE FIX !!!
+         DC    X'F0'                         !!! SOURCE COMPARE FIX !!!
+         DC    X'68'                         !!! SOURCE COMPARE FIX !!!
+         DC    X'E0'                         !!! SOURCE COMPARE FIX !!!
+         DC    X'34'                         !!! SOURCE COMPARE FIX !!!
+```
+
+**`verdict=identical`, text 0, holes 0, length 516/516.** The module is
+recovered, and nine of its lines say plainly that a value in them came from the
+object rather than from understanding. That is the deal option A makes, and the
+marker is what keeps it honest: `grep '!!!'` finds every one.
+
+### `IKJEHREN` is still here, and its holes are a different shape
+
+Six bytes in three clusters, and they are **not** `DS CL1` fillers:
+
+| section | offset | bytes | IBM |
+|---|---|---:|---|
+| `IKJEHRN2` | `0x04de` | 2 | `c5a0` |
+| `IKJEHRN2` | `0x0fea` | 2 | `c2b4` |
+| `IKJEHRN4` | `0x01b6` | 2 | `40c4` |
+
+Confirmed against the deck's own TXT coverage: two 2-byte gaps mid-section in
+`IKJEHRN2` (at load addresses `0x8d6` and `0x13e2`, section base `0x3f8`) and
+one in `IKJEHRN4`. So they are alignment gaps inside code rather than declared
+fillers, and the statement that produces each has not been located — the
+listing's offsets are section-relative and the naive mapping put them on
+instructions, which cannot be right for a byte the deck does not cover.
+
+The recipe applies once the three statements are found. That is the next step on
+this module, and it is locating them, not deciding anything.
