@@ -55,11 +55,42 @@ The scoreboard is at the head of [`README.md`](README.md) and is **generated** �
 Every one of the 56 in `src/` contributes exactly +1 to the overlay figure:
 1,221 + 56 = 1,277. That is the cheapest possible sanity check and it holds.
 
+### 🔒 Dave Kreiss answered on 2026-09-12, and two of our decisions are reversed
+
+Read [`docs/kreiss-reply-2026-09-12.md`](docs/kreiss-reply-2026-09-12.md) before
+anything else. His mail was written before he saw ours, so it answers the
+previous one, and it lands on exactly the two places we were most confident.
+
+1. **Compare against TARGET, not DLIB.** The DLIBs are back level — not all PTFs
+   were ACCEPTed — and **both** sides are linkage-editor output, which refutes
+   our stated reason for picking DLIBs. No measurement is invalidated; what
+   changes is what they mean. **Test, not argument:** pull TK5's targets with
+   `dlibpull.py` and score the same source against both.
+2. **`MAINT05Z` was required, and skipping it is the likely cause of the
+   `./ DELETE` failures.** It copies *his modified SMP* to `SYS1.LINKLIB`, and
+   his SMP *"manages the source side as well as the object side"* — which is
+   what `./ DELETE` is. Our two-sided case stands as a measurement and its
+   meaning flips: stock SMP refuses `./ DELETE`, which is a fact about **which
+   SMP was asked**. Back up `MVSTK5-BLD`, run `MAINT05Z`, then the chain.
+3. He offers **a zip of all built source and macro libraries** — better than the
+   tape, and it would close the 319 mirror macros in one step.
+4. What he says he needs is **a tool that says what changed** between
+   disassembly and assembly, not a faster loop. `tools/where.py` is that, and he
+   does not know it exists. Worth a mail with an example.
+
+One thing he is right about costs us nothing: he names the **target** source
+library where we extracted the **distribution** one. Measured over 25 random
+modules, columns 1–72: identical, 25 of 25, both 5,529 members. A fresh install
+ACCEPTs everything and the two are in sync; it is his working system that
+diverges.
+
 ### Decisions already taken — do not re-open these
 
-1. **The object baseline is TK5.** 2026-09-10. `ifox_compare.py` scored against
-   MVS/CE until 2026-09-12 and now does not; `IFOX_DLIB=ce` reproduces the old
-   figures ([`docs/macro-path.md`](docs/macro-path.md)).
+1. **The object baseline is TK5** — *which system*. 2026-09-10.
+   `ifox_compare.py` scored against MVS/CE until 2026-09-12 and now does not;
+   `IFOX_DLIB=ce` reproduces the old figures
+   ([`docs/macro-path.md`](docs/macro-path.md)). **Whether DLIB or Target within
+   TK5 is now open** — see the block above; it was never asked.
 2. **`src/` means finished** — every module there is byte-identical to its TK5
    member, and `tools/srccheck.py` asserts it. Work in progress goes to
    [`work/src-pending/`](work/src-pending/README.md).
