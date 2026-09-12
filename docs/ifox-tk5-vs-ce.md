@@ -310,3 +310,52 @@ this buys is the right to expect the corpus run to agree rather than to fear it
 now needs only the macro carry-across
 ([`macro-tk5-vs-ce.md`](macro-tk5-vs-ce.md): TK5's own libraries would move 68
 modules), because the work data sets and `PVTMAC` are in place.
+
+## The corpus run — 2026-09-12, and stage 1 is answered
+
+All 5,528 modules assembled by TK5's IFOX00 on the pinned oracle, against the
+5,528 decks MVS/CE's IFOX00 cut on 2026-09-07. Same source, **same macros** —
+MVS/CE's six libraries carried across as `IBMUSER.*` — columns 1–72, `END` card
+excluded. 192 minutes, 5,528 decks, 0 misfiled.
+
+| | |
+|---|---:|
+| modules compared | 5,528 |
+| identical on raw bytes | 4,802 |
+| **identical once date and time are masked** | **5,525 — 99.9 %** |
+| **modules with a differing RLD card** | **0** |
+| modules with a differing ESD card | 1 |
+| real differences | **3** |
+
+**TK5's IFOX00 and MVS/CE's IFOX00 are the same assembler for this corpus.**
+115 USERMODs against 37 do not show in the object code. The 726 modules that
+differ on raw bytes differ only in `&SYSDATE`/`&SYSTIME` and the `END` card's
+Julian day.
+
+### The three, and none of them is an instruction
+
+| module | what differs |
+|---|---|
+| `IBCDASDI` | one non-ESD/TXT/RLD card, five trailing bytes: content on MVS/CE, blanks on TK5 |
+| `ICAPRTBL` | the same shape, ten trailing bytes |
+| `IEAVSETS` | **three ESD cards — the same external symbols in a different order** |
+
+`IBCDASDI` and `ICAPRTBL` are standalone utilities whose decks carry card types
+outside the four normal ones; both are already known oddities — `IBCDASDI` is one
+of the four modules IFOX00 flags and `as370` does not. `IEAVSETS` is the
+interesting one: `IEAVESSS`, `IGC07902`, `IGC07903`, `IEAVSSNQ`, `IEAVEMS0`,
+`IEA0DS`, `IGC044R2` appear on both sides with the same addresses and the same
+lengths, **in a different sequence**. That is an ordering difference in the ESD,
+not a code difference, and it is the one case here that deserves a look of its
+own.
+
+Per-module list: [`../work/measurements/tk5ref-differences.txt`](../work/measurements/tk5ref-differences.txt).
+
+### What follows
+
+- **Stage 4 is unblocked and cheap.** If the assemblers agree, only the
+  right-hand side of the comparison moves, and the recorded 5,528 decks stand as
+  the reference. Re-cutting is not required.
+- **The stamp table still has to move with any re-cut.** Nothing here changes
+  that: 726 of 5,528 decks differ by the clock alone, and 21 of the 26
+  stamp-dependent modules are `IFNX*`/`IFOX*`.
