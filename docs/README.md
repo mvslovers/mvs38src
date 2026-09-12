@@ -105,4 +105,5 @@ The project measures two different things and they must never be quoted as one.
 | | |
 |---|---|
 | [`runbook.md`](runbook.md) | **how things actually work.** Read before anything touches a running MVS |
+| [`../tools/scoreboard.py`](../tools/scoreboard.py) | regenerates the scoreboard at the head of the README. **Run it after every build comparison**; `--check` fails if it is stale |
 | [`../tools/systems.json`](../tools/systems.json) | which instance may be submitted to, and which is the oracle. Machine-readable, and its comments explain why |

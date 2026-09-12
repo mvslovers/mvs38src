@@ -20,6 +20,29 @@ byte-identical to its counterpart in the distribution library, or it is not.
 > [`docs/dlib-distance.md`](docs/dlib-distance.md). Reading it across TK5's
 > DLIBs would turn the goal into a measured one.
 
+<!-- scoreboard:start -->
+
+### How much of MVS 3.8j rebuilds byte-identical to what IBM shipped
+
+The assembled CSECT is byte-identical to IBM's, or it is not. Nothing else counts.
+
+| | CSECTs built | **identical to IBM's** | |
+|---|---:|---:|---:|
+| `SYS1.LPALIB` | 2,343 | **290** | 12.4 % |
+| `SYS1.LINKLIB` | 1,721 | **468** | 27.2 % |
+| `SYS1.CMDLIB` | 753 | **229** | 30.4 % |
+| `SYS1.NUCLEUS` | 354 | **334** | 94.4 % |
+| `SYS1.TELCMLIB` | 192 | **32** | 16.7 % |
+| `SYS1.VTAMLIB` | 63 | **10** | 15.9 % |
+| `SYS1.SVCLIB` | 59 | **59** | 100.0 % |
+| **total** | **5,485** | **1,422** | **25.9 %** |
+
+Measured a second time from the other side, on the host against TK5's distribution libraries: **1,089 of 3,988** — 27.3 %. Two different programs, two different populations, two machines.
+
+> **Not to be confused with the tool figure.** `as370` reproduces IFOX00's deck for **5,427 of 5,528** modules — that says our assembler is trustworthy, not that the source carries the object's maintenance level. A module is routinely in that 98 % and not in the table above, and that gap is what this project is about.
+
+<!-- scoreboard:end -->
+
 Built on **Dave Kreiss'** *Build MVS from Source* — his reconstructed source,
 his `DSK*` PTFs, his build jobstreams and his utilities. He answered on
 2026-09-06 that this work may be released as **freeware, with no copyright and
