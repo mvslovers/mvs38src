@@ -11,14 +11,14 @@ the way; this continues his work rather than restarting it.
 Success is machine-decidable and nothing else counts: the assembled CSECT is
 byte-identical to its counterpart in the distribution library, or it is not.
 
-> **`8505` is the target as stated by Mike on 2026-09-11, and it is not yet
-> measured.** Nothing in this repository establishes which maintenance level
-> TK5's distribution libraries actually carry, so the number is a goal and not a
-> baseline. The route to checking it is machine-readable and already described:
-> each load module's IDR data carries a per-module maintenance identifier — PTF
-> numbers such as `UZ79011` and IBM `RSI` stamps — see
-> [`docs/dlib-distance.md`](docs/dlib-distance.md). Reading it across TK5's
-> DLIBs would turn the goal into a measured one.
+> **`8505` is measured, as of 2026-09-12, and it holds for 98.1 % of the
+> corpus.** The IDR records in all 3,988 distribution-library members were read —
+> 3,988 of 3,988 readable — and **3,912 carry a link/translate date of 1985 or
+> earlier.** The remaining **76 carry service after 1985**, running to 1990 and
+> concentrated in TSO (`IKJ*`, 33 of the 76). So the goal is the right
+> description with a named exception, and a tree that reached 8505 everywhere
+> would still miss those 76.
+> [`docs/maintenance-level.md`](docs/maintenance-level.md).
 
 <!-- scoreboard:start -->
 

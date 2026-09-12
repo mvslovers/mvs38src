@@ -81,6 +81,7 @@ The project measures two different things and they must never be quoted as one.
 |---|---|
 | [`deck-vs-tk5-ce.md`](deck-vs-tk5-ce.md) | **the measurement that chose TK5.** 15 to 1 where both systems carry maintenance |
 | [`dlib-distance-tk5-ce.md`](dlib-distance-tk5-ce.md) | how far apart the two object bases are; neither is a superset |
+| [`maintenance-level.md`](maintenance-level.md) | **what level TK5's DLIBs actually carry.** 98.1 % at 1985 or earlier, and a 76-module tail to 1990 that is 43 % TSO |
 | [`dlib-distance.md`](dlib-distance.md) | how far Dave's source is from the object — and the IDR route to a per-module maintenance level |
 | [`smp-tk5-vs-ce.md`](smp-tk5-vs-ce.md) | SMP inventory, TK5 against MVS/CE |
 | [`tk5-ptfs-and-usermods.md`](tk5-ptfs-and-usermods.md) | what TK5 carries that MVS/CE does not |
