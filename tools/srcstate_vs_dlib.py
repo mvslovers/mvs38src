@@ -17,6 +17,7 @@ population is exactly what the reference actually holds.
 import argparse, collections, concurrent.futures, json, os, subprocess, sys
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+_BASES = {"tk5": ("dlib-bytes", "tk5"), "ce": ("dlib-bytes", "ce")}
 TK5 = os.path.join(ROOT, "work", "measurements", "dlib-bytes", "tk5")
 CMPLMD = os.path.join(ROOT, "work", "src-states", "bin", "cmplmd370")
 
@@ -74,8 +75,13 @@ def main():
     ap.add_argument("--decks", required=True, help="obj_<label> directory")
     ap.add_argument("--out", required=True)
     ap.add_argument("--jobs", type=int, default=8)
+    ap.add_argument("--base", default="tk5", choices=sorted(_BASES),
+                    help="which object baseline. tk5 is the project's since "
+                         "2026-09-10; ce is what ifox_compare.py still uses.")
     a = ap.parse_args()
 
+    global TK5
+    TK5 = os.path.join(ROOT, "work", "measurements", *_BASES[a.base])
     refs, dupes = reference_map()
     for mod, l1, l2 in dupes:
         print(f"note: {mod} is in both {l1} and {l2}; scored against {l2}",
