@@ -41,7 +41,7 @@ Measured a second time from the other side, on the host against TK5's distributi
 
 **With the source recovered so far**, the same measurement reads **1,277 of 5,353** — 23.9 %. The first figure says how far Dave Kreiss got; this one says where the project is. Both are wanted, and the difference is exactly the number of modules in `src/`.
 
-> **Not to be confused with the tool figure.** `as370` reproduces IFOX00's deck for **5,427 of 5,528** modules — that says our assembler is trustworthy, not that the source carries the object's maintenance level. A module is routinely in that 98 % and not in the table above, and that gap is what this project is about.
+> **Not to be confused with the tool figure.** `as370` reproduces IFOX00's deck for **5,471 of 5,528** modules — that says our assembler is trustworthy, not that the source carries the object's maintenance level. A module is routinely in that 98 % and not in the table above, and that gap is what this project is about.
 
 <!-- scoreboard:end -->
 

@@ -90,7 +90,7 @@ def render():
               f"and the difference is exactly the number of modules in `src/`.", ""]
     L += [
           "> **Not to be confused with the tool figure.** `as370` reproduces IFOX00's "
-          "deck for **5,427 of 5,528** modules — that says our assembler is "
+          "deck for **5,471 of 5,528** modules — that says our assembler is "
           "trustworthy, not that the source carries the object's maintenance level. "
           "A module is routinely in that 98 % and not in the table above, and that "
           "gap is what this project is about.", "", END]
