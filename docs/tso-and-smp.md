@@ -203,7 +203,31 @@ So IBM assembled this module against a `STAX` that neither system now ships.
 That is a macro-provenance case, and it belongs with the 319 mirror macros
 waiting on Dave Kreiss' tape — not with the transcription work.
 
-### And the boundary: `IKJEFE16`
+### The boundary that was not one — `IKJEFE16`, retracted
+
+> **This section claimed option A would break `IKJEFE16`. It would not, and Mike
+> caught the flaw in one question: would that not mean IBM's own module is
+> already defective?** It would, and IBM shipping a module that never returns is
+> not credible — so the assumption was wrong, not IBM. Kept below with the
+> correction, because the reasoning error is the useful part.
+>
+> **`@EL01` appears exactly once in the whole listing: at its own definition.**
+> Nothing branches to it. `IKJEFE16` is a message table — `PROC
+> OPTIONS(DONTSAVE,CODEREG(0),NOSAVEAREA)`, and its body is 17 `DC C'...'`
+> constants — and the `BCR 15,@E` is a PL/S epilogue on a module nothing calls
+> into. It is the last two bytes of a data module and **it is never executed.**
+>
+> So IBM's `1859` there is not IBM's code either. Replacing the dead epilogue
+> with `@EL01 DC X'1859'` makes the module **identical**, and breaks nothing,
+> because there was nothing to break.
+>
+> **What survives of the distinction:** filling a gap is safe, and overwriting an
+> instruction *that is executed* would not be. The error was asserting the second
+> case without checking whether the instruction is reachable — one grep of the
+> listing answers it, and it is now the check to run before calling anything a
+> boundary.
+
+### The original claim, for the record: `IKJEFE16`
 
 Two bytes at `0x12e`: we emit `07FE`, IBM has `1859`. `07FE` is
 `BCR 15,14` — **the module's return instruction**. `1859` is `LR 5,9`.
