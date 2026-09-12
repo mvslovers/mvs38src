@@ -62,3 +62,69 @@ for it to count.
 measurement. It establishes that MVS/CE's object carries `IKJ55083I` where TK5's
 carries `IKJ56589I`, which is a fact about the two systems worth having written
 down with the bytes that prove it.
+
+---
+
+## `AOST4/IKJEFLLM` — one mechanism, and then the boundary
+
+Added 2026-09-12. The second TSO case, one differing text byte, and it is a
+better find than `IKJEHREN` because the table states its own rule.
+
+### The rule is in the data
+
+`IKJEFLLM` is a message-descriptor table: `AL2(length)`, `H'0'`, `CLn'text'`,
+sometimes a `DS CL1`. Across all nine descriptors:
+
+| | `AL2` | text | `AL2` − text |
+|---|---:|---|---:|
+| `STRTMSG1` | 11 | `CL7` | 4 |
+| `STRTMSG2` `STRTMSG3` | 12 | `CL8` | 4 |
+| `STRTMSG4` | 22 | `CL18` | 4 |
+| **`STRTMSG5`** | **7** | **`CL3`** | **4** |
+| `START1D` | 8 | `CL4` | 4 |
+| `START2D` | 9 | `CL5` | 4 |
+| `START3D` `START4D` | 10 | `CL6` | 4 |
+
+**`AL2` = text + 4, nine times out of nine.** So `AL2(7)` with `CL3` obeys the
+rule — Dave's arithmetic is not wrong. IBM's object has **8** at that offset,
+which under the same rule means IBM's text was `CL4`.
+
+And that predicts a second difference: with `CL4` the `DS CL1` filler at `0x49`
+disappears, and IBM's object carries `X'40'` — a blank — exactly there. **One
+change, two differences, and the second was predicted before it was checked.**
+
+```
+STRTMSG5 DC    AL2(8)
+TEXT5    DC    CL4'    '        (was CL3'   ' plus DS CL1)
+```
+
+Measured: text `1 → 0`, holes `15 → 14`, section length unchanged at 516.
+
+### And then it stops, which is the part worth writing down
+
+The remaining 14 hole bytes are one mechanism and it is **not** the one above:
+
+| | IBM's bytes |
+|---|---|
+| `0x02`, 6 bytes — the `@DATA DS 0H` prolog gap | `f0 16 10 c9 d2 d1` |
+| `0x13` `0x5b` `0x7b` `0xc7` `0x103` `0x18b` `0x1e3` `0x1f5` — eight `DS CL1` | `f2` `a0` `f0` `e0` `f0` `68` `e0` `34` |
+
+Controlled the way [`ds-holes.md`](../../docs/ds-holes.md) requires: **9 of 9
+clusters carry identical bytes on TK5 and MVS/CE**, so they are real content and
+not linkage-editor residue.
+
+But `X'40'` at `0x49` was recoverable *because the table's own rule said what
+belonged there*. `a0`, `e0`, `68`, `34` are not blanks, not printable, and no
+rule in this module predicts them. They can only be obtained by **copying them
+out of the object**.
+
+**That is the boundary, and crossing it is a different activity.** A source line
+reading `DC X'A0'` because the object has `A0` there reproduces the bytes and
+recovers no meaning — it is disassembly wearing source clothes. Dave Kreiss
+marked exactly this with `!!!`: *"a workaround that makes the object comparison
+succeed"*, 16 modules of it. **Whether this project writes such lines is a
+decision about what the deliverable is**, not a technique to be applied because
+it works.
+
+Until that is decided, `IKJEFLLM` sits here: one real repair in it, 14 bytes
+that byte-identity could buy and meaning could not.
