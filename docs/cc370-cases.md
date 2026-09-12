@@ -253,6 +253,36 @@ agree on **4,590**.
 | `BLSR3270` | 156/156 | Y | 88 | 0 ESD | 0 / **4** |
 | `HMASMTMD` | 275/274 | **N** | 270 | 4 ESD | 0 / 0 |
 
+> **Corrected 2026-09-12, later the same day: two of the five were not cases,
+> and the defect was in this tool.** `IFNX2A` and `IFNX4M` carry an eyecatcher
+> built from `&SYSTIME`. The gate pins one `ASMTIME` across all 5,528 modules
+> while IFOX00's runs carried real clock times, so four EBCDIC digits differ
+> inside the module's own text and a module that assembles perfectly reads as a
+> case. Masking the `END` card is not enough — an eyecatcher is not on the `END`
+> card.
+>
+> `case_list.py` now re-assembles every candidate with **the clock its own
+> IFOX00 job ran at**, from `state.tsv`'s `start` column, which is the figure
+> `ifox_compare.py` already used on a path this tool was not on. `IFNX2A` at
+> `03.38` and `IFNX4M` at `03.31` both fall out, reproducing cc370's finding.
+>
+> **The class is structural, not a handful of unlucky modules.** cc370 swept it:
+> 38 of the 95 differing decks become byte-identical once re-stamped, all 38
+> carry julian `26250`, and **those 38 jobs started at 29 distinct times.** No
+> choice of pin can match more than a few of them by construction, so the
+> per-module re-stamp is the only correct answer rather than a refinement.
+>
+> **The list is three:** `IFFAHA16` (fixed, cc370#367), `BLSR3270` and
+> `HMASMTMD`.
+>
+> And while fixing it, a second inequality surfaced: `gate.sh` passes **ten**
+> `-I` directories and `ifox_compare.py` **eight** — it is missing `erep-set`
+> and `amaclib-live`. `gate.sh`'s own comment explains why that matters. This
+> tool now parses `MACFLAGS` out of `gate.sh` rather than restating it, so a
+> tool judging the gate's decks cannot drift from the gate's path. **The
+> discrepancy in `ifox_compare.py` is left as found and not fixed here** — it
+> belongs to a pipeline another session is mid-run on.
+
 Ordered smallest-first on purpose: a two-card difference in a module nobody has
 examined is where a mechanism gets found. That is how the `^`/`¬` code-page
 substitution turned up and recovered ten modules at once, and how `IGARPT01`'s
