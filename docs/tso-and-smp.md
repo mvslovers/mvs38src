@@ -161,3 +161,62 @@ beyond the object's own resolution.
 `holes`, because six bytes in two other CSECTs are still uninitialised where
 IBM's object carries content — and [`ds-holes.md`](ds-holes.md) established that
 those are real. One of eight CSECTs closed, and the scoreboard will not move.
+
+---
+
+## Four more, three recovered, and a boundary inside option A — 2026-09-12
+
+`tools/where.py` turns the offset-to-statement hunt into a command, so these
+went quickly. **The 35 same-length TSO cases are not one class**, and that is the
+finding:
+
+| shape | modules | outcome |
+|---|---|---|
+| a declared filler (`DS CL1`) in a data table | `IKJEFLLM` | **recovered** |
+| a per-entry byte missing from a reconstructed table | `IKJEGSTA` | **recovered** |
+| an alignment gap (`DC 0F'0'`) in a data area | `IKJEFF02` `IKJEFF50` | **recovered** |
+| an alignment gap inside a **macro expansion** | `IKJEHREN` | not reachable from the module |
+| a **different instruction** | `IKJEFE16` | option A would break it |
+
+`src/` is now **38 modules, `srccheck.py` exits 0.**
+
+### The three that worked
+
+`IKJEGSTA` is the clearest. Its command-name table is Dave's own reconstruction
+— the lines carry `DSKC128` in column 65 — and each entry is `X'nn'` length plus
+the name. `ASSIGN`'s entry ends at `0x6c0`, so `DEFERNM DC 0H'0'` pads `0x6c1`,
+and IBM's object has `X'20'` there; the same one byte after `TEST` is `X'59'`.
+Two marked `DC X'..'` lines and the module is identical.
+
+`IKJEFF02` and `IKJEFF50` are one 2-byte `DC 0F'0'` alignment gap each,
+`X'F321'` and `X'5910'`. One marked line apiece.
+
+### `IKJEHREN` cannot be fixed in its own source
+
+Its remaining gap at `0x8d6` sits **inside the `STAX DEFER=NO` expansion**,
+between the generated `B 20(0,1)` and `IHB0045 DS 0F`. There is no source line
+to put a `DC` in front of — the statement is macro-generated.
+
+And it is not a macro *level* problem either: TK5's `SYS1.MACLIB(STAX)` and
+MVS/CE's `ATSOMAC(STAX)` are **byte-identical over columns 1–72**, same sha256.
+So IBM assembled this module against a `STAX` that neither system now ships.
+That is a macro-provenance case, and it belongs with the 319 mirror macros
+waiting on Dave Kreiss' tape — not with the transcription work.
+
+### And the boundary: `IKJEFE16`
+
+Two bytes at `0x12e`: we emit `07FE`, IBM has `1859`. `07FE` is
+`BCR 15,14` — **the module's return instruction**. `1859` is `LR 5,9`.
+
+Option A says: write `DC X'1859'`. That produces byte-identity and **a module
+that no longer returns.** The cost is not cosmetic here, and it is a distinction
+option A was chosen without being shown:
+
+- filling an **alignment gap or a declared filler** adds bytes the code never
+  executes. Byte-identity gained, nothing broken.
+- overwriting an **instruction** replaces executable code with data. Byte
+  identity gained, the module broken.
+
+`IKJEFE16` is left alone. Whether the second kind is also acceptable is a
+question that has not been asked yet, and it should be asked with this example
+rather than in the abstract.
