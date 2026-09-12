@@ -244,3 +244,63 @@ option A was chosen without being shown:
 `IKJEFE16` is left alone. Whether the second kind is also acceptable is a
 question that has not been asked yet, and it should be asked with this example
 rather than in the abstract.
+
+---
+
+## Automated, and the control earned its keep — 2026-09-12
+
+`tools/fillgaps.py` does what the five hand cases did: find the statement that
+owns each gap, put the object's bytes there with Dave's marker, **measure**, and
+write to `src/` only when `cmplmd370` calls the module identical. The guard is
+the measurement rather than the logic, so a wrong offset-to-statement mapping
+cannot deposit a wrong file — it can only fail to produce identity.
+
+### The control found two real bugs before a single module was written
+
+Run first against the five already done by hand, where the answer was known:
+
+1. **`DS CL1` must be replaced, not preceded.** It reserves a byte; inserting
+   one in front of it makes the section two bytes longer. The symptom was
+   `IKJEFLLM` coming back `text=0 holes=0` **and not identical** — a length
+   change and nothing else.
+2. **The owning statement is the greatest address at or below the cluster**, not
+   the last row in listing order. Taking the last row put `IKJEGSTA`'s owner on
+   an `SDWA` macro expansion in a different part of the module.
+
+A third followed from the fix: an `ALIGN` statement carries pad bytes in the
+listing — as370 prints `00` on the `DC 0H'0'` that pads an odd address — so pad
+bytes must not disqualify it, while *real* bytes must. `IKJEFE16`'s dead
+epilogue sits at the same address as a `DS 0H`, and preferring the `DS` inserted
+two bytes and grew the section.
+
+After that the control reproduces three of the five exactly — `IKJEGSTA` 2
+lines, `IKJEFF50` 1, `IKJEFF02` 1 — and correctly declines the other two:
+`IKJEFLLM` needs the `AL2`/`CL4` reasoning no tool can derive, and `IKJEFE16`
+needs a reachability check before an instruction is overwritten.
+
+### 17 of 60
+
+| | modules |
+|---|---:|
+| **recovered** | **17** |
+| a real instruction differs — a text difference, hand work | 25 |
+| the gap is inside a macro expansion | 9 |
+| the fix applied and was not enough | 6 |
+| the owner is a `CSECT` or `ORG`, not a filler | 3 |
+
+`src/` is **56 modules**, `srccheck.py` exits 0, all 56 hold 80-column records
+with CRLF and no bare LF, and **152 lines across 22 modules carry the marker.**
+
+`IKJEGMSG` took **100 marked lines** — a message table almost entirely made of
+alignment fillers. `IKJEFA31` took 16. Thirteen took one line each.
+
+### What the 43 say about where the work goes next
+
+**25 are text differences at a real instruction or constant** — the largest
+group, and none of them is fillable by definition. Those need the `IKJEFE16`
+treatment one at a time: find the statement, work out what IBM had, check
+reachability before overwriting anything.
+
+**9 are macro expansions**, which is `IKJEHREN`'s class: not reachable from the
+module's own source at all, and pointing at macro provenance rather than at the
+module.
