@@ -30,8 +30,23 @@
 # disappears is a timeout until proved otherwise, and the module was flapping
 # against MY alarm, not failing.  400 s is ten times the alone-time of the
 # slowest module that finishes.
+# 2026-09-13: the pinned ASMDATE is the WRONG date for a module whose eyecatcher
+# carries the day it was assembled, and PL/S output does that routinely. 691 of
+# 5,538 decks contain the pinned stamp `09/07/26`; for 36 of them, assembling with
+# the date IBM's own object carries makes the module byte-identical -- the source
+# was already right and the instrument was not.
+#
+# ASMDATES names a `module<TAB>mm/dd/yy` table (tools/asmdate_sweep.py writes it,
+# by assembling against every date the object contains and keeping the one that
+# exits 0). A module not in the table keeps the pinned stamp, so a missing or
+# empty table changes nothing.
 m=$1
-perl -e 'alarm 400; exec @ARGV' "$BIN" $MACFLAGS -o "$OUTDIR/$m.obj" "$SRC/$m.ASM" >/dev/null 2>&1
+d=$ASMDATE
+if [ -n "$ASMDATES" ] && [ -f "$ASMDATES" ]; then
+  found=$(awk -F'\t' -v k="$m" '$1==k {print $2; exit}' "$ASMDATES")
+  [ -n "$found" ] && d=$found
+fi
+ASMDATE=$d perl -e 'alarm 400; exec @ARGV' "$BIN" $MACFLAGS -o "$OUTDIR/$m.obj" "$SRC/$m.ASM" >/dev/null 2>&1
 rc=$?
 if [ -f "$OUTDIR/$m.obj" ]; then
   h=$(shasum -a 256 "$OUTDIR/$m.obj" | cut -d' ' -f1)

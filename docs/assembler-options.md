@@ -175,3 +175,52 @@ listing as a bug.
 - **The TSO options were not exercised as TSO options.** `NUM`, `STMT` and
   `TERM` were submitted as batch `PARM` values and accepted; their `SYSTERM`
   behaviour was not observed.
+
+---
+
+## 2026-09-13: the pinned `ASMDATE` was marking 36 correct modules as wrong
+
+`gate.sh` pins `ASMDATE=09/07/26` so a run is reproducible, and the comment beside
+it says *"381 decks carry it"*. Carrying it is the problem. PL/S output routinely
+stamps the assembly date into the module's own eyecatcher, so for those modules the
+pinned date is simply **the wrong date**, and the module is reported as differing
+from IBM's object over a value that was never in its source.
+
+`BLSUSTAE` is the clean case — four differing bytes, every one a digit:
+
+```
+ours   f9 . f7 . f2f6   ->  0 9 / 0 7 / 2 6
+IBM    f3 . f1 . f7f8   ->  0 3 / 0 1 / 7 8
+```
+
+Our source is right. IBM assembled it on **03/01/78**.
+
+### How the date is decided, and why not by arithmetic
+
+The stamp's position is known in the deck, the deck is card images,
+`cmplmd370`'s clusters are section-relative, and the bound member has a third
+layout. Mapping between those is what `where.py` got wrong once already. So
+`tools/asmdate_sweep.py` does not compute an offset: it collects every
+date-shaped byte sequence in the module's own object, assembles against each, and
+keeps the one `cmplmd370` exits 0 on. 691 decks carry the pinned stamp, 15,095
+assemblies, and **36 modules come back identical.**
+
+`gate.sh` takes `ASMDATES`, a `module<TAB>mm/dd/yy` table, and `gate-worker.sh`
+applies it per module. A module not in the table keeps the pin, so a missing table
+changes nothing.
+
+**1,445 -> 1,474 under the chosen baseline, `rc 0` unchanged at 4,590, control 0
+disagreements.**
+
+### This is not a source repair and must not be counted as one
+
+Nothing was written to `src/`. The 36 modules were already correct; the instrument
+was reporting its own pinned constant as their defect. The same is true of the
+`ASMTIME` caveat already in `TODO.md` — one pinned time cannot match 38 modules
+whose jobs ran at 29 distinct times — and that one is still open, because time is
+harder: it is not in the object in a form this method can read.
+
+**What is not claimed:** that 36 is the whole class. 691 decks carry the stamp and
+655 did not come back identical, because a wrong date is rarely a module's *only*
+difference. Every one of those 655 is now one difference closer, and they are in
+`worklist.py`'s ranking with the date no longer on the list.

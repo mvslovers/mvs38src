@@ -43,7 +43,10 @@ MACFLAGS="-I $M/mvsce-2.1.4-dlib/AMACLIB -I $M/mvsce-2.1.4-dlib/AMODGEN -I $M/mv
 OUTDIR="$PWD/obj_$LABEL"
 rm -rf "$OUTDIR"; mkdir -p "$OUTDIR"
 : ${ASMDATE:=09/07/26}; : ${ASMTIME:=12.00}   # pin the stamp: 381 decks carry it
-export BIN OUTDIR MACFLAGS SRC ASMDATE ASMTIME
+# Per-module override, because one pinned date cannot be right for every module
+# whose eyecatcher carries its own. Empty or missing = the pin, unchanged.
+: ${ASMDATES:=$here/../work/measurements/baseline-gate/asmdate.tsv}
+export BIN OUTDIR MACFLAGS SRC ASMDATE ASMTIME ASMDATES
 # Record which commit the binary came from: retest.py prints it, and a gate
 # against a branch whose base has moved can manufacture LOST and
 # rc CLEAN -> FLAGGED lines that are not regressions at all.
