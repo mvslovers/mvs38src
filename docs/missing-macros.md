@@ -728,3 +728,47 @@ Nine of sixty is the same shape as `caret_fix.py`'s ten of thirty-nine, and the
 wrong in all sixty by the code-page argument, and in 51 of them something else is
 wrong as well. **2,078 modules contain the byte somewhere; only 60 have it inside
 a constant, and the rest are comments where it changes nothing.**
+
+---
+
+## `SCHEDULE` exists at two levels, and one macro file cannot be both
+
+The third cell the ranking offered was `0010 -> 0100` with eight modules, joined by
+`00f0 -> 0f00` with seven of the same eight. All of them sit on the same three
+instructions, and the bytes say precisely what differs:
+
+```
+         L     15,CVTLSMQ-CVTMAP(0,15)     ours  X2=0  B2=15
+                                           IBM   X2=15 B2=0
+         L     0,0(0,15)
+         ST    0,SRBFLNK-SRBSECT(0,1)
+```
+
+Same effective address either way — index and base both add — so `D(0,R)` and
+`D(R)` execute identically and assemble differently. IBM wrote the short form. The
+three lines are not in any module: they are in `SCHEDULE`,
+`work/macros/mvsce-2.1.4-dlib/AMACLIB/SCHEDULE`, lines 24, 26 and 27.
+
+**Changed to the short form, and it is net negative.**
+
+| | modules |
+|---|---:|
+| gained | 3 — `IKT0940C`, `ISTORFBA`, `ISTORFSR` |
+| **lost** | **10** — `IDA019S4 IEAVELKR IEAVESCR IEAVTRER IEAVTRTM IGE0660A IGFTMC00 ILRGOS ILRGOS01 ILRSRT01` |
+
+1,481 -> 1,474. **Reverted**, and re-measured back to 1,481 with the control at 0
+disagreements.
+
+### What that means, and it is not a failure of the method
+
+Ten modules want `(0,15)` and eight want `(15)`. **IBM shipped `SCHEDULE` at two
+levels, and the modules that were assembled against each are both in this corpus.**
+One macro file cannot satisfy both, so no edit to it can be right — the fix is a
+per-module macro path, or a second copy selected by maintenance level, and that is
+the macro-provenance problem this project already has on its list rather than a
+new one.
+
+**The regression check is the whole reason this is known.** `IGGCP14` was +9 and 0
+lost; this one is +3 and 10 lost, and the net figure alone (-7) would have said
+"wrong" without saying why. Comparing the identical *sets* before and after, not
+their sizes, is what turned a bad edit into a statement about IBM's macro library.
