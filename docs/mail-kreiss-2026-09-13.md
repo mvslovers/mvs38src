@@ -1,5 +1,8 @@
 # Mailentwurf an Dave Kreiss — 2026-09-13, **nicht gesendet**
 
+> Sendefertig. Der Text unter dem Trennstrich ist die Vorlage — er steht so, wie er
+> abgeschickt werden kann; darüber steht nur, warum er so steht.
+
 > Wartet auf Mikes Wort. Zwei echte Fragen darin, und beide kann nur Dave
 > beantworten: was `./ DELETE` erwartet, und ob seine Makro-Bibliotheken das
 > `ESTAE` tragen, das keine unserer drei Kopien hat.
@@ -139,7 +142,7 @@ be useful to you, say the word and I will send it with whatever it needs.
 
 ## Where the numbers are
 
-**1,483 of 5,353 modules now assemble byte-identical to TK5's object** — measured
+**1,491 of 5,353 modules now assemble byte-identical to TK5's object** — measured
 against the target libraries, as you advised, with the distribution libraries where
 a CSECT has no target counterpart. That was 1,277 this morning. None of the gain
 came from guessing: the method is to sort the whole tree by how far each module is
