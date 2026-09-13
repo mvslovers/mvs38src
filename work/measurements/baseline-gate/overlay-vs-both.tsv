@@ -4274,7 +4274,7 @@ IKJCT464	AOST4	len-differs	len-differs	LINKLIB	IKJCT469	len-differs	1	N	0003E8	0
 IKJCT466	AOST4	len-differs	len-differs	CMDLIB	OUTPUT	len-differs	1	N	000230	000230	Y
 IKJCT467	AOST4	len-differs	len-differs	LINKLIB	IKJCT469	len-differs	1	N	000A48	000A48	Y
 IKJCT469	AOST4	len-differs	len-differs	LINKLIB	IKJCT469	len-differs	1	N	000E58	000E58	Y
-IKJCT470	AOST4	holes	holes	LINKLIB	IKJCT469	holes	1	N	000314	000314	Y
+IKJCT470	AOST4	identical	identical	LINKLIB	IKJCT469	identical	1	N	000314	000314	Y
 IKJCT471	AOST4	len-differs	len-differs	LINKLIB	IKJCT469	len-differs	1	N	0002DA	0002DA	Y
 IKJCT472	AOST4	len-differs	len-differs	LINKLIB	IKJCT469	len-differs	1	N	0002B0	0002B0	Y
 IKJCT473	AOST4	len-differs	len-differs	LINKLIB	IKJCT469	len-differs	1	N	00075C	00075C	Y
@@ -4389,7 +4389,7 @@ IKJEFLEA	AOST4	len-differs	len-differs	LPALIB	IKJEFLA	len-differs	1	N	000F3A	000
 IKJEFLF	AOST4	len-differs	len-differs	LPALIB	IKJEFLF	len-differs	1	N	0000F6	0000F6	Y
 IKJEFLG	AOST4	len-differs	len-differs	LPALIB	IKJEFLA	len-differs	1	N	0003A8	0003A8	Y
 IKJEFLGB	AOST4	len-differs	len-differs	LPALIB	IKJEFLA	len-differs	1	N	000898	000898	Y
-IKJEFLGH	AOST4	differs	differs	LPALIB	IKJEFLA	differs	1	N	000075	000075	Y
+IKJEFLGH	AOST4	holes	holes	LPALIB	IKJEFLA	identical	1	N	000075	000075	Y
 IKJEFLGM	AOST4	len-differs	len-differs	LPALIB	IKJEFLA	len-differs	1	N	000580	000580	Y
 IKJEFLGN	AOST4	len-differs	len-differs	LPALIB	IKJEFLA	len-differs	1	N	000FCC	000FCC	Y
 IKJEFLH	AOST4	len-differs	len-differs	LPALIB	IKJEFLA	len-differs	1	N	000318	000318	Y
@@ -4414,7 +4414,7 @@ IKJEFT03	AOST4	len-differs	len-differs	LPALIB	IKJEFT02	len-differs	1	N	0006E0	00
 IKJEFT04	AOST4	len-differs	len-differs	LPALIB	IKJEFT04	len-differs	1	N	000A08	000A08	Y
 IKJEFT05	AOST4	len-differs	len-differs	LPALIB	IKJEFT04	len-differs	1	N	0014B0	0014B0	Y
 IKJEFT06	AOST4	len-differs	len-differs	LPALIB	IKJEFT01	len-differs	4	N	0006A0	0006A0	Y
-IKJEFT07	AOST4	differs	differs	LPALIB	IKJEFT07	differs	1	N	000344	000344	Y
+IKJEFT07	AOST4	identical	identical	LPALIB	IKJEFT07	identical	1	N	000344	000344	Y
 IKJEFT08	AOST4	len-differs	len-differs	LPALIB	IKJEFT02	len-differs	1	N	001520	001520	Y
 IKJEFT09	AOST4	identical	identical	LPALIB	IKJEFT09	differs	1	N	000368	000368	Y
 IKJEFT25	AOST4	len-differs	len-differs	LINKLIB	IKJEFT25	len-differs	1	N	00078C	00078C	Y
@@ -4432,7 +4432,7 @@ IKJEFTE8	AOST4	differs	differs	LPALIB	IKJEFT02	len-differs	1	N	000068	000140	N
 IKJEFTNS	AOST4	identical	identical	LPALIB	IKJEFT02	identical	1	N	00009E	00009E	Y
 IKJEFTSC	AOST4	identical	identical	LPALIB	IKJEFT01	differs	1	N	000ED0	000ED0	Y
 IKJEFXSR	AOST4	len-differs	len-differs	LINKLIB	IKJEFXSR	len-differs	1	N	000670	000670	Y
-IKJEGASN	ACMDLIB	holes	holes	CMDLIB	IKJEGPCH	holes	1	N	-	00083C	?
+IKJEGASN	ACMDLIB	identical	identical	CMDLIB	IKJEGPCH	identical	1	N	-	00083C	?
 IKJEGMSG	ACMDLIB	differs	differs	CMDLIB	TEST	identical	2	Y	-	00338A	?
 IKJEGSTA	ACMDLIB	identical	identical	CMDLIB	TEST	identical	2	N	-	00073E	?
 IKJEHCIR	ACMDLIB	len-differs	len-differs	LPALIB	IKJEHDEF	len-differs	1	N	-	001148	?
@@ -4448,8 +4448,8 @@ IKJRBBMG	AOST4	holes	holes	-	-	not-in-target	0	-	000284	-	-
 IKJRBBMP	AOST4	len-differs	len-differs	-	-	not-in-target	0	-	000918	-	-
 IKJRBBU0	AOST4	len-differs	len-differs	LINKLIB	IKJRBBU0	len-differs	1	N	001FDC	001FDC	Y
 IKJRBBU1	AOST4	holes	error	-	-	not-in-target	0	-	-	-	-
-IKJTTRM0	AOST4	identical	identical	LPALIB	IKJTTRM0	differs	1	N	0002F0	0002F0	Y
-IKT0009C	AOST3	identical	identical	LPALIB	IGC0009C	differs	1	N	00029C	00029C	Y
+IKJTTRM0	AOST4	differs	differs	LPALIB	IKJTTRM0	identical	1	N	0002F0	0002F0	Y
+IKT0009C	AOST3	differs	differs	LPALIB	IGC0009C	identical	1	N	00029C	00029C	Y
 IKT0009D	AOST3	len-differs	len-differs	LPALIB	IGC0009D	len-differs	1	N	0000E4	0000E8	N
 IKT09401	AOST3	len-differs	len-differs	LPALIB	IGC0009D	len-differs	1	N	000144	000144	Y
 IKT09404	AOST3	identical	identical	LPALIB	IGC0009D	identical	1	N	0000E8	0000E8	Y

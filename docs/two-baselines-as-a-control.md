@@ -116,6 +116,50 @@ object decks assembled at different maintenance levels, so their buffers differe
 **The control does not depend on settling it.** Whatever the mechanism, a byte
 the two libraries disagree about is not a byte IBM's source contained.
 
+### 2026-09-13, later: two corrections to the control, both found by using it
+
+**1. Agreement proves *assembly-time*, not *source-derived*.** The sentence above —
+*"If both libraries hold the same byte at that offset, the byte came from IBM's
+source"* — claims more than the instrument can see. Both libraries are link-edited
+from the **same assembler output**, so anything the assembler put there appears in
+both. What the control separates is link-time from assembly-time; it cannot
+separate a real source byte from the assembler's own buffer residue.
+
+`IKJCT470` is the case that showed it. Both libraries want `4810D098` at `0x2ac`,
+in the four pad bytes a `DS 0D` inserts before a `PATCH70 DS CL100` area.
+`4810D098` is `LH 1,152(0,13)` — an instruction out of the module's own code,
+sitting in an alignment gap. Nothing in IBM's source emitted it there; the
+assembler's text buffer still held it. It is reproducible, both libraries carry
+it, and it is not source.
+
+So the 184 "corroborated" hole modules from the big run are corroborated as
+**assembly-time deterministic**, which is why they are reproducible at all, and
+that is a weaker claim than the one first written here. It does not change what
+was deposited — every one is `!!!`-marked, and option A is exactly the convention
+for a byte with no rule behind it — but it changes what the marker means. This
+document said hole bytes "are real". They are *reproducible*. That is the honest
+word.
+
+**2. A disagreement in a HOLE and a disagreement in TEXT are different things,
+and `fillgaps.py`'s `SPLIT` check does not distinguish them.**
+
+| where the two libraries disagree | what it means |
+|---|---|
+| in a **hole** — uninitialised storage neither library means anything by | link-time or buffer noise. Not recoverable. `SPLIT` is right to refuse. |
+| in **text** — bytes a statement emitted, which both libraries mean | **the target carries maintenance the DLIB never received.** Recoverable, and under the chosen baseline the target's value is the right one. |
+
+`IKJTTRM0` and `IKT0009C` are the second kind. `IKJTTRM0`'s `DC H'0'` at `0x2a2`
+is `0000` in our source and in the DLIB and `8930` in the target; `IKT0009C`'s
+`BE` at `0x0cc` assembles to `47 80` and the target has `47 D0` — mask 13, so
+`BNP` after the `LTR` in front of it. Both are ordinary un-ACCEPTed maintenance,
+exactly what Dave described, and both became identical to the target when the
+source was corrected to say what the target says.
+
+`fillgaps.py` would have refused both as `SPLIT`. That is the safe direction to be
+wrong in, and it is still wrong: **the check should ask `in_hole` before it
+refuses.** Not changed yet — it needs its own control, and the six modules below
+were done by hand.
+
 ## `IKJEHREN`, and a conclusion the control withdraws
 
 The same control corrects something the project had written down as settled.
@@ -197,3 +241,33 @@ and it did so the first time it was asked.
    differing byte, the module is a baseline choice and not a repair. The marker
    text is IBM's own and is not being changed, so the record of which baseline
    each line was copied from lives in this document and in the commits.
+
+## Six TSO modules by hand, 2026-09-13, and what each one turned out to be
+
+Ranked by distance to the target rather than picked, which is why the list is
+short and the yield is 6 of 6.
+
+| module | bytes | what it actually was |
+|---|---:|---|
+| `IKJEGASN` | 1 | a pad byte before `GRDATA DS 0F`; both libraries want `01`. Marked. |
+| `IKJCT470` | 4 | `4810D098` in a `DS 0D` gap — the assembler's own buffer. Marked. |
+| `IKJEFT07` | 5 | **the eyecatcher date.** `DC C'IKJEFT07  78.177'` → `85.049`. No marker: the object names the value and the statement is a constant. |
+| `IKJEFLGH` | 2 | **a message number.** `IKJ56403I` → `IKJ56427I`, inside `IGNTXT`. Same class as `IKJRBBCM`. |
+| `IKT0009C` | 2 | **a branch condition.** `BE` → `BNP`, twice, mask 8 → mask 13. Target-only. |
+| `IKJTTRM0` | 6 | **two table constants**, `H'0'` → `XL2'8930'` and `F'0'` → `XL4'0A0A0A03'`. Target-only. |
+
+**Four of the six needed no marker at all.** A date, a message number, a branch
+mask and two table constants are content the object *names* — there is a rule, so
+option A does not apply and the change stands on its own in the diff. Only the two
+gap fills are transcriptions.
+
+That ratio is worth noticing. The 25 "a real instruction or constant differs" cases
+were filed as the hard residue after `fillgaps.py` declined them; four of the first
+six worked are ordinary source corrections, and the mechanism was legible each
+time — a year, a Julian day, a message number, a condition mask.
+
+**And `IKT0940C` was left alone.** Its three differences sit in the displacement
+fields of `L 15,CVTLSMQ-CVTMAP(0,15)` and two neighbours, so they are the value of
+an `EQU` derived from `CVTMAP` — macro provenance, not this module's source. Both
+libraries agree on them, which is exactly why the agreement is not licence to
+transcribe: the right fix is the right macro.
