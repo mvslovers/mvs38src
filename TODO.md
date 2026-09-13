@@ -23,117 +23,152 @@ and *where to*; this list says *what next*.
 ## Start here tomorrow
 
 *Written as a handover: a fresh session should be able to start from this section
-alone. Last rewritten **2026-09-12, evening**, after 34 commits in one day.
+alone. Last rewritten **2026-09-13, evening**, after 24 commits in one day.
 Everything below the History heading is dated and keeps its own numbers.*
 
 ### The goal
 
-**MVS 3.8j at maintenance level 8505, built from source.** One question, module
-by module: **which sources do not yet assemble to the object in TK5's
-distribution libraries?** `cmplmd370` exits 0 or it does not.
+**MVS 3.8j at maintenance level 8505, built from source.** One question, module by
+module: **which sources do not yet assemble to the object IBM shipped?**
+`cmplmd370` exits 0 or it does not.
 
-`8505` is now **measured**: the IDR records in all 3,988 original DLIB members
-were read and **98.1 % carry a link date of 1985 or earlier**, with a 76-module
-tail to 1990 that is 43 % TSO
-([`docs/maintenance-level.md`](docs/maintenance-level.md)).
+`8505` is **measured**: the IDR records in all 3,988 DLIB members were read and
+**98.1 % carry a link date of 1985 or earlier**, with a 76-module tail to 1990 that
+is 43 % TSO ([`docs/maintenance-level.md`](docs/maintenance-level.md)).
 
-The scoreboard is at the head of [`README.md`](README.md) and is **generated** —
+The scoreboard at the head of [`README.md`](README.md) is **generated** —
 `tools/scoreboard.py`, `--check` fails when it is stale. Never hand-edit it.
 
-### Where it stands
+### Where it stands, 2026-09-13 evening
 
 | | |
 |---|---:|
-| build's CSECT == IBM's, per `LMDRPT38` | **1,422 of 5,485 — 25.9 %** |
-| host-side, archive source vs TK5 | **1,221 of 5,353 — 22.8 %** |
-| **host-side, with our recovered sources** | **1,509** |
-| host-side against TK5's **TARGET** libraries, same decks | **1,069 of 5,353** |
-| identical against **both** baselines | **1,052** |
 | **under the chosen baseline — target, DLIB where no target exists** | **1,491 of 5,353 — 27.9 %** |
-| `src/` — 246 identical to both, 24 no target counterpart, 7 target-only, 1 DLIB-only | **289 modules** |
-| ⚠️ `scoreboard.py --check` only checks README-against-tool | its INPUT can be stale; re-run `srcstate_vs_dlib.py` after any change to `src/` |
-| `as370` == IFOX00 | **5,471 of 5,528 — 99.0 %** |
-| open `as370` cases | **4** tree-wide, **3** in the case list |
-| `src/` — finished, guarded | **56 modules**, 152 marked lines in 22 of them |
-| TK5's IFOX00 == MVS/CE's | 5,525 of 5,528 — stage 1 answered |
+| the same decks against the DLIB alone | 1,509 |
+| against the target alone | 1,258 |
+| against both | 1,236 |
+| archive source, no repairs, against the DLIB | 1,221 |
+| `src/` — finished, guarded by `srccheck.py` | **310 modules** |
+| `as370` == IFOX00 (a TOOL figure, not a project figure) | 5,471 of 5,528 |
 
-~~Every one of the 56 in `src/` contributes exactly +1 to the overlay figure:
-1,221 + 56 = 1,277.~~ **That identity broke on 2026-09-13 and it broke on purpose.**
-Four modules in `src/` are now repaired against the **target** and therefore differ
-from the DLIB, and one was removed because Dave's archive text already reached the
-target. So the DLIB column reads **1,272** and the arithmetic that replaces it is
-the chosen-baseline figure, **1,202**. A source cannot reach two different objects;
-where the two baselines hold different bytes, gaining one costs the other.
+**The morning figure was 1,277.** The day added 214.
 
-### 🔒 Dave Kreiss answered on 2026-09-12, and two of our decisions are reversed
+> ⚠️ **`scoreboard.py --check` only checks README against the tool.** Its *input*
+> can be stale, and it was for hours: `fillgaps.py` deposits to `src/` the moment
+> `cmplmd370` exits 0, so **re-run `gate.sh` and `baseline_gate.py` after a sweep,
+> not after the commit that describes it.** Eight modules sat measured, deposited
+> and uncounted this evening.
 
-Read [`docs/kreiss-reply-2026-09-12.md`](docs/kreiss-reply-2026-09-12.md) before
-anything else. His mail was written before he saw ours, so it answers the
-previous one, and it lands on exactly the two places we were most confident.
+### Decided, do not re-open
 
-1. **Compare against TARGET, not DLIB.** The DLIBs are back level — not all PTFs
-   were ACCEPTed — and **both** sides are linkage-editor output, which refutes
-   our stated reason for picking DLIBs. No measurement is invalidated; what
-   changes is what they mean. ~~**Test, not argument:** pull TK5's targets with
-   `dlibpull.py` and score the same source against both.~~ **RUN, 2026-09-13** —
-   [`docs/baseline-dlib-vs-target.md`](docs/baseline-dlib-vs-target.md). Identical
-   against the DLIB **1,236**, against the target **1,069**, against both
-   **1,052**: the yardstick moves 167 verdicts. **23 of the 66 TSO modules we call
-   recovered are recovered against the back-level copy**, and six of our own 56
-   repairs are — `IKJEBEUN IKJEFD35 IKJEFE16 IKJEFF02 IKJEFF50 IKJEGMSG`. 17 run
-   the other way, identical against the target and not the DLIB, four of them SMP.
-   **Which baseline the project adopts is now the open question, and it is Mike's.**
-2. **`MAINT05Z` was required, and skipping it is the likely cause of the
-   `./ DELETE` failures.** It copies *his modified SMP* to `SYS1.LINKLIB`, and
-   his SMP *"manages the source side as well as the object side"* — which is
-   what `./ DELETE` is. Our two-sided case stands as a measurement and its
-   meaning flips: stock SMP refuses `./ DELETE`, which is a fact about **which
-   SMP was asked**. Back up `MVSTK5-BLD`, run `MAINT05Z`, then the chain.
-3. He offers **a zip of all built source and macro libraries** — better than the
-   tape, and it would close the 319 mirror macros in one step.
-4. What he says he needs is **a tool that says what changed** between
-   disassembly and assembly, not a faster loop. `tools/where.py` is that, and he
-   does not know it exists. Worth a mail with an example.
+1. **The object baseline is TK5** (2026-09-10), **and within TK5 the TARGET
+   library, with the DLIB where a CSECT has no target counterpart** — Mike,
+   2026-09-13, on [`docs/baseline-dlib-vs-target.md`](docs/baseline-dlib-vs-target.md).
+   The two baselines disagree about 55 modules of the 4,371 that have a member in
+   both. Named cost, in `fahrplan.md` §1: the target is TK5's *running* system, so
+   up to 49 USERMOD-changed modules enter a measurement the DLIB kept out.
+   **Unmeasured: how many of the 55 are TK5 USERMODs rather than IBM service.**
+2. **`src/` means finished.** `srccheck.py` asserts every module there is identical
+   to **at least one** baseline and prints which. Where IBM's two libraries hold
+   different bytes no source can reach both, so deleting a file that is correct
+   against a real IBM object would put nothing in its place; the *count* carries
+   that fact, not the tree.
+3. **Option A, Dave's way** — bytes with no rule behind them are transcribed from
+   the object and marked `!!! SOURCE COMPARE FIX !!!` in columns 46–71.
+4. **Priority: TSO first, SMP second.**
 
-One thing he is right about costs us nothing: he names the **target** source
-library where we extracted the **distribution** one. Measured over 25 random
-modules, columns 1–72: identical, 25 of 25, both 5,529 members. A fresh install
-ACCEPTs everything and the two are in sync; it is his working system that
-diverges.
+### What 2026-09-13 established
 
-### Decisions already taken — do not re-open these
+**On the baselines and the instruments**
 
-1. **The object baseline is TK5** — *which system*. 2026-09-10.
-   `ifox_compare.py` scored against MVS/CE until 2026-09-12 and now does not;
-   `IFOX_DLIB=ce` reproduces the old figures
-   ([`docs/macro-path.md`](docs/macro-path.md)). **And within TK5 it is the
-   TARGET, with the DLIB as the fallback** — Mike, 2026-09-13, after
-   [`docs/baseline-dlib-vs-target.md`](docs/baseline-dlib-vs-target.md). The
-   project figure is therefore **1,197 of 5,353**, generated by
-   `scoreboard.py`. Named cost, recorded in `fahrplan.md` §1: the target library
-   is TK5's *running system*, so up to 49 USERMOD-changed modules enter a
-   measurement the DLIB kept them out of, and the goal says
-   *distribution-independent*. **Next measurement: how many of the 38 differ
-   because of a TK5 USERMOD rather than IBM service?** Until that is run, all 38
-   are assumed to be IBM maintenance.
-2. **`src/` means finished** — every module there is byte-identical to TK5's
-   object, and `tools/srccheck.py` asserts it. Work in progress goes to
-   [`work/src-pending/`](work/src-pending/README.md). **Amended 2026-09-13:** with
-   two baselines the guard asserts *at least one of them* and prints which — 32
-   both, 18 DLIB with no target counterpart, **6 DLIB only**. Those six are not in
-   the 1,197, and they stay in `src/` because no source can reach both where IBM's
-   two libraries hold different object, and deleting a file that is correct against
-   a real IBM object puts nothing in its place. `srccheck.py --strict` is the
-   chosen-baseline-only run.
-3. **Option A, Dave's way.** Where no rule in the module predicts the missing
-   bytes, they are transcribed from the object and marked
-   `!!! SOURCE COMPARE FIX !!!` in **columns 46–71** — copied from `BLSVCVT2`
-   and `AMDSYS06`, not invented. Mike chose this on 2026-09-12. `grep '!!!'`
-   finds every such line.
-4. **Priority: TSO first, SMP second.** Mike intends to build his own
-   development on TSO ([`docs/tso-and-smp.md`](docs/tso-and-smp.md)).
-5. **The Fahrplan's stages 1–4 are closed**, 4 by turning out not to be needed.
-   Stage 5 is the work.
+- The two baselines are **74 CSECTs apart by length**, with the build's own two
+  sides at **0 of 4,795** as the control
+  ([`xref_distance.py`](tools/xref_distance.py)). The CSECT→bound-module map came
+  free from Dave's own `LMDXRF38` output on BLD — `fetch_xref.py`.
+- **The second baseline is a control on option A**, and it found 99 bytes of noise
+  in `IKJEGMSG` alone ([`docs/two-baselines-as-a-control.md`](docs/two-baselines-as-a-control.md)).
+  Corrected twice by using it: agreement proves *assembly-time*, not
+  *source-derived*; and `fillgaps.py`'s `SPLIT` refusal stays broad, because
+  `cmplmd370` calls alignment padding `text`.
+- **Two claims withdrawn.** `IKJEHREN`'s "missing `'0'`" is a pad byte — the target
+  holds `X'80'`, which is not printable. And "175 modules wait on `ESTAE`" was a
+  generalisation from n = 1; `seclocate.py` found 2 of 21 located insertions. The
+  second was in the mail draft and was corrected before it could be sent.
+
+**On MVS**
+
+- **`MAINT05Z` ran and Dave was right.** 82 jobs, `MAINT06@`→`MAINT15G`, all four
+  JCL libraries, no ABEND and no `CC 0012`. `HMA3462` went from **675,382 lines to
+  zero** ([`docs/dave-install-log.md`](docs/dave-install-log.md)).
+- **The source library came out damaged.** 384 members unreadable by mvsMF, FTP
+  *and* MVS (`NO RECORD FOUND`), 69 more missing their beginning, `AHLCWRIT` cut at
+  sequence `097730` — a line boundary, not a block boundary
+  ([`docs/source-states.md`](docs/source-states.md)). The pre-chain backup
+  `~/MVSTK5-BLD-frozen-20260913` is verified: 32 volumes, 32 sums, `sha256sum -c`
+  clean.
+- **The two source libraries came apart**: 6 of 25 members differ where on 09-12 it
+  was 0 of 25. `srcpull.py` takes `SRCPULL_DS` now.
+- **`mvsMF` rewrites the JOB card** with its own `USER=`/`PASSWORD=`, so a card
+  that carries them is rejected — `JOB NOT RUN - JCL ERROR`, and with `MSGCLASS=A`
+  it purges itself and looks like it was never submitted. `bldrun.py` strips them.
+- **The TK5 shutdown script does not know `JRP`**, mvsMF's job REST processor. Now
+  in [`docs/runbook.md`](docs/runbook.md) with `HTTPD` and `FTPD`.
+
+**What moved the number, and what did not**
+
+| | modules |
+|---|---:|
+| the holes run under the new guard | **+201** |
+| per-module `ASMDATE` — the pin was the wrong date | **+29** |
+| the ranked `fillgaps` sweep, ≤6 bytes | **+27** |
+| six TSO modules by hand, four needing no marker | **+6** |
+| `IGGCP14` — one wrong digit in a CCW count | **+9** |
+| `×`/`|` — a second wrong character, `caret_fix`'s class | **+9** |
+| the full `fillgaps` sweep over all 3,686 open modules | +4 |
+
+Everything else produced knowledge and no modules: four hours on MVS, the
+`SCHEDULE` edit (+3 and **−10**, reverted), the `ESTAE` dive.
+
+### What is exhausted, and what is left
+
+**Exhausted.** `fillgaps.py` over all 3,686 open modules recovers **four**.
+Widening its filler rule to `DS C`, `DS AL2`, `DS BL1` recovers **zero** more.
+
+**Left, and counted rather than guessed.** 1,295 modules are within 64 bytes of
+IBM's length; `seclocate.py` anchors **1,038** and prints the differing run with its
+bytes. **182 have exactly one length-changing spot** — that is the queue. **No large
+shared cause remains in it**: the `+8` cell is 21 distinct insertions, the `+2` cell
+diverges after offset 3. Eight, four and two bytes are common *amounts* of missing
+code, not common causes.
+
+### Blocked, and on what
+
+| | modules | blocked by |
+|---|---:|---|
+| `ESTAE` eight bytes short | some | a macro level in **none** of the three libraries, TK5's own included — **Dave's zip** |
+| target member unreadable by `cmplmd370` | 18 | scatter and overlay format — a cc370 case |
+| `SCHEDULE` at two levels | ~18 | one macro file cannot be both; needs a per-module macro path |
+| length differences | ~2,000 | one cause per module; `seclocate.py` shows each |
+
+### 🚪 The one thing that needs Mike
+
+**The mail to Dave is written and unsent** —
+[`docs/mail-kreiss-2026-09-13.md`](docs/mail-kreiss-2026-09-13.md). Two questions
+only he can answer — what `./ DELETE` expects of the source library going in, and
+whether his macro libraries carry the missing `ESTAE` — plus the zip he offered and
+`where.py --base tgt`, the tool he asked for, with a worked example.
+
+### The method that works, and it is a ranking
+
+`tools/worklist.py`: every module not identical to the chosen baseline, **nearest
+first**, with the owning source statement beside each differing cluster. Then group
+the differences by **(our byte, IBM's byte)** and look at the cell with several
+modules in it. That is where `IGGCP14` and the `×`/`|` class came from, and it is
+the only move that paid today.
+
+`tools/lenlist.py` is the same idea for the population the byte ranking cannot see —
+length differences, ranked by signed gap. `tools/seclocate.py` then says *where* the
+missing bytes are, by anchoring our section's text in the bound member and aligning.
 
 ### The tools, and the control each one needed
 
@@ -156,146 +191,43 @@ known answer rather than by reading the code.
 | `baseline_gate.py` | one source state against **both** baselines | a coherence check that confused our deck's length with the two libraries' lengths — 1,987 contradictions; then the same check reading a three-state column as two |
 | `maintenance-level` | IDR link dates | (in `docs/`, no tool) |
 
-### The next three things
+### The TSO block, closed out
 
-> ⚠️ **`fillgaps.py`'s guard changed on 2026-09-13 and the old results are not
-> comparable.** It now scores against the chosen baseline and refuses the `SPLIT`
-> class — where IBM's two libraries want *different* bytes at the offset, which
-> means no source contains it
-> ([`docs/two-baselines-as-a-control.md`](docs/two-baselines-as-a-control.md)).
-> Re-run over all 65 candidates: **16 identical, 7 SPLIT, 41 not.** The seven are
-> `IKJEBEAE IKJEBEUN IKJEE100 IKJEFA21 IKJEFE16 IKJEFF50 IKJEHREN` and under the
-> old guard every one would have been deposited as a recovery. `IKJEGMSG` needs
-> **1** marked line where it had 100, and `IKJEFF02` needed none at all.
+*Superseded as a work item — kept because it is where the method came from.*
 
-**1. Finish TSO's remaining same-length cases.** 60 candidates were run through
-`fillgaps.py`: 17 recovered, 43 declined and each declined for a stated reason:
+Sixty candidates went through `fillgaps.py` on 2026-09-12 and were filed as 17
+recovered, 25 "a real instruction or constant differs — hand work", 9 macro
+expansions, 6 not enough, 3 not a filler. **Re-run on 2026-09-13 under the guard
+that scores against the chosen baseline and refuses `SPLIT`: 16 identical, 7
+`SPLIT`, 41 not.** The seven — `IKJEBEAE IKJEBEUN IKJEE100 IKJEFA21 IKJEFE16
+IKJEFF50 IKJEHREN` — would every one have been deposited as a recovery under the
+old guard. `IKJEGMSG` needs **1** marked line where it had 100, `IKJEFF02` none at
+all.
 
-| | modules |
-|---|---:|
-| a real instruction or constant differs — hand work | **25** |
-| the gap is inside a macro expansion | 9 |
-| the fix applied and was not enough | 6 |
-| the owner is a `CSECT`/`ORG`, not a filler | 3 |
+**And the "25 hard cases" were not 25 hard cases.** Ranked by distance to the
+object instead of listed by name, the six nearest were 1–5 bytes and all six fell,
+and **four needed no marker**: an eyecatcher date, a message number, a branch
+condition mask, two table constants. That is the whole origin of `worklist.py`.
 
-The 25 need the `IKJEFE16` treatment one at a time, and **the reachability check
-comes first**: `grep` the listing for the label. `IKJEFE16`'s `@EL01` appeared
-exactly once — its own definition — so overwriting its dead epilogue broke
-nothing. Claiming a boundary without that grep is how the last wrong call
-happened.
+What is genuinely left of the block is macro provenance: `IKJEHREN`'s gap sits
+inside a `STAX` expansion, TK5's and MVS/CE's `STAX` are byte-identical, so IBM
+assembled against a `STAX` neither system ships. Same shape as the `ESTAE` case,
+same resolution — Dave's macro libraries.
 
-**2. Run `fillgaps.py` over the rest of the tree.** The 562 holes-only modules
-are its target population and TSO was only a slice. `srcstate_vs_dlib.py`'s
-output names them: `verdict == holes`.
+### The queue, in the order it pays
 
-**3. The 9 macro-expansion cases point somewhere else.** `IKJEHREN`'s gap sits
-inside a `STAX` expansion, and TK5's and MVS/CE's `STAX` are **byte-identical**
-— so IBM assembled against a `STAX` neither system ships. That is macro
-provenance, and it is what Dave Kreiss' rebuilt tape would settle.
-
-### Start here — the state on the morning of 2026-09-14
-
-**1,491 of 5,353 — 27.9 %**, from 1,277 the previous morning. Both guards green,
-`baseline_gate.py --control` at 0 disagreements, 22 commits.
-
-> **Corrected at the close of the day: 1,491, not the 1,483 reported all evening.**
-> `fillgaps.py` deposits to `src/` the moment `cmplmd370` exits 0, and three
-> sweeps ran while the commits were tracking findings rather than the tree.
-> Eight modules sat measured, deposited and uncounted. **A figure taken from the
-> last gate run is only as current as the last gate run** — re-measure after a
-> sweep, not after the commit that describes it.
-
-**The one thing that needs Mike:** the mail to Dave is written and unsent —
-[`docs/mail-kreiss-2026-09-13.md`](docs/mail-kreiss-2026-09-13.md). Two questions
-only he can answer, and the macro libraries he offered.
-
-**What paid, and what did not.** Five finds moved the number: the holes run (+201),
-six TSO modules by hand (+6), `IGGCP14`'s wrong digit (+9), the ranked `fillgaps`
-sweep (+27), the per-module `ASMDATE` (+29) and the `×`/`|` code page (+9). Every
-one came from the same move — **sort the tree by distance to the object, group the
-differences by (our byte, IBM's byte), look at the cell with several modules in
-it.** Everything else — four hours on MVS, the `SCHEDULE` edit, the `ESTAE` dive —
-produced knowledge and no modules.
-
-**What is exhausted.** `fillgaps.py` over all 3,686 open modules recovers **four**.
-Widening its filler rule to `DS C`, `DS AL2`, `DS BL1` and friends recovers
-**zero** more. The mechanical seam is closed.
-
-**What is left, measured rather than guessed.** 1,295 modules are within 64 bytes
-of IBM's length; `seclocate.py` anchors 1,038 of them and prints the differing run
-with its bytes. **182 have exactly one length-changing spot** — that is the queue.
-There is no large shared cause left in it: every family hypothesis was tested and
-only two survived, nine modules each. Eight, four and two bytes are common amounts
-of missing code, not common causes.
-
-**Two claims of mine were withdrawn today and the withdrawals are in the docs:**
-`IKJEHREN`'s "missing `'0'`" (it is a pad byte; the target holds `X'80'`), and
-"175 modules wait on `ESTAE`" (a generalisation from n = 1; `seclocate.py` found
-2 of 21 located insertions). The second was also in the mail draft and was
-corrected before it could be sent.
-
-### The method that works, and it is a ranking
-
-`tools/worklist.py`: every module not identical to the chosen baseline, **nearest
-first**, with the owning source statement beside each differing cluster. The 25
-TSO cases left over from `fillgaps.py` were filed as "hand work" and look like 25
-equally hard problems; ranked, the six nearest were 1–5 bytes and all six fell, and
-four of them needed no marker at all — an eyecatcher date, a message number, a
-branch mask, two table constants.
-
-Then the same ranking tree-wide, `--max-bytes 6`: **280 modules**, of which 47
-differ by a single byte — and **nine of the 47 by the same byte**, which turned out
-to be one wrong digit in `work/macros/mirror/IGGCP14`. One macro, nine modules,
-`rc 0` unchanged.
-
-Running `fillgaps.py` over the same 280: **27 more**. So the ranking has paid
-1,403 → 1,445 in an afternoon, and the list is not exhausted — it was cut at six
-bytes.
-
-**Next, in this order:**
-
-1. `worklist.py --max-bytes 16` and work the bands upward. Everything below six
-   bytes has been swept once.
-2. **Look for shared bytes before looking at modules.** `IGGCP14` was found by
-   grouping the one-byte cases by (our byte, IBM's byte) and noticing nine in one
-   cell. The 319 mirror macros at an unestablished level are the population that
-   produces those.
-3. The 18 modules whose target member `cmplmd370` cannot read — a `cc370` case,
-   and the cheapest block on the board.
-
-### Where 2026-09-13 left off
-
-1. 🔒 **`MAINT05Z` is authorised by Mike and blocked by the tool classifier.** The
-   shutdown command to `MVSTK5-BLD`'s Hercules console was refused, so the backup
-   could not be taken and the job was not submitted. Nothing was sent to the
-   system. The procedure is in [`docs/fahrplan.md`](docs/fahrplan.md) stage 2 and
-   the system was verified idle first — 102 jobs, all in OUTPUT. **Correction to
-   the fahrplan while checking: the DASD is 1.5 GB, not 275 MB**, and `mvsdev` has
-   28 GB free. `MAINT05Z` itself was read and it is worse than "one job": its last
-   card is `//SUB EXEC BLDSUB,LIB=1,MBR=MAINT06@`, so running it starts the whole
-   82-job chain, and its own comment warns that it replaces the running system's
-   `HMASMP` immediately and was written for TK3.
-2. ⚡ **The 18 modules whose target member `cmplmd370` cannot read** and whose DLIB
-   member it calls identical. That is 18 modules of pure instrument gap —
-   `IEANUC01` is scatter format and the rest are overlay-structured — and it is the
-   cheapest block on the board. A `cc370` case.
-3. ✅ **The holes run, done 2026-09-13.** 533 modules under the chosen baseline,
-   521 new to the tool, **201 recovered** — 184 corroborated by both of IBM's
-   libraries, 17 on a single witness, 4 refused as `SPLIT`. 1,202 → **1,403**.
-   Four of 521 against six of 22 in the TSO class: **hole bytes are real and the
-   same-length class's fillers were not**
-   ([`docs/two-baselines-as-a-control.md`](docs/two-baselines-as-a-control.md)).
-   What is left of that population is 316 where nothing is fillable or the fix was
-   not enough.
-4. ⚡ **Which of the 38 divergent modules differ because of a TK5 USERMOD** rather
-   than IBM service. Needs the target zone's SYSMOD-to-module mapping. `IKJEFF53`
-   is a known usermod target and is in the 38, so the answer is not zero.
-5. 🚪 **The mail to Dave is written and not sent** —
-   [`docs/mail-kreiss-2026-09-13.md`](docs/mail-kreiss-2026-09-13.md). It needs
-   Mike's word. Two real questions in it and only Dave can answer either: what
-   `./ DELETE` expects of the source library going in, and whether his macro
-   libraries carry the `ESTAE` that **175 modules** wait on. It also hands him
-   `where.py --base tgt` with a worked example, which is the tool he asked for.
+1. **The 182 single-spot length modules.** `seclocate.py` prints the differing run
+   and its bytes for each; `lenlist.py` ranks them. One module per handful of
+   minutes, and the only seam still open without outside help.
+2. **The 18 whose target member `cmplmd370` cannot read** — `IEANUC01` is scatter
+   format, the rest are overlay-structured, and the DLIB calls all 18 identical. A
+   `cc370` case and the cheapest block on the board.
+3. **Which of the 55 divergent modules are TK5 USERMODs** rather than IBM service.
+   Needs the target zone's SYSMOD-to-module mapping out of the SMP CDS. `IKJEFF53`
+   is a known usermod target and is among them, so the answer is not zero.
+4. **`work/measurements/baseline-gate/worklist16.txt`** — 438 modules within 16
+   bytes, with the owning statement per cluster. Swept below six bytes; the 6–16
+   band is untouched by hand.
 
 ### Waiting, and none of it blocks host-side work
 
@@ -313,7 +245,7 @@ bytes.
 
 - ✅ **DLIB or Target — decided 2026-09-13: target primary, DLIB as the
   fallback.** See decision 1. `srccheck.py` and `scoreboard.py` follow it; the
-  published figure is 1,197 of 5,353.
+  published figure is **1,491 of 5,353**.
 - **`work/src-pending/AOST4/IKJRBBCM.ASM`** — a repair made against MVS/CE.
   Dave's archive text is identical against TK5, so the module is recovered and
   always was, and nothing needs changing. Kept only because it is itself a
