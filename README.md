@@ -39,19 +39,19 @@ The assembled CSECT is byte-identical to IBM's, or it is not. Nothing else count
 
 Measured a second time from the other side, on the host against TK5's distribution libraries: **1,221 of 5,353** — 22.8 %. Two different programs, two different populations, two machines.
 
-**With the source recovered so far**, the same measurement reads **1,272 of 5,353** — 23.8 %. The first figure says how far Dave Kreiss got; this one says where the project is. Both are wanted.
+**With the source recovered so far**, the same measurement reads **1,470 of 5,353** — 27.5 %. The first figure says how far Dave Kreiss got; this one says where the project is. Both are wanted.
 
-> **`src/` no longer contributes +1 apiece to this figure, and that is deliberate.** It held until 2026-09-12, when every module in `src/` was repaired against the DLIB. Four are now repaired against the **target** instead and therefore differ from the DLIB by exactly the amount they used to differ from the target — one source cannot reach two different objects. The figure that counts `src/` under the chosen baseline is the next one down.
+> **`src/` no longer contributes +1 apiece to this figure, and that is deliberate.** It held until 2026-09-12, when every module in `src/` was repaired against the DLIB. **4** are now repaired against the **target** instead and therefore differ from the DLIB by exactly the amount they used to differ from the target — one source cannot reach two different objects. The figure that counts `src/` under the chosen baseline is the next one down.
 
 ### Under the baseline the project chose on 2026-09-13
 
-Dave Kreiss: *"target not DLIB is the version of code you should compare to since target is what the running system uses."* Measured ([`docs/baseline-dlib-vs-target.md`](docs/baseline-dlib-vs-target.md)), the two baselines are 167 verdicts apart, so the yardstick is now **TK5's target library where the CSECT has one, its DLIB where it does not**:
+Dave Kreiss: *"target not DLIB is the version of code you should compare to since target is what the running system uses."* Measured ([`docs/baseline-dlib-vs-target.md`](docs/baseline-dlib-vs-target.md)), the two baselines **disagree about 55 modules** of the 4,371 that have a member in both, so the yardstick is now **TK5's target library where the CSECT has one, its DLIB where it does not**:
 
 | | modules | |
 |---|---:|---:|
-| **recovered under the chosen baseline** | **1,202 of 5,353** | **22.5 %** |
+| **recovered under the chosen baseline** | **1,403 of 5,353** | **26.2 %** |
 
-The figures above it are not withdrawn and do not contradict it: 1,236 is the same decks against the DLIB alone, 1,069 against the target alone, 1,052 against both. **143 modules are counted as not recovered because `cmplmd370` cannot read their target member** — `IEANUC01` and the overlay-structured load modules — and 18 of those the DLIB does call identical. That is an instrument gap, not a result, and it is the cheapest 18 modules on the board.
+The figures above it are not withdrawn and do not contradict it: the same decks are identical to **1,432** DLIB members, **1,258** target members, and **1,236** of both. **143 modules are counted as not recovered because `cmplmd370` cannot read their target member** — `IEANUC01` and the overlay-structured load modules — and 18 of those the DLIB does call identical. That is an instrument gap, not a result, and it is the cheapest 18 modules on the board. A further **839** have no target counterpart at all, and for those the DLIB is the only object there is.
 
 > **Not to be confused with the tool figure.** `as370` reproduces IFOX00's deck for **5,471 of 5,528** modules — that says our assembler is trustworthy, not that the source carries the object's maintenance level. A module is routinely in that 98 % and not in the table above, and that gap is what this project is about.
 

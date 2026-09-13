@@ -65,33 +65,75 @@ def host_identity(path=None):
 
 
 def chosen_baseline(path=None):
-    """The project figure under the baseline Mike chose on 2026-09-13:
-    the TARGET library where the CSECT has one, the DLIB where it does not.
+    """Every figure the two-baseline block quotes, COMPUTED.
+
+    The project figure is the baseline Mike chose on 2026-09-13: the TARGET
+    library where the CSECT has one, the DLIB where it does not.
 
     A module whose target member `cmplmd370` cannot read counts as NOT identical,
-    even where the DLIB says it is. That is 143 modules, 18 of them DLIB-identical,
-    and falling back to the DLIB there would quietly credit the project with
-    modules nothing has measured against the chosen baseline. The class is named
-    in docs/baseline-dlib-vs-target.md; it is an instrument gap, not a result.
+    even where the DLIB says it is. Falling back to the DLIB there would quietly
+    credit the project with modules nothing has measured against the chosen
+    baseline. The class is named in docs/baseline-dlib-vs-target.md; it is an
+    instrument gap, not a result.
+
+    **Everything here used to be a literal in the template and every one of them
+    went stale within the day** -- 1,236 / 1,069 / 1,052 / 143 / 18 were measured
+    before 201 modules were deposited, and `--check` cannot see a stale literal
+    because it only compares README against the tool. Same failure as the DLIB
+    figure, one layer up. Nothing in the block is hand-written now.
+
+    `disagree` is also a correction: the block used to say the yardstick "moves
+    167 verdicts", which is 1,236 - 1,069 -- the difference between two TOTALS,
+    not a count of anything. The number of modules the two baselines actually
+    disagree about is counted here, over the modules that have both references.
     """
     p = path or GATE
     if not os.path.exists(p):
-        return None, None, None
+        return None
     rows = [l.rstrip("\n").split("\t") for l in open(p, encoding="utf-8")]
     i = {k: n for n, k in enumerate(rows[0])}
-    n = ident = unread = 0
+    d = dict(n=0, chosen=0, dlib=0, tgt=0, both=0, unread=0, unread_dlib_ok=0,
+             disagree=0, no_tgt=0)
     for r in rows[1:]:
         if len(r) < len(rows[0]):
             continue
-        n += 1
-        t, d = r[i["tgt_c"]], r[i["dlib_c"]]
-        if t == "identical":
-            ident += 1
-        elif t == "not-in-target" and d == "identical":
-            ident += 1
+        d["n"] += 1
+        t, dl = r[i["tgt_c"]], r[i["dlib_c"]]
+        di, ti = dl == "identical", t == "identical"
+        d["dlib"] += di
+        d["tgt"] += ti
+        d["both"] += di and ti
+        if t == "not-in-target":
+            d["no_tgt"] += 1
+            d["chosen"] += di
         elif t in ("error", "unpaired", "no-ref"):
-            unread += 1
-    return ident, n, unread
+            d["unread"] += 1
+            d["unread_dlib_ok"] += di
+        else:
+            d["chosen"] += ti
+            d["disagree"] += di != ti
+    return d
+
+
+def src_target_only(path=None):
+    """How many modules in src/ reach the TARGET and not the DLIB.
+
+    Another literal that went stale the same day it was written: it said "Four"
+    while the answer was already seven. A source repaired against the target
+    cannot also reach the DLIB where the two libraries hold different bytes, so
+    this number grows with every such repair and must never be typed.
+    """
+    import glob
+    p = path or GATE
+    if not os.path.exists(p):
+        return 0
+    ours = {os.path.basename(f)[:-4]
+            for f in glob.glob(os.path.join(ROOT, "src", "*", "*.ASM"))}
+    rows = [l.rstrip("\n").split("\t") for l in open(p, encoding="utf-8")]
+    i = {k: n for n, k in enumerate(rows[0])}
+    return sum(1 for r in rows[1:] if len(r) >= len(rows[0])
+               and r[i["module"]] in ours
+               and r[i["tgt_c"]] == "identical" and r[i["dlib_c"]] != "identical")
 
 
 def render():
@@ -121,30 +163,35 @@ def render():
               "",
               f"> **`src/` no longer contributes +1 apiece to this figure, and that is "
               f"deliberate.** It held until 2026-09-12, when every module in `src/` was "
-              f"repaired against the DLIB. Four are now repaired against the **target** "
-              f"instead and therefore differ from the DLIB by exactly the amount they "
-              f"used to differ from the target — one source cannot reach two different "
-              f"objects. The figure that counts `src/` under the chosen baseline is the "
-              f"next one down.", ""]
-    ci, cn, cu = chosen_baseline()
-    if ci is not None:
+              f"repaired against the DLIB. **{src_target_only()}** are now repaired "
+              f"against the **target** instead and therefore differ from the DLIB by "
+              f"exactly the amount they used to differ from the target — one source "
+              f"cannot reach two different objects. The figure that counts `src/` under "
+              f"the chosen baseline is the next one down.", ""]
+    c = chosen_baseline()
+    if c is not None:
         L += [f"### Under the baseline the project chose on 2026-09-13", "",
               f"Dave Kreiss: *\"target not DLIB is the version of code you should "
               f"compare to since target is what the running system uses.\"* Measured "
               f"([`docs/baseline-dlib-vs-target.md`](docs/baseline-dlib-vs-target.md)), "
-              f"the two baselines are 167 verdicts apart, so the yardstick is now "
-              f"**TK5's target library where the CSECT has one, its DLIB where it does "
-              f"not**:", "",
+              f"the two baselines **disagree about {c['disagree']:,} modules** of the "
+              f"{c['n'] - c['no_tgt'] - c['unread']:,} that have a member in both, so "
+              f"the yardstick is now **TK5's target library where the CSECT has one, "
+              f"its DLIB where it does not**:", "",
               f"| | modules | |", f"|---|---:|---:|",
-              f"| **recovered under the chosen baseline** | **{ci:,} of {cn:,}** | "
-              f"**{100*ci/cn:.1f} %** |", "",
-              f"The figures above it are not withdrawn and do not contradict it: "
-              f"1,236 is the same decks against the DLIB alone, 1,069 against the "
-              f"target alone, 1,052 against both. **{cu:,} modules are counted as not "
-              f"recovered because `cmplmd370` cannot read their target member** — "
-              f"`IEANUC01` and the overlay-structured load modules — and 18 of those "
+              f"| **recovered under the chosen baseline** | "
+              f"**{c['chosen']:,} of {c['n']:,}** | **{100*c['chosen']/c['n']:.1f} %** |",
+              "",
+              f"The figures above it are not withdrawn and do not contradict it: the "
+              f"same decks are identical to **{c['dlib']:,}** DLIB members, "
+              f"**{c['tgt']:,}** target members, and **{c['both']:,}** of both. "
+              f"**{c['unread']:,} modules are counted as not recovered because "
+              f"`cmplmd370` cannot read their target member** — `IEANUC01` and the "
+              f"overlay-structured load modules — and {c['unread_dlib_ok']:,} of those "
               f"the DLIB does call identical. That is an instrument gap, not a result, "
-              f"and it is the cheapest 18 modules on the board.", ""]
+              f"and it is the cheapest {c['unread_dlib_ok']:,} modules on the board. A "
+              f"further **{c['no_tgt']:,}** have no target counterpart at all, and for "
+              f"those the DLIB is the only object there is.", ""]
     L += [
           "> **Not to be confused with the tool figure.** `as370` reproduces IFOX00's "
           "deck for **5,471 of 5,528** modules — that says our assembler is "

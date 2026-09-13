@@ -119,7 +119,20 @@ def main():
         if not os.path.exists(obj):
             bad.append((mod, "did not assemble"))
             continue
-        dok, dwhy = identical(obj, os.path.join(TK5, lib, mod + ".bin"))
+        # TWO DLIB verdicts, and the difference is not cosmetic. `dok_all` pairs
+        # every section by name, which is srcstate_vs_dlib.py's criterion and the
+        # one every published DLIB figure rests on. `dok` restricts to the named
+        # CSECT, which is the only way to compare LIKE FOR LIKE against a target
+        # member that holds CSECTs our deck never contained.
+        #
+        # Classifying on `dok_all` while the target side was restricted made this
+        # tool report 7 modules as target-only where scoreboard.py said 4 -- two
+        # tools, one tree, two answers, and the restriction was the whole
+        # difference. Classification uses the restricted pair; `dok_all` is still
+        # measured and still what the guard accepts, because a module identical to
+        # its whole DLIB member is finished whatever the restriction says.
+        dok_all, dwhy_all = identical(obj, os.path.join(TK5, lib, mod + ".bin"))
+        dok, dwhy = identical(obj, os.path.join(TK5, lib, mod + ".bin"), mod)
         tok, twhy = None, "no target counterpart"
         for tlib, tlmod in tmap.get(mod, []):
             r, w = identical(obj, os.path.join(TGT, tlib, tlmod + ".bin"), mod)
@@ -128,27 +141,32 @@ def main():
                 break
             if tok is None:
                 tok, twhy = r, w
-        rows.append((mod, dok, tok, dwhy, twhy))
+        rows.append((mod, dok, tok, dwhy, twhy, dok_all))
         # The chosen baseline is the target where one exists, the DLIB otherwise.
         chosen = tok if mod in tmap else dok
         if a.strict:
             if chosen is not True:
                 bad.append((mod, f"chosen baseline: {twhy if mod in tmap else dwhy}"))
-        elif dok is not True and tok is not True:
-            bad.append((mod, f"neither baseline -- dlib: {dwhy}; target: {twhy}"))
+        elif dok is not True and dok_all is not True and tok is not True:
+            bad.append((mod, f"neither baseline -- dlib: {dwhy_all}; target: {twhy}"))
 
     if not a.quiet:
         both = sum(1 for _, d, t, *_ in rows if d and t)
         donly = sum(1 for m, d, t, *_ in rows if d and not t and m in tmap)
         notgt = sum(1 for m, d, t, *_ in rows if d and m not in tmap)
         tonly = sum(1 for _, d, t, *_ in rows if t and not d)
-        print(f"src/: {len(rows) + len(bad)} modules")
+        allonly = sum(1 for _, d, t, _dw, _tw, da in rows if da and not d)
+        print(f"src/: {len(rows) + len(bad)} modules   "
+              f"(both verdicts restricted to the named CSECT, like for like)")
         print(f"  identical to BOTH baselines                 {both}")
         print(f"  identical to the DLIB, no target counterpart {notgt}")
         print(f"  identical to the DLIB only, target differs   {donly}"
               f"   <- counted as not recovered under the chosen baseline")
         print(f"  identical to the target only                 {tonly}")
-        for m, d, t, dw, tw in rows:
+        if allonly:
+            print(f"  and {allonly} are identical to the WHOLE DLIB member but not to "
+                  f"the named CSECT alone -- the restriction, not the source")
+        for m, d, t, dw, tw, da in rows:
             if d and not t and m in tmap:
                 print(f"    {m:10s} target: {tw}")
         for m, why in bad:
