@@ -21,7 +21,7 @@ CH4      CCW   TIC,0,0,0                CH5, CH8G, OR CH14              12600020
 .SK1     ANOP                                                           14400020
 CH4      CCW   TIC,0,X'00',0            CH5, CH8D, CH9, OR CH14         15300020
 .SK12    ANOP                                                           16200020
-CH5      CCW   NOP,0,CC+SILI,6          SEARCH FOR PRIME IX ENTRY       17100020
+CH5      CCW   NOP,0,CC+SILI,1          SEARCH FOR PRIME IX ENTRY       17100020
 CH55     CCW   SIDEQ,CB22+6-CB1,CC,5    (ENTRY POINT FOR SETUPS 1/2)    18000020
 CH6      CCW   TIC,CH55-CB1,0,0                                         18900020
 CH7      CCW   WKD,0,DC,0               WRITE NEW PRIME IX KEY          19800020

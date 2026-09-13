@@ -667,3 +667,34 @@ The rule this earns, and it is the third time this page has earned a version of
 it: **a control that is never run is not a control.** `MVSCE-EXP` was set up to
 detect exactly this and sat unused through a full day of chasing the question it
 answers in one request.
+
+---
+
+## 2026-09-13: one wrong digit in `IGGCP14`, nine modules
+
+Found by ranking rather than by hunting. `tools/worklist.py` lists every module
+that is not identical to the chosen baseline, nearest first; among the 47 that
+differ by a single byte, **nine share the same one** — `06` where IBM has `01`, at
+`0x117` or `0x157`, in `IGG019HP JN JO JP JQ JR JS JT JU`. Both of IBM's libraries
+agree on the byte, and every one of the nine is a bare list of macro calls, so the
+byte cannot be in the module.
+
+It is the count field of a CCW in `work/macros/mirror/IGGCP14`:
+
+```
+CH5      CCW   NOP,0,CC+SILI,6          SEARCH FOR PRIME IX ENTRY
+```
+
+**Every other `NOP,0,CC+SILI,n` in that macro has `1`** — `CH3A1`, `CH80`,
+`CH8G`, `CH9`, `CH130`, `CH150`, `CH180`, `CH200`, `CH220`, `CH280`. `CH5` is the
+only `6`, and a `NOP` that sets the sector does not read six bytes. It is a
+transcription slip in our mirror of IBM's macro library, not a maintenance level.
+
+Changed to `1`. **1,409 -> 1,418 under the chosen baseline, exactly the nine, with
+`rc 0` unchanged at 4,590 of 5,538 — no module regressed.**
+
+This is the `^`/`¬` code-page class again in shape: one cause, a whole family, and
+invisible until the modules were sorted by how far they are from the object rather
+than by name or by library. The 319 mirror macros at an unestablished maintenance
+level are the population this came out of, and the same ranking is what would find
+the next one.
