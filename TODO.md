@@ -193,6 +193,40 @@ inside a `STAX` expansion, and TK5's and MVS/CE's `STAX` are **byte-identical**
 — so IBM assembled against a `STAX` neither system ships. That is macro
 provenance, and it is what Dave Kreiss' rebuilt tape would settle.
 
+### Start here — the state on the morning of 2026-09-14
+
+**1,483 of 5,353 — 27.7 %**, from 1,277 the previous morning. Both guards green,
+`baseline_gate.py --control` at 0 disagreements, 22 commits.
+
+**The one thing that needs Mike:** the mail to Dave is written and unsent —
+[`docs/mail-kreiss-2026-09-13.md`](docs/mail-kreiss-2026-09-13.md). Two questions
+only he can answer, and the macro libraries he offered.
+
+**What paid, and what did not.** Five finds moved the number: the holes run (+201),
+six TSO modules by hand (+6), `IGGCP14`'s wrong digit (+9), the ranked `fillgaps`
+sweep (+27), the per-module `ASMDATE` (+29) and the `×`/`|` code page (+9). Every
+one came from the same move — **sort the tree by distance to the object, group the
+differences by (our byte, IBM's byte), look at the cell with several modules in
+it.** Everything else — four hours on MVS, the `SCHEDULE` edit, the `ESTAE` dive —
+produced knowledge and no modules.
+
+**What is exhausted.** `fillgaps.py` over all 3,686 open modules recovers **four**.
+Widening its filler rule to `DS C`, `DS AL2`, `DS BL1` and friends recovers
+**zero** more. The mechanical seam is closed.
+
+**What is left, measured rather than guessed.** 1,295 modules are within 64 bytes
+of IBM's length; `seclocate.py` anchors 1,038 of them and prints the differing run
+with its bytes. **182 have exactly one length-changing spot** — that is the queue.
+There is no large shared cause left in it: every family hypothesis was tested and
+only two survived, nine modules each. Eight, four and two bytes are common amounts
+of missing code, not common causes.
+
+**Two claims of mine were withdrawn today and the withdrawals are in the docs:**
+`IKJEHREN`'s "missing `'0'`" (it is a pad byte; the target holds `X'80'`), and
+"175 modules wait on `ESTAE`" (a generalisation from n = 1; `seclocate.py` found
+2 of 21 located insertions). The second was also in the mail draft and was
+corrected before it could be sent.
+
 ### The method that works, and it is a ranking
 
 `tools/worklist.py`: every module not identical to the chosen baseline, **nearest
