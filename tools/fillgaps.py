@@ -69,7 +69,21 @@ LST = re.compile(r"^([0-9A-F]{6})\s+((?:[0-9A-F]{2,8}[ ]+)*)(\d{1,6})([+ ])\s*(.
 #            statement with `DC X'..'` of the same width, so the length holds.
 #   ALIGN:   `DS 0F`, `DC 0H'0'` -- occupies nothing. The fix is INSERTED before
 #            it and the alignment absorbs it.
-RESERVE = re.compile(r"^(?:\S+\s+)?DS\s+(?:C?L?\d+|X|[CH]L\d+)\s*(?:\s\S.*)?$")
+# 2026-09-13: this used to read `(?:C?L?\d+|X|[CH]L\d+)`, which knows `DS X`,
+# `DS CL1` and `DS 18F` and does NOT know the forms the ranking keeps landing on:
+# `CK DS C`, `RCATASID DS AL2`, `DS XL2`, `ABDPDCBP DS A`, `GETSW DS BL1`. Those
+# were reported `not a filler` and skipped, and they are the owners of the three
+# largest cells in the byte-pair grouping -- 88 modules between them.
+#
+# The duplication factor must not be zero, or `DS 0F` matches here as well as in
+# ALIGN and a zero-length alignment would be REPLACED rather than preceded --
+# which is the IKJEFLLM defect the control caught, in reverse.
+#
+# Widening is safe because the replacement's width comes from the CLUSTER, not
+# from parsing the type letter: a `DC X'..'` of the wrong width changes the
+# section length, the module does not come back identical, and nothing is
+# deposited. The measurement filters what the regex cannot judge.
+RESERVE = re.compile(r"^(?:\S+\s+)?DS\s+(?:(?:[1-9]\d*)?[CXBHFDAPZEL](?:L\d+)?|[1-9]\d*)\s*(?:\s\S.*)?$")
 ALIGN = re.compile(r"^(?:\S+\s+)?(?:DS\s+0[HFDX]|DC\s+0[HFD]'0')\s*(?:\s\S.*)?$")
 
 
