@@ -1775,3 +1775,61 @@ and match — which they could not if the attribution were generally wrong.
 **A count of modules that use a construct is not a reach; a count of modules that
 use it *and still differ* is.** Both numbers were available and the first is the
 one that got quoted. It cost one script over files already on disk to replace it.
+
+---
+
+## 2026-09-13: the mechanical seam is exhausted, and what is left is length
+
+`fillgaps.py` was run over **all 3,686 modules still open**, not a slice. It
+recovered **four**. The refusal reasons are the finding:
+
+| | modules |
+|---|---:|
+| `nothing fillable`, no reason given | **2,613** |
+| `emits bytes` | 671 |
+| `not a filler` / macro-generated | 151 |
+| `SPLIT` — the two libraries disagree at the byte | 50 |
+| recovered | 4 |
+
+**The 2,613 are length differences.** `cmplmd370` reports no clusters when a
+CSECT is a different size, so there is nothing for a gap-filler to work from, and
+the byte ranking that paid five times today cannot see them either.
+
+### So rank them by the quantity they do have
+
+[`lenlist.py`](../tools/lenlist.py): the length-differing modules, smallest gap
+first, signed. **1,295 are within 64 bytes of IBM's length** — 918 where ours is
+shorter, 377 where ours is longer — and the distribution is not smooth:
+
+| gap | modules |
+|---:|---:|
+| **+8** | **189** |
+| −4 | 91 |
+| +4 | 91 |
+| −8 | 88 |
+| +16 | 77 |
+| +24 | 71 |
+| +32 | 58 |
+| +2 | 44 |
+
+A positive gap means IBM's CSECT is longer. The +8 cell is the largest single
+lever identified, 189 modules across `IGC*` 49, `IST*` 27, `IED*` 26, `IGG*` 17.
+
+### Two hypotheses about the +8, both refuted, both cheap
+
+1. **Eight bytes missing at the END.** Appending `DC XL8'00'` makes the length
+   match exactly in 12 of 14 tried — and none becomes identical. With the lengths
+   equal, `cmplmd370` finally shows clusters, and they are displacements differing
+   by exactly 8: `9c` against `a4`, `ac` against `b4`, `54` against `5c`. **The
+   bytes are missing early, not late**, and everything after them sits 8 too low.
+2. **Eight characters missing from the eyecatcher.** The prologue is
+   `DC AL1(16)` followed by a 16-character identifier, so 24 would have explained
+   it. Extending both puts a cluster at offset `0x0003` reading IBM `16 10` — and
+   `0x0004` *is* the `AL1`, where IBM has **`10`, sixteen.** IBM's identifier is
+   the same length as ours. Refuted by its own byte.
+
+So the eight bytes are somewhere between the prologue and the first displacement
+that shifts, and finding them needs what neither tool offers yet: **the section's
+bytes out of the bound member**, to diff against the deck directly. `cmplmd370`
+compares but does not expose, and that is the next instrument rather than the next
+guess.

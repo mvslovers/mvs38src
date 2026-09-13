@@ -39,7 +39,7 @@ The assembled CSECT is byte-identical to IBM's, or it is not. Nothing else count
 
 Measured a second time from the other side, on the host against TK5's distribution libraries: **1,221 of 5,353** — 22.8 %. Two different programs, two different populations, two machines.
 
-**With the source recovered so far**, the same measurement reads **1,549 of 5,353** — 28.9 %. The first figure says how far Dave Kreiss got; this one says where the project is. Both are wanted.
+**With the source recovered so far**, the same measurement reads **1,553 of 5,353** — 29.0 %. The first figure says how far Dave Kreiss got; this one says where the project is. Both are wanted.
 
 > **`src/` no longer contributes +1 apiece to this figure, and that is deliberate.** It held until 2026-09-12, when every module in `src/` was repaired against the DLIB. **7** are now repaired against the **target** instead and therefore differ from the DLIB by exactly the amount they used to differ from the target — one source cannot reach two different objects. The figure that counts `src/` under the chosen baseline is the next one down.
 
@@ -49,9 +49,9 @@ Dave Kreiss: *"target not DLIB is the version of code you should compare to sinc
 
 | | modules | |
 |---|---:|---:|
-| **recovered under the chosen baseline** | **1,481 of 5,353** | **27.7 %** |
+| **recovered under the chosen baseline** | **1,483 of 5,353** | **27.7 %** |
 
-The figures above it are not withdrawn and do not contradict it: the same decks are identical to **1,506** DLIB members, **1,332** target members, and **1,307** of both. **143 modules are counted as not recovered because `cmplmd370` cannot read their target member** — `IEANUC01` and the overlay-structured load modules — and 18 of those the DLIB does call identical. That is an instrument gap, not a result, and it is the cheapest 18 modules on the board. A further **839** have no target counterpart at all, and for those the DLIB is the only object there is.
+The figures above it are not withdrawn and do not contradict it: the same decks are identical to **1,508** DLIB members, **1,334** target members, and **1,309** of both. **143 modules are counted as not recovered because `cmplmd370` cannot read their target member** — `IEANUC01` and the overlay-structured load modules — and 18 of those the DLIB does call identical. That is an instrument gap, not a result, and it is the cheapest 18 modules on the board. A further **839** have no target counterpart at all, and for those the DLIB is the only object there is.
 
 > **Not to be confused with the tool figure.** `as370` reproduces IFOX00's deck for **5,471 of 5,528** modules — that says our assembler is trustworthy, not that the source carries the object's maintenance level. A module is routinely in that 98 % and not in the table above, and that gap is what this project is about.
 
