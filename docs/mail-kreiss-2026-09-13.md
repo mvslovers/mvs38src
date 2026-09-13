@@ -6,9 +6,12 @@
 
 Der Anlass ist nicht Höflichkeit, sondern Arbeit, die ohne ihn stehenbleibt:
 
-- **175 Module hängen an einem Makro-Stand**, den weder MVS/CE noch TK5 selbst
-  führt ([`missing-macros.md`](missing-macros.md)). Sein angebotenes Zip löst das
-  und sonst nichts.
+- **Ein Makro-Stand fehlt in allen drei Bibliotheken**, auch in TK5s eigener
+  ([`missing-macros.md`](missing-macros.md)). Sein angebotenes Zip löst das und
+  sonst nichts. **Korrigiert:** der erste Entwurf schrieb „175 Module" — das war
+  eine Verallgemeinerung aus *einem* Fall, und `seclocate.py` hat sie widerlegt
+  (2 von 21 lokalisierten Einfügungen). Die Mail sagt die Zahl jetzt selbst
+  richtig, samt der Korrektur, weil Dave beurteilen kann, was das wert ist.
 - **`MAINT05Z` war richtig, und danach ist die Quellbibliothek beschädigt.** Die
   Objektseite ist einwandfrei. Das ist seine SMP, und die Quellseitenverwaltung
   ist genau die Funktion, die er hinzugefügt hat.
