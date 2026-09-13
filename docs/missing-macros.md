@@ -775,7 +775,7 @@ their sizes, is what turned a bad edit into a statement about IBM's macro librar
 
 ---
 
-## `ESTAE` is eight bytes short, in 175 modules, and no library we have carries the right one
+## `ESTAE` is eight bytes short — in a handful of modules, not the 175 I first claimed
 
 The largest single cause of length differences found so far, and the chain to it
 is the one the ranking keeps producing.
@@ -814,9 +814,39 @@ So **the macro that assembled TK5's object is in none of the three**, including
 TK5's own library. That is not a path-order question and not something an edit can
 fix: the level is missing, not misplaced.
 
-This is the single largest entry the missing-macro inventory has: **175 modules,
-one macro, one known-missing maintenance level.** It is also exactly what Dave
-Kreiss' offer settles — *"create a zip file of all the resulting source (including
+### The 175 was wrong, and the instrument that found `ESTAE` is what refuted it
+
+The reasoning was: 189 modules are exactly +8, one of them is `ESTAE`, therefore
+they are all `ESTAE`. **That is a generalisation from n = 1**, and it is the error
+this project's method exists to prevent. I made it anyway.
+
+`tools/seclocate.py` settles it by *locating* each insertion instead of inferring
+it — our deck's section text against the member's, aligned with `difflib`, so an
+inserted run shows up as an insertion rather than as a hundred displaced bytes.
+Over the +8 cell:
+
+| | |
+|---|---:|
+| modules tried | 120 |
+| section located (probe unique in the member) | 30 |
+| a distinct insertion identified | 21 |
+| **of those, the `ESTAE` run `d702100d100d1b`** | **2** |
+
+Twenty-one located insertions and almost every one is different: `98 0f 70 0c ...`,
+`d8 58 e0 30 ...`, `b2 00 d2 08 ...`. **Eight bytes is simply a common amount of
+missing code** — two instructions, or a doubleword — so the cell is a coincidence
+of magnitude and not of cause.
+
+`ESTAE` remains a real finding for the modules it does explain, and the macro
+really is absent from all three libraries. It is not the 175-module lever I
+announced.
+
+**And the instrument has its own limit, stated rather than hidden:** the section
+could be located in only 30 of 120, because the probe — our first 16 text bytes —
+has to appear exactly once in the member, and in a packed target member or a module
+without the PL/S branch-around-identifier prologue it does not.
+
+It is also what Dave Kreiss' offer settles — *"create a zip file of all the resulting source (including
 all assembler code and macro libraries)"*
 ([`kreiss-reply-2026-09-12.md`](kreiss-reply-2026-09-12.md) §5). Until that
 arrives, the 175 cannot be closed by any change on this side.

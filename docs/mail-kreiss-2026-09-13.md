@@ -79,8 +79,9 @@ You offered to *"create a zip file of all the resulting source (including all
 assembler code and macro libraries)"*. Here is the single largest thing it would
 close.
 
-**175 modules are exactly eight bytes shorter than IBM's object, and it is one
-macro.** `IDAVBPJ1` at offset `0x00A6`:
+There is a macro we cannot find, and I want to be careful about how big I claim it
+is — my first estimate was far too large and I corrected it before writing this.
+`IDAVBPJ1` at offset `0x00A6`:
 
 ```
 ours   1F00           0A3C          SLR 0,0            ; SVC 60
@@ -95,7 +96,15 @@ And the macro is the same version everywhere we can look: MVS/CE's distribution
 `AMACLIB`, MVS/CE's target macro library, and **TK5's own `SYS1.AMACLIB(ESTAE)`**
 are byte-identical apart from one trailing blank line, and all three emit `SLR 0,0`
 with no `XC`. So the `ESTAE` that assembled the shipped object is in none of them.
-If your macro libraries carry it, those 175 modules close at once.
+
+How many modules that accounts for, honestly: 189 modules in the corpus are exactly
+eight bytes shorter than IBM's object, and I assumed they were all this. They are
+not. Aligning our text against the shipped text module by module, twenty-one of the
+first thirty I could align showed a distinct missing run, and only two of them were
+this `ESTAE` sequence. Eight bytes is just a common amount of missing code. So the
+`ESTAE` level is worth some modules rather than a hundred and seventy-five — but it
+is certainly missing from every library we can reach, including TK5's own, and it is
+the kind of thing only your macro libraries can settle.
 
 ## And the tool you said you needed
 
