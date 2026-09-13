@@ -242,14 +242,59 @@ def space_fix(line):
     return line.replace("S=,", f"S={qty},", 1), f"{name} S={qty}"
 
 
+# mvsMF rewrites the JOB card on its way to JES and puts its own
+# `NOTIFY=$MVSMF,USER=HERC01,PASSWORD=` on it -- visible in any JESJCL it
+# produced. A card that ALREADY carries USER= or PASSWORD= therefore ends up with
+# the keyword twice, and JES rejects the job before a single step runs:
+#
+#   $HASP165 ... ENDED - JOB NOT RUN - JCL ERROR
+#
+# Measured 2026-09-13 with a control that has a known answer -- the same IEFBR14
+# job submitted twice, once with `USER=HERC01,PASSWORD=CUL8TR` on the card and
+# once without:
+#
+#   with     CTLUSER/JOB00911    JCL ERROR
+#   without  CTLPLAIN/JOB00912   CC 0000
+#
+# `MAINT05Z` is the job this bites, and it bit: Dave wrote USER=/PASSWORD= into
+# its card by hand because under RAKF the job needs HERC01's authority to write
+# SYS1.LINKLIB (docs/kreiss-project.md). Stripping the keywords does not lose
+# that -- mvsMF injects `USER=HERC01` itself, the same userid.
+#
+# **The job also carries MSGCLASS=A**, so its own JES messages were printed and
+# purged before anything could read them, and the only trace of the failure was
+# on the Hercules console. That is what MSGCLASS=H below exists to prevent, and
+# it is why this was diagnosed from a syslog line rather than from the job.
+CARDUSER = re.compile(r"\b(USER|PASSWORD)=[^,\s]*,?", re.I)
+
+
 def prepare(text):
-    """MSGCLASS=H, BLDSUB disabled, secondary extents supplied. -> (jcl, next, lib)."""
+    """MSGCLASS=H, no USER=/PASSWORD=, BLDSUB disabled, extents. -> (jcl, next, lib)."""
     lines = [l[:72].rstrip() for l in text.replace("\r\n", "\n").split("\n") if l.strip()]
     nxt, lb = None, None
-    fixed = []
+    fixed, stripped = [], []
     for i, l in enumerate(lines):
         if "MSGCLASS=" in l and i < 4:
             lines[i] = re.sub(r"MSGCLASS=\w", "MSGCLASS=H", l)
+        # Only the JOB card and its continuations: a USER= on a DD or a SYSIN
+        # card is data and must not be touched.
+        if i < 6 and lines[i].startswith("//") and not lines[i].startswith("//*") \
+                and CARDUSER.search(lines[i]):
+            was = lines[i].strip()
+            cut = CARDUSER.sub("", lines[i]).rstrip()
+            # A continuation card with nothing but blanks after `//` is itself a
+            # JCL error, so an emptied line is removed rather than blanked.
+            #
+            # And a continuation card with no `=` left on it carries no keyword,
+            # only the trailing comment that used to sit after the operand --
+            # `MAINT05Z`'s card left `//                 TK4-` behind, and alone
+            # on the line that is an operand past column 16 rather than a
+            # comment. Drop the whole remnant.
+            if re.fullmatch(r"//\s*", cut) or (i > 0 and "=" not in cut):
+                lines[i] = ""
+            else:
+                lines[i] = cut
+            stripped.append(was[:44])
         lines[i], note = space_fix(lines[i])
         if note:
             fixed.append(note)
@@ -265,7 +310,10 @@ def prepare(text):
             lines[i] = "//*" + lines[i][2:]   # keep the card, disable the step
     if fixed:
         print(f"    Sekundaerzuteilung ergaenzt: {', '.join(fixed)}", flush=True)
-    return "\n".join(lines) + "\n", nxt, lb
+    if stripped:
+        print(f"    USER=/PASSWORD= von der Jobkarte entfernt (mvsMF setzt sie "
+              f"selbst): {' | '.join(stripped)}", flush=True)
+    return "\n".join(l for l in lines if l) + "\n", nxt, lb
 
 
 # mvsMF builds a table of the JCL's lines before it hands the job to JES, and

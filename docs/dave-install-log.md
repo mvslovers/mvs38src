@@ -673,6 +673,53 @@ any later `APPLY` depends on `MAINT05Z` having refreshed `SYS1.LINKLIB` first;
 Dave disabled it, which is evidence about his intent and not about that
 dependency.
 
+### 2026-09-13: `MAINT05Z` ran, and what the chain behind it is predicted to do
+
+Written **before** the chain was started, on the model of
+[`run6-predictions.md`](run6-predictions.md).
+
+`MVSTK5-BLD` was quiesced, its DASD copied to `~/MVSTK5-BLD-frozen-20260913` — 32
+volumes, 32 SHA-256 sums, `sha256sum -c` clean — and IPLed again. Then
+`MAINT05Z` alone, `--max 1`: **`CPYSMP/JOB00913`, `CC 0000`**,
+`IEF142I ... LINK - STEP WAS EXECUTED - COND CODE 0000`, `SYS1.LINKLIB` on
+`TK5RES` written from `MVSSRC.BLD.AOS12`. **Dave's rebuilt SMP is the running SMP
+on that system as of now.**
+
+It took two attempts and the first one is the more useful:
+`CPYSMP/JOB00910` ended **`JOB NOT RUN - JCL ERROR`** and purged itself, because
+Dave's job card carries `USER=HERC01,PASSWORD=CUL8TR` — he put it there for RAKF
+authority — and **mvsMF rewrites the card with its own
+`NOTIFY=$MVSMF,USER=HERC01,PASSWORD=`**, so the keyword arrives twice. Confirmed
+with a control rather than guessed: the same `IEFBR14` job submitted twice, with
+the keywords `JCL ERROR` and without them `CC 0000`. `bldrun.py` strips them now,
+and drops the emptied continuation card rather than blanking it, because
+`MAINT05Z`'s card would otherwise have left `TK4-` alone on a continuation line —
+a trailing comment that stops being one when the operand in front of it is gone.
+
+**And it was nearly undiagnosable.** The job's own `MSGCLASS=A` printed and purged
+its messages before anything could read them, so the only trace was one line on
+the Hercules console. `prepare()`'s `MSGCLASS=H` rewrite exists for exactly this
+and did not reach it — the JCL error happened before JES honoured anything.
+
+#### The prediction
+
+Dave: *"because SMP had some functionality missing I updated SMP to have that
+functionality … my version of SMP manages the source side as well as the object
+side."* Our reading is that this is why 485 of his SYSMODs failed here with
+`HMA3462 INVALID IEBUPDTE CONTROL STATEMENT` on `./ DELETE`, and why 486 modules
+are missing their `DSK` markers.
+
+**So: the chain from `MAINT06@` should now get further than run 6 did, and the
+`./ DELETE` failures should be gone or much reduced.** Run 6's first four jobs past
+the stop returned `CC 0008`, `CC 0012`, `CC 0012`, `CC 0000`, `CC 0012` — under the
+*stock* SMP. If the same four return the same codes under Dave's SMP, the
+`./ DELETE` hypothesis is wrong and the cause is elsewhere.
+
+One conflict is recorded rather than resolved: `bldrun.py --follow-lib`'s help says
+*"Phases 2-5 UPDATE THE RUNNING SYSTEM"*, while the scan below — all 144 members of
+`JCL1`…`JCL5` — found that **only `MAINT05Z`** writes outside `MVSSRC.*`. The scan
+is the later and more specific statement, and the backup covers either way.
+
 ### `MAINT06@` `ABEND SB37` — the 16-extent limit, and `BLDCLR` cannot help
 
 The first job past Dave's stop died immediately:
