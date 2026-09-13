@@ -20,6 +20,7 @@ TGT = os.path.join(ROOT, "work/build/reports-tk5-run6/RPTTGT")
 DLB = os.path.join(ROOT, "work/build/reports-tk5-run6/RPTDLB")
 HOST = os.path.join(ROOT, "work/measurements/src-states/ss-run7-vs-tk5.tsv")
 OVERLAY = os.path.join(ROOT, "work/measurements/src-states/ss-overlay-vs-tk5.tsv")
+GATE = os.path.join(ROOT, "work/measurements/baseline-gate/overlay-vs-both.tsv")
 START, END = "<!-- scoreboard:start -->", "<!-- scoreboard:end -->"
 
 
@@ -63,6 +64,36 @@ def host_identity(path=None):
     return ident, n
 
 
+def chosen_baseline(path=None):
+    """The project figure under the baseline Mike chose on 2026-09-13:
+    the TARGET library where the CSECT has one, the DLIB where it does not.
+
+    A module whose target member `cmplmd370` cannot read counts as NOT identical,
+    even where the DLIB says it is. That is 143 modules, 18 of them DLIB-identical,
+    and falling back to the DLIB there would quietly credit the project with
+    modules nothing has measured against the chosen baseline. The class is named
+    in docs/baseline-dlib-vs-target.md; it is an instrument gap, not a result.
+    """
+    p = path or GATE
+    if not os.path.exists(p):
+        return None, None, None
+    rows = [l.rstrip("\n").split("\t") for l in open(p, encoding="utf-8")]
+    i = {k: n for n, k in enumerate(rows[0])}
+    n = ident = unread = 0
+    for r in rows[1:]:
+        if len(r) < len(rows[0]):
+            continue
+        n += 1
+        t, d = r[i["tgt_c"]], r[i["dlib_c"]]
+        if t == "identical":
+            ident += 1
+        elif t == "not-in-target" and d == "identical":
+            ident += 1
+        elif t in ("error", "unpaired", "no-ref"):
+            unread += 1
+    return ident, n, unread
+
+
 def render():
     tgt = per_library(TGT)
     tb = sum(v[0] for v in tgt.values()); te = sum(v[1] for v in tgt.values())
@@ -88,6 +119,25 @@ def render():
               f"**{oi:,} of {on:,}** — {100*oi/on:.1f} %. The first figure says how far "
               f"Dave Kreiss got; this one says where the project is. Both are wanted, "
               f"and the difference is exactly the number of modules in `src/`.", ""]
+    ci, cn, cu = chosen_baseline()
+    if ci is not None:
+        L += [f"### Under the baseline the project chose on 2026-09-13", "",
+              f"Dave Kreiss: *\"target not DLIB is the version of code you should "
+              f"compare to since target is what the running system uses.\"* Measured "
+              f"([`docs/baseline-dlib-vs-target.md`](docs/baseline-dlib-vs-target.md)), "
+              f"the two baselines are 167 verdicts apart, so the yardstick is now "
+              f"**TK5's target library where the CSECT has one, its DLIB where it does "
+              f"not**:", "",
+              f"| | modules | |", f"|---|---:|---:|",
+              f"| **recovered under the chosen baseline** | **{ci:,} of {cn:,}** | "
+              f"**{100*ci/cn:.1f} %** |", "",
+              f"The figures above it are not withdrawn and do not contradict it: "
+              f"1,236 is the same decks against the DLIB alone, 1,069 against the "
+              f"target alone, 1,052 against both. **{cu:,} modules are counted as not "
+              f"recovered because `cmplmd370` cannot read their target member** — "
+              f"`IEANUC01` and the overlay-structured load modules — and 18 of those "
+              f"the DLIB does call identical. That is an instrument gap, not a result, "
+              f"and it is the cheapest 18 modules on the board.", ""]
     L += [
           "> **Not to be confused with the tool figure.** `as370` reproduces IFOX00's "
           "deck for **5,471 of 5,528** modules — that says our assembler is "

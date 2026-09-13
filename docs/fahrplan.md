@@ -16,6 +16,17 @@ governs.
 
 **The object baseline is TK5.**
 
+> **2026-09-13: which library WITHIN TK5 is now also decided — the TARGET, with
+> the DLIB as the fallback.** Dave Kreiss reversed the assumption this document
+> was written under ([`kreiss-reply-2026-09-12.md`](kreiss-reply-2026-09-12.md)):
+> the DLIBs are back level wherever maintenance was never ACCEPTed, and both
+> sides are linkage-editor output, which refutes the stated reason for preferring
+> a DLIB. Measured in [`baseline-dlib-vs-target.md`](baseline-dlib-vs-target.md):
+> the two are 167 verdicts apart and 23 of the 66 recovered TSO modules are
+> recovered against the back-level copy. Mike chose target-primary on 2026-09-13.
+> **§1 below is unaffected** — it decides *which system*, and that is still TK5 on
+> the evidence given. The paragraph that this DOES touch is the one after it.
+
 Measured, not argued ([`deck-vs-tk5-ce.md`](deck-vs-tk5-ce.md)): over 3,988
 modules, where TK5 and MVS/CE both carry maintenance Dave Kreiss' source hits TK5
 **15 times to 1**, and it is byte-identical to a maintained object MVS/CE does not
@@ -51,6 +62,23 @@ to be named rather than inherited silently. It is a short list:
 The 49 are the running system and never reach a DLIB. Four objects is the whole
 non-IBM surface of TK5's distribution libraries, and both of ours show it: same
 RMID as MVS/CE, same length, different bytes.
+
+> **2026-09-13: and this is the price of the target decision, stated where it
+> belongs.** Choosing the target libraries as the yardstick brings those **49
+> USERMOD-changed modules into the measurement**, where the DLIB kept them out.
+> The project's stated goal is a source tree at MVS 3.8j level,
+> *distribution-independent*; the target library is TK5's running system, Rob
+> Prins' modifications included. So the goal and the yardstick now pull in
+> slightly different directions for up to 49 modules out of 4,809.
+>
+> That is a real tension and it is not a reason to reverse the decision: Dave's
+> argument is about *IBM's* un-ACCEPTed maintenance, which is the larger effect,
+> and the DLIB is demonstrably behind. But it names the next measurement — **of
+> the 38 modules that differ between the two baselines, how many differ because
+> of a TK5 USERMOD rather than IBM service?** That needs the target zone's
+> SYSMOD-to-module mapping out of the SMP CDS, and until it is run, every one of
+> the 38 is *assumed* to be IBM maintenance. `IKJEFF53` is already a known
+> usermod target on MVS/CE, and it is in the 38.
 
 ## 2. The other axis — which source tree, and a finding that reshapes the question
 

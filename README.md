@@ -41,6 +41,16 @@ Measured a second time from the other side, on the host against TK5's distributi
 
 **With the source recovered so far**, the same measurement reads **1,277 of 5,353** — 23.9 %. The first figure says how far Dave Kreiss got; this one says where the project is. Both are wanted, and the difference is exactly the number of modules in `src/`.
 
+### Under the baseline the project chose on 2026-09-13
+
+Dave Kreiss: *"target not DLIB is the version of code you should compare to since target is what the running system uses."* Measured ([`docs/baseline-dlib-vs-target.md`](docs/baseline-dlib-vs-target.md)), the two baselines are 167 verdicts apart, so the yardstick is now **TK5's target library where the CSECT has one, its DLIB where it does not**:
+
+| | modules | |
+|---|---:|---:|
+| **recovered under the chosen baseline** | **1,197 of 5,353** | **22.4 %** |
+
+The figures above it are not withdrawn and do not contradict it: 1,236 is the same decks against the DLIB alone, 1,069 against the target alone, 1,052 against both. **143 modules are counted as not recovered because `cmplmd370` cannot read their target member** — `IEANUC01` and the overlay-structured load modules — and 18 of those the DLIB does call identical. That is an instrument gap, not a result, and it is the cheapest 18 modules on the board.
+
 > **Not to be confused with the tool figure.** `as370` reproduces IFOX00's deck for **5,471 of 5,528** modules — that says our assembler is trustworthy, not that the source carries the object's maintenance level. A module is routinely in that 98 % and not in the table above, and that gap is what this project is about.
 
 <!-- scoreboard:end -->
