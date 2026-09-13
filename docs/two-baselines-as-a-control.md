@@ -162,10 +162,36 @@ and it did so the first time it was asked.
    IKJEHREN`. Under the old guard every one of them would have been deposited as
    a recovery.
 
-3. **The 562-module holes run has not happened yet**, which is luck rather than
-   judgement: under the old guard it would have produced this class at scale, and
-   the holes population is 96 % base-level — exactly where a maintenance
-   explanation is least available and a residue explanation most likely.
+3. ~~**The 562-module holes run has not happened yet**~~ — **run on 2026-09-13,
+   after the guard changed, and the result is the opposite of what the TSO class
+   led me to expect.**
+
+   Population under the chosen baseline is **533**, not the 550 the DLIB alone
+   reports; 521 had never been through the tool.
+
+   | | modules | |
+   |---|---:|---|
+   | **identical against the chosen baseline** | **201** | deposited |
+   | of those, **corroborated by both libraries** | **184** | the target agreed with the DLIB at every filled byte |
+   | of those, single witness | 17 | no target counterpart — recovered, uncontrolled, and counted as such |
+   | **`SPLIT`, refused** | **4** | `IDCxxxxx` 2, `IGCxxxxx` 2 |
+   | nothing fillable, or the fix was not enough | 316 |
+
+   **Four of 521 against six of 22.** In the TSO same-length class the two
+   libraries disagreed at 27 % of the transcribed offsets; in the holes class, at
+   0.8 %. So the two classes are not the same kind of thing at all:
+
+   - **hole bytes are real.** Both of IBM's independently link-edited libraries
+     carry them, so they were in the object IBM assembled, and transcribing them
+     is recovery.
+   - **the same-length class's alignment fillers and dead epilogues are not.**
+     That is where `IKJEGMSG`'s 99 bytes lived.
+
+   [`ds-holes.md`](ds-holes.md) established hole agreement across TK5's and
+   MVS/CE's *distribution* libraries, 309 of 309. This is the same conclusion from
+   a second, independent pair of witnesses — TK5's own two sides — and it is why
+   the holes population was worth 201 modules and the same-length population was
+   worth a correction.
 
 4. **The 25 hand cases inherit the rule.** Where the two libraries disagree at the
    differing byte, the module is a baseline choice and not a repair. The marker

@@ -46,11 +46,11 @@ The scoreboard is at the head of [`README.md`](README.md) and is **generated** �
 |---|---:|
 | build's CSECT == IBM's, per `LMDRPT38` | **1,422 of 5,485 — 25.9 %** |
 | host-side, archive source vs TK5 | **1,221 of 5,353 — 22.8 %** |
-| **host-side, with our recovered sources** | **1,272** |
+| **host-side, with our recovered sources** | **1,470** |
 | host-side against TK5's **TARGET** libraries, same decks | **1,069 of 5,353** |
 | identical against **both** baselines | **1,052** |
-| **under the chosen baseline — target, DLIB where no target exists** | **1,202 of 5,353** |
-| `src/` — 32 identical to both, 18 no target counterpart, 4 target-only, 1 DLIB-only | **55 modules**, 52 marked lines in 21 |
+| **under the chosen baseline — target, DLIB where no target exists** | **1,403 of 5,353** |
+| `src/` — 216 identical to both, 24 no target counterpart, 4 target-only, 1 DLIB-only | **256 modules**, 348 marked lines in 222 |
 | ⚠️ `scoreboard.py --check` only checks README-against-tool | its INPUT can be stale; re-run `srcstate_vs_dlib.py` after any change to `src/` |
 | `as370` == IFOX00 | **5,471 of 5,528 — 99.0 %** |
 | open `as370` cases | **4** tree-wide, **3** in the case list |
@@ -209,9 +209,14 @@ provenance, and it is what Dave Kreiss' rebuilt tape would settle.
    member it calls identical. That is 18 modules of pure instrument gap —
    `IEANUC01` is scatter format and the rest are overlay-structured — and it is the
    cheapest block on the board. A `cc370` case.
-3. ⚡ **The 562-module holes run**, now that `fillgaps.py` will refuse the `SPLIT`
-   class. It was never run, and that is the only reason this class is not
-   everywhere.
+3. ✅ **The holes run, done 2026-09-13.** 533 modules under the chosen baseline,
+   521 new to the tool, **201 recovered** — 184 corroborated by both of IBM's
+   libraries, 17 on a single witness, 4 refused as `SPLIT`. 1,202 → **1,403**.
+   Four of 521 against six of 22 in the TSO class: **hole bytes are real and the
+   same-length class's fillers were not**
+   ([`docs/two-baselines-as-a-control.md`](docs/two-baselines-as-a-control.md)).
+   What is left of that population is 316 where nothing is fillable or the fix was
+   not enough.
 4. ⚡ **Which of the 38 divergent modules differ because of a TK5 USERMOD** rather
    than IBM service. Needs the target zone's SYSMOD-to-module mapping. `IKJEFF53`
    is a known usermod target and is in the 38, so the answer is not zero.
