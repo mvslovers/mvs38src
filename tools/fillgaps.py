@@ -11,6 +11,24 @@ src/ only when `cmplmd370` calls it identical afterwards; anything else is
 reported and left alone. So a wrong offset-to-statement mapping cannot deposit a
 wrong file -- it can only fail to produce identity.
 
+**2026-09-13: that guard has a blind spot and it cost 99 bytes.** A transcribed
+byte always makes the comparison succeed -- that is what transcription is. The
+guard proves the byte was copied correctly; it can never prove IBM's source
+contained it. `IKJEGMSG` took 100 marked lines out of the DLIB member and came
+back identical, and against TK5's target member Dave's untouched source was ONE
+byte away while the repair sat 99 away
+([`../docs/two-baselines-as-a-control.md`](../docs/two-baselines-as-a-control.md)).
+
+Two things follow and both are implemented here:
+
+1. **The reference is the baseline the project chose** -- TK5's target library
+   where the CSECT has one, the DLIB where it does not. `--base` overrides.
+2. **Where IBM's two libraries disagree at the byte about to be written, that is
+   reported and the module is NOT deposited without `--accept-split`.** A byte
+   the two libraries disagree about is not a byte IBM's source contained, so
+   writing it is a choice of baseline rather than a recovery, and it has to be
+   made deliberately.
+
 What it will touch, and nothing else:
 
   * a statement that emits NO bytes and reserves or aligns -- `DS CL1`, `DS X`,
@@ -25,8 +43,10 @@ What it will touch, and nothing else:
 
     fillgaps.py MODULE...           report and, where identical, deposit
     fillgaps.py --dry-run MODULE... report only
+    fillgaps.py --base tk5 MODULE.. score against the DLIB, as before 09-13
+    fillgaps.py --accept-split ...  deposit even where the baselines disagree
 """
-import argparse, glob, json, os, re, shutil, subprocess, sys
+import argparse, collections, glob, json, os, re, shutil, subprocess, sys
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -60,11 +80,50 @@ def marked(body, seq):
     return b.ljust(72) + seq
 
 
+TGT = os.path.join(ROOT, "work/measurements/target-bytes/tk5")
+GATE = os.path.join(ROOT, "work/measurements/baseline-gate")
+
+
 def library_of(mod):
     for lib in sorted(os.listdir(DLIB)):
         if os.path.exists(os.path.join(DLIB, lib, mod + ".bin")):
             return lib
     return None
+
+
+def target_members(mod):
+    """[(label, path)] of IBM's bound modules holding this CSECT, from LMDXRF38."""
+    p = os.path.join(GATE, "org-tgt.txt")
+    if not os.path.exists(p):
+        sys.exit(f"{p}: missing -- run tools/fetch_xref.py")
+    out = []
+    for line in open(p, encoding="latin-1"):
+        f = line.split()
+        if len(f) >= 5 and f[2] == "INCLUDE" and f[3] == mod:
+            out.append((f"{f[0]}({f[1]})",
+                        os.path.join(TGT, f[0], f[1] + ".bin")))
+    return out
+
+
+def clusters_of(d):
+    """{(section, offset): ref_bytes} out of a cmplmd370 verdict."""
+    out = {}
+    for s in (d or {}).get("sections") or []:
+        for c in s.get("clusters") or []:
+            out[(s["name"], c["offset"])] = c["ref"]
+    return out
+
+
+def disagreements(dref, oref):
+    """Offsets where IBM's two libraries want DIFFERENT bytes.
+
+    Only offsets both verdicts report are comparable: an offset one library
+    reports and the other does not means that library already matches the source
+    there, which is a difference between the libraries but not a contradiction
+    about what the source should say.
+    """
+    a, b = clusters_of(dref), clusters_of(oref)
+    return sorted(k for k in set(a) & set(b) if a[k] != b[k])
 
 
 def assemble(src, mod, tag):
@@ -77,12 +136,40 @@ def assemble(src, mod, tag):
 
 
 def verdict(obj, mod, lib):
+    """Against the DLIB member, which is one element and needs no --csect."""
     q = subprocess.run([CM, "--json", obj, os.path.join(DLIB, lib, mod + ".bin")],
                        capture_output=True, text=True)
     try:
         return json.loads(q.stdout)
     except json.JSONDecodeError:
         return None
+
+
+def verdict_tgt(obj, mod):
+    """(label, verdict) against IBM's target member, restricted to this CSECT.
+
+    A CSECT can be bound into several load modules; the one that differs least is
+    the one worth working on, which is the rule baseline_gate.py uses.
+    """
+    best = None
+    for label, path in target_members(mod):
+        if not os.path.exists(path):
+            continue
+        q = subprocess.run([CM, "--json", "--csect", mod, obj, path],
+                           capture_output=True, text=True)
+        if not q.stdout.strip():
+            continue
+        try:
+            d = json.loads(q.stdout)
+        except json.JSONDecodeError:
+            continue
+        if d.get("identical"):
+            return label, d
+        n = sum((s.get("diff_in_text") or 0) + (s.get("diff_in_holes") or 0)
+                for s in d.get("sections") or [])
+        if best is None or n < best[2]:
+            best = (label, d, n)
+    return (best[0], best[1]) if best else (None, None)
 
 
 def plan(lst, d, base):
@@ -180,8 +267,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("modules", nargs="+")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--base", default="tgt", choices=("tgt", "tk5"),
+                    help="tgt (default) is the baseline chosen 2026-09-13: the "
+                         "target library where the CSECT has one, the DLIB where "
+                         "it does not. tk5 is the DLIB alone, as before that date.")
+    ap.add_argument("--accept-split", action="store_true",
+                    help="deposit even where IBM's two libraries want different "
+                         "bytes at the offset being written -- a baseline choice, "
+                         "not a recovery")
     a = ap.parse_args()
-    ok = bad = 0
+    ok = bad = split = 0
     for mod in a.modules:
         lib = library_of(mod)
         if lib is None:
@@ -195,11 +290,30 @@ def main():
             m = ESD.match(line)
             if m:
                 base[m.group(1)] = int(m.group(3), 16)
-        d = verdict(obj, mod, lib)
+        ddlib = verdict(obj, mod, lib)
+        tlabel, dtgt = verdict_tgt(obj, mod) if a.base == "tgt" else (None, None)
+        # The chosen baseline, and the reason the fallback is explicit: 839 modules
+        # have no CSECT of that name in any target library at all, and for those
+        # the DLIB is the only object there is.
+        if a.base == "tgt" and dtgt is not None:
+            d, where = dtgt, tlabel
+        else:
+            d, where = ddlib, f"DLIB {lib}"
+            if a.base == "tgt":
+                where += " (no target counterpart)"
         if d is None:
             print(f"{mod:10s} SKIP   no verdict"); bad += 1; continue
         if d.get("identical"):
-            print(f"{mod:10s} already identical"); continue
+            print(f"{mod:10s} already identical against {where}"); continue
+        # Do IBM's two libraries agree about the bytes we are about to write?
+        bad_offs = disagreements(ddlib, dtgt) if (a.base == "tgt" and dtgt) else []
+        if bad_offs and not a.accept_split:
+            print(f"{mod:10s} SPLIT  IBM's two libraries want different bytes at "
+                  f"{len(bad_offs)} offset(s) -- e.g. "
+                  f"{bad_offs[0][0]}+0x{bad_offs[0][1]:x}; not a recovery. "
+                  f"--accept-split to write the {where} value anyway")
+            split += 1
+            continue
         fixes, skips = plan(lst, d, base)
         if not fixes:
             print(f"{mod:10s} SKIP   nothing fillable" +
@@ -208,13 +322,18 @@ def main():
         if apply(src, out, fixes) is None:
             print(f"{mod:10s} SKIP   could not write 80-column records"); bad += 1; continue
         _, obj2 = assemble(out, mod, "after")
-        d2 = verdict(obj2, mod, lib) if obj2 else None
+        if not obj2:
+            d2 = None
+        elif a.base == "tgt" and dtgt is not None:
+            _, d2 = verdict_tgt(obj2, mod)
+        else:
+            d2 = verdict(obj2, mod, lib)
         if d2 and d2.get("identical"):
             dest = os.path.join(ROOT, "src", lib, mod + ".ASM")
             if not a.dry_run:
                 os.makedirs(os.path.dirname(dest), exist_ok=True)
                 shutil.copy(out, dest)
-            print(f"{mod:10s} IDENTICAL  {len(fixes)} line(s)"
+            print(f"{mod:10s} IDENTICAL against {where}  {len(fixes)} line(s)"
                   + ("  [dry run]" if a.dry_run else f"  -> src/{lib}/"))
             ok += 1
         else:
@@ -223,7 +342,8 @@ def main():
             print(f"{mod:10s} NO     {len(fixes)} fix(es) left text={t} holes={h}"
                   + (f"; skipped: {skips[0][1]}" if skips else ""))
             bad += 1
-    print(f"\n{ok} identical, {bad} not")
+    print(f"\n{ok} identical, {bad} not"
+          + (f", {split} where IBM's two libraries disagree at the byte" if split else ""))
     return 0
 
 

@@ -116,17 +116,58 @@ object decks assembled at different maintenance levels, so their buffers differe
 **The control does not depend on settling it.** Whatever the mechanism, a byte
 the two libraries disagree about is not a byte IBM's source contained.
 
-## What to do with it
+## `IKJEHREN`, and a conclusion the control withdraws
 
-1. **`fillgaps.py` must check both baselines before depositing.** Today its guard
-   is "identical to the DLIB member", which is the condition that let 99 bytes of
-   noise through. The condition should be *identical to the chosen baseline*, and
-   a disagreement between the two baselines at the offset it is about to write
-   should be reported rather than transcribed. **Not yet changed.**
-2. **The 562-module holes run has not happened yet**, which is lucky: run under
-   the old guard it would have produced this class at scale.
-3. **The 25 hand cases inherit the same rule.** Where the two libraries disagree
-   at the differing byte, the module is a baseline choice and not a repair, and
-   the `!!!` line should say which object it came from. The marker text is IBM's
-   own and is not being changed; the record of which baseline each line came from
-   belongs in this document and in the commit.
+The same control corrects something the project had written down as settled.
+
+`IKJEHREN`'s first CSECT differed from the DLIB in one byte at `0x23`, where IBM
+had `X'F0'`. `X'F0'` is EBCDIC `'0'`, the preceding statement is a maintenance
+stamp `DC C' UZ45173 08/27/85'`, and the conclusion drawn on 2026-09-12 was that
+the stamp had lost its eighteenth character — established by assembling three
+candidates and finding that `'0'` alone brings the difference to zero.
+
+**TK5's target member holds `X'80'` at that offset.** `X'80'` is not a printable
+EBCDIC character, so it cannot be the eighteenth character of anything. The byte
+is the pad byte of `BRID DC 0H'0'`, IBM's two libraries disagree about it, and no
+source contains it.
+
+The three-candidate measurement is intact and still says what it said; what is
+withdrawn is the reading. A printable byte was read as text because it *could* be
+read as text. The second baseline is the thing that could tell the difference,
+and it did so the first time it was asked.
+
+## What was done about it
+
+1. **`fillgaps.py` now scores against the chosen baseline** — the target member
+   where the CSECT has one, the DLIB where it does not — and **refuses to deposit
+   where IBM's two libraries want different bytes at the offset it is about to
+   write**, unless `--accept-split` says otherwise. That is a new outcome class,
+   `SPLIT`, and it is the one that would have caught `IKJEGMSG`.
+
+   **Controlled against the six modules repaired by hand above, and it reproduces
+   all six**: `IKJEGMSG` identical with one line, `IKJEFF02` already identical,
+   `IKJEFE16`/`IKJEFF50`/`IKJEBEUN` `SPLIT` at the offsets found by hand
+   (`0x12e`, `0x402`, `0x45d`), `IKJEFD35` nothing fillable.
+
+2. **Re-run over all 65 TSO candidates** under the new guard:
+
+   | | modules |
+   |---|---:|
+   | identical against the chosen baseline | **16** |
+   | **`SPLIT` — the two libraries disagree at the byte** | **7** |
+   | nothing fillable, or the fix was not enough | 41 |
+   | already identical | 1 |
+
+   The seven are `IKJEBEAE IKJEBEUN IKJEE100 IKJEFA21 IKJEFE16 IKJEFF50
+   IKJEHREN`. Under the old guard every one of them would have been deposited as
+   a recovery.
+
+3. **The 562-module holes run has not happened yet**, which is luck rather than
+   judgement: under the old guard it would have produced this class at scale, and
+   the holes population is 96 % base-level — exactly where a maintenance
+   explanation is least available and a residue explanation most likely.
+
+4. **The 25 hand cases inherit the rule.** Where the two libraries disagree at the
+   differing byte, the module is a baseline choice and not a repair. The marker
+   text is IBM's own and is not being changed, so the record of which baseline
+   each line was copied from lives in this document and in the commits.

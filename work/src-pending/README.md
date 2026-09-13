@@ -29,6 +29,14 @@ is what the three of them are evidence for.
 
 ## `IKJEHREN` — progress, not completion
 
+> **2026-09-13: the premise below is withdrawn.** TK5's target member holds
+> `X'80'` at `0x23` where the DLIB holds `X'F0'`, and `X'80'` is not a printable
+> character — so the byte is the pad byte of `BRID DC 0H'0'` and the stamp is not
+> short at all. The measurement is intact, the reading of it was wrong. See
+> [`../../docs/tso-and-smp.md`](../../docs/tso-and-smp.md) and
+> [`../../docs/two-baselines-as-a-control.md`](../../docs/two-baselines-as-a-control.md).
+> The six hole bytes in `IKJEHRN2`/`IKJEHRN4` are a separate matter and unaffected.
+
 The stamp `DC C' UZ45173 08/27/85'` was one character short; the missing one is
 `'0'`, established by assembling three candidates against the object
 ([`../../docs/tso-and-smp.md`](../../docs/tso-and-smp.md)). That closes the

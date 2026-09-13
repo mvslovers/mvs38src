@@ -148,6 +148,27 @@ short or whether a following `DC C'0'` was dropped. Both produce the same bytes,
 so both are consistent with the evidence and the source cannot be recovered
 beyond the object's own resolution.
 
+> ### 2026-09-13: the stamp is not one character short, and the second baseline says so
+>
+> TK5's **target** member `CMDLIB(IKJEHREN)` holds **`X'80'`** at `0x23`, where
+> the DLIB member holds `X'F0'`. `X'80'` is not a printable EBCDIC character, so
+> it cannot be the eighteenth character of a stamp.
+>
+> The byte at `0x23` is therefore the pad byte of `BRID DC 0H'0'` and nothing
+> else — and IBM's two libraries disagree about what is in it, which by the
+> control in
+> [`two-baselines-as-a-control.md`](two-baselines-as-a-control.md) means it is
+> not a byte IBM's source contained.
+>
+> **Everything measured above stands and its meaning changes.** `'0'` really is
+> the character that makes the DLIB comparison exit 0 — the three-candidate table
+> is correct. What does not follow is that IBM wrote a `'0'` there. The reading
+> "`X'F0'` is EBCDIC `'0'`, so the stamp lost a character" was a printable byte
+> being read as text, and the second baseline is what exposes it: the same
+> position, a byte that cannot be read as text at all.
+>
+> `fillgaps.py` now reports this module as `SPLIT` rather than filling it.
+
 ### What it is worth, stated exactly
 
 | CSECT | before | after |
