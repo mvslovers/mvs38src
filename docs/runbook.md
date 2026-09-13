@@ -441,6 +441,31 @@ same file at the same time give inconsistent results.
 /p HTTPD
 ```
 
+> ### 2026-09-13, TK5: it is three tasks, not one, and `JRP` is the one nobody names
+>
+> Read out of `~/MVSTK5-BLD/scripts/shutdown` rather than assumed. The script sets
+> three HAO rules — `HASP099` → `pjes2`, `HASP085` → `z_eod`, `IEE334I` →
+> `quiesce` — and then hands over with `/f bsppilot,shutnow`. So **`BSPPILOT` is
+> handled**; `HTTPD`, `FTPD` and **`JRP`** appear nowhere in it.
+>
+> `JRP` is mvsMF's job REST processor — the same package as `HTTPD`, and the
+> component every tool here submits jobs through. Stop all three by hand before
+> the quiesce:
+>
+> ```
+> /P HTTPD          HTTPD099I HTTPD SHUTDOWN COMPLETE, then $HASP250 ... IS PURGED
+> /P FTPD           IEF404I FTPD - ENDED
+> /P JRP
+> /S SHUTFAST
+> ```
+>
+> Confirm with `/D A,L` between steps: after the three, nine address spaces remain
+> and all nine are ones the script drives. **`/P HTTPD` takes mvsMF on `:8085`
+> with it**, so REST access is gone from that moment until `/S HTTPD` after the
+> IPL — which is the right order anyway, because `:8085` cannot answer before
+> `HTTPD` is started, so it is no use as a readiness probe. Poll `/D T` on the
+> Hercules console for `IEE136I` instead.
+
 The shipped script brings down neither HTTPD nor FTPD nor mvsMF. Without this
 step the web server is run over by the quiesce.
 
