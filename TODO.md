@@ -49,7 +49,8 @@ The scoreboard is at the head of [`README.md`](README.md) and is **generated** �
 | **host-side, with our 56 recovered sources** | **1,277** |
 | host-side against TK5's **TARGET** libraries, same decks | **1,069 of 5,353** |
 | identical against **both** baselines | **1,052** |
-| **under the chosen baseline — target, DLIB where no target exists** | **1,197 of 5,353** |
+| **under the chosen baseline — target, DLIB where no target exists** | **1,202 of 5,353** |
+| `src/` — 32 identical to both, 18 no target counterpart, 4 target-only, 1 DLIB-only | **55 modules**, 52 marked lines in 21 |
 | `as370` == IFOX00 | **5,471 of 5,528 — 99.0 %** |
 | open `as370` cases | **4** tree-wide, **3** in the case list |
 | `src/` — finished, guarded | **56 modules**, 152 marked lines in 22 of them |
@@ -138,7 +139,7 @@ known answer rather than by reading the code.
 | `scoreboard.py` | regenerates the README figures | — |
 | `srccheck.py` | asserts every `src/` module is identical | found 3 that were not |
 | `where.py` | every differing byte + the source line that owns it | cluster offsets are section-relative, listing addresses absolute; and `(\d+)` read the `0` of `DS 0F` as a statement number |
-| `fillgaps.py` | fills gaps from the object, measures, deposits only on identity | `DS CL1` must be replaced not preceded; owner is the greatest address, not the last listing row |
+| `fillgaps.py` | fills gaps from the object, measures, deposits only on identity **against the chosen baseline**, refuses `SPLIT` | `DS CL1` must be replaced not preceded; owner is the greatest address, not the last listing row; **and the guard could not tell a recovered byte from a transcribed one — 99 of `IKJEGMSG`'s 100 were noise** |
 | `overlay.py` | `src/` shadowing the archive, so our repairs are measurable | nothing read `src/` at all before this |
 | `macpath.py` | the one `-I` path, parsed from `gate.sh` | eight tools had drifted two directories from it |
 | `case_list.py` | the ordered as370 case list for cc370 | reported two modules that assemble perfectly — needed the per-module clock |
@@ -151,13 +152,15 @@ known answer rather than by reading the code.
 
 ### The next three things
 
-> ⚠️ **Read the gate first.** 48 of the 65 `fillgaps` candidates carry the **same**
-> verdict against both baselines, so hand work on those is unambiguous today. The
-> other **17** depend on Mike's baseline call and are on hold: `IKJEBEUN IKJEE150
-> IKJEE1A0 IKJEFD30 IKJEFD32 IKJEFD35 IKJEFD36 IKJEFE06 IKJEFE16 IKJEFF02
-> IKJEFF06 IKJEFF12 IKJEFF50 IKJEFTE8 IKJEGMSG IKJRBBMG IKJRBBU1`. The column to
-> read is `tgt_c` in
-> [`work/measurements/baseline-gate/overlay-vs-both.tsv`](work/measurements/baseline-gate/overlay-vs-both.tsv).
+> ⚠️ **`fillgaps.py`'s guard changed on 2026-09-13 and the old results are not
+> comparable.** It now scores against the chosen baseline and refuses the `SPLIT`
+> class — where IBM's two libraries want *different* bytes at the offset, which
+> means no source contains it
+> ([`docs/two-baselines-as-a-control.md`](docs/two-baselines-as-a-control.md)).
+> Re-run over all 65 candidates: **16 identical, 7 SPLIT, 41 not.** The seven are
+> `IKJEBEAE IKJEBEUN IKJEE100 IKJEFA21 IKJEFE16 IKJEFF50 IKJEHREN` and under the
+> old guard every one would have been deposited as a recovery. `IKJEGMSG` needs
+> **1** marked line where it had 100, and `IKJEFF02` needed none at all.
 
 **1. Finish TSO's remaining same-length cases.** 60 candidates were run through
 `fillgaps.py`: 17 recovered, 43 declined and each declined for a stated reason:
@@ -183,6 +186,32 @@ output names them: `verdict == holes`.
 inside a `STAX` expansion, and TK5's and MVS/CE's `STAX` are **byte-identical**
 — so IBM assembled against a `STAX` neither system ships. That is macro
 provenance, and it is what Dave Kreiss' rebuilt tape would settle.
+
+### Where 2026-09-13 left off
+
+1. 🔒 **`MAINT05Z` is authorised by Mike and blocked by the tool classifier.** The
+   shutdown command to `MVSTK5-BLD`'s Hercules console was refused, so the backup
+   could not be taken and the job was not submitted. Nothing was sent to the
+   system. The procedure is in [`docs/fahrplan.md`](docs/fahrplan.md) stage 2 and
+   the system was verified idle first — 102 jobs, all in OUTPUT. **Correction to
+   the fahrplan while checking: the DASD is 1.5 GB, not 275 MB**, and `mvsdev` has
+   28 GB free. `MAINT05Z` itself was read and it is worse than "one job": its last
+   card is `//SUB EXEC BLDSUB,LIB=1,MBR=MAINT06@`, so running it starts the whole
+   82-job chain, and its own comment warns that it replaces the running system's
+   `HMASMP` immediately and was written for TK3.
+2. ⚡ **The 18 modules whose target member `cmplmd370` cannot read** and whose DLIB
+   member it calls identical. That is 18 modules of pure instrument gap —
+   `IEANUC01` is scatter format and the rest are overlay-structured — and it is the
+   cheapest block on the board. A `cc370` case.
+3. ⚡ **The 562-module holes run**, now that `fillgaps.py` will refuse the `SPLIT`
+   class. It was never run, and that is the only reason this class is not
+   everywhere.
+4. ⚡ **Which of the 38 divergent modules differ because of a TK5 USERMOD** rather
+   than IBM service. Needs the target zone's SYSMOD-to-module mapping. `IKJEFF53`
+   is a known usermod target and is in the 38, so the answer is not zero.
+5. ⚡ **Tell Dave about `where.py --base tgt`.** It is the tool he said he needed,
+   pointed at the object he said to compare against, and he does not know it
+   exists. `docs/mail-kreiss-2026-09-12.md` is the draft to extend.
 
 ### Waiting, and none of it blocks host-side work
 

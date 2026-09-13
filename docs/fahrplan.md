@@ -362,7 +362,7 @@ curl -s -X POST --data-urlencode "command=/S SHUTFAST" \
      "http://mvsdev.lan:8585/cgi-bin/tasks/syslog"
 ```
 
-The DASD is 275 MB in `~/MVSTK5-BLD/dasd`; `cp -a` once Hercules has exited.
+The DASD is **1.5 GB** in `~/MVSTK5-BLD/dasd` — measured 2026-09-13; the 275 MB in the first version of this line was wrong or the build volumes have grown into it. `mvsdev` had 28 GB free, so `cp -a` fits, once Hercules has exited. There is already a `dasd.backup-20260910-1410` beside it.
 **Restart is `cd ~/MVSTK5-BLD && ./mvs` in tmux window `0:4`** — `0:3` is `REF`,
 `0:0` is `MVSCE-DEV` and stays untouched. Then `/S HTTPD` and `/S FTPD`.
 
