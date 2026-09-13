@@ -78,3 +78,68 @@ Whether the target is the **right** baseline. That is Mike's call, not a
 measurement, and `TODO.md` records it as open rather than decided. What the gate
 can do is partition the tree so that the part where the two baselines agree can
 be worked on while the question is open.
+
+---
+
+# Run 8's source, predicted before it was pulled
+
+**Written 2026-09-13 while `srcpull.py` was still running**, so before a single
+module of the new tree had been assembled. Same rule as above: not edited after.
+
+`MAINT05Z` and the 82 jobs behind it put maintenance into phases 6–15 for the
+first time — **1,017 distinct modules, 596 of which had never been maintained at
+all** ([`dave-install-log.md`](dave-install-log.md)). The question this run asks is
+the only one that matters about it:
+
+> **Does any of that reach the SOURCE library, and does the source it produces
+> reach IBM's object?**
+
+Those are two different questions and the run answers them in order.
+
+## What is known and therefore not predicted
+
+| state | against TK5's DLIB |
+|---|---:|
+| Dave's archive | 1,221 of 5,353 |
+| the system's source after **run 7** (`ss-run7-vs-tk5.tsv`) | **1,221** |
+| archive + our 256 repairs (`overlay`) | 1,470 |
+| the same overlay under the chosen baseline | 1,403 |
+
+Run 7's source scored **exactly what the archive scores**. That is the fact this
+run is aimed at: [`source-states.md`](source-states.md) explains it as run 6
+stopping at the phase-1 boundary, so 619 of 1,357 `DSK`-marked modules never
+reached the system's source at all.
+
+## The predictions
+
+**Q1 — the source moved.** The run-8 tree differs from the run-7 tree in a
+substantial number of members. If the two trees are *identical*, then the 82 jobs
+APPLYed maintenance to object and listings and not to `AMVSSRC`, and everything
+below is moot. **This is the prediction I am least sure of** and it is the one
+that decides whether the rest means anything.
+
+**Q2 — the score rises above 1,221.** Direction predicted, magnitude not. A gain
+of a few dozen would say the maintenance reaches the source and mostly is not
+IBM's; a gain in the hundreds would say Dave's `DSK` PTFs reconstruct IBM's object
+closely. **Refutation: 1,221 or below.** That would mean either the maintenance
+does not reach the source, or it reaches it and moves it *away* from IBM's object
+— and the second would be the more interesting result of the two.
+
+**Q3 — the two source libraries may now differ.** `MVSSRC.BLD.AMVSSRC` is the
+distribution source, `MVSSRC.BLD.MVSSRC` the target source, and Dave names the
+**target** one. Measured on 2026-09-12 over 25 random members they were identical,
+columns 1–72, on a tree where everything had been ACCEPTed. Run 8 did both APPLY
+and ACCEPT per phase, so they should still agree — but this is the first chain
+where they had a chance to drift, and a fresh 25-member sample is cheap.
+
+**Q4 — `src/`'s 256 modules are a separate axis and must not be folded in.** The
+comparison is run-7 source against run-8 source, both without our repairs. Mixing
+them would credit the build with work we did by hand, which is exactly the
+confusion `overlay.md` was written to prevent.
+
+## What no prediction covers
+
+Whether Dave's `DSK` PTFs are IBM's maintenance. They are his reconstruction of
+it, and a module can take a `DSK` PTF and move further from IBM's object rather
+than closer. The scoreboard is the only thing that can tell, and it does not care
+which of the two happened.

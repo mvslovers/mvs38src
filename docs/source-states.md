@@ -264,3 +264,48 @@ cleanly**. That is not a contradiction — a return code is not the success
 criterion here, and identity rose over the same population — but it is
 unexplained and is not being presented as harmless. Those 27 are the first thing
 to look at if the applied state is ever adopted as the base.
+
+---
+
+## 2026-09-13: the two source libraries have come apart, and that is new
+
+The question of *which* source library was settled on 2026-09-12 by finding that
+it did not matter. Dave Kreiss names the **target** source library —
+*"use the target source libraries that result from the build job streams instead
+of using the source of the build job streams"* — where every extraction here had
+read the **distribution** one, `MVSSRC.BLD.AMVSSRC`. Measured over 25 random
+members, columns 1–72: **identical, 25 of 25.** The recommendation cost nothing.
+
+**After the `MAINT06@`..`MAINT15G` chain of 2026-09-13 it costs something.** Same
+method, 25 members drawn with a fixed seed, both libraries at 5,529 members:
+
+| | members |
+|---|---:|
+| identical, columns 1–72 | 19 |
+| **differ** | **6** |
+
+And not marginally:
+
+| module | `AMVSSRC` (distribution) | `MVSSRC` (target) |
+|---|---:|---:|
+| `IEFAB435` | 136 lines | **3,626** |
+| `IDDWIFRR` | 920 | **3,592** |
+| `IFDOLT00` | 40 | **206** |
+| `IKJCT472` | **1,688** | 1,298 |
+| `IDCDB02` | 6,820 | **7,035** |
+| `IEE4203D` | **205** | 96 |
+
+Four are much larger on the target side and two on the distribution side, so this
+is not one library being a stub of the other. **24 % of a sample is not a detail**,
+and it means every extraction before today read a library that is now known to
+differ from the one Dave names.
+
+Why the earlier answer was right at the time is in his own explanation: a chain
+that ACCEPTs everything keeps the two sides in step — *"Because all jobs do an
+ACCEPT of all functions and PTFS the Target and DLIBs of the install are in
+sync"*. The 82-job chain APPLYs and ACCEPTs per phase, and the phases do not
+close the same way; `MAINT14` archives 57 APPLY members against 7 ACCEPT, and
+`MAINT15` 22 against 2.
+
+**So both libraries are being extracted, not one.** `srcpull.py` takes
+`SRCPULL_DS` now, and which library a figure came from is part of the figure.

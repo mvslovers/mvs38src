@@ -18,7 +18,22 @@ import base64, http.client, os, sys, time
 
 HOST, PORT = "mvsdev.lan", 8085
 CRED = _cred("MVSTK5-BLD").encode()
-DS = "MVSSRC.BLD.AMVSSRC"
+# SRCPULL_DS names the library, and after run 8 that is no longer a formality.
+#
+# `MVSSRC.BLD.AMVSSRC` is the DISTRIBUTION source library, `MVSSRC.BLD.MVSSRC`
+# the TARGET one, and Dave Kreiss names the target: *"use the target source
+# libraries that result from the build job streams instead of using the source of
+# the build job streams."*
+#
+# On 2026-09-12, over 25 random members and columns 1-72, the two were identical
+# 25 times out of 25 -- so the distinction looked academic and this file only ever
+# read `AMVSSRC`. **Re-measured 2026-09-13 after the MAINT06@..MAINT15G chain: 19
+# identical, 6 different, and not marginally** -- `IEFAB435` is 136 lines on the
+# distribution side against 3,626 on the target side, `IDDWIFRR` 920 against
+# 3,592. A chain that ACCEPTs everything keeps the two in step; this one did not.
+#
+# So which library a result was taken from is now part of the result.
+DS = os.environ.get("SRCPULL_DS", "MVSSRC.BLD.AMVSSRC")
 # SRCPULL_OUT names the directory, because "Dave's source on the system" is not
 # one state. The pull of 2026-09-11 08:10 caught it after run 6, which had
 # applied his chain only as far as MAINT05F; a pull after the MAINT06@..MAINT15G
