@@ -46,11 +46,11 @@ The scoreboard is at the head of [`README.md`](README.md) and is **generated** �
 |---|---:|
 | build's CSECT == IBM's, per `LMDRPT38` | **1,422 of 5,485 — 25.9 %** |
 | host-side, archive source vs TK5 | **1,221 of 5,353 — 22.8 %** |
-| **host-side, with our recovered sources** | **1,470** |
+| **host-side, with our recovered sources** | **1,509** |
 | host-side against TK5's **TARGET** libraries, same decks | **1,069 of 5,353** |
 | identical against **both** baselines | **1,052** |
-| **under the chosen baseline — target, DLIB where no target exists** | **1,403 of 5,353** |
-| `src/` — 216 identical to both, 24 no target counterpart, 4 target-only, 1 DLIB-only | **256 modules**, 348 marked lines in 222 |
+| **under the chosen baseline — target, DLIB where no target exists** | **1,445 of 5,353 — 27.0 %** |
+| `src/` — 246 identical to both, 24 no target counterpart, 7 target-only, 1 DLIB-only | **289 modules** |
 | ⚠️ `scoreboard.py --check` only checks README-against-tool | its INPUT can be stale; re-run `srcstate_vs_dlib.py` after any change to `src/` |
 | `as370` == IFOX00 | **5,471 of 5,528 — 99.0 %** |
 | open `as370` cases | **4** tree-wide, **3** in the case list |
@@ -192,6 +192,35 @@ output names them: `verdict == holes`.
 inside a `STAX` expansion, and TK5's and MVS/CE's `STAX` are **byte-identical**
 — so IBM assembled against a `STAX` neither system ships. That is macro
 provenance, and it is what Dave Kreiss' rebuilt tape would settle.
+
+### The method that works, and it is a ranking
+
+`tools/worklist.py`: every module not identical to the chosen baseline, **nearest
+first**, with the owning source statement beside each differing cluster. The 25
+TSO cases left over from `fillgaps.py` were filed as "hand work" and look like 25
+equally hard problems; ranked, the six nearest were 1–5 bytes and all six fell, and
+four of them needed no marker at all — an eyecatcher date, a message number, a
+branch mask, two table constants.
+
+Then the same ranking tree-wide, `--max-bytes 6`: **280 modules**, of which 47
+differ by a single byte — and **nine of the 47 by the same byte**, which turned out
+to be one wrong digit in `work/macros/mirror/IGGCP14`. One macro, nine modules,
+`rc 0` unchanged.
+
+Running `fillgaps.py` over the same 280: **27 more**. So the ranking has paid
+1,403 → 1,445 in an afternoon, and the list is not exhausted — it was cut at six
+bytes.
+
+**Next, in this order:**
+
+1. `worklist.py --max-bytes 16` and work the bands upward. Everything below six
+   bytes has been swept once.
+2. **Look for shared bytes before looking at modules.** `IGGCP14` was found by
+   grouping the one-byte cases by (our byte, IBM's byte) and noticing nine in one
+   cell. The 319 mirror macros at an unestablished level are the population that
+   produces those.
+3. The 18 modules whose target member `cmplmd370` cannot read — a `cc370` case,
+   and the cheapest block on the board.
 
 ### Where 2026-09-13 left off
 
