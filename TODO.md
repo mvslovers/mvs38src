@@ -49,7 +49,7 @@ The scoreboard is at the head of [`README.md`](README.md) and is **generated** �
 | **host-side, with our recovered sources** | **1,509** |
 | host-side against TK5's **TARGET** libraries, same decks | **1,069 of 5,353** |
 | identical against **both** baselines | **1,052** |
-| **under the chosen baseline — target, DLIB where no target exists** | **1,483 of 5,353 — 27.7 %** |
+| **under the chosen baseline — target, DLIB where no target exists** | **1,491 of 5,353 — 27.9 %** |
 | `src/` — 246 identical to both, 24 no target counterpart, 7 target-only, 1 DLIB-only | **289 modules** |
 | ⚠️ `scoreboard.py --check` only checks README-against-tool | its INPUT can be stale; re-run `srcstate_vs_dlib.py` after any change to `src/` |
 | `as370` == IFOX00 | **5,471 of 5,528 — 99.0 %** |
@@ -195,8 +195,15 @@ provenance, and it is what Dave Kreiss' rebuilt tape would settle.
 
 ### Start here — the state on the morning of 2026-09-14
 
-**1,483 of 5,353 — 27.7 %**, from 1,277 the previous morning. Both guards green,
+**1,491 of 5,353 — 27.9 %**, from 1,277 the previous morning. Both guards green,
 `baseline_gate.py --control` at 0 disagreements, 22 commits.
+
+> **Corrected at the close of the day: 1,491, not the 1,483 reported all evening.**
+> `fillgaps.py` deposits to `src/` the moment `cmplmd370` exits 0, and three
+> sweeps ran while the commits were tracking findings rather than the tree.
+> Eight modules sat measured, deposited and uncounted. **A figure taken from the
+> last gate run is only as current as the last gate run** — re-measure after a
+> sweep, not after the commit that describes it.
 
 **The one thing that needs Mike:** the mail to Dave is written and unsent —
 [`docs/mail-kreiss-2026-09-13.md`](docs/mail-kreiss-2026-09-13.md). Two questions

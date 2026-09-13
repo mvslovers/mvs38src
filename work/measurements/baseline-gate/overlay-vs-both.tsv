@@ -2237,8 +2237,8 @@ IEFAB4F4	AOSB3	len-differs	len-differs	LPALIB	IEFW21SD	len-differs	1	N	000706	00
 IEFAB4F5	AOSB3	differs	differs	LPALIB	IEFW21SD	differs	1	N	000998	000998	Y
 IEFAB4F6	AOSB3	identical	identical	LINKLIB	IEESB601	identical	4	N	000200	000200	Y
 IEFAB4F7	AOSB3	identical	identical	LPALIB	IEFW21SD	identical	1	N	0003BA	0003BA	Y
-IEFAB4F8	AOSB3	holes	holes	LPALIB	IEFW21SD	holes	1	N	000279	000279	Y
-IEFAB4F9	AOSB3	holes	holes	LPALIB	IEFW21SD	holes	1	N	000226	000226	Y
+IEFAB4F8	AOSB3	identical	identical	LPALIB	IEFW21SD	identical	1	N	000279	000279	Y
+IEFAB4F9	AOSB3	identical	identical	LPALIB	IEFW21SD	identical	1	N	000226	000226	Y
 IEFAB4FA	AOSB3	len-differs	len-differs	LPALIB	IEFAB4E5	len-differs	2	N	00113A	00113A	Y
 IEFAB4FC	AOSB3	len-differs	len-differs	LINKLIB	IEESB601	len-differs	3	N	000BBC	000BBC	Y
 IEFAB4FD	AOSB3	identical	identical	LPALIB	IEFW21SD	identical	1	N	0001C2	0001C2	Y
@@ -2316,10 +2316,10 @@ IEFIIC	AOSB3	len-differs	len-differs	LPALIB	IEFSD060	len-differs	1	N	0002DC	0002
 IEFIMASK	AOSB3	identical	identical	LPALIB	IEFSD060	identical	1	N	0000F9	0000F9	Y
 IEFIRECM	AOSB3	holes	holes	LPALIB	IEFIRECM	holes	1	N	000374	000374	Y
 IEFISEXR	AOSB3	len-differs	len-differs	LPALIB	IEFIRECM	len-differs	2	N	00015C	00015C	Y
-IEFJACTL	AOSB3	holes	holes	LPALIB	IEFJSUBI	holes	1	N	000132	000132	Y
+IEFJACTL	AOSB3	identical	identical	LPALIB	IEFJSUBI	identical	1	N	000132	000132	Y
 IEFJCDLT	AOSB3	identical	identical	LPALIB	IEFJSUBI	identical	1	N	0000DA	0000DA	Y
 IEFJCNTL	AOSB3	differs	differs	LPALIB	IEFJSUBI	differs	1	N	00058C	00058C	Y
-IEFJDIRD	AOSB3	holes	holes	LPALIB	IEFJSUBI	holes	1	N	0000BA	0000BA	Y
+IEFJDIRD	AOSB3	identical	identical	LPALIB	IEFJSUBI	identical	1	N	0000BA	0000BA	Y
 IEFJDSNA	AOSB3	identical	identical	LPALIB	IEFJDSNA	identical	1	N	0000D3	0000D3	Y
 IEFJDWRT	AOSB3	identical	identical	LPALIB	IEFJSUBI	identical	1	N	0000BA	0000BA	Y
 IEFJESDM	AOSB3	identical	error	-	-	not-in-target	0	-	-	-	-
@@ -2334,7 +2334,7 @@ IEFJSINT	AOSB3	identical	identical	LINKLIB	IEEVIPL	differs	1	N	0005C4	0005C4	Y
 IEFJSREQ	AOSB3	holes	holes	LPALIB	IEFJSREQ	holes	1	N	0001FC	0001FC	Y
 IEFJSSNT	AOSB3	differs	differs	LINKLIB	IEFJSSNT	differs	1	N	00024A	00024A	Y
 IEFJSWT	AOSB3	len-differs	len-differs	LPALIB	IEESB605	len-differs	1	N	000420	000420	Y
-IEFJWRTE	AOSB3	holes	holes	LPALIB	IEFJSUBI	holes	1	N	00014A	00014A	Y
+IEFJWRTE	AOSB3	identical	identical	LPALIB	IEFJSUBI	identical	1	N	00014A	00014A	Y
 IEFJWTOM	AOSB3	len-differs	len-differs	LPALIB	IEFJSUBI	len-differs	1	N	0001E8	0001E8	Y
 IEFNB901	AOSB3	len-differs	len-differs	LPALIB	IEFNB903	len-differs	1	N	000406	000406	Y
 IEFNB902	AOSB3	holes	holes	LPALIB	IEFVAMP	holes	1	N	000A31	000A31	Y
@@ -3954,7 +3954,7 @@ IGG019TX	AOST3	identical	identical	LPALIB	IGG019TX	identical	1	N	000040	000040	Y
 IGG019TY	AOST3	identical	identical	LPALIB	IGG019TY	identical	1	N	000006	000006	Y
 IGG019TZ	AOST3	identical	identical	LPALIB	IGG019TZ	identical	1	N	00000E	00000E	Y
 IGG019UM	AOSD0	holes	holes	-	-	not-in-target	0	-	0002FF	-	-
-IGG019UN	AOSD0	holes	holes	-	-	not-in-target	0	-	0002A3	-	-
+IGG019UN	AOSD0	identical	identical	-	-	not-in-target	0	-	0002A3	-	-
 IGG019UO	AOSD0	identical	identical	-	-	not-in-target	0	-	00006C	-	-
 IGG019UP	AOS20	len-differs	len-differs	LPALIB	IGG019UP	len-differs	1	N	0001DC	0001DC	Y
 IGG019V1	AOSD0	identical	identical	-	-	not-in-target	0	-	0000D8	-	-
@@ -5288,11 +5288,11 @@ ISTZLPV0	AOS26	identical	identical	LPALIB	ISTZLPVA	identical	1	N	00001C	00001C	Y
 ISTZPSV0	AOS26	identical	identical	LPALIB	ISTZPSVB	identical	1	N	000154	000154	Y
 ISTZRM01	AOS24	len-differs	len-differs	LPALIB	ISTZRM01	len-differs	1	N	00027C	00027C	Y
 LETRRIP	AOSH1	identical	identical	-	-	not-in-target	0	-	0107A4	-	-
-LINK	ACMDLIB	holes	holes	CMDLIB	LINK	holes	1	N	-	00002C	?
+LINK	ACMDLIB	identical	identical	CMDLIB	LINK	identical	1	N	-	00002C	?
 LISTB	AOST4	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
 LISTBC	AOST4	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
 LOADER	AOS05	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
-LOADGO	ACMDLIB	holes	holes	CMDLIB	LOADGO	holes	1	N	-	000030	?
+LOADGO	ACMDLIB	identical	identical	CMDLIB	LOADGO	identical	1	N	-	000030	?
 OMODVOL1	AOSD0	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
 PENTRK	AOSG0	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
 READPSWD	AOSD0	len-differs	len-differs	LPALIB	READPSWD	len-differs	1	N	000348	000348	Y
