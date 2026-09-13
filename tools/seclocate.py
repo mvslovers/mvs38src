@@ -76,6 +76,88 @@ def deck_text(path, csect):
     return bytes(buf)
 
 
+def anchor(blob, ours, mod, window=256):
+    """(offset, confidence, how) of our section's text inside the member.
+
+    Three ways, cheapest first, and the result carries how it was found because
+    they are not equally trustworthy.
+
+    **The obvious probe fails most of the time and it took a measurement to see
+    it.** Matching our first 16 bytes located the section in 59 of 200 modules;
+    141 found it *zero* times. The reason is the eyecatcher: bytes 13 onward are
+    the assembly date, ours reads `09/07/26` and IBM's does not, so a 16-byte
+    probe from offset 0 straddles the one field guaranteed to differ.
+
+      prologue  `47 F0 F0 xx` + `AL1` + the module name in EBCDIC -- the PL/S
+                branch around the identifier, date-free by construction. Certain
+                when it hits, and it hits for 15 of 200.
+      prefix    the longest of 32/24/16/12/8 leading bytes that occurs exactly
+                once. 84 of 200.
+      score     slide our first `window` bytes over every offset and take the one
+                that agrees most. The right offset agrees on almost everything --
+                only the inserted run and the relocated adcons differ -- and a
+                wrong one agrees at chance. **Reported with its agreement fraction
+                and its margin over the runner-up**, because that pair is the only
+                evidence the anchor is right: 70 of 120 land above 85 % with a
+                30-point margin, 26 more above 70 %.
+    """
+    # bytes.find rather than a Python loop: the scan is O(blob) either way, but one
+    # runs in C and the other made a 1,295-module sweep take longer than the sweep
+    # was worth.
+    def alloc(hay, needle):
+        out, i = [], hay.find(needle)
+        while i >= 0:
+            out.append(i)
+            i = hay.find(needle, i + 1)
+        return out
+
+    name = mod.ljust(8).encode("cp037")
+    hits = [i for i in alloc(blob, b"\x47\xf0\xf0") if blob[i + 5:i + 13] == name]
+    if len(hits) == 1:
+        return hits[0], 1.0, "prologue"
+    for n in (32, 24, 16, 12, 8):
+        h = alloc(blob, ours[:n])
+        if len(h) == 1:
+            return h[0], 1.0, f"prefix{n}"
+    n = min(len(ours), window)
+    if n < 8 or len(blob) < n:
+        return None, 0.0, "too short"
+    pr = ours[:n]
+    best, bi, second = -1, -1, -1
+    for i in range(len(blob) - n + 1):
+        s = n - sum((a ^ b) != 0 for a, b in zip(pr, blob[i:i + n]))
+        if s > best:
+            second, best, bi = best, s, i
+        elif s > second:
+            second = s
+    return bi, best / n, f"score {best / n:.0%} margin {(best - second) / n:+.0%}"
+
+
+def refine(blob, ours, off, want, span=4):
+    """Nudge the anchor to the offset that produces the FEWEST alignment edits.
+
+    A scored anchor can sit a byte or two off and still win on agreement, and then
+    `difflib` pays for it at the start of the section: the `IEDQ*` family came back
+    as `delete ours[0]` + `replace ours[2:4]` + `insert`, which is not a finding
+    about the module but about a misplaced origin.
+
+    So the offset is chosen by the thing the output is actually read for -- the
+    number of edit operations -- over a few bytes either side. Agreement finds the
+    neighbourhood; this picks the point in it.
+    """
+    bestoff, bestops = off, None
+    for d in range(-span, span + 1):
+        o = off + d
+        if o < 0 or o + want > len(blob):
+            continue
+        cand = blob[o:o + want]
+        ops = [x for x in difflib.SequenceMatcher(None, ours, cand, autojunk=False)
+               .get_opcodes() if x[0] != "equal"]
+        if bestops is None or len(ops) < bestops:
+            bestops, bestoff = len(ops), o
+    return bestoff, bestops
+
+
 def verdict(deck, ref, csect):
     cmd = [CM, "--json", "--csect", csect, deck, ref]
     q = subprocess.run(cmd, capture_output=True, text=True)
@@ -97,6 +179,10 @@ def main():
     ap.add_argument("--decks", default=os.path.join(ROOT, "obj_overlay12"))
     ap.add_argument("--base", default="tgt", choices=("tgt", "tk5"))
     ap.add_argument("--probe", type=int, default=16)
+    ap.add_argument("--min-conf", dest="min_conf", type=float, default=0.85,
+                    help="reject an anchor below this agreement fraction; "
+                         "0.85 with a clear margin is where the scored anchors "
+                         "separate from chance")
     a = ap.parse_args()
 
     tx = collections.defaultdict(list)
@@ -134,15 +220,14 @@ def main():
                 continue
             want = s.get("length_ref")
             blob = open(ref, "rb").read()
-            probe = ours[:a.probe]
-            hits = [i for i in range(len(blob) - len(probe))
-                    if blob[i:i + len(probe)] == probe]
-            if len(hits) != 1:
-                print(f"{mod}: probe found {len(hits)} times in {label} -- unlocatable")
+            off, conf, how = anchor(blob, ours, mod)
+            if off is None or conf < a.min_conf:
+                print(f"{mod}: not anchored in {label} -- {how}")
                 continue
-            theirs = blob[hits[0]:hits[0] + int(want)]
+            off, nops = refine(blob, ours, off, int(want))
+            theirs = blob[off:off + int(want)]
             print(f"=== {mod}  {label}  ours {len(ours)}  IBM {len(theirs)}  "
-                  f"({len(theirs) - len(ours):+d})")
+                  f"({len(theirs) - len(ours):+d})  anchor: {how}")
             sm = difflib.SequenceMatcher(None, ours, theirs, autojunk=False)
             for tag, i1, i2, j1, j2 in sm.get_opcodes():
                 if tag == "equal":

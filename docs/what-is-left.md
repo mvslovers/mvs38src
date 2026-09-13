@@ -1833,3 +1833,56 @@ that shifts, and finding them needs what neither tool offers yet: **the section'
 bytes out of the bound member**, to diff against the deck directly. `cmplmd370`
 compares but does not expose, and that is the next instrument rather than the next
 guess.
+
+---
+
+## The length population, opened and counted — 2026-09-13, late
+
+`seclocate.py` now anchors reliably enough to run over the whole population, and
+the answer to "what is in there" is finally measured rather than guessed.
+
+### The instrument, and what it took to make it work
+
+The first version matched our section's first 16 bytes in the member. **It located
+59 of 200.** The reason is the eyecatcher: bytes 13 onward are the assembly date,
+ours reads `09/07/26` and IBM's does not, so the probe straddles the one field
+guaranteed to differ. Three anchors now, cheapest first:
+
+| | located |
+|---|---:|
+| `47 F0 F0 xx` + `AL1` + name in EBCDIC — the PL/S prologue, date-free | 15 of 200 |
+| the longest of 32/24/16/12/8 leading bytes that occurs exactly once | 84 of 200 |
+| sliding-window agreement, reported with its fraction and margin | the rest |
+
+**Over all 1,295 length-differing modules: 1,038 anchored, 256 not.** And the
+anchor is then *refined* by the thing the output is read for — the offset in a
+±4 window that produces the fewest alignment edits. Without that, the `IEDQ*`
+family came back as `delete ours[0]` + `replace ours[2:4]` + `insert`, which is
+not a finding about the module but about an origin one byte out.
+
+### What is actually in the population
+
+| | modules |
+|---|---:|
+| anchored | **1,038** |
+| **exactly one length-changing spot** | **182** |
+| two or more | the rest |
+
+**And there is no large shared cause left.** The single-spot modules group by
+(gain, IBM's bytes) and the biggest group is 42 — but inspected, those are
+different one-byte cases that happen to share a magnitude. The `+2` cell, 44
+modules and 29 of them `IED*`, shares a `replace` at offset 3 and diverges
+immediately after. The `+8` cell was already shown to be twenty-one distinct
+insertions.
+
+So: **eight bytes, four bytes, two bytes are common amounts of missing code, not
+common causes.** Every family hypothesis the ranking produced today has been
+tested, and exactly two survived — `IGGCP14`'s wrong digit, nine modules, and the
+`×`/`|` code page, nine modules. The rest of this population is one module at a
+time.
+
+### The queue that is left
+
+**182 modules with a single length-changing spot** is the tractable end, and
+`seclocate.py` prints the spot and its bytes for each. That is an hour per handful,
+not a sweep, and it is the honest shape of what remains.
