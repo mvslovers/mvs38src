@@ -39,7 +39,9 @@ The assembled CSECT is byte-identical to IBM's, or it is not. Nothing else count
 
 Measured a second time from the other side, on the host against TK5's distribution libraries: **1,221 of 5,353** — 22.8 %. Two different programs, two different populations, two machines.
 
-**With the source recovered so far**, the same measurement reads **1,277 of 5,353** — 23.9 %. The first figure says how far Dave Kreiss got; this one says where the project is. Both are wanted, and the difference is exactly the number of modules in `src/`.
+**With the source recovered so far**, the same measurement reads **1,272 of 5,353** — 23.8 %. The first figure says how far Dave Kreiss got; this one says where the project is. Both are wanted.
+
+> **`src/` no longer contributes +1 apiece to this figure, and that is deliberate.** It held until 2026-09-12, when every module in `src/` was repaired against the DLIB. Four are now repaired against the **target** instead and therefore differ from the DLIB by exactly the amount they used to differ from the target — one source cannot reach two different objects. The figure that counts `src/` under the chosen baseline is the next one down.
 
 ### Under the baseline the project chose on 2026-09-13
 

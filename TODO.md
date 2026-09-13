@@ -46,18 +46,24 @@ The scoreboard is at the head of [`README.md`](README.md) and is **generated** �
 |---|---:|
 | build's CSECT == IBM's, per `LMDRPT38` | **1,422 of 5,485 — 25.9 %** |
 | host-side, archive source vs TK5 | **1,221 of 5,353 — 22.8 %** |
-| **host-side, with our 56 recovered sources** | **1,277** |
+| **host-side, with our recovered sources** | **1,272** |
 | host-side against TK5's **TARGET** libraries, same decks | **1,069 of 5,353** |
 | identical against **both** baselines | **1,052** |
 | **under the chosen baseline — target, DLIB where no target exists** | **1,202 of 5,353** |
 | `src/` — 32 identical to both, 18 no target counterpart, 4 target-only, 1 DLIB-only | **55 modules**, 52 marked lines in 21 |
+| ⚠️ `scoreboard.py --check` only checks README-against-tool | its INPUT can be stale; re-run `srcstate_vs_dlib.py` after any change to `src/` |
 | `as370` == IFOX00 | **5,471 of 5,528 — 99.0 %** |
 | open `as370` cases | **4** tree-wide, **3** in the case list |
 | `src/` — finished, guarded | **56 modules**, 152 marked lines in 22 of them |
 | TK5's IFOX00 == MVS/CE's | 5,525 of 5,528 — stage 1 answered |
 
-Every one of the 56 in `src/` contributes exactly +1 to the overlay figure:
-1,221 + 56 = 1,277. That is the cheapest possible sanity check and it holds.
+~~Every one of the 56 in `src/` contributes exactly +1 to the overlay figure:
+1,221 + 56 = 1,277.~~ **That identity broke on 2026-09-13 and it broke on purpose.**
+Four modules in `src/` are now repaired against the **target** and therefore differ
+from the DLIB, and one was removed because Dave's archive text already reached the
+target. So the DLIB column reads **1,272** and the arithmetic that replaces it is
+the chosen-baseline figure, **1,202**. A source cannot reach two different objects;
+where the two baselines hold different bytes, gaining one costs the other.
 
 ### 🔒 Dave Kreiss answered on 2026-09-12, and two of our decisions are reversed
 

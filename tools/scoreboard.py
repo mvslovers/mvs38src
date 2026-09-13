@@ -117,8 +117,15 @@ def render():
     if oi is not None:
         L += [f"**With the source recovered so far**, the same measurement reads "
               f"**{oi:,} of {on:,}** — {100*oi/on:.1f} %. The first figure says how far "
-              f"Dave Kreiss got; this one says where the project is. Both are wanted, "
-              f"and the difference is exactly the number of modules in `src/`.", ""]
+              f"Dave Kreiss got; this one says where the project is. Both are wanted.",
+              "",
+              f"> **`src/` no longer contributes +1 apiece to this figure, and that is "
+              f"deliberate.** It held until 2026-09-12, when every module in `src/` was "
+              f"repaired against the DLIB. Four are now repaired against the **target** "
+              f"instead and therefore differ from the DLIB by exactly the amount they "
+              f"used to differ from the target — one source cannot reach two different "
+              f"objects. The figure that counts `src/` under the chosen baseline is the "
+              f"next one down.", ""]
     ci, cn, cu = chosen_baseline()
     if ci is not None:
         L += [f"### Under the baseline the project chose on 2026-09-13", "",
