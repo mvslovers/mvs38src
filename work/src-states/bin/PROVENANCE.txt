@@ -19,3 +19,13 @@ cc370 HEAD at copy time: 4ca0353 docs: #26 closed, and #362 is a USING defect ra
 # the moment cp created the copy. cp -p now, and the line says 'built' and
 # 'copied' separately. A provenance file that records its own creation as
 # the artefact's age is worse than none.
+
+# Added 2026-09-13. TODO.md's control list says "pin the binary by hash" and
+# names as370-main, which this file did not know about -- every run since
+# 2026-09-12 used it and its identity was nowhere. The gate that produced
+# work/measurements/baseline-gate/overlay-vs-both.tsv ran on it.
+as370-main sha256    bdef7470342b10fd5b718b146368e1d528823ed97cdfd408593e90d4f1a6146f
+as370-main built     2026-09-12 13:38
+as370-main evidence  overlay2.tsv: 5538 modules, rc0=4590 -- reproduces the
+#                    documented overlay figure, so it is the binary that
+#                    produced ss-overlay-vs-tk5.tsv
