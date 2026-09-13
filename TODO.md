@@ -47,6 +47,8 @@ The scoreboard is at the head of [`README.md`](README.md) and is **generated** �
 | build's CSECT == IBM's, per `LMDRPT38` | **1,422 of 5,485 — 25.9 %** |
 | host-side, archive source vs TK5 | **1,221 of 5,353 — 22.8 %** |
 | **host-side, with our 56 recovered sources** | **1,277** |
+| host-side against TK5's **TARGET** libraries, same decks | **1,069 of 5,353** |
+| identical against **both** baselines | **1,052** |
 | `as370` == IFOX00 | **5,471 of 5,528 — 99.0 %** |
 | open `as370` cases | **4** tree-wide, **3** in the case list |
 | `src/` — finished, guarded | **56 modules**, 152 marked lines in 22 of them |
@@ -64,8 +66,15 @@ previous one, and it lands on exactly the two places we were most confident.
 1. **Compare against TARGET, not DLIB.** The DLIBs are back level — not all PTFs
    were ACCEPTed — and **both** sides are linkage-editor output, which refutes
    our stated reason for picking DLIBs. No measurement is invalidated; what
-   changes is what they mean. **Test, not argument:** pull TK5's targets with
-   `dlibpull.py` and score the same source against both.
+   changes is what they mean. ~~**Test, not argument:** pull TK5's targets with
+   `dlibpull.py` and score the same source against both.~~ **RUN, 2026-09-13** —
+   [`docs/baseline-dlib-vs-target.md`](docs/baseline-dlib-vs-target.md). Identical
+   against the DLIB **1,236**, against the target **1,069**, against both
+   **1,052**: the yardstick moves 167 verdicts. **23 of the 66 TSO modules we call
+   recovered are recovered against the back-level copy**, and six of our own 56
+   repairs are — `IKJEBEUN IKJEFD35 IKJEFE16 IKJEFF02 IKJEFF50 IKJEGMSG`. 17 run
+   the other way, identical against the target and not the DLIB, four of them SMP.
+   **Which baseline the project adopts is now the open question, and it is Mike's.**
 2. **`MAINT05Z` was required, and skipping it is the likely cause of the
    `./ DELETE` failures.** It copies *his modified SMP* to `SYS1.LINKLIB`, and
    his SMP *"manages the source side as well as the object side"* — which is
@@ -120,9 +129,20 @@ known answer rather than by reading the code.
 | `case_list.py` | the ordered as370 case list for cc370 | reported two modules that assemble perfectly — needed the per-module clock |
 | `srcstate_vs_dlib.py` | one source state against TK5 | was discarding `diff_in_holes`/`diff_in_text` |
 | `lmdrpt_count.py` | counts the build reports from the ERRORS detail | the published figure came off the SUMMARY page |
+| `fetch_xref.py` | brings `LMDXRF38`'s four cross-references off BLD — the CSECT→bound-module map | — |
+| `xref_distance.py` | the two baselines' CSECT lengths, no source involved | took each CSECT's *first* length instead of the set; 4 phantom differences on the build's own two sides |
+| `baseline_gate.py` | one source state against **both** baselines | a coherence check that confused our deck's length with the two libraries' lengths — 1,987 contradictions; then the same check reading a three-state column as two |
 | `maintenance-level` | IDR link dates | (in `docs/`, no tool) |
 
 ### The next three things
+
+> ⚠️ **Read the gate first.** 48 of the 65 `fillgaps` candidates carry the **same**
+> verdict against both baselines, so hand work on those is unambiguous today. The
+> other **17** depend on Mike's baseline call and are on hold: `IKJEBEUN IKJEE150
+> IKJEE1A0 IKJEFD30 IKJEFD32 IKJEFD35 IKJEFD36 IKJEFE06 IKJEFE16 IKJEFF02
+> IKJEFF06 IKJEFF12 IKJEFF50 IKJEFTE8 IKJEGMSG IKJRBBMG IKJRBBU1`. The column to
+> read is `tgt_c` in
+> [`work/measurements/baseline-gate/overlay-vs-both.tsv`](work/measurements/baseline-gate/overlay-vs-both.tsv).
 
 **1. Finish TSO's remaining same-length cases.** 60 candidates were run through
 `fillgaps.py`: 17 recovered, 43 declined and each declined for a stated reason:
@@ -163,6 +183,15 @@ provenance, and it is what Dave Kreiss' rebuilt tape would settle.
 
 ### Open for Mike
 
+- 🚪 **DLIB or Target — which baseline does the project measure against?** The
+  measuring half is done
+  ([`docs/baseline-dlib-vs-target.md`](docs/baseline-dlib-vs-target.md)); the
+  choice is not a measurement. What hangs on it: `srccheck.py`'s identity
+  assertion, the scoreboard's second figure, and — because option A and
+  `fillgaps.py` **transcribe object bytes into source** — which bytes the 25 hand
+  cases and the 562-module holes run are allowed to copy. 839 modules have no
+  target counterpart at all, so the DLIB stays the only yardstick there whatever
+  is decided.
 - **`work/src-pending/AOST4/IKJRBBCM.ASM`** — a repair made against MVS/CE.
   Dave's archive text is identical against TK5, so the module is recovered and
   always was, and nothing needs changing. Kept only because it is itself a
