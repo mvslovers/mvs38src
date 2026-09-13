@@ -309,3 +309,98 @@ close the same way; `MAINT14` archives 57 APPLY members against 7 ACCEPT, and
 
 **So both libraries are being extracted, not one.** `srcpull.py` takes
 `SRCPULL_DS` now, and which library a figure came from is part of the figure.
+
+---
+
+## 2026-09-13: the run-8 source library has read errors, and the extraction is not measurable
+
+`MVSSRC.BLD.AMVSSRC` was pulled again after the 82-job chain, to answer whether the
+maintenance reaches the source. **It does not answer, because the library cannot be
+read.**
+
+| | members |
+|---|---:|
+| in the library | 5,529 |
+| read | 5,145 |
+| **unreadable** | **384** |
+
+Every reader fails the same way and MVS itself is one of them:
+
+```
+MVSMF106E I/O ERROR READING MVSSRC.BLD.AMVSSRC ERRNO=5          (mvsMF console)
+451 Read error on data set after 0 bytes                        (FTP, port 2125)
+IEB351I I/O ERROR ,RDTEST ,S1 ,196,DA,SYSUT1 ,READ ,NO RECORD FOUND,
+        000000AF000C04,BSAM                                     (IEBGENER)
+```
+
+`NO RECORD FOUND` at `CCHHR 0000 00AF 000C 04` — the directory points at a record
+that is not on the volume. A second pull recovered exactly **one** of the 384, so
+it is not transient.
+
+**The documented cause from 2026-09-10 does not apply.** That incident correlated
+with a full volume; `IEHLIST LISTVTOC` on `BLDSR2` now reports **1,017 empty
+cylinders plus 14 tracks**, and 106 empty cylinders inside the data set itself.
+
+### All 384 were readable before
+
+Every one of them is in the run-7 extraction with content — `AHLTSVC` at 812 KB,
+`AHLTCTL1` at 156 KB. Whatever happened, happened between 2026-09-11 and the
+82-job chain.
+
+### And the damage is not confined to those 384
+
+- **69 members are truncated at the front**: the first record of the run-8 copy
+  appears further down in the run-7 copy. `AHLCWRIT` went from 12,372 lines to
+  2,600 and now begins mid-instruction, which is why it fails to assemble with
+  *Addressability error — no active USING*.
+- **743 modules assemble cleanly from the run-7 source and fail from the run-8
+  source**, against 21 the other way.
+
+### Why the figures below it must not be quoted
+
+Both trees were assembled over the identical 5,144-member population, one binary,
+one macro path:
+
+| | run 7 source | run 8 source |
+|---|---:|---:|
+| `rc 0` | 4,275 | 3,553 |
+| identical against both baselines | 936 | 699 |
+
+**That is not a measurement of the source. It is a measurement of the truncation.**
+A module missing its `CSECT` and `USING` cannot assemble, and a module that cannot
+assemble cannot match anything. The prediction in
+[`baseline-gate-predictions.md`](baseline-gate-predictions.md) — Q2, the score
+rises above 1,221 — is **neither confirmed nor refuted**, and recording it as
+refuted would be the worst available reading.
+
+### Three of my own tests failed before one worked
+
+Kept because each was wrong in a way worth not repeating.
+
+1. **"Not in the APPLY listing ⇒ run 8 did not touch it."** This would have let
+   run 7's text stand in for 372 of the 384. The control — did any module outside
+   the APPLY listing change? — says **1,778 did**. The listing does not enumerate
+   what the chain writes to the source library. Inference discarded.
+2. **A truncation test on the sequence number in columns 73–80** reported 4,971
+   of 5,145 truncated. Run against the run-7 extraction as a control it reported
+   5,290 of 5,528, which is impossible. mvsMF strips trailing blanks, so the
+   column arithmetic was measuring nothing. The 69 above come from a test with no
+   column assumption: is the run-8 first line present further down in run 7?
+3. **"Run 7's last line missing from run 8 ⇒ truncated at the end"** counted
+   2,028. `AHLMCER` is in it and **grew** from 2,735 lines to 2,755, so the test
+   conflates a truncated tail with a maintained one. No end-truncation figure is
+   claimed.
+
+And one test did work, on the question of whether shrinkage is damage at all:
+`AHLMCIH` loses 1,208 lines and **every one of them is a `*DSK` comment**, with the
+final line intact — that is Dave's `./ DELETE` doing exactly what it is for.
+`BLSCALOC` loses 835 lines of **code** including its own eyecatcher
+`DC C'BLSCALOC  78.066'`, and its final line is gone. Both are "shorter"; only one
+is damage.
+
+### What has to happen before this question can be asked again
+
+The library needs repairing or re-creating, and that is a decision about a running
+system rather than a measurement. The pre-chain backup
+`~/MVSTK5-BLD-frozen-20260913` is intact and verified — 32 volumes, 32 SHA-256
+sums, `sha256sum -c` clean — so nothing is lost that was there before the chain.
