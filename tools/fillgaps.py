@@ -106,24 +106,51 @@ def target_members(mod):
 
 
 def clusters_of(d):
-    """{(section, offset): ref_bytes} out of a cmplmd370 verdict."""
+    """{(section, offset): (ref_bytes, in_hole)} out of a cmplmd370 verdict."""
     out = {}
     for s in (d or {}).get("sections") or []:
         for c in s.get("clusters") or []:
-            out[(s["name"], c["offset"])] = c["ref"]
+            out[(s["name"], c["offset"])] = (c["ref"], c["in_hole"])
     return out
 
 
 def disagreements(dref, oref):
-    """Offsets where IBM's two libraries want DIFFERENT bytes.
+    """Offsets in a HOLE where IBM's two libraries want DIFFERENT bytes.
 
     Only offsets both verdicts report are comparable: an offset one library
     reports and the other does not means that library already matches the source
     there, which is a difference between the libraries but not a contradiction
     about what the source should say.
+
+    **This refuses on ANY disagreement, and one attempt to narrow it was wrong.**
+
+    The distinction that tempted the narrowing is real: a disagreement in
+    uninitialised storage is link-time or buffer noise and no source contains it,
+    while a disagreement in bytes a statement deliberately emitted is maintenance
+    the DLIB never received -- `IKJTTRM0`'s `DC H'0'` against the target's
+    `XL2'8930'`, `IKT0009C`'s `BE` against mask 13. Both of those were refused
+    here and both were recovered by hand.
+
+    **But that distinction does not belong in this function**, because
+    `cmplmd370`'s `in_hole` does not mean what the narrowing needed it to mean.
+    Alignment padding emitted by a `DC 0H'0'` is `text` -- a statement covers the
+    range -- while being exactly as meaningless as a hole. `IKJEHREN` is the case
+    that caught it: the byte at `0x23` is the pad of `BRID DC 0H'0'`, the DLIB
+    holds `F0` and the target `80`, and under the narrowed rule this tool happily
+    made it "identical" by writing the target's noise into the source. That is the
+    `IKJEGMSG` mistake with a different offset.
+
+    And the narrowing bought nothing, because **this tool only ever writes into a
+    statement that emits NO bytes** -- see `plan()`. Every offset it would fill is
+    padding or reservation by construction, so a disagreement at one of them is
+    noise by construction. A disagreement in real emitted text is a case `plan()`
+    declines anyway, with `emits bytes`, and it is hand work.
+
+    So: refuse on any disagreement, and let the `emits bytes` path carry the
+    maintenance cases to a human.
     """
     a, b = clusters_of(dref), clusters_of(oref)
-    return sorted(k for k in set(a) & set(b) if a[k] != b[k])
+    return sorted(k for k in set(a) & set(b) if a[k][0] != b[k][0])
 
 
 def assemble(src, mod, tag):
