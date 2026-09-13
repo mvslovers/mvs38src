@@ -1,15 +1,31 @@
 # Not finished, and why — repaired source that does not yet meet the criterion
 
-`src/` holds source that assembles **byte-identical to its TK5
-distribution-library member**; `tools/srccheck.py` enforces it. These three did
-not, and each for a different reason. They are kept because each is a measured
-result, not because they are close.
+`src/` holds source that assembles **byte-identical to TK5's object**;
+`tools/srccheck.py` enforces it. These did not, and each for a different reason.
+They are kept because each is a measured result, not because they are close.
 
 | module | archive → TK5 | this text → TK5 | this text → MVS/CE |
 |---|---|---|---|
 | `ACMDLIB/IKJEHREN` | text 1, holes 6 | **text 0**, holes 6 | text 37 |
 | `AOSC5/IDA019S4` | text 5 | **text 0**, length differs | **identical** |
 | `AOST4/IKJRBBCM` | **identical** | text 3 | **identical** |
+| `AOST4/IKJEFF02` | see below | — | — |
+
+## `IKJEFF02` — the module was recovered before anyone touched it
+
+2026-09-13. One marked line, `DC X'F321'`, transcribed out of the DLIB member by
+`fillgaps.py` under a guard that only ever asked the DLIB. Against the baseline
+the project chose that same day — the **target** library, `LINKLIB(IKJEFF04)` —
+**Dave's archive text is identical** and this text differs by 2 bytes.
+
+So there was nothing to repair, and the repair is what broke it. Removing the file
+is what recovers the module: the overlay falls back to the archive and
+`cmplmd370` exits 0.
+
+Third occurrence of the same shape, after `IKJRBBCM` here and `IKJEGMSG`, which
+was rebuilt rather than removed because it needed one genuine line of the hundred
+it had. [`../../docs/two-baselines-as-a-control.md`](../../docs/two-baselines-as-a-control.md)
+is what the three of them are evidence for.
 
 ## `IKJEHREN` — progress, not completion
 

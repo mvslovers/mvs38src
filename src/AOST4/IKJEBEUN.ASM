@@ -962,7 +962,7 @@ IKJEBEUN CSECT                                                          00949000
 @CC00432 DC    C'        '                                              00955000
 @CC00455 DC    C'UNNUM'                                                 00956000
 @CB00447 DC    X'0000000000000000'                                      00957000
-         DC    X'AA4770'                     !!! SOURCE COMPARE FIX !!! 00957010
+         DC    X'BC50E0'                     !!! SOURCE COMPARE FIX !!! 00957010
          DC    0D'0'                                            DSKC118 00957010
 @00      EQU   00                      EQUATES FOR REGISTERS 0-15       00958000
 @01      EQU   01                                                       00959000

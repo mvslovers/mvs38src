@@ -47,7 +47,7 @@ Dave Kreiss: *"target not DLIB is the version of code you should compare to sinc
 
 | | modules | |
 |---|---:|---:|
-| **recovered under the chosen baseline** | **1,197 of 5,353** | **22.4 %** |
+| **recovered under the chosen baseline** | **1,202 of 5,353** | **22.5 %** |
 
 The figures above it are not withdrawn and do not contradict it: 1,236 is the same decks against the DLIB alone, 1,069 against the target alone, 1,052 against both. **143 modules are counted as not recovered because `cmplmd370` cannot read their target member** — `IEANUC01` and the overlay-structured load modules — and 18 of those the DLIB does call identical. That is an instrument gap, not a result, and it is the cheapest 18 modules on the board.
 

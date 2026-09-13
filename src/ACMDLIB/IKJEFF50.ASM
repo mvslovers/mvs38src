@@ -632,7 +632,7 @@ IKJEFF50 CSECT                                                          00609000
 @AL00001 DS    1A                                                       00638000
 @TF00001 DS    F                                                        00639000
 IKJEFF50 CSECT                                                          00640000
-         DC    X'5910'                       !!! SOURCE COMPARE FIX !!! 00641000
+         DC    X'E008'                       !!! SOURCE COMPARE FIX !!! 00641000
          DC    0F'0'                                            DSKK040 00641000
 @CF00037 DC    F'1'                                                     00642000
 @CF00881 DC    F'-9'                                                    00645000

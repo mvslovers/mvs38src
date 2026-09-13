@@ -103,7 +103,7 @@ MSG7     DC    AL2(MSG8-MSG7)                                           01000000
 MSG8     EQU  *                                                         01030000
          DS    0H                                                       01040000
 *         END  IKJEFE16;                                                01050000
-@EL01    DC    X'1859'                       !!! SOURCE COMPARE FIX !!! 01060000
+@EL01    DC    X'91D0'                       !!! SOURCE COMPARE FIX !!! 01060000
 @DATA1   EQU   *                                                        01070000
 @0       EQU   00                  EQUATES FOR REGISTERS 0-15           01080000
 @1       EQU   01                                                       01090000

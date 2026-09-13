@@ -86,6 +86,7 @@ The project measures two different things and they must never be quoted as one.
 | [`deck-vs-tk5-ce.md`](deck-vs-tk5-ce.md) | **the measurement that chose TK5.** 15 to 1 where both systems carry maintenance |
 | [`baseline-dlib-vs-target.md`](baseline-dlib-vs-target.md) | **the measurement that answers Dave's reversal.** DLIB 1,236, target 1,069, both 1,052 — and 23 of Mike's TSO modules are recovered against the back-level copy |
 | [`baseline-gate-predictions.md`](baseline-gate-predictions.md) | the seven predictions that gate wrote down first. **Never edited, by design** |
+| [`two-baselines-as-a-control.md`](two-baselines-as-a-control.md) | **the second baseline is a control on option A, and 99 of `IKJEGMSG`'s 100 transcribed bytes were noise.** What `fillgaps.py`'s guard could never see |
 | [`dlib-distance-tk5-ce.md`](dlib-distance-tk5-ce.md) | how far apart the two object bases are; neither is a superset |
 | [`maintenance-level.md`](maintenance-level.md) | **what level TK5's DLIBs actually carry.** 98.1 % at 1985 or earlier, and a 76-module tail to 1990 that is 43 % TSO |
 | [`dlib-distance.md`](dlib-distance.md) | how far Dave's source is from the object — and the IDR route to a per-module maintenance level |

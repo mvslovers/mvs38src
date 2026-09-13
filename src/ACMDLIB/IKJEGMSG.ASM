@@ -380,7 +380,6 @@ M002     DC    0H'0'                                            DSKC125 00398000
          DC    CL1' '                                                   00411000
          DC    CL1' '                                                   00412000
          DC    CL1' '                                                   00413000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 00416000
 M003     DC    0H'0'                                            DSKC125 00416000
          DC    AL1(0)                                                   00418000
          DC    AL1(0)                                                   00419000
@@ -393,7 +392,6 @@ M003     DC    0H'0'                                            DSKC125 00416000
          DC    CL25'IKJ57021I INVALID COMMAND'                          00426000
          DC    CL1' '                                                   00427000
          DC    CL1' '                                                   00428000
-         DC    X'F0'                         !!! SOURCE COMPARE FIX !!! 00431000
 M004     DC    0H'0'                                            DSKC125 00431000
          DC    AL1(0)                                                   00433000
          DC    AL1(0)                                                   00434000
@@ -433,7 +431,6 @@ M006     DC    0H'0'                                            DSKC125 00461000
          DC    CL1' '                                                   00472000
          DC    CL1' '                                                   00473000
          DC    CL1' '                                                   00474000
-         DC    X'02'                         !!! SOURCE COMPARE FIX !!! 00477000
 M007     DC    0H'0'                                            DSKC125 00477000
          DC    AL1(44)                                                  00479000
          DC    AL1(0)                                                   00480000
@@ -460,7 +457,6 @@ M008     DC    0H'0'                                            DSKC125 00492000
          DC    CL1' '                                                   00503000
          DC    CL1' '                                                   00504000
          DC    CL1' '                                                   00505000
-         DC    X'EA'                         !!! SOURCE COMPARE FIX !!! 00508000
 M009     DC    0H'0'                                            DSKC125 00508000
          DC    AL1(0)                                                   00510000
          DC    AL1(0)                                                   00511000
@@ -487,7 +483,6 @@ M0010    DC    0H'0'                                            DSKC125 00522000
          DC    CL7'INVALID'                                             00534000
          DC    CL1' '                                                   00535000
          DC    CL1' '                                                   00536000
-         DC    X'11'                         !!! SOURCE COMPARE FIX !!! 00539000
 M0011    DC    0H'0'                                            DSKC125 00539000
          DC    AL1(43)                                                  00541000
          DC    AL1(0)                                                   00542000
@@ -526,7 +521,6 @@ M0013    DC    0H'0'                                            DSKC125 00570000
          DC    CL43'IKJ57066I DATA AREA CONTAINED BREAKPOINT(S)'        00580000
          DC    CL1' '                                                   00581000
          DC    CL1' '                                                   00582000
-         DC    X'F0'                         !!! SOURCE COMPARE FIX !!! 00585000
 M0014    DC    0H'0'                                            DSKC125 00585000
          DC    AL1(0)                                                   00587000
          DC    AL1(0)                                                   00588000
@@ -552,7 +546,6 @@ M0015    DC    0H'0'                                            DSKC125 00599000
                RD'                                                      00610000
          DC    CL1' '                                                   00611000
          DC    CL1' '                                                   00612000
-         DC    X'6C'                         !!! SOURCE COMPARE FIX !!! 00615000
 M0016    DC    0H'0'                                            DSKC125 00615000
          DC    AL1(0)                                                   00617000
          DC    AL1(0)                                                   00618000
@@ -566,7 +559,6 @@ M0016    DC    0H'0'                                            DSKC125 00615000
                RD'                                                      00626000
          DC    CL1' '                                                   00627000
          DC    CL1' '                                                   00628000
-         DC    X'20'                         !!! SOURCE COMPARE FIX !!! 00631000
 M0017    DC    0H'0'                                            DSKC125 00631000
          DC    AL1(18)                                                  00633000
          DC    AL1(0)                                                   00634000
@@ -592,7 +584,6 @@ M0018    DC    0H'0'                                            DSKC125 00646000
          DC    CL43'IKJ57242I RANGE EXTENDS INTO PROTECTED CORE'        00656000
          DC    CL1' '                                                   00657000
          DC    CL1' '                                                   00658000
-         DC    X'E0'                         !!! SOURCE COMPARE FIX !!! 00661000
 M0019    DC    0H'0'                                            DSKC125 00661000
          DC    AL1(34)                                                  00663000
          DC    AL1(0)                                                   00664000
@@ -657,7 +648,6 @@ M0023    DC    0H'0'                                            DSKC125 00721000
          DC    CL33'IKJ57247I INVALID DATA FOR TYPE P'                  00731000
          DC    CL1' '                                                   00732000
          DC    CL1' '                                                   00733000
-         DC    X'6C'                         !!! SOURCE COMPARE FIX !!! 00736000
 M0024    DC    0H'0'                                            DSKC125 00736000
          DC    AL1(28)                                                  00738000
          DC    AL1(0)                                                   00739000
@@ -722,7 +712,6 @@ M0028    DC    0H'0'                                            DSKC125 00795000
          DC    CL9'NOT FOUND'                                           00807000
          DC    CL1' '                                                   00808000
          DC    CL1' '                                                   00809000
-         DC    X'20'                         !!! SOURCE COMPARE FIX !!! 00812000
 M0029    DC    0H'0'                                            DSKC125 00812000
          DC    AL1(17)                                                  00814000
          DC    AL1(0)                                                   00815000
@@ -788,7 +777,6 @@ M0033    DC    0H'0'                                            DSKC125 00873000
          DC    CL31'IKJ57296I SYMBOL TABLE IS EMPTY'                    00883000
          DC    CL1' '                                                   00884000
          DC    CL1' '                                                   00885000
-         DC    X'02'                         !!! SOURCE COMPARE FIX !!! 00888000
 M0034    DC    0H'0'                                            DSKC125 00888000
          DC    AL1(10)                                                  00890000
          DC    AL1(0)                                                   00891000
@@ -881,7 +869,6 @@ M0040    DC    0H'0'                                            DSKC125 00981000
                '                                                        00992000
          DC    CL1' '                                                   00993000
          DC    CL1' '                                                   00994000
-         DC    X'28'                         !!! SOURCE COMPARE FIX !!! 00997000
 M0041    DC    0H'0'                                            DSKC125 00997000
          DC    AL1(0)                                                   00999000
          DC    AL1(0)                                                   01000000
@@ -895,7 +882,6 @@ M0041    DC    0H'0'                                            DSKC125 00997000
                RD'                                                      01008000
          DC    CL1' '                                                   01009000
          DC    CL1' '                                                   01010000
-         DC    X'0C'                         !!! SOURCE COMPARE FIX !!! 01013000
 M0042    DC    0H'0'                                            DSKC125 01013000
          DC    AL1(0)                                                   01015000
          DC    AL1(0)                                                   01016000
@@ -933,7 +919,6 @@ M0046    DC    0H'0'                                            DSKC125 01041000
          DC    CL1' '                                                   01052000
          DC    CL1' '                                                   01053000
          DC    CL1' '                                                   01054000
-         DC    X'20'                         !!! SOURCE COMPARE FIX !!! 01057000
 M0047    DC    0H'0'                                            DSKC125 01057000
          DC    AL1(0)                                                   01059000
          DC    AL1(0)                                                   01060000
@@ -946,7 +931,6 @@ M0047    DC    0H'0'                                            DSKC125 01057000
          DC    CL49'IKJ57378I ZERO BYTES IS INVALID COUNT FOR GETMAIN'  01067000
          DC    CL1' '                                                   01068000
          DC    CL1' '                                                   01069000
-         DC    X'20'                         !!! SOURCE COMPARE FIX !!! 01072000
 M0048    DC    0H'0'                                            DSKC125 01072000
          DC    AL1(0)                                                   01074000
          DC    AL1(0)                                                   01075000
@@ -996,7 +980,6 @@ M0051    DC    0H'0'                                            DSKC125 01116000
          DC    CL29'IKJ57400I PERMANENT I/O ERROR'                      01126000
          DC    CL1' '                                                   01127000
          DC    CL1' '                                                   01128000
-         DC    X'D3'                         !!! SOURCE COMPARE FIX !!! 01131000
 M0052    DC    0H'0'                                            DSKC125 01131000
          DC    AL1(0)                                                   01133000
          DC    AL1(0)                                                   01134000
@@ -1009,7 +992,6 @@ M0052    DC    0H'0'                                            DSKC125 01131000
          DC    CL33'IKJ57401I UNABLE TO OPEN DATA SET'                  01141000
          DC    CL1' '                                                   01142000
          DC    CL1' '                                                   01143000
-         DC    X'E9'                         !!! SOURCE COMPARE FIX !!! 01146000
 M0053    DC    0H'0'                                            DSKC125 01146000
          DC    AL1(0)                                                   01148000
          DC    AL1(0)                                                   01149000
@@ -1063,7 +1045,6 @@ M0064    DC    0H'0'                                            DSKC125 01192000
          DC    CL1' '                                                   01203000
          DC    CL1' '                                                   01204000
          DC    CL1' '                                                   01205000
-         DC    X'97'                         !!! SOURCE COMPARE FIX !!! 01208000
 M0066    DC    0H'0'                                            DSKC125 01208000
          DC    AL1(0)                                                   01210000
          DC    AL1(0)                                                   01211000
@@ -1088,7 +1069,6 @@ M0067    DC    0H'0'                                            DSKC125 01222000
          DC    CL27'IKJ57461I COMMAND NOT FOUND'                        01232000
          DC    CL1' '                                                   01233000
          DC    CL1' '                                                   01234000
-         DC    X'E9'                         !!! SOURCE COMPARE FIX !!! 01237000
 M0068    DC    0H'0'                                            DSKC125 01237000
          DC    AL1(10)                                                  01239000
          DC    AL1(0)                                                   01240000
@@ -1133,7 +1113,6 @@ M0071    DC    0H'0'                                            DSKC125 01281000
          DC    H'11'                                                    01285000
          DC    H'0'                                                     01286000
          DC    CL7' TEST'                                               01287000
-         DC    X'30'                         !!! SOURCE COMPARE FIX !!! 01290000
 M0072    DC    0H'0'                                            DSKC125 01290000
          DC    AL1(29)                                                  01292000
          DC    AL1(0)                                                   01293000
@@ -1147,7 +1126,6 @@ M0072    DC    0H'0'                                            DSKC125 01290000
          DC    CL1' '                                                   01301000
          DC    CL1' '                                                   01302000
          DC    CL1' '                                                   01303000
-         DC    X'5C'                         !!! SOURCE COMPARE FIX !!! 01306000
 M0073    DC    0H'0'                                            DSKC125 01306000
          DC    AL1(42)                                                  01308000
          DC    AL1(0)                                                   01309000
@@ -1173,7 +1151,6 @@ M0100    DC    0H'0'                                            DSKC125 01321000
          DC    CL33'IKJ57501I TEST ENDED DUE TO ERROR'                  01331000
          DC    CL1' '                                                   01332000
          DC    CL1' '                                                   01333000
-         DC    X'F2'                         !!! SOURCE COMPARE FIX !!! 01336000
 M0101    DC    0H'0'                                            DSKC125 01336000
          DC    AL1(26)                                                  01338000
          DC    AL1(0)                                                   01339000
@@ -1288,7 +1265,6 @@ M0200    DC    0H'0'                                            DSKC125 01432000
                N THIS SYSTEM'                                           01444000
          DC    CL1' '                                                   01445000
          DC    CL1' '                                                   01446000
-         DC    X'03'                         !!! SOURCE COMPARE FIX !!! 01449000
 M0201    DC    0H'0'                                            DSKC125 01449000
          DC    AL1(0)                                                   01451000
          DC    AL1(0)                                                   01452000
@@ -1371,7 +1347,6 @@ M0206    DC    0H'0'                                            DSKC125 01528000
                E'                                                       01540000
          DC    CL1' '                                                   01541000
          DC    CL1' '                                                   01542000
-         DC    X'6B'                         !!! SOURCE COMPARE FIX !!! 01545000
 M0207    DC    0H'0'                                            DSKC125 01545000
          DC    AL1(0)                                                   01547000
          DC    AL1(0)                                                   01548000
@@ -1399,7 +1374,6 @@ M0208    DC    0H'0'                                            DSKC125 01561000
          DC    CL38'AN INVALID PDE WAS OBTAINED FROM PARSE'             01572000
          DC    CL1' '                                                   01573000
          DC    CL1' '                                                   01574000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 01577000
 M0209    DC    0H'0'                                            DSKC125 01577000
          DC    AL1(0)                                                   01579000
          DC    AL1(0)                                                   01580000
@@ -1426,7 +1400,6 @@ M0210    DC    0H'0'                                            DSKC125 01592000
          DC    CL20'DATA STRING TOO LONG'                               01603000
          DC    CL1' '                                                   01604000
          DC    CL1' '                                                   01605000
-         DC    X'F2'                         !!! SOURCE COMPARE FIX !!! 01608000
 M0211    DC    0H'0'                                            DSKC125 01608000
          DC    AL1(0)                                                   01610000
          DC    AL1(0)                                                   01611000
@@ -1440,7 +1413,6 @@ M0211    DC    0H'0'                                            DSKC125 01608000
          DC    CL24'ABSOLUTE VALUE TOO GREAT'                           01619000
          DC    CL1' '                                                   01620000
          DC    CL1' '                                                   01621000
-         DC    X'D9'                         !!! SOURCE COMPARE FIX !!! 01624000
 M0212    DC    0H'0'                                            DSKC125 01624000
          DC    AL1(0)                                                   01626000
          DC    AL1(0)                                                   01627000
@@ -1454,7 +1426,6 @@ M0212    DC    0H'0'                                            DSKC125 01624000
          DC    CL24'DATA FORMAT IS INCORRECT'                           01635000
          DC    CL1' '                                                   01636000
          DC    CL1' '                                                   01637000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 01640000
 M0213    DC    0H'0'                                            DSKC125 01640000
          DC    AL1(0)                                                   01642000
          DC    AL1(0)                                                   01643000
@@ -1522,7 +1493,6 @@ M0217    DC    0H'0'                                            DSKC125 01701000
                HE PRIVILEGED MODULE BEING ACCESSED'                     01713000
          DC    CL1' '                                                   01714000
          DC    CL1' '                                                   01715000
-         DC    X'C1'                         !!! SOURCE COMPARE FIX !!! 01718000
 M0218    DC    0H'0'                                            DSKC125 01718000
          DC    AL1(0)                                                   01720000
          DC    AL1(0)                                                   01721000
@@ -1536,7 +1506,6 @@ M0218    DC    0H'0'                                            DSKC125 01718000
          DC    CL38'SPECIFIED ADDRESS IS IN PROTECTED CORE'             01729000
          DC    CL1' '                                                   01730000
          DC    CL1' '                                                   01731000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 01734000
 M0219    DC    0H'0'                                            DSKC125 01734000
          DC    AL1(0)                                                   01736000
          DC    AL1(0)                                                   01737000
@@ -1550,7 +1519,6 @@ M0219    DC    0H'0'                                            DSKC125 01734000
          DC    CL50'REGISTER TYPE OF SECOND ADDRESS DIFFERS FROM FIRST' 01745000
          DC    CL1' '                                                   01746000
          DC    CL1' '                                                   01747000
-         DC    X'C1'                         !!! SOURCE COMPARE FIX !!! 01750000
 M0220    DC    0H'0'                                            DSKC125 01750000
          DC    AL1(0)                                                   01752000
          DC    AL1(0)                                                   01753000
@@ -1565,7 +1533,6 @@ M0220    DC    0H'0'                                            DSKC125 01750000
                S'                                                       01762000
          DC    CL1' '                                                   01763000
          DC    CL1' '                                                   01764000
-         DC    X'F3'                         !!! SOURCE COMPARE FIX !!! 01767000
 M0221    DC    0H'0'                                            DSKC125 01767000
          DC    AL1(0)                                                   01769000
          DC    AL1(0)                                                   01770000
@@ -1593,7 +1560,6 @@ M0222    DC    0H'0'                                            DSKC125 01783000
          DC    CL34'NOT FOUND RELATED TO SPECIFIED TCB'                 01794000
          DC    CL1' '                                                   01795000
          DC    CL1' '                                                   01796000
-         DC    X'C5'                         !!! SOURCE COMPARE FIX !!! 01799000
 M0223    DC    0H'0'                                            DSKC125 01799000
          DC    AL1(0)                                                   01801000
          DC    AL1(0)                                                   01802000
@@ -1607,7 +1573,6 @@ M0223    DC    0H'0'                                            DSKC125 01799000
          DC    CL40'INPUT NOT RESOLVED AS LOADNAME.CSECTNAME'           01810000
          DC    CL1' '                                                   01811000
          DC    CL1' '                                                   01812000
-         DC    X'D4'                         !!! SOURCE COMPARE FIX !!! 01815000
 M0224    DC    0H'0'                                            DSKC125 01815000
          DC    AL1(0)                                                   01817000
          DC    AL1(0)                                                   01818000
@@ -1621,7 +1586,6 @@ M0224    DC    0H'0'                                            DSKC125 01815000
          DC    CL40'INPUT NOT RESOLVED AS LOADNAME OR SYMBOL'           01826000
          DC    CL1' '                                                   01827000
          DC    CL1' '                                                   01828000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 01831000
 M0225    DC    0H'0'                                            DSKC125 01831000
          DC    AL1(0)                                                   01833000
          DC    AL1(0)                                                   01834000
@@ -1635,7 +1599,6 @@ M0225    DC    0H'0'                                            DSKC125 01831000
          DC    CL40'ATTEMPT QUALIFICATION AT NEXT BREAKPOINT'           01842000
          DC    CL1' '                                                   01843000
          DC    CL1' '                                                   01844000
-         DC    X'D6'                         !!! SOURCE COMPARE FIX !!! 01847000
 M0226    DC    0H'0'                                            DSKC125 01847000
          DC    AL1(0)                                                   01849000
          DC    AL1(0)                                                   01850000
@@ -1649,7 +1612,6 @@ M0226    DC    0H'0'                                            DSKC125 01847000
          DC    CL34'NO TCB EXISTS AT SPECIFIED ADDRESS'                 01858000
          DC    CL1' '                                                   01859000
          DC    CL1' '                                                   01860000
-         DC    X'F4'                         !!! SOURCE COMPARE FIX !!! 01863000
 M0227    DC    0H'0'                                            DSKC125 01863000
          DC    AL1(0)                                                   01865000
          DC    AL1(0)                                                   01866000
@@ -1733,7 +1695,6 @@ M0232    DC    0H'0'                                            DSKC125 01943000
                S UNAVAILABLE'                                           01955000
          DC    CL1' '                                                   01956000
          DC    CL1' '                                                   01957000
-         DC    X'05'                         !!! SOURCE COMPARE FIX !!! 01960000
 M0233    DC    0H'0'                                            DSKC125 01960000
          DC    AL1(10)                                                  01962000
          DC    AL1(43)                                                  01963000
@@ -1764,7 +1725,6 @@ M0234    DC    0H'0'                                            DSKC125 01978000
          DC    CL19'NOT IN MAIN STORAGE'                                01991000
          DC    CL1' '                                                   01992000
          DC    CL1' '                                                   01993000
-         DC    X'E2'                         !!! SOURCE COMPARE FIX !!! 01996000
 M0235    DC    0H'0'                                            DSKC125 01996000
          DC    AL1(10)                                                  01998000
          DC    AL1(0)                                                   01999000
@@ -1832,7 +1792,6 @@ M0239    DC    0H'0'                                            DSKC125 02010400
          DC    C'ABSOLUTE OR RELATIVE ADDRESS MAY BE USED'      DSKC125 02010500
          DC    C' '                                             DSKC125 02010510
          DC    C' '                                             DSKC125 02010520
-         DC    X'D5'                         !!! SOURCE COMPARE FIX !!! 02012000
 M0240    DC    0H'0'                                            DSKC125 02012000
          DC    AL1(34)                                                  02014000
          DC    AL1(37)                                                  02015000
@@ -1878,7 +1837,6 @@ M0242    DC    0H'0'                                            DSKC125 02048000
          DC    CL32'PART OF RANGE IS WRITE PROTECTED'                   02059000
          DC    CL1' '                                                   02060000
          DC    CL1' '                                                   02061000
-         DC    X'D5'                         !!! SOURCE COMPARE FIX !!! 02064000
 M0243    DC    0H'0'                                            DSKC125 02064000
          DC    AL1(0)                                                   02066000
          DC    AL1(0)                                                   02067000
@@ -1971,7 +1929,6 @@ M0249    DC    0H'0'                                            DSKC125 02156000
          DC    CL10'OPEN ERROR'                                         02167000
          DC    CL1' '                                                   02168000
          DC    CL1' '                                                   02169000
-         DC    X'D4'                         !!! SOURCE COMPARE FIX !!! 02172000
 M0250    DC    0H'0'                                            DSKC125 02172000
          DC    AL1(0)                                                   02174000
          DC    AL1(0)                                                   02175000
@@ -1998,7 +1955,6 @@ M0251    DC    0H'0'                                            DSKC125 02187000
          DC    CL24'PROGRAM NOT ON LOAD LIST'                           02198000
          DC    CL1' '                                                   02199000
          DC    CL1' '                                                   02200000
-         DC    X'E4'                         !!! SOURCE COMPARE FIX !!! 02203000
 M0252    DC    0H'0'                                            DSKC125 02203000
          DC    AL1(0)                                                   02205000
          DC    AL1(0)                                                   02206000
@@ -2026,7 +1982,6 @@ M0253    DC    0H'0'                                            DSKC125 02218000
          DC    CL1' '                                                   02230000
          DC    CL1' '                                                   02231000
          DC    CL1' '                                                   02232000
-         DC    X'D5'                         !!! SOURCE COMPARE FIX !!! 02235000
 M0255    DC    0H'0'                                            DSKC125 02235000
          DC    AL1(0)                                                   02237000
          DC    AL1(0)                                                   02238000
@@ -2040,7 +1995,6 @@ M0255    DC    0H'0'                                            DSKC125 02235000
          DC    CL42'PRINT DATA SET MUST BE PHYSICAL SEQUENTIAL'         02246000
          DC    CL1' '                                                   02247000
          DC    CL1' '                                                   02248000
-         DC    X'C5'                         !!! SOURCE COMPARE FIX !!! 02251000
 M0257    DC    0H'0'                                            DSKC125 02251000
          DC    AL1(0)                                                   02253000
          DC    AL1(0)                                                   02254000
@@ -2090,7 +2044,6 @@ M0259    DC    0H'0'                                            DSKC125 02282000
          DC    CL1' '                                                   02302000
          DC    CL1' '                                                   02303000
          DC    CL1' '                                                   02304000
-         DC    X'F8'                         !!! SOURCE COMPARE FIX !!! 02307000
 M0260    DC    0H'0'                                            DSKC125 02307000
          DC    AL1(0)                                                   02309000
          DC    AL1(0)                                                   02310000
@@ -2104,7 +2057,6 @@ M0260    DC    0H'0'                                            DSKC125 02307000
          DC    CL20'INSUFFICIENT STORAGE'                               02318000
          DC    CL1' '                                                   02319000
          DC    CL1' '                                                   02320000
-         DC    X'C2'                         !!! SOURCE COMPARE FIX !!! 02323000
 M0266    DC    0H'0'                                            DSKC125 02323000
          DC    AL1(0)                                                   02325000
          DC    AL1(0)                                                   02326000
@@ -2132,7 +2084,6 @@ M0267    DC    0H'0'                                            DSKC125 02339000
          DC    CL42'REGISTER NOTATION MUST BE GENERAL REGISTER'         02350000
          DC    CL1' '                                                   02351000
          DC    CL1' '                                                   02352000
-         DC    X'C8'                         !!! SOURCE COMPARE FIX !!! 02355000
 M0268    DC    0H'0'                                            DSKC125 02355000
          DC    AL1(0)                                                   02357000
          DC    AL1(0)                                                   02358000
@@ -2161,7 +2112,6 @@ M0269    DC    0H'0'                                            DSKC125 02371000
          DC    CL1' '                                                   02383000
          DC    CL1' '                                                   02384000
          DC    CL1' '                                                   02385000
-         DC    X'D5'                         !!! SOURCE COMPARE FIX !!! 02388000
 M0270    DC    0H'0'                                            DSKC125 02388000
          DC    AL1(34)                                                  02390000
          DC    AL1(0)                                                   02391000
@@ -2176,7 +2126,6 @@ M0270    DC    0H'0'                                            DSKC125 02388000
          DC    CL1' '                                                   02400000
          DC    CL1' '                                                   02401000
          DC    CL1' '                                                   02402000
-         DC    X'D6'                         !!! SOURCE COMPARE FIX !!! 02405000
 M0271    DC    0H'0'                                            DSKC125 02405000
          DC    AL1(0)                                                   02407000
          DC    AL1(0)                                                   02408000
@@ -2244,7 +2193,6 @@ M0275    DC    0H'0'                                            DSKC125 02466000
          DC    CL1' '                                                   02478000
          DC    CL1' '                                                   02479000
          DC    CL1' '                                                   02480000
-         DC    X'C5'                         !!! SOURCE COMPARE FIX !!! 02483000
 M0276    DC    0H'0'                                            DSKC125 02483000
          DC    AL1(0)                                                   02485000
          DC    AL1(0)                                                   02486000
@@ -2258,7 +2206,6 @@ M0276    DC    0H'0'                                            DSKC125 02483000
          DC    CL46'SYSTEM CONTROL BLOCK ERROR, TEST SESSION ENDED'     02494000
          DC    CL1' '                                                   02495000
          DC    CL1' '                                                   02496000
-         DC    X'C9'                         !!! SOURCE COMPARE FIX !!! 02499000
 M0277    DC    0H'0'                                            DSKC125 02499000
          DC    AL1(0)                                                   02501000
          DC    AL1(0)                                                   02502000
@@ -2285,7 +2232,6 @@ M0278    DC    0H'0'                                            DSKC125 02514000
          DC    CL32'THE VALID RANGE IS FROM 1 TO 256'                   02525000
          DC    CL1' '                                                   02526000
          DC    CL1' '                                                   02527000
-         DC    X'C9'                         !!! SOURCE COMPARE FIX !!! 02530000
 M0279    DC    0H'0'                                            DSKC125 02530000
          DC    AL1(0)                                                   02532000
          DC    AL1(0)                                                   02533000
@@ -2299,7 +2245,6 @@ M0279    DC    0H'0'                                            DSKC125 02530000
          DC    CL34'ADDRESS IN WRITE PROTECTED STORAGE'                 02541000
          DC    CL1' '                                                   02542000
          DC    CL1' '                                                   02543000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 02546000
 M0280    DC    0H'0'                                            DSKC125 02546000
          DC    AL1(10)                                                  02548000
          DC    AL1(0)                                                   02549000
@@ -2326,7 +2271,6 @@ M0281    DC    0H'0'                                            DSKC125 02561000
          DC    CL38'SYMBOL LENGTH EXCEEDS EIGHT CHARACTERS'             02572000
          DC    CL1' '                                                   02573000
          DC    CL1' '                                                   02574000
-         DC    X'E3'                         !!! SOURCE COMPARE FIX !!! 02577000
 M0283    DC    0H'0'                                            DSKC125 02577000
          DC    AL1(0)                                                   02579000
          DC    AL1(0)                                                   02580000
@@ -2353,7 +2297,6 @@ M0284    DC    0H'0'                                            DSKC125 02592000
          DC    CL34'LENGTH MUST BE BETWEEN 0 AND 65535'                 02603000
          DC    CL1' '                                                   02604000
          DC    CL1' '                                                   02605000
-         DC    X'D5'                         !!! SOURCE COMPARE FIX !!! 02608000
 M0285    DC    0H'0'                                            DSKC125 02608000
          DC    AL1(0)                                                   02610000
          DC    AL1(0)                                                   02611000
@@ -2450,7 +2393,6 @@ M0298    DC    0H'0'                                            DSKC125 02703000
          DC    CL30'EXTENDS INTO PROTECTED STORAGE'                     02714000
          DC    CL1' '                                                   02715000
          DC    CL1' '                                                   02716000
-         DC    X'D4'                         !!! SOURCE COMPARE FIX !!! 02719000
 M0299    DC    0H'0'                                            DSKC125 02719000
          DC    AL1(0)                                                   02721000
          DC    AL1(0)                                                   02722000
@@ -2469,25 +2411,21 @@ I002     DC    0H'0'                                            DSKC125 02734000
          DC    H'0'                                                     02737000
          DC    CL8'HALFWORD'                                            02738000
          DC    CL1' '                                                   02739000
-         DC    X'C6'                         !!! SOURCE COMPARE FIX !!! 02742000
 I003     DC    0H'0'                                            DSKC125 02742000
          DC    H'13'                                                    02744000
          DC    H'0'                                                     02745000
          DC    CL8'FULLWORD'                                            02746000
          DC    CL1' '                                                   02747000
-         DC    X'C6'                         !!! SOURCE COMPARE FIX !!! 02750000
 I004     DC    0H'0'                                            DSKC125 02750000
          DC    H'15'                                                    02752000
          DC    H'0'                                                     02753000
          DC    CL10'DOUBLEWORD'                                         02754000
          DC    CL1' '                                                   02755000
-         DC    X'04'                         !!! SOURCE COMPARE FIX !!! 02758000
 I006     DC    0H'0'                                            DSKC125 02758000
          DC    H'15'                                                    02760000
          DC    H'0'                                                     02761000
          DC    CL10'ASSIGNMENT'                                         02762000
          DC    CL1' '                                                   02763000
-         DC    X'E3'                         !!! SOURCE COMPARE FIX !!! 02766000
 I007     DC    0H'0'                                            DSKC125 02766000
          DC    H'12'                                                    02768000
          DC    H'0'                                                     02769000
@@ -2503,7 +2441,6 @@ I009     DC    0H'0'                                            DSKC125 02780000
          DC    H'0'                                                     02783000
          DC    CL4'LIST'                                                02784000
          DC    CL1' '                                                   02785000
-         DC    X'E3'                         !!! SOURCE COMPARE FIX !!! 02788000
 I0010    DC    0H'0'                                            DSKC125 02788000
          DC    H'12'                                                    02790000
          DC    H'0'                                                     02791000
@@ -2514,19 +2451,16 @@ I0011    DC    0H'0'                                            DSKC125 02795000
          DC    H'0'                                                     02798000
          DC    CL6'EQUATE'                                              02799000
          DC    CL1' '                                                   02800000
-         DC    X'F4'                         !!! SOURCE COMPARE FIX !!! 02803000
 I0012    DC    0H'0'                                            DSKC125 02803000
          DC    H'9'                                                     02805000
          DC    H'0'                                                     02806000
          DC    CL4'DROP'                                                02807000
          DC    CL1' '                                                   02808000
-         DC    X'D6'                         !!! SOURCE COMPARE FIX !!! 02811000
 I0013    DC    0H'0'                                            DSKC125 02811000
          DC    H'7'                                                     02813000
          DC    H'0'                                                     02814000
          DC    CL2'AT'                                                  02815000
          DC    CL1' '                                                   02816000
-         DC    X'D5'                         !!! SOURCE COMPARE FIX !!! 02819000
 I0014    DC    0H'0'                                            DSKC125 02819000
          DC    H'12'                                                    02821000
          DC    H'0'                                                     02822000
@@ -2552,7 +2486,6 @@ I0018    DC    0H'0'                                            DSKC125 02847000
          DC    H'0'                                                     02850000
          DC    CL2'GO'                                                  02851000
          DC    CL1' '                                                   02852000
-         DC    X'D6'                         !!! SOURCE COMPARE FIX !!! 02855000
 I0019    DC    0H'0'                                            DSKC125 02855000
          DC    H'8'                                                     02857000
          DC    H'0'                                                     02858000
@@ -2563,7 +2496,6 @@ I0020    DC    0H'0'                                            DSKC125 02862000
          DC    H'0'                                                     02865000
          DC    CL4'CALL'                                                02866000
          DC    CL1' '                                                   02867000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 02870000
 I0022    DC    0H'0'                                            DSKC125 02870000
          DC    H'12'                                                    02872000
          DC    H'0'                                                     02873000
@@ -2574,13 +2506,11 @@ I0023    DC    0H'0'                                            DSKC125 02877000
          DC    H'0'                                                     02880000
          DC    CL4'LOAD'                                                02881000
          DC    CL1' '                                                   02882000
-         DC    X'C5'                         !!! SOURCE COMPARE FIX !!! 02885000
 I0024    DC    0H'0'                                            DSKC125 02885000
          DC    H'11'                                                    02887000
          DC    H'0'                                                     02888000
          DC    CL6'DELETE'                                              02889000
          DC    CL1' '                                                   02890000
-         DC    X'C1'                         !!! SOURCE COMPARE FIX !!! 02893000
 I0025    DC    0H'0'                                            DSKC125 02893000
          DC    H'12'                                                    02895000
          DC    H'0'                                                     02896000
@@ -2591,25 +2521,21 @@ I0026    DC    0H'0'                                            DSKC125 02900000
          DC    H'0'                                                     02903000
          DC    CL8'FREEMAIN'                                            02904000
          DC    CL1' '                                                   02905000
-         DC    X'C9'                         !!! SOURCE COMPARE FIX !!! 02908000
 I0027    DC    0H'0'                                            DSKC125 02908000
          DC    H'11'                                                    02910000
          DC    H'0'                                                     02911000
          DC    CL6'ATTACH'                                              02912000
          DC    CL1' '                                                   02913000
-         DC    X'C9'                         !!! SOURCE COMPARE FIX !!! 02916000
 I0030    DC    0H'0'                                            DSKC125 02916000
          DC    H'9'                                                     02918000
          DC    H'0'                                                     02919000
          DC    CL4'COPY'                                                02920000
          DC    CL1' '                                                   02921000
-         DC    X'F6'                         !!! SOURCE COMPARE FIX !!! 02924000
 I0031    DC    0H'0'                                            DSKC125 02924000
          DC    H'11'                                                    02926000
          DC    H'0'                                                     02927000
          DC    CL6'LOADER'                                              02928000
          DC    CL1' '                                                   02929000
-         DC    X'C9'                         !!! SOURCE COMPARE FIX !!! 02932000
 I0033    DC    0H'0'                                            DSKC125 02932000
          DC    H'18'                                                    02934000
          DC    H'0'                                                     02935000
@@ -2630,7 +2556,6 @@ I0036    DC    0H'0'                                            DSKC125 02954000
          DC    H'0'                                                     02957000
          DC    CL4'LINK'                                                02958000
          DC    CL1' '                                                   02959000
-         DC    X'01'                         !!! SOURCE COMPARE FIX !!! 02962000
 I0040    DC    0H'0'                                            DSKC125 02962000
          DC    H'12'                                                    02964000
          DC    H'0'                                                     02965000
@@ -2646,7 +2571,6 @@ I0042    DC    0H'0'                                            DSKC125 02976000
          DC    H'0'                                                     02979000
          DC    CL8'IKJEFF18'                                            02980000
          DC    CL1' '                                                   02981000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 02984000
 I0043    DC    0H'0'                                            DSKC125 02984000
          DC    H'18'                                                    02986000
          DC    H'0'                                                     02987000
@@ -2667,7 +2591,6 @@ I0048    DC    0H'0'                                            DSKC125 03005000
          DC    H'0'                                                     03008000
          DC    CL30'PROGRAM CHECK OR LOOP IN FETCH'                     03009000
          DC    CL1' '                                                   03010000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 03013000
 I0049    DC    0H'0'                                            DSKC125 03013000
          DC    H'52'                                                    03015000
          DC    H'0'                                                     03016000
@@ -2728,7 +2651,6 @@ I0071    DC    0H'0'                                            DSKC125 03090000
          DC    H'0'                                                     03093000
          DC    CL16'I/O ERROR IN SVC'                                   03094000
          DC    CL1' '                                                   03095000
-         DC    X'D4'                         !!! SOURCE COMPARE FIX !!! 03098000
 I0072    DC    0H'0'                                            DSKC125 03098000
          DC    H'46'                                                    03100000
          DC    H'0'                                                     03101000
@@ -2744,13 +2666,11 @@ I0074    DC    0H'0'                                            DSKC125 03112000
          DC    H'0'                                                     03115000
          DC    CL34'MODULE NOT IN LPA OR LPA DIRECTORY'                 03116000
          DC    CL1' '                                                   03117000
-         DC    X'D6'                         !!! SOURCE COMPARE FIX !!! 03120000
 I0077    DC    0H'0'                                            DSKC125 03120000
          DC    H'7'                                                     03122000
          DC    H'0'                                                     03123000
          DC    CL2'04'                                                  03124000
          DC    CL1' '                                                   03125000
-         DC    X'C8'                         !!! SOURCE COMPARE FIX !!! 03128000
 I0078    DC    0H'0'                                            DSKC125 03128000
          DC    H'7'                                                     03130000
          DC    H'0'                                                     03131000
@@ -2761,43 +2681,36 @@ I0079    DC    0H'0'                                            DSKC125 03136000
          DC    H'0'                                                     03139000
          DC    CL2'0C'                                                  03140000
          DC    CL1' '                                                   03141000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 03144000
 I0080    DC    0H'0'                                            DSKC125 03144000
          DC    H'7'                                                     03146000
          DC    H'0'                                                     03147000
          DC    CL2'10'                                                  03148000
          DC    CL1' '                                                   03149000
-         DC    X'D6'                         !!! SOURCE COMPARE FIX !!! 03152000
 I0081    DC    0H'0'                                            DSKC125 03152000
          DC    H'7'                                                     03154000
          DC    H'0'                                                     03155000
          DC    CL2'14'                                                  03156000
          DC    CL1' '                                                   03157000
-         DC    X'E2'                         !!! SOURCE COMPARE FIX !!! 03160000
 I0082    DC    0H'0'                                            DSKC125 03160000
          DC    H'7'                                                     03162000
          DC    H'0'                                                     03163000
          DC    CL2'18'                                                  03164000
          DC    CL1' '                                                   03165000
-         DC    X'E2'                         !!! SOURCE COMPARE FIX !!! 03168000
 I0083    DC    0H'0'                                            DSKC125 03168000
          DC    H'17'                                                    03170000
          DC    H'0'                                                     03171000
          DC    CL12'MULTIPLICITY'                                       03172000
          DC    CL1' '                                                   03173000
-         DC    X'F8'                         !!! SOURCE COMPARE FIX !!! 03176000
 I0084    DC    0H'0'                                            DSKC125 03176000
          DC    H'11'                                                    03178000
          DC    H'0'                                                     03179000
          DC    CL6'LENGTH'                                              03180000
          DC    CL1' '                                                   03181000
-         DC    X'C6'                         !!! SOURCE COMPARE FIX !!! 03184000
 I0085    DC    0H'0'                                            DSKC125 03184000
          DC    H'13'                                                    03186000
          DC    H'0'                                                     03187000
          DC    CL8'IKJEGSYM'                                            03188000
          DC    CL1' '                                                   03189000
-         DC    X'E2'                         !!! SOURCE COMPARE FIX !!! 03192000
 I0086    DC    0H'0'                                            DSKC125 03192000
          DC    H'8'                                                     03194000
          DC    H'0'                                                     03195000
@@ -2808,25 +2721,21 @@ I0087    DC    0H'0'                                            DSKC125 03199000
          DC    H'0'                                                     03202000
          DC    CL8'IKJEGLDF'                                            03203000
          DC    CL1' '                                                   03204000
-         DC    X'D9'                         !!! SOURCE COMPARE FIX !!! 03207000
 I0089    DC    0H'0'                                            DSKC125 03207000
          DC    H'7'                                                     03209000
          DC    H'0'                                                     03210000
          DC    CL2'1C'                                                  03211000
          DC    CL1' '                                                   03212000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 03215000
 I0092    DC    0H'0'                                            DSKC125 03215000
          DC    H'25'                                                    03217000
          DC    H'0'                                                     03218000
          DC    CL20'INSUFFICIENT STORAGE'                               03219000
          DC    CL1' '                                                   03220000
-         DC    X'C9'                         !!! SOURCE COMPARE FIX !!! 03223000
 I0093    DC    0H'0'                                            DSKC125 03223000
          DC    H'25'                                                    03225000
          DC    H'0'                                                     03226000
          DC    CL20'PROTECTION VIOLATION'                               03227000
          DC    CL1' '                                                   03228000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 03231000
 I0094    DC    0H'0'                                            DSKC125 03231000
          DC    H'16'                                                    03233000
          DC    H'0'                                                     03234000
@@ -2847,7 +2756,6 @@ I0097    DC    0H'0'                                            DSKC125 03252000
          DC    H'0'                                                     03255000
          DC    CL38'SPECIFIED AREA IS IN PROTECTED STORAGE'             03256000
          DC    CL1' '                                                   03257000
-         DC    X'F8'                         !!! SOURCE COMPARE FIX !!! 03260000
 I0098    DC    0H'0'                                            DSKC125 03260000
          DC    H'24'                                                    03262000
          DC    H'0'                                                     03263000
@@ -2863,7 +2771,6 @@ I00100   DC    0H'0'                                            DSKC125 03274000
          DC    H'0'                                                     03277000
          DC    CL20'IN A NON-TEST MODULE'                               03278000
          DC    CL1' '                                                   03279000
-         DC    X'E8'                         !!! SOURCE COMPARE FIX !!! 03282000
 I00101   DC    0H'0'                                            DSKC125 03282000
          DC    H'24'                                                    03284000
          DC    H'0'                                                     03285000
@@ -2884,7 +2791,6 @@ I00104   DC    0H'0'                                            DSKC125 03303000
          DC    H'0'                                                     03306000
          DC    CL10'IN IKJEGAT'                                         03307000
          DC    CL1' '                                                   03308000
-         DC    X'E3'                         !!! SOURCE COMPARE FIX !!! 03311000
 I00105   DC    0H'0'                                            DSKC125 03311000
          DC    H'16'                                                    03313000
          DC    H'0'                                                     03314000
@@ -2935,7 +2841,6 @@ I00114   DC    0H'0'                                            DSKC125 03374000
          DC    H'0'                                                     03377000
          DC    CL10'IN IKJEGGO'                                         03378000
          DC    CL1' '                                                   03379000
-         DC    X'C6'                         !!! SOURCE COMPARE FIX !!! 03382000
 I00115   DC    0H'0'                                            DSKC125 03382000
          DC    H'16'                                                    03384000
          DC    H'0'                                                     03385000
@@ -2946,7 +2851,6 @@ I00116   DC    0H'0'                                            DSKC125 03389000
          DC    H'0'                                                     03392000
          DC    CL10'IN IKJEGIO'                                         03393000
          DC    CL1' '                                                   03394000
-         DC    X'40'                         !!! SOURCE COMPARE FIX !!! 03397000
 I00117   DC    0H'0'                                            DSKC125 03397000
          DC    H'16'                                                    03399000
          DC    H'0'                                                     03400000
@@ -3180,7 +3084,6 @@ M0400    DC    0H'0'                                            DSKC125 03694000
          DC    CL1'+'                                                   03708000
          DC    CL1' '                                                   03709000
          DC    CL1' '                                                   03710000
-         DC    X'C8'                         !!! SOURCE COMPARE FIX !!! 03713000
 M0410    DC    0H'0'                                            DSKC125 03713000
          DC    AL1(43)                                                  03715000
          DC    AL1(44)                                                  03716000
@@ -3261,7 +3164,6 @@ M0450    DC    0H'0'                                            DSKC125 03787000
          DC    CL1'+'                                                   03801000
          DC    CL1' '                                                   03802000
          DC    CL1' '                                                   03803000
-         DC    X'C6'                         !!! SOURCE COMPARE FIX !!! 03806000
 M0460    DC    0H'0'                                            DSKC125 03806000
          DC    AL1(14)                                                  03808000
          DC    AL1(15)                                                  03809000
@@ -3294,7 +3196,6 @@ M0470    DC    0H'0'                                            DSKC125 03824000
                MODULE+'                                                 03838000
          DC    CL1' '                                                   03839000
          DC    CL1' '                                                   03840000
-         DC    X'C1'                         !!! SOURCE COMPARE FIX !!! 03843000
 M0599    DC    0H'0'                                            DSKC125 03843000
          DC    AL1(43)                                                  03845000
          DC    AL1(0)                                                   03846000
