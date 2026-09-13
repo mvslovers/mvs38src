@@ -701,6 +701,73 @@ its messages before anything could read them, so the only trace was one line on
 the Hercules console. `prepare()`'s `MSGCLASS=H` rewrite exists for exactly this
 and did not reach it — the JCL error happened before JES honoured anything.
 
+#### Run 8: the chain completed, 82 of 82
+
+**The prediction below held.** Recorded after the fact, under it, unchanged.
+
+| | run 6 (stock SMP) | **run 8 (Dave's SMP)** |
+|---|---|---|
+| `MAINT06@` | `ABEND SB37`, then `CC 0008` | **`CC 0000`** |
+| `MAINT06A` | `CC 0012` | **`CC 0000`** |
+| `MAINT06B` | `CC 0012` | **`CC 0004`** |
+| `MAINT06C` | `CC 0000` | `CC 0000` |
+| `MAINT06D` | `CC 0012` | **`CC 0000`** |
+| how far it got | job 1 | **all 82, `MAINT06@` → `MAINT15G`** |
+
+34 × `CC 0000`, 23 × `CC 0004`, 25 × `CC 0008`. **No ABEND and no `CC 0012`
+anywhere in 82 jobs.** All four library boundaries crossed — `JCL1`→`JCL2`→`JCL3`
+→`JCL4`→`JCL5` — and it stopped exactly where Dave's own chain stops, on
+`MAINT15G`'s commented-out card to the `MAINT15?` placeholder that does not exist.
+
+#### `HMA3462` — and what the count is and is not
+
+| | `HMA3462 INVALID IEBUPDTE CONTROL STATEMENT` |
+|---|---:|
+| run 7, stock SMP, 5 jobs | **675,382** lines |
+| run 8, Dave's SMP, 51 snapshot files | **0** |
+
+`MAINT06@` alone accounted for 487,641 of run 7's. **But the two halves of that
+table are not the same measurement and it would be wrong to read them as one.**
+`bldrun.py` snapshots a job's listings only when its return code is non-zero, so
+the five jobs that produced all 675,382 lines have no run-8 snapshot *because they
+returned `CC 0000`*. For those five the evidence is the return code; the zero is
+measured over the 21 other jobs that did fail.
+
+That also cost a wrong number on the way: counting `~/bldsnap` without looking at
+timestamps mixed run 7's files with run 8's and reported 675,382 as though it were
+run 8's own. The snapshots are named by member and accumulate across runs; the
+mtimes separate them cleanly — 2026-09-11 16:22–16:55 is run 7, 2026-09-13
+12:46–13:28 is run 8.
+
+#### What the chain actually put into the libraries
+
+`BLDCOPY` archives every APPLY and ACCEPT as a **PDS per phase**, one member per
+module — `MVSSRC.BLD.APPLY.MAINT06.LISTING` holds 475. (Read as a sequential data
+set they all return HTTP 400, and a first pass counted `HMA3462` as 0 across
+twenty datasets none of which had been read. mvsMF says so in the body:
+*"Dataset is a partitioned dataset (PDS)"*. A count over zero readable files is a
+claim about the instrument.)
+
+| | distinct modules |
+|---|---:|
+| phases 1–5, reached before run 8 | 453 |
+| **phases 6–15, reached only by run 8** | **1,017** |
+| of those, **never maintained in phases 1–5** | **596** |
+| union | 1,049 |
+
+Per-module list: [`../work/measurements/run8-apply-modules.tsv`](../work/measurements/run8-apply-modules.tsv).
+
+**596 is the number to hold on to.** [`source-states.md`](source-states.md) found
+that **619 of 1,357 `DSK`-marked modules are not in the system's source at all**,
+because run 6 stopped at the phase-1 boundary. Those two numbers are not the same
+measurement and they are not meant to be equated — but 596 modules receiving
+maintenance for the first time is the shape of the thing that population was
+waiting for.
+
+**What is NOT yet measured:** whether any of it reaches the *source* libraries.
+That needs `MVSSRC.BLD.AMVSSRC` extracted again and scored against both baselines,
+and it is the next run, not this one.
+
 #### The prediction
 
 Dave: *"because SMP had some functionality missing I updated SMP to have that
