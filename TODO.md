@@ -49,7 +49,7 @@ The scoreboard is at the head of [`README.md`](README.md) and is **generated** �
 | **host-side, with our recovered sources** | **1,509** |
 | host-side against TK5's **TARGET** libraries, same decks | **1,069 of 5,353** |
 | identical against **both** baselines | **1,052** |
-| **under the chosen baseline — target, DLIB where no target exists** | **1,445 of 5,353 — 27.0 %** |
+| **under the chosen baseline — target, DLIB where no target exists** | **1,483 of 5,353 — 27.7 %** |
 | `src/` — 246 identical to both, 24 no target counterpart, 7 target-only, 1 DLIB-only | **289 modules** |
 | ⚠️ `scoreboard.py --check` only checks README-against-tool | its INPUT can be stale; re-run `srcstate_vs_dlib.py` after any change to `src/` |
 | `as370` == IFOX00 | **5,471 of 5,528 — 99.0 %** |
@@ -249,9 +249,12 @@ bytes.
 4. ⚡ **Which of the 38 divergent modules differ because of a TK5 USERMOD** rather
    than IBM service. Needs the target zone's SYSMOD-to-module mapping. `IKJEFF53`
    is a known usermod target and is in the 38, so the answer is not zero.
-5. ⚡ **Tell Dave about `where.py --base tgt`.** It is the tool he said he needed,
-   pointed at the object he said to compare against, and he does not know it
-   exists. `docs/mail-kreiss-2026-09-12.md` is the draft to extend.
+5. 🚪 **The mail to Dave is written and not sent** —
+   [`docs/mail-kreiss-2026-09-13.md`](docs/mail-kreiss-2026-09-13.md). It needs
+   Mike's word. Two real questions in it and only Dave can answer either: what
+   `./ DELETE` expects of the source library going in, and whether his macro
+   libraries carry the `ESTAE` that **175 modules** wait on. It also hands him
+   `where.py --base tgt` with a worked example, which is the tool he asked for.
 
 ### Waiting, and none of it blocks host-side work
 

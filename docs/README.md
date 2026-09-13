@@ -36,6 +36,7 @@ banner, that means nobody has *found* it to be stale — not that it is current.
 | [`kreiss-project.md`](kreiss-project.md) | **what we are building on.** Dave Kreiss' project, his `DSK*` PTF scheme, and why his PTFs are not IBM's |
 | [`dave-environment-plan.md`](dave-environment-plan.md) | how his environment gets built, and why that is not the current work |
 | [`mail-kreiss-2026-09-12.md`](mail-kreiss-2026-09-12.md) | draft: status, the scoreboard, and the `./ DELETE` question |
+| [`mail-kreiss-2026-09-13.md`](mail-kreiss-2026-09-13.md) | **draft, not sent.** `MAINT05Z` worked and the `./ DELETE` failures went 675,382 → 0; the source library came out damaged; and the one macro level nobody has, worth 175 modules |
 
 ## The two instruments
 
