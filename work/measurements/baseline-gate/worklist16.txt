@@ -52,6 +52,9 @@
 === IEFSDXXX  1 bytes  LPALIB(IEFSDXXX)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEFSDXXX.ASM
     0x03e3 hole ours=00               IBM=4e               SAME
         stmt    424 |DS    0F|
+=== IGC0002I  1 bytes  LPALIB(IGC0002I)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGC0002I.ASM
+    0x06ea hole ours=00               IBM=c0               tgt-only
+        stmt    905 |DS    0F                      ESTABLISH A FULLWORD BOUNBARY   |
 === IGC0606F  1 bytes  LPALIB(IGC0606F)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGC0606F.ASM
     0x01cf hole ours=00               IBM=73               SAME
         stmt    198 |X5256    DC    X'5256'|
@@ -303,16 +306,6 @@
 === IGG019MS  3 bytes  SVCLIB(IGG019MS)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG019MS.ASM
     0x0146 TEXT ours=000000           IBM=025090           SAME
         stmt    282 |DC    XL3'0'                                           DSK2004|
-=== IGG0325U  3 bytes  LPALIB(IGG0325Z)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG0325U.ASM
-    0x02d4 TEXT ours=f7               IBM=f8               SAME
-        stmt    701 |CVT044R2 DC    V(IGC044R2) - ADDRESS OF IGC044R2 IN CHAP SERVI|
-    0x02d6 TEXT ours=f2f6             IBM=f7f3             SAME
-        stmt    701 |CVT044R2 DC    V(IGC044R2) - ADDRESS OF IGC044R2 IN CHAP SERVI|
-=== IGG0553F  3 bytes  LPALIB(IGG0553A)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG0553F.ASM
-    0x01b4 TEXT ours=f7               IBM=f8               SAME
-        stmt   1461 |CVTASCRF DC    A(0) -        CREATED ASCB QUEUE HEADER        |
-    0x01b6 TEXT ours=f2f6             IBM=f7f3             SAME
-        stmt   1461 |CVTASCRF DC    A(0) -        CREATED ASCB QUEUE HEADER        |
 === IGGMSG02  3 bytes  LPALIB(IGGMSG02)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGGMSG02.ASM
     0x07b6 TEXT ours=47e0             IBM=d204             tgt-only
         stmt    391 |DC    XL4'4F4A47E0'|
@@ -406,13 +399,6 @@
         stmt    989 |MU5ST4   DC    CL4' ×× '|
     0x04b4 TEXT ours=bf               IBM=4f               SAME
         stmt    991 |MU5ST6   DC    CL2' ×'|
-=== BLSUSTAE  4 bytes  CMDLIB(BLSU)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/BLSUSTAE.ASM
-    0x000e TEXT ours=f9               IBM=f3               SAME
-        stmt      8 |DC    AL1(IDENTEND-IDENT)  /* LENGTH OF IDENTIFIER          */|
-    0x0011 TEXT ours=f7               IBM=f1               SAME
-        stmt      8 |DC    AL1(IDENTEND-IDENT)  /* LENGTH OF IDENTIFIER          */|
-    0x0013 TEXT ours=f2f6             IBM=f7f8             SAME
-        stmt      8 |DC    AL1(IDENTEND-IDENT)  /* LENGTH OF IDENTIFIER          */|
 === HMASMIO  4 bytes  LINKLIB(HMASMP)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/HMASMIO.ASM
     0x1d9b TEXT ours=4010             IBM=4100             SAME
         stmt   4210 |ST    R4,0(0,1)                         STORE LENGTH IN LIST  |
@@ -447,57 +433,15 @@
 === IEAVEIO  4 bytes  NUCLEUS(IEANUC01)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEAVEIO.ASM
     0x021c TEXT ours=00000000         IBM=102541e0         SAME
         stmt    702 |PSATOLD  DC    A(0) -         TCB OLD POINTER                 |
-=== IEAVIOCP  4 bytes  NUCLEUS(IEANUC01)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEAVIOCP.ASM
-    0x0012 TEXT ours=f9               IBM=f1               SAME
-        stmt   3465 |RCATASID DS    AL2                                            |
-    0x0015 TEXT ours=f7               IBM=f4               SAME
-        stmt   2790 |PCBPGTA  DS    AL3 -           VIRTUAL MEMORY ADDRESS OF|
-    0x0017 TEXT ours=f2f6             IBM=f7f7             SAME
-        stmt   3514 |RSMLFQL  DS    AL2 -           PFTE INDEX TO LAST PFTE ON LFQ |
 === IEAVPIOI  4 bytes  NUCLEUS(IEANUC01)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEAVPIOI.ASM
     0x00fc TEXT ours=00000000         IBM=9108602d         SAME
         stmt    763 |CVTEXT1  DC    A(CVTXTNT1) - ADDRESS OF OS - OS/VS COMMON EXTE|
-=== IEAVVCRA  4 bytes  NUCLEUS(IEANUC01)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEAVVCRA.ASM
-    0x001c TEXT ours=f9               IBM=f5               SAME
-        stmt    962 |UCBIMAGE DS    CL4 -               FORMS OVERLAY IMAGE IDENTIF|
-    0x001f TEXT ours=f7               IBM=f9               SAME
-        stmt    855 |UCBRV042 DS    XL3 -               RESERVED                   |
-    0x0021 TEXT ours=f2f6             IBM=f7f7             SAME
-        stmt    836 |UCBRDYQA DS    AL3 -               ASYNCHRONOUS READY NOTIFICA|
 === IEAXPDXR  4 bytes  LINKLIB(IEAXPDXR)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEAXPDXR.ASM
     0x01bc hole ours=00000000         IBM=f8404040         SAME
         stmt    222 |DIV      DC    X'B22D'             EXTENDED DIVIDE OPCODE - DX|
-=== IECTTRNS  4 bytes  TELCMLIB(IECTTRNS)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IECTTRNS.ASM
-    0x000d TEXT ours=f9               IBM=f8               SAME
-        stmt     39 |B     START|
-    0x000f TEXT ours=f0f7             IBM=f1f6             SAME
-        stmt     39 |B     START|
-    0x0012 TEXT ours=f2               IBM=f7               SAME
-        stmt     39 |B     START|
 === IEDAYZZ  4 bytes  LINKLIB(IEDAYZZ)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEDAYZZ.ASM
     0x002a TEXT ours=00000000         IBM=58503008         SAME
         stmt    887 |TSBASRCE DS    CL2 .                    TCAM TERMINAL INDEX.  |
-=== IEE6303D  4 bytes  LPALIB(IGC0003D)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEE6303D.ASM
-    0x0018 TEXT ours=f9               IBM=f1               SAME
-        stmt   1777 |CVT0VL00 DC    V(IEA0VL00) - ADDRESS OF ENTRY POINT OF THE TAS|
-    0x001b TEXT ours=f7               IBM=f3               SAME
-        stmt   1447 |UCMRSV18 DS    XL1 -          RESERVED                        |
-    0x001d TEXT ours=f2f6             IBM=f7f7             SAME
-        stmt   1420 |UCMIECBP DS    AL3 -          ADDR OF I/O REQUEST ECB         |
-=== IEE6403D  4 bytes  LPALIB(IGC0003D)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEE6403D.ASM
-    0x0018 TEXT ours=f9               IBM=f1               SAME
-        stmt    934 |DCMTIMES DS    BL1                 TIME RTNS INDICATOR BYTE|
-    0x001b TEXT ours=f7               IBM=f3               SAME
-        stmt   1412 |UCMRSV18 DS    XL1 -          RESERVED                        |
-    0x001d TEXT ours=f2f6             IBM=f7f7             SAME
-        stmt   1385 |UCMIECBP DS    AL3 -          ADDR OF I/O REQUEST ECB         |
-=== IEECB911  4 bytes  LPALIB(IEECB910)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEECB911.ASM
-    0x0012 TEXT ours=f9               IBM=f1               SAME
-        stmt      2 |IEECB911 CSECT|
-    0x0015 TEXT ours=f7               IBM=f6               SAME
-        stmt      2 |IEECB911 CSECT|
-    0x0017 TEXT ours=f2f6             IBM=f7f7             SAME
-        stmt      2 |IEECB911 CSECT|
 === IEECVET7  4 bytes  LPALIB(IGC0007B)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEECVET7.ASM
     0x0011 TEXT ours=f0               IBM=f2               SAME
         stmt   1522 |UCBWTOID DS    CL3 -               WTO MESSAGE IDENTIFIER  (MD|
@@ -505,13 +449,6 @@
         stmt    936 |UCMDECBA DC    A(UCMDECB) -   ADDRESS OF DOM REQUEST ECB      |
     0x01b7 TEXT ours=bf               IBM=4f               SAME
         stmt    279 |MVI   N2(XIOB),VERTBAR         MARK WITH VERTICLE BAR   S21003|
-=== IEECVFTT  4 bytes  LPALIB(IGC0007B)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEECVFTT.ASM
-    0x000f TEXT ours=f9               IBM=f7               SAME
-        stmt    803 |DC    X'00'               RESERVED                  MC SA53462|
-    0x0011 TEXT ours=f0f7             IBM=f2f3             SAME
-        stmt    317 |CSAUCMA  DS    CL3                 UCM ENTRY POINTER          |
-    0x0014 TEXT ours=f2               IBM=f7               SAME
-        stmt    805 |DCMCVBIN DS    F                   AREA FOR CONVERSION TO BINA|
 === IEFAB4B2  4 bytes  LPALIB(IEFW21SD)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEFAB4B2.ASM
     0x0393 hole ours=00               IBM=04               SAME
         stmt    451 |DS    0F|
@@ -602,20 +539,6 @@
 === IGG019RQ  4 bytes  SVCLIB(IGG019RQ)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG019RQ.ASM
     0x005a TEXT ours=00000000         IBM=58b0b044         SAME
         stmt    113 |L     R11,PCBWRKA+8-IEDQPCB(0,R11) CHECKPOINT ECB ADDR DSK2025|
-=== IGG0290E  4 bytes  LPALIB(IGC0002I)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG0290E.ASM
-    0x0509 TEXT ours=f9               IBM=f4               SAME
-        stmt    654 |DC    0D'0'                    ALIGN  ZERO BOUNDARY    Y02080 |
-    0x050c TEXT ours=f7               IBM=f5               SAME
-        stmt    654 |DC    0D'0'                    ALIGN  ZERO BOUNDARY    Y02080 |
-    0x050e TEXT ours=f2f6             IBM=f8f3             SAME
-        stmt    654 |DC    0D'0'                    ALIGN  ZERO BOUNDARY    Y02080 |
-=== IGG0325P  4 bytes  LPALIB(IGG0325Z)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG0325P.ASM
-    0x0559 TEXT ours=f9               IBM=f1               SAME
-        stmt    693 |DC    0D'0'                    ALIGN  ZERO BOUNDARY    Y02080 |
-    0x055c TEXT ours=f7               IBM=f5               SAME
-        stmt    693 |DC    0D'0'                    ALIGN  ZERO BOUNDARY    Y02080 |
-    0x055e TEXT ours=f2f6             IBM=f7f5             SAME
-        stmt    693 |DC    0D'0'                    ALIGN  ZERO BOUNDARY    Y02080 |
 === IGG0325Q  4 bytes  LPALIB(IGG0325Z)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG0325Q.ASM
     0x0203 hole ours=00               IBM=01               SAME
         stmt    354 |LTORG                                                   Y02080|
@@ -739,20 +662,6 @@
         stmt    316 |DS    0D|
     0x02af hole ours=00               IBM=40               SAME
         stmt    346 |DS    CL1|
-=== IEAVAD71  5 bytes  LPALIB(IGC0005A)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEAVAD71.ASM
-    0x0016 TEXT ours=f9               IBM=f2               SAME
-        stmt    842 |ABDPDCBP DS    A                       ADDRESS OF DCB FOR DUMP|
-    0x0018 TEXT ours=f0f7             IBM=f1f8             SAME
-        stmt    843 |ABDPTCBP DS    A                       ADDRESS OF TCB TO BE DI|
-    0x001b TEXT ours=f2f6             IBM=f7f7             SAME
-        stmt    843 |ABDPTCBP DS    A                       ADDRESS OF TCB TO BE DI|
-=== IEAVADUS  5 bytes  LPALIB(IGC0905A)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEAVADUS.ASM
-    0x0016 TEXT ours=f9               IBM=f3               SAME
-        stmt     90 |ADPLMEMA  DS    A                     ADDRESS OF MEMORY ACCESS|
-    0x0018 TEXT ours=f0f7             IBM=f1f6             SAME
-        stmt     91 |ADPLFRMT  DS    A                     ADDRESS OF FORMAT ROUTIN|
-    0x001b TEXT ours=f2f6             IBM=f7f7             SAME
-        stmt     91 |ADPLFRMT  DS    A                     ADDRESS OF FORMAT ROUTIN|
 === IECVPST  5 bytes  NUCLEUS(IEANUC01)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IECVPST.ASM
     0x0b42 TEXT ours=0000             IBM=41b0             SAME
         stmt   4696 |DC    0F'0'                                            DSK1196|
@@ -760,13 +669,6 @@
         stmt   4722 |DC    0D'0'               PSW MUST BE ON DWORD         DSK1196|
     0x0bae TEXT ours=0000             IBM=b006             SAME
         stmt   4722 |DC    0D'0'               PSW MUST BE ON DWORD         DSK1196|
-=== IEE21110  5 bytes  LPALIB(IGC21110)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEE21110.ASM
-    0x000f TEXT ours=f9               IBM=f3               SAME
-        stmt    783 |UCBCLN   DS    H -                 THE NUMBER (BINARY) OF CLEA|
-    0x0011 TEXT ours=f0f7             IBM=f2f3             SAME
-        stmt    769 |UCBWTOID DS    CL3 -               WTO MESSAGE IDENTIFIER  (MD|
-    0x0014 TEXT ours=f2f6             IBM=f7f7             SAME
-        stmt    832 |UCBCHAR4 DS    CL4 -               NAME OF FOURTH TRANSLATE TA|
 === IEE6503D  5 bytes  LPALIB(IGC0003D)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IEE6503D.ASM
     0x0471 hole ours=00               IBM=37               SAME
         stmt   1066 |IHB0013A DS    0H                                             |
@@ -822,72 +724,14 @@
         stmt    147 |Y        DS    0D|
     0x0127 hole ours=00               IBM=18               SAME
         stmt    147 |Y        DS    0D|
-=== IGC0002I  5 bytes  LPALIB(IGC0002I)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGC0002I.ASM
-    0x06ea hole ours=00               IBM=c0               tgt-only
-        stmt    905 |DS    0F                      ESTABLISH A FULLWORD BOUNBARY   |
-    0x0799 TEXT ours=f9               IBM=f8               SAME
-        stmt    949 |DC    0D'0'                    ALIGN  ZERO BOUNDARY    Y02080 |
-    0x079b TEXT ours=f0f7             IBM=f1f9             SAME
-        stmt    949 |DC    0D'0'                    ALIGN  ZERO BOUNDARY    Y02080 |
-    0x079e TEXT ours=f2               IBM=f8               SAME
-        stmt    949 |DC    0D'0'                    ALIGN  ZERO BOUNDARY    Y02080 |
 === IGC0A06F  5 bytes  LPALIB(IGC0A06F)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGC0A06F.ASM
     0x02a7 hole ours=00               IBM=40               SAME
         stmt    206 |DS    0H|
     0x02f4 hole ours=00000000         IBM=1811bf18         DIFFER
         stmt    228 |CHANPROG DS    0D|
-=== IGC0G05B  5 bytes  LPALIB(IGC0G05B)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGC0G05B.ASM
-    0x0011 TEXT ours=f9               IBM=f7               SAME
-        stmt   3447 |UCBWTOID DS    CL3 -               WTO MESSAGE IDENTIFIER  (MD|
-    0x0013 TEXT ours=f0f7             IBM=f2f6             SAME
-        stmt   3220 |UCBTBYT4 DS    C -                 DEVICE CODE                |
-    0x0016 TEXT ours=f2f6             IBM=f7f8             SAME
-        stmt   2951 |SSDARESV DS    B                  RESERVED                    |
-=== IGC0G95B  5 bytes  LPALIB(IGC0G95B)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGC0G95B.ASM
-    0x0011 TEXT ours=f9               IBM=f4               SAME
-        stmt   3038 |UCBWTOID DS    CL3 -               WTO MESSAGE IDENTIFIER  (MD|
-    0x0013 TEXT ours=f0f7             IBM=f2f6             SAME
-        stmt   2811 |UCBTBYT4 DS    C -                 DEVICE CODE                |
-    0x0016 TEXT ours=f2f6             IBM=f7f8             SAME
-        stmt   2833 |UCBEXTP  DS    AL3 -               ADDRESS OF COMMON UCB EXTEN|
-=== IGC0H05B  5 bytes  LPALIB(IGC0H05B)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGC0H05B.ASM
-    0x0011 TEXT ours=f9               IBM=f7               SAME
-        stmt   2867 |UCBWTOID DS    CL3 -               WTO MESSAGE IDENTIFIER  (MD|
-    0x0013 TEXT ours=f0f7             IBM=f2f6             SAME
-        stmt   2640 |UCBTBYT4 DS    C -                 DEVICE CODE                |
-    0x0016 TEXT ours=f2f6             IBM=f7f8             SAME
-        stmt   2973 |DSABSSVA DS    CL3                     SWA VIRTUAL ADDRESS OF |
-=== IGC0I05B  5 bytes  LPALIB(IGC0I05B)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGC0I05B.ASM
-    0x0011 TEXT ours=f9               IBM=f4               SAME
-        stmt   2787 |UCBWTOID DS    CL3 -               WTO MESSAGE IDENTIFIER  (MD|
-    0x0013 TEXT ours=f0f7             IBM=f2f6             SAME
-        stmt    500 |DS    XL1                     RESERVED                        |
-    0x0016 TEXT ours=f2f6             IBM=f7f8             SAME
-        stmt   2582 |UCBEXTP  DS    AL3 -               ADDRESS OF COMMON UCB EXTEN|
-=== IGC0Q05B  5 bytes  LPALIB(IGC0Q05B)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGC0Q05B.ASM
-    0x0019 TEXT ours=f9               IBM=f4               SAME
-        stmt    966 |DCBBUFL  DS    H -            LENGTH OF BUFFER.  MAY RANGE FRO|
-    0x001b TEXT ours=f0f7             IBM=f2f6             SAME
-        stmt    975 |DCBDSRG2 DS    BL1 -          SECOND BYTE OF DCBDSORG         |
-    0x001e TEXT ours=f2f6             IBM=f7f8             SAME
-        stmt   2252 |TCBRV164 DS    B -     RESERVED                               |
 === IGC111  5 bytes  NUCLEUS(IEANUC01)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGC111.ASM
     0x00ac TEXT ours=0000000000       IBM=f4f6f1f3f9       SAME
         stmt    527 |CVTQOCR  DC    A(0) -        GRAPHICS INTERFACE TASK (GFX) FIE|
-=== IGG0191B  5 bytes  LPALIB(IGG0191A)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG0191B.ASM
-    0x0017 TEXT ours=f9               IBM=f5               SAME
-        stmt   1878 |TIOPNSRT DS    XL1                           NR.OF DEVICES (FI|
-    0x0019 TEXT ours=f0f7             IBM=f2f6             SAME
-        stmt   2146 |UCBAOF2  DS    B -                 SECOND BYTE OF UCBAOF      |
-    0x001c TEXT ours=f2f6             IBM=f7f8             SAME
-        stmt    813 |DS    X -            RESERVED                                 |
-=== IGG01923  5 bytes  LPALIB(IGG0191D)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG01923.ASM
-    0x0017 TEXT ours=f9               IBM=f2               SAME
-        stmt   2010 |MSGUN    DC    CL3'000'                 UNIT NAME THAT MSG REF|
-    0x0019 TEXT ours=f0f7             IBM=f2f5             SAME
-        stmt   2011 |DC    C','                                                    |
-    0x001c TEXT ours=f2f6             IBM=f7f7             SAME
-        stmt    455 |CVTPCNVT DC    V(IECPCNVT) - ADDRESS OF ENTRY POINT OF THE ROU|
 === IGG019JW  5 bytes  LPALIB(IGG019JW)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG019JW.ASM
     0x0115 TEXT ours=f9               IBM=f2               SAME
         stmt    165 |WKNMYO   DC    X'0000'                                        |
@@ -895,25 +739,11 @@
         stmt    165 |WKNMYO   DC    X'0000'                                        |
     0x011a TEXT ours=f2f6             IBM=f7f8             SAME
         stmt    165 |WKNMYO   DC    X'0000'                                        |
-=== IGG019M1  5 bytes  LPALIB(IGG019M1)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG019M1.ASM
-    0x00e9 TEXT ours=f9               IBM=f3               SAME
-        stmt     90 |CNOP  0,8|
-    0x00eb TEXT ours=f0f7             IBM=f1f1             SAME
-        stmt     90 |CNOP  0,8|
-    0x00ee TEXT ours=f2f6             IBM=f7f7             SAME
-        stmt     90 |CNOP  0,8|
 === IGG019PD  5 bytes  SVCLIB(IGG019PD)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG019PD.ASM
     0x000a TEXT ours=0000             IBM=41ec             SAME
         stmt     93 |DC    0F'0'               FULL WORD ALIGNMENT          DSK2005|
     0x0031 TEXT ours=000000           IBM=f261d9           SAME
         stmt    635 |DCBWRITA DS    AL3            ADDRESS OF WRITE MODULE         |
-=== IGG020D0  5 bytes  LPALIB(IGG020P1)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG020D0.ASM
-    0x01e1 TEXT ours=f9               IBM=f6               SAME
-        stmt   1676 |DXWDSRG2 DS    BL1                      SECOND BYTE OF DCBDSOR|
-    0x01e3 TEXT ours=f0f7             IBM=f2f3             SAME
-        stmt   1677 |ORG   DXWORK+4                 OVERLAY 16 BYTES         Y02082|
-    0x01e6 TEXT ours=f2f6             IBM=f7f3             SAME
-        stmt   1688 |DXWMACF1 DS    BL1                      FIRST BYTE DCBMACF1   |
 === IGG0325V  5 bytes  LPALIB(IGG0325Z)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/IGG0325V.ASM
     0x0236 hole ours=0000             IBM=c1c3             SAME
         stmt    329 |LTORG                                                   Y02080|
@@ -1044,13 +874,6 @@
         stmt    184 |DC    0A(0)                                            DSKC061|
     0x01e6 hole ours=0000             IBM=ffff             SAME
         stmt    247 |DS    0D|
-=== BLSUPUT  6 bytes  CMDLIB(BLSUPUT)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/BLSUPUT.ASM
-    0x000d TEXT ours=f0f9             IBM=f1f0             SAME
-        stmt     12 |DC    AL1(IDENTEND-IDENT)  /* LENGTH OF IDENTIFIER    @ZA32004|
-    0x0010 TEXT ours=f0f7             IBM=f1f1             SAME
-        stmt     12 |DC    AL1(IDENTEND-IDENT)  /* LENGTH OF IDENTIFIER    @ZA32004|
-    0x0013 TEXT ours=f2f6             IBM=f7f9             SAME
-        stmt     12 |DC    AL1(IDENTEND-IDENT)  /* LENGTH OF IDENTIFIER    @ZA32004|
 === HMASMDC1  6 bytes  LINKLIB(HMASMP)  src=../../MVSSRC/Dave Kreiss - MVS from Source/MVSBLD/HMASMDC1.ASM
     0x001a TEXT ours=000000000000     IBM=404040404040     SAME
         stmt     17 |@ER00001 BR    R14                                            |

@@ -698,3 +698,33 @@ invisible until the modules were sorted by how far they are from the object rath
 than by name or by library. The 319 mirror macros at an unestablished maintenance
 level are the population this came out of, and the same ranking is what would find
 the next one.
+
+---
+
+## And a second wrong character: `×` for `|`, nine more modules
+
+Same afternoon, same method — rank by distance, group by (our byte, IBM's byte),
+look at the cell with several modules in it. Nine sat on `BF` where IBM has `4F`.
+
+The source carries latin-1 `×` (`X'D7'`), cp037 encodes that to `BF`, and `X'4F'`
+is `|`. `BLSUMONI` has `TEXITF DC CL1'×'`, `BLST05` has `MFST2 DC CL3' × '`,
+`BLSTC`, `BLSTM4`, `BLSTM5`, `BLSTU4`, `BLSTU5`, `IDCCDAL` and `IFFAHA16` the same.
+
+This is [`caret_fix.py`](../tools/caret_fix.py)'s class with a different character,
+so `tools/charfix.py` is that tool generalised — any substitution, the same
+constant-only rule, and **the same guard: a module is deposited only when
+`cmplmd370` calls it identical.**
+
+| | modules |
+|---|---:|
+| carry `×` inside a character constant | 60 |
+| **identical after the substitution** | **9** |
+| not identical, discarded | 51 |
+
+**1,474 -> 1,481**, `rc 0` unchanged at 4,590, control 0 disagreements.
+
+Nine of sixty is the same shape as `caret_fix.py`'s ten of thirty-nine, and the
+51 are the reason the tool measures instead of substituting: the character is
+wrong in all sixty by the code-page argument, and in 51 of them something else is
+wrong as well. **2,078 modules contain the byte somewhere; only 60 have it inside
+a constant, and the rest are comments where it changes nothing.**
