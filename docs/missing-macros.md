@@ -772,3 +772,51 @@ new one.
 lost; this one is +3 and 10 lost, and the net figure alone (-7) would have said
 "wrong" without saying why. Comparing the identical *sets* before and after, not
 their sizes, is what turned a bad edit into a statement about IBM's macro library.
+
+---
+
+## `ESTAE` is eight bytes short, in 175 modules, and no library we have carries the right one
+
+The largest single cause of length differences found so far, and the chain to it
+is the one the ranking keeps producing.
+
+**189 modules are exactly +8** — IBM's CSECT eight bytes longer than ours — out of
+1,295 within 64 bytes ([`lenlist.py`](../tools/lenlist.py)). **175 of them are +8
+against BOTH baselines**, so it is not maintenance that the DLIB missed; it is a
+gap that was there from the start. Only `IRBMFIHA` is +8 against the target alone.
+
+Padding the tail with `DC XL8'00'` makes the lengths match and nothing identical —
+but with equal lengths `cmplmd370` finally emits clusters, and they are small and
+isolated: displacements differing by exactly 8, `9c` against `a4`, `ac` against
+`b4`, `54` against `5c`. The code is not shifted wholesale; only references past
+one point are eight too low.
+
+`IDAVBPJ1` at `0x00a6`:
+
+```
+ours   1F00           0A3C            SLR 0,0        ; SVC 60
+IBM    D702 100D 100D 1B00 0A3C       XC 13(3,1),13(1) ; SR 0,0 ; SVC 60
+```
+
+Eight bytes, in an `ESTAE PURGE=QUIESCE,PARAM=COMMAR,MF=(E,ESTALST)` expansion.
+The module's own `XC ESTALST(16),ESTALST` is present and correct; the missing
+bytes are inside the macro.
+
+### And the macro is the same wrong version everywhere
+
+| | `XC 13(3,1),13(1)` | |
+|---|---|---|
+| `work/macros/mvsce-2.1.4-dlib/AMACLIB/ESTAE` | no | `SLR 0,0` at line 303 |
+| `work/macros/mvsce-2.1.4-target/ESTAE` | no | byte-identical to the above |
+| **TK5's own `SYS1.AMACLIB(ESTAE)`**, read off `MVSTK5-REF` | **no** | identical but for a trailing blank line |
+
+So **the macro that assembled TK5's object is in none of the three**, including
+TK5's own library. That is not a path-order question and not something an edit can
+fix: the level is missing, not misplaced.
+
+This is the single largest entry the missing-macro inventory has: **175 modules,
+one macro, one known-missing maintenance level.** It is also exactly what Dave
+Kreiss' offer settles — *"create a zip file of all the resulting source (including
+all assembler code and macro libraries)"*
+([`kreiss-reply-2026-09-12.md`](kreiss-reply-2026-09-12.md) §5). Until that
+arrives, the 175 cannot be closed by any change on this side.
