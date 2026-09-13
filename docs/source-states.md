@@ -398,6 +398,25 @@ final line intact — that is Dave's `./ DELETE` doing exactly what it is for.
 `DC C'BLSCALOC  78.066'`, and its final line is gone. Both are "shorter"; only one
 is damage.
 
+### The reader is not the cause, and the shape points at the source side of SMP
+
+`AHLCWRIT` read over **FTP** gives the same 2,600 lines starting at the same
+`LA GPR01F,245`. Two independent readers, one answer: the member on the system
+really does begin there. It is missing its first 9,772 lines, up to and including
+its `TITLE`, `CSECT` and `USING` — and the cut falls exactly at sequence number
+`097730`, a line boundary rather than a block boundary.
+
+That is not what a media fault looks like. It is what `./ DELETE` looks like with
+the wrong base: a line-range deletion that removed everything up to a sequence
+number. **Source-side element management is precisely the functionality Dave says
+he added to SMP**, and `MAINT05Z` installed that SMP immediately before the chain
+ran.
+
+So the chain's two sides came out differently: the **object** side is clean — 82
+jobs, no ABEND, no `CC 0012`, 1,017 modules maintained — and the **source** side is
+damaged. That is worth telling him, because it is his SMP and nobody else knows
+what `./ DELETE` expects.
+
 ### What has to happen before this question can be asked again
 
 The library needs repairing or re-creating, and that is a decision about a running
