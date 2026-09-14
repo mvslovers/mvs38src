@@ -186,8 +186,8 @@ work anyway, and the PTF numbers are themselves evidence about maintenance level
 
 ## The hazard this adds, and it is already live for `ASMDATE`
 
-`SYSPARMS` would be the **second** per-module assembly parameter that lives only
-in `gate-worker.sh`, and the first one has already drifted exactly the way
+`SYSPARMS` **is** the second per-module assembly parameter living in
+`gate-worker.sh`, and the first one has already drifted exactly the way
 `macpath.py` was written to stop.
 
 Twenty tools invoke `as370`. **Three know about `ASMDATES`** — `gate.sh`,
@@ -210,8 +210,9 @@ the 110 will enter `worklist.py`'s and `fillgaps.py`'s reach for the first time
 the moment their length stops differing.
 
 The fix is the `macpath.py` fix: one module that returns the per-module
-`(flags, env)` for a module, and every assembling tool calls it. Not done here —
-named so it is not re-learned.
+`(flags, env)`, and every assembling tool calls it. **Not done for the
+parameters.** It *was* done for the deck directory, which had the same shape and
+was already two generations stale — `tools/decks.py`, `CURRENT` and `CONTROL`.
 
 ## Reproducing
 

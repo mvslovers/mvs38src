@@ -47,6 +47,7 @@ The scoreboard at the head of [`README.md`](README.md) is **generated** —
 | the same decks against the DLIB alone | 1,626 |
 | against the target alone | 1,451 |
 | against both | 1,426 |
+| archive source, no repairs, against the DLIB | **stale — re-run with `SYSPARMS`** |
 | `src/` — finished, guarded by `srccheck.py` | **310 modules** |
 | `as370` == IFOX00 (a TOOL figure, not a project figure) | 5,471 of 5,528 |
 
@@ -294,7 +295,20 @@ same resolution — Dave's macro libraries.
    `work/measurements/baseline-gate/sysparm-rest.tsv`, partitioned: 137 have a
    clean 2- or 4-byte insert and still differ after it (so a *second* cause sits
    on top and is now isolated), 167 show no clean insert, 18 differ in bytes at
-   equal length, 4 have no usable reference. The 137 are the tractable end.
+   equal length, 4 have no usable reference.
+
+   **Of the 137, 23 change state when their derived value is applied: `length
+   differs` -> `equal length, clusters`.** That is the whole point of them —
+   `cmplmd370` reports no clusters at all while the sizes differ, so those 23 are
+   invisible to `worklist.py` and `fillgaps.py` today and become visible the
+   moment the value is passed. 99 stay length-differing and **3 move the wrong
+   way** (`equal length` -> `length differs`), which is direct evidence their
+   derived value is wrong for them.
+
+   ⚠️ **Their values are derived, not proven** — `cmplmd370` does not exit 0, so
+   they are deliberately NOT in `sysparm.tsv` and must not be put in the gate.
+   Pass them for *analysis* (`--sysparm=` on a one-off assembly), never for the
+   count.
 3. **The 18 whose target member `cmplmd370` cannot read** — `IEANUC01` is scatter
    format, the rest are overlay-structured, and the DLIB calls all 18 identical. A
    `cc370` case and the cheapest block on the board.
@@ -345,6 +359,12 @@ same resolution — Dave's macro libraries.
   `12.00` and sweeping every time-shaped byte sequence recovers none of them.
 - **Pin the binary by hash.** `work/src-states/bin/as370-main`, provenance in
   `PROVENANCE.txt`. The default path points into a tree another session rebuilds.
+- **And pin the DECK DIRECTORY the same way.** `tools/decks.py` names it:
+  `CURRENT` = `obj_sysparm1`, `CONTROL` = the same with `SYSPARMS` off.
+  `obj_overlay12` was the hardcoded default of three tools and was two generations
+  behind before anyone looked. **`sysparm_sweep.py` must read `CONTROL`** — in
+  `CURRENT` its 110 winners are already identical, so there is no inserted run to
+  read, and a re-run would write a table with 110 fewer rows at exit 0.
 - **`grep` here is `ugrep` and `ls` is `eza`.** `ls -1 > list.txt` wrote eza's
   header line into a module list and the first REST call answered HTTP 400. Use
   `/bin/ls`, `/usr/bin/grep`, or Python.

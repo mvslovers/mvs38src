@@ -48,6 +48,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..")
 sys.path.insert(0, HERE)
 from macpath import flags
+from decks import CONTROL
 import seclocate as SL
 
 BIN = os.path.join(ROOT, "work/src-states/bin/as370-main")
@@ -141,7 +142,7 @@ def one(job):
     mod, src, rs, date = job
     tried = 0
     for csect, ref in rs:
-        cands = candidates(os.path.join(ROOT, "obj_overlay12", mod + ".obj"), ref, mod)
+        cands = candidates(os.path.join(CONTROL, mod + ".obj"), ref, mod)
         tried += len(cands)
         for hja, hjb in cands:
             obj = os.path.join(TMP, f"{mod}.{hja}{hjb}.obj")
@@ -185,7 +186,7 @@ def main():
         src = os.path.join(SRCDIR, f)
         if b"IEDHJN" not in open(src, "rb").read():
             continue
-        if not os.path.exists(os.path.join(ROOT, "obj_overlay12", mod + ".obj")):
+        if not os.path.exists(os.path.join(CONTROL, mod + ".obj")):
             continue
         rs = [(mod, os.path.join(TGT, lib, lmod + ".bin")) for lib, lmod in tx.get(mod, [])]
         rs = [r for r in rs if os.path.exists(r[1])]

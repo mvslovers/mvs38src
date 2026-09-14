@@ -31,6 +31,8 @@ at -- the whole point is to stop guessing about this population.
 import argparse, collections, difflib, json, os, subprocess, sys
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from decks import CURRENT
 CM = os.path.join(ROOT, "work/src-states/bin/cmplmd370")
 DLIB = os.path.join(ROOT, "work/measurements/dlib-bytes/tk5")
 TGT = os.path.join(ROOT, "work/measurements/target-bytes/tk5")
@@ -176,7 +178,7 @@ def verdict(deck, ref, csect):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("modules", nargs="+")
-    ap.add_argument("--decks", default=os.path.join(ROOT, "obj_overlay12"))
+    ap.add_argument("--decks", default=CURRENT)
     ap.add_argument("--base", default="tgt", choices=("tgt", "tk5"))
     ap.add_argument("--probe", type=int, default=16)
     ap.add_argument("--min-conf", dest="min_conf", type=float, default=0.85,

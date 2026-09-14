@@ -33,6 +33,8 @@ of inverted sign that turns a maintenance module into a Dave patch on sight.
 import argparse, collections, json, os, subprocess, sys
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from decks import CURRENT
 CM = os.path.join(ROOT, "work/src-states/bin/cmplmd370")
 DLIB = os.path.join(ROOT, "work/measurements/dlib-bytes/tk5")
 TGT = os.path.join(ROOT, "work/measurements/target-bytes/tk5")
@@ -60,7 +62,7 @@ def lengths(deck, ref, csect=None):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--decks", default=os.path.join(ROOT, "obj_overlay12"))
+    ap.add_argument("--decks", default=CURRENT)
     ap.add_argument("--out", default=os.path.join(GATE, "lenlist.tsv"))
     ap.add_argument("--max-bytes", type=int, default=64)
     ap.add_argument("--prefix", default=None)
