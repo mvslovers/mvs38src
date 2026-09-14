@@ -229,6 +229,71 @@ work anyway, and the PTF numbers are themselves evidence about maintenance level
   (`overlay/*.ASM`) or Python.** The first count taken here was "0 modules call
   `IEDHJN`", which is an artefact of the instrument and nothing else.
 
+## What the newly visible clusters say — and the one question they raise for Mike
+
+Supplying the derived value to the 136 makes 34 of them length-equal, so their
+clusters print for the first time. Grouped by `(our byte, IBM's byte)` — the move
+that found `IGGCP14` and the `×`/`|` class —
+`work/measurements/sysparm/second-cause.txt`:
+
+| | distinct modules |
+|---|---:|
+| signed byte delta `+4` | 13 |
+| `+1` | 8 |
+| `-4` | 6 |
+| `-1`, `-3` | 5 each |
+
+The `±4` mass is displacement shifts, so those modules still carry a length error
+somewhere that a second one compensates — length-equal is not the same as
+length-right. **Three modules have exactly ONE differing byte**, and two of them
+are the same case.
+
+### `IGE0104G` and `IGE0304G`: one byte, and it is an executed instruction
+
+Both, at `0x0223` and `0x0177`, on the identical statement:
+
+```
+OI    SCBERR4,SCBCTLUN         CONTROL UNIT ERROR
+9604 5013          ours: immediate 04        IBM: 01
+```
+
+`SCBCTLUN EQU X'04'` in `work/macros/mirror/TSCBD`, which is the right macro —
+both modules call `TSCBD` and are TCAM error recovery, not EREP. Supply the
+derived `SYSPARM` **and** `X'01'` and both are byte-identical: measured over all
+35 modules that reference the symbol, **+2 and −0**.
+
+**What is not established is where the byte belongs**, and the two candidates are
+not separable with anything in hand:
+
+- **the macro** — our `TSCBD` is at the wrong level and IBM's `SCBCTLUN` is
+  `X'01'`. The bit ladder is `40 20 10 04 02 01` with **`X'08'` missing**, which
+  is where a `SCBCTLUN` between `SCBTRMLN` and `SCBCHANN` would sit.
+- **the source** — IBM wrote `SCBUNDFN` (which *is* `X'01'`) and Dave transcribed
+  `SCBCTLUN`. `SCBCTLUF EQU X'FB'` is the complement of `X'04'`, not of `X'01'`,
+  so the macro is at least self-consistent as it stands.
+
+Every control that would separate them was tried and none is available. The
+neighbouring EQUs are *confirmed*: after the `SYSPARM` fix `IGE0104G` differs in
+one byte only, so its `SCBTXTTN` (`X'40'`) and `SCBCHANN` (`X'02'`) emissions
+match IBM exactly — but that holds under either hypothesis. `IGE0504G` emits
+`SCBCTLUN+SCBCHANN` as `06`, which would decide it outright, and it is 130 bytes
+short of IBM's length so the offsets do not correspond. **No module emits
+`SCBCTLUF` at all** — the complement is dead text in the macro, so it is an
+argument and not a measurement. And no module that emits `SCBCTLUN` as `04` is
+identical to IBM today, so nothing contradicts `X'01'` either.
+
+> 🚪 **This is the case TODO.md has been holding open.** *"Does option A extend to
+> overwriting an instruction that IS executed? Not needed so far: every case
+> examined turned out to be data, alignment or a dead epilogue. Ask again when a
+> real one appears."* A real one has appeared: an `OI` on the error path, two
+> modules, one byte.
+>
+> Nothing was changed. Changing the **macro** is the wider of the two — 35 modules
+> reference the symbol and 12 emit it — and if the macro is in fact right, those 12
+> would get a wrong byte silently, because every one of them differs from IBM
+> today anyway and nothing would visibly break. The trial macro and its measuring
+> script are kept at `work/measurements/sysparm/scbctlun-trial.py`.
+
 ## The hazard this adds, and it is already live for `ASMDATE`
 
 `SYSPARMS` **is** the second per-module assembly parameter living in

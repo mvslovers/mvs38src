@@ -352,9 +352,27 @@ same resolution — Dave's macro libraries.
   Dave's archive text is identical against TK5, so the module is recovered and
   always was, and nothing needs changing. Kept only because it is itself a
   measurement of a difference between the two objects.
-- **Does option A extend to overwriting an instruction that IS executed?** Not
-  needed so far: every case examined turned out to be data, alignment or a dead
-  epilogue. Ask again when a real one appears.
+- 🚪 **Does option A extend to overwriting an instruction that IS executed? A real
+  one has appeared.** `IGE0104G` and `IGE0304G`, one byte each, the same
+  statement: `OI SCBERR4,SCBCTLUN` emits immediate `04` and IBM's object holds
+  `01`. Supply that plus their derived `SYSPARM` and **both are byte-identical,
+  +2 and −0** over all 35 modules referencing the symbol.
+
+  **Where the byte belongs is not established and the two candidates are not
+  separable with anything in hand** — either our `TSCBD` is at the wrong level
+  (the bit ladder `40 20 10 04 02 01` is missing `X'08'`, where `SCBCTLUN` would
+  sit) or IBM's source said `SCBUNDFN`, which is `X'01'`, and Dave transcribed
+  `SCBCTLUN`. Every separating control was tried: `IGE0504G` emits
+  `SCBCTLUN+SCBCHANN` as `06` and would decide it, but it is 130 bytes short so
+  the offsets do not correspond; **no module emits `SCBCTLUF`**, so the
+  complement's `X'FB'` is dead macro text and an argument rather than a
+  measurement; and no module emitting `04` is identical today, so nothing
+  contradicts `X'01'` either. Details and the trial script in
+  [`docs/sysparm.md`](docs/sysparm.md).
+
+  **Nothing was changed.** The macro is the wider of the two — 35 modules
+  reference the symbol, 12 emit it, and all 12 differ from IBM today, so a wrong
+  macro value would be baked in without anything visibly breaking.
 
 ### Controls that must not be dropped
 

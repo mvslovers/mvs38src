@@ -1,0 +1,37 @@
+34 modules are length-equal and clustered
+
+(our byte -> IBM's byte), by how many DISTINCT modules show it:
+   00 -> 01     5 modules
+   04 -> 01     4 modules
+   2e -> 32     3 modules
+   20 -> 24     3 modules
+   a6 -> aa     3 modules
+   1e -> 22     3 modules
+   22 -> 26     3 modules
+   16 -> 1a     3 modules
+   10 -> 80     2 modules
+   00 -> 08     2 modules
+   66 -> 6a     2 modules
+   50 -> 54     2 modules
+   6c -> 70     2 modules
+   44 -> 48     2 modules
+   da -> de     2 modules
+
+signed byte delta (IBM - ours), one-byte clusters, by distinct modules:
+      +4    13 modules
+      +1     8 modules
+      -4     6 modules
+      -1     5 modules
+      -3     5 modules
+      +2     4 modules
+     +96     4 modules
+     +12     4 modules
+      -2     3 modules
+    +112     3 modules
+      +8     3 modules
+      -8     3 modules
+
+modules whose ENTIRE difference is a uniform one-byte delta:
+   IGE0104G   delta   -3  clusters   1  diff_bytes    1  sysparm 90610000
+   IGE0304G   delta   -3  clusters   1  diff_bytes    1  sysparm 90610000
+   IGG019TH   delta +235  clusters   1  diff_bytes    1  sysparm 10200000
