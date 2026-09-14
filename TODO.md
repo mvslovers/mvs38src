@@ -23,7 +23,7 @@ and *where to*; this list says *what next*.
 ## Start here tomorrow
 
 *Written as a handover: a fresh session should be able to start from this section
-alone. Last rewritten **2026-09-13, evening**, after 24 commits in one day.
+alone. Last rewritten **2026-09-14, morning**.
 Everything below the History heading is dated and keeps its own numbers.*
 
 ### The goal
@@ -39,25 +39,30 @@ is 43 % TSO ([`docs/maintenance-level.md`](docs/maintenance-level.md)).
 The scoreboard at the head of [`README.md`](README.md) is **generated** —
 `tools/scoreboard.py`, `--check` fails when it is stale. Never hand-edit it.
 
-### Where it stands, 2026-09-13 evening
+### Where it stands, 2026-09-14 morning
 
 | | |
 |---|---:|
-| **under the chosen baseline — target, DLIB where no target exists** | **1,491 of 5,353 — 27.9 %** |
-| the same decks against the DLIB alone | 1,509 |
-| against the target alone | 1,258 |
-| against both | 1,236 |
-| archive source, no repairs, against the DLIB | 1,221 |
+| **under the chosen baseline — target, DLIB where no target exists** | **1,601 of 5,353 — 29.9 %** |
+| the same decks against the DLIB alone | 1,626 |
+| against the target alone | 1,451 |
+| against both | 1,426 |
 | `src/` — finished, guarded by `srccheck.py` | **310 modules** |
 | `as370` == IFOX00 (a TOOL figure, not a project figure) | 5,471 of 5,528 |
 
-**The morning figure was 1,277.** The day added 214.
+**1,491 the evening before.** The whole of the +110 is one cause:
+[`docs/sysparm.md`](docs/sysparm.md).
 
 > ⚠️ **`scoreboard.py --check` only checks README against the tool.** Its *input*
-> can be stale, and it was for hours: `fillgaps.py` deposits to `src/` the moment
-> `cmplmd370` exits 0, so **re-run `gate.sh` and `baseline_gate.py` after a sweep,
-> not after the commit that describes it.** Eight modules sat measured, deposited
-> and uncounted this evening.
+> can be stale, and it was for hours on 2026-09-13: `fillgaps.py` deposits to
+> `src/` the moment `cmplmd370` exits 0, so **re-run `gate.sh` and
+> `baseline_gate.py` after a sweep, not after the commit that describes it.**
+>
+> ⚠️ **And a stale deck directory is not a comparison base.** Diffing the 2026-09-14
+> run against `obj_overlay12` showed 118 decks moved where 110 were expected; the
+> eight extra were `src/` repairs deposited at 20:45 while those decks were cut at
+> 18:21. **Cut the control run yourself, with the one variable switched off** —
+> here `SYSPARMS=/dev/null`, which reproduced `rc0=4590` and `chosen=1491` exactly.
 
 ### Decided, do not re-open
 
@@ -76,6 +81,51 @@ The scoreboard at the head of [`README.md`](README.md) is **generated** —
 3. **Option A, Dave's way** — bytes with no rule behind them are transcribed from
    the object and marked `!!! SOURCE COMPARE FIX !!!` in columns 46–71.
 4. **Priority: TSO first, SMP second.**
+
+### What 2026-09-14 established
+
+**`&SYSPARM` was empty in every assembly this project has ever run, and it emits
+bytes.** `IEDHJN`, TCAM's module-identifier macro, is called by 436 of our
+sources and does `DC X'&SYSPARM'(1,4)`. With no `SYSPARM` that flags `IFO117` +
+`IFO178` and emits **nothing**, so the CSECT comes out 2 or 4 bytes short and
+`cmplmd370` reports a length difference with no clusters at all.
+
+**110 of the 436 are byte-identical the moment IBM's own `SYSPARM` is supplied.**
+No source change, no marker, nothing deposited in `src/` — the `ASMDATE` class,
+one size larger. `gate.sh` reads `SYSPARMS` per module now, exactly as it reads
+`ASMDATES`. Acceptance test: **+110 / −0**, as sets.
+Full account in [`docs/sysparm.md`](docs/sysparm.md).
+
+- **It was not a `cc370` case.** `as370` has had `--sysparm=` since the open-code
+  work — implemented, undocumented, absent from `--help`, and already recorded in
+  [`docs/assembler-options.md`](docs/assembler-options.md).
+  [`docs/opencode-gate.md`](docs/opencode-gate.md) left the matching question
+  open in as many words: *"what `&SYSPARM` the real TCAM assemblies passed is now
+  a source question, not a tool question."* **That question is the one that was
+  just answered**, per module, out of IBM's own object. Read the option table
+  before opening a case: this one was measured for an hour through a patched
+  macro on a private `-I` path, which is precisely what `macpath.py` exists to
+  prevent.
+- **The `+2` cell was a family after all, and the grouping is what hid it.** On
+  2026-09-13 it was inspected — 44 modules, 29 of them `IED*` — and written off as
+  *"different one-byte cases that happen to share a magnitude"*. The offsets
+  genuinely differ (`IEDQA1` at `0x000e`, `IEDQA2` at `0x000a`, `IEDAYY` at
+  `0x000c`), because the eyecatcher sits after however much prologue each module
+  has. **Group by what the run is for, not by where it lands.** The verdict still
+  holds for `+8`; it was never true of `+2`.
+- **`MODID` reads `&SYSPARM` too and recovers nothing.** 288 decks carry its
+  default `R03700` where IBM's object holds a PTF number — ` UZ61918 `,
+  ` UY35469 `. `DC CL9` is length-neutral, so it is invisible to `lenlist.py`,
+  and in **0** modules is it the whole difference (192 also differ in length, 89
+  have other clusters, 7 are already identical). Worth reading against
+  [`maintenance-level.md`](docs/maintenance-level.md) as evidence, not as a queue.
+- **`ASMDATES` has already drifted, and `SYSPARMS` will.** Twenty tools invoke
+  `as370`; **three** know the date table — `gate.sh`, `gate-worker.sh`,
+  `sysparm_sweep.py`. Ten hardcode `ASMDATE="09/07/26"`, `fillgaps.py:60`,
+  `where.py:41` and **`srccheck.py`** among them. It costs nothing today, measured
+  — none of the 36 dated modules is in `src/`, one is in `worklist16.txt` — and it
+  is the `macpath.py` shape exactly. The fix is one module returning the
+  per-module `(flags, env)`; **not done**, named so it is not re-learned.
 
 ### What 2026-09-13 established
 
@@ -135,11 +185,19 @@ Everything else produced knowledge and no modules: four hours on MVS, the
 Widening its filler rule to `DS C`, `DS AL2`, `DS BL1` recovers **zero** more.
 
 **Left, and counted rather than guessed.** 1,295 modules are within 64 bytes of
-IBM's length; `seclocate.py` anchors **1,038** and prints the differing run with its
-bytes. **182 have exactly one length-changing spot** — that is the queue. **No large
-shared cause remains in it**: the `+8` cell is 21 distinct insertions, the `+2` cell
-diverges after offset 3. Eight, four and two bytes are common *amounts* of missing
-code, not common causes.
+IBM's length (`lenlist.tsv`, whose `delta` column is **IBM minus ours** — the
+tool's own docstring said the opposite until 2026-09-14). `seclocate.py` anchors
+**987** and prints the differing run with its bytes; **71 have exactly one
+length-changing spot**, and 34 of those are gone already. See queue item 1 for why
+these are not the 1,038 / 182 recorded the day before.
+
+**"No large shared cause remains" was wrong once and the correction is the day's
+main result.** It was said of the `+8` cell — 21 distinct insertions, and that
+still holds — and extended to `+2` on the grounds that its modules diverge after
+offset 3. They do not: they insert at different offsets because each module's
+eyecatcher ends at a different offset, and grouped by what the inserted run *is*
+they are one family, `IEDHJN` on an empty `&SYSPARM`, **110 modules**. Eight and
+four bytes may still be amounts rather than causes. Two bytes was a cause.
 
 ### Blocked, and on what
 
@@ -216,16 +274,34 @@ same resolution — Dave's macro libraries.
 
 ### The queue, in the order it pays
 
-1. **The 182 single-spot length modules.** `seclocate.py` prints the differing run
-   and its bytes for each; `lenlist.py` ranks them. One module per handful of
-   minutes, and the only seam still open without outside help.
-2. **The 18 whose target member `cmplmd370` cannot read** — `IEANUC01` is scatter
+1. **The 37 single-spot length modules still open** —
+   `work/measurements/baseline-gate/single-spot.txt`, persisted for the first time
+   on 2026-09-14. `seclocate.py` prints the differing run and its bytes for each;
+   `lenlist.py` ranks them.
+
+   ⚠️ **This replaces "the 182", and that number does not reproduce.** Re-derived
+   over the same `lenlist.tsv` with the same unchanged `seclocate.py`: **987
+   anchored, not 1,038**, and the single-spot count is **71** by *(a)* one
+   size-differing alignment op, **56** by *(b)* one insert/delete, **4** by *(c)*
+   one non-equal op of any kind. None of the three is 182, the 2026-09-13 list was
+   never written to a file, and the gap is **unexplained** — one candidate was
+   ruled out by measurement (`seclocate.py` tries the next reference when an anchor
+   fails; a sweep that broke instead was the first suspect and fixing it moved
+   nothing). Quote 71, with its definition, or re-derive.
+
+   34 of the 71 were carried off by the `SYSPARM` sweep, which is what leaves 37.
+2. **The 326 `IEDHJN` callers the `SYSPARM` sweep did not close** —
+   `work/measurements/baseline-gate/sysparm-rest.tsv`, partitioned: 137 have a
+   clean 2- or 4-byte insert and still differ after it (so a *second* cause sits
+   on top and is now isolated), 167 show no clean insert, 18 differ in bytes at
+   equal length, 4 have no usable reference. The 137 are the tractable end.
+3. **The 18 whose target member `cmplmd370` cannot read** — `IEANUC01` is scatter
    format, the rest are overlay-structured, and the DLIB calls all 18 identical. A
    `cc370` case and the cheapest block on the board.
-3. **Which of the 55 divergent modules are TK5 USERMODs** rather than IBM service.
+4. **Which of the 55 divergent modules are TK5 USERMODs** rather than IBM service.
    Needs the target zone's SYSMOD-to-module mapping out of the SMP CDS. `IKJEFF53`
    is a known usermod target and is among them, so the answer is not zero.
-4. **`work/measurements/baseline-gate/worklist16.txt`** — 438 modules within 16
+5. **`work/measurements/baseline-gate/worklist16.txt`** — 438 modules within 16
    bytes, with the owning statement per cluster. Swept below six bytes; the 6–16
    band is untouched by hand.
 
@@ -272,6 +348,21 @@ same resolution — Dave's macro libraries.
 - **`grep` here is `ugrep` and `ls` is `eza`.** `ls -1 > list.txt` wrote eza's
   header line into a module list and the first REST call answered HTTP 400. Use
   `/bin/ls`, `/usr/bin/grep`, or Python.
+- **`grep -r` AND `-R` return zero over `work/src-states/overlay/`, for every
+  pattern.** The tree is nothing but symlinks (`overlay.py` writes them) and BSD
+  grep 2.6 descends into none of them. The control that settled it: one directory
+  holding a real file and a symlink, both containing the pattern — `-R` finds one.
+  **Use a glob (`overlay/*.ASM`) or Python.** The first count taken on 2026-09-14
+  was "0 modules call `IEDHJN`"; the answer is 436.
+- **Read the option table before opening a tool case.** `as370 --help` does not
+  list `--sysparm=`; `docs/assembler-options.md` does, as *"implemented,
+  undocumented"*. An hour went into measuring through a patched macro on a private
+  `-I` path — the one thing `macpath.py` exists to prevent — for a switch that was
+  already there.
+- **A cell that "diverges immediately" may be grouped on the wrong key.** The `+2`
+  cell was closed on 2026-09-13 because its modules insert at different offsets.
+  They do; the offsets are where each module's eyecatcher ends. Grouped by what the
+  inserted run *is*, they are one family of 110. Group by cause, not by coordinate.
 - **In zsh a variable is not word-split.** `kill -TERM $PIDS` with newlines kills
   nothing and reports success. Use `xargs`.
 - **`git add <missing-path>` stages a DELETE**, and a newline-separated command

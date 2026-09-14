@@ -46,7 +46,12 @@ if [ -n "$ASMDATES" ] && [ -f "$ASMDATES" ]; then
   found=$(awk -F'\t' -v k="$m" '$1==k {print $2; exit}' "$ASMDATES")
   [ -n "$found" ] && d=$found
 fi
-ASMDATE=$d perl -e 'alarm 400; exec @ARGV' "$BIN" $MACFLAGS -o "$OUTDIR/$m.obj" "$SRC/$m.ASM" >/dev/null 2>&1
+sp=""
+if [ -n "$SYSPARMS" ] && [ -f "$SYSPARMS" ]; then
+  v=$(awk -F'\t' -v k="$m" '$1==k {print $2; exit}' "$SYSPARMS")
+  [ -n "$v" ] && sp="--sysparm=$v"
+fi
+ASMDATE=$d perl -e 'alarm 400; exec @ARGV' "$BIN" $sp $MACFLAGS -o "$OUTDIR/$m.obj" "$SRC/$m.ASM" >/dev/null 2>&1
 rc=$?
 if [ -f "$OUTDIR/$m.obj" ]; then
   h=$(shasum -a 256 "$OUTDIR/$m.obj" | cut -d' ' -f1)

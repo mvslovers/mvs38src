@@ -46,7 +46,17 @@ rm -rf "$OUTDIR"; mkdir -p "$OUTDIR"
 # Per-module override, because one pinned date cannot be right for every module
 # whose eyecatcher carries its own. Empty or missing = the pin, unchanged.
 : ${ASMDATES:=$here/../work/measurements/baseline-gate/asmdate.tsv}
-export BIN OUTDIR MACFLAGS SRC ASMDATE ASMTIME ASMDATES
+# Same shape, same reason, one class larger: IEDHJN emits `&SYSPARM` as data and
+# ours has always been null, so 436 TCAM modules come out 2 or 4 bytes short and
+# cmplmd370 reports a length difference with no clusters at all.  SYSPARMS names
+# a `module<TAB>sysparm` table (tools/sysparm_sweep.py writes it, by taking the
+# inserted run out of IBM's own object and keeping the value only when
+# cmplmd370 exits 0).  A module not in the table gets NO --sysparm, which is the
+# state every measurement so far was taken in, so a missing or empty table
+# changes nothing.  It is deliberately per module and never global: 5,092
+# modules do not call IEDHJN and must not see a SYSPARM they never had.
+: ${SYSPARMS:=$here/../work/measurements/baseline-gate/sysparm.tsv}
+export BIN OUTDIR MACFLAGS SRC ASMDATE ASMTIME ASMDATES SYSPARMS
 # Record which commit the binary came from: retest.py prints it, and a gate
 # against a branch whose base has moved can manufacture LOST and
 # rc CLEAN -> FLAGGED lines that are not regressions at all.

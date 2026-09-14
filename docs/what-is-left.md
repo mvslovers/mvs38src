@@ -1854,6 +1854,15 @@ guaranteed to differ. Three anchors now, cheapest first:
 | the longest of 32/24/16/12/8 leading bytes that occurs exactly once | 84 of 200 |
 | sliding-window agreement, reported with its fraction and margin | the rest |
 
+> ⚠️ **Re-derived 2026-09-14 over the same input with the same unchanged tool:
+> 987 anchored and 71 single-spot, not 1,038 and 182. Neither figure below
+> reproduces and the gap is unexplained — see TODO.md, queue item 1. The
+> single-spot list is now a file: `baseline-gate/single-spot.txt`.**
+>
+> **And the reading of the `+2` cell below is withdrawn.** Those 44 modules are
+> one family — `IEDHJN` on an empty `&SYSPARM` — and 110 modules came out of it.
+> [`sysparm.md`](sysparm.md).
+
 **Over all 1,295 length-differing modules: 1,038 anchored, 256 not.** And the
 anchor is then *refined* by the thing the output is read for — the offset in a
 ±4 window that produces the fewest alignment edits. Without that, the `IEDQ*`

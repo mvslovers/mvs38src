@@ -18,10 +18,17 @@ those two has never been the sort key.
 Columns: module, our length, IBM's, the signed difference, and the bound module the
 comparison used. Sorted by absolute difference.
 
-**A positive difference means OUR CSECT is longer** — our source emits code IBM's
-does not, which is usually a `DSKnnnn` patch of Dave's that the object never had.
-Negative means IBM's object carries something our source does not, which is
-maintenance. The two directions are different problems and the sign says which.
+**The `delta` column is IBM's length minus ours, so a positive difference means
+IBM's CSECT is longer** — IBM's object carries something our source does not,
+which is maintenance. Negative means our source emits code the object never had,
+usually a `DSKnnnn` patch of Dave's. The two directions are different problems and
+the sign says which.
+
+This paragraph read the other way round until 2026-09-14, against the tool's own
+`fh.write(f"...{b - o:+d}...")` two screens below and against its own stdout line
+`ours shorter than IBM's`. Nothing downstream had used it —
+`docs/what-is-left.md` states the correct direction — but it is exactly the kind
+of inverted sign that turns a maintenance module into a Dave patch on sight.
 """
 import argparse, collections, json, os, subprocess, sys
 
