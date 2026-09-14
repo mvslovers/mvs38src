@@ -240,7 +240,37 @@ four bytes may still be amounts rather than causes. Two bytes was a cause.
 | `TSCBD` at two levels — `SCBCTLUN` | ≥6 | the same thing, newly measured. `IEDAYC`'s object emits `04` and `IGE0004G`/`IGE0104G`/`IGE0304G`/`IGE0404G`/`IGE0604G` emit `01`, **both out of IBM's own members**, so no single value reproduces both and editing the shared macro gains the `IGE*` set by losing `IEDAYC`. Two of them, `IGE0104G` and `IGE0304G`, are **one byte** from identical — **Dave's zip**, per decision 5 |
 | length differences | ~2,000 | one cause per module; `seclocate.py` shows each |
 
-### Nothing needs Mike right now
+### 🚪 One thing needs Mike — how to mark option A when column 46 is taken
+
+**Six modules are one constant from identical**, and the constant is a Julian
+`yy.ddd` date in the eyecatcher that `asmdate_sweep.py` cannot see because it
+hunts `mm/dd/yy`: `AMDUSRF9` `76.352`→`78.272`, `IEECB801` `75.325`→`77.235`,
+`IEFAB820` `76.328`→`77.279`, `IEFJCNTL` `76.190`→`80.261`, `ISTCFCR2`
+`78.062`→`78.312`, `ISTZCF1B` `78.100`→`78.265`. Option A is decided (decision 3)
+and the value comes out of IBM's object, so the repair is not in question.
+
+**The marking is.** The convention is uniform — `!!! SOURCE COMPARE FIX !!!` in
+columns 46–71, **424 lines across 263 modules, every one at column 46** — and on
+all six of these lines columns 46–71 are **already occupied** by the PL/S
+statement ids:
+
+```
+         DC    C'AMDUSRF9  76.352'                                 0001 00008000
+         DC    C'IEFAB820  76.328'                              01S0001 00011000
+```
+
+No precedent exists: no marked line in `src/` sits anywhere but column 46, and no
+comment-line variant is used anywhere. So one of
+
+- **overwrite 46–71** and lose the PL/S id on that line,
+- **a comment line above** in Dave's `*DSK` style — costs nothing in the object,
+  breaks the single-column convention,
+- **leave them unmarked** and carry the six in a list instead.
+
+The answer applies to every future repair on a line whose right margin is taken,
+which is most PL/S output. **Nothing was changed.**
+
+### Nothing else needs Mike right now
 
 **The mail to Dave is written, unsent, and held on purpose** —
 [`docs/mail-kreiss-2026-09-13.md`](docs/mail-kreiss-2026-09-13.md). Mike is
@@ -345,6 +375,20 @@ What is genuinely left of the block is macro provenance: `IKJEHREN`'s gap sits
 inside a `STAX` expansion, TK5's and MVS/CE's `STAX` are byte-identical, so IBM
 assembled against a `STAX` neither system ships. Same shape as the `ESTAE` case,
 same resolution — Dave's macro libraries.
+
+### The open-code population, and there is no family in it
+
+`tools/opencode_families.py` over the 605: **4,972 clusters, biggest
+`(ours, IBM)` cell 15 modules of 605**, and that cell is `00 -> 40` on a
+`DC 0D'0'` — **alignment fill, not a defect class**. From here it is one module at
+a time, and that is measured rather than felt: the same instrument found four real
+macro families the same day and rejected two false ones.
+
+What the population is made of, by owning statement and distinct modules: `DC` a
+real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MVC`
+56, `ST` 47, `TM` 41, `LA` 40, `OI` 38. **Data, not instructions** — which is what
+option A was decided for. Alignment fill is 9 % of the clusters and is **not a
+source defect**; `cmplmd370` counts it as text.
 
 ### The queue, in the order it pays
 
