@@ -227,13 +227,24 @@ four bytes may still be amounts rather than causes. Two bytes was a cause.
 | `TSCBD` at two levels — `SCBCTLUN` | ≥6 | the same thing, newly measured. `IEDAYC`'s object emits `04` and `IGE0004G`/`IGE0104G`/`IGE0304G`/`IGE0404G`/`IGE0604G` emit `01`, **both out of IBM's own members**, so no single value reproduces both and editing the shared macro gains the `IGE*` set by losing `IEDAYC`. Two of them, `IGE0104G` and `IGE0304G`, are **one byte** from identical — **Dave's zip**, per decision 5 |
 | length differences | ~2,000 | one cause per module; `seclocate.py` shows each |
 
-### 🚪 The one thing that needs Mike
+### Nothing needs Mike right now
 
-**The mail to Dave is written and unsent** —
-[`docs/mail-kreiss-2026-09-13.md`](docs/mail-kreiss-2026-09-13.md). Two questions
-only he can answer — what `./ DELETE` expects of the source library going in, and
-whether his macro libraries carry the missing `ESTAE` — plus the zip he offered and
-`where.py --base tgt`, the tool he asked for, with a worked example.
+**The mail to Dave is written, unsent, and held on purpose** —
+[`docs/mail-kreiss-2026-09-13.md`](docs/mail-kreiss-2026-09-13.md). Mike is
+waiting on an answer to an earlier question, and **nothing goes out to Dave until
+that arrives** (2026-09-14). Do not offer to send it and do not read it as an
+oversight.
+
+It carries two questions only he can answer — what `./ DELETE` expects of the
+source library going in, and whether his macro libraries carry the missing
+`ESTAE` — plus the zip he offered and `where.py --base tgt`, the tool he asked
+for, with a worked example.
+
+**Before it ever goes it needs one addition: `TSCBD` / `SCBCTLUN`.** That is a
+sharper instance of the same `ESTAE` question — a macro IBM demonstrably shipped
+at two levels, with two modules one byte from identical — and since decision 5 his
+libraries are a *precondition* rather than a convenience. Sending without it asks
+the weaker version.
 
 ### The method that works, and it is a ranking
 
@@ -355,9 +366,9 @@ same resolution — Dave's macro libraries.
   decision 5 makes them a precondition rather than a convenience. Four macros are
   known to exist at a level none of our libraries carries: `ESTAE`, `STAX`,
   `SCHEDULE` and — measured 2026-09-14 — `TSCBD`. Together ≥24 modules, two of
-  them one byte away. **The 2026-09-13 mail is still unsent** and asks about
-  `ESTAE`; `TSCBD` is a new, sharper instance of the same question and is not in
-  it yet.
+  them one byte away. **The 2026-09-13 mail is held, not pending** — nothing goes
+  to Dave until an earlier answer arrives — and it asks about `ESTAE` only.
+  `TSCBD` is to be added to it before it goes.
 - **Dave Kreiss — mail sent 2026-09-12**
   ([`docs/mail-kreiss-2026-09-12.md`](docs/mail-kreiss-2026-09-12.md)): the
   `./ DELETE` question (SMP here refuses it, costing 485 of his SYSMODs and 486
