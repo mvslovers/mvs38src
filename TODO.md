@@ -131,6 +131,15 @@ Full account in [`docs/sysparm.md`](docs/sysparm.md).
   `0x000c`), because the eyecatcher sits after however much prologue each module
   has. **Group by what the run is for, not by where it lands.** The verdict still
   holds for `+8`; it was never true of `+2`.
+- **The other eight `&SYSPARM` readers are measured now, and none of them pays.**
+  `IECEQU`/`IECDSECS`/`UTRK3390` use it for listing `PRINT` only and emit nothing.
+  The `BNG*` family and `BTMHJN` have the `IEDHJN` shape exactly and **zero
+  callers** in the tree. `XCTLTABL` is real — `DC CL6'&CODE'`, 202 sources, 174
+  decks carrying its default `Y02080` — and it is the `MODID` class: **65 modules
+  confirm the default is right**, 17 want `VS2-R2` (via `SDC=VS2-R2`, which drops
+  exactly five bytes from each, the arithmetic of the value itself), and in **0**
+  is it the whole difference. Stays out of `sysparm.tsv`; `IFG0193C` and
+  `IFG0553C` are down to four bytes with it.
 - **`MODID` reads `&SYSPARM` too and recovers nothing.** 288 decks carry its
   default `R03700` where IBM's object holds a PTF number — ` UZ61918 `,
   ` UY35469 `. `DC CL9` is length-neutral, so it is invisible to `lenlist.py`,
@@ -224,6 +233,7 @@ four bytes may still be amounts rather than causes. Two bytes was a cause.
 | `ESTAE` eight bytes short | some | a macro level in **none** of the three libraries, TK5's own included — **Dave's zip** |
 | target member unreadable by `cmplmd370` | 18 | scatter and overlay format — a cc370 case |
 | `SCHEDULE` at two levels | ~18 | one macro file cannot be both; the per-module macro path is agreed but waits on a real macro to put in it — **Dave's zip**, per decision 5 |
+| `IHBINNRB` / `XCTL SF=(E,…)` at two levels | 11 | the whole `±4` group. IBM expands to `LA 15,D(,B)` + `EX 0,32(,2)` + `SVC 7` where we emit `LA 15,D(X)` + `SVC 7` — four bytes more, cancelled by four we emit elsewhere, which is why the lengths match and nothing clustered before. **Not the assembler**: `verdicts.tsv` gives `IGCFK10D` `tool = identical`, so IFOX00 emits our bytes too. All three surviving copies of `IHBINNRB` are byte-identical and none emits the `EX` — **Dave's zip**, per decision 5 |
 | `TSCBD` at two levels — `SCBCTLUN` | ≥6 | the same thing, newly measured. `IEDAYC`'s object emits `04` and `IGE0004G`/`IGE0104G`/`IGE0304G`/`IGE0404G`/`IGE0604G` emit `01`, **both out of IBM's own members**, so no single value reproduces both and editing the shared macro gains the `IGE*` set by losing `IEDAYC`. Two of them, `IGE0104G` and `IGE0304G`, are **one byte** from identical — **Dave's zip**, per decision 5 |
 | length differences | ~2,000 | one cause per module; `seclocate.py` shows each |
 
@@ -333,6 +343,10 @@ same resolution — Dave's macro libraries.
    moment the value is passed. 99 stay length-differing and **3 move the wrong
    way** (`equal length` -> `length differs`), which is direct evidence their
    derived value is wrong for them.
+
+   **Of the 34, eleven are the `±4` group and they are blocked, not workable** —
+   `IHBINNRB` at a level nobody has, see the blocked table. Three more are `−4`.
+   That leaves ~20 with a second cause that is still open.
 
    **The second pass already harvests part of this and it is in the sweep.** A
    length-equal deck with a 2-byte cluster at the parameter's own offset hands

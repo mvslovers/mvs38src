@@ -308,6 +308,77 @@ any `OI` at displacement `X'013'`, and `IEDSAC`/`IEDSARI` write the mask as a
 literal `B'00000100'` rather than through the symbol. **Checking our own count
 against the source's statement count is what made it a measurement.**
 
+## The `±4` group: `XCTL SF=(E,…)` at a level nobody has
+
+Eleven of the 34 have `+4` as their commonest one-byte delta and **eight share one
+signature exactly** — `work/measurements/sysparm/plusminus4.txt`:
+
+```
+multi 0x____ len 2   ours=f200      IBM=f020
+multi 0x____ len N   ours=0a07…     IBM=440020200a07…
+```
+
+`IGCFK10D` dumped in full, and it is two errors that cancel to the same length:
+
+```
+0x110  ours 41 f2 00 cc  0a 07                 IBM 41 f0 20 cc  44 00 20 20  0a 07
+0x124  ours 00 00 00 00                        IBM  — not there
+```
+
+The owning statement is `XCTL SF=(E,OPCXCTL(ROPCAVT))` → `IHBINNRB`. Ours expands
+to `LA 15,204(2)` + `SVC 7`; IBM's to `LA 15,204(,2)` + `EX 0,32(,2)` + `SVC 7` —
+**base register where we emit an index, plus one whole instruction more.**
+
+**It is not the assembler, and that was worth checking before saying so.**
+`work/measurements/ifox-run/verdicts.tsv` gives `IGCFK10D` the verdict
+`tool = identical`: `as370` and `IFOX00` produce the same deck from this source
+with these macros, so IFOX00 emits `41F2 00CC` too, and the module is correctly
+absent from `for-cc370.tsv`.
+
+So IBM built these from a different `IHBINNRB` — and **all three surviving copies
+are byte-identical** (`mvsce-2.1.4-target`, `mvsce-2.1.4-dlib/AMACLIB`, stben's),
+none of them emitting the `EX`. That is the `TSCBD` wall again, the fifth macro on
+it, and it puts the `±4` group with `ESTAE`, `STAX`, `SCHEDULE` and `TSCBD` rather
+than in the workable queue.
+
+## The other `&SYSPARM` readers, measured rather than counted
+
+`IEDHJN` and `MODID` were the two this started from. The other eight that read the
+option:
+
+| macro | what it does with `&SYSPARM` | reach |
+|---|---|---:|
+| `XCTLTABL` | `DC CL6'&CODE'` — the `MODID` shape | 202 sources |
+| `IECEQU`, `IECDSECS`, `UTRK3390` | listing `PRINT`/`NOPRINT`/`TEST` only — **emits nothing** | — |
+| `BNGCLOCM` `BNGCMENM` `BNGC327M` `BNGIEXIM` `BNGCDISM` `BNGCRMOM` `BTMHJN` | the `IEDHJN` shape exactly (`HJA`/`HJB`/`HJC`) | **0 callers** |
+
+The `BNG*`/`BTMHJN` family is the same mechanism and is a dead end: not one source
+in the tree calls any of them.
+
+`XCTLTABL` is real. It emits `DC CL6'&CODE'` — *"RELEASE OR PTF NUMBER"* — with
+`&CODE` defaulting to `Y02080` and taken from `SDC=XXXXXX` inside `&SYSPARM`
+otherwise. **174 of our decks carry the default**, and IBM's objects say:
+
+| | modules |
+|---|---:|
+| IBM holds `Y02080` too — the default is right for them | **65** |
+| IBM holds something else | 17 |
+| length differs as well, so not comparable here | 92 |
+| **the `CL6` is the whole difference** | **0** |
+
+The 17 all read **`VS2-R2`**, and assembling them with `--sysparm=SDC=VS2-R2`
+drops **exactly five** differing bytes from every one — `Y02080` and `VS2-R2`
+agree in one position of six, so the value is confirmed by its own arithmetic.
+None becomes identical, so like `MODID` it stays out of `sysparm.tsv`; but
+`IFG0193C` and `IFG0553C` are down to **four** differing bytes with it, and it
+removes a byte pattern that would otherwise be chased again.
+
+**The first value read out of an object here was `'VS'`** — a slice of one
+cluster's hex by `i - offset`, which is wrong whenever the field straddles a
+cluster edge. Rebuild the section (ours, with each cluster's `ref` bytes
+substituted at that cluster's own offset) and it reads `VS2-R2`. A six-character
+field that prints as two characters is the instrument, not the data.
+
 ## The hazard this adds, and it is already live for `ASMDATE`
 
 `SYSPARMS` **is** the second per-module assembly parameter living in
