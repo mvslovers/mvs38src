@@ -234,6 +234,9 @@ four bytes may still be amounts rather than causes. Two bytes was a cause.
 | target member unreadable by `cmplmd370` | 18 | scatter and overlay format — a cc370 case |
 | `SCHEDULE` at two levels | ~18 | one macro file cannot be both; the per-module macro path is agreed but waits on a real macro to put in it — **Dave's zip**, per decision 5 |
 | `IHBINNRB` / `XCTL SF=(E,…)` at two levels | 11 | the whole `±4` group. IBM expands to `LA 15,D(,B)` + `EX 0,32(,2)` + `SVC 7` where we emit `LA 15,D(X)` + `SVC 7` — four bytes more, cancelled by four we emit elsewhere, which is why the lengths match and nothing clustered before. **Not the assembler**: `verdicts.tsv` gives `IGCFK10D` `tool = identical`, so IFOX00 emits our bytes too. All three surviving copies of `IHBINNRB` are byte-identical and none emits the `EX` — **Dave's zip**, per decision 5 |
+| `SETFRR` at two levels | 28 | a different expansion outright: ours `LA R12,32` + `AL` + `CL` + `BH`, IBM's `L R12,FRRSCURR` + `C` + `BE` + `A R12,8` — an FRR stack entry of 8 bytes where ours computes 32. All three surviving copies byte-identical, `MACDATE 75295`. **Not the assembler**: `AHLREADR` is `tool = identical` — **Dave's zip** |
+| `GETMAIN` / `FREEMAIN` at two levels | 52 | one cause shared across both: `ST R2,0(0,1)` where IBM has `ST R2,0(1)`. `HMASMDRV`/`HMASMDSU` are `tool = identical` — **Dave's zip** |
+| `IEAPMNIP` | 21 | ours emits zeros where IBM emits instructions (`58f020f805ef` and the like), so the expansion produces nothing on a path IBM's takes. `IEAVNIPX` is `tool = identical` — **Dave's zip** |
 | `TSCBD` at two levels — `SCBCTLUN` | ≥6 | the same thing, newly measured. `IEDAYC`'s object emits `04` and `IGE0004G`/`IGE0104G`/`IGE0304G`/`IGE0404G`/`IGE0604G` emit `01`, **both out of IBM's own members**, so no single value reproduces both and editing the shared macro gains the `IGE*` set by losing `IEDAYC`. Two of them, `IGE0104G` and `IGE0304G`, are **one byte** from identical — **Dave's zip**, per decision 5 |
 | length differences | ~2,000 | one cause per module; `seclocate.py` shows each |
 
@@ -401,11 +404,17 @@ same resolution — Dave's macro libraries.
 4. **Which of the 55 divergent modules are TK5 USERMODs** rather than IBM service.
    Needs the target zone's SYSMOD-to-module mapping out of the SMP CDS. `IKJEFF53`
    is a known usermod target and is among them, so the answer is not zero.
-5. **The named macro families in `macroattr.tsv`**, largest first and with the
-   holes already discounted: `IEAPMNIP` (21), `SETFRR` (28), `HMASMMGP` (30),
-   `FREEMAIN`/`GETMAIN` (31/21). Each is one question — does that macro expand
-   differently, the way `XCTL`/`IHBINNRB` does — and the answer either closes a
-   family or adds an entry to the blocked table. None has been asked yet.
+5. **The 605 modules with no named macro family and every differing byte in open
+   code.** That is the workable population, and it is the largest thing on this
+   list. `macroattr.tsv` names them; `worklist.py` ranks them.
+
+   The family question has now been asked of all of them
+   ([`docs/macro-attribution.md`](docs/macro-attribution.md)). `SETFRR` (28, one
+   cause in 75 %), `GETMAIN`+`FREEMAIN` (52, one cause shared) and `IEAPMNIP` (21,
+   ours emits zeros where IBM emits instructions) joined `XCTL` on the wall.
+   `HMASMMGP` (30) and `SETLOCK` (10) have **no** shared cause and are genuinely
+   per-module. Together the blocked families touch 112 modules but stop only
+   **11** outright — the other 101 have open-code differences too.
 6. **`work/measurements/baseline-gate/worklist16.txt`** — 438 modules within 16
    bytes, with the owning statement per cluster. Swept below six bytes; the 6–16
    band is untouched by hand.

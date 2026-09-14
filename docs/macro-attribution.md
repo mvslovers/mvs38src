@@ -84,6 +84,68 @@ were swept in September; ranking by raw cluster count was naming an answered
 question. Text is emitted code, holes are reserved storage, and only the first is
 a difference in what a module *does*.
 
+## One question per family, asked and answered
+
+For each owner: collect every **text** cluster it owns and group by
+`(our bytes, IBM's bytes)`. A family with one cause shows one dominant cell; a
+family that is really N unrelated modules shows N singletons. That is the test
+that killed the `+8` cell and confirmed the `×`/`|` one.
+
+**And every one of these was checked against `verdicts.tsv` first.** `IGCFK10D`,
+`HMASMDRV`, `HMASMDSU`, `AHLREADR` and `IEAVNIPX` all carry `tool = identical`:
+`as370` reproduces IFOX00's deck for each. **None of these is an assembler
+difference**, which matters because three of the families differ in the same
+way — an index register where IBM has a base, or the reverse — and that shape
+invites exactly the wrong diagnosis.
+
+| family | modules | answer |
+|---|---:|---|
+| `SETFRR` | 28 | **one cause, 75 % of them.** A different expansion outright |
+| `GETMAIN` + `FREEMAIN` | 52 | **one cause, shared across both.** `ST R2,0(0,1)` against IBM's `ST R2,0(1)` |
+| `XCTL` / `IHBINNRB` | 31 | the `±4` family, already on the wall |
+| `IEAPMNIP` | 21 | **ours emits zeros where IBM emits instructions** |
+| `MODID`, `XCTLTABL`, `IECPDINI` | 95 | `&SYSPARM`, measured, **0 recoveries** ([`sysparm.md`](sysparm.md)) |
+| `HMASMMGP` | 30 | no shared cause — biggest cell is 1 module of 30 |
+| `SETLOCK` | 10 | no shared cause — biggest cell is 3 of 10 |
+
+`SETFRR` is the clearest and the most sobering. Ours:
+
+```
+LA  R12,32          AL R12,FRRSCURR(,R9)    CL R12,FRRSLAST(,R9)    BH  …
+```
+
+IBM's:
+
+```
+L   R12,FRRSCURR(,R9)   C  R12,FRRSLAST(,R9)   BE …   A R12,8(,R9)
+```
+
+Different instructions, different comparison, and an FRR stack entry of 8 bytes
+where ours computes 32. That is not a level of a macro we have — and all three
+surviving copies are byte-identical, `MACDATE 75295` on both of the two that carry
+one.
+
+**A grep said stben's copy differed and it does not.** Two different regexes were
+used on the two files and only one of them could match `LA &R2,32(0,0)`; a
+`diff` of columns 1–71 shows 167 identical records. Compare the files, not two
+greps of them.
+
+## What that leaves
+
+| | modules |
+|---|---:|
+| touched by a blocked macro family (`SETFRR`/`GETMAIN`/`FREEMAIN`/`IEAPMNIP`/`XCTL`) | 112 |
+| …of those, whose differences are **only** in macro expansions | **11** |
+| touched by `HMASMMGP`/`SETLOCK`, which have no shared cause | 40 |
+| touched by the `&SYSPARM` families | 95 |
+| **no named macro family at all** | **755** |
+| …of those, every differing byte in open code | **605** |
+
+So the blocked families bind 112 modules but stop only **11** of them outright:
+the other 101 have open-code differences as well and need that work regardless.
+**605 modules are workable today**, with no macro in the way of a single differing
+byte.
+
 ## Two limits, and the second matters more
 
 It runs only where `cmplmd370` reports clusters, so the **2,231 length-differing

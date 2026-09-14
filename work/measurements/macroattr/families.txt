@@ -1,0 +1,100 @@
+
+=== IEAPMNIP: 21 modules, 121 distinct (ours,IBM) cells
+    biggest cell covers 6 of them (29%)
+      0000               -> 05ef                  6 modules
+      000000000000       -> 58f020f805ef          3 modules
+      000000000000       -> 58f020f005ef          3 modules
+      0000000000000000   -> 131158f0210405ef      2 modules
+      e.g. IEAVNIPX  0x00e4 000000000000000000000000 -> 4110609958f020fc05ef923b   |         LA    RPARM,IEA363I          LOAD PAR|
+      e.g. IEAVNIPX  0x0284 0000000000000000000000 -> 131158f0210405ef589050   |         LCR   RPARM,R1               INDICATE|
+      e.g. IEAVNIPX  0x02b2 000000000000 -> 58f0210405ef   |         L     RENTRY,NVTWTOR2(0,RNVT)    LOAD|
+
+=== SETFRR: 28 modules, 53 distinct (ours,IBM) cells
+    biggest cell covers 21 of them (75%)
+      41                 -> 58                   21 modules
+      55                 -> 59                   20 modules
+      5f                 -> 5b                   20 modules
+      00205e             -> d00c59                8 modules
+      e.g. AHLREADR  0x0016 41 -> 58   |         LA    R12WORK,32(0,0)              LE|
+      e.g. AHLREADR  0x0018 00205e -> 900c59   |         LA    R12WORK,32(0,0)              LE|
+      e.g. AHLREADR  0x001d 0c55c09004472003f4 -> 04478003f45ac09008   |         AL    R12WORK,FRRSCURR-FRRS(0,R9PARM)|
+
+=== HMASMMGP: 30 modules, 68 distinct (ours,IBM) cells
+    biggest cell covers 1 of them (3%)
+      00000000000000     -> 5e10caa858aa10        1 modules
+      0000000000000000   -> 55a0cae04770c71e      1 modules
+      00                 -> 10                    1 modules
+      0000000000000000   -> 55a0cb884780c6ba      1 modules
+      e.g. HMASMALC  0x078a 00000000000000 -> 5e10caa858aa10   |MGPMGNO2 DC    FL2'0'                         |
+      e.g. HMASMALC  0x0792 000000000000000000000000 -> 55a0cae04770c71e4a50c954   |         DC    XL3'0'                         |
+      e.g. HMASMASI  0x06c4 00 -> 10   |MGPMGNO1 DC    FL2'0'                         |
+
+=== FREEMAIN: 31 modules, 29 distinct (ours,IBM) cells
+    biggest cell covers 6 of them (19%)
+      2010               -> 2100                  6 modules
+      1010               -> 1100                  5 modules
+      8010               -> 8100                  1 modules
+      4010               -> 4100                  1 modules
+      e.g. HMASMDRV  0x0bf3 2010 -> 2100   |         ST    R2,0(0,1)                      |
+      e.g. HMASMDRV  0x0c4b 2010 -> 2100   |         ST    R2,0(0,1)                      |
+      e.g. HMASMDRV  0x0d43 2010 -> 2100   |         ST    R2,0(0,1)                      |
+
+=== GETMAIN: 21 modules, 29 distinct (ours,IBM) cells
+    biggest cell covers 5 of them (24%)
+      2010               -> 2100                  5 modules
+      3010               -> 3100                  2 modules
+      8010               -> 8100                  1 modules
+      4010               -> 4100                  1 modules
+      e.g. HMASMDRV  0x227f 2010 -> 2100   |         ST    R2,0(0,1)                      |
+      e.g. HMASMDRV  0x22d7 2010 -> 2100   |         ST    R2,0(0,1)                      |
+      e.g. HMASMDSU  0x0a13 2010 -> 2100   |         ST    R2,0(0,1)                      |
+
+=== SETLOCK: 10 modules, 22 distinct (ours,IBM) cells
+    biggest cell covers 3 of them (30%)
+      58d0               -> 98bd                  3 modules
+      48                 -> 40                    3 modules
+      54                 -> 4c                    3 modules
+      d24805ed41b081ee   -> 02fc58d0d24805ed      1 modules
+      e.g. IEAVAR05  0x00b0 d24805ed41b081ee58500380 -> 02fc58d0d24805ed41b081f2   |         L     13,584(0,13)            LOAD AD|
+      e.g. IEAVAR05  0x0288 d25405ed18e307fe4100002e -> 02fc58d0d25405ed18e307fe   |         L     13,596(0,13)            LOAD AD|
+      e.g. IEEMPVST  0x07ad d148e090408be00002585000 -> bf18fd18c018d148e090408b   |         LR    13,1                     RESTOR|
+
+=== IECPDINI: 4 modules, 93 distinct (ours,IBM) cells
+    biggest cell covers 4 of them (100%)
+      f0f8f0             -> 60d9f2                4 modules
+      f9                 -> f8                    2 modules
+      f9                 -> f1                    2 modules
+      f2f6e8f0           -> f8f4e5e2              2 modules
+      e.g. IFG0190P  0x024e 2431360404 -> 230131ac00   |         DC    C'42'                          |
+      e.g. IFG0190P  0x0254 f42541 -> f12431   |         DC    C'44'                          |
+      e.g. IFG0190P  0x0258 1c00 -> 0404   |         DC    C'44'                          |
+
+=== IECRES: 8 modules, 34 distinct (ours,IBM) cells
+    biggest cell covers 3 of them (38%)
+      51                 -> 00                    3 modules
+      1b44585000105850   -> 4140000058500010      2 modules
+      10                 -> 00                    2 modules
+      45e05030982ef000   -> 5850511045e05030      2 modules
+      e.g. IFG0195N  0x0100 1b44585000105850511045e0 -> 414000005850001058505110   |         SR    4,4                      NO PRE|
+      e.g. IFG0195N  0x02a1 10 -> 00   |         L     5,CVTPTR(,0)             LOAD C|
+      e.g. IFG0195N  0x02a4 51 -> 00   |         L     5,CVTDMSR-CVT(,5)        LOAD A|
+
+=== READ: 4 modules, 33 distinct (ours,IBM) cells
+    biggest cell covers 2 of them (50%)
+      0000               -> 0810                  2 modules
+      00081000           -> 451021be              1 modules
+      5060100c           -> 00000000              1 modules
+      05ef4110219a58e0   -> 5060100c58f02d9a      1 modules
+      e.g. BNGT3270  0x01a4 00081000 -> 451021be   |         DC    BL1'00000000'                  |
+      e.g. BNGT3270  0x01ad 0000 -> 0810   |         DC    A(0)                           |
+      e.g. BNGT3270  0x01bc 5060100c -> 00000000   |         ST    6,12(0,1)                      |
+
+=== WTOR: 4 modules, 51 distinct (ours,IBM) cells
+    biggest cell covers 2 of them (50%)
+      00                 -> 01                    2 modules
+      00                 -> 5c                    2 modules
+      39800040404040     -> 000d9000398000        1 modules
+      0001               -> 4040                  1 modules
+      e.g. IEDQWJ2   0x0339 39800040404040 -> 000d9000398000   |         DC    AL2(57)             TEXT LENGTH|
+      e.g. IEDQWJ2   0x0372 0001 -> 4040   |         DC    B'0100000000000000' DESCRIPTOR |
+      e.g. IGCN410D  0x044c 50e100040a23411700004100 -> 1010301047f0c46048b04432   |         ST    14,4(1,0)                      |
