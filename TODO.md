@@ -82,6 +82,23 @@ The scoreboard at the head of [`README.md`](README.md) is **generated** —
 3. **Option A, Dave's way** — bytes with no rule behind them are transcribed from
    the object and marked `!!! SOURCE COMPARE FIX !!!` in columns 46–71.
 4. **Priority: TSO first, SMP second.**
+5. **A per-module macro path is agreed in principle — and waits for Dave's macro
+   libraries** — Mike, 2026-09-14. The mechanism is the one `ASMDATES` and
+   `SYSPARMS` already use: a `module<TAB>…` table read by `gate-worker.sh`,
+   applied per module, never global.
+
+   **What is NOT agreed is filling it with variants we construct ourselves.** The
+   `TSCBD` case would need exactly one invented line — `SCBCTLUN EQU X'01'`, a
+   value that stands in **no surviving copy of the macro** — and that is nearer to
+   option A than to `ASMDATE`, because a macro is third-party source material and
+   `SYSPARM` is an assembler option that leaves the source untouched. Dave's
+   libraries may hold the *real* second `TSCBD`, and an override carrying a real
+   macro is a different object from one carrying a derived line.
+
+   So: **build the mechanism when there is a real macro to put in it, not before.**
+   Until then the modules stay blocked and are counted as blocked — not as
+   "waiting on a tool". ≥24 modules, two of them (`IGE0104G`, `IGE0304G`) **one
+   byte** from identical.
 
 ### What 2026-09-14 established
 
@@ -206,8 +223,8 @@ four bytes may still be amounts rather than causes. Two bytes was a cause.
 |---|---:|---|
 | `ESTAE` eight bytes short | some | a macro level in **none** of the three libraries, TK5's own included — **Dave's zip** |
 | target member unreadable by `cmplmd370` | 18 | scatter and overlay format — a cc370 case |
-| `SCHEDULE` at two levels | ~18 | one macro file cannot be both; needs a per-module macro path |
-| `TSCBD` at two levels — `SCBCTLUN` | ≥6 | the same thing, newly measured. `IEDAYC`'s object emits `04` and `IGE0004G`/`IGE0104G`/`IGE0304G`/`IGE0404G`/`IGE0604G` emit `01`, **both out of IBM's own members**, so no single value reproduces both and editing the shared macro gains the `IGE*` set by losing `IEDAYC`. Two of them, `IGE0104G` and `IGE0304G`, are **one byte** from identical |
+| `SCHEDULE` at two levels | ~18 | one macro file cannot be both; the per-module macro path is agreed but waits on a real macro to put in it — **Dave's zip**, per decision 5 |
+| `TSCBD` at two levels — `SCBCTLUN` | ≥6 | the same thing, newly measured. `IEDAYC`'s object emits `04` and `IGE0004G`/`IGE0104G`/`IGE0304G`/`IGE0404G`/`IGE0604G` emit `01`, **both out of IBM's own members**, so no single value reproduces both and editing the shared macro gains the `IGE*` set by losing `IEDAYC`. Two of them, `IGE0104G` and `IGE0304G`, are **one byte** from identical — **Dave's zip**, per decision 5 |
 | length differences | ~2,000 | one cause per module; `seclocate.py` shows each |
 
 ### 🚪 The one thing that needs Mike
@@ -334,6 +351,13 @@ same resolution — Dave's macro libraries.
 
 ### Waiting, and none of it blocks host-side work
 
+- **Dave Kreiss — his macro libraries are now the single largest blocker**, and
+  decision 5 makes them a precondition rather than a convenience. Four macros are
+  known to exist at a level none of our libraries carries: `ESTAE`, `STAX`,
+  `SCHEDULE` and — measured 2026-09-14 — `TSCBD`. Together ≥24 modules, two of
+  them one byte away. **The 2026-09-13 mail is still unsent** and asks about
+  `ESTAE`; `TSCBD` is a new, sharper instance of the same question and is not in
+  it yet.
 - **Dave Kreiss — mail sent 2026-09-12**
   ([`docs/mail-kreiss-2026-09-12.md`](docs/mail-kreiss-2026-09-12.md)): the
   `./ DELETE` question (SMP here refuses it, costing 485 of his SYSMODs and 486
@@ -2131,6 +2155,13 @@ missing-macro list is only as good as the assembler that produced it.
 
 ### Waiting on other people
 
+- **Dave Kreiss — his macro libraries are now the single largest blocker**, and
+  decision 5 makes them a precondition rather than a convenience. Four macros are
+  known to exist at a level none of our libraries carries: `ESTAE`, `STAX`,
+  `SCHEDULE` and — measured 2026-09-14 — `TSCBD`. Together ≥24 modules, two of
+  them one byte away. **The 2026-09-13 mail is still unsent** and asks about
+  `ESTAE`; `TSCBD` is a new, sharper instance of the same question and is not in
+  it yet.
 - **Dave Kreiss — mail sent 2026-09-12**
   ([`docs/mail-kreiss-2026-09-12.md`](docs/mail-kreiss-2026-09-12.md)). Three
   asks, and **none of them blocks host-side work**:
