@@ -79,6 +79,32 @@ def asmdates():
     return out
 
 
+def clusters_after(obj, csect, ref):
+    """The differing runs once the lengths already match, or None while they do not.
+
+    This is the second pass, and `IEDCSA` is why there is one. `seclocate.py`
+    anchors by agreement, and a weakly scored anchor puts the inserted run in
+    roughly the right place rather than exactly it: `IEDCSA` scored 90 % with a
+    margin of only 30 points, and the two bytes it reported were `0010` where IBM
+    holds `8117`. The first pass therefore assembles a deck of the RIGHT LENGTH
+    with the WRONG VALUE — and at equal length `cmplmd370` finally reports
+    clusters, so IBM's own bytes are readable at the exact offset. Feeding those
+    back makes `IEDCSA` identical.
+    """
+    q = subprocess.run([CM, "--json", "--csect", csect, obj, ref],
+                       capture_output=True, text=True)
+    if not q.stdout.strip():
+        return None
+    try:
+        d = json.loads(q.stdout)
+    except json.JSONDecodeError:
+        return None
+    s_ = next((x for x in (d.get("sections") or []) if x.get("name") == csect), None)
+    if s_ is None or s_.get("identical") or s_.get("length_differs"):
+        return None
+    return [c for c in (s_.get("clusters") or []) if c.get("length") == 2]
+
+
 def identical(obj, csect, ref):
     q = subprocess.run([CM, "--json", "--csect", csect, obj, ref],
                        capture_output=True, text=True)
@@ -149,8 +175,24 @@ def one(job):
             subprocess.run([BIN, f"--sysparm={hja}{hjb}"] + flags() + ["-o", obj, src],
                            capture_output=True,
                            env=dict(os.environ, ASMDATE=date, ASMTIME="12.00"))
-            if os.path.exists(obj) and identical(obj, csect, ref):
+            if not os.path.exists(obj):
+                continue
+            if identical(obj, csect, ref):
                 return mod, hja + hjb, os.path.basename(ref), "recovered"
+            # Second pass: the length is right, so IBM's bytes are now readable.
+            for c in (clusters_after(obj, csect, ref) or []):
+                b = c.get("ref", "").upper()
+                if len(b) != 4:
+                    continue
+                for v in (b + hjb, hja + b, b + b):
+                    if v == hja + hjb:
+                        continue
+                    o2 = os.path.join(TMP, f"{mod}.{v}.obj")
+                    subprocess.run([BIN, f"--sysparm={v}"] + flags() + ["-o", o2, src],
+                                   capture_output=True,
+                                   env=dict(os.environ, ASMDATE=date, ASMTIME="12.00"))
+                    if os.path.exists(o2) and identical(o2, csect, ref):
+                        return mod, v, os.path.basename(ref), "recovered (second pass)"
     return mod, None, None, ("no 2- or 4-byte insert" if tried == 0 else "tried, still differs")
 
 

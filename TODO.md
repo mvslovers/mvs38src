@@ -43,7 +43,7 @@ The scoreboard at the head of [`README.md`](README.md) is **generated** —
 
 | | |
 |---|---:|
-| **under the chosen baseline — target, DLIB where no target exists** | **1,601 of 5,353 — 29.9 %** |
+| **under the chosen baseline — target, DLIB where no target exists** | **1,602 of 5,353 — 29.9 %** |
 | the same decks against the DLIB alone | 1,626 |
 | against the target alone | 1,451 |
 | against both | 1,426 |
@@ -51,7 +51,7 @@ The scoreboard at the head of [`README.md`](README.md) is **generated** —
 | `src/` — finished, guarded by `srccheck.py` | **310 modules** |
 | `as370` == IFOX00 (a TOOL figure, not a project figure) | 5,471 of 5,528 |
 
-**1,491 the evening before.** The whole of the +110 is one cause:
+**1,491 the evening before.** The whole of the +111 is one cause:
 [`docs/sysparm.md`](docs/sysparm.md).
 
 > ⚠️ **`scoreboard.py --check` only checks README against the tool.** Its *input*
@@ -91,10 +91,10 @@ sources and does `DC X'&SYSPARM'(1,4)`. With no `SYSPARM` that flags `IFO117` +
 `IFO178` and emits **nothing**, so the CSECT comes out 2 or 4 bytes short and
 `cmplmd370` reports a length difference with no clusters at all.
 
-**110 of the 436 are byte-identical the moment IBM's own `SYSPARM` is supplied.**
+**111 of the 436 are byte-identical the moment IBM's own `SYSPARM` is supplied.**
 No source change, no marker, nothing deposited in `src/` — the `ASMDATE` class,
 one size larger. `gate.sh` reads `SYSPARMS` per module now, exactly as it reads
-`ASMDATES`. Acceptance test: **+110 / −0**, as sets.
+`ASMDATES`. Acceptance test: **+111 / −0**, as sets.
 Full account in [`docs/sysparm.md`](docs/sysparm.md).
 
 - **It was not a `cc370` case.** `as370` has had `--sysparm=` since the open-code
@@ -197,7 +197,7 @@ main result.** It was said of the `+8` cell — 21 distinct insertions, and that
 still holds — and extended to `+2` on the grounds that its modules diverge after
 offset 3. They do not: they insert at different offsets because each module's
 eyecatcher ends at a different offset, and grouped by what the inserted run *is*
-they are one family, `IEDHJN` on an empty `&SYSPARM`, **110 modules**. Eight and
+they are one family, `IEDHJN` on an empty `&SYSPARM`, **111 modules**. Eight and
 four bytes may still be amounts rather than causes. Two bytes was a cause.
 
 ### Blocked, and on what
@@ -297,7 +297,7 @@ same resolution — Dave's macro libraries.
    on top and is now isolated), 167 show no clean insert, 18 differ in bytes at
    equal length, 4 have no usable reference.
 
-   **Of the 137, 23 change state when their derived value is applied: `length
+   **Of those, 23 change state when their derived value is applied: `length
    differs` -> `equal length, clusters`.** That is the whole point of them —
    `cmplmd370` reports no clusters at all while the sizes differ, so those 23 are
    invisible to `worklist.py` and `fillgaps.py` today and become visible the
@@ -305,10 +305,22 @@ same resolution — Dave's macro libraries.
    way** (`equal length` -> `length differs`), which is direct evidence their
    derived value is wrong for them.
 
+   **The second pass already harvests part of this and it is in the sweep.** A
+   length-equal deck with a 2-byte cluster at the parameter's own offset hands
+   back IBM's bytes; `IEDCSA` went `--sysparm=00100000` DIFFER,
+   `--sysparm=81170000` IDENTICAL. Worth one module. The other 35 length-equal
+   ones have their second cause **elsewhere**, and their clusters are printable
+   now — that is what makes them work rather than a wall.
+
    ⚠️ **Their values are derived, not proven** — `cmplmd370` does not exit 0, so
    they are deliberately NOT in `sysparm.tsv` and must not be put in the gate.
    Pass them for *analysis* (`--sysparm=` on a one-off assembly), never for the
    count.
+
+   ⚠️ **`MODID` is not the way in, and it is the obvious idea.** It prints the
+   parameter as text (`DC CL9`), so a module expanding both macros would carry
+   `&SYSPARM` twice. **Zero of the 436 do**, and zero of the 111. `grep` finds 101
+   sources mentioning both and every one is a comment — the deck is what counts.
 3. **The 18 whose target member `cmplmd370` cannot read** — `IEANUC01` is scatter
    format, the rest are overlay-structured, and the DLIB calls all 18 identical. A
    `cc370` case and the cheapest block on the board.
@@ -382,7 +394,7 @@ same resolution — Dave's macro libraries.
 - **A cell that "diverges immediately" may be grouped on the wrong key.** The `+2`
   cell was closed on 2026-09-13 because its modules insert at different offsets.
   They do; the offsets are where each module's eyecatcher ends. Grouped by what the
-  inserted run *is*, they are one family of 110. Group by cause, not by coordinate.
+  inserted run *is*, they are one family of 111. Group by cause, not by coordinate.
 - **In zsh a variable is not word-split.** `kill -TERM $PIDS` with newlines kills
   nothing and reports success. Use `xargs`.
 - **`git add <missing-path>` stages a DELETE**, and a newline-separated command

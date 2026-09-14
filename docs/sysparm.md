@@ -1,11 +1,11 @@
 # `&SYSPARM` was empty in every assembly this project has ever run
 
-> **In the gate, and the acceptance test passed: +110 / −0.**
-> `gate.sh` reads `SYSPARMS` per module, the published figure is **1,601 of
+> **In the gate, and the acceptance test passed: +111 / −0.**
+> `gate.sh` reads `SYSPARMS` per module, the published figure is **1,602 of
 > 5,353 (29.9 %)**, up from 1,491. Derived with `as370-main`, sha256
 > `bdef7470…6146f` (`work/src-states/bin/PROVENANCE.txt`), 2026-09-14.
 
-**110 modules are byte-identical to IBM's shipped object the moment the assembler
+**111 modules are byte-identical to IBM's shipped object the moment the assembler
 is given the `SYSPARM` IBM gave it.** No source change, no marker, nothing
 deposited in `src/` — the source was already right and the instrument was not.
 This is the `ASMDATE` class, one size larger.
@@ -80,8 +80,8 @@ A win count on its own says nothing about what is left, so:
 
 | | modules |
 |---|---:|
-| **identical once IBM's own `SYSPARM` is supplied** | **110** |
-| a 2- or 4-byte insert found, still differs after it | 137 |
+| **identical once IBM's own `SYSPARM` is supplied** | **111** |
+| a 2- or 4-byte insert found, still differs after it | 136 |
 | length differs, no clean 2- or 4-byte insert | 167 |
 | bytes differ, length equal | 18 |
 | no usable reference | 4 |
@@ -124,18 +124,63 @@ which is what makes `SYSPARM` the only variable between the two deck sets.
 **Gained 110, lost 0**, as sets and not as counts. `srccheck.py` still passes on
 all 310 modules in `src/`.
 
+The table was then re-cut with the second pass below and the whole sequence run
+again: **gained 111, lost 0**, every gain in the table, `rc0=4699`,
+**chosen = 1,602**. The control run is unchanged and is still the comparison base.
+
+## The second pass, and why a right length with a wrong value is progress
+
+`seclocate.py` anchors by agreement, and a weakly scored anchor lands the inserted
+run in roughly the right place rather than exactly it. `IEDCSA` scored 90 % with a
+margin of only 30 points over the runner-up, and the two bytes it reported were
+`0010` where IBM holds `8117`.
+
+But the first pass still assembles a deck of the **right length** with the wrong
+value — and at equal length `cmplmd370` stops refusing to cluster. IBM's own bytes
+are then readable at the exact offset:
+
+```
+IEDCSA   clusters=1   offset 0x000a   ours=0010   IBM=8117
+--sysparm=00100000   DIFFER
+--sysparm=81170000   IDENTICAL
+```
+
+So the sweep now feeds every 2-byte cluster back as a candidate half. It is the
+same rule as before — the value comes out of IBM's object and is kept only when
+`cmplmd370` exits 0 — applied to a measurement the first pass had to create first.
+
+**It is worth one module, 110 -> 111**, and three more modules reach the same
+value by this route that a later candidate reached by the first. The honest
+reading is that the anchor was already good enough almost everywhere; this closes
+the one case where it was not, and it costs nothing.
+
 ## The values
 
 `work/measurements/baseline-gate/sysparm.tsv`, `module<TAB>sysparm<TAB>reference`.
 They are per module and they repeat: `7033` in 21 modules, `6363` in 16, `7175`
 and `7144` in 6 each, then a long tail of singletons.
 
-**57 of the 110 carry an observable second half**; the other 53 are written
+**57 of the 111 carry an observable second half**; the other 54 are written
 `0000` because their caller did not pass `HJN`, the macro never emits `&HJB`, and
 **the bytes are therefore not measurable**. A recorded value that was never
 measured would be the worst kind of number in this repository, so the placeholder
 is visible rather than plausible. If one of those modules is ever assembled with
 `HJN`, its second half becomes a real question again.
+
+## The lever that does not exist: `IEDHJN` and `MODID` never meet
+
+`MODID` emits the parameter as **plain text** — `DC CL9'&PARMC'` — so a module
+expanding both macros would carry the same `&SYSPARM` twice in IBM's object, two
+binary bytes and nine EBCDIC characters. That would settle the 53 unobservable
+second halves and hand the 136 their value directly.
+
+**It does not happen once.** Of the 436 `IEDHJN` callers, the number whose deck
+also carries `MODID`'s expansion is **0**, and of the 111 proven modules likewise
+**0**. The two macros serve disjoint sets — `IEDHJN` is TCAM, `MODID` is the
+general MVS one. Recorded because it is the obvious next idea and it is dead;
+`grep` for the macro name in the source says 101 modules mention both, and every
+one of those is a comment. The measurement that counts is whether the expansion is
+in the deck.
 
 ## `MODID` reads `&SYSPARM` too, and recovers nothing
 
