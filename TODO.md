@@ -256,6 +256,37 @@ at two levels, with two modules one byte from identical — and since decision 5
 libraries are a *precondition* rather than a convenience. Sending without it asks
 the weaker version.
 
+### The map: where the differing bytes come from
+
+**Of the 988 CSECTs that differ at equal length, 605 have every differing byte in
+open code, 293 are mixed, and 90 are entirely inside macro expansions.** The macro
+wall is not what dominates this population — `tools/macroattr.py`,
+[`docs/macro-attribution.md`](docs/macro-attribution.md).
+
+The owners, by differing clusters in generated **text** (holes counted separately,
+because holes are `fillgaps.py`'s answered population):
+
+| owner | text clusters | modules |
+|---|---:|---:|
+| `<open code>` | 12,931 | 558 |
+| `IEAPMNIP` | 218 | 21 |
+| `MODID` | 195 | **48** |
+| `SETFRR` | 157 | 28 |
+| `XCTLTABL` | 145 | **43** |
+| `XCTL` | 95 | **31** |
+| `HMASMMGP` | 70 | 30 |
+| `FREEMAIN` / `GETMAIN` | 52 / 46 | 31 / 21 |
+
+`MODID` and `XCTLTABL` are the validation: both were measured by hand the same day
+from the `&SYSPARM` side and the tool found them without being told. `XCTL` is the
+`±4` family, which hand analysis had put at 11 and is 31.
+
+⚠️ **Two limits.** It needs clusters, so the **2,231 length-differing CSECTs are
+out of reach** — the largest block, 41.7 %. And **open code is not the same as our
+problem**: `IGE0104G`'s byte is emitted by an ordinary `OI` and caused by `TSCBD`
+at two levels. `macro` is a *lower bound* on the wall; `open` means "could be
+either".
+
 ### The method that works, and it is a ranking
 
 `tools/worklist.py`: every module not identical to the chosen baseline, **nearest
@@ -370,7 +401,12 @@ same resolution — Dave's macro libraries.
 4. **Which of the 55 divergent modules are TK5 USERMODs** rather than IBM service.
    Needs the target zone's SYSMOD-to-module mapping out of the SMP CDS. `IKJEFF53`
    is a known usermod target and is among them, so the answer is not zero.
-5. **`work/measurements/baseline-gate/worklist16.txt`** — 438 modules within 16
+5. **The named macro families in `macroattr.tsv`**, largest first and with the
+   holes already discounted: `IEAPMNIP` (21), `SETFRR` (28), `HMASMMGP` (30),
+   `FREEMAIN`/`GETMAIN` (31/21). Each is one question — does that macro expand
+   differently, the way `XCTL`/`IHBINNRB` does — and the answer either closes a
+   family or adds an entry to the blocked table. None has been asked yet.
+6. **`work/measurements/baseline-gate/worklist16.txt`** — 438 modules within 16
    bytes, with the owning statement per cluster. Swept below six bytes; the 6–16
    band is untouched by hand.
 
