@@ -261,9 +261,12 @@ same resolution — Dave's macro libraries.
 - **Both sides must see the same macros.** On `MVSTK5-REF` that means the
   carried-across `IBMUSER.*` copies, not TK5's own `SYS1.A*` — the delta moves
   68 modules. `macpath.py` is the single definition; `gate.sh` is its source.
-- **Pin `ASMDATE`/`ASMTIME`, and per module where it matters.** One pinned
-  `ASMTIME` cannot match 38 modules whose jobs ran at 29 distinct times;
-  `state.tsv`'s `start` column has each one.
+- **Pin `ASMDATE`/`ASMTIME`, and per module where it matters.** `gate.sh` reads
+  `ASMDATES`, a `module<TAB>mm/dd/yy` table that `asmdate_sweep.py` writes by
+  assembling against every date the object carries and keeping the one that exits
+  0 — 36 modules were being reported as defective over the pinned constant. The
+  **time** is the same class and is **not** solved: 38 decks carry the pinned
+  `12.00` and sweeping every time-shaped byte sequence recovers none of them.
 - **Pin the binary by hash.** `work/src-states/bin/as370-main`, provenance in
   `PROVENANCE.txt`. The default path points into a tree another session rebuilds.
 - **`grep` here is `ugrep` and `ls` is `eza`.** `ls -1 > list.txt` wrote eza's
@@ -278,6 +281,26 @@ same resolution — Dave's macro libraries.
   otherwise.
 - **Before calling something a boundary, check reachability.** One `grep` of the
   listing for the label.
+- **Re-measure after a sweep, not after the commit that describes it.**
+  `fillgaps.py` deposits to `src/` the moment `cmplmd370` exits 0, and
+  `scoreboard.py --check` compares README against the tool — not the tool against
+  the tree. Eight modules sat measured, deposited and uncounted on 2026-09-13, and
+  the figure was quoted eight low for hours.
+- **When a macro changes, compare the identical SETS before and after, not their
+  sizes.** `IGGCP14` was +9 and 0 lost; `SCHEDULE` was +3 and **10 lost**, and the
+  net alone would have said "wrong" without saying why — that ten modules want the
+  old form is what proves IBM shipped the macro at two levels.
+- **One command per call against the Hercules console.** A compound with `&&`, or
+  a foreground `sleep`, is refused; the same command alone goes through. And the
+  refusals are not deterministic — `/P HTTPD` was allowed and `/P FTPD` refused
+  one call later, which is how a shutdown ended up half-done.
+- **A generalisation from one case is not a finding.** "189 modules are +8, one of
+  them is `ESTAE`, therefore they all are" survived into a document and into an
+  unsent mail before `seclocate.py` measured it: 2 of 21 located insertions.
+- **An anchor into a bound member must report its confidence.** `seclocate.py`
+  prints the agreement fraction and the margin, and refines to the offset with the
+  fewest alignment edits — a scored anchor one byte out invents `delete`/`insert`
+  pairs that look like findings.
 
 ---
 
