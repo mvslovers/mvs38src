@@ -1,0 +1,70 @@
+605 modules
+605 measured, 4972 open-code text clusters
+
+=== (our bytes -> IBM's), by distinct modules
+   00 -> 40                                   15 modules   e.g. BLSEADPR 0x13e7 |         DC    0D'0'                                |
+   00 -> 80                                   14 modules   e.g. BLSDIFP0 0x06f9 |         DC    0H'0'                                |
+   0000 -> 4040                               13 modules   e.g. BLSEADP1 0x076a |         DC    0F'0'                                |
+   f2f6 -> f7f8                               12 modules   e.g. IEAVEMS0 0x0045 |         BR    R14                  RETURN.         |
+   00 -> 50                                    9 modules   e.g. HMASMIO1 0x0474 |         DC    0D'0'                                |
+   00 -> 92                                    9 modules   e.g. HMASMLKD 0x1b44 |JRTRC    DC    FL1'0'                               |
+   00 -> 08                                    8 modules   e.g. AMDSAPRO 0x0623 |IPLINPUT DC    XL4'00007400'           WORK AREA FOR|
+   00 -> e0                                    8 modules   e.g. BLSCADYN 0x0398 |         DC    F'0'                                 |
+   00 -> 01                                    8 modules   e.g. BLSR3270 0x0533 |         DC    0F'0'                                |
+   00000000 -> 40404040                        7 modules   e.g. BLSCANLE 0x0b7a |@CB00378 DC    B'00000000'|
+   00 -> 20                                    7 modules   e.g. BLSRVRBX 0x040f |         DC    0F'0'                                |
+   00 -> f0                                    7 modules   e.g. BLSVPSA 0x05a3 |         DC    0H'0'                                |
+   00 -> 70                                    6 modules   e.g. AMDPRFMG 0x0067 |         DC    0F'0'                                |
+   00 -> d2                                    6 modules   e.g. BLSCALOC 0x05d2 |@CB01020 DC    B'10010000'|
+   00 -> 30                                    6 modules   e.g. BLSRADD1 0x0be1 |         DC    0H'0'                                |
+   00 -> 10                                    6 modules   e.g. BLSRMSGA 0x01e1 |         DC    0H'0'                                |
+   f8 -> f9                                    6 modules   e.g. BLSRVPCP 0x0010 |         DC    AL1(16)                              |
+   f9 -> f2                                    6 modules   e.g. IEAVGM00 0x0012 |         BAL   R14,FRRINIT     ESTABLISH FRR, CLEAR |
+   00 -> a0                                    5 modules   e.g. AMDSAPRO 0x04cb |         DC    H'01'                   RCD PER TRK C|
+   00 -> 58                                    5 modules   e.g. BLSDIFP0 0x0775 |         DC    0H'0'                                |
+
+=== signed byte delta, one-byte clusters
+   +1                                         30 modules
+   +2                                         23 modules
+   +4                                         19 modules
+   +64                                        18 modules
+   +128                                       17 modules
+   +8                                         16 modules
+   +48                                        16 modules
+   -4                                         16 modules
+   +16                                        14 modules
+   +32                                        14 modules
+   +80                                        14 modules
+   -6                                         13 modules
+   -1                                         11 modules
+   -2                                         11 modules
+   +112                                       10 modules
+   +3                                         10 modules
+   -16                                        10 modules
+   -32                                        10 modules
+   +224                                        9 modules
+   +5                                          9 modules
+
+=== operation field of the owning statement
+   DC                                        242 modules   e.g. AHLVCOFF 0x0010 |         DC    AL1(16)                              |
+   L                                          78 modules   e.g. IDAVBPO1 0x0268 |         L     R0,PSATOLD                           |
+   MVC                                        56 modules   e.g. BLSRMSGA 0x0196 |A000190  MVC   MSG(0,R5),MCXB                       |
+   ST                                         47 modules   e.g. AHLVCOFF 0x0042 |         ST    @05,MCRMCA(,MCRPTR)                  |
+   TM                                         41 modules   e.g. IDA121A4 0x0148 |         TM    IOSSNS-IOSB+1(R12),IOSFP             |
+   LA                                         40 modules   e.g. IDCRS05 0x00cf |         LA    @07,RSVOLENT(,@07)                   |
+   OI                                         38 modules   e.g. IDCXP01 0x124b |         OI    CTGNAME(@07),B'00000100'             |
+   B                                          34 modules   e.g. BLSDSTAE 0x000d |         B     BEGIN                BRANCH AROUND ID|
+   MVI                                        31 modules   e.g. IDCXP01 0x0ab7 |         MVI   HEADFLG2(@07),X'FF'                  |
+   ORG                                        30 modules   e.g. BLSCFDYN 0x0612 |         ORG   DISPSTR+30|
+   CLI                                        28 modules   e.g. IAPCNTRL 0x01fa |         CLI   UCBUNTYP(UCBPTR),DVC3330             |
+   CLC                                        23 modules   e.g. IDCXP01 0x2c7c |@SC01380 CLC   FIELD(0,@15),NOTINIT|
+   C                                          22 modules   e.g. IDCXP01 0x0141 |@RT00326 C     DEFSTID,@CF00116                     |
+   XC                                         22 modules   e.g. IDCXP01 0x0475 |         XC    ALLAGL(31,@15),ALLAGL(@15)           |
+   NI                                         22 modules   e.g. IDCXP01 0x050a |         NI    AIXFLAG,B'01111111'                  |
+   LH                                         21 modules   e.g. IDCXP01 0x1a02 |@RC01011 LH    @07,NUMOBJ                           |
+   DS                                         19 modules   e.g. BLSSPCCA 0x04ca |DTPSA9   DS    0C|
+   STH                                        15 modules   e.g. IDCXP01 0x0e56 |         STH   @15,DARGINL(,@04)                    |
+   IC                                         14 modules   e.g. IEAVCSEG 0x012e |         IC    R8,SPCTSSEG-SPCT(,R12)               |
+   BR                                         13 modules   e.g. HMASMDC1 0x001a |@ER00001 BR    R14                                  |
+
+-> /Users/mike/repos/mvs/mvs38src/tools/../work/measurements/baseline-gate/opencode-families.tsv

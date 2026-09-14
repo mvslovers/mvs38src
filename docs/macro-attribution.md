@@ -168,3 +168,81 @@ tools/macroattr.py --only IGCFK10D   # the control: every cluster owned by XCTL
 It assembles through `tools/asmparams.py`, which returns the per-module
 `ASMDATE` and `--sysparm` that `gate-worker.sh` applies — added here because ten
 tools hardcode the pin instead and this one must not become the eleventh.
+
+---
+
+# The same question asked of open code — 2026-09-14, late
+
+`tools/opencode_families.py` over the 605 modules whose every differing byte is
+open code: **4,972 clusters, and no family.**
+
+The biggest `(our bytes, IBM's bytes)` cell covers **15 modules of 605**, and it
+is `00 -> 40` on a `DC 0D'0'` — alignment fill, not a defect class. The next are
+`00 -> 80` (14) and `0000 -> 4040` (13), the same thing. Below that it is a long
+tail of singletons.
+
+**So from here it is one module at a time, and that is now a measured statement
+rather than a feeling** — the same instrument found four real macro families the
+same day and rejected two false ones.
+
+## What the population is made of
+
+By the operation field of the owning statement, and by distinct modules:
+
+| | clusters | modules |
+|---|---:|---:|
+| `DC`, a real constant | 696 | **159** |
+| `DC`, zero duplication factor — **alignment fill** | 470 | 131 |
+| `L` | 627 | 78 |
+| `MVC` | 236 | 56 |
+| `ST` | 504 | 47 |
+| `TM` | 207 | 41 |
+| `LA` | 323 | 40 |
+| `OI` | — | 38 |
+
+**Data, not instructions.** The largest single class is a constant somebody
+assembled differently, which is exactly what option A was decided for.
+
+And **alignment fill is 470 clusters across 131 modules, 9 % of the population.**
+`cmplmd370` counts it as text — TODO.md's control list already says so — and it is
+not a source defect. A module whose only differences are there is not a module
+with a bug.
+
+## A second date format, and six modules hanging on it
+
+`asmdate_sweep.py` hunts `mm/dd/yy`, which is what `&SYSDATE` produces. It cannot
+see this:
+
+```
+AHLVCOFF   ours 'AHLVCOFF  73.241'      IBM 'AHLVCOFF  79.137'
+BLSRVPCP   ours 'BLSRVPCP  78.059'      IBM 'BLSRVPCP  79.288'
+```
+
+A Julian `yy.ddd` in the eyecatcher, and it **differs per module**, so it is a
+constant in the source rather than the assembler's stamp — maintenance level
+written into the module and left behind by whatever archive we have.
+
+`tools/julian_dates.py`, over the 988:
+
+| | modules |
+|---|---:|
+| decks carrying a `yy.ddd` date | **430** |
+| the date matches IBM's, other bytes differ | 358 |
+| the date differs **and** so does other code | 66 |
+| **the date is the whole difference** | **6** |
+
+The six are `AMDUSRF9`, `IEECB801`, `IEFAB820`, `IEFJCNTL`, `ISTCFCR2`,
+`ISTZCF1B`, each one `DC C'<name>  yy.ddd'`:
+
+| module | ours | IBM |
+|---|---|---|
+| `AMDUSRF9` | `76.352` | `78.272` |
+| `IEECB801` | `75.325` | `77.235` |
+| `IEFAB820` | `76.328` | `77.279` |
+| `IEFJCNTL` | `76.190` | `80.261` |
+| `ISTCFCR2` | `78.062` | `78.312` |
+| `ISTZCF1B` | `78.100` | `78.265` |
+
+**Not repaired**, and the reason is a marking question rather than a measurement
+one — see TODO.md. That 358 of 430 already match is the control that says the
+class is real and the archive is mostly at IBM's level here.
