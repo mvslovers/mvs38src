@@ -87,6 +87,28 @@ overlap, missing `CESDSEG`.
 `load_lmod` memcpys every segment into one flat image, last-wins, with `SEGTAB`
 copied in as program text and `CESDSEG` never read. **Both exit 0 or 1, never 2.**
 
+> ## ⚠️ Corrected 2026-09-16 — the scatter half was wrong and one sentence below
+> was wrong for the whole corpus
+>
+> **The scatter mechanism does not exist.** A scatter record carries no program
+> text — it is the loader's translation and scatter tables — so a reader that
+> skips it is right to. The `dasm370` session retracted it; the **overlay** half
+> was real. `IDA019S4 IECVERPL IECVESIO IECVRRSV IGC121` come off hold, and
+> **the headline no longer carries ±5**.
+>
+> **And a DLIB row is NOT an object deck.** Measured: **5,353 of 5,353 DLIB
+> members begin `X'20'`, a CESD.** Every DLIB row goes through the same reader,
+> so the sentence below is false and the independence it claims is not the
+> format's. What does hold: **zero DLIB members carry a flagged CESD type byte
+> and 21 target members do** (149 entries). That is the separation.
+>
+> Reader fixed in cc370#375, merged as `63f372f`. Tree-wide: **1,608 -> 1,626,
+> +18/-0 as sets**, unreadable target members **143 -> 2**, no
+> `identical -> anything` transition in either direction. Of `IEANUC01`'s 24,
+> **13 -> identical and 10 -> differs, exactly as the DLIB predicted for each**.
+> The published figure stays 1,608 until the comparator is re-pinned here.
+> `work/measurements/cmplmd-reader/`.
+
 Exposure measured here: 247 CSECTs have `IEANUC01` as their target member, 65 of
 them `identical`. The DLIB comparison is an independent path — a DLIB row is an
 extracted **object deck** and never enters `load_lmod` — and **60 of the 65 are

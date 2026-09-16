@@ -481,45 +481,89 @@ flag reaching the **verdict** and not only the JSON.
 reads after four weeks. A contract with another session is exactly the thing that
 has no owner unless it has a file.
 
-### ⚠️ `cmplmd370` misreads scatter and overlay modules — exposure measured at 5
+### `cmplmd370`'s reader is fixed, the ±5 is withdrawn, and the 18 are measured
 
-Reported by the `dasm370` session, with the mechanism rather than the symptom: for
-a **scatter** module `lmod_iter_next` frames the `X'10'` record and the compare
-loop falls through the `if/else if` without handling it, so the image is built
-**partially and silently**; for an **overlay** module `load_lmod` memcpys every
-segment into one flat image, last-wins, with the `SEGTAB` text record copied in as
-program text and `CESDSEG` never read. **Both paths exit 0 or 1, never 2** — so an
-`error` verdict is not reliably "could not read", and an `identical` one is not
-reliably right.
+**Superseded 2026-09-16.** This section read *"⚠️ `cmplmd370` misreads scatter and
+overlay modules — exposure measured at 5"*, held five modules out of the count,
+and told the reader to stop quoting "18 free modules". The scatter half of that
+was wrong, the hold was unnecessary, and the 18 are now measured. What follows
+replaces it; the old claims are named so the correction stays visible.
 
-**Measured here rather than taken on trust.** 247 CSECTs have `IEANUC01` — the
-scatter module — as their target member: 112 `differs`, **65 `identical`**, 45
-`len-differs`, 24 `error`, 1 `holes`.
+**The scatter mechanism does not exist.** The `dasm370` session reported it and
+then retracted it: `lmod_iter_next` does frame the `X'10'` record and the compare
+loop does fall through, but **a scatter record carries no program text** — it is
+the loader's translation and scatter tables, written between the IDRs and the
+first control record — so a consumer building a module image is *right* to skip
+it. `IEANUC01`'s four sit exactly there and the walk reaches MODEND cleanly.
+The **overlay** half was real: a flat last-wins image, `CESDSEG` never read.
 
-But the DLIB comparison is an independent path: a DLIB row is an extracted
-**object deck**, not a load module, so it never enters `load_lmod`.
-
-| | |
-|---|---:|
-| `tgt=identical` **and** `dlib=identical` | **60** |
-| `tgt=identical`, `dlib` disagrees | **5** |
-
-**Sixty of the sixty-five are corroborated by a path that does not touch either
-broken branch.** Five rest on the scatter reader alone and are **held, not
-counted**:
+**So the five come off hold**, and not on anybody's say-so:
 
 ```
 IDA019S4  IECVERPL  IECVESIO  IECVRRSV  IGC121
 ```
 
-So the headline is safe to **±5 of 1,608** — 0.3 % — which is worth saying
-precisely instead of "possibly wrong".
+They are `identical` under the comparator *before* the fix as well — the verdict
+never depended on it — and the new reader now reports `image_incomplete: false`,
+`scatter: true`, `records: 797`, `anomalies: ''` for each, so the completeness the
+verdict rests on is stated instead of assumed. **The headline no longer carries
+±5.**
 
-⚠️ **But stop quoting "18 free modules".** For `IEANUC01` alone the cross-tab
-shows 13 `tgt=error, dlib=identical` and 10 `tgt=error, dlib=differs`. If the
-scatter path can exit 1 on a partially built image, some of those 24 may be real
-differences and some of the 13 may not be free. **Not a number to bank until the
-reader PR lands.**
+**And "stop quoting 18 free modules" is answered rather than lifted.** The worry
+was that of `IEANUC01`'s 24 unreadable CSECTs, some of the 13 whose DLIB said
+identical might not be free and some of the 10 whose DLIB said differs might be
+real. Measured on the fixed reader: **13 → `identical`, 10 → `differs`, exactly
+what the DLIB predicted for each.** The DLIB was right about all 24.
+
+Tree-wide, `work/measurements/cmplmd-reader/`:
+
+| | before | after |
+|---|---:|---:|
+| **recovered under the chosen baseline** | 1,608 | **1,626** |
+| target member unreadable | 143 | **2** |
+| …of those, DLIB calls identical | 18 | 0 |
+| explained — the second verdict | 1,700 | 1,718 |
+
+**+18 / −0 as sets**, with no `identical → anything` transition in either column
+in either direction. The 18 are exactly the set this section told you not to
+quote, and all 18 are `dlib_c = identical` as well.
+
+⚠️ **The published figure stays 1,608 until the comparator is re-pinned.**
+cc370#375 is merged (`63f372f`, binary sha256 `faa151cc…e5f49b5`), but adoption
+here is a coordinated change — pin, `PROVENANCE.txt`, re-gate, regenerate the
+scoreboard, and re-cut `macroattr`, `lenattr`, `alignfill`, `reachable` and the
+three macro-reconstruction sweeps, all of which were built on a corpus that could
+not see 123 modules. **Measured is not counted.**
+
+**The two members still refused are not reader failures**: `IECVOID` and
+`ISTNSC00`, both `image_incomplete: false` and exit 2 on `no section named X` —
+the deck names a CSECT the member does not carry.
+
+**One claim in this section was wrong for the whole corpus, not just at the
+edges.** It read: *"the DLIB comparison is an independent path: a DLIB row is an
+extracted **object deck**, not a load module, so it never enters `load_lmod`."*
+**5,353 of 5,353 DLIB members begin `X'20'` — a CESD. Not one is an object
+deck**, and every DLIB row goes through the same reader. The corroboration still
+holds, for a reason that has to be stated instead of inferred from the format:
+**zero DLIB members carry a flagged CESD type byte and 21 target members do**
+(149 entries — `X'20'` 135, `X'80'` 12, `X'14'` 2). The same sentence was in
+`docs/dasm370-interface.md` and is corrected there too.
+
+⚠️ **One thing the fix does not prove, and it is not a blocker.** The per-segment
+slicing has no discriminating test. Running `HEWLF064`'s sections against their
+own single-CSECT DLIB members agrees on 22 of 22 — and cannot mean anything:
+`length_ref` comes from the CESD entry rather than the sliced text, and
+`diff_bytes` is 0 in all 22 *because* the lengths differ, so the byte comparison
+never ran. All 22 are `len-differs` against both libraries, so TK5's one overlay
+member contributes **0** to the figure either way. Unproven and unexposed; it
+becomes load-bearing the moment one of those 22 reaches equal length.
+
+**The trap this run caught, and it is a general one.** A CESD record's bytes 6–7
+hold the **data** length (240) while its entries run to the end of the **record**
+(248). Bounding the entry loop by the data length silently drops the last entry of
+every record — it gave 18 members / 137 entries where the answer is 21 / 149, and
+it was caught only because a peer's figure disagreed. **A census with no second
+opinion would have stood.**
 
 ### One CSECT in the target library has no name, and eighteen tools invent one
 
