@@ -455,6 +455,50 @@ Reconstructed and tried tree-wide, the same experiment as `GETMAIN`/`FREEMAIN`:
 | **lost** | **33**, including `AHLMCIH` and `AHLTFOR` |
 | chosen baseline | 1,608 → **1,579** |
 
+## What the reconstruction actually is
+
+Seven records, and it is not a patch but a coherent design change: **IBM's level
+reads the entry length out of the `IHAFRRS` header and uses signed arithmetic
+throughout where ours uses logical.**
+
+```
+104  CL -> C   &R2,FRRSEMP-FRRS(0,&R1)      delete path: is the stack empty
+109  SL -> S   &R2,FRRSELEN-FRRS(0,&R1)     delete path: decrement
+111  LA &R2,32(0,0)               -> L  &R2,FRRSCURR-FRRS(0,&R1)
+112  AL &R2,FRRSCURR-FRRS(0,&R1)  -> C  &R2,FRRSLAST-FRRS(0,&R1)
+113  CL &R2,FRRSLAST-FRRS(0,&R1)  -> BE PSALSFCC-PSA(0,0)
+114  BH PSALSFCC-PSA(0,0)         -> A  &R2,FRRSELEN-FRRS(0,&R1)
+117  AL -> A   &R2,FRRSELEN-FRRS(0,&R1)     replace path
+```
+
+`IHAFRRS` maps the header as `FRRSEMP 0`, `FRRSLAST 4`, `FRRSELEN 8`,
+`FRRSCURR 12` — which is where the `8` comes from, and why the entry is still 32
+bytes. **IBM's level emits no literal size at all.** The brief warned that
+changing one occurrence of `32` and not another was a likely trap; it could not
+bite, because `32` occurred exactly once in generated code and is gone, and the
+`(32)` in the header comment is prose.
+
+**Line 117 is not a guess**: `ISTAPC59` has a `SETFRR R` and its object shows
+`55 → 59` at `0x188` and `5E → 5A` at `0x190` — the replace path's `CL` and
+`.COMMON`'s `AL`, both confirmed independently of the add path.
+
+## Four controls, and one of them is a prediction
+
+- **The control reproduces the live measurement to the module**: 1,608 = 1,608,
+  empty both ways. So the harness perturbs nothing and the −33 is the macro.
+- **The edit reaches exactly what it should.** 239 of 5,538 decks changed; all 239
+  are `SETFRR A/D/R` callers and **every** `A/D/R` caller changed. The three
+  `P`/`F`-only callers (`IEAVEDS0`, `IEAVEEXP`, `IEAVESVC`) produce byte-identical
+  decks, because the purge and flush paths emit no arithmetic.
+- **Return codes and deck presence are identical in both sweeps** — `rc0 = 4,829`,
+  5,538 decks — so no `LOST` entry is a transient failure.
+- **The LOST list was predicted before the sweep ran.** Intersecting the 242
+  `SETFRR` callers with the live identical set gives exactly those 33 modules. All
+  33 lost; **none of the other 209 did.**
+
+A side result worth keeping: control-vs-live is 0/0, so the 136 derived, unproven
+`SYSPARM` values in `sysparm-trial.tsv` **move nothing on their own**.
+
 **And this trial carried a control the earlier one did not**: the *unmodified*
 `SETFRR` on the same prepended `-I` path with the same `SYSPARMS` reproduces the
 live measurement exactly — 1,608, nothing gained, nothing lost. So the harness
