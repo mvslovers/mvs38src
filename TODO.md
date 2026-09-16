@@ -468,6 +468,36 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
+### A macro CAN be reconstructed from the object — and the first trial proved it two-level
+
+Mike asked whether the six wrong-level macros could simply be brought to the level
+we need. **Yes as a method, and the first trial says no as a shortcut.**
+
+`GETMAIN`/`FREEMAIN` emit `ST …,0(0,1)`; IBM's object shows `ST …,0(1)`. One
+character per line, six lines each. Rebuilt all 5,538 modules with the
+reconstruction prepended to the macro path
+([`work/measurements/macro-reconstruct/`](work/measurements/macro-reconstruct/)):
+
+| | |
+|---|---|
+| gained | `HMASMIO`, `HMASMRDS`, `IEDQNT` |
+| **lost** | 18, including `IEDQNV` — `IEDQNT`'s neighbour in the same library |
+| chosen baseline | 1,608 → **1,593** |
+
+**The method works**: a line read back out of IBM's object took `IEDQNT` from two
+differing bytes to zero. **The macro is two-level**, like `SCHEDULE` and `TSCBD`,
+so a global reconstruction cannot help — 18 modules want one form and 3 want the
+other. **Nothing was applied.**
+
+That makes three known two-level macros and moves `GETMAIN`/`FREEMAIN` out of
+"reconstructable" and into "needs the per-module macro path", decision 5 — with a
+reconstructed macro as the content, which is exactly the question decision 5
+deferred.
+
+⚠️ **The `SCHEDULE` rule held for the third time**: +3/−10 there, +3/−18 here. The
+net says "wrong" without saying why; only the identical **sets** say which modules
+want which level, and that list is the input to a per-module table.
+
 ### The wrong-level macros are a class of their own, and they are 332 modules
 
 [`docs/missing-macros.md`](docs/missing-macros.md) tracked only macros that are
