@@ -1136,6 +1136,28 @@ searching again.
 
 ### Controls that must not be dropped
 
+- **The IFOX00 comparison has THREE moving inputs, and a null control against it
+  comes back wrong without saying so.** Measured 2026-09-16, after the `dasm370`
+  session could not reproduce the recorded `as370 == IFOX00` figure: `gate.sh`
+  defaults apply `asmdate.tsv` and `sysparm.tsv`, while the reference decks were
+  cut on 2026-09-07 against one pinned date and an empty `SYSPARM`. So every
+  override costs that module its IFOX identity — **−36 for the dates and −111 for
+  the `SYSPARM`s, exactly the modules those two tables name, and no module
+  outside them.** The tables are not wrong; they are matched to IBM's shipped
+  object, which is the *other* comparison. **The two halves of the gate want
+  different inputs and nothing said so.**
+
+  **And the residual −9 is a third input: our own macro repairs.**
+  `IGG019HP IGG019JN JO JP JQ JR JS JT JU` — the `IGGCP14` CCW-count fix of
+  2026-09-13 (`ed5cf4f`), six months' worth of one digit. Measured directly, same
+  binary, same flags, the repaired macro against the pre-repair one on the same
+  `-I` path: **all nine are `identical` to IFOX00 with the old macro and `bytes`
+  with the repaired one, 9 of 9.** The repair is right — it gained those nine
+  against IBM's object — and the reference corpus predates it.
+
+  So: **to compare against IFOX00, null BOTH tables and remember the macro
+  corpus has moved since 2026-09-07.** To compare against IBM's object, apply
+  them. A figure that does not say which it is, is not a figure.
 - **Pass all 80 columns.** Column 72 is the continuation; cutting at 71 produces
   `IFO035` everywhere and looks like a source defect.
 - **Both sides must see the same macros.** On `MVSTK5-REF` that means the
