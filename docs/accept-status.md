@@ -1,5 +1,12 @@
 # Was the maintenance ACCEPTed into the distribution libraries?
 
+> ## ⚠️ Stale on its conclusion, 2026-09-16
+>
+> *"The DLIB yardstick is sound, and better than assumed"* no longer decides
+> anything: the baseline is TK5's TARGET library since decision 1 of 2026-09-13.
+> **The zone comparison in this page stands** — only the verdict drawn from it
+> has been overtaken.
+
 2026-09-06. Open since the workplan was written, because the answer decides how
 much noise sits between our yardstick and the truth.
 

@@ -1,5 +1,16 @@
 # Rebuilding MVS 3.8j from Source — Restart Workplan
 
+> ## ⚠️ Stale on the baseline, 2026-09-16
+>
+> **§5 and rule 10 are reversed.** This page says *"the primary oracle is the DLIB
+> object deck, not the target load module"*. Since Dave Kreiss' reply of
+> 2026-09-12 and Mike's decision 1 of 2026-09-13, the oracle is **TK5's TARGET
+> library, with the DLIB only where a CSECT has no target counterpart.**
+> `docs/baseline-dlib-vs-target.md`, `../TODO.md` "Decided, do not re-open".
+>
+> **The host-side method is untouched and still governs** — extract, assemble,
+> compare, everything machine-decidable.
+
 As of 2026-09-04. This plan resumes Dave Kreiss' project, but changes the target
 system, the tooling and the way of working.
 

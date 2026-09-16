@@ -1,5 +1,11 @@
 # `SYS1.LPALIB`, sorted by mechanism
 
+> ## ⚠️ Stale, and it contradicts itself, 2026-09-16
+>
+> Item 1 — *"281 modules are counted as failures for a difference that cannot be a
+> defect"* — survives a retraction printed eight lines above it, and is refuted by
+> [`ds-holes.md`](ds-holes.md). Read the retraction, not the item.
+
 2026-09-12. `LPALIB` is the reddest row on the scoreboard — **290 of 2,343
 CSECTs, 12.4 %** — and it is the largest, so it decides the total more than
 anything else. This asks what is actually wrong there, rather than how much.

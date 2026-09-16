@@ -1,5 +1,11 @@
 # How far is Dave Kreiss' source from MVS/CE's object code?
 
+> ## ⚠️ Stale on the holes, 2026-09-16
+>
+> *"the holes are unavoidable, they are not defects"* is refuted by
+> [`ds-holes.md`](ds-holes.md), which measured 309 of 309 the other way. Every
+> count on this page that rests on that reading is too favourable.
+
 2026-09-06. The first measurement of that distance, and it needs no comparator.
 
 ## The idea

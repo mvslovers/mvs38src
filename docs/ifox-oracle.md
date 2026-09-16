@@ -1,5 +1,11 @@
 # The IFOX00 oracle
 
+> ## ⚠️ Stale on one sentence, 2026-09-16
+>
+> *"the one byte … is the `DS` hole at 0x00AA. Source correct, tool correct,
+> difference explained"* is the exact reading [`ds-holes.md`](ds-holes.md) was
+> written to refute. Everything else on this page holds.
+
 2026-09-06. Every claim about what `as370` *should* do is checked against the
 real Assembler XF running under MVS/CE, not against a reading of the manual.
 This is how.

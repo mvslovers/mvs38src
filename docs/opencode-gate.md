@@ -1,5 +1,13 @@
 # The gate on cc370's open-code branch
 
+> ## ⚠️ Stale on `--sysparm=`, 2026-09-16
+>
+> *"`as370` grew `--sysparm=`; the gate deliberately does not use it"* stopped
+> being true on 2026-09-14: `gate.sh` reads a per-module `SYSPARMS` table, +111
+> modules and none lost. And the question this page leaves open — *"what
+> `&SYSPARM` the real TCAM assemblies passed is now a source question"* — is the
+> one [`sysparm.md`](sysparm.md) answers.
+
 2026-09-07. `fix/as370-open-code-setc`, seven commits, measured against the whole
 of Dave Kreiss' tree and against the object code MVS/CE ships.
 

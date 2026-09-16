@@ -1,5 +1,14 @@
 # Mailentwurf an Dave Kreiss — 2026-09-13, **nicht gesendet**
 
+> ## ⚠️ Do not send as it stands, 2026-09-16
+>
+> **Held on purpose** — nothing goes to Dave until an earlier answer arrives
+> (`../TODO.md`). And two things in it are out of date: the figure **1,491** is
+> now **1,608**, and it asks the `ESTAE` question **alone** where the ask is now
+> **five macros and 332 modules** — `ESTAE`, `SCHEDULE`, `TSCBD`,
+> `GETMAIN`/`FREEMAIN`, `SETFRR`, `XCTL`/`IHBINNRB`
+> ([`missing-macros.md`](missing-macros.md)).
+
 > Sendefertig. Der Text unter dem Trennstrich ist die Vorlage — er steht so, wie er
 > abgeschickt werden kann; darüber steht nur, warum er so steht.
 

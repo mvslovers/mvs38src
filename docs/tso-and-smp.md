@@ -1,5 +1,18 @@
 # TSO first, SMP second — the two components that matter most
 
+> ## ⚠️ Two figures stale, 2026-09-16
+>
+> *"17 of 60"* was re-run on 2026-09-13 under the guard that scores against the
+> chosen baseline and refuses `SPLIT`: **16 identical, 7 `SPLIT`, 41 not.** And
+> *"`src/` is 56 modules"* is now **316**.
+>
+> **The SMP claim is not stale and was checked**: *"SMP's 82 same-length
+> differences are the single most tractable block found so far"* holds — of the 73
+> equal-length `HMA*` modules, 25 are all in open code, 46 mixed, 2 all in macro
+> expansions, and only six touch a two-level macro. What is unsettled is whether
+> *most* tractable still holds against the 361 open-code modules in the length
+> block, which did not exist when this was written.
+
 2026-09-12. Mike's priority, and it changes what "the work" means: **TSO is
 where he intends to build his own development on top**, so its recovery is worth
 more than its share of the module count. SMP is second, and it is the

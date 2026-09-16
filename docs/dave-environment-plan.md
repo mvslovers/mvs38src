@@ -1,5 +1,12 @@
 # Building Dave Kreiss' environment — the plan, and why it is not the current work
 
+> ## ⚠️ Stale on its status, 2026-09-16
+>
+> *"written down, not started — and as of 2026-09-09 it is the recommended next
+> work"*: it was built and run **eight times**
+> ([`dave-install-log.md`](dave-install-log.md)). And *"Goal A is now at 98.4 %"*
+> is 5,441 of 5,528; it is **5,471**.
+
 **Status: written down, not started — and as of 2026-09-09 it is the recommended
 next work.** This document was written when Goal A stood at 87.0 % and was still
 yielding a defect per merge, so that the second goal would not be re-derived from

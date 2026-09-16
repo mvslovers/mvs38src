@@ -1,6 +1,6 @@
 # The documents, and which of them is current
 
-Forty-odd files accumulated in a week, most of them records of a single
+Fifty-nine files accumulated in two weeks, most of them records of a single
 measurement on a single day. That is deliberate — this project's rule is that
 corrections stay visible and a number that moved four times says so — but it
 leaves no way in. This page is the way in.
@@ -42,10 +42,10 @@ lines.** None of them is maintained afterwards; a later document corrects an
 earlier one, and the earlier one keeps its number so the correction stays
 visible. So the date is not decoration — it is the statement's scope.
 
-Three were overtaken within hours of being written and now carry a banner
-saying so: [`fahrplan.md`](fahrplan.md), [`open-decisions.md`](open-decisions.md)
-and [`build-vs-original-tk5.md`](build-vs-original-tk5.md). If a document has no
-banner, that means nobody has *found* it to be stale — not that it is current.
+**Twelve carry a stale banner**, added 2026-09-16 after every one of the 59 was
+audited against the current state. If a document has no banner it has now been
+*checked* and found to hold — which is new; before that audit, no banner only
+meant nobody had looked.
 
 ## The 2026-09-14 to 09-16 documents, and they carry the current picture
 
@@ -70,7 +70,7 @@ break should treat them as the state of the project.
 | [`kreiss-project.md`](kreiss-project.md) | **what we are building on.** Dave Kreiss' project, his `DSK*` PTF scheme, and why his PTFs are not IBM's |
 | [`dave-environment-plan.md`](dave-environment-plan.md) | how his environment gets built, and why that is not the current work |
 | [`mail-kreiss-2026-09-12.md`](mail-kreiss-2026-09-12.md) | draft: status, the scoreboard, and the `./ DELETE` question |
-| [`mail-kreiss-2026-09-13.md`](mail-kreiss-2026-09-13.md) | **draft, not sent.** `MAINT05Z` worked and the `./ DELETE` failures went 675,382 → 0; the source library came out damaged; and the one macro level nobody has, worth 175 modules |
+| [`mail-kreiss-2026-09-13.md`](mail-kreiss-2026-09-13.md) | **draft, held — do not send as it stands.** Its figure is 1,491 and the current one is 1,608, and it asks about `ESTAE` alone where the ask is now five macros and 332 modules. Nothing goes to Dave until an earlier answer arrives (TODO.md) |
 
 ## The two instruments
 
@@ -110,7 +110,7 @@ The project measures two different things and they must never be quoted as one.
 | [`macro-tk5-vs-ce.md`](macro-tk5-vs-ce.md) | **93 % of the macro surface is identical, and the residue moves 68 modules.** The reason stage 1 must carry MVS/CE's macros across |
 | [`macro-path.md`](macro-path.md) | **`gate.sh` decides the `-I` path and eight tools had drifted from it.** 33 EREP decks differ between the two paths; the short one starves them |
 | [`macro-collisions.md`](macro-collisions.md) | the ten places where `-I` order decides what gets assembled |
-| [`missing-macros.md`](missing-macros.md) | the 40 operations neither assembler can resolve, and where each has been hunted |
+| [`missing-macros.md`](missing-macros.md) | **two kinds of missing.** The 40 operations neither assembler can resolve, and — since the 09-16 rewrite — the nine macros that are *present at the wrong level*, emit different bytes than IBM shipped and flag nothing. The second kind touches **332 modules** |
 | [`private-macros.md`](private-macros.md) | the private macros, and what they are worth |
 | [`igc018-macro-path.md`](igc018-macro-path.md) | one identity lost to macro path order, not to the assembler |
 

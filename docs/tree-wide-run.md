@@ -1,5 +1,11 @@
 # The tree-wide run
 
+> ## ⚠️ Stale on the holes, 2026-09-16
+>
+> *"281 differ only in `DS` holes, which are by construction not source defects"*,
+> and the **853 of 3,888 — 21.9 %** that rests on it, are refuted by
+> [`ds-holes.md`](ds-holes.md).
+
 > **Superseded by the second run, 2026-09-06 evening.** After five `as370`
 > defects were closed — `START`, `ISEQ`, `DC/DS` type `S`, `&SYSECT`, the
 > cross-section duplication factor — and the per-section location counter

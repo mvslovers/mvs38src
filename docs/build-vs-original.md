@@ -1,5 +1,11 @@
 # What the build produced, against what IBM shipped — 2026-09-09
 
+> ## ⚠️ Superseded, 2026-09-16
+>
+> MVS/CE is no longer the baseline — decision 1 of 2026-09-13 makes it TK5's
+> TARGET library. [`build-vs-original-tk5.md`](build-vs-original-tk5.md) prints
+> both columns and replaces this page.
+
 The first run of Dave Kreiss' own verification jobs. `ZLMDRPTD` compares the
 DLIBs the build produced against the original DLIBs, `ZLMDRPTT` the targets
 against the original targets; both had never run here, because each begins with

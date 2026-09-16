@@ -1,5 +1,23 @@
 # The remaining — where they are and what each block needs
 
+> ## ⚠️ Superseded as the map, 2026-09-16
+>
+> **Do not read this for current figures.** Its head reads *"as370 == IFOX00,
+> deck | 5,441 of 5,528 (98.4 %)"* — now 5,471 — its last entry is 2026-09-13
+> late, and nothing in it knows the five two-level macros or either attribution
+> map. Its map role has passed to
+> [`macro-attribution.md`](macro-attribution.md) and `tools/lenattr.py`.
+>
+> The dated entries below keep their own numbers and stay readable as history.
+>
+> **One unresolved transcription slip, recorded rather than quietly fixed.** Line
+> 45 here reads *"From 3,465 (62.7 %) at `ee1090b`"*; `ifox-tree.md:146` and
+> `../TODO.md` read **3,466** for the same measurement. 62.7 % of 5,528 is
+> 3,466.06, so 3,466 is the arithmetically consistent one — but that is a
+> reconstruction, not a re-derivation. **Both figures are withdrawn anyway**, and
+> settling it would mean re-running the gate at `ee1090b`. Left standing so the
+> disagreement is visible.
+
 > ⚠️ **Every figure below carries the commit it was derived against, and the
 > commit alone is not enough.** cc370 found this file 29 merges stale while its
 > mtime read as today: *fresh by mtime, stale by content*. Second time the same
