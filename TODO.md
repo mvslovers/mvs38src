@@ -39,6 +39,87 @@ is 43 % TSO ([`docs/maintenance-level.md`](docs/maintenance-level.md)).
 The scoreboard at the head of [`README.md`](README.md) is **generated** —
 `tools/scoreboard.py`, `--check` fails when it is stale. Never hand-edit it.
 
+### 🔑 1,878 of 2,292 length-differing modules now have a located divergence point
+
+**The length block is 41.7 % of the corpus and the largest single thing between
+this project and its goal. This morning 909 of it had a number saying where the
+divergence starts. Tonight 1,878 do.**
+[`work/measurements/divergence/first-divergence.tsv`](work/measurements/divergence/first-divergence.tsv).
+
+`dasm370 --derive-hints` assembles **our** outdated source, writes out what the
+assembly found — labels, and base registers with the lifetimes `--usings` gave
+them — and applies it to **IBM's** object. Where our source has already diverged,
+a derived expectation fails, and `--anchors=report` prints the offset. That
+offset is where the two part company.
+
+| | |
+|---|---:|
+| anchor offsets | 1,664 |
+| `seclocate.py` offsets | 909 |
+| **union** | **1,878 of 2,292 — 82 %** |
+| only the anchor reaches | 969 |
+| only `seclocate` reaches | 214 |
+
+**They overlap on 695 and agree exactly on 7 % of those, and that is not a
+disagreement.** They measure different quantities: `seclocate` locates the first
+**length-changing** run by text-anchoring in the bound member; an anchor locates
+the first **byte** where a derived expectation fails, which includes
+substitutions and exists only where a label does. Hence the median +15 — anchors
+fire a little after the true first divergence, because they sit at labels. The
+gain is the coverage, not the precision.
+
+**Why this matters more than the number**: `IEBWSAM` cost a person a hand-decode
+of fourteen bytes to answer *"does this continue the preceding code"* for **one**
+module. This is the same question answered mechanically for 1,878.
+
+⚠️ **It is a starting offset, not an explanation.** A module with a divergence
+point at `0x54` is a module somebody still has to read. And the population is not
+closed: 510 refuse because our own source does not assemble (`rc0 = 4,699 of
+5,538` — correct refusals, not defects), 100 report no failed anchor at all, and
+18 refuse on an anchor landing inside a relocatable field.
+
+**The measurement took two attempts and the first one was broken in a way no
+fixture could show.** `--derive-hints` shipped refusing where it should have
+reported: 404 `base outside section` — which is the length-differing population's
+*defining property*, our section and IBM's are different lengths — and 158 label
+collisions, which are themselves divergence reports. **Every one of those 634
+refusals was correct in its own case and they were a broken measurement in
+aggregate.** Nothing but running the mode over the whole population could see it;
+the fixtures were green throughout. cc370#400 made `--anchors=report` mean report
+for every detector, and 616 of the 634 became measurements.
+
+🔑 **That is the transferable lesson and it is worth more than the 1,878: a new
+mode must meet the population, not only its fixture.**
+
+### ⚠️ `dasm370 --infer` does not work on the population it exists for
+
+**Measured, and #401 is not merged because of it.** `--infer` derives base-register
+candidates from the code itself, *"for a section with no source"* — and on this
+corpus such a section is **always inside a bound member**.
+
+```
+30 control CSECTs   from our object deck   374 candidates
+                    from the DLIB member     0
+                    from the target member   0
+772 no-source CSECTs, members only: 648 ran, 648 produced nothing
+```
+
+`IEAVTCR1` is `identical`, so its deck and its member hold the **same bytes** —
+the difference is the input format alone. **Found only because a case with a
+known answer was tried**: 648 of 648 empty reads as a fact about the corpus until
+a module whose answer you know comes back empty too.
+
+Two further measurements on the deck path, where it does work:
+
+- **`rld` evidence fires twice in 374 candidates.** `pattern` 344 (92 %),
+  `prologue` 28 (7 %), `rld` 2 (1 %). So in practice it is one evidence kind plus
+  two rarities.
+- **`prologue` is wrong in 3 of 28** against the real `USING` events from
+  `--usings`: `IGG08113` (R15) and `ICKTR02` (R1) are registers the source never
+  bases anything on — a `BALR Rn,0` that is not an addressability idiom — and
+  `IECVERPL` has the right register with the wrong value. Sent as three cases
+  rather than a rate; the comparison is a first pass.
+
 ### 🔑 `dasm370` rebuilds 66 modules that have no source — 2026-09-16, evening
 
 **The first source this project has produced for modules where none existed.**
