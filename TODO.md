@@ -468,6 +468,33 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
+### 🔑 What four two-level macros mean, and it changes decision 5's premise
+
+`SCHEDULE`, `TSCBD`, `GETMAIN`/`FREEMAIN`, `SETFRR`, `XCTL` — five now, measured
+two-level, and **every time the split runs per module.** Not per component
+(`AHLREADR`, `AHLTFOR`, `AHLMCIH` are all GTF and disagree), not per library
+(`AHLREADR` and `AHLTFOR` share one), not per date.
+
+**Only one model fits: the shipped objects were assembled over years against a
+macro library that moved between assemblies.** A module carries whatever level
+`SYS1.AMACLIB` happened to be at on the day IBM assembled it, and the library
+IBM *shipped* is one snapshot of a decade of PTFs.
+
+Three consequences, and the third is the important one:
+
+1. **No archive can solve this, however pristine** — not Dave's, not an original
+   IBM 3.8 distribution tape, not anything. Any macro library is one snapshot and
+   the objects need several.
+2. It explains every measurement at once: why our macro is right for 98 `SETFRR`
+   callers and wrong for 22, why `IGCFK10D` and `IGCA110D` have identical source
+   and different objects, why `SYSPARM` had to be per module.
+3. ⚠️ **Decision 5 waits for "a real macro rather than a constructed one", and
+   that premise no longer holds.** A real library would be one level and we need
+   two or more per macro. **The per-module macro path is not a workaround for
+   missing material — it is the only model that matches how the object was
+   actually built**, and a reconstruction read out of the objects is the only
+   thing that can fill it.
+
 ### 🚪 `XCTL` gains 14 and loses 1 — the one trial that is worth applying, and it needs Mike
 
 Three reconstructions tried. Two are hopeless as global changes. **The third is
