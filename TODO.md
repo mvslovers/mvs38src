@@ -288,11 +288,20 @@ rank against a comparator and a deck set that are both superseded.
 | | |
 |---|---:|
 | **under the chosen baseline — target, DLIB where no target exists** | **1,626 of 5,353 — 30.4 %** |
-| **explained — the second verdict** | **1,724 — 32.2 %** |
+| **explained — the second verdict** | **1,719 — 32.1 %** |
 | the same decks against the DLIB alone | 1,633 |
 | against the target alone | 1,476 |
 | against both | 1,451 |
 | target member not paired — was 143 | **2** |
+
+⚠️ **1,719 and not the 1,724 this table said until it was re-read.** The figure
+dropped by five when `alignfill.py`'s guard was added the same evening — it had
+been counting five modules as explained that nothing explained. A number that
+moves DOWN on a correction is the healthy direction; a number that stays up in
+the handover while the tool says otherwise is the failure this file spent the day
+documenting. `scoreboard.py --check` cannot catch it, because it compares README
+against the tool and never the prose above it. **Re-read the handover's own table
+against `explained.py` before quoting it.**
 
 **The +18 came from the instrument, not from source work.** cc370#375 fixed
 `cmplmd370`'s load-module reader; the comparator is re-pinned and everything
