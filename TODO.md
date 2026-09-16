@@ -1039,7 +1039,7 @@ searching again.
    nothing). Quote 71, with its definition, or re-derive.
 
    34 of the 71 were carried off by the `SYSPARM` sweep, which is what leaves 37.
-2. **The 44 alignment-fill modules** — see above. Not a source defect, cause
+2. **The 49 alignment-fill modules** (44 before the 2026-09-16 re-cut) — see above. Not a source defect, cause
    unestablished, and the single biggest lever on the board. Start by asking
    `cc370` what a byte in an alignment gap should be, with `IGG019Q1` as the case.
 3. **The 326 `IEDHJN` callers the `SYSPARM` sweep did not close** —
