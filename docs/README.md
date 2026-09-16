@@ -82,7 +82,7 @@ The project measures two different things and they must never be quoted as one.
 | [`ifox-tree.md`](ifox-tree.md) | the tree-wide IFOX00 run — how the 5,528 reference decks were cut |
 | [`regression-gate.md`](regression-gate.md) | **re-testing an `as370` change.** The gate, the promote sequence, and its traps. Ten minutes on the host, no MVS |
 | [`complmd-spec.md`](complmd-spec.md) | `COMPLMD` read as the specification for `cmplmd370` |
-| [`what-is-left.md`](what-is-left.md) | the map of what still differs, by block and by mechanism |
+| [`what-is-left.md`](what-is-left.md) | **superseded as the map, 09-16.** Its figures stop at 09-13 and it knows neither the five two-level macros nor `&SYSPARM`. Read [`macro-attribution.md`](macro-attribution.md) instead; keep this for its dated history |
 | [`overlay.md`](overlay.md) | **`src/` means finished and had 3 modules that were not; nothing measured it until now.** Our repairs are +33, and one was made against the superseded baseline |
 | [`tso-and-smp.md`](tso-and-smp.md) | **the two components Mike prioritises**, profiled. TSO 44 of 228, SMP 19 of 109, zero tool cases in either, and SMP's 82 same-length differences are the most tractable block found so far |
 | [`ds-holes.md`](ds-holes.md) | **a class of 495 modules that was labelled "cannot be our fault", refuted.** The two object baselines agree on the hole bytes 309 times out of 309 |

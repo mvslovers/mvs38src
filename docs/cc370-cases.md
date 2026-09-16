@@ -18,7 +18,9 @@
 > | D — IFOX00 flags, `as370` silent | **2** | 96 |
 > | no deck on one side / does not terminate | **0** | 8 / 2 |
 >
-> The map that replaces this page is [`what-is-left.md`](what-is-left.md).
+> The map that replaces this page was [`what-is-left.md`](what-is-left.md), and
+> **that one has since been superseded too** (2026-09-16). The current map is
+> [`macro-attribution.md`](macro-attribution.md) plus `tools/lenattr.py`.
 > `for-cc370.tsv` is **not** re-derived here: it is output of the promote
 > sequence, and the promoted state was not `main` when this banner was written.
 
