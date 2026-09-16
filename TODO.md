@@ -39,6 +39,15 @@ is 43 % TSO ([`docs/maintenance-level.md`](docs/maintenance-level.md)).
 The scoreboard at the head of [`README.md`](README.md) is **generated** —
 `tools/scoreboard.py`, `--check` fails when it is stale. Never hand-edit it.
 
+**And since 2026-09-16 `--check` also reads the two derivable figures out of the
+*"Where it stands"* table below** — `recovered` and `explained` — and fails naming
+both values when they disagree with the tools. It was added because that table
+carried `explained = 1,724` for an evening after the figure had dropped to 1,719,
+in the section a fresh session reads first, with nothing watching it. It checks
+only what it can derive; every other number in this file is prose that no tool
+reads, and a `--check` failure naming `TODO.md` means that table and nothing
+else.
+
 ### 🔑 1,878 of 2,292 length-differing modules now have a located divergence point
 
 **The length block is 41.7 % of the corpus and the largest single thing between
