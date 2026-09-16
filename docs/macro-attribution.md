@@ -246,3 +246,71 @@ The six are `AMDUSRF9`, `IEECB801`, `IEFAB820`, `IEFJCNTL`, `ISTCFCR2`,
 **Not repaired**, and the reason is a marking question rather than a measurement
 one — see TODO.md. That 358 of 430 already match is the control that says the
 class is real and the archive is mostly at IBM's level here.
+
+---
+
+# The length-differing block, mapped — 2026-09-15
+
+`macroattr.py` cannot see the 2,231 CSECTs that differ in **length**, 41.7 % of
+the whole, because `cmplmd370` reports no clusters while the sizes differ.
+`tools/lenattr.py` supplies what is missing: `seclocate.py` anchors our section in
+the bound member and the alignment locates the insert or delete, and that offset
+goes into the same listing attribution.
+
+**Reach is the limit and it is stated rather than hidden.** `lenlist.tsv` covers
+the modules within 64 bytes of IBM's length — **1,221 of the 2,231** — and
+`seclocate` anchors most but not all of those.
+
+| | modules |
+|---|---:|
+| mixed | 474 |
+| **every length-changing run in open code** | **361** |
+| not anchored | 281 |
+| every run inside a macro expansion | 77 |
+| no usable reference / no listing | 28 |
+
+Owners, **by distinct modules** — the weighting that exposed `WTO` as a false
+family, and it does the same job here: `LINE` owns 325 clusters and does not reach
+the top eighteen, because they sit in a handful of `IFCE*` modules:
+
+| owner | modules | | owner | modules |
+|---|---:|---|---|---:|
+| `<open code>` | 835 | | `GETMAIN` | 33 |
+| `XCTL` | **107** | | `DEQ` | 32 |
+| `IEDHJN` | **90** | | `SDUMP` | 30 |
+| `MODID` | 46 | | `ESTAE` | 26 |
+| `GSPACE` | 39 | | `MODESET` | 23 |
+| `XCTLTABL` | 35 | | `LINK` | 22 |
+| `FREEMAIN` | 34 | | `SAVE` | 21 |
+
+**Two numbers are bigger than the equal-length map said.** `XCTL` is 107 here
+against 31 there — the `IHBINNRB` family is more than four times what hand
+analysis found. And **`IEDHJN` is 90**: those are `&SYSPARM` modules the sweep
+could not prove a value for, still short their eyecatcher bytes, and they are the
+population `sysparm-rest.tsv` describes from the other side.
+
+`GSPACE` and `DSCAN` are real macros not seen before. **`LSTART` is not a macro in
+the path at all** — an attribution artefact, and a reminder that a name in this
+column is a hypothesis until the macro is found.
+
+## The correction the control forced
+
+An `insert` has no span of ours. The first version attributed it to `i1`, the
+statement the missing bytes would **precede**, and on the control that turned
+`IGCFK10D`'s missing `IEDHJN` eyecatcher into an open-code `LR` and the module
+into a false `mixed`. The question being asked is *which expansion came up short*,
+so an insert is attributed to `i1 - 1`, the statement it follows. With that,
+`IGCFK10D` reads `IEDHJN` for the eyecatcher and `XCTL` for the other two, and its
+verdict is `all in macro expansions` — which is the right answer for a module
+whose both causes are macros.
+
+## What the two maps say together
+
+| | modules |
+|---|---:|
+| equal length, every differing byte in open code | 605 |
+| length differs, every length-changing run in open code | 361 |
+| **workable without a macro in the way** | **966** |
+
+Against 281 the anchor cannot reach and 1,010 of the length block outside
+`lenlist`'s 64-byte window, which remain unmapped.

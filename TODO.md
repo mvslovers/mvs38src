@@ -380,6 +380,35 @@ inside a `STAX` expansion, TK5's and MVS/CE's `STAX` are byte-identical, so IBM
 assembled against a `STAX` neither system ships. Same shape as the `ESTAE` case,
 same resolution — Dave's macro libraries.
 
+### The length-differing block is mapped too — 2026-09-15
+
+`tools/lenattr.py` does for the 2,231 length-differing CSECTs what `macroattr.py`
+does for the rest: `seclocate.py` locates the insert or delete, the listing says
+who owns it. **Reach is 1,221 of the 2,231** — `lenlist.tsv`'s 64-byte window —
+and of those:
+
+| | modules |
+|---|---:|
+| mixed | 474 |
+| **every length-changing run in open code** | **361** |
+| not anchored | 281 |
+| every run inside a macro expansion | 77 |
+
+Owners by **distinct modules**: `<open code>` 835, `XCTL` **107**, `IEDHJN` **90**,
+`MODID` 46, `GSPACE` 39, `XCTLTABL` 35, `FREEMAIN` 34, `GETMAIN` 33, `DEQ` 32,
+`SDUMP` 30, `ESTAE` 26.
+
+**`XCTL` is 107 here against 31 in the equal-length map** — the `IHBINNRB` family
+is over four times what hand analysis found. **`IEDHJN` is 90**: `&SYSPARM`
+modules the sweep could not prove a value for, seen from the other side of
+`sysparm-rest.tsv`. `GSPACE` and `DSCAN` are macros not met before; **`LSTART` is
+not a macro in the path at all** and is an artefact — a name in that column is a
+hypothesis until the macro is found.
+
+**Both maps together: 966 modules are workable with no macro in the way** — 605 at
+equal length, 361 in the length block. Unmapped: 281 the anchor cannot reach and
+1,010 outside the 64-byte window.
+
 ### The open-code population, and there is no family in it
 
 `tools/opencode_families.py` over the 605: **4,972 clusters, biggest
