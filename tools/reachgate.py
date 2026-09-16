@@ -54,11 +54,21 @@ def classify(binary, csect, ref):
     ent = []
     for line in p.stdout.splitlines():
         body = line[:72]
+        # A comment card carries `*` in COLUMN 1, where it lands inside LINE's
+        # name-field group -- so the second field is an ordinary word and the
+        # card was classified as an instruction at whatever six-hex number it
+        # mentioned. `* reachability: 3 roots, 000412 bytes reached` invented a
+        # phantom instruction byte at 0x412 out of a statistic. Found by the
+        # cc370 session, and triggered by the statistics line THEY asked to add:
+        # the addition would have corrupted this gate's own baseline on its first
+        # run. Column 1 decides, before anything else looks at the line.
+        if body[:1] == "*":
+            continue
         m = LINE.match(body)
         if not m:
             continue
         op = m.group(2).upper()
-        if op in ("CSECT", "ENTRY", "EXTRN", "END", "*"):
+        if op in ("CSECT", "ENTRY", "EXTRN", "END"):
             continue
         offs = OFF.findall(body)
         if not offs:
