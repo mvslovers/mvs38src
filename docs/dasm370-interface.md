@@ -48,6 +48,53 @@ We place the marker from their JSON. **`dasm370` does not place it.**
 Output format `--format=card|free`, default card, so a stage 1 result drops
 straight into `src/`.
 
+## Agreed sequence for the hints work — 2026-09-16, evening
+
+Written here rather than left in the message log, for the reason this file exists
+at all: a contract with another session has no owner unless it has a file.
+
+**#382 splits in two, with a shared-input change between them:**
+
+1. **PR A — `--hints FILE`.** Nine keys, `REPLACE`/`VERIFY`, and `VERIFY` reads
+   the **original** bytes, which is what makes `REPLACE` safe. Needs nothing of
+   ours.
+2. **The as370 `USING`/`DROP`/`PUSH`/`POP` event export** — its own branch off
+   `main`, its own null control. **Mike agreed to pull this forward**, ahead of
+   PR B.
+3. **PR B — `--derive-hints old.s` / `--infer`.**
+
+**Why the export is worth its own PR, and the reason is measured rather than
+argued.** `as370`'s `usings[]` is live state, not an event log: at the end of an
+assembly it holds whatever survived the last `DROP`/`POP`. So `--sym` cannot
+supply a `USING` with a **lifetime**, and a `USING` without one is precisely the
+range inference the third rule above forbids — a base register attributed to the
+wrong span produces plausible symbolic operands where it never applied, and the
+round trip cannot object because the bytes are identical either way.
+
+What it buys **us**: `IEBWSAM` was settled by one hand-decode of fourteen bytes.
+Our 2,231 length-differing and 605 open-code CSECTs all *have* source, at the
+wrong level. Disassembling IBM's object in the terms of our own source — our
+labels, sections, DSECTs and `USING`s — is what stops *"which statement is
+missing here"* being a day of hand work per module. It is the largest open
+population in the project.
+
+**`base` is refused, and that is settled rather than deferred.** #112 and #382
+both list it and neither defines it; grepped here, it appears **nowhere** as a
+hint key — the one hit is `workplan.md:372`, a divergence-diagnosis category with
+no connection to a hints file. So it is undefined on both sides, and `dasm370`
+refuses it with rc 16 naming the line rather than ignoring it silently. If a need
+appears under that name it gets specified then, with a measurement behind it.
+
+**What we run on the export**, so it is not re-negotiated when it lands: both
+binaries from `git archive` with sha256 named, the tree assembled with each under
+identical inputs, the **deck-hash table compared module by module** (an
+output-only change must give `0 of 5,538` decks and `0` rc changed), and the gate
+as **sets** in both directions. Plus a second control this file should not leave
+implicit: for the 30 decoder-control modules we hold real source with real
+`USING`/`DROP`/`PUSH`/`POP` statements, so the event log can be checked against
+the **source text** — a witness independent of the assembler that produced it,
+and the only one that can catch a log which is internally consistent and wrong.
+
 ## The two corpora, and which question each answers — 2026-09-16
 
 Both are ours and both are committed. **They are not interchangeable, and the
