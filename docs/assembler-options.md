@@ -277,10 +277,21 @@ libraries themselves:
 //    DD  DSN=SYS1.AMACLIB,DISP=(SHR,PASS)
 ```
 
-**and it passes no PARM at all.** `SYSPARM` appears **zero times** on either
-volume, measured on the raw flat byte stream of all four tape files so nothing can
-hide at a record boundary. `++JCLIN`: zero. No generated stage-2 JCL anywhere; no
-SMP `ASM` entry recoverable from `SYS1.CDS`.
+**and it passes no PARM at all.** The four `IFOX00` procs take a different
+`SYSLIB` — `SYS1.MACLIB` concatenated to itself, no `AMODGEN` — so `ASMS` is the
+only one of the six that assembles against the distribution libraries.
+
+`SYSPARM` appears **zero times** on either volume, measured on the raw flat byte
+stream of all four tape files so nothing can hide at a record or block boundary.
+`++JCLIN`: zero. No generated stage-2 JCL anywhere; no SMP `ASM` entry
+recoverable from `SYS1.CDS`.
+
+⚠️ **And the zero has a control, which is the only reason it is worth writing
+down.** *A scan with no hits is a claim about the instrument until a control says
+otherwise.* The same search over the same bytes returns **12** hits for `IFOX00`,
+**3** for `PARM=OBJ`, **11** for `ASMBLR` and **970** for `SETC` — the instrument
+finds short EBCDIC strings in exactly this material. `SYSPARM` is absent, not
+missed.
 
 ### The conclusion, and it is the useful one
 
