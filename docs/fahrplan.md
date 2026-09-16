@@ -1,5 +1,22 @@
 # Fahrplan — the baseline is decided, and what follows from it
 
+> ## ⚠️ The goal was reformulated on 2026-09-16, and this page predates it
+>
+> **The five stages below still hold as a sequence.** What changed is the target
+> they run at: the project no longer aims at byte-identity alone but at **every
+> module explained, as many as possible byte-identical, and a system that builds
+> and runs from those sources.** There are two measured verdicts now —
+> [`../README.md`](../README.md), [`../CLAUDE.md`](../CLAUDE.md).
+>
+> **And the reason is a finding this page could not anticipate.** Five macros are
+> measured to exist at **two levels**, with the split running **per module**:
+> `SCHEDULE`, `TSCBD`, `GETMAIN`/`FREEMAIN`, `SETFRR`, `XCTL`/`IHBINNRB`, touching
+> 332 modules. IBM assembled over years against a macro library that moved between
+> assemblies, so **no single macro library reproduces them all and no archive can
+> supply one** ([`macro-attribution.md`](macro-attribution.md)).
+>
+> Stage 5 below is therefore no longer the last stage. **See §7.**
+
 > **Overtaken in three places on 2026-09-11, corrected inline below rather than
 > rewritten.** Stage 1's capture system, §4's account of run 5, and stage 3's
 > status all moved after this was written. Each correction is marked
@@ -497,6 +514,43 @@ the 5,528 decks stand.
 `AOSU0` (94), `AOSD0` (77), `AOSA0` (75), `AOS20` (42). No baseline decision
 moves them; they are the maintenance that never reached any source, and they are
 the actual project.
+
+## 7. Stages 6 to 8 — added 2026-09-16 with the reformulated goal
+
+Stages 1–5 are about getting a *comparison* that means something. These three are
+about what to do with the 68 % it leaves, and they exist because the macro finding
+closed the road stages 1–5 were pointing down.
+
+### Stage 6 — the per-module macro path *(decision 5, and its premise has changed)*
+
+Decision 5 defers this until there is "a real macro rather than a constructed
+one". **A real macro library would still be one level**, and the objects need
+several — so the per-module path is not a workaround for missing material, it is
+the only model that matches how the object was built.
+
+**Measured worth today: +21.** `tools/reachable.py` takes the identical sets of
+the three tree-wide reconstruction trials and unions them: our macros give 1,608,
+`XCTL` 1,621, `SETFRR` 1,579, `GETMAIN`/`FREEMAIN` 1,593, **union 1,629** — and
+*the union loses nothing* where two of the three lose 29 and 15 on their own. The
+`wants-trial` lists from those trials are the table the mechanism needs.
+
+### Stage 7 — disassembly, for the 772 CSECTs that have no source at all
+
+`dasm370`, cc370 #112, being planned now in a sibling session. 800 CSECTs have an
+object and no source — 598 of them distinct, 154 of them `IKJ` — and **no amount
+of editing recovers a module whose source does not exist.**
+`work/measurements/nosource-corpus.tsv` is stage 1's acceptance corpus.
+
+Two rules agreed with that session and worth carrying here:
+**a macro call is emitted only where `dasm370 → as370 → cmplmd370` exits 0 for
+that module**, never as a mode; and **an inferred `USING` is never applied
+silently**, because a wrong one produces plausible false symbolics that the round
+trip cannot see — the bytes are identical either way.
+
+### Stage 8 — a system that builds and runs
+
+The verdict the reformulated goal actually names, and the only one that is not a
+proxy. Nothing here measures it yet.
 
 ## 6. Rules this Fahrplan carries forward
 
