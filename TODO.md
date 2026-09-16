@@ -498,6 +498,35 @@ deferred.
 net says "wrong" without saying why; only the identical **sets** say which modules
 want which level, and that list is the input to a per-module table.
 
+### There is no hidden assembler option, and the shipped object was not built by SYSGEN
+
+Mike's question after `&SYSPARM` proved worth 111 modules: are there **other**
+options or global SET symbols IBM supplied that we do not? Closed, three ways —
+[`docs/assembler-options.md`](docs/assembler-options.md).
+
+**A macro can see exactly three things from outside**: `&SYSPARM`, `&SYSDATE`,
+`&SYSTIME`. All three are handled; only `ASMTIME` is unsolved, 38 decks.
+
+**The nine wrong-level macros read no external global.** `XCTL`'s `&IHBSWA`/
+`&IHBSWB` it sets itself, `IHBINNRB`'s `&IHBNO` is an error number, and the other
+seven declare none at all. `SGGBLPAK`, the SYSGEN global package, **we do have**
+and it is already on the gate's path — and it is irrelevant twice: **0 of 5,538**
+sources `COPY` it, and none of the nine reads a global it declares.
+
+**And the starter tapes settle the rest.** `SYSPARM` appears **zero times** on
+either volume. The SYSGEN assembly proc `ASMS` — the one whose SYSLIB is
+`SYS1.AMODGEN` + `SYS1.AMACLIB` — passes **no PARM**; the others pass `OBJ` or
+nothing.
+
+> 🔑 **We proved IBM passed a per-module `SYSPARM`. The customer SYSGEN passes
+> none. So the shipped object modules were never built by the customer SYSGEN —
+> they were assembled in IBM's own build environment, with its own macro libraries
+> and its own PARMs, and no customer tape carries either.**
+
+That is why every archive sits at or before the base level. **It closes the
+"search another tape" avenue**: what remains is reconstruction from the object,
+and asking people who might hold something IBM-internal.
+
 ### The VS2 3.7 starter tapes do not have them, and they point the wrong way
 
 Jay Moseley's `vs2StarterTapes.tar.gz`, searched 2026-09-16.

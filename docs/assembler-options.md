@@ -224,3 +224,74 @@ harder: it is not in the object in a form this method can read.
 655 did not come back identical, because a wrong date is rarely a module's *only*
 difference. Every one of those 655 is now one difference closer, and they are in
 `worklist.py`'s ranking with the date no longer on the list.
+
+---
+
+# Is there an option we do not know about? — 2026-09-16
+
+The question Mike asked after `&SYSPARM` turned out to be worth 111 modules: are
+there **other** assembler options, or global SET symbols, that IBM supplied and we
+do not? Three measurements, and together they close the question.
+
+## What a macro can even see from outside
+
+Only three things: `&SYSPARM`, `&SYSDATE`, `&SYSTIME`. All three are handled —
+`SYSPARM` per module since 2026-09-14, `ASMDATE` per module since 2026-09-13,
+`ASMTIME` pinned and **unsolved** for 38 decks. Everything else a macro branches on
+comes from its own call parameters or from global SET symbols.
+
+## The nine wrong-level macros read no external global
+
+Measured directly. `XCTL` declares `&IHBSWA` and `&IHBSWB` and **sets them
+itself**; `IHBINNRB` declares `&IHBNO`, which is only an error-message number.
+`SETFRR`, `GETMAIN`, `FREEMAIN`, `ESTAE`, `SCHEDULE`, `IEAPMNIP`, `TSCBD` and
+`STAX` declare **no globals at all** and branch purely on their own operands.
+
+`SGGBLPAK` — the SYSGEN global SET symbol package, which the starter tape's
+stage-1 deck `COPY`s and which the tape itself does not carry — **we do have**, in
+`work/macros/mvsce-2.1.4-dlib/AGENLIB`, and it is already on `gate.sh`'s path.
+It is irrelevant here twice over: **no source in the tree `COPY`s it** (0 of
+5,538), and **none of the nine reads any global it declares**.
+
+So for these nine it is not a hidden switch. It is a different macro.
+
+## What the starter tapes record, and what that proves
+
+`SYS1.PROCLIB` on `START1`, read through its own PDS directory — 35 members, six
+of which assemble:
+
+```
+ASMFC    //ASM      EXEC  PGM=IFOX00,REGION=128K                   <- no PARM
+ASMFCL   //ASM      EXEC PGM=IFOX00,PARM=OBJ,REGION=128K
+ASMFCLG  //ASM      EXEC PGM=IFOX00,PARM=OBJ,REGION=128K
+ASMFCG   //ASM      EXEC PGM=IFOX00,PARM=OBJ,REGION=128K
+ASMS     //A  EXEC  PGM=ASMBLR,COND=(4,LT),REGION=768K             <- no PARM
+HASPASM  //ASM     EXEC PGM=&ASMBLR,PARM='DECK,XREF(SHORT)',REGION=256K
+```
+
+`ASMS` is the SYSGEN assembly proc — the one whose `SYSLIB` is the distribution
+libraries themselves:
+
+```
+//SYSLIB  DD  DSN=SYS1.AMODGEN,DISP=(SHR,PASS)
+//    DD  DSN=SYS1.AMACLIB,DISP=(SHR,PASS)
+```
+
+**and it passes no PARM at all.** `SYSPARM` appears **zero times** on either
+volume, measured on the raw flat byte stream of all four tape files so nothing can
+hide at a record boundary. `++JCLIN`: zero. No generated stage-2 JCL anywhere; no
+SMP `ASM` entry recoverable from `SYS1.CDS`.
+
+### The conclusion, and it is the useful one
+
+We have **proved** IBM passed a per-module `SYSPARM` — 111 modules go
+byte-identical when it is supplied, with values like `7033` and `SDC=VS2-R2`. The
+customer-facing SYSGEN passes **none**.
+
+**So the shipped object modules were not built by the customer SYSGEN.** They were
+assembled in IBM's own build environment, with its own macro libraries and its own
+PARMs, and no customer tape carries either. That is why every archive we find sits
+at or before the base level and none runs in the direction we need.
+
+**This closes the "search another tape" avenue.** What is left is reconstruction
+from the object, and asking people who might have kept something IBM-internal.
