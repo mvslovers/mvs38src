@@ -91,34 +91,62 @@ for every detector, and 616 of the 634 became measurements.
 🔑 **That is the transferable lesson and it is worth more than the 1,878: a new
 mode must meet the population, not only its fixture.**
 
-### ⚠️ `dasm370 --infer` does not work on the population it exists for
+### `--infer` reaches the 772 now, and 606 of them carry a question list
 
-**Measured, and #401 is not merged because of it.** `--infer` derives base-register
-candidates from the code itself, *"for a section with no source"* — and on this
-corpus such a section is **always inside a bound member**.
+**Fixed and merged — cc370#401, and #382 closed with it.** The cause was a `goto`:
+the bound-member path jumped past the `--infer` block and produced **an ordinary
+disassembly**, which is well-formed, plausible, and silently answers a different
+question. Our 648-of-648 was that.
 
 ```
-30 control CSECTs   from our object deck   374 candidates
-                    from the DLIB member     0
-                    from the target member   0
-772 no-source CSECTs, members only: 648 ran, 648 produced nothing
+30 control CSECTs      our deck 374   DLIB member 374   equal in 30/30
+772 no-source CSECTs   772 ran, 606 with candidates, 5,126 candidates
+   pattern   4,690  91 %      prologue  408  8 %      rld  28  1 %
 ```
 
-`IEAVTCR1` is `identical`, so its deck and its member hold the **same bytes** —
-the difference is the input format alone. **Found only because a case with a
-known answer was tried**: 648 of 648 empty reads as a fact about the corpus until
-a module whose answer you know comes back empty too.
+**606 of the 772 now carry a list of base-register questions.** The 4,690
+`pattern` lines are the honest half — a register the code addresses through whose
+origin nothing explains — and that is exactly what a reader of a module with no
+source needs. `rld`, the only kind with ground truth in the object, fires **28
+times in 5,126**.
 
-Two further measurements on the deck path, where it does work:
+⚠️ **`prologue` cannot be made reliable and the reason is not a defect.**
+Measured against the real `USING` events on the 30: 25 of 28 agree, 3 do not, and
+all three are one limit — **`BALR Rn,0` is a run-time fact and `USING` is an
+assembly-time declaration; the object records the first and cannot record the
+second.**
 
-- **`rld` evidence fires twice in 374 candidates.** `pattern` 344 (92 %),
-  `prologue` 28 (7 %), `rld` 2 (1 %). So in practice it is one evidence kind plus
-  two rarities.
-- **`prologue` is wrong in 3 of 28** against the real `USING` events from
-  `--usings`: `IGG08113` (R15) and `ICKTR02` (R1) are registers the source never
-  bases anything on — a `BALR Rn,0` that is not an addressability idiom — and
-  `IECVERPL` has the right register with the wrong value. Sent as three cases
-  rather than a rate; the comparison is a first pass.
+- `IGG08113` hand-codes the displacement (`B 32(,R15)`), so no `USING` was ever
+  needed — the same bytes either way.
+- `IECVERPL` establishes R10 twice and the second has no `USING` beside it, so
+  the assembly resolved everything against R10 = 0 throughout. **True about the
+  code, false as a hint.**
+- `ICKTR02` is **data**: `A001188 DC F'01296'`, and decimal 1296 is
+  `X'00000510'`, whose low half reads as `BALR 1,0`. The reported value `X'118C'`
+  is the `V(ICKTP05)` that follows it.
+
+It is stated in cc370's source, in the emitted file's header and in its man page
+rather than covered by an accuracy figure.
+
+### The chain of four correct-looking readings, and it is the day in one artefact
+
+`ICKTR02` took four steps and **nobody held a wrong measurement at any point**:
+
+1. the tool reported `value=0x118C` — true about the bytes;
+2. this session read it as a guard failure on a `BALR R1,R15` at source line 31 —
+   plausible source, wrong line, and **the candidate had printed its own offset**;
+3. cc370 checked its guard instead of changing it, and refuted the diagnosis:
+   `BALR 1,15` is `X'051F'`, so `0x1F & 0xF` never reaches the prologue branch;
+4. this session then read the offset from step 1 and found the constant.
+
+🔑 **So the rule gets its amendment**: *send the case, not the diagnosis* becomes
+**send both, and label which is which.** A labelled diagnosis can be checked
+against its own evidence and discarded without losing the measurement — which is
+what happened here in both directions on the same day, cc370's scatter mechanism
+in the afternoon and this session's `BALR` reading at night. The corollary cc370
+added and this file should carry: **check a diagnosis before acting on it, even a
+good one — being right most of the time is exactly what makes the exception
+expensive.**
 
 ### 🔑 `dasm370` rebuilds 66 modules that have no source — 2026-09-16, evening
 
