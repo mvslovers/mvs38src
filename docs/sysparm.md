@@ -327,7 +327,14 @@ multi 0x____ len N   ours=0a07…     IBM=440020200a07…
 
 The owning statement is `XCTL SF=(E,OPCXCTL(ROPCAVT))` → `IHBINNRB`. Ours expands
 to `LA 15,204(2)` + `SVC 7`; IBM's to `LA 15,204(,2)` + `EX 0,32(,2)` + `SVC 7` —
-**base register where we emit an index, plus one whole instruction more.**
+a base register where we emit an index, plus one whole instruction more.
+
+⚠️ **Read as "two macro defects" here, and that is wrong.** The two co-vary
+perfectly — all 134 `EX` sites in IBM's objects are preceded by the base form,
+none by an index — but `IGCA110D` has *source identical to `IGCFK10D`'s* and IBM
+emits the **index** form there with **no `EX`**. So the `LA` form is not an
+independent fault: it is part of the same two-level split, and a module gets
+either both or neither. Measured 2026-09-16.
 
 **It is not the assembler, and that was worth checking before saying so.**
 `work/measurements/ifox-run/verdicts.tsv` gives `IGCFK10D` the verdict

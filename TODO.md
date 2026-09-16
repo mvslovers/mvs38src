@@ -468,6 +468,42 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
+### 🚪 `XCTL` gains 14 and loses 1 — the one trial that is worth applying, and it needs Mike
+
+Three reconstructions tried. Two are hopeless as global changes. **The third is
+not**, and it is the largest single gain on the board:
+
+| trial | gained | lost | chosen |
+|---|---:|---:|---:|
+| `GETMAIN`/`FREEMAIN` | 3 | 18 | 1,608 → 1,593 |
+| `SETFRR` | 4 | 33 | 1,608 → 1,579 |
+| **`XCTL`/`IHBINNRB`** | **14** | **1** | 1,608 → **1,621** |
+
+`IGCFK10D` drops from 23 differing bytes in 13 clusters to **2, both in `DS`
+holes** — the expansion is IBM's byte for byte. 53 verdict changes, **every one
+inside the 147-module `SF=(E,symbol)` population and none outside**. The single
+loss is `IGCSW10D`.
+
+**The question is not whether it works. It is whether we may install a macro we
+know is not IBM's.** The inserted operand is a **literal**: `EX 0,32(,2)`, where
+`32` is `IEDQOPCD+32` and `2` is `ROPCAVT` in every module of the family. No
+expression over `&SF` yields it. **This is a TCAM-build-private macro, not a
+general `IHBINNRB`** — applying it globally puts a TCAM hook into every
+`XCTL SF=(E,…)` in the tree. That it costs only one module is *measured*; that it
+is *correct* for a non-TCAM caller is not.
+
+Three ways to go: apply globally (+13 net, knowingly wrong where it is harmless);
+put it behind the per-module macro path of decision 5 (right, but that mechanism
+does not exist); or leave it and keep the 14.
+
+**And it is two-level either way, proven without the trial:** `IGCFK10D` and
+`IGCA110D` have identical source and IBM emits the `EX` in one and not the other.
+130 objects carry it, 21 do not.
+
+**A second axis is measured and untried**: `IHBINNRB`'s `.ISAREGA` path
+(`@ZA65467`) — ours emits `LA 0,0(0,R)` + `ST`, IBM the single `ST`, in **138 of
+143**. `.ISAREGB` runs the opposite way. Its own trial, not to be bundled.
+
 ### Reconstruction works, and it keeps finding the macros are TWO-level
 
 Mike asked whether the wrong-level macros could be brought to the level we need.

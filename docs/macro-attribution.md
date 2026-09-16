@@ -520,3 +520,84 @@ That is now three macros — `GETMAIN`/`FREEMAIN`, `SCHEDULE`, `SETFRR` — plus
 is not a component boundary, not a library boundary, and not a date. It is the
 signature of modules assembled at different times against a macro library that
 moved between them.
+
+---
+
+# `XCTL`/`IHBINNRB` — two levels as well, but the asymmetry is the other way
+
+Third reconstruction trial. Unlike `GETMAIN`/`FREEMAIN` (3 : 18) and `SETFRR`
+(4 : 33), this one **gains far more than it loses**:
+`work/measurements/macro-reconstruct/xctl/`.
+
+| | chosen | gained | lost |
+|---|---:|---|---|
+| control (macro byte-identical to the shipped one) | **1,608** | — | — |
+| candidate 1 — insert the `EX` only | 1,616 | 9 | `IGCSW10D` |
+| **candidate 2 — `EX` plus the base-form `LA`** | **1,621** | **14** | `IGCSW10D` |
+
+Gained by candidate 2: `IGC0410D IGC0N10D IGCD510D IGCD710D IGCDC10D IGCFG10D
+IGCI110D IGCM210D IGCM510D IGCMG10D IGCT110D IGCV310D IGCV710D IGCVG10D`.
+
+**53 verdict changes, every one inside the 147-module `SF=(E,symbol)` population
+and none outside it.** `IGCFK10D` goes from 23 differing bytes in 13 clusters to
+**2 bytes in 1 cluster, both in `DS` holes** — the expansion is IBM's byte for
+byte, `41f020cc 44002020 0a07`, and the residual at `0x11a` is alignment residue
+in the bound member rather than anything `as370` writes.
+
+## Two levels, proven without the trial at all
+
+Four modules, same statement, same construction, same library `AOS21`:
+
+| module | source | IBM's bytes |
+|---|---|---|
+| `IGC0410D` | `XCTL SF=(E,OPCXCTL)`, `USING IEDQOPCD,ROPCAVT` | `41f020cc 44002020 0a07` |
+| `IEDQCA` | `XCTL SF=(E,OPCXCTL)`, `USING OPCAVT,ROPCAVT` | `41f020cc 0a07` |
+| `IGCFK10D` | `IEDQOPCD EQU 0`, `SF=(E,OPCXCTL(ROPCAVT))` | `41f020cc 44002020 0a07` |
+| `IGCA110D` | `IEDQOPCD EQU 0`, `SF=(E,OPCXCTL(ROPCAVT))` | `41f200cc 0a07` |
+
+**130 objects carry the `EX`, 21 do not**, over 151 non-register call sites. And
+`IGCA110D` settles a second question at the same time: IBM emits the **index**
+form there with **no `EX`**, from source identical to `IGCFK10D`'s, so the `LA`
+form is part of the same split rather than a separate fault.
+
+## What the reconstruction is, and what it is not
+
+```
+         LA    15,&SF(2)      LOAD SUP. PARM LIST
++        EX    0,32(,2)       TCAM HOOK BEFORE XCTL SVC
+         AGO   .CONTA
+```
+
+**The operand is a literal, and that is the honest limit.** The `LA` takes its
+`204` from `&SF(2)`; no expression over `&SF` yields `32`. `32` is `IEDQOPCD+32`,
+the word `TOPCAVTD` carries as `DS A . UNUSED X03039`, and `2` is `ROPCAVT` in
+every module of the family. **This is not a reconstruction of a general
+`IHBINNRB` — it is the fingerprint of a TCAM-build-private macro**, and installing
+it globally would put a TCAM hook into every `XCTL SF=(E,…)` in the tree. That it
+costs only `IGCSW10D` is measured; that it is *right* for a non-TCAM caller is
+not.
+
+## A separate axis, measured but not yet tried
+
+`IHBINNRB`'s `.ISAREGA` path, APAR `@ZA65467`: ours emits `LA 0,0(0,R)` +
+`ST 0,0(0,15)`, IBM holds the single `ST R,0(0,15)`. **143 of our decks emit the
+pair; IBM has the single `ST` in 138 and our pair in 1** (`IEFVFA`, and that one
+is a `LINK`/SVC 6). `.ISAREGB`, the `DCB=(reg)` path, runs the **opposite** way:
+42 of 65 IBM objects carry *our* pair and 2 the single `ST`. `.RFORM` has no call
+sites in the tree.
+
+That is its own trial with its own set diff. Bundling it with the `EX` would make
+neither attributable.
+
+## Controls
+
+The control sweep — macro byte-identical to the shipped one, same everything else
+— gives `chosen = 1,608` and is **set-identical** to
+`baseline-gate/overlay-vs-both.tsv`, +0/−0. So `sysparm-trial.tsv`'s derived
+values are not a confound and the difference is the macro alone. `IGC0410D` went
+from `LENGTH differs −4` to `cmplmd370 IDENTICAL`, exit 0.
+
+Four objects carry the `EX` but sit outside the source population and are excluded
+rather than explained away: `IGCDM10D`, `IGCFR10D` and `IGCVK10D` have stub
+sources with no `XCTL` at all, and `IGG01942`'s source uses the register form
+`SF=(E,(15))`, which emits no `LA`.

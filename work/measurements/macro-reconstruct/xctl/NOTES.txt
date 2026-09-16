@@ -1,0 +1,55 @@
+XCTL / IHBINNRB reconstruction trial  -- 2026-09-16
+
+CANDIDATE MACRO TEXT (work/macros/.../AMACLIB/IHBINNRB, after line 21):
+         LA    15,&SF(2)      LOAD SUP. PARM LIST                       01050000
++        EX    0,32(,2)       TCAM HOOK BEFORE XCTL SVC                 01075000
+         AGO   .CONTA                                                   01100000
+Literal operand: the LA takes 204 from &SF(2); no expression over &SF yields 32.
+Record asserted 80 wide, col 72 blank, seq 73-80 intact (mkmac.py).
+
+SINGLE-MODULE VERIFICATION
+IGCFK10D   23 bytes / 13 clusters of 398  ->  4 bytes / 2 clusters
+           residual: 0x111 f200 vs f020 (LA form) + 0x11a 0000 vs 47f0 (DS hole)
+IGC0410D   LENGTH differs -4            ->  IDENTICAL (cmplmd370 exit 0)
+
+TREE-WIDE (5,538 modules, as370-main, SYSPARMS=sysparm-trial.tsv)
+control  obj_xctlctl   (unpatched macro)  chosen=1608  -- set-identical to
+                                          baseline-gate/overlay-vs-both.tsv (+0/-0)
+trial    obj_xctltrial (patched)          chosen=1616
+GAINED 9: IGC0410D IGCD510D IGCD710D IGCI110D IGCM210D IGCM510D IGCMG10D
+          IGCV310D IGCV710D
+LOST   1: IGCSW10D
+Verdict changes outside the 147-module SF=(E,symbol) population: NONE.
+
+TWO LEVELS -- proof independent of the trial
+  IBM object contains EX 0,32(,2) before SVC 7:      130 members, all AOS21
+  IBM object for the same call shape without it:      21 members
+  IGC0410D  XCTL SF=(E,OPCXCTL), USING IEDQOPCD,ROPCAVT -> 41f020cc 44002020 0a07
+  IEDQCA    XCTL SF=(E,OPCXCTL), USING OPCAVT,ROPCAVT   -> 41f020cc 0a07
+  IGCFK10D  IEDQOPCD EQU 0, SF=(E,OPCXCTL(ROPCAVT))    -> 41f020cc 44002020 0a07
+  IGCA110D  IEDQOPCD EQU 0, SF=(E,OPCXCTL(ROPCAVT))    -> 41f200cc 0a07
+Same statement, same library, two expansions.
+
+SHAPE B (separate axis, NOT in this trial): .ISAREGA @ZA65467
+  ours  LA 0,0(0,R) ; ST 0,0(0,15)      IBM  ST R,0(0,15)
+  143 of our decks emit the pair; IBM has ours in 1 (IEFVFA, a LINK/SVC 6),
+  the single ST in 138.  .ISAREGB (DCB) is the opposite: 42 of 65 IBM objects
+  carry OUR pair, 2 the single ST.  .RFORM: no call sites in the tree.
+
+CANDIDATE 2 (mac-trial2): the EX **plus** the D(X) -> D(,B) rewrite.
+Every one of the 134 EX sites in IBM's objects is preceded by the BASE form
+(133x 41f020cc, 1x 41f03020 in IGCMM10D); none by an index. So the level that
+emits the EX also writes the parameter-list address explicitly.  The macro
+splits &SF(2) at its last '(' and re-emits  LA 15,<sym>(,<reg>) .
+  IGCFK10D   23/13  ->  2 bytes / 1 cluster, ALL in DS holes
+             XCTL expansion now 41f020cc 44002020 0a07, byte for byte IBM's;
+             residual = 0x11a 0000 vs 47f0, alignment residue in the bound
+             member, not a byte as370 writes.  No macro can reach it.
+  trial2 obj_xctltrial2   chosen = 1608 -> 1621
+  GAINED 14: IGC0410D IGC0N10D IGCD510D IGCD710D IGCDC10D IGCFG10D IGCI110D
+             IGCM210D IGCM510D IGCMG10D IGCT110D IGCV310D IGCV710D IGCVG10D
+  LOST    1: IGCSW10D
+  53 verdict changes, all inside the 147-module population, none outside.
+  withEX: 14 identical, 18 -> holes, 17 len-differs -> differs
+  noEX:   IGCSW10D identical->len-differs; IGG0197C IGG0197D IGG0553E
+          differs->len-differs
