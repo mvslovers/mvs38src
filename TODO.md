@@ -355,12 +355,21 @@ because #384 is the one that says *what to change in the source we are keeping*.
 #383 governs how much of a module decodes at all, which matters most where there
 is no source to edit.
 
-⚠️ **The named exception: the 772 have no old source to repair.** Mike's rule
-covers "most cases" and those are exactly the cases where a source exists. For a
-CSECT with none, either the disassembly is the source or the module stays
-unrecovered — and that sub-question is **still open**. It is much smaller than
-the one just answered, and it can wait for #383 and #384 to say how readable the
-output is.
+**The named exception is answered too, in the same breath.** Mike: *"Es wird auch
+Fälle geben, wo es keinen alten Quellcode gibt, dann wandert natürlich das
+disassembly nach `src/`. Es soll halt nur nicht automatisch passieren."* So for a
+CSECT with no old source the disassembly **does** become the source — **by hand,
+never by a tool exiting 0**. The rule is not *"disassembly stays out"*; it is
+*"an existing source is repaired rather than replaced, and nothing enters `src/`
+unattended"*.
+
+⚠️ **And `dasm370` is not only ours.** Mike: *"dasm370 wird später auch von
+anderen benutzt, die nicht wie wir Quellen haben."* That is a constraint on the
+tool rather than on us, and it cuts against the reordering above: for a user with
+no sources at all there is nothing to repair, the no-source path is the *whole*
+product, and **#383's reachability is what decides whether the output is readable
+at all**. So #384 first is right for this project and #383 must not be
+deprioritised into never — it is the half that serves everyone who is not us.
 
 **"Not automatically"** is the other half and it is a process rule: nothing
 deposits into `src/` off the back of a round trip exiting 0. `fillgaps.py` already
