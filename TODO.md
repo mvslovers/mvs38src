@@ -468,7 +468,47 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
-### 800 modules have an object and no source — measured 2026-09-16
+### 800 modules have an object and no source — and 598 are distinct CSECTs
+
+Asked by the `dasm370` session (cc370 #112, the disassembler Mike named for
+semantic restoration), because their stage 1 is ranked on it.
+
+| | |
+|---|---:|
+| CSECT names with a DLIB object | 5,353 |
+| CSECT names in a TARGET member | 5,240 |
+| **object present, no source** | **800** |
+| source present, no object | 260 |
+
+172 DLIB-only, 615 target-only, 14 both. Prefixes of the 615: `IKJ` **154**,
+`IEH` 40, `IGC` 40, `IFN` 38 — and TSO first is this project's stated priority.
+
+**`org-tgt.txt` carries a length and an offset per row**, so "is this a real
+CSECT" is a direct test rather than a guess:
+
+| of the 615 | |
+|---|---:|
+| length 0 — genuine alias/entry candidates | 2 |
+| shorter than 16 bytes — stubs or entries | 15 |
+| appearing with **different lengths** across load modules | 12 |
+| **distinct CSECTs with real length** | **~598** |
+
+**Quote 598, not 800**, and name the 15 short ones as excluded rather than
+filtering them silently. The 12 with differing lengths are the interesting
+residue — the same name bound at two sizes is either two CSECTs sharing a name or
+one re-assembled between load modules, and neither belongs in an acceptance
+corpus.
+
+**74 of the 615 are more than 60 % printable EBCDIC in their own CSECT slice** —
+`IKJ` 22, `PDE` 9, `BLS` 4 — with the extremes tiny and total: `IKJEFLE4` 21 bytes
+at 100 %, `DSVPCL` 53, `DDNPCL` 40. Those are parse/PCL tables, not message text,
+and they are the named case for reachability analysis in a disassembler: an opcode
+subset will not stop text decoding as `L`, `LA`, `ST` or `BC`.
+
+⚠️ **The first cut of that figure said 2 of 615** because it measured the whole
+bound member instead of the CSECT's own bytes. Slice by the offset and length the
+file already carries.
+
 
 Asked by the `dasm370` session (cc370 #112, the disassembler Mike named for
 semantic restoration), because their stage 1 is ranked on it. Measured against the
