@@ -325,45 +325,47 @@ and `srccheck.py` still passes.
 > 18:21. **Cut the control run yourself, with the one variable switched off** —
 > here `SYSPARMS=/dev/null`, which reproduced `rc0=4590` and `chosen=1491` exactly.
 
-### 🚪 Open, deferred by Mike on 2026-09-16: does disassembled source go into `src/`?
+### ✅ Decided 2026-09-16: disassembled code does NOT go into `src/` by itself
 
-**Not decided, and deliberately not decided yet.** Recorded here because it lives
-nowhere else — it was only ever written down in cc370#396, in another repository,
-framed as a dependency of a flag. It is not that. It is the point where this
-project's two stated goals stop agreeing.
+**Mike:** *"Rein disassemblierter Code sollte nicht nach `src/` wandern. Jedenfalls
+nicht automatisch. Wir haben in den meisten Fällen alte Sourcen mit PL/S-
+Kommentaren. Diese sollten mit Hilfe des disassemblierten Codes so bearbeitet
+werden, dass das Resultat passt."*
 
-**Why it matters.** `src/` means *finished* (decision 2), and `srccheck.py`
-asserts every module there is identical to a baseline. A disassembled module
-satisfies that by the letter: `cmplmd370` exits 0. But it is a different thing
-from what the figure claims —
+**So a disassembly is an instrument for repairing the source we have, not a
+source of new source.** That resolves the question this file recorded as open a
+few hours earlier, and it resolves it in the direction that keeps the figures
+meaning what they say: `recovered` stays *source that assembles to IBM's object*,
+never *source we produced from the object*.
 
-| | |
-|---|---|
-| **recovered** | source that assembles to IBM's object — we reconstructed what was written |
-| **disassembled** | source we produced *from* the object — it rebuilds the bytes, it is not what IBM wrote |
+**The reason is the one no measurement would have found.** The surviving sources
+carry **PL/S comments** — statement ids, APAR markers, the original structure and
+its intent. A disassembly reconstructs bytes and can reconstruct nothing of that,
+and it never will. Depositing it would trade something irreplaceable for
+something we can regenerate at any time.
 
-**1,626 means the first.** Add the 66 and it reads 1,692 and stops meaning what
-it says. That is why the scoreboard did not move on 2026-09-16 although 66
-CSECTs with no source now rebuild byte-identically.
+**What this changes about the tools, and it is not small.** If disassembly exists
+to *edit existing source until the result matches*, then for the 2,292
+length-differing and 1,044 equal-length CSECTs the criterion is **readability
+against our own source**, not round-trip fidelity. That raises
+[`cc370#384`](https://github.com/mvslovers/cc370/issues/384) — `--align-diff`,
+both sides disassembled, differences classified as insertion / deletion /
+displacement shift / constant change — above #383 in value for this project,
+because #384 is the one that says *what to change in the source we are keeping*.
+#383 governs how much of a module decodes at all, which matters most where there
+is no source to edit.
 
-**And the goals part company here.** *"Every module explained, as many as possible
-byte-identical, **and a system that builds and runs from those sources**"* — for
-the second half a disassembled module is perfectly good, because it builds. For
-the first it is not evidence. While we had no disassembly nobody had to choose.
+⚠️ **The named exception: the 772 have no old source to repair.** Mike's rule
+covers "most cases" and those are exactly the cases where a source exists. For a
+CSECT with none, either the disassembly is the source or the module stays
+unrecovered — and that sub-question is **still open**. It is much smaller than
+the one just answered, and it can wait for #383 and #384 to say how readable the
+output is.
 
-**A third answer exists**: deposit, but as its own class — a separate tree or a
-provenance column — so both figures stay countable. Then it is a bookkeeping
-question rather than a yes/no one.
-
-**Why waiting is right rather than lazy.** How usable the output is depends on
-cc370#383 (reachability — 73 of the 772 are over 60 % printable EBCDIC and decode
-as instructions today) and #384 (`--align-diff` — which differences are causes and
-which are consequences). Today the answer would be a bet on tools that do not
-exist; after those two it is a measurement.
-
-⚠️ **And it is irreversible in practice.** Deposited labels become permanent
-(cc370#396), other people edit the files, and separating provenance afterwards
-means tracking it per file. **Decide before the first deposit, not after.**
+**"Not automatically"** is the other half and it is a process rule: nothing
+deposits into `src/` off the back of a round trip exiting 0. `fillgaps.py` already
+deposits the moment `cmplmd370` exits 0 — that mechanism must never be pointed at
+disassembler output.
 
 ### Decided, do not re-open
 
