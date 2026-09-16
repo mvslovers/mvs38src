@@ -8,8 +8,31 @@ by module — **which sources do not yet assemble to the object in TK5's
 distribution libraries?** — and then closing the gap. Dave Kreiss got part of
 the way; this continues his work rather than restarting it.
 
-Success is machine-decidable and nothing else counts: the assembled CSECT is
-byte-identical to its counterpart in the distribution library, or it is not.
+## The goal, as reformulated on 2026-09-16
+
+**Every module explained, as many as possible byte-identical, and a system that
+builds and runs from those sources.**
+
+Two verdicts, and **both are machine-decidable**. Nothing else counts.
+
+| | |
+|---|---|
+| **recovered** | `cmplmd370` exits 0 — the assembled CSECT is byte-identical to the object IBM shipped |
+| **explained** | every differing byte is attributed to a named, accepted class, and none is left unattributed |
+
+**Why a second verdict.** Five macros — `SCHEDULE`, `TSCBD`, `GETMAIN`/`FREEMAIN`,
+`SETFRR`, `XCTL`/`IHBINNRB` — are measured to exist at **two levels**, with the
+split running **per module** every time. The only model that fits is that IBM
+assembled its modules over years against a macro library that moved between
+assemblies, so **no single macro library reproduces them all** and for some
+modules byte-identity is unreachable with any surviving material
+([`docs/macro-attribution.md`](docs/macro-attribution.md)).
+
+**"Explained" is a measurement, not a reading.** A module with one unattributed
+byte is not explained, however convincing a disassembly of it looks. The accepted
+classes are a macro at a level we do not have, alignment fill in the bound member,
+the assembly date or `SYSPARM`, and displacements shifted as a consequence of one
+of those. `tools/macroattr.py` and `tools/lenattr.py` do the attributing.
 
 > **`8505` is measured, as of 2026-09-12, and it holds for 98.1 % of the
 > corpus.** The IDR records in all 3,988 distribution-library members were read —

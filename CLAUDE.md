@@ -58,12 +58,33 @@ project analysis live outside this repo, in `~/repos/MVSSRC/WORK/doc/`.
 
 ## The one rule everything rests on
 
-**Success is measured, not asserted.** A module counts as recovered exactly when
-`cmplmd370` exits 0 — the assembled CSECT is byte-identical to the DLIB object
-deck. No judgement, no assessment, no "this should be right now".
+**Success is measured, not asserted.** No judgement, no assessment, no "this
+should be right now". It follows that you must **never record a verdict that did
+not come out of a tool run.**
 
-It follows that you must **never record a verdict that did not come out of a tool
-run.**
+There are **two** measured verdicts, and the second was added on 2026-09-16 when
+the goal was reformulated. Neither is an opinion.
+
+1. **Recovered** — `cmplmd370` exits 0: the assembled CSECT is byte-identical to
+   the object IBM shipped. Unchanged, and still the gold standard.
+2. **Explained** — every differing byte is attributed to a **named, accepted
+   class**, and none is left unattributed. The classes are measured, not asserted:
+   a macro at a level we do not have, alignment fill in the bound member, the
+   assembly date or `SYSPARM`, a displacement shifted as a consequence of one of
+   those. `macroattr.py` and `lenattr.py` do the attributing.
+
+**"Explained" is not "looks right".** A module with one unattributed byte is not
+explained, however convincing a disassembly of it reads. That is the whole point
+of the second verdict: it keeps semantic restoration mechanical.
+
+**Why the second verdict exists.** Five macros — `SCHEDULE`, `TSCBD`,
+`GETMAIN`/`FREEMAIN`, `SETFRR`, `XCTL`/`IHBINNRB` — are measured to exist at two
+levels, with the split running **per module** every time. The only model that fits
+is that IBM assembled its modules over years against a macro library that moved
+between assemblies. **No single macro library can reproduce them all**, so for
+some modules byte-identity is unreachable with any material that survives.
+The project's aim is therefore: **every module explained, as many as possible
+identical, and a system that builds and runs from those sources.**
 
 ## Handling the source
 

@@ -5,13 +5,35 @@ measurement on a single day. That is deliberate — this project's rule is that
 corrections stay visible and a number that moved four times says so — but it
 leaves no way in. This page is the way in.
 
-**Read these four, in this order, and nothing else is needed to start:**
+> ## ⚠️ The goal was reformulated on 2026-09-16, and it changes how to read
+> everything below
+>
+> **Every module explained, as many as possible byte-identical, and a system that
+> builds and runs from those sources.** There are now **two** measured verdicts —
+> *recovered* (`cmplmd370` exits 0) and *explained* (every differing byte
+> attributed to a named class, none left over). Both are machine-decidable; the
+> second is not a softening.
+>
+> The reason: **five macros are measured to exist at two levels, with the split
+> running per module** — `SCHEDULE`, `TSCBD`, `GETMAIN`/`FREEMAIN`, `SETFRR`,
+> `XCTL`/`IHBINNRB`, 332 modules touched. IBM assembled over years against a macro
+> library that moved between assemblies, so **no single macro library reproduces
+> them all and no archive can supply one.** For some modules byte-identity is
+> unreachable with any surviving material.
+>
+> **Every document written before 2026-09-16 assumes the single verdict.** That
+> does not make it wrong — it makes its scope narrower than it reads.
+> [`../README.md`](../README.md), [`macro-attribution.md`](macro-attribution.md).
 
-1. [`../README.md`](../README.md) — the goal: MVS 3.8j at maintenance level
-   8505, from source, measured against TK5's distribution libraries
+**Read these five, in this order, and nothing else is needed to start:**
+
+1. [`../README.md`](../README.md) — the goal and the two verdicts
 2. [`../TODO.md`](../TODO.md) — *Start here tomorrow*, written as a handover
-3. [`fahrplan.md`](fahrplan.md) — the baseline decision and the five stages
-4. [`runbook.md`](runbook.md) — anything that touches a running MVS
+3. [`macro-attribution.md`](macro-attribution.md) — **where the remaining
+   differences come from**: the two attribution maps, the five two-level macros,
+   and the three reconstruction trials
+4. [`fahrplan.md`](fahrplan.md) — the baseline decision and the five stages
+5. [`runbook.md`](runbook.md) — anything that touches a running MVS
 
 ## How to read a date here
 
@@ -24,6 +46,18 @@ Three were overtaken within hours of being written and now carry a banner
 saying so: [`fahrplan.md`](fahrplan.md), [`open-decisions.md`](open-decisions.md)
 and [`build-vs-original-tk5.md`](build-vs-original-tk5.md). If a document has no
 banner, that means nobody has *found* it to be stale — not that it is current.
+
+## The 2026-09-14 to 09-16 documents, and they carry the current picture
+
+These four are the newest and the load-bearing ones. A reader coming back after a
+break should treat them as the state of the project.
+
+| | |
+|---|---|
+| [`macro-attribution.md`](macro-attribution.md) | **the map.** Where every differing byte comes from — macro expansion or open code — over both populations, plus the five two-level macros and the `GETMAIN`/`SETFRR`/`XCTL` reconstruction trials |
+| [`sysparm.md`](sysparm.md) | `&SYSPARM` was empty in every assembly ever run here; supplying it per module recovers **111 modules**. `MODID` and `XCTLTABL` read it too and recover none |
+| [`missing-macros.md`](missing-macros.md) | two kinds of missing: **absent** (the assembler says so) and **present at the wrong level** (nothing says so). The second kind is 332 modules and was not on the page until 09-16. Also: the VS2 3.7 starter tapes carry none of them |
+| [`assembler-options.md`](assembler-options.md) | what IFOX00 accepts, what `as370` does with it, and the 09-16 finding that **the shipped object was never built by the customer SYSGEN** |
 
 ## Direction and plan
 
