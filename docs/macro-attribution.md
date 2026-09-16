@@ -539,7 +539,14 @@ Gained by candidate 2: `IGC0410D IGC0N10D IGCD510D IGCD710D IGCDC10D IGCFG10D
 IGCI110D IGCM210D IGCM510D IGCMG10D IGCT110D IGCV310D IGCV710D IGCVG10D`.
 
 **53 verdict changes, every one inside the 147-module `SF=(E,symbol)` population
-and none outside it.** `IGCFK10D` goes from 23 differing bytes in 13 clusters to
+and none outside it** — 14 to `identical`, **18 to `holes`**, **17 from
+`len-differs` to `differs`**. The last 35 are the second-order gain: modules that
+`cmplmd370` will now cluster, so `worklist.py` and `macroattr.py` can see them at
+all. Going the other way: `IGCSW10D` `identical → len-differs`, and `IGG0197C`
+`IGG0197D` `IGG0553E` `differs → len-differs`.
+
+The base form is 133× `41f020cc` and once `41f03020`, in `IGCMM10D`; all 151 call
+sites are in `AOS21`. `IGCFK10D` goes from 23 differing bytes in 13 clusters to
 **2 bytes in 1 cluster, both in `DS` holes** — the expansion is IBM's byte for
 byte, `41f020cc 44002020 0a07`, and the residual at `0x11a` is alignment residue
 in the bound member rather than anything `as370` writes.

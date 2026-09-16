@@ -492,9 +492,21 @@ general `IHBINNRB`** — applying it globally puts a TCAM hook into every
 `XCTL SF=(E,…)` in the tree. That it costs only one module is *measured*; that it
 is *correct* for a non-TCAM caller is not.
 
-Three ways to go: apply globally (+13 net, knowingly wrong where it is harmless);
-put it behind the per-module macro path of decision 5 (right, but that mechanism
-does not exist); or leave it and keep the 14.
+**The gain is bigger than +14, and the cost is smaller than it looks.** The 53
+verdict changes are 14 to `identical`, **18 to `holes`** and **17 from
+`len-differs` to `differs`** — so 35 further modules move into a state where
+`worklist.py`, `fillgaps.py` and `macroattr.py` can see them, which today they
+cannot.
+
+And "walls off the 21 permanently" overstates it. Only **one** of the 21 no-`EX`
+modules is identical today; the other 20 are not, and cannot become identical
+under either macro alone — they need the per-module path regardless. **The real
+cost of a global apply is `IGCSW10D` and one extra difference to undo later in 20
+modules that are already blocked.**
+
+Three ways to go: apply globally (+14 identical, +35 newly workable, −1, knowingly
+wrong where it is harmless); build the per-module macro path of decision 5 first
+and put it there (right, and the mechanism does not exist); or leave it.
 
 **And it is two-level either way, proven without the trial:** `IGCFK10D` and
 `IGCA110D` have identical source and IBM emits the `EX` in one and not the other.
