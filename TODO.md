@@ -308,9 +308,11 @@ dropped by five when `alignfill.py`'s guard was added the same evening — it ha
 been counting five modules as explained that nothing explained. A number that
 moves DOWN on a correction is the healthy direction; a number that stays up in
 the handover while the tool says otherwise is the failure this file spent the day
-documenting. `scoreboard.py --check` cannot catch it, because it compares README
-against the tool and never the prose above it. **Re-read the handover's own table
-against `explained.py` before quoting it.**
+documenting. **`scoreboard.py --check` could not catch it** — it compared README
+against the tool and never the prose above it — **which is why it does now.** The
+two derivable figures in this table are checked, and a `--check` failure naming
+`TODO.md` means one of them disagrees with the tools. The rest of this file is
+still prose no instrument reads.
 
 **The +18 came from the instrument, not from source work.** cc370#375 fixed
 `cmplmd370`'s load-module reader; the comparator is re-pinned and everything
