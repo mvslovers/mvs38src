@@ -100,7 +100,7 @@ invites exactly the wrong diagnosis.
 
 | family | modules | answer |
 |---|---:|---|
-| `SETFRR` | 28 | **one cause, 75 % of them.** A different expansion outright |
+| `SETFRR` | 28 | **one cause, 75 % of them.** A different expansion outright — and measured 2026-09-16 as a **two-level** macro, see below |
 | `GETMAIN` + `FREEMAIN` | 52 | **one cause, shared across both.** `ST R2,0(0,1)` against IBM's `ST R2,0(1)` |
 | `XCTL` / `IHBINNRB` | 31 | the `±4` family, already on the wall |
 | `IEAPMNIP` | 21 | **ours emits zeros where IBM emits instructions** |
@@ -120,10 +120,17 @@ IBM's:
 L   R12,FRRSCURR(,R9)   C  R12,FRRSLAST(,R9)   BE …   A R12,8(,R9)
 ```
 
-Different instructions, different comparison, and an FRR stack entry of 8 bytes
-where ours computes 32. That is not a level of a macro we have — and all three
-surviving copies are byte-identical, `MACDATE 75295` on both of the two that carry
-one.
+Different instructions and a different comparison. That is not a level of a macro
+we have — and all three surviving copies are byte-identical, `MACDATE 75295` on
+both of the two that carry one.
+
+⚠️ **"an FRR stack entry of 8 bytes where ours computes 32" was written here and
+it is wrong.** The `8` in IBM's `A R12,8(0,R9)` is `FRRSELEN-FRRS`, the
+displacement of the entry-length field in the `IHAFRRS` header — `EMP 0`,
+`LAST 4`, `ELEN 8`, `CURR 12`. **IBM's level reads the entry length out of the
+header where ours hardcodes 32; the entry is still 32 bytes.** Caught by the
+subagent that reconstructed the macro, not by the reading that produced the
+sentence.
 
 **A grep said stben's copy differed and it does not.** Two different regexes were
 used on the two files and only one of them could match `LA &R2,32(0,0)`; a
@@ -433,3 +440,39 @@ first:
 Every one of the four nearest is a class already named. **That is the map working
 as intended**: nothing here needed a new investigation, and three of the four are
 blocked on something already recorded.
+
+
+---
+
+# `SETFRR` is two-level as well — 2026-09-16
+
+Reconstructed and tried tree-wide, the same experiment as `GETMAIN`/`FREEMAIN`:
+`work/measurements/macro-reconstruct/setfrr/`.
+
+| | |
+|---|---|
+| gained | `AHLSBLOK ISTAPC56 ISTORFBQ ISTZFMFA` |
+| **lost** | **33**, including `AHLMCIH` and `AHLTFOR` |
+| chosen baseline | 1,608 → **1,579** |
+
+**And this trial carried a control the earlier one did not**: the *unmodified*
+`SETFRR` on the same prepended `-I` path with the same `SYSPARMS` reproduces the
+live measurement exactly — 1,608, nothing gained, nothing lost. So the harness
+itself perturbs nothing and the −33 is the macro. That control should be standard
+for every trial of this shape from now on.
+
+**The reconstruction is right where it applies.** `AHLREADR` goes from 23
+differing bytes in 8 clusters to **8 bytes in 3, every one of them a `DS` hole** —
+so all of its `SETFRR` bytes match IBM's.
+
+**And the split is per module, not per component.** `AHLREADR`, `AHLTFOR` and
+`AHLMCIH` are all GTF, `AHLREADR` and `AHLTFOR` are in the same library — and one
+wants IBM's level while the other two are byte-identical with ours and break under
+the trial. A per-caller census over 238 callers: **98 want ours, 22 want IBM's,
+118 cannot be classified** (`levels.tsv`).
+
+That is now three macros — `GETMAIN`/`FREEMAIN`, `SCHEDULE`, `SETFRR` — plus
+`TSCBD`, measured two-level, with the split running **per module** each time. It
+is not a component boundary, not a library boundary, and not a date. It is the
+signature of modules assembled at different times against a macro library that
+moved between them.

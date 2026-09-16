@@ -468,7 +468,43 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
-### A macro CAN be reconstructed from the object — and the first trial proved it two-level
+### Reconstruction works, and it keeps finding the macros are TWO-level
+
+Mike asked whether the wrong-level macros could be brought to the level we need.
+**Yes as a method; so far no as a shortcut, twice.**
+[`work/measurements/macro-reconstruct/`](work/measurements/macro-reconstruct/).
+
+| trial | gained | lost | chosen |
+|---|---|---:|---:|
+| `GETMAIN`/`FREEMAIN` — `ST …,0(0,1)` → `0(1)` | `HMASMIO HMASMRDS IEDQNT` | **18** | 1,608 → 1,593 |
+| `SETFRR` — read the entry length from the header | `AHLSBLOK ISTAPC56 ISTORFBQ ISTZFMFA` | **33** | 1,608 → 1,579 |
+
+**The method is sound.** `IEDQNT` went from two differing bytes to zero;
+`AHLREADR` went from 23 bytes in 8 clusters to **8 bytes in 3, all of them `DS`
+holes** — every `SETFRR` byte matching.
+
+**The macros are two-level, and the split is per MODULE.** `AHLREADR`, `AHLTFOR`
+and `AHLMCIH` are all GTF, two of them in the same library, and one wants IBM's
+level while the other two break under it. Per-caller census for `SETFRR`: **98
+want ours, 22 want IBM's, 118 unclassifiable**.
+
+That is four measured two-level macros now — `GETMAIN`/`FREEMAIN`, `SCHEDULE`,
+`SETFRR`, `TSCBD`. Not a component boundary, not a library boundary, not a date:
+**the signature of modules assembled at different times against a macro library
+that moved between them.** Which is exactly what decision 5's per-module macro
+path is for, with a reconstructed macro as its content — and the `wants-trial`
+lists are the table it needs.
+
+⚠️ **Every trial of this shape needs the null control.** The `SETFRR` run included
+it — the *unmodified* macro on the same prepended `-I` path with the same
+`SYSPARMS` reproduces the live figure exactly, 1,608 and 0/0 — so the −33 is the
+macro and not the harness. The `GETMAIN` trial did not have that control.
+
+⚠️ **One documented claim was wrong and is corrected**: "an FRR stack entry of 8
+bytes where ours computes 32". The `8` is `FRRSELEN-FRRS`, the displacement of the
+entry-length field in `IHAFRRS`. **IBM's level reads the length from the header
+where ours hardcodes 32; the entry is still 32 bytes.**
+
 
 Mike asked whether the six wrong-level macros could simply be brought to the level
 we need. **Yes as a method, and the first trial says no as a shortcut.**
