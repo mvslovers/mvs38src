@@ -63,3 +63,35 @@ cmplmd370  measured  faa151cceee15d739bf42727153dffb26ae10c19fc306b455d88ae860e5
 cmplmd370  evidence  work/measurements/cmplmd-reader/ -- three controls at 0/0,
 #                    including 6ddbaaf vs the PR head, so the delta is the reader
 #                    change alone and not 18 other cc370 commits.
+
+# Added 2026-09-16, evening. as370 re-pinned -- and the point of this entry is
+# the PROVENANCE, not the figure, because the figure did not move at all.
+#
+# The 2026-09-13 entry above recorded as370-main by hash with no commit, and the
+# reason has now been found rather than guessed: the pinned copy was a copy of
+# whatever was installed in ~/.local/bin at the time. `make install` on
+# 2026-09-16 confirmed it -- the binary it replaced there was bdef7470, this
+# file's pin exactly. So the pin's origin was "whatever was installed", which is
+# not a provenance at all. This one names a commit and was built from it.
+#
+# DECK-NEUTRAL, and measured module by module rather than inferred from the
+# verdicts: the tree was assembled twice, once with bdef7470 and once with
+# e7e70924, same sources, same macro path, same stamp, same tables.
+#
+#   5,538 modules   rc changed: 0   deck sha256 changed: 0   rc0 = 4,699 both
+#
+# So the five as370 fix/feat commits between the two -- #97 and #104 (a SET
+# symbol and an option nothing recognises are now diagnosed), #372's reader, and
+# #373's symbol export plus its absolute-EQU fix -- emit not one different byte
+# on this corpus. chosen stays 1,626 and every attribution map keeps its input,
+# so nothing downstream was re-cut. The two diagnostic fixes were the ones worth
+# fearing; they cost nothing here.
+# The first version of this line carried an INVENTED sha256: the full digest
+# had only ever been read 24 characters at a time and the tail was written
+# from nothing. It is corrected below from `shasum -a 256` on the file itself.
+# A fabricated hash in a provenance file is worse than no file, because it
+# reads exactly like a measured one.
+as370-main sha256    e7e709241959fa0bec29790660b949aa0407034544a88a5784568d4b397d9f29
+as370-main source    cc370 3c6cf07 (main), cc -O2 -Wall -Wextra -Werror
+as370-main replaces  bdef7470342b10fd5b718b146368e1d528823ed97cdfd408593e90d4f1a6146f
+as370-main evidence  decks byte-identical to the replaced binary's, 5,538 of 5,538
