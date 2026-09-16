@@ -252,6 +252,51 @@ def render():
     return "\n".join(L)
 
 
+
+# --- the handover's own table -----------------------------------------------
+#
+# `--check` compared the README block against the tool and NEVER the prose above
+# it, and on 2026-09-16 that is exactly where a figure went stale: TODO.md's
+# "Where it stands" carried explained = 1,724 for an evening after alignfill.py's
+# guard took it to 1,719. It sat in the section a fresh session reads FIRST, and
+# nothing was watching it -- a handover is prose with numbers in it.
+#
+# The cc370 session put a warning at the top of theirs saying which section
+# expires. A warning is better than nothing and an instrument is better than a
+# warning, so this reads the two figures out of that table and compares them
+# with the tools. It checks only what it can derive; anything it cannot derive
+# it leaves alone rather than guessing.
+
+HANDOVER = "### Where it stands"
+ROW = re.compile(r"^\|\s*\*\*(.+?)\*\*\s*\|\s*\*\*([\d,]+)", re.M)
+
+
+def check_handover():
+    """[] when TODO.md's handover table agrees with the tools."""
+    p = os.path.join(ROOT, "TODO.md")
+    if not os.path.exists(p):
+        return []
+    s = open(p, encoding="utf-8").read()
+    i = s.find(HANDOVER)
+    if i < 0:
+        return []
+    block = s[i:s.find("\n### ", i + 10)]
+    c = chosen_baseline()
+    e = explained()
+    want = {}
+    if c:
+        want["under the chosen baseline"] = c["chosen"]
+    if e:
+        want["explained"] = e["recovered"] + e["reachable"] + e["blocked"]
+    bad = []
+    for label, num in ROW.findall(block):
+        for key, v in want.items():
+            if label.lower().startswith(key.lower().split(" —")[0]):
+                if int(num.replace(",", "")) != v:
+                    bad.append(f"TODO.md handover: \"{label}\" says {num}, the tools say {v:,}")
+    return bad
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
@@ -263,7 +308,9 @@ def main():
         sys.exit(f"{p}: no {START} marker")
     out = re.sub(re.escape(START) + r".*?" + re.escape(END), lambda _: new, s, flags=re.S)
     if a.check:
-        sys.exit(0 if out == s else "README scoreboard is out of date -- run tools/scoreboard.py")
+        bad = [] if out == s else ["README scoreboard is out of date -- run tools/scoreboard.py"]
+        bad += check_handover()
+        sys.exit("\n".join(bad) if bad else 0)
     open(p, "w", encoding="utf-8").write(out)
     print("README scoreboard updated")
 
