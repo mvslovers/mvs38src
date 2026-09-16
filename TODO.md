@@ -468,6 +468,30 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
+### 800 modules have an object and no source — measured 2026-09-16
+
+Asked by the `dasm370` session (cc370 #112, the disassembler Mike named for
+semantic restoration), because their stage 1 is ranked on it. Measured against the
+overlay tree and every object we can see:
+
+| | |
+|---|---:|
+| CSECT names with a DLIB object | 5,353 |
+| CSECT names in a TARGET member | 5,240 |
+| union — objects of any kind | 6,079 |
+| **object present, no source** | **800** |
+| source present, no object | 260 |
+
+172 DLIB-only, 615 target-only, 14 both. **All 615 target-only have a readable
+`.bin`**, so they are reachable input. Prefixes: `IKJ` **154**, `IEH` 40, `IGC` 40,
+`IFN` 38, `IEA` 27, `IEC` 23, `AMD` 22 — and TSO first is this project's stated
+priority, so the 154 weigh more than the count suggests.
+
+⚠️ **Not yet proven**: that all 615 are distinct disassemblable CSECTs rather than
+aliases or entry points. The figure is solid as *"readable object, no source of
+that name"* and no further. One name (`000032`) was a parse artefact and is
+excluded — 801 raw, 800 real.
+
 ### The second verdict has a number now: 1,700 of 5,353 — 31.8 %
 
 `tools/explained.py`, and it is on the README scoreboard beside the first verdict.
