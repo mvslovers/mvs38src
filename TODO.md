@@ -409,6 +409,32 @@ hypothesis until the macro is found.
 equal length, 361 in the length block. Unmapped: 281 the anchor cannot reach and
 1,010 outside the 64-byte window.
 
+### What is under the missing eyecatcher — the 136, re-mapped
+
+The 136 that `sysparm_sweep.py` derives a value for and keeps none of had an
+invisible second cause: still length-differing, so no clusters, and every map ran
+**without** their derived value and therefore named `IEDHJN` and stopped. Re-cut
+with the values applied — a trial table, `SYSPARMS` pointed at it, the real one
+untouched — `work/measurements/lenattr/the136-with-sysparm.tsv`:
+
+| of the 95 that were length-differing | modules |
+|---|---:|
+| mixed | 43 |
+| **now equal length**, so they leave this population | 22 |
+| every remaining run in open code | 17 |
+| every remaining run in a macro expansion | 10 |
+
+What is left, by distinct modules: `<open code>` **60**, **`XCTL` 41**, `IEDHJN`
+11, `BLDL` 3.
+
+**`XCTL` is the second cause in 41 of them** — `IHBINNRB` runs through the whole
+TSO `IGC*10D` set and is the largest single blocker under the eyecatcher.
+
+**`IEDHJN` still owns a run in 11, so the derived value is wrong for those** — and
+six show a `replace +8`, meaning IBM's expansion emits eight bytes where the sweep
+reads two or four. **A lead the second pass does not cover and nobody has
+followed.**
+
 ### The open-code population, and there is no family in it
 
 `tools/opencode_families.py` over the 605: **4,972 clusters, biggest
@@ -570,7 +596,10 @@ source defect**; `cmplmd370` counts it as text.
   They do; the offsets are where each module's eyecatcher ends. Grouped by what the
   inserted run *is*, they are one family of 111. Group by cause, not by coordinate.
 - **In zsh a variable is not word-split.** `kill -TERM $PIDS` with newlines kills
-  nothing and reports success. Use `xargs`.
+  nothing and reports success. Use `xargs`. **Hit twice more on 2026-09-15**:
+  `for m in $MODS` made one 3 kB filename (`rm: File name too long`) and
+  `--only $MODS` made one argument, so the tool matched **0 modules and exited
+  0**. Write the list to a file and pipe it through `xargs`.
 - **`git add <missing-path>` stages a DELETE**, and a newline-separated command
   after a failed one still runs. One commit removed a file its own message
   claimed to have edited. Chain with `&&`.

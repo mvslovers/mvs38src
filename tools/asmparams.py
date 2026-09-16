@@ -29,8 +29,12 @@ GATE = os.path.join(ROOT, "work/measurements/baseline-gate")
 
 PINNED_DATE = "09/07/26"
 PINNED_TIME = "12.00"
-ASMDATES = os.path.join(GATE, "asmdate.tsv")
-SYSPARMS = os.path.join(GATE, "sysparm.tsv")
+# `gate.sh` lets both tables be overridden from the environment (`: ${ASMDATES:=…}`),
+# and a tool that ignores that cannot reproduce a trial run -- measuring the 136
+# with their DERIVED, unproven values needs a second table without touching the
+# real one.
+ASMDATES = os.environ.get("ASMDATES") or os.path.join(GATE, "asmdate.tsv")
+SYSPARMS = os.environ.get("SYSPARMS") or os.path.join(GATE, "sysparm.tsv")
 
 
 def _table(path):

@@ -314,3 +314,67 @@ whose both causes are macros.
 
 Against 281 the anchor cannot reach and 1,010 of the length block outside
 `lenlist`'s 64-byte window, which remain unmapped.
+
+---
+
+# What is under the missing eyecatcher — the 136, re-mapped
+
+`sysparm_sweep.py` derives a value for 136 modules and keeps none of them, because
+`cmplmd370` does not exit 0: a **second cause** sits on top. Until now that second
+cause was invisible, and for a reason worth stating — the modules are still
+length-differing, so `cmplmd370` clusters nothing, and `lenattr.py`'s first pass
+ran **without** their derived value, so every map named `IEDHJN` and stopped
+there. `IEDHJN` owned a length-changing run in **90** of the length block, and 84
+of those the sweep had already tried.
+
+So the map was re-cut with the derived values applied — a trial table of proven
+plus unproven, `SYSPARMS` pointed at it, the real table untouched.
+`work/measurements/lenattr/the136-with-sysparm.tsv`.
+
+**95 of the 136 were length-differing and could be re-mapped:**
+
+| | modules |
+|---|---:|
+| mixed | 43 |
+| **now equal length** — they leave this population entirely | 22 |
+| every remaining run in open code | 17 |
+| every remaining run in a macro expansion | 10 |
+| not anchored | 3 |
+
+And what is actually left once the eyecatcher is accounted for, by distinct
+modules: `<open code>` **60**, **`XCTL` 41**, `IEDHJN` 11, `BLDL` 3, `DCB` 2,
+`WTO` 2, `MODESET` 2.
+
+**`XCTL` is the second cause in 41 of them.** The `IHBINNRB` family runs through
+the whole TSO `IGC*10D` set and is by a wide margin the largest single blocker
+under the eyecatcher.
+
+**`IEDHJN` still owns a run in 11, which means the derived value is wrong for
+them** — and the shape says how: six show a `replace +8` (`IEDAYL`, `IEDLUS`,
+`IEDQWO`, `IGCFI10D`, `IGCFL10D`, `IGCT010D`, `IGG01934`), so IBM's expansion
+emits eight bytes more rather than the two or four the sweep reads. That is a lead
+the second pass does not cover and nobody has followed.
+
+The 22 that became length-equal are now `macroattr.py`'s population and their
+remaining difference is byte-level: `IEDQBH IEDQBL IEDQNT IEDSAI IGC0I10D
+IGC0J10D IGC0K10D IGC0N10D IGCA710D IGCDD10D IGCFG10D IGCFK10D IGCFQ10D IGCVG10D
+IGE0004G IGE0004H IGE0104G IGE0304G IGG019Q1 IGG019R6 IGG019TE IGG019TI`.
+
+## `asmparams.py` reads the environment now
+
+`gate.sh` writes `: ${ASMDATES:=…}` and `: ${SYSPARMS:=…}`, so both tables can be
+overridden from outside. `asmparams.py` ignored that and a trial run could not be
+made without editing the real table. It honours both now, which is what made this
+measurement possible at all.
+
+## The zsh trap, for the second time in one day
+
+```sh
+MODS=$(awk … )
+for m in $MODS; do rm -f …/$m.lst; done      # ONE filename, 3 kB long
+python3 tools/lenattr.py --only $MODS         # ONE argument, 0 jobs matched
+```
+
+`rm` said *File name too long* and the tool reported **0 modules** and exited 0.
+TODO.md's control list has said *"in zsh a variable is not word-split, use
+xargs"* since 2026-09-13. Write the list to a file and pipe it through `xargs`.
