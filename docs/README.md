@@ -47,6 +47,11 @@ audited against the current state. If a document has no banner it has now been
 *checked* and found to hold — which is new; before that audit, no banner only
 meant nobody had looked.
 
+**Four merges were proposed by that audit and all four were declined**, each
+because the shorter document carries a measurement or a correction its target does
+not — see the end of [`doc-audit-2026-09-16.md`](doc-audit-2026-09-16.md).
+**Nothing has been merged or deleted here.**
+
 ## The 2026-09-14 to 09-16 documents, and they carry the current picture
 
 These four are the newest and the load-bearing ones. A reader coming back after a
