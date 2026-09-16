@@ -78,12 +78,43 @@ labels, sections, DSECTs and `USING`s — is what stops *"which statement is
 missing here"* being a day of hand work per module. It is the largest open
 population in the project.
 
-**`base` is refused, and that is settled rather than deferred.** #112 and #382
-both list it and neither defines it; grepped here, it appears **nowhere** as a
-hint key — the one hit is `workplan.md:372`, a divergence-diagnosis category with
-no connection to a hints file. So it is undefined on both sides, and `dasm370`
-refuses it with rc 16 naming the line rather than ignoring it silently. If a need
-appears under that name it gets specified then, with a measurement behind it.
+**`base` was going to be refused as undefined, and it is defined — Mike knew
+where.** Both sessions had grepped their own repository and found nothing; it is
+in a third tree neither had searched, Gerhard Pospischil's `mvs38dasm`, whose
+control-statement documentation (`DISASMDC`) gives it exactly:
+
+```
+BASE  <reg>  <from>  [<to>]  <value>
+
+  reg     base register. 1 or R1; 10..15 as 10/R10 or A..F/RA..RF
+  from    starting displacement into the CSECT where the register is in effect
+  to      OPTIONAL end. If omitted it is <from> + 4096 -- one register's range
+  value   the displacement the base register refers to
+```
+
+Their own worked example: R12 used as a base from `+X'20'`, pointing at
+`+X'22C'`, is `BASE R12 20 22C`. And *"if a base register is defined, a LABEL (or
+PREFIX) statement is also required"* — a resolved displacement has to be able to
+name what it lands on.
+
+**So it carries a lifetime**, which is what the third rule above demands, and
+**it is not a synonym for `using`** — in that tool the two are distinct and the
+split is clean: `BASE` is a base register covering a range of **the CSECT
+itself**, `USING` is one pointing at a **DSECT**, with its own optional range and
+an optional label within the DSECT when the register does not point at
+displacement zero. That is why #112 lists both.
+
+⚠️ **It does not replace the as370 event export.** `base` is what a *human*
+asserts by hand, supplying the lifetime deliberately; the export is what
+`--derive-hints` reads out of an assembly so nobody has to. Same information, two
+sources — and the hand-written one was always allowed to carry a range, because a
+person can state one.
+
+**Licensing**: `mvs38dasm` carries no licence statement anywhere in its tree, so
+the rule is the one this project applies to `UTL31`/`LOADLMD`/`MAPLMD` — absence
+of a grant is not a grant. **Consult, never copy.** Reading a documented control
+statement to learn what a key means is consulting; what gets implemented is the
+semantics, in a TOML file of our own shape, not their 80-column card format.
 
 **What we run on the export**, so it is not re-negotiated when it lands: both
 binaries from `git archive` with sha256 named, the tree assembled with each under
