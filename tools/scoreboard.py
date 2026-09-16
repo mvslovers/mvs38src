@@ -83,6 +83,14 @@ def chosen_baseline(path=None):
     because it only compares README against the tool. Same failure as the DLIB
     figure, one layer up. Nothing in the block is hand-written now.
 
+    **And the PROSE around a computed number goes stale too, which is one layer
+    further up again.** When cc370#375 took `unread` from 143 to 2 and
+    `unread_dlib_ok` to 0, the sentence carried on calling them "the cheapest 0
+    modules on the board" and still blamed "the overlay-structured load modules",
+    which the fixed reader handles. A template that only interpolates numbers
+    will state a true figure inside a false sentence, and `--check` passes on it
+    because the tool and the README agree. The branch below exists for that.
+
     `disagree` is also a correction: the block used to say the yardstick "moves
     167 verdicts", which is 1,236 - 1,069 -- the difference between two TOTALS,
     not a count of anything. The number of modules the two baselines actually
@@ -207,12 +215,16 @@ def render():
               f"same decks are identical to **{c['dlib']:,}** DLIB members, "
               f"**{c['tgt']:,}** target members, and **{c['both']:,}** of both. "
               f"**{c['unread']:,} modules are counted as not recovered because "
-              f"`cmplmd370` cannot read their target member** — `IEANUC01` and the "
-              f"overlay-structured load modules — and {c['unread_dlib_ok']:,} of those "
-              f"the DLIB does call identical. That is an instrument gap, not a result, "
-              f"and it is the cheapest {c['unread_dlib_ok']:,} modules on the board. A "
-              f"further **{c['no_tgt']:,}** have no target counterpart at all, and for "
-              f"those the DLIB is the only object there is.", ""]
+              f"`cmplmd370` does not pair their target member**"
+              + (f", and {c['unread_dlib_ok']:,} of those the DLIB does call "
+                 f"identical — an instrument gap rather than a result, and the "
+                 f"cheapest {c['unread_dlib_ok']:,} modules on the board."
+                 if c['unread_dlib_ok'] else
+                 f" — the deck names a CSECT the member does not carry. **None of "
+                 f"them is called identical by the DLIB either**, so nothing is "
+                 f"being withheld from the count by the instrument.") +
+              f" A further **{c['no_tgt']:,}** have no target counterpart at all, "
+              f"and for those the DLIB is the only object there is.", ""]
     e = explained()
     if e is not None:
         tot = sum(e.values())

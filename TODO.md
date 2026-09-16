@@ -39,7 +39,92 @@ is 43 % TSO ([`docs/maintenance-level.md`](docs/maintenance-level.md)).
 The scoreboard at the head of [`README.md`](README.md) is **generated** —
 `tools/scoreboard.py`, `--check` fails when it is stale. Never hand-edit it.
 
-### Where it stands, 2026-09-14 morning
+### The reader adoption — 2026-09-16, and the +18 is now counted
+
+cc370#375 fixed `cmplmd370`'s load-module reader. It was accepted the way this
+project accepts a cc370 change — a tree-wide run, three controls at 0/0 — and the
+whole chain has been run: comparator re-pinned, gate re-cut, scoreboard
+regenerated, every attribution map rebuilt.
+Full account: [`work/measurements/cmplmd-reader/`](work/measurements/cmplmd-reader/).
+
+| | before | after |
+|---|---:|---:|
+| **recovered** | 1,608 | **1,626** |
+| **explained** | 1,700 | **1,724** |
+| target member not paired | 143 | **2** |
+| equal-length differing CSECTs — `macroattr`'s population | 988 | **1,044** |
+| within 64 bytes — `lenlist`'s reach | 1,221 | **1,222** |
+| alignment fill only | 44 | **49** |
+| per-module macro path is worth (`reachable`) | 1,629 | **1,647** |
+
+**+18 / −0 as sets**, and no `identical → anything` transition in either
+direction — so nothing that was recovered stopped being recovered.
+
+**What the newly comparable modules did to the maps.** 123 modules entered a
+state the maps could see for the first time (61 `len-differs`, 50 `differs`, 12
+`holes`), and the partitions moved accordingly:
+
+| | before | after |
+|---|---:|---:|
+| equal length, every differing byte in **open code** | 605 | **607** |
+| equal length, mixed | 293 | **301** |
+| equal length, all inside macro expansions | 90 | 90 |
+| length block, every length-changing run in open code | 361 | **374** |
+| length block, mixed | 474 | **460** |
+| length block, all in macro expansions | 77 | 75 |
+| length block, not anchored | 281 | 288 |
+
+**`macroattr`'s top owners barely moved and that is the useful part** — `WTO` 49,
+`MODID` 48, `XCTLTABL` 43, `HMASMMGP` 37, `FREEMAIN` 34, `XCTL` 31, `IEDHJN` 29,
+`SETFRR` 28. The wall is the same wall; it just has 56 more modules in front of
+it.
+
+⚠️ **The pin names `c5f3d07`, not the commit that was measured**, and the reason
+belongs here rather than only in `PROVENANCE.txt`: **`63f372f` was merged with a
+red gcc job.** The measurement had been checked exhaustively and `gh pr checks`
+was never run. cc370#377 fixed it — an error-message buffer gcc can prove too
+small under `_FORTIFY_SOURCE`, which macOS clang cannot see — and the binary
+built from the fixed commit is **set-identical** to the measured one, 0/0,
+`chosen = 1,626` both ways. **Read the checks before merging, not only the
+measurement.**
+
+⚠️ **And a generated number can sit inside a stale sentence.** With `unread` down
+to 2 and `unread_dlib_ok` to 0, `scoreboard.py`'s template went on calling them
+*"the cheapest 0 modules on the board"* and still blamed *"the
+overlay-structured load modules"*, which the fixed reader handles. Every figure
+in it was correct. **`--check` passes on that**, because it compares the README
+against the tool and both agreed. The template now branches; the class does not
+go away.
+
+**One tool was reaching into a dead session.** `reachable.py` read the three
+reconstruction-trial gates by absolute path out of *one session's scratchpad* —
+nothing re-cuts them, no clone has them, and they vanish when the session ends.
+Moved to `work/measurements/macro-reconstruct/`, with the deck directories named
+beside them so the next re-pin can re-cut all four with one command each.
+
+**Still stale, named rather than fixed**: `worklist.py` defaults to `--decks
+obj_overlay5`, which is older than the `obj_overlay12` TODO already flagged as
+two generations behind — `decks.py` exists precisely for this and `worklist.py`
+does not ask it. `worklist.txt` and `worklist16.txt` were not re-cut, so they
+rank against a comparator and a deck set that are both superseded.
+
+### Where it stands, 2026-09-16 evening
+
+| | |
+|---|---:|
+| **under the chosen baseline — target, DLIB where no target exists** | **1,626 of 5,353 — 30.4 %** |
+| **explained — the second verdict** | **1,724 — 32.2 %** |
+| the same decks against the DLIB alone | 1,633 |
+| against the target alone | 1,476 |
+| against both | 1,451 |
+| target member not paired — was 143 | **2** |
+
+**The +18 came from the instrument, not from source work.** cc370#375 fixed
+`cmplmd370`'s load-module reader; the comparator is re-pinned and everything
+downstream re-cut. See *"The reader adoption"* below. `src/` is unchanged at 316
+and `srccheck.py` still passes.
+
+### Where it stood, 2026-09-14 morning — kept for the delta
 
 | | |
 |---|---:|
@@ -231,7 +316,6 @@ four bytes may still be amounts rather than causes. Two bytes was a cause.
 | | modules | blocked by |
 |---|---:|---|
 | `ESTAE` eight bytes short | some | a macro level in **none** of the three libraries, TK5's own included — **Dave's zip** |
-| target member unreadable by `cmplmd370` | 18 | scatter and overlay format — a cc370 case |
 | `SCHEDULE` at two levels | ~18 | one macro file cannot be both; the per-module macro path is agreed but waits on a real macro to put in it — **Dave's zip**, per decision 5 |
 | `IHBINNRB` / `XCTL SF=(E,…)` at two levels | 11 | the whole `±4` group. IBM expands to `LA 15,D(,B)` + `EX 0,32(,2)` + `SVC 7` where we emit `LA 15,D(X)` + `SVC 7` — four bytes more, cancelled by four we emit elsewhere, which is why the lengths match and nothing clustered before. **Not the assembler**: `verdicts.tsv` gives `IGCFK10D` `tool = identical`, so IFOX00 emits our bytes too. All three surviving copies of `IHBINNRB` are byte-identical and none emits the `EX` — **Dave's zip**, per decision 5 |
 | `SETFRR` at two levels | 28 | a different expansion outright: ours `LA R12,32` + `AL` + `CL` + `BH`, IBM's `L R12,FRRSCURR` + `C` + `BE` + `A R12,8` — an FRR stack entry of 8 bytes where ours computes 32. All three surviving copies byte-identical, `MACDATE 75295`. **Not the assembler**: `AHLREADR` is `tool = identical` — **Dave's zip** |
@@ -992,9 +1076,12 @@ searching again.
    parameter as text (`DC CL9`), so a module expanding both macros would carry
    `&SYSPARM` twice. **Zero of the 436 do**, and zero of the 111. `grep` finds 101
    sources mentioning both and every one is a comment — the deck is what counts.
-4. **The 18 whose target member `cmplmd370` cannot read** — `IEANUC01` is scatter
-   format, the rest are overlay-structured, and the DLIB calls all 18 identical. A
-   `cc370` case and the cheapest block on the board.
+4. ✅ **Done 2026-09-16 — the 18 whose target member could not be read.** The
+   reader fix landed (cc370#375), all 18 are now `identical`, and the 143
+   unreadable target members are **2**. Both survivors, `IECVOID` and
+   `ISTNSC00`, are `no section named X` — the deck names a CSECT the member does
+   not carry — and neither is called identical by the DLIB, so the instrument is
+   withholding nothing. `work/measurements/cmplmd-reader/`.
 5. **Which of the 55 divergent modules are TK5 USERMODs** rather than IBM service.
    Needs the target zone's SYSMOD-to-module mapping out of the SMP CDS. `IKJEFF53`
    is a known usermod target and is among them, so the answer is not zero.

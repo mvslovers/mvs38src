@@ -212,7 +212,47 @@ AHLWTASK	mixed	insert	0x09c6	+2	<open code>	@CA01679 DC    A(AHL027)
 AHLWTASK	mixed	insert	0x09c8	+2	<open code>	@CA01679 DC    A(AHL027)
 AHLWTASK	mixed	insert	0x09ca	+2	<open code>	@CA01680 DC    A(AHL026)
 AHLWTASK	mixed	replace	0x09cc	-6	<open code>	@CA01681 DC    A(AHL119)
-AMDPRAPP	no usable reference					
+AMDPRAPP	mixed	replace	0x0012	+1	<open code>	         DC    AL1(16)                          
+AMDPRAPP	mixed	delete	0x0014	-1	<open code>	         DC    AL1(16)                          
+AMDPRAPP	mixed	insert	0x0046	+6	<open code>	         XC    WKAREA(200,@08),WKAREA(@08)      
+AMDPRAPP	mixed	insert	0x0048	+4	<open code>	         LR    ABDPLPTR,@08                     
+AMDPRAPP	mixed	delete	0x0064	-2	<open code>	         AL    @03,@CF00475                     
+AMDPRAPP	mixed	delete	0x0095	-12	<open code>	         B     AMDPAPP2                         
+AMDPRAPP	mixed	delete	0x00a2	-18	<open code>	AMDPRTN  NI    APP(AEDITCBR),B'01111111'        
+AMDPRAPP	mixed	delete	0x00e6	-2	<open code>	         AL    @03,@CF00475                     
+AMDPRAPP	mixed	delete	0x00f8	-2	<open code>	         AL    @08,@CF00475                     
+AMDPRAPP	mixed	replace	0x0146	+2	HEXCNVT	HEX0003B DC    A(HEX0003)
+AMDPRAPP	mixed	insert	0x015e	+6	HEXCNVT	         DC    C'  '
+AMDPRAPP	mixed	delete	0x0170	-2	<open code>	         AL    @03,@CF00475                     
+AMDPRAPP	mixed	delete	0x0182	-2	<open code>	         AL    @08,@CF00475                     
+AMDPRAPP	mixed	delete	0x01f6	-2	<open code>	         AL    @14,@CF00475                     
+AMDPRAPP	mixed	delete	0x0220	-2	<open code>	         AL    @14,@CF00475                     
+AMDPRAPP	mixed	delete	0x0246	-2	<open code>	         AL    @14,@CF00475                     
+AMDPRAPP	mixed	delete	0x0276	-2	<open code>	         AL    @14,@CF00475                     
+AMDPRAPP	mixed	replace	0x0286	+14	<open code>	         B     AMDPRTN                          
+AMDPRAPP	mixed	delete	0x033a	-2	<open code>	         AL    @15,@CF00475                     
+AMDPRAPP	mixed	replace	0x039b	+2	<open code>	         BE    @RT00202                         
+AMDPRAPP	mixed	replace	0x03c3	+12	<open code>	         ST    CODEREG,CODESAVE         SAVE RET
+AMDPRAPP	mixed	delete	0x0403	-2	<open code>	         ST    @08,BUFPTR                       
+AMDPRAPP	mixed	replace	0x0406	+4	<open code>	         AL    @10,@CF00046                     
+AMDPRAPP	mixed	insert	0x040c	+10	<open code>	         ST    @10,ADPLBUF(,ABDPLPTR)           
+AMDPRAPP	mixed	insert	0x042a	+14	<open code>	         L     @10,GTFWDPTR(,AEDITCBR)          
+AMDPRAPP	mixed	replace	0x0465	-4	<open code>	         MVC   BLDBUF+11(109,@10),BLDBUF+10(@10)
+AMDPRAPP	mixed	insert	0x046c	+2	<open code>	         MVC   BLDBUF(10,@10),BLANK1            
+AMDPRAPP	mixed	replace	0x046d	+38	<open code>	         MVC   BLDBUF(10,@10),BLANK1            
+AMDPRAPP	mixed	insert	0x0475	+2	<open code>	@RF00233 CLC   CODESAVE(4),@CF00076             
+AMDPRAPP	mixed	delete	0x0476	-2	<open code>	@RF00233 CLC   CODESAVE(4),@CF00076             
+AMDPRAPP	mixed	replace	0x0495	-4	<open code>	         MVC   BLDBUF+11(109,@10),BLDBUF+10(@10)
+AMDPRAPP	mixed	delete	0x049c	-2	<open code>	         MVC   BLDBUF(10,@10),BLANK1            
+AMDPRAPP	mixed	delete	0x0532	-2	<open code>	         AL    @10,@CF00475                     
+AMDPRAPP	mixed	delete	0x0598	-2	<open code>	         AL    @10,@CF00475                     
+AMDPRAPP	mixed	delete	0x05cc	-2	<open code>	         AL    @10,@CF00475                     
+AMDPRAPP	mixed	replace	0x06a1	+2	<open code>	         LA    AREAPTR,SAVECALL                 
+AMDPRAPP	mixed	delete	0x0770	-2	<open code>	         AL    @08,@CF00475                     
+AMDPRAPP	mixed	delete	0x07a0	-2	<open code>	         AL    @06,@CF00475                     
+AMDPRAPP	mixed	delete	0x0a1c	-4	<open code>	@CF00475 DC    F'-1'
+AMDPRAPP	mixed	insert	0x0c3a	+4	<open code>	OTEMPREC DS    CL110
+AMDPRAPP	mixed	insert	0x0c55	+4	<open code>	HMDPREF  DC    CL1'H'
 AMDPRCVT	all in open code	insert	0x000e	+5	<open code>	         DC    AL1(16)                          
 AMDPRCVT	all in open code	replace	0x000f	+3	<open code>	         DC    AL1(16)                          
 AMDPRCVT	all in open code	insert	0x05d3	+14	<open code>	@NM01399 DC    CL3'CVT'
@@ -841,13 +881,42 @@ BNGIREAD	mixed	insert	0x013b	+60	<open code>	               =A(INPUTA)
 BNGIREAD	mixed	insert	0x013c	+2387	<open code>	               =A(INPUTA)
 BNGIREAD	mixed	insert	0x013e	+594	<open code>	               =C'FF'
 BNGTQEMA	not anchored (score 84% margin +66%)					
-HEWLFAPT	no usable reference					
-HEWLFESD	no usable reference					
-HEWLFINC	no usable reference					
-HEWLFINP	no usable reference					
-HEWLFOPT	no usable reference					
-HEWLFREL	no usable reference					
-HEWLFSCD	no usable reference					
+HEWLFAPT	all in macro expansions	insert	0x01ea	+2	HEWAPT	SPACES   DS    18F       SAVE AREA FOR TEMPORARY
+HEWLFAPT	all in macro expansions	replace	0x01ec	-26	HEWAPT	SPACES   DS    18F       SAVE AREA FOR TEMPORARY
+HEWLFAPT	all in macro expansions	insert	0x02d6	+6	HEWAPT	         DC    A(0)                             
+HEWLFAPT	all in macro expansions	replace	0x032a	-4	HEWAPT	         DC    C'MAPT'        END OF HEWLFAPT IN
+HEWLFESD	all in open code	insert	0x000a	+16	<open code>	         B     OVERNAME                BRANCH AR
+HEWLFESD	all in open code	delete	0x0012	-16	<open code>	         B     OVERNAME                BRANCH AR
+HEWLFESD	all in open code	replace	0x0325	-4	<open code>	         LA    WRKREGE,ENTER1          SET RETUR
+HEWLFESD	all in open code	replace	0x032d	-6	<open code>	         BO    ESD39A                  SIGNAL OV
+HEWLFESD	all in open code	replace	0x0671	-2	<open code>	FS       DS    0F
+HEWLFESD	all in open code	insert	0x0682	+2	<open code>	ZERO3    DC    X'000000'               FOR CHECK
+HEWLFESD	all in open code	insert	0x0684	+2	<open code>	ZERO3    DC    X'000000'               FOR CHECK
+HEWLFESD	all in open code	insert	0x0686	+2	<open code>	ADDDECHN DC    V(HEWLCDCN)
+HEWLFESD	all in open code	replace	0x0688	-6	<open code>	RPCHGADD DC    V(HEWLFRCG)
+HEWLFESD	all in open code	insert	0x06fa	+2	<open code>	CMGTSD   DC    X'2237'
+HEWLFESD	all in open code	replace	0x07c6	+9	<open code>	SAVETEMP DC    F'0'                     SAVE ARE
+HEWLFINC	mixed	replace	0x0011	+8	<open code>	         B     INCLU050                BRANCH AR
+HEWLFINC	mixed	insert	0x0013	+7	<open code>	         B     INCLU050                BRANCH AR
+HEWLFINC	mixed	delete	0x001b	-19	<open code>	         B     INCLU050                BRANCH AR
+HEWLFINC	mixed	replace	0x01b9	+8	<open code>	         B     GETNEXT1                GO TO REA
+HEWLFINC	mixed	insert	0x047b	+5	<open code>	         TM    HEWLCRBB+24,X'04'   WAS BLOCK SIZ
+HEWLFINC	mixed	insert	0x047c	+11	<open code>	         TM    HEWLCRBB+24,X'04'   WAS BLOCK SIZ
+HEWLFINC	mixed	replace	0x0483	-16	<open code>	         LH    0,IEW0532               NO--GIVE 
+HEWLFINC	mixed	insert	0x051e	+12	<open code>	         LA    13,BLDLMBRN    ADDR. OF MBER NAME
+HEWLFINC	mixed	insert	0x071e	+2	<open code>	INPUTPRA DC    V(HEWLFINP)
+HEWLFINC	mixed	insert	0x0720	+2	<open code>	INPUTPRA DC    V(HEWLFINP)
+HEWLFINC	mixed	replace	0x0722	-4	<open code>	ENDADDR  DC    V(HEWLFEND)
+HEWLFINC	mixed	insert	0x076a	+2	DCB	         DC    AL3(HEWLCEOD)           EODAD    
+HEWLFINC	mixed	replace	0x076c	-2	DCB	         DC    BL1'0000000                      
+HEWLFINC	mixed	insert	0x07a2	+6	<open code>	SYNADAD  DC    A(HEWLCRO1)
+HEWLFINC	mixed	replace	0x07a4	-6	<open code>	ADRASSEY DC    V(HEWLFADA)             ADDRESS O
+HEWLFINC	mixed	insert	0x08b6	+30	<open code>	MAXENTRY DC    H'10'                   MAXINUM N
+HEWLFINC	mixed	replace	0x08b9	-30	<open code>	APPEND   DS    20C
+HEWLFINP	not anchored (score 80% margin +67%)					
+HEWLFOPT	not anchored (score 79% margin +64%)					
+HEWLFREL	not anchored (score 81% margin +59%)					
+HEWLFSCD	not anchored (score 74% margin +62%)					
 HMASMAAR	mixed	replace	0x0190	-1	LINK	         LA    0,0(0,R2)              PICKUP EPL
 HMASMAAR	mixed	delete	0x0193	-3	LINK	         LA    0,0(0,R2)              PICKUP EPL
 HMASMAAR	mixed	replace	0x01c0	-1	LINK	         LA    0,0(0,R2)              PICKUP EPL
@@ -1099,7 +1168,36 @@ HMASMPIN	mixed	insert	0x0fb0	+11	<open code>	A000F7D  DC    C'HMAS'
 HMASMPIN	mixed	replace	0x0fb1	-23	<open code>	A000F7D  DC    C'HMAS'
 HMASMPIN	mixed	insert	0x103b	+19	<open code>	A001029  DC    C'09'
 HMASMPIN	mixed	replace	0x103c	-19	<open code>	A001029  DC    C'09'
-HMASMRCD	no usable reference					
+HMASMRCD	mixed	replace	0x089c	-1	LINK	         LA    0,0(0,R14)             PICKUP EPL
+HMASMRCD	mixed	delete	0x089f	-3	LINK	         LA    0,0(0,R14)             PICKUP EPL
+HMASMRCD	mixed	replace	0x0901	+98	<open code>	         ST    R9,@AL00001                      
+HMASMRCD	mixed	replace	0x0908	-3	<open code>	         LA    R1,@AL00001                      
+HMASMRCD	mixed	delete	0x090d	-95	<open code>	         L     R9,MAXCOPY                       
+HMASMRCD	mixed	replace	0x0a89	+94	<open code>	         ST    R9,@AL00001                      
+HMASMRCD	mixed	delete	0x0a90	-21	<open code>	         LA    R1,@AL00001                      
+HMASMRCD	mixed	delete	0x0aa6	-12	<open code>	         STH   R9,MGPMGNO1                      
+HMASMRCD	mixed	delete	0x0ab3	-61	<open code>	         L     R9,MAXCOPY                       
+HMASMRCD	mixed	insert	0x0e72	+242	<open code>	@CH00558 DC    H'26'
+HMASMRCD	mixed	replace	0x0e7a	+1	<open code>	@AL00655 DC    A(HMASMMGP)             LIST WITH
+HMASMRCD	mixed	insert	0x0e7d	+15	<open code>	@AL00594 DC    A(HMASMSPL)             LIST WITH
+HMASMRCD	mixed	replace	0x0e7e	+10	<open code>	@AL00594 DC    A(HMASMSPL)             LIST WITH
+HMASMRCD	mixed	replace	0x0e84	-268	<open code>	         DC    0F'0'                            
+HMASMRCD	mixed	insert	0x0f9e	+2	<open code>	@CV01464 DC    V(HMASMIO)
+HMASMRCD	mixed	insert	0x0f9f	+3	<open code>	@CV01464 DC    V(HMASMIO)
+HMASMRCD	mixed	insert	0x0fa0	+3	<open code>	@CV01464 DC    V(HMASMIO)
+HMASMRCD	mixed	replace	0x0fa1	-12	<open code>	@CV01465 DC    V(HMASMGTA)
+HMASMRCD	mixed	insert	0x0fdc	+12	<open code>	@CC01636 DC    C') '
+HMASMRCD	mixed	insert	0x0fe0	+2	HMASMSPL	SPLPMAD  DC    AL4(0)                           
+HMASMRCD	mixed	insert	0x0fe2	+3	HMASMSPL	SPLFUNCT DC    FL1'0'                           
+HMASMRCD	mixed	replace	0x0fe3	-17	HMASMSPL	SPLFUNCT DC    FL1'0'                           
+HMASMRCD	mixed	insert	0x1016	+14	HMASMMGP	MGPVAR   DS    0XL(12)                          
+HMASMRCD	mixed	replace	0x1017	-14	<open code>	         DC    0D'0'                            
+HMASMRCD	mixed	replace	0x113c	-102	<open code>	A001134  DC    H'0'                             
+HMASMRCD	mixed	insert	0x11c5	+132	<open code>	         ORG   TAPEDSN+11
+HMASMRCD	mixed	insert	0x11c6	+7	<open code>	         ORG   TAPEDSN+44
+HMASMRCD	mixed	replace	0x11c7	-37	<open code>	         ORG   TAPEDSN+44
+HMASMRCD	mixed	insert	0x1244	+10	<open code>	         DC    0A(0)                            
+HMASMRCD	mixed	replace	0x1245	-10	<open code>	         ORG   PATCHRCD+80
 HMASMULI	mixed	replace	0x00c3	-8	ESTAE	A0000C0  BAL   1,*+20                  LIST ADDR
 HMASMULI	mixed	replace	0x01a0	-1	LINK	         LA    0,0(0,R4)              PICKUP EPL
 HMASMULI	mixed	delete	0x01a3	-3	LINK	         LA    0,0(0,R4)              PICKUP EPL
@@ -1797,7 +1895,15 @@ IDA0192B	mixed	insert	0x1830	+7	<open code>	@CV05348 DC    V(IDA0192Z)
 IDA0192B	mixed	replace	0x1832	-12	<open code>	@CV05359 DC    V(IDA0192C)
 IDA0192B	mixed	insert	0x185c	+4	<open code>	@CC04265 DC    C'192P'
 IDA0192B	mixed	replace	0x1996	+4	<open code>	         DS    0D                       DOUBLE W
-IDA0192D	no usable reference					
+IDA0192D	all in open code	insert	0x0000	+2	<open code>	         B     @PROLOG                          
+IDA0192D	all in open code	insert	0x000f	+5	<open code>	         DC    AL1(16)                          
+IDA0192D	all in open code	delete	0x0010	-5	<open code>	         DC    AL1(16)                          
+IDA0192D	all in open code	insert	0x001c	+24	<open code>	         BALR  @12,0                            
+IDA0192D	all in open code	insert	0x0398	+4	<open code>	         OI    ACQFULL(ACQPTR),B'10000000'      
+IDA0192D	all in open code	replace	0x039b	+4	<open code>	         BAL   @14,GETLIST                      
+IDA0192D	all in open code	replace	0x09ff	+8	<open code>	         BZ    @DL00649                         
+IDA0192D	all in open code	insert	0x0af4	+4	<open code>	@CF03097 DC    F'104'
+IDA0192D	all in open code	replace	0x0b05	+4	<open code>	@CV03385 DC    V(IDA0192P)
 IDA0192I	mixed	insert	0x0012	+1	<open code>	         DC    AL1(16)                          
 IDA0192I	mixed	replace	0x0013	-1	<open code>	         DC    AL1(16)                          
 IDA0192I	mixed	replace	0x0057	+24	<open code>	         BZ    @RT00185                         
@@ -1948,14 +2054,22 @@ IDA019SF	mixed	insert	0x077e	+2	<open code>	@CV01044 DC    V(IDAFREEB)
 IDA019SF	mixed	insert	0x0780	+10	<open code>	@CV01044 DC    V(IDAFREEB)
 IDA019SF	mixed	insert	0x0782	+10	<open code>	@CV01045 DC    V(IDA019RM)
 IDA019SF	mixed	replace	0x0784	-38	<open code>	@CV01046 DC    V(IDA019RV)
-IDA0C05B	no usable reference					
-IDA0I96C	no usable reference					
+IDA0C05B	mixed	replace	0x0128	+6	ESTAE	         SLR   0,0                     INDICATE 
+IDA0C05B	mixed	insert	0x02a8	+2	<open code>	@CH00089 DC    H'4'
+IDA0C05B	mixed	insert	0x02d1	+7	ESTAE	         DC    AL1(32)                 FLAGS    
+IDA0C05B	mixed	delete	0x02f5	-7	<open code>	         DS    0D                   START ON DOU
+IDA0I96C	mixed	insert	0x0060	+12	<open code>	@RF00121 LR    RCORE,R1                         
+IDA0I96C	mixed	delete	0x0234	-4	<open code>	         DS    0D
+IDA0I96C	mixed	insert	0x0249	+7	ESTAE	         DC    AL1(32)                 FLAGS    
+IDA0I96C	mixed	delete	0x0267	-6	<open code>	         DS    0D                   START ON DOU
 IDA121A5	all in open code	delete	0x000f	-1	<open code>	         DC    AL1(16)                          
 IDA121A5	all in open code	insert	0x0011	+1	<open code>	         DC    AL1(16)                          
 IDA121A5	all in open code	insert	0x0018	+24	<open code>	@PROLOG  BALR  @08,0                            
 IDA121A5	all in open code	insert	0x0028	+1	<open code>	         L     RBUFC,IOMBUFC(,RIOMB)            
 IDA121A5	all in open code	delete	0x0029	-1	<open code>	         L     RBUFC,IOMBUFC(,RIOMB)            
-IDACKRA1	no usable reference					
+IDACKRA1	all in open code	insert	0x0256	+2	<open code>	         NOPR  ((@ENDDATD-@DATD)*16)
+IDACKRA1	all in open code	replace	0x025a	-2	<open code>	         DC    AL3(@ENDDATD-@DATD)
+IDACKRA1	all in open code	delete	0x03f8	-17	<open code>	         DS    0D                   START ON DOU
 IDAICIA1	mixed	delete	0x000f	-1	<open code>	         DC    AL1(16)                          
 IDAICIA1	mixed	insert	0x0011	+1	<open code>	         DC    AL1(16)                          
 IDAICIA1	mixed	delete	0x0012	-1	<open code>	         DC    AL1(16)                          
@@ -4070,6 +4184,7 @@ IECVIOPM	mixed	replace	0x08fd	-4	<open code>	         B     @EL00006
 IECVIOPM	mixed	delete	0x0996	-4	<open code>	         B     @PB00008                         
 IECVIOPM	mixed	delete	0x0a1e	-4	<open code>	         B     @EL00001                         
 IECVIOPM	mixed	insert	0x0a2f	+4	<open code>	@CF02785 DC    F'62720'
+IECVOID	no TXT					
 IECVSMGR	mixed	insert	0x001d	+2	<open code>	SMGRHDRS DC    A(IECVSHDR)         POINTER TO ST
 IECVSMGR	mixed	delete	0x001e	-2	<open code>	SMGRHDRS DC    A(IECVSHDR)         POINTER TO ST
 IECVSMGR	mixed	replace	0x094c	-17	SDUMP	         DC    AL1(18)                      LENG
@@ -4198,20 +4313,21 @@ IEDAYII	all in open code	insert	0x07ca	+2	<open code>	ONE      DC    H'1'       
 IEDAYII	all in open code	replace	0x07cc	-2	<open code>	CC3270L  DC    H'3'                     USED TO 
 IEDAYII	all in open code	insert	0x07d6	+2	<open code>	TPPRI    DC    AL1(PRIBFRTB)            TPOST PR
 IEDAYII	all in open code	replace	0x07d8	-2	<open code>	TPPRI    DC    AL1(PRIBFRTB)            TPOST PR
-IEDAYL	mixed	insert	0x001a	+10	<open code>	         B     PASTID                   GET PAST
-IEDAYL	mixed	insert	0x0075	+32	<open code>	         TM    TRMSTATE,TRMPREF         IS THERE
-IEDAYL	mixed	replace	0x007b	+8	<open code>	         BZ    OXOCNI                   TERM 0X 
-IEDAYL	mixed	replace	0x0083	-8	<open code>	         BNO   CONCAN                   NO, IGNO
-IEDAYL	mixed	replace	0x00d5	-8	<open code>	         BE    CONCAN                   YES - NO
-IEDAYL	mixed	insert	0x012c	+8	<open code>	         SR    RBUSZ,RHDR               GET DATA
-IEDAYL	mixed	insert	0x0133	+2	<open code>	         SR    RMSGSZ,RHDR              GET DATA
-IEDAYL	mixed	insert	0x021e	+10	<open code>	         LR    RBUF,RBUF1               GET ADDR
-IEDAYL	mixed	delete	0x0220	-2	<open code>	         LR    RBUSZ,RBUSZ1             GET SIZE
-IEDAYL	mixed	replace	0x03ca	+20	<open code>	         B     CHKMH                    ATTEMPT 
-IEDAYL	mixed	insert	0x0480	+24	IEDDCT	         OI        DCTBYTE1-IEDDCT(RCH),DCT3270 
-IEDAYL	mixed	insert	0x04f4	+4	<open code>	         OI    QCBFLAG,QCBTSSES         MAKE SUR
-IEDAYL	mixed	delete	0x056c	-24	<open code>	         TM    QCBTSOF1,QCBDELAY        IS QCB I
-IEDAYL	mixed	delete	0x06f4	-20	<open code>	         DC    C'X'                     MARKS EN
+IEDAYL	mixed	replace	0x001a	+8	IEDHJN	         DC    X'F01B' .                DATE OF 
+IEDAYL	mixed	insert	0x0077	+32	<open code>	         TM    TRMSTATE,TRMPREF         IS THERE
+IEDAYL	mixed	replace	0x007d	+8	<open code>	         BZ    OXOCNI                   TERM 0X 
+IEDAYL	mixed	replace	0x0085	-8	<open code>	         BNO   CONCAN                   NO, IGNO
+IEDAYL	mixed	replace	0x00d7	-8	<open code>	         BE    CONCAN                   YES - NO
+IEDAYL	mixed	insert	0x012e	+8	<open code>	         SR    RBUSZ,RHDR               GET DATA
+IEDAYL	mixed	insert	0x0135	+2	<open code>	         SR    RMSGSZ,RHDR              GET DATA
+IEDAYL	mixed	insert	0x0220	+10	<open code>	         LR    RBUF,RBUF1               GET ADDR
+IEDAYL	mixed	delete	0x0222	-2	<open code>	         LR    RBUSZ,RBUSZ1             GET SIZE
+IEDAYL	mixed	replace	0x03cc	+20	<open code>	         B     CHKMH                    ATTEMPT 
+IEDAYL	mixed	insert	0x0482	+24	IEDDCT	         OI        DCTBYTE1-IEDDCT(RCH),DCT3270 
+IEDAYL	mixed	insert	0x04f6	+4	<open code>	         OI    QCBFLAG,QCBTSSES         MAKE SUR
+IEDAYL	mixed	delete	0x056e	-24	<open code>	         TM    QCBTSOF1,QCBDELAY        IS QCB I
+IEDAYL	mixed	delete	0x068e	-2	<open code>	MGCRMASK DS    0F                       FORCE FU
+IEDAYL	mixed	delete	0x06f8	-20	<open code>	         DC    C'X'                     MARKS EN
 IEDAYLL	all in open code	insert	0x02bc	+36	<open code>	ANMVC    MVC   TSBTRMID(0),X'52'(RIS)           
 IEDAYQT	mixed	replace	0x004f	+4	<open code>	         BZ    ROUTING                  NO, DON'
 IEDAYQT	mixed	insert	0x0058	+4	<open code>	         L     R13,R13DISP(,RPARM)      RESTORE 
@@ -4235,122 +4351,113 @@ IEDBITN	all in macro expansions	insert	0x0252	+1	IEDBEND	         DC    X'00'   
 IEDBITN	all in macro expansions	replace	0x0255	-1	IEDBEND	         DC    X'00'                    LU PROFI
 IEDBITN	all in macro expansions	replace	0x026f	-3	IEDBEND	         DC    AL1(9)                   LOG ON D
 IEDBITN	all in macro expansions	replace	0x02de	-5	IEDBEND	         DC    AL1(11)                  LOG ON D
-IEDDFOUT	mixed	insert	0x001a	+4	IEDHJN	         B     START  .                 BR AROUN
-IEDDFOUT	mixed	insert	0x00a4	+28	<open code>	         LA    RLCB,0(,RLCB)                    
-IEDDFOUT	mixed	replace	0x00ee	+50	<open code>	         B     @RC00441                         
-IEDDFOUT	mixed	replace	0x01c6	+3	<open code>	         L     @09,BDQCB(,@09)                  
-IEDDFOUT	mixed	replace	0x01c8	-5	<open code>	         L     @09,BDQCB(,@09)                  
-IEDDFOUT	mixed	delete	0x0380	-1	<open code>	         BNO   @RF00600                         
-IEDDFOUT	mixed	insert	0x0382	+1	<open code>	         BNO   @RF00600                         
-IEDDFOUT	mixed	insert	0x03b0	+28	<open code>	         NI    LCBCHN(IEDQLPTR),B'01111111'     
-IEDDFOUT	mixed	replace	0x040f	-38	<open code>	         BNZ   @RF00622                         
-IEDDFOUT	mixed	replace	0x0439	-64	<open code>	         BAL   @14,BLDERBUF                     
-IEDDFOUT	mixed	replace	0x0493	+62	<open code>	         B     @RC00596                         
-IEDDFOUT	mixed	insert	0x06ce	+14	<open code>	@CB02152 DC    X'4B8000'
+IEDDFOUT	all in open code	insert	0x00a8	+28	<open code>	         LA    RLCB,0(,RLCB)                    
+IEDDFOUT	all in open code	replace	0x00f2	+50	<open code>	         B     @RC00441                         
+IEDDFOUT	all in open code	replace	0x01ca	+3	<open code>	         L     @09,BDQCB(,@09)                  
+IEDDFOUT	all in open code	replace	0x01cc	-5	<open code>	         L     @09,BDQCB(,@09)                  
+IEDDFOUT	all in open code	insert	0x03b4	+28	<open code>	         NI    LCBCHN(IEDQLPTR),B'01111111'     
+IEDDFOUT	all in open code	replace	0x0413	-38	<open code>	         BNZ   @RF00622                         
+IEDDFOUT	all in open code	replace	0x043d	-64	<open code>	         BAL   @14,BLDERBUF                     
+IEDDFOUT	all in open code	replace	0x0497	+62	<open code>	         B     @RC00596                         
+IEDDFOUT	all in open code	replace	0x06bc	-4	<open code>	         DS    0D
+IEDDFOUT	all in open code	insert	0x06d6	+14	<open code>	@CB02152 DC    X'4B8000'
 IEDIAA	not anchored (score 41% margin +1%)					
-IEDIAB	mixed	insert	0x0010	+12	IEDHJN	         B     AFTERHJN .                 BR ARO
-IEDIAB	mixed	insert	0x01a6	+4	<open code>	         LH    RNEXT,SAVTPLSZ(,@09)             
-IEDIAB	mixed	insert	0x03f0	+20	<open code>	         MVI   LCBRSPRI(@09),X'20'              
-IEDIAB	mixed	insert	0x0606	+1	<open code>	@CH02246 DC    H'28'
-IEDIAB	mixed	replace	0x0607	-1	<open code>	         DS    0F
-IEDIAB	mixed	insert	0x0630	+4	<open code>	@CF02198 DC    XL4'FFFFFFF8'
-IEDIAB	mixed	delete	0x0645	-24	<open code>	RVTSIZE  DC    A(0)
+IEDIAB	mixed	insert	0x0010	+3	IEDHJN	         B     AFTERHJN .                 BR ARO
+IEDIAB	mixed	replace	0x0011	+5	IEDHJN	         DC    X'5430' .                DATE OF 
+IEDIAB	mixed	insert	0x01aa	+4	<open code>	         LH    RNEXT,SAVTPLSZ(,@09)             
+IEDIAB	mixed	insert	0x03f4	+20	<open code>	         MVI   LCBRSPRI(@09),X'20'              
+IEDIAB	mixed	insert	0x060a	+1	<open code>	@CH02246 DC    H'28'
+IEDIAB	mixed	replace	0x060b	-1	<open code>	         DS    0F
+IEDIAB	mixed	insert	0x0634	+4	<open code>	@CF02198 DC    XL4'FFFFFFF8'
+IEDIAB	mixed	delete	0x0649	-28	<open code>	SATSIZE  DC    A(0)
 IEDIAR	not anchored (score 82% margin +61%)					
-IEDLUS	mixed	insert	0x001a	+10	IEDHJN	         B     START  .                 BR AROUN
-IEDLUS	mixed	insert	0x03f6	+20	<open code>	         MVC   CURQCB(3,RPRF),SAVTCLUP+1(@09)   
-IEDLUS	mixed	replace	0x04e1	-8	<open code>	         B     @RC00760                         
-IEDLUS	mixed	insert	0x04ee	+8	<open code>	@RC00760 L     @09,PREVIOUS                     
-IEDLUS	mixed	replace	0x0618	+20	<open code>	         L     @09,BUFPTR                       
-IEDLUS	mixed	insert	0x07e2	+20	<open code>	         L     @09,REQLINK-1(,@09)              
-IEDLUS	mixed	replace	0x08e2	-8	<open code>	         BNE   @RF00939                         
-IEDLUS	mixed	replace	0x08ef	+8	<open code>	@RF00939 BAL   @14,ERBRTNX                      
-IEDLUS	mixed	insert	0x0be2	+20	<open code>	         BAL   @14,MHBUF                        
-IEDLUS	mixed	replace	0x0fe1	+20	<open code>	         STH   @09,TNTSLU                       
-IEDLUS	mixed	insert	0x10fd	+2	<open code>	@RF01300 MVC   XINSMODE(8),@CC03115             
-IEDLUS	mixed	delete	0x10fe	-2	<open code>	@RF01300 MVC   XINSMODE(8),@CC03115             
-IEDLUS	mixed	insert	0x13e2	+20	<open code>	         SH    RPARMF,AVTKEYLE(,RAVT)           
-IEDLUS	mixed	insert	0x1407	+2	<open code>	@SM03407 MVC   NAMECON(0),CHAR8(RPARM)
+IEDLUS	mixed	replace	0x001a	+8	IEDHJN	         DC    X'5DA5' .                DATE OF 
+IEDLUS	mixed	insert	0x03f8	+20	<open code>	         MVC   CURQCB(3,RPRF),SAVTCLUP+1(@09)   
+IEDLUS	mixed	replace	0x04e3	-8	<open code>	         B     @RC00760                         
+IEDLUS	mixed	insert	0x04f0	+8	<open code>	@RC00760 L     @09,PREVIOUS                     
+IEDLUS	mixed	replace	0x061a	+20	<open code>	         L     @09,BUFPTR                       
+IEDLUS	mixed	insert	0x07e4	+20	<open code>	         L     @09,REQLINK-1(,@09)              
+IEDLUS	mixed	replace	0x08e4	-8	<open code>	         BNE   @RF00939                         
+IEDLUS	mixed	replace	0x08f1	+8	<open code>	@RF00939 BAL   @14,ERBRTNX                      
+IEDLUS	mixed	insert	0x0be4	+20	<open code>	         BAL   @14,MHBUF                        
+IEDLUS	mixed	replace	0x0fe3	+20	<open code>	         STH   @09,TNTSLU                       
+IEDLUS	mixed	insert	0x10ff	+2	<open code>	@RF01300 MVC   XINSMODE(8),@CC03115             
+IEDLUS	mixed	delete	0x1100	-2	<open code>	@RF01300 MVC   XINSMODE(8),@CC03115             
+IEDLUS	mixed	insert	0x13e4	+20	<open code>	         SH    RPARMF,AVTKEYLE(,RAVT)           
+IEDLUS	mixed	insert	0x14e0	+4	<open code>	@CF01909 DC    XL4'4C'
 IEDLUS	mixed	delete	0x160e	-68	<open code>	         ORG   LUSLCB+90
-IEDNGD	mixed	insert	0x0018	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IEDNGD	mixed	insert	0x03fc	+28	<open code>	         TM    LCBEOMSG(RLCB),B'01000000'       
-IEDNGD	mixed	replace	0x0401	+8	<open code>	         BNZ   @RF00742                         
-IEDNGD	mixed	replace	0x0409	+54	<open code>	         B     @RC00732                         
-IEDNGD	mixed	replace	0x04a9	-198	<open code>	         SL    RBDU,@CF00070                    
-IEDNGD	mixed	insert	0x0591	+136	<open code>	         BNZ   @RF00812                         
-IEDNGD	mixed	insert	0x0592	+62	<open code>	         BNZ   @RF00812                         
-IEDNGD	mixed	insert	0x07be	+20	<open code>	         MVC   TTHOAF(2,@10),SAVTTCPU(@09)      
-IEDNGD	mixed	replace	0x0aa6	+3	<open code>	         L     @14,SAVTDNIR(,@14)               
-IEDNGD	mixed	replace	0x0aa8	-5	<open code>	         L     @14,SAVTDNIR(,@14)               
-IEDNGD	mixed	insert	0x0b14	+5	<open code>	@SX02407 XC    BUFTOCLR(0,@14),BUFTOCLR(@14)
-IEDNGD	mixed	insert	0x0b15	+7	<open code>	@SA00018 DS    1F
-IEDNGD	mixed	insert	0x0b16	+17	<open code>	@SA00018 DS    1F
-IEDNGD	mixed	replace	0x0b17	-29	<open code>	@SA00018 DS    1F
-IEDNGD	mixed	delete	0x0b54	-47	<open code>	@CF00044 DC    F'8'
-IEDNKA	mixed	insert	0x0018	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IEDNKA	mixed	replace	0x0029	+8	<open code>	         BNE   @RF00573                         
-IEDNKA	mixed	delete	0x00d0	-4	<open code>	         NI    LCBRTRRO(RLCB),B'11111011'       
-IEDNKA	mixed	insert	0x012e	+4	<open code>	         NI    TRMNLOUT(RTRM),B'11111011'       
-IEDNKA	mixed	insert	0x0224	+4	<open code>	         LR    RLCB,@10                         
-IEDNKA	mixed	replace	0x0261	+16	<open code>	         BO    @RF00697                         
-IEDNKA	mixed	insert	0x026a	+6	<open code>	         OI    SCBSLCTN(@10),B'10100000'        
-IEDNKA	mixed	replace	0x03d8	+28	<open code>	         BNO   @GL00005                         
-IEDNKA	mixed	insert	0x05ad	+4	<open code>	         B     @RC00877                         
-IEDNKA	mixed	delete	0x05b0	-4	<open code>	@RF00877 BAL   @14,IPBSRDIN                     
-IEDNKA	mixed	insert	0x0628	+4	<open code>	         MVI   BDUMODIF(@10),X'00'              
-IEDNKA	mixed	insert	0x069c	+4	<open code>	         MVI   BDUCMND(@10),X'07'               
-IEDNKA	mixed	replace	0x07d2	+20	<open code>	         B     @RC00990                         
-IEDNKA	mixed	insert	0x0a52	+6	<open code>	         XC    IEDPF1(8,@10),IEDPF1(@10)        
-IEDNKA	mixed	delete	0x0b0e	-1	<open code>	IPMHBFR  ST    @14,@SA00017                     
-IEDNKA	mixed	insert	0x0b10	+1	<open code>	IPMHBFR  ST    @14,@SA00017                     
-IEDNKA	mixed	delete	0x0b42	-1	<open code>	@ER00017 L     @14,@SA00017                     
-IEDNKA	mixed	insert	0x0b44	+1	<open code>	@ER00017 L     @14,@SA00017                     
-IEDNKA	mixed	replace	0x0b90	+3	<open code>	         L     @10,SAVTCNIR(,@10)               
-IEDNKA	mixed	replace	0x0b92	-5	<open code>	         L     @10,SAVTCNIR(,@10)               
-IEDNKA	mixed	insert	0x0bc0	+5	<open code>	@SX02496 XC    BUFTOCLR(0,@07),BUFTOCLR(@07)
-IEDNKA	mixed	insert	0x0bc1	+9	<open code>	@SA00010 DS    1F
-IEDNKA	mixed	delete	0x0bc2	-66	<open code>	@SA00010 DS    1F
-IEDNKA	mixed	insert	0x0c0a	+1	<open code>	@CF00044 DC    F'8'
-IEDNKA	mixed	replace	0x0c0b	+2	<open code>	@CF00044 DC    F'8'
-IEDNKA	mixed	replace	0x0c0e	-28	<open code>	@CF02135 DC    F'14'
-IEDNKA	mixed	delete	0x0c2d	-2	<open code>	@CB02131 DC    X'0B8000'
-IEDNKA	mixed	replace	0x0c30	+4	<open code>	@CB02362 DC    X'27F1'
-IEDNKA	mixed	insert	0x0c35	+11	<open code>	@NM00217 DC    AL2(0)
-IEDNKA	mixed	replace	0x0c36	+17	<open code>	@NM00218 DC    X'05'
-IEDNLT	mixed	insert	0x0014	+2	IEDHJN	         B     AFTERHJN .                 BR ARO
-IEDNLT	mixed	insert	0x0022	+6	<open code>	         ALR   RWORK,@14                        
-IEDNLT	mixed	insert	0x0045	+22	<open code>	         ICM   RHEADER,15,NCPLTRAC(RNCPI)       
-IEDNLT	mixed	delete	0x0048	-6	<open code>	         LA    RRLTD,13                         
-IEDNLT	mixed	replace	0x0056	+2	<open code>	         SL    RLEN,@CF00236                    
-IEDNLT	mixed	delete	0x0066	-4	<open code>	         TM    HEDTBL1(RHEADER),B'10000000'     
-IEDNLT	mixed	delete	0x0076	-6	<open code>	@RF00135 LTR   RLEN,RLEN                        
-IEDNLT	mixed	replace	0x0083	+8	<open code>	         BNO   @RF00140                         
-IEDNLT	mixed	replace	0x0089	+14	<open code>	         MVC   HEDID(4,RHEADER),@CC01027        
-IEDNLT	mixed	insert	0x00ab	+8	<open code>	         BAL   @14,FULLTBL                      
-IEDNLT	mixed	insert	0x00ac	+18	<open code>	         BAL   @14,FULLTBL                      
-IEDNLT	mixed	delete	0x00be	-8	<open code>	@RF00155 L     RTBPOS,HEDTBPOS(,RHEADER)        
-IEDNLT	mixed	insert	0x00ca	+6	<open code>	         LH    RWORK,HEDREMLN(,RHEADER)         
-IEDNLT	mixed	replace	0x00cb	+2	<open code>	         BCTR  RWORK,0                          
-IEDNLT	mixed	replace	0x00cf	-8	<open code>	         EX RWORK,MVCDATA
-IEDNLT	mixed	delete	0x00dc	-14	<open code>	         B     @RC00161                         
-IEDNLT	mixed	replace	0x00ed	-8	<open code>	@RC00161 BAL   @14,FULLTBL                      
-IEDNLT	mixed	replace	0x00f7	-6	<open code>	         BH    @DL00158                         
-IEDNLT	mixed	replace	0x011c	-8	<open code>	         LTR   @14,@14                          
-IEDNLT	mixed	insert	0x0156	+10	<open code>	         AH    @14,HEDSEQCT(,RHEADER)           
-IEDNLT	mixed	insert	0x0158	+4	<open code>	         ST    @14,TABSEQCT(,RTABHALF)          
-IEDNLT	mixed	insert	0x01f6	+3	<open code>	@RF00219 SLR   RRTN,RRTN                        
-IEDNLT	mixed	delete	0x01f7	-9	<open code>	@ER00001 L     @14,12(,@13)                     
-IEDNLT	mixed	replace	0x0204	+4	<open code>	         AH    @00,HEDSEQCT(,RHEADER)           
-IEDNLT	mixed	insert	0x0208	+4	<open code>	         AH    @00,HEDSEQCT(,RHEADER)           
-IEDNLT	mixed	insert	0x020c	+12	<open code>	         STH   @00,HEDSEQCT(,RHEADER)           
-IEDNLT	mixed	insert	0x020e	+4	<open code>	         ST    @00,TABSEQCT(,RTABHALF)          
-IEDNLT	mixed	delete	0x0292	-12	<open code>	MVCDATA  MVC   0(0,RTBPOS),0(RDATA)     MOVE DAT
-IEDNLT	mixed	replace	0x02a7	+4	<open code>	@CF00236 DC    F'12'
-IEDNLT	mixed	replace	0x02b7	+16	<open code>	AQTJID   DC    AL3(TJID)
-IEDNTR	mixed	insert	0x0010	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IEDNTR	mixed	delete	0x0060	-18	<open code>	         LR    @07,RPIU                         
-IEDNTR	mixed	replace	0x00e3	+46	<open code>	         EX    RLEN,CLRDATA             CLEAR VA
-IEDNTR	mixed	insert	0x0244	+4	<open code>	@CF00059 DC    F'1'
-IEDNTR	mixed	delete	0x0253	-4	<open code>	COUNTER  DC    F'0'
+IEDNGD	all in open code	insert	0x0400	+28	<open code>	         TM    LCBEOMSG(RLCB),B'01000000'       
+IEDNGD	all in open code	replace	0x0405	+8	<open code>	         BNZ   @RF00742                         
+IEDNGD	all in open code	replace	0x040d	+54	<open code>	         B     @RC00732                         
+IEDNGD	all in open code	replace	0x04ad	-198	<open code>	         SL    RBDU,@CF00070                    
+IEDNGD	all in open code	replace	0x0595	+198	<open code>	         BNZ   @RF00812                         
+IEDNGD	all in open code	insert	0x07c2	+20	<open code>	         MVC   TTHOAF(2,@10),SAVTTCPU(@09)      
+IEDNGD	all in open code	replace	0x0aaa	+3	<open code>	         L     @14,SAVTDNIR(,@14)               
+IEDNGD	all in open code	replace	0x0aac	-5	<open code>	         L     @14,SAVTDNIR(,@14)               
+IEDNGD	all in open code	insert	0x0b18	+5	<open code>	@SX02407 XC    BUFTOCLR(0,@14),BUFTOCLR(@14)
+IEDNGD	all in open code	insert	0x0b19	+7	<open code>	@SA00018 DS    1F
+IEDNGD	all in open code	insert	0x0b1a	+17	<open code>	@SA00018 DS    1F
+IEDNGD	all in open code	replace	0x0b1b	-29	<open code>	@SA00018 DS    1F
+IEDNGD	all in open code	delete	0x0b58	-43	<open code>	@CF00044 DC    F'8'
+IEDNKA	all in open code	replace	0x002d	+8	<open code>	         BNE   @RF00573                         
+IEDNKA	all in open code	delete	0x00d4	-4	<open code>	         NI    LCBRTRRO(RLCB),B'11111011'       
+IEDNKA	all in open code	insert	0x0132	+4	<open code>	         NI    TRMNLOUT(RTRM),B'11111011'       
+IEDNKA	all in open code	insert	0x0228	+4	<open code>	         LR    RLCB,@10                         
+IEDNKA	all in open code	replace	0x0265	+16	<open code>	         BO    @RF00697                         
+IEDNKA	all in open code	insert	0x026e	+6	<open code>	         OI    SCBSLCTN(@10),B'10100000'        
+IEDNKA	all in open code	replace	0x03dc	+28	<open code>	         BNO   @GL00005                         
+IEDNKA	all in open code	insert	0x05a9	+12	<open code>	         BNO   @RF00877                         
+IEDNKA	all in open code	replace	0x05b1	-12	<open code>	         B     @RC00877                         
+IEDNKA	all in open code	insert	0x062c	+4	<open code>	         MVI   BDUMODIF(@10),X'00'              
+IEDNKA	all in open code	insert	0x06a0	+4	<open code>	         MVI   BDUCMND(@10),X'07'               
+IEDNKA	all in open code	replace	0x07d6	+20	<open code>	         B     @RC00990                         
+IEDNKA	all in open code	delete	0x09ab	-8	<open code>	         BNZ   @RF01075                         
+IEDNKA	all in open code	insert	0x09b6	+8	<open code>	         BAL   @14,IPBSRDCN                     
+IEDNKA	all in open code	insert	0x0a56	+6	<open code>	         XC    IEDPF1(8,@10),IEDPF1(@10)        
+IEDNKA	all in open code	replace	0x0b94	+3	<open code>	         L     @10,SAVTCNIR(,@10)               
+IEDNKA	all in open code	replace	0x0b96	-5	<open code>	         L     @10,SAVTCNIR(,@10)               
+IEDNKA	all in open code	insert	0x0bc4	+5	<open code>	@SX02496 XC    BUFTOCLR(0,@07),BUFTOCLR(@07)
+IEDNKA	all in open code	insert	0x0bc5	+9	<open code>	@SA00010 DS    1F
+IEDNKA	all in open code	delete	0x0bc6	-66	<open code>	@SA00010 DS    1F
+IEDNKA	all in open code	insert	0x0c0e	+1	<open code>	@CF00044 DC    F'8'
+IEDNKA	all in open code	replace	0x0c0f	+2	<open code>	@CF00044 DC    F'8'
+IEDNKA	all in open code	replace	0x0c12	-24	<open code>	@CF02135 DC    F'14'
+IEDNKA	all in open code	delete	0x0c2d	-2	<open code>	@CB02131 DC    X'0B8000'
+IEDNKA	all in open code	replace	0x0c30	+4	<open code>	@CB02362 DC    X'27F1'
+IEDNKA	all in open code	insert	0x0c35	+11	<open code>	@NM00217 DC    AL2(0)
+IEDNKA	all in open code	replace	0x0c36	+17	<open code>	@NM00218 DC    X'05'
+IEDNLT	all in open code	insert	0x0024	+6	<open code>	         ALR   RWORK,@14                        
+IEDNLT	all in open code	insert	0x0047	+22	<open code>	         ICM   RHEADER,15,NCPLTRAC(RNCPI)       
+IEDNLT	all in open code	delete	0x004a	-6	<open code>	         LA    RRLTD,13                         
+IEDNLT	all in open code	replace	0x0058	+2	<open code>	         SL    RLEN,@CF00236                    
+IEDNLT	all in open code	delete	0x0068	-4	<open code>	         TM    HEDTBL1(RHEADER),B'10000000'     
+IEDNLT	all in open code	delete	0x0078	-6	<open code>	@RF00135 LTR   RLEN,RLEN                        
+IEDNLT	all in open code	replace	0x0085	+8	<open code>	         BNO   @RF00140                         
+IEDNLT	all in open code	replace	0x008b	+14	<open code>	         MVC   HEDID(4,RHEADER),@CC01027        
+IEDNLT	all in open code	insert	0x00ad	+12	<open code>	         BAL   @14,FULLTBL                      
+IEDNLT	all in open code	insert	0x00ae	+14	<open code>	         BAL   @14,FULLTBL                      
+IEDNLT	all in open code	delete	0x00c0	-8	<open code>	@RF00155 L     RTBPOS,HEDTBPOS(,RHEADER)        
+IEDNLT	all in open code	insert	0x00cc	+6	<open code>	         LH    RWORK,HEDREMLN(,RHEADER)         
+IEDNLT	all in open code	replace	0x00cd	+2	<open code>	         BCTR  RWORK,0                          
+IEDNLT	all in open code	replace	0x00d1	-8	<open code>	         EX RWORK,MVCDATA
+IEDNLT	all in open code	delete	0x00de	-14	<open code>	         B     @RC00161                         
+IEDNLT	all in open code	replace	0x00ef	-8	<open code>	@RC00161 BAL   @14,FULLTBL                      
+IEDNLT	all in open code	replace	0x00f9	-6	<open code>	         BH    @DL00158                         
+IEDNLT	all in open code	replace	0x011e	-8	<open code>	         LTR   @14,@14                          
+IEDNLT	all in open code	insert	0x0158	+10	<open code>	         AH    @14,HEDSEQCT(,RHEADER)           
+IEDNLT	all in open code	insert	0x015a	+4	<open code>	         ST    @14,TABSEQCT(,RTABHALF)          
+IEDNLT	all in open code	insert	0x01f8	+3	<open code>	@RF00219 SLR   RRTN,RRTN                        
+IEDNLT	all in open code	delete	0x01f9	-9	<open code>	@ER00001 L     @14,12(,@13)                     
+IEDNLT	all in open code	replace	0x0206	+4	<open code>	         AH    @00,HEDSEQCT(,RHEADER)           
+IEDNLT	all in open code	insert	0x020a	+4	<open code>	         AH    @00,HEDSEQCT(,RHEADER)           
+IEDNLT	all in open code	insert	0x020e	+12	<open code>	         STH   @00,HEDSEQCT(,RHEADER)           
+IEDNLT	all in open code	insert	0x0210	+4	<open code>	         ST    @00,TABSEQCT(,RTABHALF)          
+IEDNLT	all in open code	delete	0x0294	-12	<open code>	MVCDATA  MVC   0(0,RTBPOS),0(RDATA)     MOVE DAT
+IEDNLT	all in open code	replace	0x02a7	+6	<open code>	@CF00236 DC    F'12'
+IEDNLT	all in open code	replace	0x02b7	+16	<open code>	AQTJID   DC    AL3(TJID)
+IEDNTR	all in open code	delete	0x0064	-18	<open code>	         LR    @07,RPIU                         
+IEDNTR	all in open code	replace	0x00e7	+46	<open code>	         EX    RLEN,CLRDATA             CLEAR VA
+IEDNTR	all in open code	insert	0x0248	+4	<open code>	@CF00059 DC    F'1'
 IEDOPTN	mixed	replace	0x0011	+4	IEDHJN	START    DS    0H                               
 IEDOPTN	mixed	replace	0x0083	+4	<open code>	         N     RPARM,@CF01497                   
 IEDQA0	not anchored (score 83% margin +75%)					
@@ -4366,13 +4473,15 @@ IEDQA6	mixed	insert	0x000a	+5	IEDHJN	         B     LCTLINIT .                 B
 IEDQA6	mixed	replace	0x0102	-4	<open code>	         B     MACBLOK                  CHECK BL
 IEDQAB	not anchored (score 84% margin +64%)					
 IEDQAE	not anchored (score 55% margin +15%)					
-IEDQAG	mixed	insert	0x0010	+4	IEDHJN	         B     MSGLIMIT .                 BR ARO
-IEDQAG	mixed	delete	0x0028	-76	<open code>	         CLI   LCBFLAG1,LCBPLCB         PLCB    
-IEDQAG	mixed	insert	0x0092	+112	<open code>	         AR    RTRM,RPARM               SET TRM 
+IEDQAG	all in open code	delete	0x002c	-76	<open code>	         CLI   LCBFLAG1,LCBPLCB         PLCB    
+IEDQAG	all in open code	insert	0x0096	+112	<open code>	         AR    RTRM,RPARM               SET TRM 
 IEDQAH	not anchored (score 63% margin +36%)					
-IEDQAJ	all in open code	insert	0x015a	+2	<open code>	         LR    RCHAR8,RPREFIX           PICKUP B
-IEDQAJ	all in open code	replace	0x016d	+12	<open code>	         B     CHECK                    CHECK FO
-IEDQAJ	all in open code	insert	0x01d4	+4	<open code>	OIX      OI    SCBDESTL,AVTEZERO        SAVE SCB
+IEDQAJ	mixed	delete	0x0000	-4	IEDHJN	         B     IDPASS .                 BR AROUN
+IEDQAJ	mixed	replace	0x000a	+5	IEDHJN	         DC    X'18F2' .                DATE OF 
+IEDQAJ	mixed	insert	0x000c	+3	IEDHJN	         DC    X'18F2' .                DATE OF 
+IEDQAJ	mixed	insert	0x015c	+2	<open code>	         LR    RCHAR8,RPREFIX           PICKUP B
+IEDQAJ	mixed	replace	0x016f	+12	<open code>	         B     CHECK                    CHECK FO
+IEDQAJ	mixed	insert	0x01d6	+4	<open code>	OIX      OI    SCBDESTL,AVTEZERO        SAVE SCB
 IEDQAM	not anchored (score 51% margin +3%)					
 IEDQAT	not anchored (score 54% margin +33%)					
 IEDQATTN	not anchored (score 73% margin +45%)					
@@ -4383,62 +4492,55 @@ IEDQBA	all in open code	insert	0x019a	+4	<open code>	         AR    R9,R10      
 IEDQBC	all in open code	insert	0x0094	+4	<open code>	         MVC   AVTEZERO(X03,R9),AVTFZERO   CLEAR
 IEDQBE	not anchored (score 79% margin +61%)					
 IEDQBF	not anchored (score 85% margin +71%)					
-IEDQBH	all in open code	insert	0x0006	+2	<open code>	         LR    RBASE,RENTRY             SET BASE
-IEDQBH	all in open code	insert	0x028c	+2	<open code>	         L     RBASE,BHBASE             SET BASE
+IEDQBH	equal length -- macroattr's population					
 IEDQBJ	not anchored (score 62% margin +29%)					
-IEDQBL	mixed	insert	0x000a	+2	IEDHJN	         B     START  .                 BR AROUN
-IEDQBL	mixed	insert	0x0232	+2	<open code>	         D     R14,AVTKEYLE             COMPUTE 
-IEDQBM	mixed	insert	0x000a	+2	IEDHJN	         B     SKIP   .                 BR AROUN
-IEDQBM	mixed	replace	0x013d	+4	<open code>	         BO    SETBIT3                  YES, BRA
-IEDQBM	mixed	insert	0x0164	+16	<open code>	         BALR  R14,R15                  GO TO IE
-IEDQBM	mixed	replace	0x0296	-2	<open code>	SAVREG   DS    A                        SAVE TTE
-IEDQBT	all in open code	insert	0x0000	+2	<open code>	         DC    AL1(DSPMCPL8)            SUBTASK 
-IEDQBT	all in open code	insert	0x0006	+2	<open code>	         DC    AL1(DSPMCPL8)            SUBTASK 
-IEDQBT	all in open code	replace	0x02d5	+16	<open code>	         BNE   GOTMH                    BR NO, H
-IEDQBT	all in open code	replace	0x03ed	+20	<open code>	         BNZ   RECALL1                  BRANCH Y
-IEDQBT	all in open code	insert	0x07ee	+20	<open code>	         L     R5,PRFTIC-IEDQPRF(R5)    NEXT UNI
-IEDQBT	all in open code	replace	0x0a19	-40	<open code>	         BZ    XCONT                    NO, UNCO
+IEDQBL	equal length -- macroattr's population					
+IEDQBM	all in open code	replace	0x013f	+4	<open code>	         BO    SETBIT3                  YES, BRA
+IEDQBM	all in open code	insert	0x0166	+16	<open code>	         BALR  R14,R15                  GO TO IE
+IEDQBT	mixed	insert	0x0000	+4	<open code>	         DC    AL1(DSPMCPL8)            SUBTASK 
+IEDQBT	mixed	delete	0x0006	-1	IEDHJN	         DC    X'0400' .                DATE OF 
+IEDQBT	mixed	insert	0x0008	+1	IEDHJN	         DC    X'0400' .                DATE OF 
+IEDQBT	mixed	insert	0x02d7	+2	<open code>	         BNE   GOTMH                    BR NO, H
+IEDQBT	mixed	insert	0x02d8	+14	<open code>	         BNE   GOTMH                    BR NO, H
+IEDQBT	mixed	replace	0x03ef	+20	<open code>	         BNZ   RECALL1                  BRANCH Y
+IEDQBT	mixed	insert	0x07f0	+20	<open code>	         L     R5,PRFTIC-IEDQPRF(R5)    NEXT UNI
+IEDQBT	mixed	delete	0x0a1a	-44	<open code>	         BZ    XCONT                    NO, UNCO
 IEDQBU	not anchored (score 75% margin +53%)					
 IEDQBV	not anchored (score 74% margin +54%)					
-IEDQCA	mixed	insert	0x0010	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IEDQCA	mixed	delete	0x002e	-2	LOAD	         CNOP  0,4                              
-IEDQCA	mixed	insert	0x03c0	+65	<open code>	TWENTY   DC    H'20'                    USED IN 
-IEDQCA	mixed	insert	0x03c4	+10	<open code>	SAVEDOPC DS    18F'0'                   REGSAVE 
-IEDQCA	mixed	insert	0x03c6	+4	<open code>	SAVEDOPC DS    18F'0'                   REGSAVE 
-IEDQCA	mixed	insert	0x03c8	+1	<open code>	SAVEDOPC DS    18F'0'                   REGSAVE 
-IEDQCA	mixed	insert	0x03c9	+2	<open code>	SAVEDOPC DS    18F'0'                   REGSAVE 
-IEDQCA	mixed	replace	0x03ca	-54	<open code>	SAVEDOPC DS    18F'0'                   REGSAVE 
-IEDQCA	mixed	insert	0x0800	+20	<open code>	         STH   RWORK,OPCAVBUF           ... COUN
-IEDQCA	mixed	insert	0x09e9	+1	<open code>	         TM    OPCSPEC,ALTDEST     PROCESSING AL
-IEDQCA	mixed	delete	0x09ea	-9	<open code>	         TM    OPCSPEC,ALTDEST     PROCESSING AL
-IEDQCA	mixed	replace	0x09f7	-4	<open code>	         BNO   GETDEST             NO, SEND MESS
-IEDQCA	mixed	delete	0x0a28	-4	<open code>	         NI    OPCSPEC,ALL-ALTDEST CLEAR ALTDEST
-IEDQCA	mixed	insert	0x0c10	+20	<open code>	         CLC   ZERO(AL1,REGTABLT),TRMTYPE COMPAR
-IEDQCA	mixed	insert	0x1010	+20	<open code>	         L     RWAITCHN,OCLINK     POINT TO NEXT
-IEDQCA	mixed	insert	0x1064	+62	<open code>	LINERG   DC    F'2'                     VALUE OF
-IEDQCA	mixed	replace	0x10a8	-62	<open code>	PROGSAVE DS    18A                      SAVE ARE
-IEDQCA	mixed	insert	0x1410	+108	<open code>	OPCPWSTC DC    AL3(OPCPWVTO)       NEXT STCB    
-IEDQCA	mixed	delete	0x1616	-186	<open code>	BLDLLIST DC    AL2(1),AL2(58)           PREFIX F
+IEDQCA	all in open code	insert	0x03c0	+65	<open code>	TWENTY   DC    H'20'                    USED IN 
+IEDQCA	all in open code	insert	0x03c4	+10	<open code>	SAVEDOPC DS    18F'0'                   REGSAVE 
+IEDQCA	all in open code	insert	0x03c6	+4	<open code>	SAVEDOPC DS    18F'0'                   REGSAVE 
+IEDQCA	all in open code	insert	0x03c8	+1	<open code>	SAVEDOPC DS    18F'0'                   REGSAVE 
+IEDQCA	all in open code	insert	0x03c9	+2	<open code>	SAVEDOPC DS    18F'0'                   REGSAVE 
+IEDQCA	all in open code	replace	0x03ca	-54	<open code>	SAVEDOPC DS    18F'0'                   REGSAVE 
+IEDQCA	all in open code	insert	0x0800	+20	<open code>	         STH   RWORK,OPCAVBUF           ... COUN
+IEDQCA	all in open code	insert	0x09e9	+1	<open code>	         TM    OPCSPEC,ALTDEST     PROCESSING AL
+IEDQCA	all in open code	delete	0x09ea	-9	<open code>	         TM    OPCSPEC,ALTDEST     PROCESSING AL
+IEDQCA	all in open code	replace	0x09f7	-4	<open code>	         BNO   GETDEST             NO, SEND MESS
+IEDQCA	all in open code	delete	0x0a28	-4	<open code>	         NI    OPCSPEC,ALL-ALTDEST CLEAR ALTDEST
+IEDQCA	all in open code	insert	0x0c10	+20	<open code>	         CLC   ZERO(AL1,REGTABLT),TRMTYPE COMPAR
+IEDQCA	all in open code	insert	0x1010	+20	<open code>	         L     RWAITCHN,OCLINK     POINT TO NEXT
+IEDQCA	all in open code	insert	0x1064	+62	<open code>	LINERG   DC    F'2'                     VALUE OF
+IEDQCA	all in open code	replace	0x10a8	-62	<open code>	PROGSAVE DS    18A                      SAVE ARE
+IEDQCA	all in open code	insert	0x1410	+108	<open code>	OPCPWSTC DC    AL3(OPCPWVTO)       NEXT STCB    
+IEDQCA	all in open code	delete	0x1616	-186	<open code>	BLDLLIST DC    AL2(1),AL2(58)           PREFIX F
 IEDQDA	not anchored (score 80% margin +41%)					
 IEDQE6	not anchored (score 80% margin +45%)					
 IEDQES	not anchored (score 38% margin +2%)					
-IEDQEW	all in open code	replace	0x0000	-5	<open code>	GETQCB   DC    AL2(TAG-IEDQEW)          OFFSET U
-IEDQEW	all in open code	insert	0x0014	+2	<open code>	         DC    AL2(0)                   PRIORITY
-IEDQEW	all in open code	insert	0x03fe	+28	<open code>	         LH    RTEMP,PEWASOWA           NUMBER O
-IEDQEW	all in open code	insert	0x07fe	+20	<open code>	         SR    RTEMP,RSTCB              SUBTRACT
-IEDQEW	all in open code	insert	0x0bfe	+20	<open code>	         L     RCOUNT,PEWAPEUN          RESTORE 
-IEDQEW	all in open code	replace	0x0c56	-2	<open code>	         L     RPARM,PEWARCB            ADDR OF 
-IEDQEW	all in open code	delete	0x0c96	-6	<open code>	         XC    FIVE(3,RPARM),FIVE(RPARM)  CLEAR 
-IEDQEW	all in open code	replace	0x0c9f	-2	<open code>	         B     ENDC2                            
-IEDQEW	all in open code	insert	0x0ca6	+6	<open code>	          MVC   FIVE(3,RPARM),LCBERBCH   ADD BUF
-IEDQEW	all in open code	replace	0x0cad	-2	<open code>	         BC    8,ENDC3                  BR,IF RC
-IEDQEW	all in open code	insert	0x0cba	+4	<open code>	         B     DSPDISP                  NO POST 
-IEDQEW	all in open code	insert	0x0f2a	+18	<open code>	         MVC   PEWASAVE+THIRTY4(1),LCBERBST-IEDQ
-IEDQEW	all in open code	insert	0x0fee	+20	<open code>	         NC    PRFTQBCK(3),PRFTQBCK     END OF Q
-IEDQEW	all in open code	delete	0x1062	-10	<open code>	         B     EMPTYRTN                RETURN BU
-IEDQEW	all in open code	insert	0x128e	+18	<open code>	         MVC   SCBOSEQ,PEWASAVE+TWENTY2 RESTORE 
-IEDQEW	all in open code	replace	0x1347	+2	<open code>	         B     RLOOP                    GO RETUR
-IEDQEW	all in open code	delete	0x1399	-83	<open code>	         BNO   TAG1                     BR, NO  
+IEDQEW	all in open code	insert	0x0400	+28	<open code>	         LH    RTEMP,PEWASOWA           NUMBER O
+IEDQEW	all in open code	insert	0x0800	+20	<open code>	         SR    RTEMP,RSTCB              SUBTRACT
+IEDQEW	all in open code	insert	0x0c00	+20	<open code>	         L     RCOUNT,PEWAPEUN          RESTORE 
+IEDQEW	all in open code	replace	0x0c58	-2	<open code>	         L     RPARM,PEWARCB            ADDR OF 
+IEDQEW	all in open code	delete	0x0c98	-6	<open code>	         XC    FIVE(3,RPARM),FIVE(RPARM)  CLEAR 
+IEDQEW	all in open code	replace	0x0ca1	-2	<open code>	         B     ENDC2                            
+IEDQEW	all in open code	insert	0x0ca8	+6	<open code>	          MVC   FIVE(3,RPARM),LCBERBCH   ADD BUF
+IEDQEW	all in open code	replace	0x0caf	-2	<open code>	         BC    8,ENDC3                  BR,IF RC
+IEDQEW	all in open code	insert	0x0cbc	+4	<open code>	         B     DSPDISP                  NO POST 
+IEDQEW	all in open code	insert	0x0f2c	+18	<open code>	         MVC   PEWASAVE+THIRTY4(1),LCBERBST-IEDQ
+IEDQEW	all in open code	insert	0x0ff0	+20	<open code>	         NC    PRFTQBCK(3),PRFTQBCK     END OF Q
+IEDQEW	all in open code	delete	0x1064	-10	<open code>	         B     EMPTYRTN                RETURN BU
+IEDQEW	all in open code	insert	0x1290	+18	<open code>	         MVC   SCBOSEQ,PEWASAVE+TWENTY2 RESTORE 
+IEDQEW	all in open code	delete	0x1398	-88	<open code>	         TM    PEWAFLG,CFLG             CLOSE PE
 IEDQFA1	all in macro expansions	delete	0x0000	-10	MIEDQFA	         DC    AL1(DSPMCPL2) .                  
 IEDQFA1	all in macro expansions	replace	0x0011	+8	MIEDQFA	NOCPBQ   DS    0H                               
 IEDQFA1	all in macro expansions	replace	0x030f	+4	MIEDQFA	         L     RBASE,ADRFA01 .                  
@@ -4458,15 +4560,14 @@ IEDQFA1	all in macro expansions	delete	0x0e5e	-14	MIEDQFA	MOVE     MVC   0(0,R9)
 IEDQFA1	all in macro expansions	insert	0x0ffa	+28	MIEDQFA	         NC    PRFNTXT-IEDQPRF(3,R1),PRFNTXT-IED
 IEDQFA1	all in macro expansions	insert	0x100a	+2	MIEDQFA	ADRTNBFR DC    A(RTNBFR) .                      
 IEDQFA1	all in macro expansions	delete	0x1098	-102	MIEDQFA	         L     RDCB,LCBDCBPT .          DCB ADDR
-IEDQFE10	mixed	insert	0x0016	+2	IEDHJN	         B     ENTER  .                 BR AROUN
-IEDQFE10	mixed	delete	0x0112	-8	<open code>	         TM    AVTOPECA,X'40'      HAS OPERATOR 
-IEDQFE10	mixed	insert	0x01b6	+32	<open code>	         BR    R14                 RETURN
-IEDQFE10	mixed	insert	0x01b7	+56	<open code>	SAVE     DS    18F
-IEDQFE10	mixed	insert	0x01b8	+19	<open code>	SAVE     DS    18F
-IEDQFE10	mixed	insert	0x01b9	+3	<open code>	SAVE     DS    18F
-IEDQFE10	mixed	insert	0x01ba	+10	<open code>	SAVE     DS    18F
-IEDQFE10	mixed	insert	0x01bb	+15	<open code>	SAVE     DS    18F
-IEDQFE10	mixed	replace	0x01bc	-137	<open code>	SAVE     DS    18F
+IEDQFE10	all in open code	delete	0x0114	-8	<open code>	         TM    AVTOPECA,X'40'      HAS OPERATOR 
+IEDQFE10	all in open code	insert	0x01b8	+32	<open code>	         BR    R14                 RETURN
+IEDQFE10	all in open code	insert	0x01b9	+56	<open code>	SAVE     DS    18F
+IEDQFE10	all in open code	insert	0x01ba	+19	<open code>	SAVE     DS    18F
+IEDQFE10	all in open code	insert	0x01bb	+3	<open code>	SAVE     DS    18F
+IEDQFE10	all in open code	insert	0x01bc	+10	<open code>	SAVE     DS    18F
+IEDQFE10	all in open code	insert	0x01bd	+15	<open code>	SAVE     DS    18F
+IEDQFE10	all in open code	replace	0x01be	-135	<open code>	SAVE     DS    18F
 IEDQFE20	not anchored (score 85% margin +71%)					
 IEDQFE30	mixed	insert	0x0012	+10	IEDHJN	         B     ENTER  .                 BR AROUN
 IEDQFE30	mixed	delete	0x006a	-2	<open code>	         DS    0F
@@ -4502,11 +4603,7 @@ IEDQGT	mixed	insert	0x0400	+20	<open code>	         BNZ   KEEPON                
 IEDQGT	mixed	delete	0x04b2	-4	<open code>	         MVI   PRFFLAGS-IEDQPRF(RUNIT),CCWSLI+CC
 IEDQGT	mixed	delete	0x05bc	-12	<open code>	         CLI   PRFOPCDE-IEDQPRF(RUNIT),AVTEZERO 
 IEDQGT	mixed	delete	0x0645	-10	<open code>	         MVI   PRFTIC-IEDQPRF(RUNIT),CCWTIC
-IEDQHI	mixed	insert	0x0000	+4	<open code>	DELAYQCB DC    X'02',AL3(*-1)           KEY + QC
-IEDQHI	mixed	insert	0x0026	+2	<open code>	         DC    A(0)                     TIME Q L
-IEDQHI	mixed	insert	0x0148	+2	<open code>	         NI    AVTBIT1,AVTDLAYF         TURN OFF
-IEDQHI	mixed	delete	0x02bc	-6	IOHALT	         LR    0,1                  PUT UCB ADDR
-IEDQHI	mixed	replace	0x02ca	-4	<open code>	         BAL   REXIT,DECCOUNT           DO NOT C
+IEDQHI	all in macro expansions	delete	0x02c0	-6	IOHALT	         LR    0,1                  PUT UCB ADDR
 IEDQHM2	all in macro expansions	delete	0x0000	-4	MIEDQHM	         DC    AL1(DSPMCPL6)                    
 IEDQHM2	all in macro expansions	replace	0x0015	+8	MIEDQHM	QUEUE    DS    0H                               
 IEDQHM2	all in macro expansions	insert	0x03f8	+28	MIEDQHM	         B     POSTB                            
@@ -4516,185 +4613,125 @@ IEDQHM2	all in macro expansions	insert	0x07c8	+32	MIEDQHM	         L     R2,QCBD
 IEDQHM2	all in macro expansions	delete	0x0906	-56	MIEDQHM	         NC    PRFLINK-IEDQPRF(3,RLCB),PRFLINK-I
 IEDQNG	all in open code	insert	0x009a	+4	<open code>	         N     R1,AVTCLRHI              CLEAR HI
 IEDQNH	all in open code	insert	0x0094	+4	<open code>	         N     R1,AVTCLRHI              CLEAR HI
-IEDQNJ	mixed	insert	0x000a	+2	IEDHJN	         B     QNJ00  .                 BR AROUN
-IEDQNJ	mixed	insert	0x0147	+16	<open code>	         BNE   QNJ40                    NO, BRAN
-IEDQNJ	mixed	insert	0x029d	+2	<open code>	ENTLEN   DC    H'3'                     LENGTH O
+IEDQNJ	all in open code	insert	0x0149	+16	<open code>	         BNE   QNJ40                    NO, BRAN
 IEDQNM	not anchored (score 34% margin +13%)					
-IEDQNO	mixed	insert	0x000a	+2	IEDHJN	         B     QNO00  .                 BR AROUN
-IEDQNO	mixed	insert	0x00f8	+4	<open code>	         L     R5,4(0,R5)               GET NEXT
+IEDQNO	all in open code	insert	0x00fa	+4	<open code>	         L     R5,4(0,R5)               GET NEXT
 IEDQNS	not anchored (score 41% margin +7%)					
-IEDQNT	mixed	insert	0x000c	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IEDQNT	mixed	insert	0x00fb	+1	GETMAIN	         ST    REG00,0(0,1)                     
-IEDQNT	mixed	delete	0x00fc	-1	GETMAIN	         ST    REG00,0(0,1)                     
-IEDQNT	mixed	insert	0x03fc	+20	<open code>	@CF00066 DC    F'3'
-IEDQNT	mixed	insert	0x0410	+4	<open code>	@CF01742 DC    XL4'FFFF'
-IEDQNT	mixed	delete	0x0439	-20	<open code>	@NM00204 DC    X'1E'
+IEDQNT	equal length -- macroattr's population					
 IEDQNX	not anchored (score 56% margin +32%)					
-IEDQOT01	mixed	insert	0x0012	+2	IEDHJN	         B     START  .                 BR AROUN
-IEDQOT01	mixed	replace	0x0077	+2	<open code>	         BAL   RBRANCH,UNLOCK           RELEASE 
-IEDQOT01	mixed	insert	0x03fc	+20	<open code>	         LA    RBRANCH,ZERO(,RAIB)      GET LENG
-IEDQOT01	mixed	insert	0x0674	+12	<open code>	         ICM   RASID,ADDR,RMPLASCB+ONE  ASCB ADD
-IEDQOT01	mixed	insert	0x06ec	+6	<open code>	         XC    ZERO(RCBSIZE,RONE),ZERO(RONE) CLE
-IEDQOT01	mixed	insert	0x072b	+5	<open code>	         BO    LOOPPEWA                 YES, SKI
-IEDQOT01	mixed	insert	0x072c	+3	<open code>	         BO    LOOPPEWA                 YES, SKI
-IEDQOT01	mixed	insert	0x0794	+2	<open code>	         BR    RBRANCH                  RETURN T
-IEDQOT01	mixed	delete	0x07b8	-20	<open code>	PGFLG2   DC    XL1'80'                  LAST ENT
+IEDQOT01	all in open code	insert	0x0400	+20	<open code>	         LA    RBRANCH,ZERO(,RAIB)      GET LENG
+IEDQOT01	all in open code	insert	0x0678	+12	<open code>	         ICM   RASID,ADDR,RMPLASCB+ONE  ASCB ADD
+IEDQOT01	all in open code	insert	0x06f0	+6	<open code>	         XC    ZERO(RCBSIZE,RONE),ZERO(RONE) CLE
+IEDQOT01	all in open code	insert	0x072f	+5	<open code>	         BO    LOOPPEWA                 YES, SKI
+IEDQOT01	all in open code	insert	0x0730	+3	<open code>	         BO    LOOPPEWA                 YES, SKI
+IEDQOT01	all in open code	insert	0x0798	+2	<open code>	         BR    RBRANCH                  RETURN T
+IEDQOT01	all in open code	delete	0x07bc	-20	<open code>	PGFLG2   DC    XL1'80'                  LAST ENT
 IEDQTL	not anchored (score 81% margin +64%)					
 IEDQUI	not anchored (score 70% margin +39%)					
-IEDQW25	mixed	insert	0x0011	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IEDQW25	mixed	insert	0x03fc	+20	<open code>	         ST    @11,REQQCB(,ROLTCB)              
-IEDQW25	mixed	insert	0x040a	+16	<open code>	         L     RTRM,BASRTRM(,ROLTCB)            
-IEDQW25	mixed	delete	0x0618	-4	<open code>	@CF02737 DC    BL4'00000000000000000000000000010
-IEDQW25	mixed	insert	0x0633	+6	<open code>	         DS    0D
-IEDQW25	mixed	delete	0x0655	-20	<open code>	         DS    CL1
-IEDQWB2	mixed	delete	0x0000	-6	IEDHJN	         B     STARB2 .                 BR AROUN
-IEDQWB2	mixed	replace	0x000b	+10	IEDHJN	STARB2   DS    0H                               
-IEDQWB2	mixed	insert	0x03f6	+20	<open code>	         LA    R1,TOTWKSPC        ADDRESS OF WOR
-IEDQWB2	mixed	replace	0x051f	+8	<open code>	         EX    R3,DUMTTE          COPY TTE
-IEDQWB2	mixed	insert	0x0694	+4	<open code>	         MVC   QCBTTCIN(D2),D2(R8) SET DUMMY TTC
-IEDQWB2	mixed	insert	0x07ea	+20	<open code>	         OI    D0(R10),TOTAPIAC   SHOW THAT LIST
-IEDQWB2	mixed	insert	0x0830	+2	<open code>	         BR    R3                 RETURN
-IEDQWB2	mixed	delete	0x0926	-34	<open code>	LGBMOVE  MVC   D0(D0,R10),D0(R8)  COPY LGB      
-IEDQWE	mixed	insert	0x001e	+4	IEDHJN	         B     IEDQWEE .                 BR AROU
-IEDQWE	mixed	delete	0x00ce	-4	BLDL	         LA    1,0(1)                     CLEAR 
-IEDQWE	mixed	replace	0x01b5	-4	BLDL	         LA    0,BLDLLIST                       
-IEDQWE	mixed	insert	0x0404	+40	<open code>	         NI    TOTFLG05,X'FF'-TOTREPLY TURN OFF 
-IEDQWE	mixed	insert	0x0804	+40	<open code>	         AR    R5,R4                   COMPUTE A
-IEDQWE	mixed	insert	0x0c04	+52	<open code>	NAMEMOVE MVC   UNIT(ZERO),ZERO(R1) MOVE NAME    
-IEDQWE	mixed	delete	0x0c82	-4	<open code>	         DS    0D                      DOUBLE WO
+IEDQW25	all in open code	insert	0x0400	+20	<open code>	         ST    @11,REQQCB(,ROLTCB)              
+IEDQW25	all in open code	insert	0x040e	+16	<open code>	         L     RTRM,BASRTRM(,ROLTCB)            
+IEDQW25	all in open code	delete	0x061c	-4	<open code>	@CF02737 DC    BL4'00000000000000000000000000010
+IEDQW25	all in open code	insert	0x0631	+4	<open code>	         DS    0D
+IEDQW25	all in open code	insert	0x0633	+6	<open code>	         DS    0D
+IEDQW25	all in open code	delete	0x0655	-20	<open code>	         DS    CL1
+IEDQWB2	not anchored (score 84% margin +64%)					
+IEDQWE	mixed	delete	0x00d2	-4	BLDL	         LA    1,0(1)                     CLEAR 
+IEDQWE	mixed	replace	0x01b9	-4	BLDL	         LA    0,BLDLLIST                       
+IEDQWE	mixed	insert	0x0408	+40	<open code>	         NI    TOTFLG05,X'FF'-TOTREPLY TURN OFF 
+IEDQWE	mixed	insert	0x0808	+40	<open code>	         AR    R5,R4                   COMPUTE A
+IEDQWE	mixed	insert	0x0c08	+52	<open code>	NAMEMOVE MVC   UNIT(ZERO),ZERO(R1) MOVE NAME    
 IEDQWE	mixed	delete	0x0d18	-132	<open code>	BLDLNAM  DC    XL3'0'             MAIN STORAGE N
-IEDQWE2	mixed	insert	0x001f	+4	IEDHJN	         B     IEDQWEE .                 BR AROU
-IEDQWE2	mixed	insert	0x03fc	+20	<open code>	         AR    R1,R11                  TNT ADDR 
-IEDQWE2	mixed	insert	0x07fb	+11	<open code>	         BE    ON5                     OK BR    
-IEDQWE2	mixed	insert	0x07fc	+9	<open code>	         BE    ON5                     OK BR    
-IEDQWE2	mixed	insert	0x0a9a	+16	<open code>	         MVC   NCPTTCIN(D2),LCBTTCIN   SAVE NCP 
-IEDQWE2	mixed	insert	0x0b23	+3	<open code>	         BO    SRTRNLIN                YES BRANC
-IEDQWE2	mixed	insert	0x0b24	+5	<open code>	         BO    SRTRNLIN                YES BRANC
-IEDQWE2	mixed	insert	0x0be4	+32	WAIT	         LA    1,TOTOTECB                       
-IEDQWE2	mixed	insert	0x0ec8	+4	<open code>	ENDALTAB DC    X'EA'                   PAST ALPH
-IEDQWE2	mixed	delete	0x0f1d	-72	<open code>	LUFLAGS  DC    X'00'                  LU FLAGS  
-IEDQWIA	all in macro expansions	insert	0x0011	+4	IEDHJN	         B     IEDQWIAA .                 BR ARO
-IEDQWIA	all in macro expansions	replace	0x02b1	-4	BLDL	         LA    0,BLDLLIST                       
-IEDQWIA	all in macro expansions	replace	0x03ff	+56	NOTE	         LA    1,CDS42                          
-IEDQWIA	all in macro expansions	replace	0x052b	-4	BLDL	         LA    0,BLDLLIST                       
-IEDQWIA	all in macro expansions	delete	0x07ff	-1	XCTL	         DC    A(*+8)             ADDR. OF PARM.
-IEDQWIA	all in macro expansions	insert	0x0804	+53	XCTL	         DC    A(0)                DCB ADDRESS P
-IEDQWIA	all in macro expansions	delete	0x095c	-108	DCB	         DC    A(1)                    IOBA     
-IEDQWIE	mixed	insert	0x001f	+4	IEDHJN	         B     IEDQWIEE .                 BR ARO
-IEDQWIE	mixed	replace	0x00fb	-4	BLDL	         LA    0,BLDLLIST                       
-IEDQWIE	mixed	replace	0x012b	-4	BLDL	         LA    0,BLDLLIST                       
-IEDQWIE	mixed	replace	0x01af	-24	<open code>	@RF00052 MVC   PRNTBUF1(30),CDSTITLE+60         
-IEDQWIE	mixed	insert	0x01cc	+24	<open code>	         MVI   PRNTBUF2+8,C' '                  
-IEDQWIE	mixed	insert	0x01ed	+8	TCONV	         ST    R14,QWIE0023    . PLACE ADDR IN P
-IEDQWIE	mixed	delete	0x01f0	-4	TCONV	         LA    R14,PRNTBUF2 . GET OUTPUT DATA AD
-IEDQWIE	mixed	replace	0x01f5	-4	TCONV	         ST    R14,QWIU0023    . OUTPUT DATA STO
-IEDQWIE	mixed	insert	0x021f	+8	TCONV	         ST    R14,QWIE0024    . PLACE ADDR IN P
-IEDQWIE	mixed	delete	0x0222	-4	TCONV	         LA    R14,PRNTBUF2 . GET OUTPUT DATA AD
-IEDQWIE	mixed	replace	0x0227	-4	TCONV	         ST    R14,QWIU0024    . OUTPUT DATA STO
-IEDQWIE	mixed	insert	0x024f	+8	TCONV	         ST    R14,QWIE0025    . PLACE ADDR IN P
-IEDQWIE	mixed	delete	0x0252	-4	TCONV	         LA    R14,PRNTBUF2 . GET OUTPUT DATA AD
-IEDQWIE	mixed	replace	0x0257	-4	TCONV	         ST    R14,QWIU0025    . OUTPUT DATA STO
-IEDQWIE	mixed	replace	0x02d7	-4	BLDL	         LA    0,BLDLLIST                       
-IEDQWIE	mixed	insert	0x0408	+48	<open code>	         B     EXHBCNFG                         
-IEDQWIE	mixed	replace	0x0807	+64	<open code>	@ER00002 LM    @14,@12,@SA00002                 
+IEDQWE2	mixed	insert	0x0400	+20	<open code>	         AR    R1,R11                  TNT ADDR 
+IEDQWE2	mixed	insert	0x0800	+20	<open code>	         BE    ON5                     OK BR    
+IEDQWE2	mixed	insert	0x0a9e	+16	<open code>	         MVC   NCPTTCIN(D2),LCBTTCIN   SAVE NCP 
+IEDQWE2	mixed	replace	0x0b27	+8	<open code>	         BO    SRTRNLIN                YES BRANC
+IEDQWE2	mixed	insert	0x0be8	+32	WAIT	         LA    1,TOTOTECB                       
+IEDQWE2	mixed	delete	0x0f25	-72	<open code>	LUFLAGS  DC    X'00'                  LU FLAGS  
+IEDQWIA	all in macro expansions	replace	0x02b5	-4	BLDL	         LA    0,BLDLLIST                       
+IEDQWIA	all in macro expansions	replace	0x0403	+56	NOTE	         LA    1,CDS42                          
+IEDQWIA	all in macro expansions	replace	0x052f	-4	BLDL	         LA    0,BLDLLIST                       
+IEDQWIA	all in macro expansions	delete	0x0802	-1	XCTL	         DC    A(*+8)             ADDR. OF PARM.
+IEDQWIA	all in macro expansions	insert	0x0808	+53	XCTL	         DC    A(0)                DCB ADDRESS P
+IEDQWIA	all in macro expansions	delete	0x0960	-108	DCB	         DC    A(1)                    IOBA     
+IEDQWIE	mixed	replace	0x00ff	-4	BLDL	         LA    0,BLDLLIST                       
+IEDQWIE	mixed	replace	0x012f	-4	BLDL	         LA    0,BLDLLIST                       
+IEDQWIE	mixed	replace	0x01b3	-24	<open code>	@RF00052 MVC   PRNTBUF1(30),CDSTITLE+60         
+IEDQWIE	mixed	insert	0x01d0	+24	<open code>	         MVI   PRNTBUF2+8,C' '                  
+IEDQWIE	mixed	replace	0x02db	-4	BLDL	         LA    0,BLDLLIST                       
+IEDQWIE	mixed	insert	0x040c	+48	<open code>	         B     EXHBCNFG                         
+IEDQWIE	mixed	replace	0x080b	+64	<open code>	@ER00002 LM    @14,@12,@SA00002                 
+IEDQWIE	mixed	insert	0x0b20	+4	<open code>	OPNERRR  DS    F
 IEDQWIE	mixed	insert	0x0c08	+20	<open code>	BLNKLIN  DC    XL4'0'
 IEDQWIE	mixed	delete	0x0dac	-132	<open code>	BLNKLIN  DC    XL4'0'
 IEDQWL	not anchored (score 84% margin +41%)					
 IEDQWL1	not anchored (score 82% margin +54%)					
 IEDQWL3	not anchored (score 81% margin +48%)					
-IEDQWO	mixed	insert	0x001e	+12	IEDHJN	         B     SKIP   .                 BR AROUN
-IEDQWO	mixed	replace	0x0319	+2	<open code>	         B     @PB00005                         
-IEDQWO	mixed	replace	0x031d	-4	<open code>	         L     IEDQQPTR,TRMDESTQ-1(,RTRM)       
-IEDQWO	mixed	replace	0x03f4	+20	<open code>	         N     @15,@CF03058                     
-IEDQWO	mixed	replace	0x050b	+16	<open code>	         BAL   @14,INSERT                       
-IEDQWO	mixed	replace	0x0730	+2	<open code>	         L     RSIB,TRMSIBPT-1(,RTRM)           
-IEDQWO	mixed	replace	0x0733	-4	<open code>	         L     RSIB,TRMSIBPT-1(,RTRM)           
-IEDQWO	mixed	replace	0x07e8	+20	<open code>	         N     @15,@CF03058                     
-IEDQWO	mixed	delete	0x09fc	-4	<open code>	@CF03067 DC    BL4'11111111111111111111111111101
-IEDQWO	mixed	insert	0x0a01	+4	<open code>	         NOPR  ((@ENDDATD-@DATD)*16)
-IEDQWO	mixed	insert	0x0a10	+7	<open code>	@CB02974 DC    X'038000'
-IEDQWO	mixed	delete	0x0a3d	-39	<open code>	PRINTER  DC    X'48'
+IEDQWO	mixed	replace	0x001e	+8	IEDHJN	         DC    X'0000' .                DATE OF 
+IEDQWO	mixed	replace	0x031d	+2	<open code>	         B     @PB00005                         
+IEDQWO	mixed	replace	0x0321	-4	<open code>	         L     IEDQQPTR,TRMDESTQ-1(,RTRM)       
+IEDQWO	mixed	replace	0x03f8	+20	<open code>	         N     @15,@CF03058                     
+IEDQWO	mixed	replace	0x050f	+16	<open code>	         BAL   @14,INSERT                       
+IEDQWO	mixed	replace	0x0734	+2	<open code>	         L     RSIB,TRMSIBPT-1(,RTRM)           
+IEDQWO	mixed	replace	0x0737	-4	<open code>	         L     RSIB,TRMSIBPT-1(,RTRM)           
+IEDQWO	mixed	replace	0x07ec	+20	<open code>	         N     @15,@CF03058                     
+IEDQWO	mixed	delete	0x0a00	-4	<open code>	@CF03067 DC    BL4'11111111111111111111111111101
+IEDQWO	mixed	insert	0x0a18	+7	<open code>	@CB02974 DC    X'038000'
+IEDQWO	mixed	delete	0x0a45	-39	<open code>	PRINTER  DC    X'48'
 IEDQWR	not anchored (score 63% margin +22%)					
 IEDQXC	mixed	insert	0x0000	+4	<open code>	         STM   14,12,12(13)
-IEDQXC	mixed	insert	0x0028	+4	IEDHJN	         B     BYPASS .                 BR AROUN
-IEDQXC	mixed	delete	0x01ec	-2	<open code>	         MVC   FORMATM(3),HDR+3    INDICATE HEAD
-IEDQXC	mixed	replace	0x01ef	+2	<open code>	         MVC   FORMATM(3),HDR+3    INDICATE HEAD
-IEDQXC	mixed	insert	0x0213	+2	<open code>	         MVC   OUTBUF(ELEVEN),FORMATM   GET HEX 
-IEDQXC	mixed	delete	0x0214	-2	<open code>	         MVC   OUTBUF(ELEVEN),FORMATM   GET HEX 
-IEDQXC	mixed	insert	0x027f	+20	$PRNT	         MVC   OUTAREA+1(60),OUTBUF     MOVE DAT
-IEDQXC	mixed	replace	0x0283	+2	$PRNT	         BAL   14,PUT                   OUTPUT B
-IEDQXC	mixed	replace	0x0285	-4	<open code>	         MVI   FORMATM,BLNK             BLANK OU
-IEDQXC	mixed	replace	0x0297	-18	$PRNT	         BAL   14,PUT                   OUTPUT B
-IEDQXC	mixed	replace	0x03fb	+36	<open code>	         MVC   OUTBUF+3(6),HEXRCD  INDICATE RECO
-IEDQXC	mixed	delete	0x0482	-2	<open code>	         MVC   FORMATM(3),BFR+3    INDICATE BUFF
-IEDQXC	mixed	replace	0x0485	+2	<open code>	         MVC   FORMATM(3),BFR+3    INDICATE BUFF
-IEDQXC	mixed	replace	0x066b	+34	<open code>	DUMPLOOP BAL   RIR1,FEDQFP         GO READ
-IEDQXC	mixed	replace	0x0675	+2	<open code>	         BZ    BALINCR                  YES, BRA
-IEDQXC	mixed	replace	0x0679	-6	<open code>	         L     RREC,UNIT                GET UNIT
-IEDQXC	mixed	replace	0x068d	-26	<open code>	         BZ    YESPRFX                  BRANCH I
-IEDQXC	mixed	insert	0x077e	+32	<open code>	         STC   R3,8(RTOTNO)
-IEDQXC	mixed	insert	0x07d8	+28	<open code>	         LA    R1,PHOUR                 LOAD 4 I
-IEDQXC	mixed	insert	0x0bd8	+32	WTO	         DC    B'1000000000000000' MCS FLAGS    
-IEDQXC	mixed	insert	0x0ec7	+5	<open code>	SCANBYTE DC    XL1'00'                  FLAG BYT
-IEDQXC	mixed	replace	0x0ec8	-1	<open code>	SAVE13   DS    F                        REG 13 S
-IEDQXC	mixed	insert	0x0fd4	+36	<open code>	DUMSG    DC    CL2'UN'                  TO MAKE 
-IEDQXC	mixed	insert	0x122c	+4	<open code>	PUTSAVE  DS    F                        REG 14 S
-IEDQXC	mixed	insert	0x123a	+5	<open code>	DATSIZE  DC    H'6'                     SIZE OF 
-IEDQXC	mixed	replace	0x123d	-1	OPEN	         DC    AL3(RDDCB1)                      
-IEDQXC	mixed	replace	0x1243	-8	OPEN	         DC    AL3(RDDCB2)                      
-IEDQXC	mixed	replace	0x1277	+4	OPEN	         DC    AL3(RDDCB15)                     
-IEDQXC	mixed	insert	0x13d0	+100	OPEN	         DC    AL3(RDDCB16)                     
-IEDQXC	mixed	insert	0x17cf	+44	CAMLST	         DC    A(FMT1DSCB)                      
-IEDQXC	mixed	replace	0x1bc2	+116	DCB	         DC    BL2'0010000                      
-IEDQXC	mixed	delete	0x1cc4	-396	DCB	         DC    AL3(0)                  EXLST    
-IEDSAI	mixed	insert	0x0018	+4	IEDHJN	         B     START  .                 BR AROUN
-IEDSAI	mixed	insert	0x006e	+6	<open code>	         LA    RLCB,0(,RLCB)                    
-IEDSAI	mixed	replace	0x012b	+8	<open code>	BSCSTATS ST    @14,@SA00002                     
-IEDSAI	mixed	delete	0x014c	-28	<open code>	         MVI   PRFPRI(IEDQPPTR),X'E0'           
-IEDSAI	mixed	delete	0x0178	-12	<open code>	         MVI   PRFPRI(RPARM),X'E4'              
-IEDSAI	mixed	replace	0x01db	+6	<open code>	         B     @RC00606                         
-IEDSAI	mixed	replace	0x01e3	+8	<open code>	         BNZ   @RT00608                         
-IEDSAI	mixed	insert	0x0240	+4	<open code>	         NI    TRMERLCK(RTRM),B'11111011'       
-IEDSAI	mixed	insert	0x0404	+28	<open code>	         TM    TRMWTNEG(RTRM),B'10000000'       
-IEDSAI	mixed	replace	0x04d1	+8	<open code>	RDPRPROC ST    @14,@SA00010                     
-IEDSAI	mixed	insert	0x06c8	+36	<open code>	         STCM  RPRF,7,LCBWAITC(RLCB)            
-IEDSAI	mixed	replace	0x06ca	+8	<open code>	         B     @RC00836                         
-IEDSAI	mixed	replace	0x06f8	-4	<open code>	@RC00836 TM    LCBRECVN(RLCB),B'00000010'       
-IEDSAI	mixed	delete	0x06ff	-3	<open code>	         BNO   @RF00847                         
-IEDSAI	mixed	delete	0x0703	-25	<open code>	         TM    TRMRDOUT(RTRM),B'00000011'       
-IEDSAI	mixed	replace	0x071f	-8	<open code>	         B     @RC00847                         
-IEDSAI	mixed	insert	0x073e	+3	<open code>	@SM02307 MVC   RCVUNIT(0,RLINK),SRCUNIT(IEDQPPTR
-IEDSAI	mixed	insert	0x073f	+38	<open code>	         DS    0F
-IEDSAI	mixed	delete	0x0740	-65	<open code>	@SA00010 DS    1F
-IEDSAO	mixed	insert	0x0018	+4	IEDHJN	         B     START  .                 BR AROUN
-IEDSAO	mixed	insert	0x0032	+4	<open code>	         BALR  @14,@15                          
-IEDSAO	mixed	replace	0x0034	+5	<open code>	         SL    RTRM,@CF00035                    
-IEDSAO	mixed	replace	0x0036	-13	<open code>	         SL    RTRM,@CF00035                    
-IEDSAO	mixed	replace	0x02e8	-4	<open code>	@SA00003 DS    1F
-IEDSAO	mixed	replace	0x02fc	-4	<open code>	         DS    0D
-IEDSAO	mixed	insert	0x0309	+23	<open code>	@CB01596 DC    X'0B8000'
-IEDSCPDS	mixed	insert	0x0016	+44	IEDHJN	         B     START  .                 BR AROUN
-IEDSCPDS	mixed	insert	0x010a	+2	<open code>	@ER00004 BR    @14                              
-IEDSCPDS	mixed	insert	0x010c	+2	<open code>	         DS    0F
-IEDSCPRQ	mixed	insert	0x0000	+3	<open code>	@PROLOG  DS    0H                               
-IEDSCPRQ	mixed	insert	0x001a	+4	IEDHJN	         B     START  .                 BR AROUN
-IEDSCPRQ	mixed	delete	0x00d0	-8	<open code>	         BNE   @RF00407                         
-IEDSCPRQ	mixed	replace	0x00dd	+8	<open code>	@RF00407 BAL   @14,WAITCHN                      
-IEDSCPRQ	mixed	insert	0x00f4	+8	<open code>	         L     @15,SAVTRNTA(,@10)               
-IEDSCPRQ	mixed	delete	0x00f6	-10	<open code>	         LTR   RF,RF                            
-IEDSCPRQ	mixed	insert	0x0104	+24	<open code>	         B     @RC00415                         
-IEDSCPRQ	mixed	replace	0x0111	+12	<open code>	         ST    RE,R14SAVE1                      
-IEDSCPRQ	mixed	replace	0x01a1	-4	<open code>	         BC    7,NOTFREE                        
-IEDSCPRQ	mixed	insert	0x029c	+2	<open code>	@ER00008 BR    @14                              
-IEDSCPRQ	mixed	insert	0x02a0	+4	<open code>	@CF00065 DC    F'3'
-IEDSCPRQ	mixed	insert	0x02c7	+4	<open code>	@NM00190 DC    X'81'
+IEDQXC	mixed	insert	0x0098	+4	<open code>	         ST    R1,TRCYL
+IEDQXC	mixed	replace	0x009d	-4	<open code>	         M     R1-1,CYLVOL         TRK/CYL * CYL
+IEDQXC	mixed	delete	0x01f0	-2	<open code>	         MVC   FORMATM(3),HDR+3    INDICATE HEAD
+IEDQXC	mixed	replace	0x01f3	+2	<open code>	         MVC   FORMATM(3),HDR+3    INDICATE HEAD
+IEDQXC	mixed	replace	0x03ff	+36	<open code>	         MVC   OUTBUF+3(6),HEXRCD  INDICATE RECO
+IEDQXC	mixed	delete	0x0486	-2	<open code>	         MVC   FORMATM(3),BFR+3    INDICATE BUFF
+IEDQXC	mixed	replace	0x0489	+2	<open code>	         MVC   FORMATM(3),BFR+3    INDICATE BUFF
+IEDQXC	mixed	replace	0x05e5	-30	<open code>	         MVC   OUTBUF+11(8),XWK    MOVE CHARS TO
+IEDQXC	mixed	insert	0x0612	+30	<open code>	         MVC   OUTBUF+75(8),XWK+56
+IEDQXC	mixed	replace	0x066f	+34	<open code>	DUMPLOOP BAL   RIR1,FEDQFP         GO READ
+IEDQXC	mixed	replace	0x0679	+2	<open code>	         BZ    BALINCR                  YES, BRA
+IEDQXC	mixed	replace	0x0682	-6	<open code>	         AR    RREC,RPRF                POINT TO
+IEDQXC	mixed	replace	0x0691	-26	<open code>	         BZ    YESPRFX                  BRANCH I
+IEDQXC	mixed	insert	0x0782	+32	<open code>	         STC   R3,8(RTOTNO)
+IEDQXC	mixed	insert	0x07dc	+28	<open code>	         LA    R1,PHOUR                 LOAD 4 I
+IEDQXC	mixed	insert	0x0bdc	+32	WTO	         DC    B'1000000000000000' MCS FLAGS    
+IEDQXC	mixed	insert	0x0ecb	+5	<open code>	SCANBYTE DC    XL1'00'                  FLAG BYT
+IEDQXC	mixed	replace	0x0ecc	-1	<open code>	SAVE13   DS    F                        REG 13 S
+IEDQXC	mixed	insert	0x0fd8	+36	<open code>	DUMSG    DC    CL2'UN'                  TO MAKE 
+IEDQXC	mixed	insert	0x1242	+5	<open code>	DATSIZE  DC    H'6'                     SIZE OF 
+IEDQXC	mixed	replace	0x1245	-1	OPEN	         DC    AL3(RDDCB1)                      
+IEDQXC	mixed	replace	0x124b	-8	OPEN	         DC    AL3(RDDCB2)                      
+IEDQXC	mixed	replace	0x127f	+4	OPEN	         DC    AL3(RDDCB15)                     
+IEDQXC	mixed	insert	0x13d8	+100	OPEN	         DC    AL3(RDDCB16)                     
+IEDQXC	mixed	insert	0x17d7	+44	CAMLST	         DC    A(FMT1DSCB)                      
+IEDQXC	mixed	replace	0x1bca	+116	DCB	         DC    BL2'0010000                      
+IEDQXC	mixed	delete	0x1ccc	-396	DCB	         DC    AL3(0)                  EXLST    
+IEDSAI	equal length -- macroattr's population					
+IEDSAO	all in open code	insert	0x0036	+4	<open code>	         BALR  @14,@15                          
+IEDSAO	all in open code	replace	0x0038	+5	<open code>	         SL    RTRM,@CF00035                    
+IEDSAO	all in open code	replace	0x003a	-13	<open code>	         SL    RTRM,@CF00035                    
+IEDSAO	all in open code	replace	0x02ec	-4	<open code>	@SA00003 DS    1F
+IEDSAO	all in open code	insert	0x0309	+23	<open code>	@CB01596 DC    X'0B8000'
+IEDSCPDS	mixed	replace	0x0016	+40	IEDHJN	         DC    X'947F' .                DATE OF 
+IEDSCPDS	mixed	insert	0x010e	+2	<open code>	@ER00004 BR    @14                              
+IEDSCPDS	mixed	insert	0x0110	+2	<open code>	         DS    0F
+IEDSCPRQ	all in open code	insert	0x0000	+3	<open code>	@PROLOG  DS    0H                               
+IEDSCPRQ	all in open code	insert	0x00f8	+8	<open code>	         L     @15,SAVTRNTA(,@10)               
+IEDSCPRQ	all in open code	insert	0x00fa	+6	<open code>	         BALR  @14,@15                          
+IEDSCPRQ	all in open code	insert	0x00fd	+8	<open code>	         BNZ   @RF00415                         
+IEDSCPRQ	all in open code	replace	0x0119	+12	<open code>	         BAL   @14,X3705CB                      
+IEDSCPRQ	all in open code	replace	0x01a5	-4	<open code>	         BC    7,NOTFREE                        
+IEDSCPRQ	all in open code	insert	0x02a0	+2	<open code>	@ER00008 BR    @14                              
+IEDSCPRQ	all in open code	insert	0x02a4	+4	<open code>	@CF00065 DC    F'3'
+IEDSCPRQ	all in open code	delete	0x02ac	-4	<open code>	         DS    0D
+IEDSCPRQ	all in open code	insert	0x02cf	+4	<open code>	@NM00190 DC    X'81'
 IEDSNS	not anchored (score 83% margin +70%)					
-IEDXFMI	mixed	insert	0x0011	+4	IEDHJN	         B     START  .                 BR AROUN
-IEDXFMI	mixed	delete	0x00f8	-4	<open code>	         N     @15,@CF00445                     
-IEDXFMI	mixed	replace	0x01ca	+8	<open code>	@CF00445 DC    XL4'0000FFFF'
-IEDXFMI	mixed	delete	0x01d2	-2	<open code>	WATHPTR  DC    AL4(WATH)
-IEDXFMI	mixed	delete	0x01d6	-3	<open code>	WARHPTR  DC    AL4(WARH)
-IEDXFMI	mixed	replace	0x01db	+3	<open code>	@CB00329 DC    X'08000002'
+IEDXFMI	all in open code	delete	0x00fc	-4	<open code>	         N     @15,@CF00445                     
+IEDXFMI	all in open code	replace	0x011b	+102	<open code>	         IC    @15,WAPIUO                       
+IEDXFMI	all in open code	insert	0x012a	+10	<open code>	         XC    IEDQPRF+35(5,IEDQPPTR),IEDQPRF+35
+IEDXFMI	all in open code	replace	0x0145	-112	<open code>	         B     @EL00003                         
+IEDXFMI	all in open code	replace	0x01d3	-4	<open code>	WATHPTR  DC    AL4(WATH)
+IEDXFMI	all in open code	insert	0x01dc	+14	<open code>	@CB00329 DC    X'08000002'
 IEE0303D	mixed	insert	0x0000	+4	<open code>	         BALR  R3,0
 IEE0303D	mixed	replace	0x000e	+3	MODID	         B     *+30                             
 IEE0303D	mixed	replace	0x0011	-1	MODID	         B     *+30                             
@@ -7885,7 +7922,16 @@ IFDOLT18	mixed	replace	0x0d0a	-41	<open code>	         ORG   @DATA+00000340
 IFDOLT18	mixed	insert	0x0d4c	+4	<open code>	         ORG   @DATA+00000340
 IFDOLT18	mixed	replace	0x0d50	+4	<open code>	@TEMP2   DC    F'0'
 IFDOLT18	mixed	delete	0x0df8	-8	IFDCOM	         ORG
-IFDOLT24	no usable reference					
+IFDOLT24	mixed	replace	0x01e3	+18	<open code>	         BC    15,PROCESS                       
+IFDOLT24	mixed	replace	0x02ab	+2	<open code>	         BC    07,@9E8                          
+IFDOLT24	mixed	insert	0x02fd	+192	<open code>	         DS    00000418C
+IFDOLT24	mixed	insert	0x030d	+88	<open code>	         DS    00000418C
+IFDOLT24	mixed	insert	0x0315	+26	<open code>	         DS    00000418C
+IFDOLT24	mixed	insert	0x0317	+2	<open code>	         DS    00000418C
+IFDOLT24	mixed	delete	0x0319	-221	<open code>	         DS    00000418C
+IFDOLT24	mixed	delete	0x03f7	-83	<open code>	         DC    AL3(JFCBAREA)
+IFDOLT24	mixed	delete	0x04a1	-24	<open code>	@TEMP4   DC    F'0'
+IFDOLT24	mixed	insert	0x04dc	+26	IFDCOM	         DC    S(*)                LAST 2 BYTES 
 IFDOLT30	mixed	delete	0x000e	-1	<open code>	         DC    AL1(18)                          
 IFDOLT30	mixed	insert	0x0010	+1	<open code>	         DC    AL1(18)                          
 IFDOLT30	mixed	insert	0x004e	+8	<open code>	         ST    @D,8(0,@4)                       
@@ -7910,7 +7956,12 @@ IFDOLT30	mixed	insert	0x0889	+16	<open code>	         DC    C'TALK'
 IFDOLT30	mixed	replace	0x088b	-16	<open code>	         ORG   @DATA
 IFDOLT30	mixed	delete	0x094d	-32	DCB	         DC    A(1)                    CNTRL, NO
 IFDOLT30	mixed	insert	0x09c4	+34	IFDCOM	         DC    S(*)                LAST 2 BYTES 
-IFDOLT44	no usable reference					
+IFDOLT44	mixed	replace	0x00f5	+10	<open code>	         CLC   38(1,@6),TELCOMN                 
+IFDOLT44	mixed	insert	0x0128	+6	<open code>	         BCR   15,@E                            
+IFDOLT44	mixed	insert	0x012d	+1	<open code>	         DC    X'10'
+IFDOLT44	mixed	replace	0x012e	-1	<open code>	         ORG   @DATA+00000008
+IFDOLT44	mixed	delete	0x0140	-16	<open code>	@TEMPS   DS    0F
+IFDOLT44	mixed	insert	0x0172	+16	IFDPATCH	         DC    S(*)                LAST 2 BYTES 
 IFDOLT52	mixed	replace	0x01a1	+16	<open code>	         BC    08,@9EB                          
 IFDOLT52	mixed	insert	0x02ca	+67	<open code>	         DS    0F
 IFDOLT52	mixed	insert	0x02cc	+2	<open code>	         DS    0D
@@ -8138,12 +8189,47 @@ IFG0193D	mixed	insert	0x0530	+1	<open code>	ONE9U    DC    X'0001'              
 IFG0193D	mixed	replace	0x0555	-1	XCTLTABL	         LTORG                                  
 IFG0193D	mixed	insert	0x05d6	+4	XCTLTABL	         DC    0D'0'                    ALIGN  Z
 IFG0193D	mixed	replace	0x05d7	-8	XCTLTABL	         DC    0D'0'                    ALIGN  Z
-IFG0193E	no usable reference					
+IFG0193E	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,K0                 SET BASE
+IFG0193E	mixed	insert	0x0248	+12	<open code>	         MVC   DXCCW4(RACKLNTH),RACKLIST
+IFG0193E	mixed	replace	0x0249	+2	<open code>	         MVC   DXCCW4(RACKLNTH),RACKLIST
+IFG0193E	mixed	insert	0x024e	+10	<open code>	         LA    RB,DXCCW4                ADDR OF 
+IFG0193E	mixed	insert	0x0280	+28	RACHECK	         SVC   130               INVOKE RACHECK 
+IFG0193E	mixed	replace	0x02ee	-28	RACHECK	         DC    AL3(ICH10021)    CLASS NAME ADDRE
+IFG0193E	mixed	insert	0x03a6	+4	XCTLTABL	         DC    VL3(IFG0194A),0C'        ADDRESS 
+IFG0193E	mixed	replace	0x03a7	-8	XCTLTABL	         DC    VL3(IFG0194A),0C'        ADDRESS 
 IFG0194A	not anchored (score 56% margin +27%)					
-IFG0195A	no usable reference					
+IFG0195A	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,R0                 ESTABLIS
+IFG0195A	mixed	insert	0x009e	+10	<open code>	         MVC  JFCBCRDT,DSCCREDT         DATE TO 
+IFG0195A	mixed	delete	0x0258	-14	IECRES	         MVC   0(5,RWTGC),ODA1940X      MOVE ID 
+IFG0195A	mixed	insert	0x0274	+8	IECRES	         B     RESXCTL(,RES)            SELECTIV
+IFG0195A	mixed	replace	0x0276	+4	XCTLTABL	         LTORG                                  
+IFG0195A	mixed	delete	0x02b6	-6	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IFG0195A	mixed	replace	0x02be	+2	XCTLTABL	         DC    AL2(IHB0005E-IFG0195A)   LENGTH O
 IFG0195U	not anchored (score 61% margin +25%)					
-IFG0196O	no usable reference					
-IFG0196U	no usable reference					
+IFG0196O	mixed	insert	0x000b	+4	<open code>	         B     OTA70200                 RETURN F
+IFG0196O	mixed	delete	0x004c	-6	<open code>	         MVC   DXCCW7(L'UCBVOLI),UCBVOLI SAVE VO
+IFG0196O	mixed	delete	0x0056	-4	<open code>	         OI    DXATOUTA,DXATNSL         SET NSL 
+IFG0196O	mixed	delete	0x0065	-4	<open code>	         L     RF,IECRRPRM              GET RRPL
+IFG0196O	mixed	insert	0x006c	+2	<open code>	         L     RPAR,IECUPRML            GET POIN
+IFG0196O	mixed	insert	0x006f	+4	<open code>	         LA    RET,K0                   RE-ENTRY
+IFG0196O	mixed	insert	0x0070	+1	<open code>	         LA    RET,K0                   RE-ENTRY
+IFG0196O	mixed	delete	0x0071	-3	<open code>	         OI    RRFLAGS1,RRFNSL          SET NSL 
+IFG0196O	mixed	delete	0x0080	-6	IECRES	         MVC   WTGMODNM(12),NSLOHDRO    MOVE MOD
+IFG0196O	mixed	replace	0x014b	+6	<open code>	         BNO   OTA70800                 BR IF NO
+IFG0196O	mixed	insert	0x0158	+6	<open code>	         NI    UCBDMCT,ALLBITS-UCBMOUNT SET NSL 
+IFG0196O	mixed	delete	0x0160	-10	<open code>	         MVI   DXRETCOD,K4              SET UP R
+IFG0196O	mixed	delete	0x0178	-142	<open code>	         CLC   DXVOLSR2,SCRTCH          CHECK FO
+IFG0196O	mixed	delete	0x0218	-32	ENQ	         DC    AL1(192)                LISTEND B
+IFG0196O	mixed	replace	0x0257	-8	XCTLTABL	         DC    VL3(IFG0194A),0C'        ADDRESS 
+IFG0196O	mixed	replace	0x0289	-3	XCTLTABL	         DC    V(NSLOHDRO),0C'          NSLOHDRO
+IFG0196O	mixed	replace	0x028f	+180	XCTLTABL	         DC    V(NSLOHDRO),0C'          NSLOHDRO
+IFG0196O	mixed	replace	0x0297	+7	XCTLTABL	         DC    AL2(IHB0018E-IFG0196O)   LENGTH O
+IFG0196U	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,0                  SET BASE
+IFG0196U	mixed	insert	0x0256	+4	<open code>	         MVI   DXCCW2,CCWNOP            SET CCW 
+IFG0196U	mixed	insert	0x0387	+1	<open code>	UHLCON   DC    C'UHL'                   HEADER L
+IFG0196U	mixed	insert	0x0388	+3	XCTLTABL	         LTORG                                  
+IFG0196U	mixed	insert	0x03e6	+4	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IFG0196U	mixed	replace	0x03e7	-8	XCTLTABL	         DC    0D'0'                    ALIGN  Z
 IFG0199D	not anchored (score 75% margin +40%)					
 IFG019TR	mixed	insert	0x0000	+4	<open code>	         BALR  RC,R0                    USE REG 
 IFG019TR	mixed	insert	0x000e	+4	<open code>	         L     R1,RWATRBUF              PTR TO T
@@ -8244,10 +8330,42 @@ IFG0551T	mixed	insert	0x0235	+3	XCTLTABL	         LTORG
 IFG0551T	mixed	replace	0x0236	+1	XCTLTABL	         LTORG                                  
 IFG0551T	mixed	insert	0x028e	+4	XCTLTABL	NAME551T DC    0D'0'                    ALIGN  Z
 IFG0551T	mixed	replace	0x028f	-8	XCTLTABL	NAME551T DC    0D'0'                    ALIGN  Z
-IFG0552B	no usable reference					
-IFG0552D	no usable reference					
+IFG0552B	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,0                  ESTABLIS
+IFG0552B	mixed	replace	0x01a7	+12	<open code>	         B     ETO17100                 BR TO PR
+IFG0552B	mixed	replace	0x0351	+10	<open code>	         BO    ETO17180                 IF YES, 
+IFG0552B	mixed	replace	0x046f	-2	<open code>	         BO    ETO17350                 YES - SK
+IFG0552B	mixed	replace	0x0473	+4	<open code>	         MVC   DXCCW8(RACDFLEN),RACDFL  MOVE IN 
+IFG0552B	mixed	replace	0x0475	+6	<open code>	         MVC   DXCCW8(RACDFLEN),RACDFL  MOVE IN 
+IFG0552B	mixed	insert	0x047a	+6	RACDEF	         LA    1,DXCCW8                         
+IFG0552B	mixed	insert	0x048c	+26	RACDEF	         SVC   133           ISSUE RACDEF SVC   
+IFG0552B	mixed	insert	0x04b2	+1	<open code>	         BAL   R7,ETO17800              GO REWIN
+IFG0552B	mixed	delete	0x04b3	-1	<open code>	         BAL   R7,ETO17800              GO REWIN
+IFG0552B	mixed	insert	0x04de	+1	<open code>	         BAL   R7,ETO17800              GO ISSUE
+IFG0552B	mixed	delete	0x04df	-1	<open code>	         BAL   R7,ETO17800              GO ISSUE
+IFG0552B	mixed	insert	0x04f4	+1	<open code>	         BAL   R7,ETO17800              GO ISSUE
+IFG0552B	mixed	delete	0x04f5	-1	<open code>	         BAL   R7,ETO17800              GO ISSUE
+IFG0552B	mixed	insert	0x0589	+1	<open code>	BLANKS   DC    CL4' '                   CHAR BLA
+IFG0552B	mixed	replace	0x058f	+1	RACDEF	RACDFL   DS    0F                               
+IFG0552B	mixed	replace	0x05a2	-16	RACDEF	         DC    A(ICH10037)    -    ENTITY CLASS 
+IFG0552B	mixed	delete	0x0671	-3	XCTLTABL	         DC    VL3(IFG0555T),0C'        ADDRESS 
+IFG0552B	mixed	replace	0x0677	-3	XCTLTABL	         DC    VL3(IFG0555T),0C'        ADDRESS 
+IFG0552B	mixed	replace	0x067e	+2	XCTLTABL	         DC    AL2(XCT0038E-IFG0552B)   LENGTH O
+IFG0552D	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,0                  ESTABLIS
+IFG0552D	mixed	insert	0x0054	+10	<open code>	         LH    R7,DXVOLSEQ              PICK UP 
+IFG0552D	mixed	insert	0x0066	+10	<open code>	         LH    R7,UCBFSEQ               FILE SEQ
+IFG0552D	mixed	replace	0x017e	+4	XCTLTABL	         LTORG                                  
+IFG0552D	mixed	insert	0x01b1	+3	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IFG0552D	mixed	replace	0x01b3	+1	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IFG0552D	mixed	replace	0x01b7	-8	XCTLTABL	         DC    0D'0'                    ALIGN  Z
 IFG0552F	not anchored (score 53% margin +4%)					
-IFG0552N	no usable reference					
+IFG0552N	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,0                  ESTABLIS
+IFG0552N	mixed	delete	0x00d4	-4	ENQ	         BO    *+20                      YES, GE
+IFG0552N	mixed	replace	0x00dc	-1	ENQ	         NI    2(14),248                 SET RET
+IFG0552N	mixed	delete	0x00df	-7	ENQ	         NI    2(14),248                 SET RET
+IFG0552N	mixed	delete	0x0234	-4	XCTLTABL	         LTORG                                  
+IFG0552N	mixed	replace	0x0279	-3	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IFG0552N	mixed	replace	0x027f	+3	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IFG0552N	mixed	replace	0x0283	-4	XCTLTABL	         DC    0D'0'                    ALIGN  Z
 IFG0552R	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,R0                 ESTABLIS
 IFG0552R	mixed	delete	0x00ec	-10	<open code>	         PACK  DXCCW7,FL1BLKCT          CONVERT 
 IFG0552R	mixed	insert	0x0132	+20	<open code>	         ST    RC,DCBBLKCT              ..FOR EO
@@ -8255,7 +8373,17 @@ IFG0552R	mixed	delete	0x04de	-2	DMABCOND	         B     RESXCTL(,RES)           
 IFG0552R	mixed	insert	0x059e	+1	XCTLTABL	         DC    VL3(IFG0552R),0C'        ADDRESS 
 IFG0552R	mixed	replace	0x059f	-1	XCTLTABL	         DC    VL3(IFG0552R),0C'        ADDRESS 
 IFG0552R	mixed	replace	0x05a3	-4	XCTLTABL	         DC    VL3(IFG0552R),0C'        ADDRESS 
-IFG0552T	no usable reference					
+IFG0552T	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,0                  ESTABLIS
+IFG0552T	mixed	replace	0x0060	+2	IECRES	         SR    4,4                      NO PREFI
+IFG0552T	mixed	replace	0x00bf	+10	<open code>	         BE    ETI04500                 ..BR IF 
+IFG0552T	mixed	replace	0x00dd	-10	<open code>	         BE    ETI04200                 ..BR IF 
+IFG0552T	mixed	replace	0x02ce	+2	IECRES	         SR    4,4                      NO PREFI
+IFG0552T	mixed	insert	0x03e0	+4	DMABCOND	         B     RESXCTL(,RES)            SELECTIV
+IFG0552T	mixed	insert	0x0460	+1	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IFG0552T	mixed	delete	0x0461	-1	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IFG0552T	mixed	insert	0x0464	+2	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IFG0552T	mixed	replace	0x0465	+2	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IFG0552T	mixed	replace	0x0467	-8	XCTLTABL	         DC    0D'0'                    ALIGN  Z
 IFG0553P	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,0                  ESTABLIS
 IFG0553P	mixed	replace	0x01fb	+8	<open code>	         BNO   EDI01400                 IF BIT I
 IFG0553P	mixed	insert	0x0273	+4	<open code>	         B     EDI02025                 GO TO SM
@@ -8272,7 +8400,14 @@ IFG0553X	mixed	insert	0x06b8	+16	<open code>	         STC   RF,ARNMEXTS         
 IFG0553X	mixed	replace	0x0858	-3	XCTLTABL	         DC    0D'0'                    ALIGN  Z
 IFG0553X	mixed	delete	0x085f	-3	XCTLTABL	         DC    0D'0'                    ALIGN  Z
 IFG0553X	mixed	replace	0x0865	+2	XCTLTABL	         DC    0D'0'                    ALIGN  Z
-IFG0555H	no usable reference					
+IFG0555H	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,0                  ESTABLIS
+IFG0555H	mixed	insert	0x060e	+8	<open code>	         OI    ARFLAG,INHIBST           SET TO I
+IFG0555H	mixed	insert	0x062e	+4	<open code>	         NI    ARFLAG,X'FF'-INHIBST     STAGE TH
+IFG0555H	mixed	insert	0x063c	+12	<open code>	         OI    ARFLAG,ARSEC             SET SECO
+IFG0555H	mixed	delete	0x06cc	-16	<open code>	         TM    DCBMACRF,DCBMEXCP        IS THIS 
+IFG0555H	mixed	insert	0x06e5	+16	<open code>	         TM    DCBDSORG,DCBORGPS        TEST IF 
+IFG0555H	mixed	insert	0x08e6	+4	XCTLTABL	         DC    VL3(IFG0555J),0C'        ADDRESS 
+IFG0555H	mixed	replace	0x08e7	-8	XCTLTABL	         DC    VL3(IFG0555J),0C'        ADDRESS 
 IFG0RR0A	mixed	insert	0x0197	+8	<open code>	         BNO   @RF00192                         
 IFG0RR0A	mixed	replace	0x01ad	-42	<open code>	         LA    @15,B                            
 IFG0RR0A	mixed	insert	0x01e5	+4	<open code>	         B     @RC00203                         
@@ -8386,19 +8521,17 @@ IGC018	all in open code	delete	0x0b0c	-16	<open code>	A000AF82 MVI   SEEKHH,X'20
 IGC018	all in open code	replace	0x0b28	+2	<open code>	         AR    R0,R11             ADD BACK IN LA
 IGC018	all in open code	replace	0x0b44	-2	<open code>	         SR    R12,R12            CLEAR FOR UNSI
 IGC018	all in open code	replace	0x0b4a	+6	<open code>	         AR    R11,R12            PLUS CC START 
-IGC0210D	mixed	insert	0x0020	+4	IEDHJN	         B     SKIPID .                 BR AROUN
-IGC0210D	mixed	replace	0x0083	+62	<open code>	         BNO   @RF00442                         
-IGC0210D	mixed	replace	0x0097	-62	<open code>	         AL    @11,@CF01588                     
-IGC0210D	mixed	insert	0x03fb	+9	<open code>	         BNZ   @RF00584                         
-IGC0210D	mixed	insert	0x03fc	+11	<open code>	         BNZ   @RF00584                         
-IGC0210D	mixed	replace	0x0593	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGC0210D	mixed	replace	0x0595	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGC0210D	mixed	insert	0x0091	+28	<open code>	         MVC   LOCALSW(4,@11),@CF00075          
+IGC0210D	mixed	insert	0x00a0	+6	<open code>	         CLI   TRMTYPE-11(@11),X'0F'            
+IGC0210D	mixed	replace	0x00b7	-34	<open code>	         AL    @11,@CF02437                     
+IGC0210D	mixed	insert	0x0400	+20	<open code>	         BNZ   @RF00584                         
+IGC0210D	mixed	replace	0x0597	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGC0210D	mixed	replace	0x0599	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGC0210D	mixed	insert	0x06c0	+4	<open code>	@CF00452 DC    XL4'1E'
 IGC0210D	mixed	delete	0x06e5	-20	<open code>	@CB02405 DC    X'000003'
-IGC0410D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGC0410D	mixed	replace	0x006d	-8	<open code>	         BE    TESTTERM                 YES, CHE
-IGC0410D	mixed	replace	0x0081	+8	<open code>	         CH    RMSGNO,MSGNO46           OUTPUT O
-IGC0410D	mixed	insert	0x0110	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGC0410D	mixed	delete	0x011f	-2	<open code>	ERRORTAB DS    0F
+IGC0410D	mixed	replace	0x006b	-8	<open code>	         CH    RMSGNO,MSGNO19           MESSAGE 
+IGC0410D	mixed	replace	0x0083	+8	<open code>	         CH    RMSGNO,MSGNO46           OUTPUT O
+IGC0410D	mixed	insert	0x0112	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
 IGC0505I	mixed	delete	0x0026	-8	<open code>	         BZ    D0(RETURN)        NOPE, THEREFORE
 IGC0505I	mixed	insert	0x035d	+8	WTO	         DC    B'0000000001000000' ROUTING CODES
 IGC0505I	mixed	replace	0x0386	-8	IFDPATCH	         ORG   PATCH5I             RETURN TO STA
@@ -8418,9 +8551,9 @@ IGC0810D	not anchored (score 41% margin +1%)
 IGC0910D	not anchored (score 78% margin +60%)					
 IGC0C10D	not anchored (score 76% margin +62%)					
 IGC0D06F	not anchored (score 82% margin +49%)					
-IGC0D10D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGC0D10D	mixed	replace	0x017b	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGC0D10D	mixed	replace	0x017d	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGC0D10D	mixed	replace	0x017f	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGC0D10D	mixed	replace	0x0181	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGC0D10D	mixed	insert	0x01a0	+4	<open code>	@CF01325 DC    F'449'
 IGC0D10D	mixed	insert	0x03f8	+20	<open code>	@NM00203 DC    AL1(39)
 IGC0D10D	mixed	delete	0x04c4	-20	<open code>	         DS    CL1
 IGC0E06F	not anchored (score 59% margin +20%)					
@@ -8428,23 +8561,13 @@ IGC0F06F	not anchored (score 59% margin +18%)
 IGC0G10D	mixed	replace	0x014b	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
 IGC0G10D	mixed	replace	0x014d	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
 IGC0G10D	mixed	insert	0x0168	+4	<open code>	@CF01152 DC    F'128'
-IGC0H10D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGC0H10D	mixed	replace	0x0117	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGC0H10D	mixed	replace	0x0119	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGC0H10D	mixed	replace	0x011b	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGC0H10D	mixed	replace	0x011d	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGC0H10D	mixed	insert	0x0130	+4	<open code>	         DC    AL3(@ENDDATD-@DATD)
 IGC0H10D	mixed	insert	0x03f8	+20	<open code>	@CC01323 DC    C'0K'
-IGC0H10D	mixed	replace	0x07a3	-20	<open code>	         DC    AL4(ACTIVRES)
-IGC0I10D	mixed	insert	0x000e	+2	IEDHJN	         B     ENTER  .                 BR AROUN
-IGC0I10D	mixed	insert	0x03fe	+20	<open code>	         LR    RCOUNT,RTCB              TOTAL LE
-IGC0I10D	mixed	insert	0x0474	+2	<open code>	         L     RWORK,CVTLINK            ADDRESS 
-IGC0I10D	mixed	replace	0x0488	-1	LINK	         LA    0,0(0,RWORK)        PICK UP DCB A
-IGC0I10D	mixed	replace	0x048b	+1	LINK	         LA    0,0(0,RWORK)        PICK UP DCB A
-IGC0I10D	mixed	delete	0x061a	-20	<open code>	         MVC   ZERO(ONE,RWORK),ZERO(RTEMP) MOVE 
-IGC0J10D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGC0J10D	mixed	replace	0x0079	+10	<open code>	         BZ    XCTLA10D                 NO, BRAN
-IGC0J10D	mixed	delete	0x0080	-10	<open code>	         B     GOXCTL                   GO XCTL 
-IGC0J10D	mixed	insert	0x0399	+2	WTO	         DC    AL2(52)             TEXT LENGTH  
-IGC0J10D	mixed	insert	0x03cd	+67	WTO	         DC    B'0000100000000000' DESCRIPTOR CO
-IGC0J10D	mixed	delete	0x0455	-67	WTO	         DC    B'0000000000000000' ROUTING CODES
+IGC0H10D	mixed	delete	0x07a4	-20	<open code>	         DC    AL4(ISSUE)
+IGC0I10D	equal length -- macroattr's population					
+IGC0J10D	equal length -- macroattr's population					
 IGC0K05B	mixed	replace	0x0133	+12	<open code>	         BAL   DSCNTR,MNTTP115    BUILD CCW
 IGC0K05B	mixed	replace	0x0141	-8	<open code>	         BNE   AHEAD               BR IF YES    
 IGC0K05B	mixed	delete	0x014c	-4	<open code>	         NI    TABFLG2,X'FE'       TURN OFF BIT 
@@ -8463,15 +8586,7 @@ IGC0K05B	mixed	insert	0x07e4	+18	<open code>	         B     MNTTP040            
 IGC0K05B	mixed	insert	0x07f0	+20	<open code>	         MVC   OPID,K05BID              CALL ER=
 IGC0K05B	mixed	replace	0x08d6	-28	RACHECK	         DC    AL3(ICH10037)    CLASS NAME ADDRE
 IGC0K05B	mixed	delete	0x095e	-44	RACHECK	         DC    AL2(7)       - CLASS NAME LENGTH 
-IGC0K10D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGC0K10D	mixed	replace	0x01cd	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGC0K10D	mixed	replace	0x01cf	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGC0K10D	mixed	insert	0x03f8	+20	<open code>	@CC01169 DC    C'0L'
-IGC0K10D	mixed	insert	0x0435	+1	<open code>	@CC01169 DC    C'0L'
-IGC0K10D	mixed	replace	0x049d	-1	<open code>	         DS    CL1
-IGC0K10D	mixed	insert	0x0526	+2	<open code>	TABEND   DC    H'0'
-IGC0K10D	mixed	replace	0x0529	-2	<open code>	CP0001@  DC    AL4(SUBORDIN)
-IGC0K10D	mixed	replace	0x052f	-20	<open code>	         DC    AL4(ALLSUBOR)
+IGC0K10D	equal length -- macroattr's population					
 IGC0L05B	mixed	delete	0x0000	-3	<open code>	         BALR  BASER,0                  ESTABLIS
 IGC0L05B	mixed	replace	0x0004	+4	<open code>	         B     BEGIN               BRANCH AROUND
 IGC0L05B	mixed	delete	0x000f	-1	<open code>	         CNOP  0,8                 ALIGN TO A DB
@@ -8493,9 +8608,7 @@ IGC0M05B	mixed	insert	0x074a	+8	WTO	         DC    B'0100000000100000' ROUTING C
 IGC0M05B	mixed	delete	0x0795	-18	WTO	         DC    B'0100000000100000' ROUTING CODES
 IGC0N06C	all in macro expansions	replace	0x01a2	-1	XCTL	         LA    0,0(0,RWKB)            PICKUP EPL
 IGC0N06C	all in macro expansions	delete	0x01a5	-3	XCTL	         LA    0,0(0,RWKB)            PICKUP EPL
-IGC0N10D	all in macro expansions	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGC0N10D	all in macro expansions	replace	0x0057	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGC0N10D	all in macro expansions	replace	0x0059	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGC0N10D	equal length -- macroattr's population					
 IGC0P05B	mixed	replace	0x026e	-1	XCTL	         LA    0,0(0,WRKR5)           PICKUP EPL
 IGC0P05B	mixed	delete	0x0271	-3	XCTL	         LA    0,0(0,WRKR5)           PICKUP EPL
 IGC0P05B	mixed	delete	0x02de	-1	<open code>	MAXTRKNO DC    X'7FFF'                  MAX NO O
@@ -8548,20 +8661,15 @@ IGCA310D	not anchored (score 54% margin +13%)
 IGCA410D	not anchored (score 84% margin +71%)					
 IGCA510D	not anchored (score 51% margin +20%)					
 IGCA610D	not anchored (score 84% margin +69%)					
-IGCA710D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCA710D	mixed	replace	0x016d	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCA710D	mixed	replace	0x016f	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCA710D	mixed	insert	0x01a6	+4	<open code>	@CB01465 DC    X'0815'
-IGCA710D	mixed	delete	0x020e	-4	<open code>	         DS    CL1
+IGCA710D	equal length -- macroattr's population					
 IGCA810D	not anchored (score 80% margin +65%)					
 IGCA910D	not anchored (score 46% margin +1%)					
 IGCAA10D	not anchored (score 67% margin +48%)					
 IGCAB10D	not anchored (score 40% margin +12%)					
-IGCAC10D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCAC10D	mixed	replace	0x01a5	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCAC10D	mixed	replace	0x01a7	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCAC10D	mixed	insert	0x01c6	+2	<open code>	         NOPR  ((@ENDDATD-@DATD)*16)
-IGCAC10D	mixed	replace	0x01ca	-2	<open code>	         DC    AL3(@ENDDATD-@DATD)
+IGCAC10D	mixed	replace	0x01a9	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCAC10D	mixed	replace	0x01ab	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCAC10D	mixed	insert	0x01ca	+2	<open code>	         NOPR  ((@ENDDATD-@DATD)*16)
+IGCAC10D	mixed	replace	0x01ce	+2	<open code>	         DC    AL3(@ENDDATD-@DATD)
 IGCAC10D	mixed	insert	0x01e3	+1	<open code>	@CB01509 DC    X'081A'
 IGCAC10D	mixed	delete	0x024b	-1	<open code>	         DS    CL1
 IGCAD10D	not anchored (score 53% margin +13%)					
@@ -8573,185 +8681,118 @@ IGCC110D	not anchored (score 23% margin +0%)
 IGCD110D	not anchored (score 55% margin +16%)					
 IGCD210D	not anchored (score 61% margin +16%)					
 IGCD410D	not anchored (score 82% margin +69%)					
-IGCD510D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCD510D	mixed	insert	0x0268	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCD510D	mixed	insert	0x03fa	+20	<open code>	NOIM     DC    C'NO'                    TEXT
-IGCD510D	mixed	delete	0x0418	-20	<open code>	NOIM     DC    C'NO'                    TEXT
-IGCD710D	all in macro expansions	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCD710D	all in macro expansions	insert	0x010c	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCD510D	mixed	insert	0x026a	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCD510D	mixed	insert	0x03fc	+20	<open code>	NOIM     DC    C'NO'                    TEXT
+IGCD510D	mixed	delete	0x041a	-20	<open code>	NOIM     DC    C'NO'                    TEXT
+IGCD710D	all in macro expansions	insert	0x010e	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
 IGCD810D	not anchored (score 66% margin +36%)					
-IGCD910D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCD910D	mixed	insert	0x0160	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCD910D	mixed	delete	0x02b5	-10	<open code>	         BZ    NOTACT                   NO, SET 
-IGCD910D	mixed	replace	0x02c5	+10	<open code>	         MVC   OPCZERO(OPCTWO,RTBL),LI  SET LINE
-IGCD910D	mixed	insert	0x03fa	+20	<open code>	         DC    X'FF'                    END OF T
-IGCD910D	mixed	insert	0x0422	+1	<open code>	DISPSESS DC    X'0801'                  DISPLAY 
-IGCD910D	mixed	delete	0x0445	-20	<open code>	DISPSESS DC    X'0801'                  DISPLAY 
-IGCDB10D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCDB10D	mixed	replace	0x00dd	-10	<open code>	         BNO   @RF00255                         
-IGCDB10D	mixed	insert	0x00ee	+10	<open code>	@RF00255 MVC   STATUS(8,RWORKA),IDLE            
-IGCDB10D	mixed	replace	0x011d	-10	<open code>	         BNO   @RF00269                         
-IGCDB10D	mixed	insert	0x012e	+10	<open code>	@RF00269 MVC   SWITCH(8,RWORKA),VOID            
-IGCDB10D	mixed	replace	0x015b	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCDB10D	mixed	replace	0x015d	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCDB10D	mixed	insert	0x0174	+2	<open code>	@CF01772 DC    XL4'0000FFFF'
-IGCDB10D	mixed	replace	0x0175	-2	<open code>	         DS    0D
-IGCDC10D	mixed	insert	0x0010	+2	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCDC10D	mixed	replace	0x037f	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCDC10D	mixed	replace	0x0381	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCDC10D	mixed	replace	0x039b	+2	<open code>	@SM01687 MVC   OCBACKUP-1(0,@01),BLANKS
+IGCD910D	mixed	insert	0x0162	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCD910D	mixed	insert	0x03fc	+20	<open code>	         DC    X'FF'                    END OF T
+IGCD910D	mixed	insert	0x0424	+1	<open code>	DISPSESS DC    X'0801'                  DISPLAY 
+IGCD910D	mixed	delete	0x0447	-20	<open code>	DISPSESS DC    X'0801'                  DISPLAY 
+IGCDB10D	mixed	replace	0x015f	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCDB10D	mixed	replace	0x0161	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCDB10D	mixed	insert	0x0178	+4	<open code>	@CF01772 DC    XL4'0000FFFF'
+IGCDC10D	mixed	replace	0x0381	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCDC10D	mixed	replace	0x0383	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCDC10D	mixed	insert	0x03d0	+4	<open code>	@CF00474 DC    XL4'1E'
 IGCDC10D	mixed	insert	0x03f8	+20	<open code>	@NM00172 DS    CL8
 IGCDC10D	mixed	delete	0x0460	-20	<open code>	MOD00    DC    CL2'00'
-IGCDD10D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIP   .                 BR AROUN
-IGCDD10D	mixed	replace	0x0329	+3	XCTL	         LA    15,OPCXCTL(ROCVT) LOAD SUP. PARM 
-IGCDD10D	mixed	replace	0x032b	+1	XCTL	         LA    15,OPCXCTL(ROCVT) LOAD SUP. PARM 
-IGCDD10D	mixed	insert	0x038c	+2	<open code>	@SM02029 MVC   NAME(0,@15),ENTRNAME(RPARM)
-IGCDD10D	mixed	insert	0x03f8	+1	<open code>	THISMOD  DC    CL2'DD'
-IGCDD10D	mixed	insert	0x03fc	+1	<open code>	THISMOD  DC    CL2'DD'
-IGCDD10D	mixed	replace	0x03fe	-2	<open code>	THISMOD  DC    CL2'DD'
-IGCFC10D	mixed	delete	0x0000	-12	<open code>	@PROLOG  BALR  @12,0                            
-IGCFC10D	mixed	insert	0x000e	+12	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCFC10D	mixed	replace	0x00ff	+22	<open code>	         B     @RC00412                         
-IGCFC10D	mixed	replace	0x025b	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFC10D	mixed	replace	0x025d	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFC10D	mixed	insert	0x0300	+2	<open code>	@CH01521 DC    H'539'
-IGCFC10D	mixed	insert	0x031b	+4	<open code>	@CF00870 DC    F'-3'
-IGCFC10D	mixed	insert	0x032a	+1	<open code>	         NOPR  ((@ENDDATD-@DATD)*16)
-IGCFC10D	mixed	replace	0x032f	+3	<open code>	         DC    AL3(@ENDDATD-@DATD)
-IGCFC10D	mixed	insert	0x0349	+1	<open code>	@CC01529 DC    C'FC'
-IGCFC10D	mixed	replace	0x03b1	+5	<open code>	         DS    CL1
+IGCDD10D	equal length -- macroattr's population					
+IGCFC10D	not anchored (score 84% margin +68%)					
 IGCFF10D	not anchored (score 74% margin +49%)					
-IGCFG10D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCFG10D	mixed	replace	0x02d3	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFG10D	mixed	replace	0x02d5	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFG10D	mixed	insert	0x03f8	+28	<open code>	         MVC   OPCMODID(2,ROPCAVT),OPCKPMOD     
-IGCFG10D	mixed	delete	0x0488	-28	<open code>	         DS    CL1
-IGCFH10D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCFH10D	mixed	replace	0x0169	-32	<open code>	         BNE   @RF00451                         
-IGCFH10D	mixed	replace	0x01a5	+32	<open code>	         B     @RC00450                         
-IGCFH10D	mixed	replace	0x03fb	+20	<open code>	         BNO   @RF00554                         
-IGCFH10D	mixed	replace	0x0525	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFH10D	mixed	replace	0x0527	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCFG10D	equal length -- macroattr's population					
+IGCFH10D	mixed	insert	0x0400	+20	<open code>	         BNO   @RF00554                         
+IGCFH10D	mixed	replace	0x0529	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCFH10D	mixed	replace	0x052b	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCFH10D	mixed	insert	0x0558	+4	<open code>	         DC    AL3(@ENDDATD-@DATD)
 IGCFH10D	mixed	insert	0x0567	+1	<open code>	@CB02925 DC    X'0000'
 IGCFH10D	mixed	delete	0x05b7	-21	<open code>	         DS    CL1
-IGCFI10D	mixed	delete	0x0000	-8	<open code>	@PROLOG  BALR  @12,0                            
-IGCFI10D	mixed	insert	0x000e	+12	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCFI10D	mixed	replace	0x01fb	+28	<open code>	         BNZ   @RF00442                         
-IGCFI10D	mixed	delete	0x0208	-4	<open code>	         B     @RC00443                         
-IGCFI10D	mixed	insert	0x0217	+17	<open code>	         BZ    @RT00445                         
-IGCFI10D	mixed	insert	0x0218	+9	<open code>	         BZ    @RT00445                         
-IGCFI10D	mixed	replace	0x021f	-16	<open code>	         BNO   @RF00447                         
-IGCFI10D	mixed	replace	0x023d	+14	<open code>	         B     @RC00442                         
-IGCFI10D	mixed	insert	0x03c4	+20	<open code>	         SLR   @09,@14                          
-IGCFI10D	mixed	replace	0x0625	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFI10D	mixed	replace	0x0627	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFI10D	mixed	insert	0x0644	+4	<open code>	@CC02778 DC    C'FJ'
-IGCFI10D	mixed	delete	0x06a0	-16	<open code>	         DS    CL1
-IGCFJ10D	mixed	replace	0x0001	-3	<open code>	@PROLOG  BALR  @12,0                            
-IGCFJ10D	mixed	replace	0x012f	-4	<open code>	         BAL   @14,CLNUPNCP                     
-IGCFJ10D	mixed	replace	0x01af	+6	<open code>	         SH    RPARM,@CH00047                   
-IGCFJ10D	mixed	replace	0x01bf	-4	<open code>	@RC00452 BAL   @14,CLNUPNCP                     
-IGCFJ10D	mixed	replace	0x0301	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFJ10D	mixed	replace	0x0303	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFJ10D	mixed	insert	0x03f2	+20	<open code>	         STH   @09,OCTRMTBL(,ROPCE)             
-IGCFJ10D	mixed	insert	0x0656	+4	<open code>	         MVC   OPCCOPCE(4,ROPCAVT),OCPTRSAV(ROPC
-IGCFJ10D	mixed	insert	0x0658	+2	<open code>	         LR    RPARM,ROPCAVT                    
-IGCFJ10D	mixed	insert	0x066e	+4	LINK	         SVC   6                   ISSUE LINK SV
-IGCFJ10D	mixed	delete	0x06e0	-34	<open code>	         BNE   @RF00745                         
-IGCFJ10D	mixed	insert	0x0708	+6	<open code>	@RF00750 MVC   OPCMODID(2,ROPCAVT),MSGMOD0C     
-IGCFJ10D	mixed	replace	0x0709	+28	<open code>	@RF00750 MVC   OPCMODID(2,ROPCAVT),MSGMOD0C     
-IGCFJ10D	mixed	replace	0x07e8	-3	<open code>	MSGMOD0D DC    CL2'0D'
-IGCFK10D	all in macro expansions	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCFK10D	all in macro expansions	replace	0x010d	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFK10D	all in macro expansions	replace	0x010f	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFL10D	mixed	delete	0x0000	-8	<open code>	@PROLOG  BALR  @12,0                            
-IGCFL10D	mixed	insert	0x000e	+12	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCFL10D	mixed	insert	0x03f4	+20	<open code>	         ST    @14,ENTRYRVT(,ROPCE)             
-IGCFL10D	mixed	replace	0x041f	+8	<open code>	         CLI   TRMTYPE-11(@14),X'4F'            
-IGCFL10D	mixed	replace	0x0541	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFL10D	mixed	replace	0x0543	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFL10D	mixed	insert	0x05b4	+6	<open code>	         ST    @14,ENTRYRVT(,ROPCE)             
-IGCFL10D	mixed	replace	0x05c5	+8	<open code>	         CLI   TRMTYPE-11(@14),X'4F'            
-IGCFL10D	mixed	replace	0x0607	+8	<open code>	         B     @RC00730                         
-IGCFL10D	mixed	delete	0x067d	-2	<open code>	@CF00131 DC    F'2'
-IGCFL10D	mixed	insert	0x0688	+4	<open code>	@CF00239 DC    F'12'
-IGCFL10D	mixed	insert	0x06b9	+1	<open code>	THISMOD  DC    CL2'FL'
-IGCFL10D	mixed	delete	0x0711	-13	<open code>	         DS    CL1
-IGCFQ10D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCFQ10D	mixed	insert	0x03fc	+20	<open code>	         STH   @14,OCBUFGOT(,ROPCE)             
-IGCFQ10D	mixed	replace	0x05bf	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFQ10D	mixed	replace	0x05c1	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCFQ10D	mixed	insert	0x0757	+1	<open code>	THISMOD  DC    CL2'FQ'
-IGCFQ10D	mixed	delete	0x07a7	-21	<open code>	         DS    CL1
+IGCFI10D	mixed	replace	0x0000	-5	<open code>	@PROLOG  BALR  @12,0                            
+IGCFI10D	mixed	replace	0x000e	+8	IEDHJN	         DC    X'0000' .                DATE OF 
+IGCFI10D	mixed	replace	0x01ff	+28	<open code>	         BNZ   @RF00442                         
+IGCFI10D	mixed	delete	0x020c	-4	<open code>	         B     @RC00443                         
+IGCFI10D	mixed	replace	0x021b	+26	<open code>	         BZ    @RT00445                         
+IGCFI10D	mixed	replace	0x0223	-16	<open code>	         BNO   @RF00447                         
+IGCFI10D	mixed	replace	0x0241	+14	<open code>	         B     @RC00442                         
+IGCFI10D	mixed	insert	0x03c8	+20	<open code>	         SLR   @09,@14                          
+IGCFI10D	mixed	replace	0x0629	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCFI10D	mixed	replace	0x062b	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCFI10D	mixed	delete	0x0644	-4	<open code>	         DS    0D
+IGCFI10D	mixed	insert	0x064c	+4	<open code>	@CC02778 DC    C'FJ'
+IGCFI10D	mixed	delete	0x06a5	-19	<open code>	         DS    CL1
+IGCFJ10D	not anchored (score 84% margin +64%)					
+IGCFK10D	equal length -- macroattr's population					
+IGCFL10D	mixed	replace	0x0000	-5	<open code>	@PROLOG  BALR  @12,0                            
+IGCFL10D	mixed	replace	0x000e	+8	IEDHJN	         DC    X'0000' .                DATE OF 
+IGCFL10D	mixed	insert	0x03f8	+20	<open code>	         ST    @14,ENTRYRVT(,ROPCE)             
+IGCFL10D	mixed	replace	0x0423	+8	<open code>	         CLI   TRMTYPE-11(@14),X'4F'            
+IGCFL10D	mixed	replace	0x0545	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCFL10D	mixed	replace	0x0547	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCFL10D	mixed	insert	0x05b8	+6	<open code>	         ST    @14,ENTRYRVT(,ROPCE)             
+IGCFL10D	mixed	replace	0x05c9	+8	<open code>	         CLI   TRMTYPE-11(@14),X'4F'            
+IGCFL10D	mixed	replace	0x060b	+8	<open code>	         B     @RC00730                         
+IGCFL10D	mixed	delete	0x0681	-2	<open code>	@CF00131 DC    F'2'
+IGCFL10D	mixed	insert	0x068c	+4	<open code>	@CF00239 DC    F'12'
+IGCFL10D	mixed	delete	0x06a4	-4	<open code>	         DS    0D
+IGCFL10D	mixed	insert	0x06c1	+1	<open code>	THISMOD  DC    CL2'FL'
+IGCFL10D	mixed	delete	0x0716	-16	<open code>	         DS    CL1
+IGCFQ10D	equal length -- macroattr's population					
 IGCH010D	not anchored (score 29% margin +11%)					
 IGCI010D	not anchored (score 79% margin +56%)					
-IGCI110D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCI110D	mixed	replace	0x00c3	-4	<open code>	         BE    MACTIVE                  YES,MAKE
-IGCI110D	mixed	insert	0x00d0	+4	<open code>	         EX    RWORK1,SWAP3             ENTRIES
-IGCI110D	mixed	insert	0x025e	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCI210D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCI210D	mixed	insert	0x03fc	+20	<open code>	         LA    @15,OFFSET(,@12)                 
-IGCI210D	mixed	replace	0x0679	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCI210D	mixed	replace	0x067b	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCI110D	all in macro expansions	insert	0x0260	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCI210D	mixed	insert	0x0400	+20	<open code>	         LA    @15,OFFSET(,@12)                 
+IGCI210D	mixed	replace	0x067d	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCI210D	mixed	replace	0x067f	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCI210D	mixed	insert	0x06d8	+4	<open code>	@CF01689 DC    XL4'0000FFFF'
 IGCI210D	mixed	delete	0x06dd	-20	<open code>	@CB01506 DC    X'0B8000'
-IGCI310D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCI310D	mixed	replace	0x0155	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCI310D	mixed	replace	0x0157	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCI310D	mixed	insert	0x03f8	+20	<open code>	         B     XCTL                             
+IGCI310D	mixed	replace	0x0159	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCI310D	mixed	replace	0x015b	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCI310D	mixed	insert	0x03fc	+20	<open code>	         B     XCTL                             
+IGCI310D	mixed	insert	0x0418	+4	<open code>	@CF01636 DC    XL4'0000FFFF'
 IGCI310D	mixed	delete	0x0483	-20	<open code>	@CB01036 DC    X'0B8000'
 IGCM110D	not anchored (score 60% margin +24%)					
-IGCM210D	all in macro expansions	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCM210D	all in macro expansions	insert	0x0186	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCM310D	all in macro expansions	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCM310D	all in macro expansions	replace	0x0115	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCM310D	all in macro expansions	replace	0x0117	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCM510D	all in macro expansions	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCM510D	all in macro expansions	insert	0x01bc	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCM210D	all in macro expansions	insert	0x0188	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCM310D	mixed	replace	0x0119	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCM310D	mixed	replace	0x011b	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCM310D	mixed	insert	0x0139	+4	<open code>	@CC01120 DC    C'ALL'
+IGCM510D	all in macro expansions	insert	0x01be	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
 IGCM610D	not anchored (score 84% margin +65%)					
-IGCM810D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCM810D	mixed	insert	0x02b8	+4	<open code>	         N     RWORK7,AVTCLRHI          CLEAR HI
-IGCM810D	mixed	replace	0x0371	+8	<open code>	         MVC   OPCLDNME+VARINAME(TWO),CKPTMOD MO
-IGCM810D	mixed	delete	0x0379	-8	<open code>	         LA    RZERO,THIRTY4            SET ERRO
-IGCM810D	mixed	insert	0x039e	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCM810D	mixed	insert	0x03f6	+20	<open code>	ZONECO   DC    X'C0'                    PLUS ZON
-IGCM810D	mixed	delete	0x0427	-20	<open code>	ZONECO   DC    X'C0'                    PLUS ZON
+IGCM810D	mixed	insert	0x02ba	+4	<open code>	         N     RWORK7,AVTCLRHI          CLEAR HI
+IGCM810D	mixed	insert	0x03a0	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCM810D	mixed	insert	0x03f8	+20	<open code>	ZONECO   DC    X'C0'                    PLUS ZON
+IGCM810D	mixed	delete	0x0429	-20	<open code>	ZONECO   DC    X'C0'                    PLUS ZON
 IGCMA10D	not anchored (score 80% margin +61%)					
-IGCME10D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCME10D	mixed	insert	0x020a	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCME10D	mixed	replace	0x033d	-2	<open code>	         B     OUT                      PREPARE 
+IGCME10D	all in macro expansions	insert	0x020c	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
 IGCMF10D	not anchored (score 46% margin +20%)					
-IGCMG10D	all in macro expansions	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCMG10D	all in macro expansions	insert	0x0140	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCMH10D	all in macro expansions	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCMH10D	all in macro expansions	replace	0x0315	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCMH10D	all in macro expansions	replace	0x0317	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCMG10D	all in macro expansions	insert	0x0142	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCMH10D	mixed	replace	0x0319	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCMH10D	mixed	replace	0x031b	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCMH10D	mixed	insert	0x0340	+4	<open code>	@CF01142 DC    XL4'20'
 IGCMI10D	not anchored (score 81% margin +70%)					
 IGCMK10D	not anchored (score 82% margin +69%)					
 IGCML10D	not anchored (score 82% margin +68%)					
 IGCMN10D	not anchored (score 81% margin +64%)					
-IGCMR10D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCMR10D	mixed	replace	0x017b	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCMR10D	mixed	replace	0x017d	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCMR10D	mixed	insert	0x026c	+6	<open code>	         AH    RQCBE,QCBEXTO(,IEDQQPTR)         
-IGCMR10D	mixed	replace	0x02ae	+4	<open code>	         DS    0D
+IGCMR10D	mixed	replace	0x017d	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCMR10D	mixed	replace	0x017f	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCMR10D	mixed	insert	0x026e	+6	<open code>	         AH    RQCBE,QCBEXTO(,IEDQQPTR)         
+IGCMR10D	mixed	delete	0x02a9	-2	<open code>	@CF00086 DC    F'1'
+IGCMR10D	mixed	insert	0x02b0	+8	<open code>	@CF00071 DC    F'8'
 IGCMS10D	not anchored (score 84% margin +72%)					
 IGCMU10D	not anchored (score 83% margin +68%)					
-IGCMV10D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCMV10D	mixed	replace	0x01a5	-74	<open code>	         B     FOUNDTTE                         
-IGCMV10D	mixed	insert	0x01fa	+60	<open code>	         MVC   MSGNUM(2,ROPCE),@CH02015         
-IGCMV10D	mixed	replace	0x0207	+14	<open code>	         MVC   MSGNUM(2,ROPCE),@CH00181         
-IGCMV10D	mixed	insert	0x03fc	+20	<open code>	         OI    ERRX(ROPCE),B'00010000'          
-IGCMV10D	mixed	delete	0x0419	-16	<open code>	         C     @15,@CF00181                     
-IGCMV10D	mixed	replace	0x0435	+16	<open code>	         BE    @RT00475                         
-IGCMV10D	mixed	replace	0x05f7	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCMV10D	mixed	replace	0x05f9	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCMV10D	mixed	delete	0x05fc	-2	<open code>	@ER00001 BR    @14                              
-IGCMV10D	mixed	insert	0x0608	+2	<open code>	@CH02020 DC    H'431'
+IGCMV10D	mixed	insert	0x0400	+20	<open code>	         OI    ERRX(ROPCE),B'00010000'          
+IGCMV10D	mixed	insert	0x041a	+8	<open code>	         LH    @15,MSGNUM(,ROPCE)               
+IGCMV10D	mixed	replace	0x042d	-8	<open code>	         C     @15,@CF02015                     
+IGCMV10D	mixed	replace	0x05fb	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCMV10D	mixed	replace	0x05fd	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCMV10D	mixed	delete	0x0600	-2	<open code>	@ER00001 BR    @14                              
+IGCMV10D	mixed	insert	0x060c	+2	<open code>	@CH02020 DC    H'431'
+IGCMV10D	mixed	insert	0x0650	+4	<open code>	@CF00411 DC    XL4'20'
 IGCMV10D	mixed	delete	0x068f	-20	<open code>	MVRTN    DC    CL2'MV'
-IGCMY10D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCMY10D	mixed	replace	0x0159	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCMY10D	mixed	replace	0x015b	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCMY10D	mixed	insert	0x03f8	+20	<open code>	         N     RPARM,@CF01884                   
+IGCMY10D	mixed	replace	0x015d	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCMY10D	mixed	replace	0x015f	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCMY10D	mixed	insert	0x03fc	+20	<open code>	         N     RPARM,@CF01884                   
+IGCMY10D	mixed	insert	0x0590	+4	<open code>	         DC    AL3(@ENDDATD-@DATD)
 IGCMY10D	mixed	delete	0x05de	-20	<open code>	@CC01798 DC    C'06'
 IGCMZ10D	not anchored (score 84% margin +72%)					
 IGCN010D	mixed	delete	0x0013	-1	<open code>	         DC    AL1(16)                          
@@ -8761,11 +8802,9 @@ IGCN010D	mixed	replace	0x03cd	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SU
 IGCN010D	mixed	insert	0x03fc	+20	<open code>	@CF01295 DC    F'-13'
 IGCN010D	mixed	insert	0x0410	+4	<open code>	@CF01291 DC    XL4'0000FFFF'
 IGCN010D	mixed	delete	0x0461	-20	<open code>	@CC01283 DC    C'03'
-IGCR010D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCR010D	mixed	insert	0x03fd	+2	<open code>	         BZ    NOTTOTE                  NO
-IGCR010D	mixed	insert	0x03fe	+18	<open code>	         BZ    NOTTOTE                  NO
-IGCR010D	mixed	insert	0x0532	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCR010D	mixed	delete	0x05c3	-20	<open code>	MAXRLN   DC    H'255'                   MAXIMUM 
+IGCR010D	mixed	insert	0x0400	+20	<open code>	         BZ    NOTTOTE                  NO
+IGCR010D	mixed	insert	0x0534	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCR010D	mixed	delete	0x05c5	-20	<open code>	MAXRLN   DC    H'255'                   MAXIMUM 
 IGCT002D	all in open code	insert	0x000e	+8	<open code>	         DC    XL1'10'
 IGCT002D	all in open code	delete	0x000f	-1	<open code>	         DC    XL1'10'
 IGCT002D	all in open code	replace	0x0011	+3	<open code>	         DC    XL1'10'
@@ -8798,91 +8837,68 @@ IGCT005G	mixed	replace	0x0694	+6	ESTAE	         SLR   0,0                     IN
 IGCT005G	mixed	insert	0x096c	+2	<open code>	@CH01980 DC    H'64'
 IGCT005G	mixed	delete	0x0adb	-16	SDUMP	         DC    AL1(0)                       FLAG
 IGCT005G	mixed	delete	0x0b2c	-4	SNAP	         DC    A(0)                ADDRESS OF HE
-IGCT010D	mixed	delete	0x0000	-8	<open code>	@PROLOG  BALR  @11,0                            
-IGCT010D	mixed	insert	0x000e	+12	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCT010D	mixed	replace	0x0180	-62	<open code>	         B     XCTL                             
-IGCT010D	mixed	delete	0x01c0	-6	<open code>	         CLI   WANSCD(PARAM),0                  
-IGCT010D	mixed	replace	0x01e1	+36	<open code>	         BNH   @RT00434                         
-IGCT010D	mixed	replace	0x01e9	+56	<open code>	         BNH   @RF00434                         
-IGCT010D	mixed	replace	0x01f6	-4	<open code>	         B     @RC00429                         
-IGCT010D	mixed	insert	0x0210	+6	<open code>	BRANCH   L     @10,ELMNT-1(,ROPCAVT)            
-IGCT010D	mixed	insert	0x0318	+2	<open code>	@RF00481 LH    REG1,WTNTNDX(,PARAM)             
-IGCT010D	mixed	insert	0x03d8	+28	<open code>	ATCHNG1  MVC   OPCLDNME(8,ROPCAVT),MODNAME1     
-IGCT010D	mixed	replace	0x03e1	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCT010D	mixed	replace	0x03e3	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCT010D	mixed	delete	0x0594	-4	<open code>	         DS    0D
+IGCT010D	mixed	replace	0x0000	-5	<open code>	@PROLOG  BALR  @11,0                            
+IGCT010D	mixed	replace	0x000e	+8	IEDHJN	         DC    X'0700' .                DATE OF 
+IGCT010D	mixed	replace	0x0184	-62	<open code>	         B     XCTL                             
+IGCT010D	mixed	delete	0x01c4	-6	<open code>	         CLI   WANSCD(PARAM),0                  
+IGCT010D	mixed	replace	0x01e5	+36	<open code>	         BNH   @RT00434                         
+IGCT010D	mixed	replace	0x01ed	+56	<open code>	         BNH   @RF00434                         
+IGCT010D	mixed	replace	0x01fa	-4	<open code>	         B     @RC00429                         
+IGCT010D	mixed	insert	0x0214	+6	<open code>	BRANCH   L     @10,ELMNT-1(,ROPCAVT)            
+IGCT010D	mixed	insert	0x031c	+2	<open code>	@RF00481 LH    REG1,WTNTNDX(,PARAM)             
+IGCT010D	mixed	insert	0x03dc	+28	<open code>	ATCHNG1  MVC   OPCLDNME(8,ROPCAVT),MODNAME1     
+IGCT010D	mixed	replace	0x03e5	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCT010D	mixed	replace	0x03e7	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
 IGCT010D	mixed	insert	0x05d9	+1	<open code>	MOD07    DC    CL2'07'
-IGCT010D	mixed	delete	0x062d	-21	<open code>	         DS    CL1
-IGCT110D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCT110D	mixed	replace	0x0253	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCT110D	mixed	replace	0x0255	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCT110D	mixed	delete	0x026b	-12	<open code>	         CLI   FDATA(RTO),X'0F'                 
-IGCT110D	mixed	replace	0x027f	+8	<open code>	         B     MOVFLD                           
-IGCT110D	mixed	replace	0x0283	+4	<open code>	         B     SHIFT1                           
-IGCT110D	mixed	replace	0x03f8	+20	<open code>	         B     @RC00376                         
-IGCT110D	mixed	replace	0x043b	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCT110D	mixed	replace	0x043d	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCT110D	mixed	insert	0x0508	+4	<open code>	@CF01543 DC    XL4'0000FFFF'
-IGCT110D	mixed	delete	0x056e	-20	<open code>	         DS    CL1
+IGCT010D	mixed	delete	0x062a	-24	<open code>	         DS    CL1
+IGCT110D	mixed	replace	0x0257	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCT110D	mixed	replace	0x0259	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCT110D	mixed	insert	0x03fc	+20	<open code>	         B     @RC00376                         
+IGCT110D	mixed	replace	0x043f	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCT110D	mixed	replace	0x0441	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCT110D	mixed	delete	0x0576	-20	<open code>	         DS    CL1
 IGCT210D	not anchored (score 21% margin +4%)					
-IGCV010D	mixed	insert	0x006a	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCV010D	mixed	insert	0x0186	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCV010D	mixed	insert	0x03f8	+20	<open code>	         ST    RWORK,OCELEM             CHAIN NE
-IGCV010D	mixed	delete	0x04ec	-20	<open code>	         DC    X'550A',C'V2'            SPECIAL 
+IGCV010D	mixed	insert	0x018a	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCV010D	mixed	insert	0x03fc	+20	<open code>	         ST    RWORK,OCELEM             CHAIN NE
+IGCV010D	mixed	delete	0x04f0	-20	<open code>	         DC    X'550A',C'V2'            SPECIAL 
 IGCV110D	not anchored (score 81% margin +70%)					
-IGCV310D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCV310D	mixed	insert	0x02fe	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCV310D	mixed	replace	0x0353	+2	<open code>	         B     IMMDXCTL                 XCTL TO 
-IGCV410D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCV410D	mixed	replace	0x01d7	+8	<open code>	         BO    NORESTRT                 YES, CK 
-IGCV410D	mixed	insert	0x0218	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCV410D	mixed	delete	0x02ce	-2	<open code>	ERRORTAB DS    0F
-IGCV410D	mixed	insert	0x0312	+4	<open code>	STRTGP   DC    C'V6'                    START GE
-IGCV710D	all in macro expansions	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCV710D	all in macro expansions	insert	0x01c6	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCV310D	all in macro expansions	insert	0x0300	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCV410D	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,RZERO              SET BASE
+IGCV410D	mixed	replace	0x01d9	+8	<open code>	         BO    NORESTRT                 YES, CK 
+IGCV410D	mixed	insert	0x021a	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCV710D	all in macro expansions	insert	0x01c8	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
 IGCV910D	not anchored (score 71% margin +58%)					
-IGCVA10D	mixed	insert	0x0020	+4	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCVA10D	mixed	delete	0x0057	-8	<open code>	         BNE   @RF00449                         
-IGCVA10D	mixed	replace	0x0063	+8	<open code>	@RF00449 BAL   @14,RQSTBFR                      
-IGCVA10D	mixed	replace	0x006b	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCVA10D	mixed	replace	0x006d	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCVA10D	mixed	delete	0x0070	-2	<open code>	@ER00001 BR    @14                              
-IGCVA10D	mixed	insert	0x03fa	+20	<open code>	@RC00650 MVI   OPREPRI(RNSL),X'DD'              
-IGCVA10D	mixed	insert	0x0472	+4	<open code>	         L     RWORK8,OCLINK(,RWORK8)           
-IGCVA10D	mixed	insert	0x0526	+4	<open code>	         L     RWORK8,OCLINK(,RWORK8)           
-IGCVA10D	mixed	insert	0x0529	+6	<open code>	         BNE   @DL00729                         
-IGCVA10D	mixed	replace	0x052b	+22	<open code>	         BNE   @DL00729                         
-IGCVA10D	mixed	insert	0x0534	+8	<open code>	         ST    @15,OCLINK(,RRET)                
-IGCVA10D	mixed	delete	0x0725	-2	<open code>	@CF00046 DC    F'8'
+IGCVA10D	mixed	replace	0x006f	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCVA10D	mixed	replace	0x0071	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCVA10D	mixed	delete	0x0074	-2	<open code>	@ER00001 BR    @14                              
+IGCVA10D	mixed	insert	0x03fe	+20	<open code>	@RC00650 MVI   OPREPRI(RNSL),X'DD'              
+IGCVA10D	mixed	insert	0x0476	+4	<open code>	         L     RWORK8,OCLINK(,RWORK8)           
+IGCVA10D	mixed	insert	0x052a	+4	<open code>	         L     RWORK8,OCLINK(,RWORK8)           
+IGCVA10D	mixed	insert	0x052d	+6	<open code>	         BNE   @DL00729                         
+IGCVA10D	mixed	replace	0x052f	+22	<open code>	         BNE   @DL00729                         
+IGCVA10D	mixed	insert	0x0538	+8	<open code>	         ST    @15,OCLINK(,RRET)                
+IGCVA10D	mixed	delete	0x0729	-2	<open code>	@CF00046 DC    F'8'
+IGCVA10D	mixed	replace	0x0748	+4	<open code>	IEDQPPTR DS    A
 IGCVA10D	mixed	delete	0x07b0	-20	<open code>	@CC03910 DC    C'VA'
 IGCVF10D	not anchored (score 48% margin +32%)					
-IGCVG10D	all in macro expansions	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCVG10D	all in macro expansions	replace	0x01c7	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCVG10D	all in macro expansions	replace	0x01c9	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCZ010D	mixed	insert	0x000e	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGCZ010D	mixed	replace	0x0167	+8	<open code>	@RF00381 BAL   @14,IPTSOCK                      
-IGCZ010D	mixed	replace	0x03f3	+20	<open code>	         MVC   OPCMODID(2,ROPCAVT),MOD03        
-IGCZ010D	mixed	replace	0x0477	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCZ010D	mixed	replace	0x0479	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
-IGCZ010D	mixed	insert	0x0659	+1	<open code>	ENTRY2   DC    X'FF'
-IGCZ010D	mixed	delete	0x06ad	-21	<open code>	         DS    CL1
-IGCZ110D	mixed	replace	0x0000	-5	<open code>	         BALR  RBASE,ZERO               ESTABLIS
-IGCZ110D	mixed	insert	0x000e	+2	IEDHJN	         B     SKIPID .                 BR AROUN
-IGCZ110D	mixed	insert	0x0018	+4	<open code>	         L     ROPCE,OPCCOPCE           SET OPC 
-IGCZ110D	mixed	insert	0x02be	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
-IGCZ110D	mixed	replace	0x0377	+10	<open code>	         CLC   OCBACKUP(TWO),MODNAME    MCPCLOSE
-IGCZ110D	mixed	replace	0x037b	+14	<open code>	         BNE   GETNEXT                  NO
-IGCZ110D	mixed	insert	0x0393	+6	<open code>	         MVC   OPCZERO(OPCFOUR,R10),OCLINK UPDAT
-IGCZ110D	mixed	replace	0x03d3	+32	<open code>	         B     COMPPCB                  CHECK FO
-IGCZ110D	mixed	delete	0x050c	-13	WTO	         DC    B'1000000000000000' MCS FLAGS    
-IGE0004G	mixed	insert	0x000c	+2	IEDHJN	         B     ID     .                 BR AROUN
-IGE0004G	mixed	replace	0x013c	+2	<open code>	         CLI   LCBINCAM,AVTEZERO        RETRY CO
-IGE0004G	mixed	replace	0x03fb	+28	<open code>	         BNZ   UPDATE                   BRANCH Y
-IGE0004G	mixed	delete	0x0554	-28	<open code>	         L     RXCTL,CVTXTLER           XCTL ROU
-IGE0004H	mixed	insert	0x000c	+2	IEDHJN	         B     ID     .                 BR AROUN
-IGE0004H	mixed	replace	0x0132	+2	<open code>	         CLI   LCBINCAM,AVTEZERO        RETRY CO
-IGE0004H	mixed	replace	0x03fb	+28	<open code>	         IC    RWKA,TABLE-1(RWKA)       GET ASSO
-IGE0004H	mixed	delete	0x0508	-28	<open code>	         BR    RXCTL                    CALL NEX
+IGCVG10D	equal length -- macroattr's population					
+IGCZ010D	mixed	replace	0x016b	+8	<open code>	@RF00381 BAL   @14,IPTSOCK                      
+IGCZ010D	mixed	replace	0x03f7	+20	<open code>	         MVC   OPCMODID(2,ROPCAVT),MOD03        
+IGCZ010D	mixed	replace	0x047b	+3	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCZ010D	mixed	replace	0x047d	+1	XCTL	         LA    15,OPCXCTL(ROPCAVT) LOAD SUP. PAR
+IGCZ010D	mixed	delete	0x0614	-4	<open code>	         DS    0D
+IGCZ010D	mixed	insert	0x0661	+1	<open code>	ENTRY2   DC    X'FF'
+IGCZ010D	mixed	delete	0x06b5	-21	<open code>	         DS    CL1
+IGCZ110D	mixed	insert	0x001a	+4	<open code>	         L     ROPCE,OPCCOPCE           SET OPC 
+IGCZ110D	mixed	insert	0x02c0	+4	XCTL	         LA    15,OPCXCTL     LOAD SUP. PARM LIS
+IGCZ110D	mixed	replace	0x0379	+10	<open code>	         CLC   OCBACKUP(TWO),MODNAME    MCPCLOSE
+IGCZ110D	mixed	replace	0x037d	+14	<open code>	         BNE   GETNEXT                  NO
+IGCZ110D	mixed	insert	0x0395	+6	<open code>	         MVC   OPCZERO(OPCFOUR,R10),OCLINK UPDAT
+IGCZ110D	mixed	replace	0x03d5	+32	<open code>	         B     COMPPCB                  CHECK FO
+IGCZ110D	mixed	delete	0x04ce	-2	WTO	QC0MSG2  DS    0F                               
+IGCZ110D	mixed	delete	0x050b	-18	WTO	         DC    B'1000000000000000' MCS FLAGS    
+IGE0004G	equal length -- macroattr's population					
+IGE0004H	equal length -- macroattr's population					
 IGE0004I	not anchored (score 69% margin +46%)					
 IGE0019I	not anchored (score 59% margin +33%)					
 IGE0104B	all in open code	insert	0x0012	+8	<open code>	         L     IOBRG,RQEIOB        BASE IOB
@@ -8891,11 +8907,11 @@ IGE0104B	all in open code	insert	0x00fa	+4	<open code>	         OI    IOBFLAG1,I
 IGE0104B	all in open code	insert	0x00fd	+8	<open code>	         OI    IOSFLA,IOSCCHN      COMMAND CHAIN
 IGE0104B	all in open code	insert	0x010a	+4	<open code>	         OI    DECERRST(DECBRG),DISABLOK   SET D
 IGE0104C	not anchored (score 46% margin +7%)					
-IGE0104G	all in macro expansions	insert	0x000c	+2	IEDHJN	         B     DATE   .                 BR AROUN
+IGE0104G	equal length -- macroattr's population					
 IGE0204G	not anchored (score 72% margin +44%)					
 IGE0204H	not anchored (score 78% margin +65%)					
 IGE0304C	not anchored (score 53% margin +28%)					
-IGE0304G	all in macro expansions	insert	0x000c	+2	IEDHJN	         B     DATE   .                 BR AROUN
+IGE0304G	equal length -- macroattr's population					
 IGE0404H	not anchored (score 71% margin +45%)					
 IGE0604G	not anchored (score 78% margin +51%)					
 IGE0704C	all in open code	insert	0x000e	+9	<open code>	         B     BEGIN               BRANCH AROUND
@@ -9214,33 +9230,39 @@ IGG0192X	all in macro expansions	replace	0x02b0	-1	XCTL	         LA    0,0(0,RWT
 IGG0192X	all in macro expansions	delete	0x02b3	-3	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
 IGG0192X	all in macro expansions	insert	0x02bd	+1	XCTL	         ST    0,4(0,15)      STORE DCB PARAMETE
 IGG0192X	all in macro expansions	delete	0x02be	-1	XCTL	         ST    0,4(0,15)      STORE DCB PARAMETE
-IGG01931	mixed	insert	0x000e	+2	IEDHJN	         B     RESTART .                 BR AROU
-IGG01931	mixed	insert	0x01ac	+2	<open code>	         LR    RWORK,REG0               SAVE LEN
-IGG01931	mixed	replace	0x0374	-1	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
-IGG01931	mixed	delete	0x0377	-3	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
-IGG01931	mixed	insert	0x0400	+20	MODESET	         SPKA  0(0)                SET PSW KEY  
-IGG01931	mixed	insert	0x042a	+62	PGFIX	         SVC   113  INVOKE SERVICE ROUTINE      
-IGG01931	mixed	delete	0x0451	-22	<open code>	AMIDCNST DC    C'31'                    ID OF TH
-IGG01934	mixed	delete	0x0000	-10	<open code>	         BALR  RBASE,0                  ESTABLIS
-IGG01934	mixed	insert	0x000e	+10	IEDHJN	         B     RESTART .                 BR AROU
-IGG01934	mixed	insert	0x0182	+4	<open code>	         LTR   RCORE,RCORE              IS THIS 
-IGG01934	mixed	delete	0x0186	-4	<open code>	         BZ    ALLFREE                  YES, BRA
-IGG01934	mixed	replace	0x025a	-1	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
-IGG01934	mixed	delete	0x025d	-3	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
-IGG01934	mixed	insert	0x0278	+2	<open code>	         L     RF,CVTSVDCB              ADDRESS 
+IGG01931	mixed	replace	0x0378	-1	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
+IGG01931	mixed	delete	0x037b	-3	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
+IGG01931	mixed	insert	0x0404	+20	MODESET	         SPKA  0(0)                SET PSW KEY  
+IGG01931	mixed	insert	0x042e	+62	PGFIX	         SVC   113  INVOKE SERVICE ROUTINE      
+IGG01931	mixed	delete	0x0455	-22	<open code>	AMIDCNST DC    C'31'                    ID OF TH
+IGG01934	mixed	delete	0x0000	-8	<open code>	         BALR  RBASE,0                  ESTABLIS
+IGG01934	mixed	replace	0x000e	+8	IEDHJN	         DC    X'4780' .                DATE OF 
+IGG01934	mixed	insert	0x0184	+4	<open code>	         LTR   RCORE,RCORE              IS THIS 
+IGG01934	mixed	delete	0x0188	-4	<open code>	         BZ    ALLFREE                  YES, BRA
+IGG01934	mixed	replace	0x025c	-1	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
+IGG01934	mixed	delete	0x025f	-3	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
 IGG01935	not anchored (score 81% margin +66%)					
-IGG01936	mixed	insert	0x0000	+4	<open code>	         BALR  RBASE,0                  BASE REG
-IGG01936	mixed	insert	0x0012	+2	IEDHJN	         B     RESTART .                 BR AROU
-IGG01936	mixed	insert	0x03fe	+20	<open code>	         LA    RCORE,8(RCORE)           INCREMEN
-IGG01936	mixed	replace	0x05f4	-1	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
-IGG01936	mixed	delete	0x05f7	-3	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
-IGG01936	mixed	replace	0x0602	+1	<open code>	         CNOP  0,4
-IGG01936	mixed	insert	0x0604	+1	<open code>	         CNOP  0,4
+IGG01936	mixed	insert	0x0400	+20	<open code>	         LA    RCORE,8(RCORE)           INCREMEN
+IGG01936	mixed	replace	0x05f6	-1	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
+IGG01936	mixed	delete	0x05f9	-3	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
+IGG01936	mixed	insert	0x0604	+4	XCTL	         SVC   7                                
 IGG01936	mixed	insert	0x0698	+4	<open code>	         SR    RE,RE                    CLEAR   
-IGG01936	mixed	replace	0x07b5	-24	<open code>	         B     XCTRTNE                  GO TO TH
+IGG01936	mixed	delete	0x07ba	-20	<open code>	CLEAR    XC    0(ONE,RCORE),0(RCORE)    CLEAR ON
 IGG01938	not anchored (score 50% margin +7%)					
 IGG01939	not anchored (score 85% margin +74%)					
-IGG0193K	no usable reference					
+IGG0193K	mixed	insert	0x0000	+4	<open code>	@PROLOG  BALR  @03,0                            
+IGG0193K	mixed	insert	0x00b8	+6	<open code>	         ST    @12,DEBUCBAD+32(,@14)            
+IGG0193K	mixed	replace	0x0159	-4	<open code>	         BNE   @RF00151                         
+IGG0193K	mixed	delete	0x01d0	-4	<open code>	         LA    @12,0(,@12)                      
+IGG0193K	mixed	delete	0x0290	-2	<open code>	         ALR   RWTGC,RWTG                       
+IGG0193K	mixed	replace	0x02de	-8	<open code>	         DS    0F
+IGG0193K	mixed	delete	0x02fc	-4	<open code>	         DS    0D
+IGG0193K	mixed	insert	0x030a	+2	<open code>	@CC02555 DC    C'3K'
+IGG0193K	mixed	replace	0x030b	-2	XCTLTABL	         LTORG                                  
+IGG0193K	mixed	insert	0x0349	+3	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IGG0193K	mixed	replace	0x034b	-2	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IGG0193K	mixed	replace	0x034f	-1	XCTLTABL	         DC    0D'0'                    ALIGN  Z
+IGG0193K	mixed	replace	0x0353	-4	XCTLTABL	         DC    0D'0'                    ALIGN  Z
 IGG0193M	mixed	replace	0x0011	+1	<open code>	         B     AROUND                   BRANCH A
 IGG0193M	mixed	replace	0x0013	+2	<open code>	         B     AROUND                   BRANCH A
 IGG0193M	mixed	delete	0x0015	-3	<open code>	         DS    0F                               
@@ -9250,9 +9272,7 @@ IGG0193M	mixed	delete	0x02ed	-3	XCTL	         LA    0,0(0,RWTG)            PICKU
 IGG0193M	mixed	replace	0x031a	+2	<open code>	         B     AB3                              
 IGG0193S	not anchored (score 83% margin +47%)					
 IGG0193Y	not anchored (score 81% margin +66%)					
-IGG01946	mixed	insert	0x0000	+2	<open code>	         BAL   RBASE,BEGIN              BRANCH A
-IGG01946	mixed	insert	0x000c	+2	<open code>	TAMOID   DC    C'46'                    ID OF TH
-IGG01946	mixed	delete	0x014a	-2	GETMAIN	         CNOP  0,4                              
+IGG01946	mixed	insert	0x0000	+4	<open code>	         BAL   RBASE,BEGIN              BRANCH A
 IGG01946	mixed	replace	0x01e4	-1	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
 IGG01946	mixed	delete	0x01e7	-3	XCTL	         LA    0,0(0,RWTG)            PICKUP EPL
 IGG01946	mixed	replace	0x023a	+14	<open code>	         B     OUTERRX                  EXIT TO 
@@ -9260,7 +9280,7 @@ IGG01946	mixed	insert	0x02dc	+2	MODESET	         SPKA  96(0)               SET P
 IGG01946	mixed	insert	0x03f4	+20	<open code>	         CS    RENTRY,RPARM,TCXREADY-IEDQTCX(RTC
 IGG01946	mixed	replace	0x0513	-2	FREEMAIN	         L     0,*-8+2*0                        
 IGG01946	mixed	replace	0x0519	+2	FREEMAIN	         L     15,IHB0034F                      
-IGG01946	mixed	replace	0x05c0	-18	<open code>	INTVL    DS    0D                               
+IGG01946	mixed	delete	0x05c0	-20	<open code>	INTVL    DS    0D                               
 IGG0194N	not anchored (score 58% margin +17%)					
 IGG0194Q	mixed	delete	0x0000	-8	<open code>	         BALR  RBASE,0             ESTABLISH ADD
 IGG0194Q	mixed	replace	0x000e	+8	<open code>	         DC    XL2'4072'                 AND DAT
@@ -9576,8 +9596,7 @@ IGG019PH	all in open code	insert	0x0038	+2	<open code>	WEA      DC     X'0108'  
 IGG019PH	all in open code	insert	0x0080	+14	<open code>	WEA      DC     X'0108'            WRITE ERASE A
 IGG019PK	not anchored (score 62% margin +14%)					
 IGG019Q0	not anchored (score 84% margin +68%)					
-IGG019Q1	all in open code	insert	0x000e	+2	<open code>	         B     START                            
-IGG019Q1	all in open code	insert	0x0398	+2	<open code>	         BR    R14                     RETURN   
+IGG019Q1	equal length -- macroattr's population					
 IGG019Q6	all in macro expansions	replace	0x0000	-5	SNDSCH	         DC    AL2(LCBSCAN-IGG019Q6) .     USED 
 IGG019Q6	all in macro expansions	insert	0x000e	+2	SNDSCH	         BAL   RBASE,ID                 BYPASS I
 IGG019Q6	all in macro expansions	delete	0x0162	-2	SNDSCH	         LR    0,1                  PUT UCB ADDR
@@ -9609,9 +9628,7 @@ IGG019R4	all in macro expansions	replace	0x03ea	+20	SNDSCH	         B     LOCKTE
 IGG019R4	all in macro expansions	replace	0x04e1	+12	SNDSCH	         BE    GOSEND                   BRANCH I
 IGG019R4	all in macro expansions	insert	0x06da	+6	SNDSCH	         MVI   LCBERBCT+1,AVTEZERO .    CLEAR DI
 IGG019R4	all in macro expansions	delete	0x0759	-15	SNDSCH	DOCQAD   DC    AL2(LCBFLAG1-IEDQLCB+12) CONSTANT
-IGG019R6	all in open code	insert	0x001a	+2	<open code>	         B     QNC00                            
-IGG019R6	all in open code	insert	0x03fe	+28	<open code>	         MVI   AVTCPBCB+4,X'FF'
-IGG019R6	all in open code	delete	0x046c	-28	<open code>	QNCMOVE1 MVC   PRFSHDR(0),0(R1)
+IGG019R6	equal length -- macroattr's population					
 IGG019RD	not anchored (score 83% margin +64%)					
 IGG019RG	all in open code	replace	0x0003	-4	<open code>	         B     BSAM                     ENTRY IF
 IGG019RG	all in open code	replace	0x0010	-12	<open code>	         STM   R14,R12,REG14(R13)  SAVE REGS    
@@ -9628,10 +9645,8 @@ IGG019T6	not anchored (score 52% margin +24%)
 IGG019T7	not anchored (score 46% margin +9%)					
 IGG019T8	mixed	replace	0x007a	+14	TPUT	         LA    1,0(,1)                  CLR HIGH
 IGG019T8	mixed	delete	0x0094	-2	<open code>	ZEROHALF DC    X'0000FFFF'              USED TO 
-IGG019TE	mixed	insert	0x0014	+4	IEDHJN	         B     AFTERHJN .                 BR ARO
-IGG019TE	mixed	insert	0x0348	+4	<open code>	@CF01549 DC    XL4'0000FFFF'
-IGG019TI	all in open code	insert	0x001a	+4	<open code>	         B     AFTERHJN                         
-IGG019TI	all in open code	insert	0x03b0	+4	<open code>	@CF01470 DC    XL4'00FFFFFF'
+IGG019TE	equal length -- macroattr's population					
+IGG019TI	equal length -- macroattr's population					
 IGG019UP	not anchored (score 48% margin +11%)					
 IGG019VW	mixed	insert	0x001c	+2	<open code>	         BALR  @12,0                            
 IGG019VW	mixed	insert	0x0028	+2	<open code>	         LR    @10,@01                          
@@ -9962,7 +9977,15 @@ IGG0553B	mixed	replace	0x0096	-4	<open code>	         SR    R1,R1
 IGG0553B	mixed	delete	0x00a6	-4	<open code>	         ICM   R7,3,0(R2)                       
 IGG0553B	mixed	insert	0x038c	+2	XCTLTABL	         DC    VL3(IGG0553E),0C'        ADDRESS 
 IGG0553B	mixed	replace	0x038d	-2	XCTLTABL	         DC    VL3(IGG0553E),0C'        ADDRESS 
-IGG0553D	no usable reference					
+IGG0553D	mixed	replace	0x0270	-3	<open code>	         SR    R7,R7                            
+IGG0553D	mixed	replace	0x0276	-1	<open code>	         SR    R9,R9                            
+IGG0553D	mixed	delete	0x0363	-1	<open code>	         ICM   R7,3,2(R12)        LOAD NUMBER OF
+IGG0553D	mixed	replace	0x0365	+5	<open code>	         MH    R7,DS4DEVTR        MULTIPLY BY TR
+IGG0553D	mixed	replace	0x036e	-6	<open code>	         SH    R6,R6                            
+IGG0553D	mixed	insert	0x0380	+2	<open code>	         STCM  R6,3,0(R12)        SAVE RTA TO CO
+IGG0553D	mixed	delete	0x03f4	-4	XCTLTABL	         LTORG                                  
+IGG0553D	mixed	insert	0x0444	+2	XCTLTABL	         DC    VL3(IGG0553E),0C'        ADDRESS 
+IGG0553D	mixed	replace	0x0445	-2	XCTLTABL	         DC    VL3(IGG0553E),0C'        ADDRESS 
 IGG08101	not anchored (score 38% margin +21%)					
 IGG08102	not anchored (score 63% margin +32%)					
 IGG08103	not anchored (score 41% margin +2%)					

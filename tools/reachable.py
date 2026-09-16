@@ -33,14 +33,24 @@ import argparse, collections, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..")
 GATE = os.path.join(ROOT, "work/measurements/baseline-gate")
-SCRATCH = ("/private/tmp/claude-501/-Users-mike-repos-mvs-mvs38src/"
-           "5b5bad03-54bd-4be0-8036-9cd5a73a5e47/scratchpad")
+
+# The three trial gates used to be read out of ONE SESSION'S SCRATCHPAD, by
+# absolute path. That is the `decks.py` / `macpath.py` defect in its purest form:
+# a tool in the repository whose input lives somewhere no clone has, that nothing
+# re-cuts when the comparator moves, and that disappears without a word when the
+# session ends. Moved into the repository on 2026-09-16, when the cmplmd370
+# re-pin made all four have to be re-cut together.
+#
+# The decks they are scored from are `obj_xctltrial2`, `obj_setfrrtrial` and
+# `obj_gmtrial`. Re-cut all four with one command each when the comparator moves:
+#   python3 tools/baseline_gate.py --decks obj_<trial> --out <the path below>
+RECON = os.path.join(ROOT, "work/measurements/macro-reconstruct")
 
 RUNS = [
     ("our macros (live)", os.path.join(GATE, "overlay-vs-both.tsv")),
-    ("XCTL/IHBINNRB reconstructed", os.path.join(SCRATCH, "xctl/xctltrial2-vs-both.tsv")),
-    ("SETFRR reconstructed", os.path.join(SCRATCH, "setfrr/setfrr-vs-both.tsv")),
-    ("GETMAIN/FREEMAIN reconstructed", os.path.join(SCRATCH, "gmtrial-vs-both.tsv")),
+    ("XCTL/IHBINNRB reconstructed", os.path.join(RECON, "xctl/xctltrial2-vs-both.tsv")),
+    ("SETFRR reconstructed", os.path.join(RECON, "setfrr/setfrr-vs-both.tsv")),
+    ("GETMAIN/FREEMAIN reconstructed", os.path.join(RECON, "gmtrial-vs-both.tsv")),
 ]
 
 

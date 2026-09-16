@@ -34,7 +34,7 @@ AHLTSRB	AOS11	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
 AHLTSVC	AOS11	len-differs	len-differs	LPALIB	AHLTSVC	len-differs	1	N	0021DC	0021DC	Y
 AHLTSYFL	AOS11	differs	differs	LPALIB	AHLTSYFL	differs	1	N	0006B2	0006B2	Y
 AHLTSYSM	AOS11	len-differs	len-differs	LPALIB	AHLTSYSM	len-differs	1	N	000F12	000F12	Y
-AHLTTAB	AOS11	holes	holes	LINKLIB	AHLGTF	holes	1	N	0005A0	0005A0	Y
+AHLTTAB	AOS11	differs	differs	LINKLIB	AHLGTF	differs	1	N	0005A0	0005A0	Y
 AHLTUIO	AOS11	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
 AHLTUSR	AOS11	len-differs	len-differs	LPALIB	AHLTUSR	len-differs	1	N	00055C	00055C	Y
 AHLTVTAM	AOS11	identical	identical	LPALIB	AHLTVTAM	identical	1	N	00064A	00064A	Y
@@ -50,7 +50,7 @@ AHLWWRIT	AOS11	len-differs	len-differs	LINKLIB	AHLWWRIT	len-differs	1	N	002090	0
 AKJLKMSG	ACMDLIB	identical	identical	CMDLIB	AKJLKL01	identical	1	N	-	000DA3	?
 AMAPTF01	AOS12	holes	holes	LINKLIB	AMAPTF01	holes	1	N	000E68	000E68	Y
 AMAPTF02	AOS12	holes	holes	LINKLIB	AMAPTF02	holes	1	N	000200	000200	Y
-AMAPTFLE	AOS12	holes	holes	LINKLIB	AMAPTFLE	holes	1	N	00211C	00211C	Y
+AMAPTFLE	AOS12	differs	differs	LINKLIB	AMAPTFLE	differs	1	N	00211C	00211C	Y
 AMASPZAP	AOS12	identical	identical	LINKLIB	AMASPZAP	identical	1	N	001489	001489	Y
 AMBLKCTL	AOS12	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
 AMBLKERR	AOS12	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
@@ -620,7 +620,7 @@ HMASMFVL	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	000422	000422	Y
 HMASMFXF	AOS12	identical	identical	LINKLIB	HMASMP	identical	1	N	00095B	00095B	Y
 HMASMGTA	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	002274	002274	Y
 HMASMIDU	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	0023F8	0023F8	Y
-HMASMIO	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	005640	005640	Y
+HMASMIO	AOS12	identical	identical	LINKLIB	HMASMP	identical	1	N	005640	005640	Y
 HMASMIO1	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	000478	000478	Y
 HMASMION	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	000BC4	000BC4	Y
 HMASMLC1	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	0003B1	0003B1	Y
@@ -646,7 +646,7 @@ HMASMRCC	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	000528	000528	Y
 HMASMRCD	AOS12	len-differs	len-differs	LINKLIB	HMASMP	len-differs	1	N	001270	001270	Y
 HMASMRCF	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	0006B0	0006B0	Y
 HMASMRCL	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	0010D8	0010D8	Y
-HMASMRDS	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	000744	000744	Y
+HMASMRDS	AOS12	identical	identical	LINKLIB	HMASMP	identical	1	N	000744	000744	Y
 HMASMREC	AOS12	len-differs	len-differs	LINKLIB	HMASMP	len-differs	1	N	003778	003778	Y
 HMASMREJ	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	000BC0	000BC0	Y
 HMASMRJD	AOS12	differs	differs	LINKLIB	HMASMP	differs	1	N	000480	000480	Y
@@ -894,7 +894,7 @@ IDA0192B	AOSA0	len-differs	len-differs	LPALIB	IDA0192A	len-differs	1	N	0019D0	00
 IDA0192C	AOSA0	len-differs	len-differs	LPALIB	IDA0192A	len-differs	1	N	001FB0	001FB0	Y
 IDA0192D	AOSA0	len-differs	len-differs	LPALIB	IDA0192A	len-differs	1	N	000BD8	000BD8	Y
 IDA0192F	AOSA0	len-differs	len-differs	LPALIB	IDA0192A	len-differs	1	N	001ED8	001ED8	Y
-IDA0192G	AOSA0	identical	identical	LPALIB	IDA0192A	identical	1	N	00017A	00017A	Y
+IDA0192G	AOSA0	differs	differs	LPALIB	IDA0192A	differs	1	N	00017A	00017A	Y
 IDA0192I	AOSA0	len-differs	len-differs	LPALIB	IDA0192A	len-differs	1	N	000F3B	000F3B	Y
 IDA0192M	AOSA0	len-differs	len-differs	LPALIB	IDA0192A	len-differs	1	N	0010C8	0010C8	Y
 IDA0192P	AOSA0	len-differs	len-differs	LPALIB	IDA0192A	len-differs	1	N	000C6F	000C6F	Y
@@ -1231,10 +1231,10 @@ IEAVAD05	AOSC5	identical	identical	LPALIB	IGC0005A	identical	1	N	00084F	00084F	Y
 IEAVAD06	AOSC5	identical	identical	LPALIB	IGC0005A	identical	1	N	000707	000707	Y
 IEAVAD07	AOSC5	len-differs	len-differs	LPALIB	IGC0005A	len-differs	1	N	000B23	000B40	N
 IEAVAD08	AOSC5	len-differs	len-differs	LPALIB	IGC0005A	len-differs	1	N	000322	000322	Y
-IEAVAD09	AOSC5	identical	identical	LPALIB	IGC0005A	identical	1	N	000191	000191	Y
+IEAVAD09	AOSC5	differs	differs	LPALIB	IGC0005A	differs	1	N	000191	000191	Y
 IEAVAD0A	AOSC5	differs	differs	LPALIB	IGC0005A	differs	1	N	00057F	00057F	Y
 IEAVAD0B	AOSC5	identical	identical	LPALIB	IGC0005A	identical	1	N	000BEA	000BEA	Y
-IEAVAD0C	AOSC5	identical	identical	LPALIB	IGC0005A	len-differs	1	N	0002CE	000410	N
+IEAVAD0C	AOSC5	differs	differs	LPALIB	IGC0005A	len-differs	1	N	0002CE	000410	N
 IEAVAD0D	AOSC5	len-differs	len-differs	LPALIB	IGC0005A	len-differs	1	N	000A9A	000A9A	Y
 IEAVAD0E	AOSC5	len-differs	len-differs	LPALIB	IGC0005A	len-differs	1	N	000A43	000A43	Y
 IEAVAD0F	AOSC5	len-differs	len-differs	LPALIB	IGC0005A	len-differs	1	N	000401	000401	Y
@@ -1242,7 +1242,7 @@ IEAVAD10	AOSC5	len-differs	len-differs	LPALIB	IGC0005A	len-differs	1	N	00031C	00
 IEAVAD11	AOSC5	len-differs	len-differs	LPALIB	IGC0005A	len-differs	1	N	00024B	00024B	Y
 IEAVAD31	AOSC5	len-differs	len-differs	LPALIB	IGC0005A	len-differs	1	N	00012C	00012C	Y
 IEAVAD51	AOSC5	len-differs	len-differs	LPALIB	IGC0005A	len-differs	1	N	00031A	00031A	Y
-IEAVAD71	AOSC5	identical	identical	LPALIB	IGC0005A	identical	1	N	000646	000646	Y
+IEAVAD71	AOSC5	differs	differs	LPALIB	IGC0005A	differs	1	N	000646	000646	Y
 IEAVADFM	AOSC5	identical	identical	LPALIB	IGC0005A	identical	1	N	000030	000030	Y
 IEAVADUS	AOSC5	identical	identical	LPALIB	IGC0905A	identical	1	N	000022	000022	Y
 IEAVAMSI	AOSC5	differs	differs	NUCLEUS	IEANUC01	differs	1	N	000C78	000C78	Y
@@ -1511,7 +1511,7 @@ IEBDV1	AOSU0	holes	holes	LINKLIB	IEBCOPY	holes	1	N	001014	001014	Y
 IEBDWR	AOSU0	differs	differs	LINKLIB	IEBCOPY	differs	1	N	000986	000986	Y
 IEBEDIT	AOSU0	len-differs	len-differs	LINKLIB	IEBEDIT	len-differs	1	N	001F70	001F70	Y
 IEBEDIT2	AOSU0	len-differs	len-differs	LINKLIB	IEBGENER	len-differs	1	N	00026D	00026D	Y
-IEBFDANL	AOSU0	identical	identical	LINKLIB	IEBFDANL	identical	1	N	000CF9	000CF9	Y
+IEBFDANL	AOSU0	differs	differs	LINKLIB	IEBFDANL	differs	1	N	000CF9	000CF9	Y
 IEBFDTBL	AOSU0	differs	differs	LINKLIB	IEBFDTBL	differs	1	N	000A79	000A79	Y
 IEBGEN03	AOSU0	len-differs	len-differs	LINKLIB	IEBGENER	len-differs	1	N	0010F4	0010F4	Y
 IEBGENR3	AOSU0	len-differs	len-differs	LINKLIB	IEBGENER	len-differs	1	N	00132D	00132D	Y
@@ -1777,10 +1777,10 @@ IEDQBD	AOS21	len-differs	len-differs	TELCMLIB	IEDQBD	len-differs	1	N	0006F3	0006
 IEDQBE	AOS21	len-differs	len-differs	TELCMLIB	IEDQBE	len-differs	1	N	00015E	00015E	Y
 IEDQBF	AOS21	len-differs	len-differs	TELCMLIB	IEDQBF	len-differs	1	N	00006C	00006C	Y
 IEDQBG	AOS21	identical	identical	TELCMLIB	IEDQBG	identical	1	N	000152	000152	Y
-IEDQBH	AOS21	len-differs	len-differs	TELCMLIB	IEDQBH	len-differs	1	N	000365	000365	Y
+IEDQBH	AOS21	differs	differs	TELCMLIB	IEDQBH	differs	1	N	000365	000365	Y
 IEDQBI	AOS21	len-differs	len-differs	TELCMLIB	IEDQBI	len-differs	1	N	000CD8	000CD8	Y
 IEDQBJ	AOS21	len-differs	len-differs	TELCMLIB	IEDQBJ	len-differs	1	N	000110	000110	Y
-IEDQBL	AOS21	len-differs	len-differs	TELCMLIB	IEDQBL	len-differs	1	N	000386	000386	Y
+IEDQBL	AOS21	differs	differs	TELCMLIB	IEDQBL	differs	1	N	000386	000386	Y
 IEDQBM	AOS21	len-differs	len-differs	TELCMLIB	IEDQBM	len-differs	1	N	0002B2	0002B2	Y
 IEDQBN	AOS21	identical	identical	TELCMLIB	IEDQBN	identical	1	N	0002C7	0002C7	Y
 IEDQBO	AOS21	len-differs	len-differs	TELCMLIB	IEDQBO	len-differs	1	N	000E24	000E24	Y
@@ -1854,9 +1854,9 @@ IEDQNP	AOS21	identical	identical	LINKLIB	IEDQNP	identical	1	N	0002D0	0002D0	Y
 IEDQNQ	AOS21	len-differs	len-differs	LINKLIB	IEDQNQ	len-differs	1	N	000458	000458	Y
 IEDQNR	AOS21	identical	identical	LINKLIB	IEDQNR	identical	1	N	0000F8	0000F8	Y
 IEDQNS	AOS21	len-differs	len-differs	LINKLIB	IEDQNS	len-differs	1	N	000150	000150	Y
-IEDQNT	AOS21	len-differs	len-differs	LINKLIB	IEDQNT	len-differs	1	N	000455	000455	Y
+IEDQNT	AOS21	identical	identical	LINKLIB	IEDQNT	identical	1	N	000455	000455	Y
 IEDQNU	AOS21	identical	identical	LINKLIB	IEDQNU	identical	1	N	0005A8	0005A8	Y
-IEDQNV	AOS21	identical	identical	LINKLIB	IEDQNV	identical	1	N	000426	000426	Y
+IEDQNV	AOS21	differs	differs	LINKLIB	IEDQNV	differs	1	N	000426	000426	Y
 IEDQNW	AOS21	identical	identical	LINKLIB	IEDQNW	identical	1	N	0000CA	0000CA	Y
 IEDQNX	AOS21	len-differs	len-differs	LINKLIB	IEDQNX	len-differs	1	N	000698	000698	Y
 IEDQOA	AOS21	len-differs	len-differs	LINKLIB	IEDQOA	len-differs	1	N	001398	001398	Y
@@ -1869,7 +1869,7 @@ IEDQUI	AOS21	len-differs	len-differs	TELCMLIB	IEDQUI	len-differs	1	N	00005E	0000
 IEDQW21	AOS21	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
 IEDQW25	AOS21	len-differs	len-differs	LINKLIB	IEDQW25	len-differs	1	N	00067F	00067F	Y
 IEDQW33	AOS21	identical	identical	LINKLIB	IEDQW33	identical	1	N	0007EC	0007EC	Y
-IEDQW42	AOS21	identical	identical	LINKLIB	IEDQW42	identical	1	N	000288	000288	Y
+IEDQW42	AOS21	differs	differs	LINKLIB	IEDQW42	differs	1	N	000288	000288	Y
 IEDQW43	AOS21	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
 IEDQW44	AOS21	identical	identical	LINKLIB	IEDQW44	identical	1	N	000366	000366	Y
 IEDQW47	AOS21	identical	identical	LINKLIB	IEDQW47	identical	1	N	00034C	00034C	Y
@@ -1878,9 +1878,9 @@ IEDQWA1	AOS21	identical	identical	LINKLIB	IEDQWA1	identical	1	N	001284	001284	Y
 IEDQWAA	AOS21	identical	identical	LINKLIB	IEDQWAA	identical	1	N	000192	000192	Y
 IEDQWAB	AOS21	identical	identical	LINKLIB	IEDQWAB	identical	1	N	0000F8	0000F8	Y
 IEDQWAC	AOS21	differs	error	-	-	not-in-target	0	-	-	-	-
-IEDQWAJ	AOS21	identical	identical	LINKLIB	IEDQWAJ	identical	1	N	0005AC	0005AC	Y
+IEDQWAJ	AOS21	differs	differs	LINKLIB	IEDQWAJ	differs	1	N	0005AC	0005AC	Y
 IEDQWB	AOS21	identical	identical	LINKLIB	IEDQWB	identical	1	N	000C97	000C97	Y
-IEDQWB1	AOS21	differs	differs	LINKLIB	IEDQWB1	differs	1	N	0008E8	0008E8	Y
+IEDQWB1	AOS21	len-differs	len-differs	LINKLIB	IEDQWB1	len-differs	1	N	0008E8	0008E8	Y
 IEDQWB2	AOS21	len-differs	len-differs	LINKLIB	IEDQWB2	len-differs	1	N	000960	000960	Y
 IEDQWC	AOS21	identical	identical	LINKLIB	IEDQWC	identical	1	N	000FA2	000FA2	Y
 IEDQWC1	AOS21	identical	identical	LINKLIB	IEDQWC1	identical	1	N	000D3E	000D3E	Y
@@ -1928,7 +1928,7 @@ IEDQXC	AOS21	len-differs	len-differs	LINKLIB	IEDQXC	len-differs	1	N	001E80	001E8
 IEDRQIN	AOS21	identical	identical	TELCMLIB	IEDRQIN	identical	1	N	000EC2	000EC2	Y
 IEDRSPIN	AOS21	len-differs	len-differs	TELCMLIB	IEDRSPIN	len-differs	1	N	000678	000678	Y
 IEDSAC	AOS21	len-differs	len-differs	TELCMLIB	IEDSAC	len-differs	1	N	000F5C	000F5C	Y
-IEDSAI	AOS21	len-differs	len-differs	TELCMLIB	IEDSAI	len-differs	1	N	00078D	00078D	Y
+IEDSAI	AOS21	differs	differs	TELCMLIB	IEDSAI	differs	1	N	00078D	00078D	Y
 IEDSAO	AOS21	len-differs	len-differs	TELCMLIB	IEDSAO	len-differs	1	N	000318	000318	Y
 IEDSARI	AOS21	len-differs	len-differs	TELCMLIB	IEDSARI	len-differs	1	N	0011AB	0011AB	Y
 IEDSCLU	AOS21	identical	identical	TELCMLIB	IEDSCLU	identical	1	N	000C88	000C88	Y
@@ -2182,7 +2182,7 @@ IEFAB476	AOSB3	identical	identical	LPALIB	IEFW21SD	identical	1	N	0002A7	0002A7	Y
 IEFAB477	AOSB3	len-differs	len-differs	LPALIB	IEFW21SD	len-differs	1	N	00092C	00092C	Y
 IEFAB478	AOSB3	identical	identical	LPALIB	IEFW21SD	identical	1	N	000C6E	000C6E	Y
 IEFAB479	AOSB3	holes	holes	LPALIB	IEFW21SD	holes	1	N	000D42	000D42	Y
-IEFAB480	AOSB3	identical	identical	LPALIB	IEFW21SD	identical	1	N	000D7A	000D7A	Y
+IEFAB480	AOSB3	differs	differs	LPALIB	IEFW21SD	differs	1	N	000D7A	000D7A	Y
 IEFAB481	AOSB3	identical	identical	LPALIB	IEFW21SD	identical	1	N	000188	000188	Y
 IEFAB485	AOSB3	len-differs	len-differs	LPALIB	IEFW21SD	len-differs	1	N	000DE8	000DE8	Y
 IEFAB486	AOSB3	len-differs	len-differs	LPALIB	IEFW21SD	len-differs	1	N	00104C	00104C	Y
@@ -2337,7 +2337,7 @@ IEFJSWT	AOSB3	len-differs	len-differs	LPALIB	IEESB605	len-differs	1	N	000420	000
 IEFJWRTE	AOSB3	identical	identical	LPALIB	IEFJSUBI	identical	1	N	00014A	00014A	Y
 IEFJWTOM	AOSB3	len-differs	len-differs	LPALIB	IEFJSUBI	len-differs	1	N	0001E8	0001E8	Y
 IEFNB901	AOSB3	len-differs	len-differs	LPALIB	IEFNB903	len-differs	1	N	000406	000406	Y
-IEFNB902	AOSB3	holes	holes	LPALIB	IEFVAMP	holes	1	N	000A31	000A31	Y
+IEFNB902	AOSB3	differs	differs	LPALIB	IEFVAMP	differs	1	N	000A31	000A31	Y
 IEFNB903	AOSB3	len-differs	len-differs	LPALIB	IEFNB903	len-differs	1	N	000560	000560	Y
 IEFNB9CR	AOSB3	len-differs	len-differs	LPALIB	IEFVH1	len-differs	1	N	00026C	00026C	Y
 IEFNB9CT	AOSB3	identical	identical	LPALIB	IEFVH1	identical	1	N	00008B	00008B	Y
@@ -3095,7 +3095,7 @@ IFOX0G	AOS03	differs	error	-	-	not-in-target	0	-	-	-	-
 IFOX0H	AOS03	differs	error	-	-	not-in-target	0	-	-	-	-
 IFOX0I	AOS03	differs	error	-	-	not-in-target	0	-	-	-	-
 IFOX0J	AOS03	identical	error	-	-	not-in-target	0	-	-	-	-
-IGARPT01	AOSC5	holes	holes	LPALIB	IGARPT01	holes	1	N	00167C	00167C	Y
+IGARPT01	AOSC5	differs	differs	LPALIB	IGARPT01	differs	1	N	00167C	00167C	Y
 IGC0001G	ALPALIB	differs	error	-	-	not-in-target	0	-	-	-	-
 IGC0001I	AOSD0	len-differs	len-differs	LPALIB	IGC0001I	len-differs	1	N	0007E8	0007E8	Y
 IGC00020	AOSD0	len-differs	len-differs	LPALIB	IGC00020	len-differs	1	N	000738	000738	Y
@@ -3206,17 +3206,17 @@ IGC0G95B	AOSC6	identical	identical	LPALIB	IGC0G95B	identical	1	N	0003D9	0003D9	Y
 IGC0H05B	AOSC6	identical	identical	LPALIB	IGC0H05B	identical	1	N	0004E2	0004E2	Y
 IGC0H10D	AOS21	len-differs	len-differs	LPALIB	IGC0H10D	len-differs	1	N	0007C0	0007C0	Y
 IGC0I05B	AOSC6	identical	identical	LPALIB	IGC0I05B	identical	1	N	000276	000276	Y
-IGC0I10D	AOS21	len-differs	len-differs	LPALIB	IGC0I10D	len-differs	1	N	000632	000632	Y
+IGC0I10D	AOS21	differs	differs	LPALIB	IGC0I10D	differs	1	N	000632	000632	Y
 IGC0J05B	AOS21	differs	differs	LPALIB	IGC0J05B	differs	1	N	000264	000264	Y
-IGC0J10D	AOS21	len-differs	len-differs	LPALIB	IGC0J10D	len-differs	1	N	00049C	00049C	Y
+IGC0J10D	AOS21	differs	differs	LPALIB	IGC0J10D	differs	1	N	00049C	00049C	Y
 IGC0K05B	AOSC6	len-differs	len-differs	LPALIB	IGC0K05B	len-differs	1	N	00097A	00097A	Y
-IGC0K10D	AOS21	len-differs	len-differs	LPALIB	IGC0K10D	len-differs	1	N	00054C	00054C	Y
+IGC0K10D	AOS21	differs	differs	LPALIB	IGC0K10D	differs	1	N	00054C	00054C	Y
 IGC0L05B	AOSC6	len-differs	len-differs	LPALIB	IGC0L05B	len-differs	1	N	000174	000174	Y
 IGC0L10D	AOS21	len-differs	len-differs	LPALIB	IGC0L10D	len-differs	1	N	00044C	00044C	Y
 IGC0M05B	AOSC6	len-differs	len-differs	LPALIB	IGC0M05B	len-differs	1	N	0007DD	0007DD	Y
 IGC0N05B	AOSC6	len-differs	len-differs	LPALIB	IGC0N05B	len-differs	1	N	000718	000718	Y
 IGC0N06C	AOSC6	len-differs	len-differs	LPALIB	IGC0N06C	len-differs	1	N	0003C6	0003C6	Y
-IGC0N10D	AOS21	len-differs	len-differs	LPALIB	IGC0N10D	len-differs	1	N	0000D2	0000D2	Y
+IGC0N10D	AOS21	differs	differs	LPALIB	IGC0N10D	differs	1	N	0000D2	0000D2	Y
 IGC0P05B	AOSC6	len-differs	len-differs	LPALIB	IGC0P05B	len-differs	1	N	0002DA	0002DA	Y
 IGC0Q05B	AOSC6	identical	identical	LPALIB	IGC0Q05B	identical	1	N	00023C	00023C	Y
 IGC0R05B	AOSC6	len-differs	len-differs	LPALIB	IGC0R05B	len-differs	1	N	000733	000733	Y
@@ -3239,7 +3239,7 @@ IGCA310D	AOS21	len-differs	len-differs	LPALIB	IGCA310D	len-differs	1	N	0006BC	00
 IGCA410D	AOS21	len-differs	len-differs	LPALIB	IGCA410D	len-differs	1	N	0001FB	0001FB	Y
 IGCA510D	AOS21	len-differs	len-differs	LPALIB	IGCA510D	len-differs	1	N	0004F6	0004F6	Y
 IGCA610D	AOS21	len-differs	len-differs	LPALIB	IGCA610D	len-differs	1	N	00031C	00031C	Y
-IGCA710D	AOS21	len-differs	len-differs	LPALIB	IGCA710D	len-differs	1	N	00021A	00021A	Y
+IGCA710D	AOS21	differs	differs	LPALIB	IGCA710D	differs	1	N	00021A	00021A	Y
 IGCA810D	AOS21	len-differs	len-differs	LPALIB	IGCA810D	len-differs	1	N	000181	000181	Y
 IGCA910D	AOS21	len-differs	len-differs	LPALIB	IGCA910D	len-differs	1	N	00032E	00032E	Y
 IGCAA10D	AOS21	len-differs	len-differs	LPALIB	IGCAA10D	len-differs	1	N	00041A	00041A	Y
@@ -3265,7 +3265,7 @@ IGCD810D	AOS21	len-differs	len-differs	LPALIB	IGCD810D	len-differs	1	N	000392	00
 IGCD910D	AOS21	len-differs	len-differs	LPALIB	IGCD910D	len-differs	1	N	000460	000460	Y
 IGCDB10D	AOS21	len-differs	len-differs	LPALIB	IGCDB10D	len-differs	1	N	000232	000232	Y
 IGCDC10D	AOS21	len-differs	len-differs	LPALIB	IGCDC10D	len-differs	1	N	00047C	00047C	Y
-IGCDD10D	AOS21	len-differs	len-differs	LPALIB	IGCDD10D	len-differs	1	N	000409	000409	Y
+IGCDD10D	AOS21	differs	differs	LPALIB	IGCDD10D	differs	1	N	000409	000409	Y
 IGCDL10D	AOS21	len-differs	len-differs	LPALIB	IGCDL10D	len-differs	1	N	00063D	00063D	Y
 IGCDM10D	AOS21	identical	identical	LPALIB	IGCDM10D	identical	1	N	000263	000263	Y
 IGCFA10D	AOS21	len-differs	len-differs	LPALIB	IGCFA10D	len-differs	1	N	000536	000536	Y
@@ -3274,14 +3274,14 @@ IGCFC10D	AOS21	len-differs	len-differs	LPALIB	IGCFC10D	len-differs	1	N	0003E2	00
 IGCFD10D	AOS21	identical	identical	LINKLIB	IGCFD10D	identical	1	N	0001BE	0001BE	Y
 IGCFE10D	AOS21	len-differs	len-differs	LPALIB	IGCFE10D	len-differs	1	N	000526	000526	Y
 IGCFF10D	AOS21	len-differs	len-differs	LPALIB	IGCFF10D	len-differs	1	N	000610	000610	Y
-IGCFG10D	AOS21	len-differs	len-differs	LPALIB	IGCFG10D	len-differs	1	N	0004AC	0004AC	Y
+IGCFG10D	AOS21	differs	differs	LPALIB	IGCFG10D	differs	1	N	0004AC	0004AC	Y
 IGCFH10D	AOS21	len-differs	len-differs	LPALIB	IGCFH10D	len-differs	1	N	0005D4	0005D4	Y
 IGCFI10D	AOS21	len-differs	len-differs	LPALIB	IGCFI10D	len-differs	1	N	0006F0	0006F0	Y
 IGCFJ10D	AOS21	len-differs	len-differs	LPALIB	IGCFJ10D	len-differs	1	N	000810	000810	Y
-IGCFK10D	AOS21	len-differs	len-differs	LPALIB	IGCFK10D	len-differs	1	N	00018E	00018E	Y
+IGCFK10D	AOS21	differs	differs	LPALIB	IGCFK10D	differs	1	N	00018E	00018E	Y
 IGCFL10D	AOS21	len-differs	len-differs	LPALIB	IGCFL10D	len-differs	1	N	00074E	00074E	Y
 IGCFP10D	AOS21	len-differs	len-differs	LPALIB	IGCFP10D	len-differs	1	N	00069E	00069E	Y
-IGCFQ10D	AOS21	len-differs	len-differs	LPALIB	IGCFQ10D	len-differs	1	N	0007C4	0007C4	Y
+IGCFQ10D	AOS21	differs	differs	LPALIB	IGCFQ10D	differs	1	N	0007C4	0007C4	Y
 IGCFR10D	AOS21	identical	identical	LPALIB	IGCFR10D	identical	1	N	0004C4	0004C4	Y
 IGCH010D	AOS21	len-differs	len-differs	LPALIB	IGCH010D	len-differs	1	N	000802	000802	Y
 IGCI010D	AOS21	len-differs	len-differs	LPALIB	IGCI010D	len-differs	1	N	000556	000556	Y
@@ -3351,7 +3351,7 @@ IGCV910D	AOS21	len-differs	len-differs	LPALIB	IGCV910D	len-differs	1	N	0007B8	00
 IGCVA10D	AOS21	len-differs	len-differs	LPALIB	IGCVA10D	len-differs	1	N	0007F4	0007F4	Y
 IGCVE10D	AOS21	len-differs	len-differs	LPALIB	IGCVE10D	len-differs	1	N	000888	000888	Y
 IGCVF10D	AOS21	len-differs	len-differs	LPALIB	IGCVF10D	len-differs	1	N	000648	000648	Y
-IGCVG10D	AOS21	len-differs	len-differs	LPALIB	IGCVG10D	len-differs	1	N	0002D0	0002D0	Y
+IGCVG10D	AOS21	differs	differs	LPALIB	IGCVG10D	differs	1	N	0002D0	0002D0	Y
 IGCVI10D	AOS21	len-differs	len-differs	LPALIB	IGCVI10D	len-differs	1	N	0006E3	0006E3	Y
 IGCVK10D	AOS21	identical	identical	LPALIB	IGCVK10D	identical	1	N	0005F6	0005F6	Y
 IGCZ010D	AOS21	len-differs	len-differs	LPALIB	IGCZ010D	len-differs	1	N	0006D2	0006D2	Y
@@ -3375,8 +3375,8 @@ IGE0004A	AOS20	len-differs	len-differs	LPALIB	IGE0004A	len-differs	1	N	000486	00
 IGE0004B	AOS20	len-differs	len-differs	LPALIB	IGE0004B	len-differs	1	N	000250	000250	Y
 IGE0004C	AOS20	len-differs	len-differs	LPALIB	IGE0004C	len-differs	1	N	00069C	00069C	Y
 IGE0004D	AOS20	len-differs	len-differs	LPALIB	IGE0004D	len-differs	1	N	000A02	000A02	Y
-IGE0004G	AOS21	len-differs	len-differs	LPALIB	IGE0004G	len-differs	1	N	000574	000574	Y
-IGE0004H	AOS21	len-differs	len-differs	LPALIB	IGE0004H	len-differs	1	N	000528	000528	Y
+IGE0004G	AOS21	differs	differs	LPALIB	IGE0004G	differs	1	N	000574	000574	Y
+IGE0004H	AOS21	differs	differs	LPALIB	IGE0004H	differs	1	N	000528	000528	Y
 IGE0004I	AOS21	len-differs	len-differs	LPALIB	IGE0004I	len-differs	1	N	0005B4	0005B4	Y
 IGE0010A	AOSG0	len-differs	len-differs	-	-	not-in-target	0	-	000428	-	-
 IGE0010B	AOSG0	len-differs	len-differs	-	-	not-in-target	0	-	000486	-	-
@@ -3394,7 +3394,7 @@ IGE0101F	AOSCA	len-differs	error	-	-	not-in-target	0	-	-	-	-
 IGE0104A	AOS20	len-differs	len-differs	LPALIB	IGE0104A	len-differs	1	N	000318	000318	Y
 IGE0104B	AOS20	len-differs	len-differs	LPALIB	IGE0104B	len-differs	1	N	0001C2	0001C2	Y
 IGE0104C	AOS20	len-differs	len-differs	LPALIB	IGE0104C	len-differs	1	N	0001DE	0001DE	Y
-IGE0104G	AOS21	len-differs	len-differs	LPALIB	IGE0104G	len-differs	1	N	0003DA	0003DA	Y
+IGE0104G	AOS21	differs	differs	LPALIB	IGE0104G	differs	1	N	0003DA	0003DA	Y
 IGE0104H	AOS21	identical	identical	LPALIB	IGE0104H	identical	1	N	00038A	00038A	Y
 IGE0119I	AOS06	identical	identical	-	-	not-in-target	0	-	0002E0	-	-
 IGE0204A	AOS20	len-differs	len-differs	LPALIB	IGE0204A	len-differs	1	N	000354	000354	Y
@@ -3406,7 +3406,7 @@ IGE0301H	AOSCA	len-differs	len-differs	-	-	not-in-target	0	-	000E4C	-	-
 IGE0304A	AOS20	len-differs	len-differs	LPALIB	IGE0304A	len-differs	1	N	000304	000304	Y
 IGE0304B	AOS20	len-differs	len-differs	LPALIB	IGE0304B	len-differs	1	N	000320	000320	Y
 IGE0304C	AOS20	len-differs	len-differs	LPALIB	IGE0304C	len-differs	1	N	0001F2	0001F2	Y
-IGE0304G	AOS21	len-differs	len-differs	LPALIB	IGE0304G	len-differs	1	N	0001AC	0001AC	Y
+IGE0304G	AOS21	differs	differs	LPALIB	IGE0304G	differs	1	N	0001AC	0001AC	Y
 IGE0404A	AOS20	len-differs	len-differs	LPALIB	IGE0404A	len-differs	1	N	000202	000202	Y
 IGE0404B	AOS20	len-differs	len-differs	LPALIB	IGE0404B	len-differs	1	N	000278	000278	Y
 IGE0404C	AOS20	len-differs	len-differs	LPALIB	IGE0404C	len-differs	1	N	00046C	00046C	Y
@@ -3583,7 +3583,7 @@ IGG0193M	AOS20	len-differs	len-differs	LPALIB	IGG0193M	len-differs	1	N	0003F4	00
 IGG0193Q	AOS20	len-differs	len-differs	LPALIB	IGG0193Q	len-differs	1	N	0005D0	0005D0	Y
 IGG0193S	AOS20	len-differs	len-differs	LPALIB	IGG0193S	len-differs	1	N	0004C0	0004C0	Y
 IGG0193Y	AOSG0	len-differs	len-differs	LPALIB	IGG0193Y	len-differs	1	N	000907	000907	Y
-IGG01940	AOS21	differs	differs	LPALIB	IGG01940	differs	1	N	000294	000294	Y
+IGG01940	AOS21	len-differs	len-differs	LPALIB	IGG01940	len-differs	1	N	000294	000294	Y
 IGG01941	AOS21	len-differs	len-differs	LPALIB	IGG01941	len-differs	1	N	0004BC	0004BC	Y
 IGG01942	AOS21	len-differs	len-differs	LPALIB	IGG01942	len-differs	1	N	000800	000800	Y
 IGG01943	AOS21	len-differs	len-differs	LPALIB	IGG01943	len-differs	1	N	0007D4	0007D4	Y
@@ -3891,7 +3891,7 @@ IGG019PO	AOS20	identical	identical	LPALIB	IGG019PO	identical	1	N	000138	000138	Y
 IGG019PP	AOS20	identical	identical	LPALIB	IGG019PP	identical	1	N	0000E0	0000E0	Y
 IGG019PQ	AOS20	identical	identical	LPALIB	IGG019PQ	identical	1	N	000110	000110	Y
 IGG019Q0	AOS21	len-differs	len-differs	SVCLIB	IGG019Q0	len-differs	1	N	0011BC	0011BC	Y
-IGG019Q1	AOS21	len-differs	len-differs	SVCLIB	IGG019Q1	len-differs	1	N	0003C8	0003C8	Y
+IGG019Q1	AOS21	differs	differs	SVCLIB	IGG019Q1	differs	1	N	0003C8	0003C8	Y
 IGG019Q2	AOS21	len-differs	len-differs	SVCLIB	IGG019Q2	len-differs	1	N	002BB0	002BB0	Y
 IGG019Q3	AOS21	len-differs	len-differs	SVCLIB	IGG019Q3	len-differs	1	N	001E10	001E10	Y
 IGG019Q4	AOS21	len-differs	len-differs	SVCLIB	IGG019Q4	len-differs	1	N	001070	001070	Y
@@ -3907,7 +3907,7 @@ IGG019R2	AOS21	identical	identical	SVCLIB	IGG019R2	identical	1	N	0003A0	0003A0	Y
 IGG019R3	AOS21	identical	identical	SVCLIB	IGG019R3	identical	1	N	00033A	00033A	Y
 IGG019R4	AOS21	len-differs	len-differs	SVCLIB	IGG019R4	len-differs	1	N	000790	000790	Y
 IGG019R5	AOS21	differs	differs	SVCLIB	IGG019R5	differs	1	N	00034C	00034C	Y
-IGG019R6	AOS21	len-differs	len-differs	SVCLIB	IGG019R6	len-differs	1	N	00048A	00048A	Y
+IGG019R6	AOS21	differs	differs	SVCLIB	IGG019R6	differs	1	N	00048A	00048A	Y
 IGG019R7	AOS21	identical	identical	SVCLIB	IGG019R7	identical	1	N	000075	000075	Y
 IGG019R8	AOS21	identical	identical	SVCLIB	IGG019R8	identical	1	N	000075	000075	Y
 IGG019R9	AOS21	identical	identical	SVCLIB	IGG019R9	identical	1	N	000070	000070	Y
@@ -3944,9 +3944,9 @@ IGG019T7	AOST3	len-differs	len-differs	LPALIB	IGG019T7	len-differs	1	N	0001AC	00
 IGG019T8	AOST3	len-differs	len-differs	LPALIB	IGG019T8	len-differs	1	N	0000A6	0000A6	Y
 IGG019TC	AOSD0	len-differs	len-differs	LPALIB	IGG019TC	len-differs	1	N	0003A0	0003A0	Y
 IGG019TD	AOSD0	len-differs	len-differs	-	-	not-in-target	0	-	000386	-	-
-IGG019TE	AOS21	len-differs	len-differs	SVCLIB	IGG019TE	len-differs	1	N	00035C	00035C	Y
+IGG019TE	AOS21	differs	differs	SVCLIB	IGG019TE	differs	1	N	00035C	00035C	Y
 IGG019TH	AOS21	differs	differs	SVCLIB	IGG019TH	differs	1	N	000AF2	000AF2	Y
-IGG019TI	AOS21	len-differs	len-differs	SVCLIB	IGG019TI	len-differs	1	N	0003CC	0003CC	Y
+IGG019TI	AOS21	differs	differs	SVCLIB	IGG019TI	differs	1	N	0003CC	0003CC	Y
 IGG019TM	AOS21	identical	identical	SVCLIB	IGG019TM	identical	1	N	000022	000022	Y
 IGG019TV	AOSD0	len-differs	len-differs	-	-	not-in-target	0	-	0004C6	-	-
 IGG019TW	AOSD0	len-differs	len-differs	LPALIB	IGG019TW	len-differs	1	N	00036E	00036E	Y
@@ -4000,7 +4000,7 @@ IGG0202M	AOSD8	len-differs	len-differs	LPALIB	IGG0202M	len-differs	1	N	000415	00
 IGG0202N	AOSD8	len-differs	len-differs	LPALIB	IGG0202N	len-differs	1	N	0001E1	0001E1	Y
 IGG02030	AOS21	len-differs	len-differs	LPALIB	IGG02030	len-differs	1	N	000317	000317	Y
 IGG02035	AOS21	differs	differs	LPALIB	IGG02035	differs	1	N	00021C	00021C	Y
-IGG02036	AOS21	differs	differs	LPALIB	IGG02036	differs	1	N	0005EF	0005EF	Y
+IGG02036	AOS21	len-differs	len-differs	LPALIB	IGG02036	len-differs	1	N	0005EF	0005EF	Y
 IGG0203A	AOSD7	len-differs	len-differs	LPALIB	IGG0203A	len-differs	1	N	00043F	00043F	Y
 IGG0203B	AOS21	len-differs	len-differs	LPALIB	IGG0203B	len-differs	1	N	000168	000168	Y
 IGG0203K	AOSD0	len-differs	len-differs	LPALIB	IGC00020	len-differs	1	N	000148	000148	Y
@@ -4279,7 +4279,7 @@ IKJCT471	AOST4	len-differs	len-differs	LINKLIB	IKJCT469	len-differs	1	N	0002DA	0
 IKJCT472	AOST4	len-differs	len-differs	LINKLIB	IKJCT469	len-differs	1	N	0002B0	0002B0	Y
 IKJCT473	AOST4	len-differs	len-differs	LINKLIB	IKJCT469	len-differs	1	N	00075C	00075C	Y
 IKJDAIR	AOST4	no-deck	no-deck	-	-	not-in-target	0	-	-	-	-
-IKJEBEAA	ACMDLIB	identical	identical	CMDLIB	IKJEBEAA	identical	1	N	-	000040	?
+IKJEBEAA	ACMDLIB	differs	identical	CMDLIB	IKJEBEAA	identical	1	N	-	000040	?
 IKJEBEAE	ACMDLIB	differs	differs	CMDLIB	IKJEBEMA	differs	1	N	-	0004D0	?
 IKJEBEAR	AOST4	identical	identical	-	-	not-in-target	0	-	000020	-	-
 IKJEBEAT	ACMDLIB	identical	identical	CMDLIB	IKJEBEMA	identical	1	N	-	000174	?
@@ -4294,7 +4294,7 @@ IKJEBEDE	ACMDLIB	len-differs	len-differs	CMDLIB	IKJEBEDE	len-differs	1	N	-	0006E
 IKJEBEDX	ACMDLIB	len-differs	len-differs	CMDLIB	IKJEBERE	len-differs	1	N	-	00069A	?
 IKJEBEEX	ACMDLIB	differs	differs	CMDLIB	IKJEBEEX	differs	1	N	-	000250	?
 IKJEBEHE	ACMDLIB	len-differs	len-differs	CMDLIB	IKJEBEHE	len-differs	1	N	-	00007C	?
-IKJEBELE	ACMDLIB	identical	identical	CMDLIB	IKJEBELE	identical	1	N	-	0008E6	?
+IKJEBELE	ACMDLIB	differs	differs	CMDLIB	IKJEBELE	differs	1	N	-	0008E6	?
 IKJEBEM1	ACMDLIB	holes	holes	CMDLIB	IKJEBEM1	holes	1	N	-	0003F2	?
 IKJEBEM2	ACMDLIB	holes	holes	CMDLIB	IKJEBEM2	holes	1	N	-	000693	?
 IKJEBEM3	ACMDLIB	holes	holes	CMDLIB	IKJEBEM3	holes	1	N	-	0003EE	?
@@ -4307,7 +4307,7 @@ IKJEBEMS	ACMDLIB	len-differs	len-differs	CMDLIB	IKJEBEMS	len-differs	1	N	-	0002D
 IKJEBEPS	ACMDLIB	identical	identical	CMDLIB	IKJEBEPS	identical	1	N	-	000068	?
 IKJEBERC	AOST4	identical	identical	-	-	not-in-target	0	-	000020	-	-
 IKJEBERN	ACMDLIB	differs	differs	CMDLIB	IKJEBERN	differs	1	N	-	000B06	?
-IKJEBESC	ACMDLIB	identical	identical	CMDLIB	IKJEBESC	identical	1	N	-	001193	?
+IKJEBESC	ACMDLIB	differs	differs	CMDLIB	IKJEBESC	differs	1	N	-	001193	?
 IKJEBESE	ACMDLIB	differs	differs	CMDLIB	IKJEBECH	differs	2	N	-	000370	?
 IKJEBETO	ACMDLIB	len-differs	len-differs	CMDLIB	IKJEBETO	len-differs	1	N	-	0000E4	?
 IKJEBEUI	ACMDLIB	differs	differs	CMDLIB	IKJEBEUI	differs	1	N	-	000838	?
@@ -4424,7 +4424,7 @@ IKJEFT40	AOST4	identical	identical	LPALIB	IKJPTGT	identical	1	N	0002D8	0002D8	Y
 IKJEFT45	AOST4	len-differs	len-differs	LPALIB	IKJPTGT	len-differs	1	N	000660	000660	Y
 IKJEFT52	AOST4	identical	identical	LPALIB	IKJPTGT	identical	1	N	0000D8	0000D8	Y
 IKJEFT53	AOST4	identical	identical	LPALIB	IKJPTGT	identical	1	N	000088	000088	Y
-IKJEFT54	AOST4	identical	identical	LPALIB	IKJPTGT	identical	1	N	000328	000328	Y
+IKJEFT54	AOST4	differs	differs	LPALIB	IKJPTGT	differs	1	N	000328	000328	Y
 IKJEFT55	AOST4	len-differs	len-differs	LPALIB	IKJPTGT	len-differs	1	N	00103C	00103C	Y
 IKJEFT56	AOST4	identical	identical	LPALIB	IKJPTGT	len-differs	1	N	000278	000398	N
 IKJEFTE2	AOST4	identical	identical	LPALIB	IKJEFT02	len-differs	1	N	000068	0001E0	N
@@ -4480,9 +4480,9 @@ IKTCAS30	AOST3	identical	identical	LINKLIB	IKTCAS30	identical	1	N	0002D0	0002D0	
 IKTCAS31	AOST3	len-differs	len-differs	LINKLIB	IKTCAS30	len-differs	1	N	0008A0	0008A0	Y
 IKTCAS32	AOST3	len-differs	len-differs	LINKLIB	IKTCAS30	len-differs	1	N	000264	000264	Y
 IKTCAS33	AOST3	identical	identical	LINKLIB	IKTCAS30	identical	1	N	000234	000234	Y
-IKTCAS40	AOST3	identical	identical	LINKLIB	IKTCAS40	identical	1	N	000520	000520	Y
-IKTCAS41	AOST3	identical	identical	LINKLIB	IKTCAS40	identical	1	N	0004D0	0004D0	Y
-IKTCAS42	AOST3	identical	identical	LINKLIB	IKTCAS40	identical	1	N	000371	000371	Y
+IKTCAS40	AOST3	differs	differs	LINKLIB	IKTCAS40	differs	1	N	000520	000520	Y
+IKTCAS41	AOST3	differs	differs	LINKLIB	IKTCAS40	differs	1	N	0004D0	0004D0	Y
+IKTCAS42	AOST3	differs	differs	LINKLIB	IKTCAS40	differs	1	N	000371	000371	Y
 IKTCAS51	AOST3	identical	identical	LINKLIB	IKTCAS51	identical	1	N	000174	000174	Y
 IKTCAS52	AOST3	len-differs	len-differs	LINKLIB	IKTCAS51	len-differs	1	N	00035C	00035C	Y
 IKTCAS53	AOST3	len-differs	len-differs	LINKLIB	IKTCAS51	len-differs	1	N	00036C	00036C	Y
@@ -4660,7 +4660,7 @@ ISDAFSC0	AOSD0	len-differs	len-differs	-	-	not-in-target	0	-	001638	-	-
 ISDAFSC1	AOSD0	len-differs	len-differs	-	-	not-in-target	0	-	0013E7	-	-
 ISDAFSC2	AOSD0	len-differs	len-differs	-	-	not-in-target	0	-	0008B2	-	-
 ISDAGEN0	AOSD0	identical	identical	-	-	not-in-target	0	-	000372	-	-
-ISDAGET0	AOSD0	identical	identical	-	-	not-in-target	0	-	000242	-	-
+ISDAGET0	AOSD0	differs	differs	-	-	not-in-target	0	-	000242	-	-
 ISDAHEXP	AOSD0	len-differs	len-differs	-	-	not-in-target	0	-	000242	-	-
 ISDAHIST	AOSD0	len-differs	len-differs	-	-	not-in-target	0	-	0002FC	-	-
 ISDALOG0	AOSD0	len-differs	len-differs	-	-	not-in-target	0	-	0003F4	-	-
@@ -4716,7 +4716,7 @@ ISTATM10	AOS26	len-differs	len-differs	VTAMLIB	ISTATM10	len-differs	1	N	000918	0
 ISTAUCAG	AOS24	identical	identical	LPALIB	ISTAUCAG	identical	1	N	000030	000030	Y
 ISTAUCAT	AOS24	identical	identical	LPALIB	ISTAUCAT	identical	1	N	000030	000030	Y
 ISTCC010	AOS26	holes	holes	VTAMLIB	ISTOLTEP	holes	1	N	00056C	00056C	Y
-ISTCC011	AOS26	identical	identical	VTAMLIB	ISTOLTEP	identical	1	N	000D60	000D60	Y
+ISTCC011	AOS26	differs	differs	VTAMLIB	ISTOLTEP	differs	1	N	000D60	000D60	Y
 ISTCC012	AOS26	holes	holes	VTAMLIB	ISTOLTEP	holes	1	N	00020C	00020C	Y
 ISTCC013	AOS26	differs	differs	VTAMLIB	ISTOLTEP	differs	1	N	000795	000795	Y
 ISTCC014	AOS26	differs	differs	VTAMLIB	ISTOLTEP	differs	1	N	000834	000834	Y
@@ -4778,7 +4778,7 @@ ISTEC789	AOS26	holes	holes	VTAMLIB	ISTOLTEP	holes	1	N	0005AC	0005AC	Y
 ISTESC01	AOS24	identical	identical	LPALIB	ISTESC01	identical	1	N	000040	000040	Y
 ISTESC02	AOS24	identical	identical	LPALIB	ISTESC02	identical	1	N	000090	000090	Y
 ISTIC000	AOS26	len-differs	len-differs	VTAMLIB	ISTOLTEP	len-differs	1	N	001664	001664	Y
-ISTIC001	AOS26	holes	holes	VTAMLIB	ISTOLTEP	holes	1	N	000A74	000A74	Y
+ISTIC001	AOS26	differs	differs	VTAMLIB	ISTOLTEP	differs	1	N	000A74	000A74	Y
 ISTIC002	AOS26	len-differs	len-differs	VTAMLIB	ISTOLTEP	len-differs	1	N	001090	001090	Y
 ISTIC003	AOS26	holes	holes	VTAMLIB	ISTOLTEP	holes	1	N	000780	000780	Y
 ISTIC004	AOS26	holes	holes	VTAMLIB	ISTOLTEP	holes	1	N	000B80	000B80	Y
@@ -4794,7 +4794,7 @@ ISTINC32	AOS26	differs	differs	LINKLIB	ISTINC32	differs	1	N	0001B6	0001B6	Y
 ISTINCA0	AOS26	holes	holes	LINKLIB	ISTINM01	holes	1	N	000200	000200	Y
 ISTINCAW	AOS26	holes	holes	LINKLIB	ISTINM01	holes	1	N	001FF4	001FF4	Y
 ISTINCBL	AOS26	differs	differs	LINKLIB	ISTINM01	differs	1	N	000154	000154	Y
-ISTINCCC	AOS26	identical	identical	LINKLIB	ISTINM01	identical	1	N	002254	002254	Y
+ISTINCCC	AOS26	differs	differs	LINKLIB	ISTINM01	differs	1	N	002254	002254	Y
 ISTINCCF	AOS26	holes	holes	LINKLIB	ISTINM01	holes	1	N	0001D4	0001D4	Y
 ISTINCCL	AOS26	len-differs	len-differs	LINKLIB	ISTINM01	len-differs	1	N	001AF2	001AF2	Y
 ISTINCD0	AOS26	identical	identical	LINKLIB	ISTINM01	identical	1	N	000388	000388	Y
@@ -4828,7 +4828,7 @@ ISTINCF9	AOS26	holes	holes	LINKLIB	ISTINM01	holes	1	N	0001F8	0001F8	Y
 ISTINCFE	AOS26	identical	identical	VTAMLIB	ISTINCFE	identical	1	N	0000E8	0000E8	Y
 ISTINCFM	AOS26	identical	identical	LINKLIB	ISTINM01	identical	1	N	0000DC	0000DC	Y
 ISTINCFS	AOS26	len-differs	len-differs	LINKLIB	ISTINM01	len-differs	1	N	000AB4	000AB4	Y
-ISTINCHT	AOS26	holes	holes	LINKLIB	ISTINM01	holes	1	N	0005A4	0005A4	Y
+ISTINCHT	AOS26	differs	differs	LINKLIB	ISTINM01	differs	1	N	0005A4	0005A4	Y
 ISTINCIB	AOS26	holes	holes	LINKLIB	ISTINM01	holes	1	N	000100	000100	Y
 ISTINCIO	AOS26	len-differs	len-differs	LINKLIB	ISTINM01	len-differs	1	N	001BCC	001BCC	Y
 ISTINCIP	AOS26	identical	identical	VTAMLIB	ISTINCIP	identical	1	N	000DBC	000DBC	Y
@@ -4867,7 +4867,7 @@ ISTINCR6	AOS26	len-differs	len-differs	LINKLIB	ISTINCR6	len-differs	1	N	000D28	0
 ISTINCRD	AOS26	len-differs	len-differs	LINKLIB	ISTINM01	len-differs	1	N	000D54	000D54	Y
 ISTINCRF	AOS26	holes	holes	LINKLIB	ISTINM01	holes	1	N	0004D4	0004D4	Y
 ISTINCRP	AOS26	len-differs	len-differs	LINKLIB	ISTINCRP	len-differs	1	N	0002D5	0002D5	Y
-ISTINCRR	AOS26	identical	identical	LINKLIB	ISTINM01	identical	1	N	001280	001280	Y
+ISTINCRR	AOS26	differs	differs	LINKLIB	ISTINM01	differs	1	N	001280	001280	Y
 ISTINCRS	AOS26	holes	holes	LINKLIB	ISTINM01	holes	1	N	0001D7	0001D7	Y
 ISTINCS1	AOS26	identical	identical	LINKLIB	ISTINM01	identical	1	N	0000D8	0000D8	Y
 ISTINCSD	AOS26	identical	error	-	-	not-in-target	0	-	-	-	-
@@ -5029,7 +5029,7 @@ ISTRCC81	AOS24	holes	holes	LPALIB	ISTRCC81	holes	1	N	000344	000344	Y
 ISTRCFY0	AOS24	differs	differs	LPALIB	ISTRCFY0	differs	1	N	000258	000258	Y
 ISTSC020	AOS26	holes	holes	VTAMLIB	ISTOLTEP	holes	1	N	000914	000914	Y
 ISTSC021	AOS26	holes	holes	VTAMLIB	ISTOLTEP	holes	1	N	00014C	00014C	Y
-ISTSC022	AOS26	holes	holes	VTAMLIB	ISTOLTEP	holes	1	N	0004BC	0004BC	Y
+ISTSC022	AOS26	differs	differs	VTAMLIB	ISTOLTEP	differs	1	N	0004BC	0004BC	Y
 ISTSC023	AOS26	identical	identical	VTAMLIB	ISTOLTEP	identical	1	N	000110	000110	Y
 ISTSC024	AOS26	holes	holes	VTAMLIB	ISTOLTEP	holes	1	N	000F88	000F88	Y
 ISTSC025	AOS26	holes	holes	VTAMLIB	ISTOLTEP	holes	1	N	000694	000694	Y

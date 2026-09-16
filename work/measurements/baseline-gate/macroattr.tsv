@@ -15,6 +15,7 @@ AMAPTF01	all in open code	0	32
 AMAPTF02	all in open code	0	1	
 AMAPTFLE	all in open code	0	22	
 AMDPRCOM	all in macro expansions	1	0	COMMON:1
+AMDPREXT	all in open code	0	36	
 AMDPRFMG	all in open code	0	8	
 AMDPRFSC	all in open code	0	11	
 AMDPRNUC	all in open code	0	3	
@@ -44,7 +45,6 @@ AMDSAUPD	all in open code	0	9
 AMDSAVCK	all in open code	0	16	
 AMDSAWAT	all in open code	0	5	
 AMDSYS02	mixed	9	5	FMTPTRN:9
-AMDUSRF9	all in open code	0	2	
 BLSCADYN	all in open code	0	4	
 BLSCAINT	all in open code	0	4	
 BLSCALOC	all in open code	0	3	
@@ -172,6 +172,9 @@ HMASMMPI	mixed	5	17	HMASMVLP:3 HMASMMGP:2
 HMASMMPV	mixed	2	16	HMASMMGP:1 HMASMSCP:1
 HMASMMSG	mixed	1	73	WTO:1
 HMASMPGC	mixed	2	21	HMASMGTP:2
+HMASMRCC	all in open code	0	7	
+HMASMRCF	mixed	2	8	HMASMMGP:2
+HMASMRCL	mixed	18	10	HMASMSPL:17 HMASMMGP:1
 HMASMRDS	all in macro expansions	2	0	GETMAIN:1 FREEMAIN:1
 HMASMREJ	mixed	1	6	HMASMMGP:1
 HMASMRJD	mixed	7	4	HMASMVLP:7
@@ -180,8 +183,14 @@ HMASMSEC	mixed	5	15	HMASMVLP:5
 HMASMSER	mixed	8	9	HMASMMGP:8
 HMASMSTA	mixed	5	4	ESTAE:3 STAE:1 HMASMMGP:1
 HMASMSUB	mixed	2	15	GETMAIN:1 FREEMAIN:1
+HMASMTAD	mixed	1	8	HMASMMGP:1
+HMASMTAI	mixed	2	4	HMASMMGP:2
+HMASMTBL	mixed	10	77	HMASMTBX:5 HMASMMGP:3 FREEMAIN:1 GETMAIN:1
+HMASMTCL	mixed	3	36	HMASMMGP:2 FREEMAIN:1
 HMASMTCR	mixed	2	18	HMASMGTP:1 HMASMMGP:1
 HMASMTD1	all in open code	0	13	
+HMASMTDD	mixed	4	11	HMASMMGP:4
+HMASMTEC	all in open code	0	18	
 HMASMTL1	all in open code	0	11	
 HMASMTL2	mixed	3	23	HMASMSPL:2 HMASMMGP:1
 HMASMTM1	mixed	3	21	HMASMMGP:3
@@ -190,12 +199,14 @@ HMASMTM3	mixed	1	19	HMASMMGP:1
 HMASMTMJ	mixed	7	36	HMASMMPP:6 HMASMMGP:1
 HMASMTP2	all in open code	0	14	
 HMASMTPA	mixed	3	24	HMASMMGP:3
+HMASMTPD	all in open code	0	23	
 HMASMTPL	all in open code	0	26	
 HMASMTPO	mixed	2	18	HMASMMGP:2
 HMASMTPR	mixed	2	15	HMASMMGP:2
 HMASMTPS	all in open code	0	4	
 HMASMTR1	all in open code	0	6	
 HMASMTRM	mixed	10	216	HMASMMGP:6 HMASMLPR:4
+HMASMTSB	mixed	1	1	FREEMAIN:1
 HMASMUC1	mixed	13	160	HMASMVLP:7 HMASMMGP:6
 HMASMUC2	mixed	13	32	HMASMVLP:10 HMASMMGP:2 DSCAN:1
 HMASMUC3	mixed	5	9	HMASMVLP:4 HMASMGTP:1
@@ -217,6 +228,7 @@ ICGDSANL	all in open code	0	1
 ICGDSB07	mixed	1	60	LINK:1
 ICGTRDST	mixed	4	325	SYNADRLS:2 SYNADAF:1 PUT:1
 ICKBI01	all in open code	0	5	
+IDA0192W	all in open code	0	2	
 IDA019RH	all in open code	0	5	
 IDA121A3	all in open code	0	1	
 IDA121A4	all in open code	0	6	
@@ -253,6 +265,7 @@ IEAVAD03	mixed	1	73	FREEMAIN:1
 IEAVAD0A	mixed	8	90	GETMAIN:7 FREEMAIN:1
 IEAVAMSI	mixed	4	7	MODID:4
 IEAVAR05	mixed	23	36	SETFRR:7 MODESET:6 TPUT:4 TGET:2 SETLOCK:2 GETMAIN:2
+IEAVAR06	all in open code	0	22	
 IEAVCKRR	all in open code	0	2	
 IEAVCSEG	all in open code	0	24	
 IEAVDLAS	mixed	4	8	MODID:4
@@ -289,6 +302,7 @@ IEAVLK02	all in open code	0	5
 IEAVLK03	mixed	1	4	WTO:1
 IEAVMNTR	mixed	5	1	SETFRR:5
 IEAVMQR0	mixed	1	1	ESTAE:1
+IEAVNIP0	all in open code	0	26	
 IEAVNIPX	mixed	4	46	IEAPMNIP:4
 IEAVNP01	mixed	2	12	IEAPMNIP:2
 IEAVNP02	mixed	26	23	IEAPMNIP:26
@@ -337,6 +351,7 @@ IEAVTRTR	all in macro expansions	4	0	GETSEQ:3 CONTIME:1
 IEAVTRTS	all in macro expansions	4	0	GETSEQ:3 CONTIME:1
 IEAVTRV	mixed	4	1	MODID:4
 IEAVTSDI	mixed	27	64	IEAPMNIP:27
+IEAVTSDU	all in open code	0	5	
 IEAVTSDX	all in open code	0	33	
 IEAVTSL2	all in open code	0	14	
 IEAVTSLS	all in open code	0	3	
@@ -398,7 +413,6 @@ IEE6503D	mixed	1	2	WTO:1
 IEE6603D	mixed	1	8	RISGNL:1
 IEE7103D	all in macro expansions	4	0	MODID:4
 IEE8603D	mixed	1	3	WTO:1
-IEECB801	all in open code	0	2	
 IEECB900	all in open code	0	3	
 IEECB901	all in open code	0	2	
 IEECB910	all in macro expansions	1	0	DCB:1
@@ -443,7 +457,6 @@ IEFAB4F2	all in open code	0	2
 IEFAB4F5	mixed	10	131	GSPACE:4 FSPACE:3 ENQ:2 GETMAIN:1
 IEFAB4M4	all in open code	0	4	
 IEFAB4M9	all in open code	0	4	
-IEFAB820	all in open code	0	2	
 IEFBB4M1	all in macro expansions	1	0	WTO:1
 IEFDB450	all in open code	0	2	
 IEFDB480	all in open code	0	1	
@@ -459,7 +472,6 @@ IEFIB650	all in macro expansions	17	0	WTO:17
 IEFICATL	all in open code	0	2	
 IEFICPUA	mixed	1	1	ENQ:1
 IEFIRECM	mixed	2	2	WTO:1 ESTAE:1
-IEFJCNTL	all in open code	0	2	
 IEFJJCLS	all in open code	0	6	
 IEFJREAD	all in open code	0	3	
 IEFJRECM	all in open code	0	1	
@@ -494,14 +506,17 @@ IFDMSG03	mixed	8	4	WTO:8
 IFDMSG04	mixed	1	2	WTO:1
 IFDMSG06	all in open code	0	2	
 IFDMSG07	mixed	3	2	WTO:3
+IFDMSG22	no clusters	0	0	
 IFDMSG31	mixed	6	1	WTO:6
 IFDMSG33	mixed	3	2	WTO:3
+IFDMSG37	no clusters	0	0	
 IFDMSG50	mixed	3	2	WTO:3
 IFDMSG53	mixed	3	2	WTO:3
 IFDMSG54	mixed	2	2	WTO:2
 IFDMSG56	mixed	4	2	WTO:4
 IFDMSG61	mixed	3	1	WTO:3
 IFDMSG73	mixed	5	2	WTO:5
+IFDMSGAJ	no clusters	0	0	
 IFDOLT04	all in open code	0	6	
 IFDOLT05	all in open code	0	4	
 IFDOLT07	all in open code	0	16	
@@ -514,9 +529,17 @@ IFDOLT14	mixed	5	12	SAVE:3 WTO:1 IFDCOM:1
 IFDOLT16	all in open code	0	19	
 IFDOLT17	mixed	2	1	SAVE:2
 IFDOLT21	all in open code	0	3	
+IFDOLT26	no clusters	0	0	
+IFDOLT28	no clusters	0	0	
 IFDOLT31	all in open code	0	9	
+IFDOLT35	no clusters	0	0	
+IFDOLT37	no clusters	0	0	
 IFDOLT38	all in open code	0	10	
 IFDOLT39	mixed	1	10	IFDCOM:1
+IFDOLT41	no clusters	0	0	
+IFDOLT42	no clusters	0	0	
+IFDOLT43	no clusters	0	0	
+IFDOLT46	no clusters	0	0	
 IFDOLT48	all in open code	0	1	
 IFDOLT49	mixed	1	6	WTO:1
 IFDOLT50	all in open code	0	1	
@@ -524,9 +547,13 @@ IFDOLT51	mixed	3	1	DCB:3
 IFDOLT54	all in open code	0	8	
 IFDOLT56	all in open code	0	2	
 IFDOLT57	all in open code	0	4	
+IFDOLT59	no clusters	0	0	
 IFDOLT73	all in open code	0	15	
 IFDOLT74	all in open code	0	34	
 IFDOLT98	all in open code	0	159	
+IFDOLTAA	no clusters	0	0	
+IFDOLTAB	no clusters	0	0	
+IFDOLTAJ	no clusters	0	0	
 IFFAAA05	all in open code	0	17	
 IFFACA00	mixed	1	29	GETMAIN:1
 IFFACA01	mixed	2	34	FREEMAIN:2
@@ -562,7 +589,18 @@ IFFPAAST	all in macro expansions	1	0	WTO:1
 IFFPJAPV	mixed	3	72	LOAD:2 RETURN:1
 IFG0190P	all in macro expansions	73	0	IECPDINI:73
 IFG0193C	all in macro expansions	5	0	XCTLTABL:5
+IFG0195C	no clusters	0	0	
+IFG0195D	no clusters	0	0	
+IFG0195G	no clusters	0	0	
+IFG0195J	no clusters	0	0	
 IFG0195N	mixed	25	26	IECRES:18 XCTLTABL:4 MODESET:2 DMABCOND:1
+IFG0195T	no clusters	0	0	
+IFG0196J	no clusters	0	0	
+IFG0196K	no clusters	0	0	
+IFG0196M	no clusters	0	0	
+IFG0196Q	no clusters	0	0	
+IFG0196V	no clusters	0	0	
+IFG0196W	no clusters	0	0	
 IFG0200P	all in macro expansions	4	0	IECPDINI:4
 IFG0201R	mixed	3	1	XCTLTABL:3
 IFG0202B	all in macro expansions	4	0	XCTLTABL:4
@@ -571,10 +609,18 @@ IFG0230P	all in macro expansions	6	0	IECPDINI:6
 IFG0232D	all in macro expansions	5	0	XCTLTABL:5
 IFG0232J	mixed	30	38	IECRES:18 MODESET:4 XCTLTABL:4 SETLOCK:2 WAIT:2
 IFG0232S	mixed	14	36	IECRES:5 XCTLTABL:5 WAIT:2 FEOV:1 XLATE:1
+IFG0551H	no clusters	0	0	
+IFG0551P	no clusters	0	0	
+IFG0552V	no clusters	0	0	
 IFG0553C	all in macro expansions	5	0	XCTLTABL:5
+IFG0553H	no clusters	0	0	
 IFG0553Z	all in macro expansions	5	0	XCTLTABL:5
 IFG0554B	all in macro expansions	5	0	XCTLTABL:5
 IFG0554L	all in macro expansions	5	0	XCTLTABL:5
+IFG0554Z	no clusters	0	0	
+IFG0555B	no clusters	0	0	
+IFG0555J	no clusters	0	0	
+IFG0558X	no clusters	0	0	
 IFG0RR0F	mixed	15	13	ESTAE:8 XCTLTABL:3 SDUMP:2 RETURN:1 WTO:1
 IFHSTATR	all in open code	0	22	
 IGARPT01	all in open code	0	1	
@@ -621,6 +667,7 @@ IGF2503D	mixed	3	2	SCHEDULE:3
 IGFC70	all in macro expansions	4	0	MODID:4
 IGFC80	all in macro expansions	4	0	MODID:4
 IGFCCHCR	all in open code	0	13	
+IGFCCHED	no clusters	0	0	
 IGFDD0	all in open code	0	3	
 IGFDD1	all in open code	0	4	
 IGFDL1	all in open code	0	3	
@@ -632,6 +679,14 @@ IGFDT2	all in open code	0	3
 IGFDU0	all in open code	0	2	
 IGFDU1	all in open code	0	2	
 IGFINTVL	all in macro expansions	4	0	MODID:4
+IGFPBUCR	no clusters	0	0	
+IGFPKREF	no clusters	0	0	
+IGFPMHCA	no clusters	0	0	
+IGFPMKTA	no clusters	0	0	
+IGFPMPFX	no clusters	0	0	
+IGFPMRTM	no clusters	0	0	
+IGFPNRFH	no clusters	0	0	
+IGFPTAIM	no clusters	0	0	
 IGFTMCHK	all in open code	0	6	
 IGG0191T	mixed	3	25	WAIT:2 LOAD:1
 IGG01920	mixed	13	29	XCTL:7 ABEND:3 WAIT:2 FREEMAIN:1
@@ -717,6 +772,7 @@ IGG0325V	all in macro expansions	3	0	XCTLTABL:3
 IGG032I1	mixed	8	26	IECRES:5 XCTLTABL:3
 IGG032I2	mixed	8	41	IECRES:3 XCTLTABL:3 EXCP:1 WAIT:1
 IGG032I3	mixed	3	1	XCTLTABL:3
+IGG032I4	no clusters	0	0	
 IGG032I5	mixed	3	2	XCTLTABL:3
 IGG032I8	mixed	4	3	XCTLTABL:4
 IGG0553A	mixed	3	2	XCTLTABL:3
@@ -766,6 +822,8 @@ IKJEBERN	all in macro expansions	4	0	IKJEBESV:4
 IKJEBESE	all in macro expansions	6	0	IKJEBESV:6
 IKJEBEUI	all in macro expansions	5	0	IKJEBESV:5
 IKJEE100	all in open code	0	14	
+IKJEE150	no clusters	0	0	
+IKJEE1A0	no clusters	0	0	
 IKJEES10	mixed	5	3	MODID:5
 IKJEES20	all in open code	0	33	
 IKJEES70	all in macro expansions	5	0	MODID:5
@@ -870,7 +928,6 @@ ISTCFCDP	all in open code	0	4
 ISTCFCMM	all in macro expansions	23	0	VMSGSKL:23
 ISTCFCPC	all in open code	0	19	
 ISTCFCPO	all in open code	0	1	
-ISTCFCR2	all in open code	0	1	
 ISTCFF3D	all in macro expansions	4	0	CALLRTM:4
 ISTCSCPS	all in open code	0	8	
 ISTDCC10	all in open code	0	1	
@@ -966,7 +1023,6 @@ ISTZBF0L	all in open code	0	2
 ISTZBFAG	all in open code	0	2	
 ISTZBFNB	all in open code	0	4	
 ISTZBM0J	all in open code	0	42	
-ISTZCF1B	all in open code	0	1	
 ISTZDFK0	mixed	5	5	SETFRR:5
 ISTZDFKA	all in open code	0	5	
 ISTZEFBA	mixed	5	4	SETFRR:5

@@ -32,22 +32,28 @@ PARENT -> NEW, 5,353 CSECTs, chosen baseline
   NO identical -> anything transition, either column, either direction
 ```
 
-## Status
+## Status — adopted 2026-09-16
 
-**Merged** as `63f372f` on cc370 `main`. The binary built from it is byte-identical
-to the one measured (`faa151cceee15d739bf42727153dffb26ae10c19fc306b455d88ae860e5f49b5`),
-so the acceptance run transfers to the merged commit exactly.
+Merged as `63f372f`, and **the pin names `c5f3d07`**, one commit later. `63f372f`
+went in with a **red gcc job**: the measurement had been checked exhaustively and
+`gh pr checks` was never run. cc370#377 fixed it — an error-message buffer gcc can
+prove too small under `_FORTIFY_SOURCE`, which macOS clang cannot see, so this
+host builds clean and only CI's Linux gcc can observe it.
 
-⚠️ **The published figure is still 1,608 and that is correct.** The comparator here
-is not re-pinned yet, so the +18 is **measured and not counted**. Adoption is a
-coordinated change, not a copy:
+The binary from `c5f3d07` (`8e73a789…9065a45`) is **set-identical** to the measured
+one (`faa151cc…e5f49b5`, which `795de6c` and `63f372f` both produce byte for byte):
+0/0 on both columns, `chosen = 1,626` either way. So the acceptance run transfers
+to the pinned commit rather than being re-argued, and the attribution maps — cut
+under `faa151cc` — stand.
 
-1. pin the binary from the merged `main` commit, with a `PROVENANCE.txt` entry;
-2. re-gate into `work/measurements/baseline-gate/overlay-vs-both.tsv`;
-3. regenerate the scoreboard — `scoreboard.py --check` fails until then;
-4. re-cut `macroattr`, `lenattr`, `alignfill`, `reachable` and the three
-   macro-reconstruction sweeps. **123 modules became comparable** that none of
-   those maps has ever seen.
+**The whole chain has been run**: comparator re-pinned with a `PROVENANCE.txt`
+entry, gate re-cut, scoreboard regenerated, and `macroattr`, `lenattr`,
+`alignfill`, `reachable`, `explained` plus the three reconstruction trials rebuilt.
+**The published figure is 1,626 and `explained` is 1,724.**
+
+⚠️ **The binary itself is gitignored** (`.gitignore:59`) where `as370-main` is
+tracked, so `PROVENANCE.txt`'s sha256 is its only record here. Rebuild it from
+`c5f3d07` with the recipe below and check the hash before trusting a figure.
 
 ## Rebuilding a comparator (seconds, and it touches nothing)
 
@@ -55,7 +61,7 @@ Binaries are deliberately not committed. cc370's working tree belongs to another
 session and must not be disturbed, so use `git archive`:
 
 ```sh
-C=63f372f
+C=c5f3d07
 mkdir -p /tmp/cc-$C && git -C ~/repos/mvs/cc370 archive $C | tar -x -C /tmp/cc-$C
 (cd /tmp/cc-$C && make cmplmd370/cmplmd370 && shasum -a 256 cmplmd370/cmplmd370)
 

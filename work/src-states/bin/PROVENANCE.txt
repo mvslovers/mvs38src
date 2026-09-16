@@ -29,3 +29,37 @@ as370-main built     2026-09-12 13:38
 as370-main evidence  overlay2.tsv: 5538 modules, rc0=4590 -- reproduces the
 #                    documented overlay figure, so it is the binary that
 #                    produced ss-overlay-vs-tk5.tsv
+
+# Added 2026-09-16. cmplmd370 re-pinned after cc370#375 (issue #372) landed:
+# the load-module reader now handles the records it used to refuse and the ones
+# it read wrongly. Unreadable target members go 143 -> 2 and the chosen figure
+# 1,608 -> 1,626, +18/-0 as SETS.
+#
+# The commit is PROVEN here, which the 2026-09-11 entry above could not claim:
+# the binary was built by `git archive 63f372f | tar -x` into a scratchpad and
+# `make cmplmd370/cmplmd370`, never out of a working tree another session
+# rebuilds. Built from the branch head 795de6c and again from the merged commit
+# 63f372f -- BYTE-IDENTICAL, which is what lets the acceptance run transfer to
+# the merged commit instead of being re-argued.
+# The pin moved once more the same day, and the reason is worth recording rather
+# than tidying away: 63f372f was merged with a RED gcc job. The measurement had
+# been checked exhaustively and `gh pr checks` had not been run at all -- a
+# condition code says whether the job ran, and here nobody read it. cc370#377
+# (c5f3d07) enlarges an error-message buffer gcc could prove too small under
+# _FORTIFY_SOURCE, which macOS clang cannot see. The pin therefore names the
+# GREEN commit, not the one that was measured first.
+#
+# Verdict-equivalent, and measured rather than argued: the same gate over the
+# same decks gives chosen = 1,626 and is SET-IDENTICAL to the faa151cc run, 0/0
+# on both columns. The change can only widen a string that no member in this
+# corpus causes to be formed. The attribution maps were cut under faa151cc and
+# stand for that reason.
+cmplmd370  sha256    8e73a789a1e77491a9d3c3e375479392d34e926ce3aff03a19f5174ea9065a45
+cmplmd370  source    cc370 c5f3d07 (main, CI green), cc -O2 -Wall -Wextra -Werror
+cmplmd370  replaces  c907e52c93b099a60cfa06ac7221f8a878322d30c5b1bb33cb4e1958c8237d43
+cmplmd370  measured  faa151cceee15d739bf42727153dffb26ae10c19fc306b455d88ae860e5f49b5
+#                    (63f372f / 795de6c, byte-identical to each other) -- the
+#                    acceptance run, set-identical to this binary's
+cmplmd370  evidence  work/measurements/cmplmd-reader/ -- three controls at 0/0,
+#                    including 6ddbaaf vs the PR head, so the delta is the reader
+#                    change alone and not 18 other cc370 commits.
