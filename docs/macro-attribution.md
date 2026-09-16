@@ -608,3 +608,36 @@ Four objects carry the `EX` but sit outside the source population and are exclud
 rather than explained away: `IGCDM10D`, `IGCFR10D` and `IGCVK10D` have stub
 sources with no `XCTL` at all, and `IGG01942`'s source uses the register form
 `SF=(E,(15))`, which emits no `LA`.
+
+---
+
+# One CSECT in the target library has no name, and eighteen tools invent one
+
+`org-tgt.txt` is read with `line.split()` by **eighteen** tools here —
+`seclocate.py`, `macroattr.py`, `lenattr.py`, `baseline_gate.py`, `fillgaps.py`,
+`worklist.py` and the rest. One of its 5,517 `INCLUDE` rows has a **blank CSECT
+name**:
+
+```
+LPALIB   IGC0004{  INCLUDE   IGC0001D  0008FE 000000 0000000     7 fields
+LPALIB   IGC0004{  INCLUDE             000032 000900 0002304     6 fields
+```
+
+`split()` collapses the empty field and shifts every later column left, so the
+**length `000032` is read as the CSECT's name.** That phantom sits in all eighteen
+maps.
+
+**It is inert and it is still worth writing down.** Nothing in the tree is called
+`000032`, so it never matches and never changes a verdict. What it does cost is
+the real thing: **an unnamed control section of 8,964 bytes at offset `0x900` in
+`LPALIB(IGC0004{)` is invisible to every instrument here**, because all of them key
+on a CSECT name and it has none.
+
+Found only because `tools/nosource.py` printed its corpus row by row instead of
+counting it. A filter that drops awkward rows silently would never have surfaced
+it — which is why that tool names its exclusions in a column rather than applying
+them.
+
+**Not fixed in the other seventeen.** One inert row does not justify editing
+eighteen tools in a batch; it is recorded here so nobody rediscovers it, and
+`nosource.py` skips six-field rows with the reason written at the skip.

@@ -468,6 +468,32 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
+### One CSECT in the target library has no name, and eighteen tools invent one
+
+`org-tgt.txt` has 5,517 `INCLUDE` rows and **one has a blank CSECT name**:
+
+```
+LPALIB   IGC0004{  INCLUDE   IGC0001D  0008FE 000000 0000000     7 fields
+LPALIB   IGC0004{  INCLUDE             000032 000900 0002304     6 fields
+```
+
+Eighteen tools read that file with `line.split()`, which collapses the empty field
+and reads the **length** `000032` as the CSECT's **name**.
+
+**The phantom is inert** — nothing is called `000032`, so it never matches and
+never moved a verdict. **The real cost is the other way round**: an unnamed
+control section of **8,964 bytes at offset `0x900` in `LPALIB(IGC0004{)` is
+invisible to every instrument here**, because all of them key on a CSECT name and
+it has none.
+
+**Not fixed in the other seventeen** — one inert row does not justify a batch edit.
+`nosource.py` skips six-field rows with the reason written at the skip, and
+[`docs/macro-attribution.md`](docs/macro-attribution.md) carries the account.
+
+Found only because `nosource.py` printed its corpus row by row instead of counting
+it. **A filter that drops awkward rows silently would never have surfaced it**,
+which is why that tool names its exclusions in a column.
+
 ### 800 modules have an object and no source — and 598 are distinct CSECTs
 
 Asked by the `dasm370` session (cc370 #112, the disassembler Mike named for
