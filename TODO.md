@@ -468,6 +468,33 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
+### The wrong-level macros are a class of their own, and they are 332 modules
+
+[`docs/missing-macros.md`](docs/missing-macros.md) tracked only macros that are
+**absent** — `Undefined operation code`, module does not build. **The second kind
+is larger and was not on that page**: the macro is present, assembles without a
+diagnostic, and emits different bytes than IBM shipped. Nothing flags.
+
+| macro | modules | | macro | modules |
+|---|---:|---|---|---:|
+| `XCTL` → `IHBINNRB` | **138** | | `SCHEDULE` | 27 |
+| `FREEMAIN` | 65 | | `IEAPMNIP` | 23 |
+| `GETMAIN` | 54 | | `TSCBD` | ≥6 |
+| `SETFRR` | 43 | | `STAX` | small |
+| `ESTAE` | 35 | | **union** | **332** |
+
+⚠️ **Touched is not blocked.** Many of the 332 also differ in open code and need
+that work anyway: on the equal-length side the blocked families touch 112 and stop
+only **11** outright. 332 is the exposure, not the yield.
+
+Both controls are in the document: `tool = identical` in `verdicts.tsv` for every
+one, so **not the assembler**; and every surviving copy compared by `diff` rather
+than by grep, so **not a transcription slip**. Nine for nine, every archive has the
+same wrong level.
+
+**This is the list for a mailing-list post**, and it is why asking publicly beats
+searching again.
+
 ### The queue, in the order it pays
 
 1. **The 37 single-spot length modules still open** —

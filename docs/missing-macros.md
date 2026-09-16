@@ -850,3 +850,86 @@ It is also what Dave Kreiss' offer settles — *"create a zip file of all the re
 all assembler code and macro libraries)"*
 ([`kreiss-reply-2026-09-12.md`](kreiss-reply-2026-09-12.md) §5). Until that
 arrives, the 175 cannot be closed by any change on this side.
+
+---
+
+# A second kind of missing, and this page did not have it — 2026-09-16
+
+Everything above is about macros that are **absent**: the assembler says
+`Undefined operation code` and the module does not build. This page has tracked
+that class since 2026-09-07 and it is in good order.
+
+**There is a second kind and it is larger.** The macro is present, it assembles
+without a diagnostic, the module builds cleanly — and it emits **different bytes
+than IBM's shipped object**. Nothing flags. The only way to see it is to compare
+the assembled CSECT against the object IBM shipped, which is what this project
+does, and then to ask which statement owns the differing bytes, which is what
+`tools/macroattr.py` and `tools/lenattr.py` now answer.
+
+`SCHEDULE` and `ESTAE` were found this way and are documented above. **Six more
+were found on 2026-09-14 and 2026-09-15 and were not on this page at all.**
+
+## The list
+
+Distinct modules in which the macro owns at least one differing byte, over both
+maps — equal-length (`macroattr.tsv`) and length-differing (`lenattr.tsv`):
+
+| macro | equal-len | length | **modules** | what differs |
+|---|---:|---:|---:|---|
+| `XCTL` → `IHBINNRB` | 31 | 107 | **138** | IBM expands `LA 15,D(,B)` + `EX 0,32(,2)` + `SVC 7`; ours `LA 15,D(X)` + `SVC 7` — four bytes more, and a base register where we emit an index |
+| `FREEMAIN` | 31 | 34 | **65** | `ST R2,0(0,1)` against IBM's `ST R2,0(1)` |
+| `GETMAIN` | 21 | 33 | **54** | the same, and it is one cause shared across both |
+| `SETFRR` | 28 | 15 | **43** | a different expansion outright: ours `LA R12,32` + `AL` + `CL` + `BH`, IBM's `L R12,FRRSCURR` + `C` + `BE` + `A R12,8` — an FRR stack entry of 8 bytes where ours computes 32 |
+| `ESTAE` | 9 | 26 | **35** | eight bytes short |
+| `SCHEDULE` | 11 | 16 | **27** | two levels; +3 modules and −10 when the other is used |
+| `IEAPMNIP` | 21 | 2 | **23** | ours emits zeros where IBM emits instructions |
+| `TSCBD` | — | — | **≥6** | `SCBCTLUN EQU X'04'` against IBM's `X'01'`. Not a call, so the maps do not see it: the symbol is used in open code |
+| `STAX` | — | — | small | `IKJEHREN`'s gap sits inside its expansion |
+
+**Union: 332 distinct modules**, 6.2 % of the tree.
+
+⚠️ **Touched is not blocked.** Many of those 332 also differ in open code and need
+that work regardless — measured on the equal-length side, the blocked families
+touch 112 modules there but stop only **11** of them outright. So 332 is the
+**exposure**, not the number that would fall if the right macros arrived. The
+honest lower bound is a few dozen; the honest upper bound is 332.
+
+## Why we are certain it is the macro and not us
+
+Two controls, run on every one of them:
+
+- **Not the assembler.** `IGCFK10D`, `HMASMDRV`, `HMASMDSU`, `AHLREADR` and
+  `IEAVNIPX` all carry `tool = identical` in
+  [`verdicts.tsv`](../work/measurements/ifox-run/verdicts.tsv): `as370`
+  reproduces IFOX00's deck byte for byte from the same source and the same macro
+  libraries. Both assemblers agree; IBM's object disagrees with both.
+- **Not a transcription slip.** Every surviving copy of each macro was compared —
+  `work/macros/mvsce-2.1.4-dlib`, `mvsce-2.1.4-target`, `work/macros/mirror`,
+  `stben.net`, `mainframe.eu`, and Jay Moseley's `MVSSRC.ETC1102`, which is an
+  IBM-named distribution. For `TSCBD` and `SETFRR` all copies are **byte
+  identical** to each other and none matches what IBM's object shows.
+  `SETFRR`'s copies even carry the same `MACDATE 75295`.
+
+**A grep is not that comparison.** A claim that stben's `SETFRR` differed came
+from running two different regexes on the two files; a `diff` of columns 1–71
+shows 167 identical records.
+
+## What we are actually asking for
+
+**A `SYS1.MACLIB` / `SYS1.AMODGEN` / `SYS1.APVTMAC` at the maintenance level IBM
+assembled MVS 3.8j with** — that is, the macro libraries as they stood after the
+1975–1985 PTF stream, not the base level that survived into the public archives.
+For the TCAM ones (`TSCBD`, `IHBINNRB`, `IEDHJN`) the relevant product is TCAM
+Level 10.
+
+Any one of the nine above is worth having on its own. `XCTL`/`IHBINNRB` is worth
+the most.
+
+## Where it has already been looked for
+
+The archives listed earlier on this page, plus: the two web mirrors, Jay Moseley's
+distribution, Dave Kreiss' `MVSBLD`, `NEW.ASM`, `MVT.ASM` and `UTL.ASM`, the
+MVS/CE 2.1.4 DLIB and target libraries, and TK5's own. **Nine for nine, every
+surviving copy is the same wrong level.**
+
+That is why this is worth asking about publicly rather than searching again.
