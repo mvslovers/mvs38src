@@ -1169,6 +1169,15 @@ searching again.
   0 — 36 modules were being reported as defective over the pinned constant. The
   **time** is the same class and is **not** solved: 38 decks carry the pinned
   `12.00` and sweeping every time-shaped byte sequence recovers none of them.
+- **`gate.sh`'s `.commit` degrades to `unknown` without the run failing.** It
+  runs `git log` in the directory above the binary, so a binary built out of a
+  `git archive` extraction — which is how a cc370 commit is measured here without
+  touching that session's working tree — records nothing, and `retest.py` prints
+  `unknown` as though it were a provenance. Measured 2026-09-16 on the #376
+  acceptance: both runs wrote it, neither said so. **The sha256 is the identity
+  and it never degrades** (`PROVENANCE.txt` says so for the pinned binaries);
+  `.commit` is context. Not fixed — recording the hash beside it is one line and
+  nobody has written it.
 - **Pin the binary by hash.** `work/src-states/bin/as370-main`, provenance in
   `PROVENANCE.txt`. The default path points into a tree another session rebuilds.
 - **And pin the DECK DIRECTORY the same way.** `tools/decks.py` names it:

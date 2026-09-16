@@ -48,7 +48,7 @@ We place the marker from their JSON. **`dasm370` does not place it.**
 Output format `--format=card|free`, default card, so a stage 1 result drops
 straight into `src/`.
 
-## Three rules agreed, each with the reason that produced it
+## Four rules agreed, each with the reason that produced it
 
 **A macro call is emitted only where `dasm370 → as370 → cmplmd370` exits 0 for
 that module.** Never as a mode, never per system. Five macros are measured at two
@@ -78,6 +78,32 @@ Hard refusal was rejected because it would have cost the 60 corroborated
 `IEANUC01` identicals, and a withheld verdict leaves nothing to re-examine when
 the reader improves. The flag should carry **why** — unhandled record type, segment
 overlap, missing `CESDSEG`.
+
+
+**A symbol's section does not mean it has an address in that section.** Added
+2026-09-16 from the `as370` symbol export (cc370#376), and it is the rule that
+fails *silently*, which is why it is here rather than in a commit message.
+
+Resolving a displacement is **not** a nearest-match scan over `(sect, value)`.
+An **absolute `EQU` keeps the section its card was written in while holding no
+address in it** — as370's own handler says so: its section is dead weight, and
+`expr_sect` and `using_for` both skip `S_ABS`. Every real module opens with
+`R0 EQU 0` … `R15 EQU 15` **inside a CSECT**, so the naive scan resolves
+`LA 1,4(,12)` to `LA 1,R4(,12)`: plausible, internally consistent, false — and
+**the round trip cannot catch it, because the bytes are identical either way.**
+That is the same shape as the inferred `USING` above and it needs the same
+treatment.
+
+The rule:
+
+> `sect` equal to the addressed section, `defined = 1`, **`type` not `ABS`**,
+> nearest `value <= target`.
+
+`--sym=FILE` emits one tab-separated record per symbol — name, value, length,
+type (`REL/SD/PC/ER/LD/ABS`), section id, section name, DSECT membership, ESDID,
+`defined`, `entry` — with its own `#columns` header and `-` for stdout. Values
+are decimal; section-relative inside a DSECT, absolute elsewhere. It emits no
+deck byte: it runs where `emit_listing_a` runs, past `g_pass = 0`.
 
 ## What they told us, and what it cost
 
