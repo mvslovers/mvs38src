@@ -48,6 +48,64 @@ We place the marker from their JSON. **`dasm370` does not place it.**
 Output format `--format=card|free`, default card, so a stage 1 result drops
 straight into `src/`.
 
+## The two corpora, and which question each answers — 2026-09-16
+
+Both are ours and both are committed. **They are not interchangeable, and the
+difference is the whole reason there are two.**
+
+| | |
+|---|---|
+| [`work/measurements/dasm370-decoder-control.tsv`](../work/measurements/dasm370-decoder-control.tsv) — **30** | cut by instruction **format**, not by size. Every one already assembles `identical` from real source, so the answer is known **independently of the tool**. This is the acceptance **for the decoder**. |
+| [`work/measurements/dasm370-stage1a.tsv`](../work/measurements/dasm370-stage1a.tsv) — **66** | the `IKJ` subset of the 772 with no source. **None has a second reference.** Exit 0 proves the round trip faithful to the member it came from, **not** that the reading is right. This corpus measures **reach**. |
+
+⚠️ **A wrong but self-consistent reading survives the 66 unchanged.** That is not
+a hypothetical: a `dec` field with `BE` and `BZ` swapped prints the wrong
+mnemonic for `X'47'` mask 8 and still round-trips **byte-identically**. Only the
+30, where a second witness exists, can contradict it. Never quote a figure off
+the 66 without saying which of the two questions it answers.
+
+**`SRP` has exactly one witness in the whole 1,626-module identical population**
+— `IGCFR10D`. Coverage is therefore reported **per format**: a regression there
+is a total loss of coverage for that shape, not one line in thirty. `ED` at 5 is
+the same caution, less sharply.
+
+**And the pure round trip needs no IBM member at all.** For the 27 of the 30
+whose `dlib_identical` is `yes`, our own deck *is* IBM's bytes, so
+`obj_sysparm1/<mod>.obj` is both input and reference: one reader on each side and
+nothing between them but the decoder. A DLIB member is **not** an object deck —
+all 30 begin `X'20'` — so that route still enters `load_lmod`, and 8 of the 30
+hold more than one section.
+
+**Two things a reassembly must carry or it measures something else**: the pinned
+stamp and any per-module `SYSPARM`, from `tools/asmparams.py`, the one place that
+knows the pair; and `--no-clearrld` where the point is the relocations, because
+`cmplmd370` compares CSECT **text** and a decoder can get an address constant's
+value right and its relocation wrong.
+
+## Where it got to, 2026-09-16 — and what it is not yet
+
+`dasm370` exists and is merged (cc370 #388, #389, #390). Measured **here**, with
+our pinned `as370-main` and `cmplmd370`, not taken from the other session:
+
+| | |
+|---|---:|
+| the 30, deck path: text | **30 / 30** |
+| the same with `--no-clearrld` | **30 / 30** |
+| END card | 20 byte-identical, 9 equal in meaning, 1 correctly omitted |
+| **the 66, member path** | **66 / 66** |
+| the same with `--no-clearrld` | 46 / 66 — bound adcons are resolved, so this is the expected shape |
+
+**Sixty-six CSECTs that have no source at all now rebuild byte-identically from
+a disassembly.** That is the first time this project has produced source for a
+module where none existed, and it is Fahrplan stage 7 reaching its first
+measurable result.
+
+⚠️ **It is not 772 and it is not recovery.** The 66 are the `IKJ` subset chosen
+for being code rather than text and between 64 and 1023 bytes; the parse and PCL
+tables, the modules over 1 KB and the stubs are all still outside. And a module
+that round-trips is a module we can **rebuild**, not one whose source we can
+claim is IBM's — the scoreboard does not move and must not.
+
 ## Four rules agreed, each with the reason that produced it
 
 **A macro call is emitted only where `dasm370 → as370 → cmplmd370` exits 0 for

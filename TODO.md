@@ -39,6 +39,72 @@ is 43 % TSO ([`docs/maintenance-level.md`](docs/maintenance-level.md)).
 The scoreboard at the head of [`README.md`](README.md) is **generated** —
 `tools/scoreboard.py`, `--check` fails when it is stale. Never hand-edit it.
 
+### 🔑 `dasm370` rebuilds 66 modules that have no source — 2026-09-16, evening
+
+**The first source this project has produced for modules where none existed.**
+cc370 #388, #389 and #390 landed; the acceptance was run **here**, with our
+pinned `as370-main` and `cmplmd370` and the per-module stamp from
+`asmparams.py`, rather than taken from the other session:
+
+| | |
+|---|---:|
+| the 30-module decoder control, deck path | **30 / 30** |
+| the same with `--no-clearrld` | **30 / 30** |
+| **the 66 `IKJ` no-source CSECTs, member path** | **66 / 66** |
+| the same with `--no-clearrld` | 46 / 66 — the expected shape; bound adcons are resolved |
+
+Both corpora are ours and both are committed —
+`work/measurements/dasm370-decoder-control.tsv` and `…/dasm370-stage1a.tsv`.
+[`docs/dasm370-interface.md`](docs/dasm370-interface.md) carries which question
+each answers, and they are **not interchangeable**: a `dec` field with `BE` and
+`BZ` swapped prints the wrong mnemonic and still round-trips byte-identically, so
+only the 30 — where a second witness exists — can contradict a wrong but
+self-consistent reading.
+
+⚠️ **The scoreboard does not move and must not.** A module that round-trips is one
+we can **rebuild**, not one whose source we can claim is IBM's. `recovered` stays
+**1,626** and `explained` **1,719**. This is Fahrplan stage 7 reaching its first
+measurable result, not a recovery.
+
+⚠️ **And it is 66, not 772.** The 66 are the `IKJ` subset chosen for being code
+rather than text and 64–1023 bytes. Still outside: 19 parse/PCL tables where an
+opcode subset will not stop text decoding as `L`/`LA`/`ST`/`BC`, 23 modules of
+1 KB or more, 19 stubs — and the other prefixes entirely.
+
+**`SRP` has exactly one witness in the whole identical population** (`IGCFR10D`),
+so coverage is reported per format: a regression there is total loss of coverage
+for that shape, not one line in thirty.
+
+### The failure shape that ran seven times in one day, across two sessions
+
+Worth its own heading because it is not an anecdote and it is not about either
+session being careless. Seven instances on 2026-09-16, ours and theirs:
+
+| | |
+|---|---|
+| a right number with an **unrecorded precondition** | `IGG019Q1`'s `03250000`, marked `DERIVED-UNPROVEN` |
+| a right number inside a **stale sentence** | `scoreboard.py`: *"the cheapest 0 modules on the board"* |
+| a right lookup asked a **question it cannot answer** | `MA.owner` on a region with no emitting row |
+| a **line-by-line diff** conflating ordering with content | our ESD comparison of dasm370's output |
+| a regex matching **file370's filename line** | our "RLD differs in 28" |
+| **EBCDIC blanks read as numbers** — `0x404040` | our raw END parse, against a warning already in this file |
+| a regex reading **columns 73–80** as data | theirs: `37 of 37 outside` where the answer is `37 of 37 inside` |
+
+**Every one was found by the other side's instrument.** In most of them the side
+that made the error had already written down the rule that would have caught it —
+the EBCDIC-blank warning is in this file's own control list, and the seventh
+happened half an hour after its author wrote the previous six into a memory.
+
+🔑 **So it is not a knowledge problem and not an attention problem. It is a
+position problem: an instrument cannot check the assumption it was built on, and
+only one built on a different assumption can.** That is why *send the case, not
+the diagnosis* works in both directions, and it is the argument for the
+two-session arrangement rather than a story about one day.
+
+The practical form, which is the same lesson `DC 0D pads at most 7 bytes` had:
+**derive a count, never write one down.** A number in a document is an assumption
+with no instrument behind it.
+
 ### The reader adoption — 2026-09-16, and the +18 is now counted
 
 cc370#375 fixed `cmplmd370`'s load-module reader. It was accepted the way this
