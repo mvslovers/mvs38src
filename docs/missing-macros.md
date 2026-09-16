@@ -933,3 +933,67 @@ MVS/CE 2.1.4 DLIB and target libraries, and TK5's own. **Nine for nine, every
 surviving copy is the same wrong level.**
 
 That is why this is worth asking about publicly rather than searching again.
+
+## The VS2 3.7 starter tapes carry none of them — 2026-09-16
+
+Jay Moseley's `vs2StarterTapes.tar.gz`, the pair used to SYSGEN an MVS 3.8j.
+Searched because a starter tape is the SYSGEN's own starting point and might
+predate or postdate our archives.
+
+**Format.** Hercules **HET**, not AWS — the same 6-byte header, but `flags1 &
+0x01` marks a zlib-compressed block, so `tools/awstape.py` reads nothing as they
+stand. Inflating each block into a plain AWS image first makes `awstape.py` work
+unchanged.
+
+Both tapes hold two unlabelled files: an `IBCDASDI` standalone loader and a **CKD
+volume image**, not sequential datasets. `vs2start.het` is volser **START1** with
+23 datasets — `SYS1.LINKLIB LPALIB SVCLIB NUCLEUS PROCLIB PARMLIB CMDLIB DCMLIB
+IMAGELIB UADS PTS CDS HLDS DSSVM LOGREC BRODCAST DUMP00 MANX MANY` plus four VSAM
+data spaces; `vs2spool.het` is **SPOOL0** with three.
+
+**No macro library is catalogued on either volume.** No `SYS1.MACLIB`,
+`AMACLIB`, `AMODGEN`, `APVTMAC` or `AGENLIB` in either VTOC. That settles it:
+these tapes cannot supply one.
+
+**There is macro source on START1 anyway**, as residue — ~46,000 card images on
+cylinders 54–70, on tracks since reallocated to `SYS1.LOGREC`, VSAM data spaces
+and free space, with no directory. 320 members are recoverable by structure.
+
+| | |
+|---|---|
+| `XCTL` `IHBINNRB` `FREEMAIN` `GETMAIN` `SETFRR` `ESTAE` `SCHEDULE` `IEAPMNIP` `TSCBD` | **not present** |
+| `IEDHJN` `IHANVT` `TABLE` `NAME` | **not present** |
+| `STAX` | present, and **identical** to `mvsce-2.1.4-target/STAX` in columns 1–71 |
+
+"Not present" means absent from the 320 recoverable members **and** from a raw
+byte search of both whole volumes, by two independent instruments that agree — a
+structural `MACRO`/prototype scan and a raw search for 25 distinctive body lines
+taken from our own copies.
+
+### And the residue points the wrong way, which is itself the finding
+
+Sweeping all 320 against our archives: **187 identical, 69 differ, 55 truncated by
+residue damage, 5 absent from our archives** (`RELEASEM STARTLN STOPLN COPYP
+QSTART`). Of the 69, none is a code-page artefact and **36 carry an APAR-tagged
+line present only in OUR copy** — `CALL` lacks four `@ZA33014` lines we have,
+`SAVE` lacks `@ZA58263` and `@ZA58863`.
+
+**The tape is at an earlier maintenance level than our archives**, not a later
+one. That is the direction of this whole problem stated from a new angle: the
+public material sits at or before the base level, and what MVS 3.8j was actually
+assembled with is later than all of it.
+
+### Controls the agent ran, and five things they caught
+
+`IHBOPLST`, `STAX`, `TIME` and `DELETE` extract byte-identical to our copies, so
+the reader and the extraction are faithful; `CALL` and `SAVE` differ by exactly
+their APAR lines, so the comparison detects a real difference when there is one.
+
+Caught before they became answers: the HET compression; a one-byte error in the
+DSCB extent offset, caught because `SYS1.PROCLIB`'s extent had to cover a track
+where its members had already been found; a `MACRO` detector requiring exactly
+nine leading blanks, which **missed `STAX`** because it uses ten — caught only by
+the second, independent search; two member-boundary rules that produced 109 and
+122 "differences", both artefacts of the PL/S `*%` prologue; and 89 track slots
+written off as channel programs on a guessed signature, which slot parity showed
+to be 24-byte stubs of tracks dumped elsewhere.

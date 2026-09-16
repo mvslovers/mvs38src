@@ -498,6 +498,30 @@ deferred.
 net says "wrong" without saying why; only the identical **sets** say which modules
 want which level, and that list is the input to a per-module table.
 
+### The VS2 3.7 starter tapes do not have them, and they point the wrong way
+
+Jay Moseley's `vs2StarterTapes.tar.gz`, searched 2026-09-16.
+
+**No macro library is catalogued on either volume** — no `MACLIB`, `AMACLIB`,
+`AMODGEN`, `APVTMAC`, `AGENLIB` in either VTOC. They are CKD volume images
+(`START1`, `SPOOL0`) in Hercules **HET** format, which `awstape.py` cannot read
+until each block is inflated.
+
+START1 does carry ~46,000 card images of macro source as **residue** on cylinders
+54–70, 320 members recoverable without a directory. **None of the nine is among
+them**, by two independent searches that agree. `STAX` is there and is
+**identical** to ours.
+
+⚠️ **And the residue is at an EARLIER level than our archives, not a later one**:
+of 69 members that differ, **36 carry an APAR-tagged line present only in our
+copy** (`CALL` lacks four `@ZA33014` lines we have; `SAVE` lacks `@ZA58263`).
+That is the shape of the whole problem seen from a new angle — **the public
+material sits at or before the base level, and what MVS 3.8j was assembled with is
+later than all of it.** No archive we have found runs in the direction we need.
+
+Full account and the agent's five caught errors in
+[`docs/missing-macros.md`](docs/missing-macros.md).
+
 ### The wrong-level macros are a class of their own, and they are 332 modules
 
 [`docs/missing-macros.md`](docs/missing-macros.md) tracked only macros that are
