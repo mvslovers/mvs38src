@@ -468,6 +468,19 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
+### The `dasm370` contract is written down — [`docs/dasm370-interface.md`](docs/dasm370-interface.md)
+
+Everything agreed with the disassembler session in one place: the corpus path and
+`DASM370_CORPUS`, the reference-byte layout, which index to stratify from, the
+JSON-per-divergence contract, **that they do not place the `!!!` marker**, and the
+three rules — macro emission only where the round trip exits 0 for *that* module,
+an inferred `USING` never applied silently, an incomplete image flagged with the
+flag reaching the **verdict** and not only the JSON.
+
+⚠️ **It was written because all of it lived in commit messages**, which nobody
+reads after four weeks. A contract with another session is exactly the thing that
+has no owner unless it has a file.
+
 ### ⚠️ `cmplmd370` misreads scatter and overlay modules — exposure measured at 5
 
 Reported by the `dasm370` session, with the mechanism rather than the symptom: for

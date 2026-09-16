@@ -62,6 +62,7 @@ break should treat them as the state of the project.
 | [`macro-attribution.md`](macro-attribution.md) | **the map.** Where every differing byte comes from — macro expansion or open code — over both populations, plus the five two-level macros and the `GETMAIN`/`SETFRR`/`XCTL` reconstruction trials |
 | [`sysparm.md`](sysparm.md) | `&SYSPARM` was empty in every assembly ever run here; supplying it per module recovers **111 modules**. `MODID` and `XCTLTABL` read it too and recover none |
 | [`missing-macros.md`](missing-macros.md) | two kinds of missing: **absent** (the assembler says so) and **present at the wrong level** (nothing says so). The second kind is 332 modules and was not on the page until 09-16. Also: the VS2 3.7 starter tapes carry none of them |
+| [`dasm370-interface.md`](dasm370-interface.md) | **the contract with the disassembler session** — what we give them (the no-source corpus, the reference bytes, the runners), what they give us (JSON per divergence, and they do **not** place the marker), and the three rules with the reason each came from |
 | [`assembler-options.md`](assembler-options.md) | what IFOX00 accepts, what `as370` does with it, and the 09-16 finding that **the shipped object was never built by the customer SYSGEN** |
 
 ## Direction and plan
