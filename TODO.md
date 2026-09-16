@@ -1046,11 +1046,39 @@ counted as unexplained, because the open-code half is real work nobody has done.
 shrink it. What it changed is that the 68 % is now *countable* and the 1.3 % that
 is genuinely blocked is separated from it.
 
-⚠️ **One inference is made and is stated rather than buried**: in a
-length-differing module, once every length-changing run is attributed to a named
-macro, the displacement shifts that follow are consequences of an attributed cause
-and are not counted separately. At **equal** length no such allowance is made — a
-shift there means two compensating errors, and accepting it would let judgement in.
+⚠️ **The inference this used to claim is not the one the code makes, and the
+truth is worse. Corrected 2026-09-16.**
+
+This said: *"the displacement shifts that **follow** an attributed length change
+are consequences of an attributed cause and are not counted separately."* Two
+things are wrong with it.
+
+**The ordering is wrong**, and the cc370 session's first constructed case for
+#384 shows why structurally rather than incidentally: `L 2,18(0,12)` addresses a
+field in the data area at the end of the section, so an insertion **anywhere
+before that field** moves it — including from a point *after* the instruction
+that addresses it. The rule is **"shifts in statements that address data beyond
+the insertion point"**, which has no ordering relationship to the insertion at
+all.
+
+**And we do not implement any such rule.** `lenattr.py:90` is
+`if tag == "equal" or (i2 - i1) == (j2 - j1): continue` — a displacement shift is
+an equal-length `replace` and is dropped there, upstream or downstream alike. So
+no figure of ours ever rested on the ordering.
+
+🔑 **What the filter does instead is the real limit: it cannot tell a
+displacement shift from a genuine constant change of the same size.** Both are
+equal-length replaces, both are dropped. So in the length block we are not
+over-claiming shifts as consequences — **we are silently discarding real constant
+changes**, which are precisely the differences a repair has to make.
+
+That is what [`cc370#384`](https://github.com/mvslovers/cc370/issues/384) is worth
+to this project, and it is more than "turning an assumption into a measurement":
+its classifier separates *a single consistent delta* (the consequence we are right
+to ignore) from *anything else* (a constant change we have never counted).
+
+At **equal** length no allowance is made and that part stands — a shift there
+means two compensating errors, and accepting it would let judgement in.
 
 ### What decision 5 is worth, measured: 1,608 → 1,629
 
