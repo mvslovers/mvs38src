@@ -519,24 +519,56 @@ six show a `replace +8`, meaning IBM's expansion emits eight bytes where the swe
 reads two or four. **A lead the second pass does not cover and nobody has
 followed.**
 
-### 44 modules differ only in alignment fill, and the cause is open
+### The alignment-fill class is answered, and it inverts — 2026-09-16
 
-`tools/alignfill.py`. A `DC 0H'0'` emits nothing and only moves the location
-counter; the bytes in that gap are fill. `IGG019Q1` is **three bytes from
-identical** and all three are exactly that — ours `00` at `0x0017` where IBM holds
-`0C`, ours `0000` at `0x039A` where IBM holds `B25A`. **44 modules differ in
-nothing else**, `IKJEHREN` among them, whose pad byte was already known and never
-counted as a class.
+*Was: "44 modules differ only in alignment fill, and the cause is open", with
+`IGG019Q1` as the worked case. Both halves of that heading are now wrong: it is
+49 modules, and the cause is not alignment.*
 
-**Both obvious readings are refuted.** It is not the assembler: 43 of the 44 are
-`tool = identical`, so IFOX00 writes the same `00`. And it is not an uncovered
-hole: the deck's TXT ranges were read directly — `deck_text()` cannot tell
-*covered with zero* from *never defined* — and `IGG019Q1`'s bytes are **covered**,
-with no uncovered gap anywhere in the section.
+**Answered by the cc370 session**, asked as a question rather than handed a
+diagnosis, and the answer refutes the framing rather than filling it in.
 
-So both assemblers deliberately write zero and IBM's module holds something else.
-**Why is open.** A case to hand over as a question, worth **up to 43 modules** —
-the largest single lever available without Dave.
+- **The bytes are not fill.** 338 differing bytes in 138 clusters: ours is `00`
+  in every one, IBM's carries **114 distinct values** — `40` ×35, then
+  `80 47 58 F0 B0 E0 50 10 60 01 C1` — **78 % printable EBCDIC**. A fill byte is
+  one value.
+- **Three clusters are 11, 14 and 16 bytes**, and a `DC 0D` pads at most 7.
+  `IEBWSAM` at `0x0548` is `95f84b43 47a0b54a 92f84b43 41f0` — `CLI`, `BC`,
+  `MVI`, `LA`. **Instruction text.**
+- **It was in IBM's deck, not added at link time**: for **47 of 49**, IBM's DLIB
+  copy and IBM's bound target member — two independent link-edits — hold
+  identical bytes in the same gaps.
+- Not an `ORG` artefact (11 of 149 clusters), not the wrong source state (all 49
+  differ under `run8-asm` too), and not "IBM's literal was longer" — tested
+  directly on `BLSSLCCA` and refuted.
+
+🔑 **Alignment is not the cause, it is the selection.** A statement our source is
+missing lands in this bucket **only when its bytes fit inside a pad**; anything
+larger moves the section length and lands in `length-differs`. That is why the
+population is small and why its members look unrelated. **So this is source
+fidelity, not assembler behaviour** — worth up to 48 modules, and it belongs with
+the recovery work rather than on a cc370 list.
+
+**The next step is one disassembled cluster**: does `IEBWSAM`'s fourteen bytes
+continue the preceding code? That is the measurement that closes the class, and
+it is the first concrete thing `dasm370` would earn.
+
+⚠️ **And the worked example this project has quoted all along does not
+reproduce.** `IGG019Q1` is **not in `alignfill.tsv`**: live it is *length-differs*,
+964 against 968, failing `IFO117` + `IFO178` at rc 8 because it calls
+`IEDHJN ,,325` with an empty `&SYSPARM` and **is not in `sysparm.tsv`**. Its three
+bytes appear only under `--sysparm=03250000`, which comes from
+`sysparm-trial.tsv` and is marked **`DERIVED-UNPROVEN`** — the table this file
+says to use for analysis and never for the count. Measured here:
+
+| | rc | length | clusters |
+|---|---:|---|---:|
+| live | 8 | 964 vs 968 | **0** |
+| `--sysparm=03250000` | 0 | 968 = 968 | 2 — `00`/`0c` at `0x0017`, `0000`/`b25a` at `0x039a` |
+
+**Pick a case out of the current `alignfill.tsv` before quoting one.** The
+docstring in `alignfill.py` and `docs/macro-attribution.md` both carried it
+without the condition, and the condition is what makes it visible.
 
 ### The open-code population, and there is no family in it
 

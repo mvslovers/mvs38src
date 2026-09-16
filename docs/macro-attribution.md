@@ -390,6 +390,23 @@ xargs"* since 2026-09-13. Write the list to a file and pipe it through `xargs`.
 
 # 44 modules differ only in alignment fill, and nobody knows why
 
+> ## ⚠️ Answered and inverted 2026-09-16 — and the worked case below does not reproduce
+>
+> **The bytes are not fill.** 338 differing bytes in 138 clusters, ours `00` in
+> every one, IBM's with **114 distinct values**, 78 % printable EBCDIC; three
+> clusters are 11, 14 and 16 bytes where a `DC 0D` pads at most 7; and for 47 of
+> the 49, IBM's DLIB and target copies hold identical bytes in the same gaps, so
+> they were in IBM's deck and not added at link time. **Alignment is the
+> selection, not the cause** — a missing statement lands here only when its bytes
+> fit inside a pad. Source fidelity, not assembler behaviour. Measured by the
+> cc370 session; account in [`../TODO.md`](../TODO.md).
+>
+> ⚠️ **And `IGG019Q1` is not in `alignfill.tsv`.** Live it is *length-differs*,
+> 964 against 968, failing `IFO117` at rc 8 on an empty `&SYSPARM`. The three
+> bytes below need `--sysparm=03250000` from `sysparm-trial.tsv`, marked
+> **`DERIVED-UNPROVEN`**. The case is real and its condition was never stated.
+
+
 `tools/alignfill.py`. A `DC 0H'0'` has a duplication factor of zero: it emits
 nothing and only moves the location counter to a boundary. The bytes in that gap
 are fill, and `IGG019Q1` is **three bytes from identical** with all three of them

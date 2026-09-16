@@ -34,8 +34,54 @@ established.** Two things were checked and both refute the obvious readings:
   zero on purpose.
 
 So both assemblers write zero into the gap and IBM's shipped object holds
-something else. **Why is open**, and that is the case to hand over -- a question,
-not a diagnosis.
+something else.
+
+## Answered 2026-09-16 by the cc370 session, and it inverts the class
+
+**The bytes are not fill and alignment is not the cause -- it is the SELECTION.**
+Six measurements, of which three refuted readings held at the start:
+
+- **Not a fill pattern.** 338 differing bytes in 138 clusters: ours is `00` in
+  every one, IBM's side carries **114 distinct values** (`40` x35, then
+  `80 47 58 F0 B0 E0 50 10 60 01 C1`), 78 % printable EBCDIC. A fill byte is one
+  value.
+- **Three clusters are 11, 14 and 16 bytes** and a `DC 0D` pads at most 7, so
+  they cannot be padding under any reading. `IEBWSAM` at `0x0548` is
+  `95f84b43 47a0b54a 92f84b43 41f0` -- `CLI`, `BC`, `MVI`, `LA`. Instruction text.
+- **The bytes were in IBM's deck, not added at link time**: for 47 of the 49,
+  IBM's DLIB copy and IBM's bound target member -- two separate link-edits --
+  hold identical bytes in the same gaps.
+- Not an `ORG` artefact (11 of 149 clusters), not the wrong source state (all 49
+  differ under `run8-asm` too), and not "IBM's literal was longer" (tested on
+  `BLSSLCCA` and refuted: as370 re-zeroes a pad laid over `ORG`'d-back text).
+
+**So this is a source question, not an assembler question**: content IBM's deck
+carried that neither recovered source produces. A missing statement lands in this
+bucket only when its bytes fit inside a pad -- anything larger moves the section
+length and lands in `length-differs` instead. That is why the population is small
+and why its members look unrelated to one another. Worth up to 48 modules of
+SOURCE fidelity.
+
+## The worked example above does NOT reproduce in the live state
+
+⚠️ `IGG019Q1` is **not in `alignfill.tsv`** and has not been for some time. Live,
+it is a *length-differs* module -- 964 against 968 -- because it calls
+`IEDHJN ,,325` and fails `IFO117` + `IFO178` at rc 8 on an empty `&SYSPARM`. It
+is **not in `sysparm.tsv`**, so nothing supplies one.
+
+The three bytes above are reproducible, and only like this:
+
+    as370 --sysparm=03250000 ...        -> rc 0, 968 = 968, 3 bytes in 2 clusters
+                                           0x0017 ours 00 / IBM 0c
+                                           0x039a ours 0000 / IBM b25a
+
+That value comes from `work/measurements/lenattr/sysparm-trial.tsv`, where it is
+marked **`DERIVED-UNPROVEN`** -- the table TODO.md says to pass for analysis and
+never for the count. So the docstring was accurate about what it measured and
+silent about the one condition that makes it visible, and the case it presents as
+canonical cannot be cut from the live tree. Found by the cc370 session while
+answering the question above; **pick a case out of the current `alignfill.tsv`
+before quoting one from here.**
 """
 import argparse, collections, concurrent.futures, json, os, re, subprocess, sys
 
