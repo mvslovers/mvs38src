@@ -101,7 +101,12 @@ TMP = os.path.join(ROOT, "work/measurements/macroattr")
 
 # `DC 0<type>` -- a duplication factor of exactly zero. `DC 01F` is a real
 # duplication factor and must not match, so the digit run has to be a lone 0.
-ZERO_DUP = re.compile(r"\bDC\s+0[A-Z]", re.I)
+ZERO_DUP = re.compile(r"\bDC\s+0([A-Z])", re.I)
+# How far a zero-duplication DC of each type reaches: its own alignment.
+# D and L are doubleword, F/A/V/E/S word, H/Y halfword, the rest byte -- so a
+# `DC 0D` pads at most 7 bytes and `DC 0C` pads none at all.
+ALIGN = {"D": 8, "L": 8, "F": 4, "A": 4, "V": 4, "E": 4, "S": 4,
+         "H": 2, "Y": 2, "X": 1, "C": 1, "B": 1, "P": 1, "Z": 1}
 
 
 def one(job):
@@ -133,8 +138,25 @@ def one(job):
         origin = rows[0][0]
         fill = 0
         for c in cl:
-            st, _ = MA.owner(rows, seq, origin + c["offset"])
-            if st and not st[1] and ZERO_DUP.search(st[2]):
+            addr = origin + c["offset"]
+            st, _ = MA.owner(rows, seq, addr)
+            if not (st and not st[1]):
+                continue
+            m = ZERO_DUP.search(st[2])
+            if not m:
+                continue
+            # The owner lookup returns the nearest EMITTING row at or below the
+            # address, and a `DC 0X` is the last emitting row before a region
+            # defined entirely by EQUs -- IEBWSAM's @DATA work area is 184 bytes
+            # of exactly that. So the lookup happily named one `DC 0D'0'` as the
+            # owner of clusters 52, 14 and 33 bytes long, and the whole module
+            # entered this table. Arithmetic settles it without the lookup:
+            # a zero-duplication DC only reaches the next boundary of its own
+            # type, so a cluster that starts before the pad or runs past that
+            # boundary is not padding, whatever owns it.
+            align = ALIGN.get(m.group(1).upper(), 1)
+            pad_end = (st[0] + align - 1) // align * align
+            if st[0] <= addr and addr + len(c.get("ref", "")) // 2 <= pad_end:
                 fill += 1
         if fill == len(cl):
             return mod, s.get("diff_bytes"), len(cl), os.path.basename(ref)

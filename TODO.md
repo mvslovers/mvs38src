@@ -521,6 +521,31 @@ followed.**
 
 ### The alignment-fill class is answered, and it inverts — 2026-09-16
 
+> **Amended the same evening: the table itself was over-counting, 49 -> 44.**
+> `alignfill.py` asked `MA.owner` who owns a cluster and accepted any
+> zero-duplication `DC`. But `owner` returns the nearest **emitting** row at or
+> below the address, and a region defined entirely by `EQU`s has none — so the
+> last `DC 0D'0'` before `IEBWSAM`'s 184-byte `@DATA` work area was named the
+> owner of clusters **52, 14 and 33 bytes long**, and the module entered a table
+> named for padding.
+>
+> **Arithmetic settles it and needs no lookup**: a zero-duplication `DC` reaches
+> only the next boundary of its own type, so `DC 0D` pads at most 7 bytes and
+> `DC 0C` none at all. A cluster running past that boundary is not padding,
+> whatever the listing says owns it. With the guard: **44 modules**, and
+> `HMASMDR1 HMASMIO1 IEAVEIO IEBWSAM IGC111` leave. `explained` 1,724 -> **1,719**.
+>
+> On clusters: **22 of 139 are not padding, 16 %.** The cc370 session's own audit
+> put it at 68 of 149 (46 %) and asked for it to be re-derived with our lookup,
+> which excludes DSECT rows and macro-generated rows; theirs did neither. Their
+> *conclusion* was right and their magnitude was high.
+>
+> ⚠️ **Neither of the two mechanisms we suspected was the one.** Not a DSECT at
+> colliding addresses (`listing_rows` has excluded those since `macroattr.py`'s
+> fourth defect) and not the `ZERO_DUP` regex (it correctly requires a `0`
+> duplication factor). It was the *absence* of any emitting row after the pad.
+
+
 *Was: "44 modules differ only in alignment fill, and the cause is open", with
 `IGG019Q1` as the worked case. Both halves of that heading are now wrong: it is
 49 modules, and the cause is not alignment.*
@@ -1071,7 +1096,7 @@ searching again.
    nothing). Quote 71, with its definition, or re-derive.
 
    34 of the 71 were carried off by the `SYSPARM` sweep, which is what leaves 37.
-2. **The 49 alignment-fill modules** (44 before the 2026-09-16 re-cut) — see above. Not a source defect, cause
+2. **The 44 alignment-fill modules** (49 until the guard below was added) — see above. Not a source defect, cause
    unestablished, and the single biggest lever on the board. Start by asking
    `cc370` what a byte in an alignment gap should be, with `IGG019Q1` as the case.
 3. **The 326 `IEDHJN` callers the `SYSPARM` sweep did not close** —
