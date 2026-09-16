@@ -468,6 +468,37 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
+### What decision 5 is worth, measured: 1,608 → 1,629
+
+`tools/reachable.py`. The second verdict needs a testable definition, and the
+strongest one is not "the differences look accounted for" — it is **byte-identical
+under a named macro level we can actually produce**.
+
+Three of the five two-level macros have a reconstruction read out of IBM's own
+objects, and each was swept tree-wide. So for every module we already know whether
+it is identical under our macro or under that reconstruction, and **the union of
+those identical sets is exactly what a per-module macro path would deliver**:
+
+| run | identical | adds |
+|---|---:|---:|
+| our macros (live) | 1,608 | — |
+| `XCTL`/`IHBINNRB` reconstructed | 1,621 | 14 |
+| `SETFRR` reconstructed | 1,579 | 4 |
+| `GETMAIN`/`FREEMAIN` reconstructed | 1,593 | 3 |
+| **union — per-module choice** | **1,629** | **+21** |
+
+**Two of the three reconstructions lose modules on their own** — `SETFRR` drops
+29, `GETMAIN` drops 15 — **and the union loses none.** The tool asserts that: no
+module identical today is absent from the union. That is the whole argument for
+per-module selection in one line, and it is now a measurement rather than a
+principle.
+
+⚠️ **This is only the reachable half of "explained".** A module whose differences
+are attributed to `ESTAE`, `SCHEDULE`, `TSCBD`, `IEAPMNIP` or `STAX` is **named
+but not reachable** — no reconstruction exists, so nothing can prove it. That
+third tier, *explained but blocked*, needs the per-module attribution roll-up,
+which does not exist yet and is the next tool.
+
 ### 🔑 What four two-level macros mean, and it changes decision 5's premise
 
 `SCHEDULE`, `TSCBD`, `GETMAIN`/`FREEMAIN`, `SETFRR`, `XCTL` — five now, measured
