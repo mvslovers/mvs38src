@@ -76,6 +76,20 @@ Dave Kreiss: *"target not DLIB is the version of code you should compare to sinc
 
 The figures above it are not withdrawn and do not contradict it: the same decks are identical to **1,633** DLIB members, **1,458** target members, and **1,433** of both. **143 modules are counted as not recovered because `cmplmd370` cannot read their target member** — `IEANUC01` and the overlay-structured load modules — and 18 of those the DLIB does call identical. That is an instrument gap, not a result, and it is the cheapest 18 modules on the board. A further **839** have no target counterpart at all, and for those the DLIB is the only object there is.
 
+### The second verdict, since the goal was reformulated on 2026-09-16
+
+**Every module explained, as many as possible byte-identical.** A module is *explained* when every differing byte is attributed to a named, accepted class and none is left over — a measurement, not a reading ([`tools/explained.py`](tools/explained.py)).
+
+| | modules | |
+|---|---:|---:|
+| `recovered` — `cmplmd370` exits 0 | 1,608 | 30.0 % |
+| `reachable` — identical under a named macro reconstruction | 21 | 0.4 % |
+| `blocked` — attributed, but no reconstruction exists to prove it | 71 | 1.3 % |
+| **explained** | **1,700 of 5,353** | **31.8 %** |
+| unexplained | 3,653 | 68.2 % |
+
+**The `blocked` rule is narrow on purpose.** One differing byte in open code and the module is unexplained, however obvious its cause looks. That is why the tier is small and why the figure can be trusted.
+
 > **Not to be confused with the tool figure.** `as370` reproduces IFOX00's deck for **5,471 of 5,528** modules — that says our assembler is trustworthy, not that the source carries the object's maintenance level. A module is routinely in that 98 % and not in the table above, and that gap is what this project is about.
 
 <!-- scoreboard:end -->

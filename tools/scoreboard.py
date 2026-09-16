@@ -13,7 +13,7 @@ Two numbers, and they must be quoted together or not at all:
 
     scoreboard.py [--check]      --check exits 1 if README is out of date
 """
-import argparse, collections, os, re, sys
+import argparse, collections, collections, os, re, sys
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 TGT = os.path.join(ROOT, "work/build/reports-tk5-run6/RPTTGT")
@@ -21,6 +21,7 @@ DLB = os.path.join(ROOT, "work/build/reports-tk5-run6/RPTDLB")
 HOST = os.path.join(ROOT, "work/measurements/src-states/ss-run7-vs-tk5.tsv")
 OVERLAY = os.path.join(ROOT, "work/measurements/src-states/ss-overlay-vs-tk5.tsv")
 GATE = os.path.join(ROOT, "work/measurements/baseline-gate/overlay-vs-both.tsv")
+EXPLAINED = os.path.join(ROOT, "work/measurements/baseline-gate/explained.tsv")
 START, END = "<!-- scoreboard:start -->", "<!-- scoreboard:end -->"
 
 
@@ -136,6 +137,26 @@ def src_target_only(path=None):
                and r[i["tgt_c"]] == "identical" and r[i["dlib_c"]] != "identical")
 
 
+def explained(path=None):
+    """The second verdict's tiers, from `tools/explained.py`'s output.
+
+    Added 2026-09-16 with the reformulated goal. Returns None when the file is
+    absent, so the scoreboard degrades to the single verdict rather than
+    inventing a figure -- the same rule `chosen_baseline` already follows.
+    """
+    p = path or EXPLAINED
+    if not os.path.exists(p):
+        return None
+    c = collections.Counter()
+    with open(p, encoding="utf-8") as fh:
+        next(fh, None)
+        for line in fh:
+            f = line.rstrip("\n").split("\t")
+            if len(f) >= 2:
+                c[f[1]] += 1
+    return c if c else None
+
+
 def render():
     tgt = per_library(TGT)
     tb = sum(v[0] for v in tgt.values()); te = sum(v[1] for v in tgt.values())
@@ -192,6 +213,24 @@ def render():
               f"and it is the cheapest {c['unread_dlib_ok']:,} modules on the board. A "
               f"further **{c['no_tgt']:,}** have no target counterpart at all, and for "
               f"those the DLIB is the only object there is.", ""]
+    e = explained()
+    if e is not None:
+        tot = sum(e.values())
+        ex = e["recovered"] + e["reachable"] + e["blocked"]
+        L += ["### The second verdict, since the goal was reformulated on 2026-09-16", "",
+              "**Every module explained, as many as possible byte-identical.** A module "
+              "is *explained* when every differing byte is attributed to a named, "
+              "accepted class and none is left over — a measurement, not a reading "
+              "([`tools/explained.py`](tools/explained.py)).", "",
+              "| | modules | |", "|---|---:|---:|",
+              f"| `recovered` — `cmplmd370` exits 0 | {e['recovered']:,} | {100*e['recovered']/tot:.1f} % |",
+              f"| `reachable` — identical under a named macro reconstruction | {e['reachable']:,} | {100*e['reachable']/tot:.1f} % |",
+              f"| `blocked` — attributed, but no reconstruction exists to prove it | {e['blocked']:,} | {100*e['blocked']/tot:.1f} % |",
+              f"| **explained** | **{ex:,} of {tot:,}** | **{100*ex/tot:.1f} %** |",
+              f"| unexplained | {e['unexplained']:,} | {100*e['unexplained']/tot:.1f} % |", "",
+              "**The `blocked` rule is narrow on purpose.** One differing byte in open "
+              "code and the module is unexplained, however obvious its cause looks. "
+              "That is why the tier is small and why the figure can be trusted.", ""]
     L += [
           "> **Not to be confused with the tool figure.** `as370` reproduces IFOX00's "
           "deck for **5,471 of 5,528** modules — that says our assembler is "

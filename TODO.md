@@ -468,6 +468,36 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
+### The second verdict has a number now: 1,700 of 5,353 — 31.8 %
+
+`tools/explained.py`, and it is on the README scoreboard beside the first verdict.
+
+| tier | modules | |
+|---|---:|---:|
+| `recovered` — `cmplmd370` exits 0 | 1,608 | 30.0 % |
+| `reachable` — identical under a named macro reconstruction | 21 | 0.4 % |
+| `blocked` — attributed, no reconstruction exists to prove it | 71 | 1.3 % |
+| **explained** | **1,700** | **31.8 %** |
+| **unexplained** | **3,653** | **68.2 %** |
+
+The 71 blocked are **44 alignment fill**, 7 equal-length macro, 20 length macro.
+
+**The second verdict adds 92 modules and no more, and that is the honest result.**
+The `blocked` rule is deliberately narrow: *one* differing byte in open code and
+the module is unexplained, however obvious its cause looks. Most modules are
+`mixed` — macro differences **and** open-code differences — and they are correctly
+counted as unexplained, because the open-code half is real work nobody has done.
+
+**So 68 % is the actual size of the job**, and reformulating the goal did not
+shrink it. What it changed is that the 68 % is now *countable* and the 1.3 % that
+is genuinely blocked is separated from it.
+
+⚠️ **One inference is made and is stated rather than buried**: in a
+length-differing module, once every length-changing run is attributed to a named
+macro, the displacement shifts that follow are consequences of an attributed cause
+and are not counted separately. At **equal** length no such allowance is made — a
+shift there means two compensating errors, and accepting it would let judgement in.
+
 ### What decision 5 is worth, measured: 1,608 → 1,629
 
 `tools/reachable.py`. The second verdict needs a testable definition, and the
