@@ -435,6 +435,25 @@ six show a `replace +8`, meaning IBM's expansion emits eight bytes where the swe
 reads two or four. **A lead the second pass does not cover and nobody has
 followed.**
 
+### 44 modules differ only in alignment fill, and the cause is open
+
+`tools/alignfill.py`. A `DC 0H'0'` emits nothing and only moves the location
+counter; the bytes in that gap are fill. `IGG019Q1` is **three bytes from
+identical** and all three are exactly that — ours `00` at `0x0017` where IBM holds
+`0C`, ours `0000` at `0x039A` where IBM holds `B25A`. **44 modules differ in
+nothing else**, `IKJEHREN` among them, whose pad byte was already known and never
+counted as a class.
+
+**Both obvious readings are refuted.** It is not the assembler: 43 of the 44 are
+`tool = identical`, so IFOX00 writes the same `00`. And it is not an uncovered
+hole: the deck's TXT ranges were read directly — `deck_text()` cannot tell
+*covered with zero* from *never defined* — and `IGG019Q1`'s bytes are **covered**,
+with no uncovered gap anywhere in the section.
+
+So both assemblers deliberately write zero and IBM's module holds something else.
+**Why is open.** A case to hand over as a question, worth **up to 43 modules** —
+the largest single lever available without Dave.
+
 ### The open-code population, and there is no family in it
 
 `tools/opencode_families.py` over the 605: **4,972 clusters, biggest
@@ -467,7 +486,10 @@ source defect**; `cmplmd370` counts it as text.
    nothing). Quote 71, with its definition, or re-derive.
 
    34 of the 71 were carried off by the `SYSPARM` sweep, which is what leaves 37.
-2. **The 326 `IEDHJN` callers the `SYSPARM` sweep did not close** —
+2. **The 44 alignment-fill modules** — see above. Not a source defect, cause
+   unestablished, and the single biggest lever on the board. Start by asking
+   `cc370` what a byte in an alignment gap should be, with `IGG019Q1` as the case.
+3. **The 326 `IEDHJN` callers the `SYSPARM` sweep did not close** —
    `work/measurements/baseline-gate/sysparm-rest.tsv`, partitioned: 137 have a
    clean 2- or 4-byte insert and still differ after it (so a *second* cause sits
    on top and is now isolated), 167 show no clean insert, 18 differ in bytes at
@@ -501,13 +523,13 @@ source defect**; `cmplmd370` counts it as text.
    parameter as text (`DC CL9`), so a module expanding both macros would carry
    `&SYSPARM` twice. **Zero of the 436 do**, and zero of the 111. `grep` finds 101
    sources mentioning both and every one is a comment — the deck is what counts.
-3. **The 18 whose target member `cmplmd370` cannot read** — `IEANUC01` is scatter
+4. **The 18 whose target member `cmplmd370` cannot read** — `IEANUC01` is scatter
    format, the rest are overlay-structured, and the DLIB calls all 18 identical. A
    `cc370` case and the cheapest block on the board.
-4. **Which of the 55 divergent modules are TK5 USERMODs** rather than IBM service.
+5. **Which of the 55 divergent modules are TK5 USERMODs** rather than IBM service.
    Needs the target zone's SYSMOD-to-module mapping out of the SMP CDS. `IKJEFF53`
    is a known usermod target and is among them, so the answer is not zero.
-5. **The 605 modules with no named macro family and every differing byte in open
+6. **The 605 modules with no named macro family and every differing byte in open
    code.** That is the workable population, and it is the largest thing on this
    list. `macroattr.tsv` names them; `worklist.py` ranks them.
 
@@ -518,7 +540,7 @@ source defect**; `cmplmd370` counts it as text.
    `HMASMMGP` (30) and `SETLOCK` (10) have **no** shared cause and are genuinely
    per-module. Together the blocked families touch 112 modules but stop only
    **11** outright — the other 101 have open-code differences too.
-6. **`work/measurements/baseline-gate/worklist16.txt`** — 438 modules within 16
+7. **`work/measurements/baseline-gate/worklist16.txt`** — 438 modules within 16
    bytes, with the owning statement per cluster. Swept below six bytes; the 6–16
    band is untouched by hand.
 

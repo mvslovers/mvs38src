@@ -378,3 +378,58 @@ python3 tools/lenattr.py --only $MODS         # ONE argument, 0 jobs matched
 `rm` said *File name too long* and the tool reported **0 modules** and exited 0.
 TODO.md's control list has said *"in zsh a variable is not word-split, use
 xargs"* since 2026-09-13. Write the list to a file and pipe it through `xargs`.
+
+---
+
+# 44 modules differ only in alignment fill, and nobody knows why
+
+`tools/alignfill.py`. A `DC 0H'0'` has a duplication factor of zero: it emits
+nothing and only moves the location counter to a boundary. The bytes in that gap
+are fill, and `IGG019Q1` is **three bytes from identical** with all three of them
+there:
+
+```
+000010 E4E9F3F4F6F6F4        DC    CL7'UZ34664'        seven bytes, ends 0x16
+000017 00            START   DC    0H'0'               <- one byte of fill
+000018 4140 1000             LA    R4,AVTEZERO(,R1)
+```
+
+Ours is `00` at `0x0017`; IBM's object holds `0C`. At `0x039A`, after a `BR R14`,
+ours is `0000` and IBM's is `B25A`.
+
+**44 modules differ in nothing else.** `IKJEHREN` is among them, and TODO.md
+already knew about that one — *"the 'missing 0' is a pad byte; the target holds
+`X'80'`, which is not printable"* — but the class had never been counted.
+
+## Both obvious readings are refuted
+
+**It is not the assembler.** 43 of the 44 carry `tool = identical` in
+`verdicts.tsv`: `as370` reproduces IFOX00's deck exactly, so IFOX00 writes the
+same `00`. The 44th is `BLSR3270`, already a `cc370` case.
+
+**It is not an uncovered hole.** The deck's TXT card ranges were read directly
+rather than through `deck_text()`, which cannot tell *covered with zero* from
+*never defined*: `IGG019Q1`'s `0x0017` and `0x039A` are both **covered**, and the
+section has **no uncovered gaps at all**.
+
+So both assemblers deliberately write zero into the gap, and IBM's shipped module
+holds something else. **Why is open.** That is the case to hand over — a question,
+not a diagnosis — and it is worth up to 43 modules, which makes it the largest
+single lever available without Dave Kreiss.
+
+## The 22, and what each turned out to be
+
+The 22 that became length-equal once their derived `SYSPARM` was applied, nearest
+first:
+
+| module | bytes | what it is |
+|---|---:|---|
+| `IGE0104G`, `IGE0304G` | 1 | `SCBCTLUN` — `TSCBD` at two levels, blocked |
+| `IEDQNT` | 2 | `ST REG00,0(0,1)` → `0100`: the `GETMAIN` family, blocked |
+| `IGG019Q1`, `IGG019R6` | 3 | alignment fill, above |
+| `IEDQBH`, `IGC0J10D`, `IGG019TE` | 6 | mixed open code |
+| the rest | 7–1,213 | |
+
+Every one of the four nearest is a class already named. **That is the map working
+as intended**: nothing here needed a new investigation, and three of the four are
+blocked on something already recorded.
