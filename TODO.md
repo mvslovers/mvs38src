@@ -325,6 +325,46 @@ and `srccheck.py` still passes.
 > 18:21. **Cut the control run yourself, with the one variable switched off** —
 > here `SYSPARMS=/dev/null`, which reproduced `rc0=4590` and `chosen=1491` exactly.
 
+### 🚪 Open, deferred by Mike on 2026-09-16: does disassembled source go into `src/`?
+
+**Not decided, and deliberately not decided yet.** Recorded here because it lives
+nowhere else — it was only ever written down in cc370#396, in another repository,
+framed as a dependency of a flag. It is not that. It is the point where this
+project's two stated goals stop agreeing.
+
+**Why it matters.** `src/` means *finished* (decision 2), and `srccheck.py`
+asserts every module there is identical to a baseline. A disassembled module
+satisfies that by the letter: `cmplmd370` exits 0. But it is a different thing
+from what the figure claims —
+
+| | |
+|---|---|
+| **recovered** | source that assembles to IBM's object — we reconstructed what was written |
+| **disassembled** | source we produced *from* the object — it rebuilds the bytes, it is not what IBM wrote |
+
+**1,626 means the first.** Add the 66 and it reads 1,692 and stops meaning what
+it says. That is why the scoreboard did not move on 2026-09-16 although 66
+CSECTs with no source now rebuild byte-identically.
+
+**And the goals part company here.** *"Every module explained, as many as possible
+byte-identical, **and a system that builds and runs from those sources**"* — for
+the second half a disassembled module is perfectly good, because it builds. For
+the first it is not evidence. While we had no disassembly nobody had to choose.
+
+**A third answer exists**: deposit, but as its own class — a separate tree or a
+provenance column — so both figures stay countable. Then it is a bookkeeping
+question rather than a yes/no one.
+
+**Why waiting is right rather than lazy.** How usable the output is depends on
+cc370#383 (reachability — 73 of the 772 are over 60 % printable EBCDIC and decode
+as instructions today) and #384 (`--align-diff` — which differences are causes and
+which are consequences). Today the answer would be a bet on tools that do not
+exist; after those two it is a measurement.
+
+⚠️ **And it is irreversible in practice.** Deposited labels become permanent
+(cc370#396), other people edit the files, and separating provenance afterwards
+means tracking it per file. **Decide before the first deposit, not after.**
+
 ### Decided, do not re-open
 
 1. **The object baseline is TK5** (2026-09-10), **and within TK5 the TARGET
