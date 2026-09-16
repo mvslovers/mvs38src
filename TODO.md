@@ -468,6 +468,46 @@ real constant **159**, `DC` zero-duplication **alignment fill** 131, `L` 78, `MV
 option A was decided for. Alignment fill is 9 % of the clusters and is **not a
 source defect**; `cmplmd370` counts it as text.
 
+### ⚠️ `cmplmd370` misreads scatter and overlay modules — exposure measured at 5
+
+Reported by the `dasm370` session, with the mechanism rather than the symptom: for
+a **scatter** module `lmod_iter_next` frames the `X'10'` record and the compare
+loop falls through the `if/else if` without handling it, so the image is built
+**partially and silently**; for an **overlay** module `load_lmod` memcpys every
+segment into one flat image, last-wins, with the `SEGTAB` text record copied in as
+program text and `CESDSEG` never read. **Both paths exit 0 or 1, never 2** — so an
+`error` verdict is not reliably "could not read", and an `identical` one is not
+reliably right.
+
+**Measured here rather than taken on trust.** 247 CSECTs have `IEANUC01` — the
+scatter module — as their target member: 112 `differs`, **65 `identical`**, 45
+`len-differs`, 24 `error`, 1 `holes`.
+
+But the DLIB comparison is an independent path: a DLIB row is an extracted
+**object deck**, not a load module, so it never enters `load_lmod`.
+
+| | |
+|---|---:|
+| `tgt=identical` **and** `dlib=identical` | **60** |
+| `tgt=identical`, `dlib` disagrees | **5** |
+
+**Sixty of the sixty-five are corroborated by a path that does not touch either
+broken branch.** Five rest on the scatter reader alone and are **held, not
+counted**:
+
+```
+IDA019S4  IECVERPL  IECVESIO  IECVRRSV  IGC121
+```
+
+So the headline is safe to **±5 of 1,608** — 0.3 % — which is worth saying
+precisely instead of "possibly wrong".
+
+⚠️ **But stop quoting "18 free modules".** For `IEANUC01` alone the cross-tab
+shows 13 `tgt=error, dlib=identical` and 10 `tgt=error, dlib=differs`. If the
+scatter path can exit 1 on a partially built image, some of those 24 may be real
+differences and some of the 13 may not be free. **Not a number to bank until the
+reader PR lands.**
+
 ### One CSECT in the target library has no name, and eighteen tools invent one
 
 `org-tgt.txt` has 5,517 `INCLUDE` rows and **one has a blank CSECT name**:
