@@ -240,37 +240,41 @@ four bytes may still be amounts rather than causes. Two bytes was a cause.
 | `TSCBD` at two levels — `SCBCTLUN` | ≥6 | the same thing, newly measured. `IEDAYC`'s object emits `04` and `IGE0004G`/`IGE0104G`/`IGE0304G`/`IGE0404G`/`IGE0604G` emit `01`, **both out of IBM's own members**, so no single value reproduces both and editing the shared macro gains the `IGE*` set by losing `IEDAYC`. Two of them, `IGE0104G` and `IGE0304G`, are **one byte** from identical — **Dave's zip**, per decision 5 |
 | length differences | ~2,000 | one cause per module; `seclocate.py` shows each |
 
-### 🚪 One thing needs Mike — how to mark option A when column 46 is taken
+### The Julian eyecatcher date — six modules, done
 
-**Six modules are one constant from identical**, and the constant is a Julian
-`yy.ddd` date in the eyecatcher that `asmdate_sweep.py` cannot see because it
-hunts `mm/dd/yy`: `AMDUSRF9` `76.352`→`78.272`, `IEECB801` `75.325`→`77.235`,
-`IEFAB820` `76.328`→`77.279`, `IEFJCNTL` `76.190`→`80.261`, `ISTCFCR2`
-`78.062`→`78.312`, `ISTZCF1B` `78.100`→`78.265`. Option A is decided (decision 3)
-and the value comes out of IBM's object, so the repair is not in question.
+`asmdate_sweep.py` hunts `mm/dd/yy` because that is what `&SYSDATE` produces, and
+it cannot see a Julian `yy.ddd` sitting in the eyecatcher as a source constant.
+Six modules had one, it was the **only** difference in the whole CSECT, and the
+value was taken from IBM's object — option A, decision 3. `tools/julian_fix.py`.
 
-**The marking is.** The convention is uniform — `!!! SOURCE COMPARE FIX !!!` in
-columns 46–71, **424 lines across 263 modules, every one at column 46** — and on
-all six of these lines columns 46–71 are **already occupied** by the PL/S
-statement ids:
+| module | ours | IBM | now in |
+|---|---|---|---|
+| `AMDUSRF9` | `76.352` | `78.272` | `src/ALPALIB/` |
+| `IEECB801` | `75.325` | `77.235` | `src/AOSB3/` |
+| `IEFAB820` | `76.328` | `77.279` | `src/AOSB3/` |
+| `IEFJCNTL` | `76.190` | `80.261` | `src/AOSB3/` |
+| `ISTCFCR2` | `78.062` | `78.312` | `src/AOS26/` |
+| `ISTZCF1B` | `78.100` | `78.265` | `src/AOS24/` |
+
+**+6 / −0** as sets; 1,602 → **1,608**. `srccheck.py` passes on all 316.
+
+**The marker sits at column 41 or 38, not 46, and that is the one new convention
+here.** All 424 existing markers are at 46 because nothing had ever been in the
+way; on these six lines columns 46–71 carry the PL/S statement id (`0001`,
+`01S0001`). The free block between operand and id is 29–32 columns and the marker
+is 26, so it is **right-aligned against the id** and nothing is overwritten:
 
 ```
-         DC    C'AMDUSRF9  76.352'                                 0001 00008000
-         DC    C'IEFAB820  76.328'                              01S0001 00011000
+         DC    C'AMDUSRF9  78.272'      !!! SOURCE COMPARE FIX !!! 0001 00008000
+         DC    C'IEFAB820  77.279'   !!! SOURCE COMPARE FIX !!! 01S0001 00011000
 ```
 
-No precedent exists: no marked line in `src/` sits anywhere but column 46, and no
-comment-line variant is used anywhere. So one of
+⚠️ **This was first reported to Mike as a dilemma and it was not one.** The claim
+was that 46–71 are occupied and something must be sacrificed; measuring the line
+showed 32 free columns for a 26-character marker. **Measure the record before
+describing what does not fit in it.**
 
-- **overwrite 46–71** and lose the PL/S id on that line,
-- **a comment line above** in Dave's `*DSK` style — costs nothing in the object,
-  breaks the single-column convention,
-- **leave them unmarked** and carry the six in a list instead.
-
-The answer applies to every future repair on a line whose right margin is taken,
-which is most PL/S output. **Nothing was changed.**
-
-### Nothing else needs Mike right now
+### Nothing needs Mike right now
 
 **The mail to Dave is written, unsent, and held on purpose** —
 [`docs/mail-kreiss-2026-09-13.md`](docs/mail-kreiss-2026-09-13.md). Mike is

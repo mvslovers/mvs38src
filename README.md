@@ -49,9 +49,9 @@ Dave Kreiss: *"target not DLIB is the version of code you should compare to sinc
 
 | | modules | |
 |---|---:|---:|
-| **recovered under the chosen baseline** | **1,602 of 5,353** | **29.9 %** |
+| **recovered under the chosen baseline** | **1,608 of 5,353** | **30.0 %** |
 
-The figures above it are not withdrawn and do not contradict it: the same decks are identical to **1,627** DLIB members, **1,452** target members, and **1,427** of both. **143 modules are counted as not recovered because `cmplmd370` cannot read their target member** — `IEANUC01` and the overlay-structured load modules — and 18 of those the DLIB does call identical. That is an instrument gap, not a result, and it is the cheapest 18 modules on the board. A further **839** have no target counterpart at all, and for those the DLIB is the only object there is.
+The figures above it are not withdrawn and do not contradict it: the same decks are identical to **1,633** DLIB members, **1,458** target members, and **1,433** of both. **143 modules are counted as not recovered because `cmplmd370` cannot read their target member** — `IEANUC01` and the overlay-structured load modules — and 18 of those the DLIB does call identical. That is an instrument gap, not a result, and it is the cheapest 18 modules on the board. A further **839** have no target counterpart at all, and for those the DLIB is the only object there is.
 
 > **Not to be confused with the tool figure.** `as370` reproduces IFOX00's deck for **5,471 of 5,528** modules — that says our assembler is trustworthy, not that the source carries the object's maintenance level. A module is routinely in that 98 % and not in the table above, and that gap is what this project is about.
 
