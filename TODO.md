@@ -128,6 +128,28 @@ lines has to hide the dropping too, and it cannot. Controls: identity → 0
 unplaceable in both, exit 0; a wrapper that strips the remark from every `DC` card
 → refused on **30 of 30**, exit 1, `HMASMADD` +231 lines.
 
+⚠️⚠️ **The gate's source witness was defined and never called, and it was broken
+in the direction that matters.** `main()` has never invoked `witness()` — the
+module's own docstring offers it as the thing that makes this a **test** rather
+than a tally, and the tool shipped the tally. It was exercised by hand when the
+gate was proven, which is what made it look wired. **A function only ever called
+by hand is a function the tool does not have.**
+
+And `source_kinds()` carried **the same column-40/41 error found and fixed in
+`rootreach.py` that morning**, plus no section tracking. On an unnamed card the
+operation still parsed; on a **named** card the first field was the label minus its
+first character and the operation was never read — so **every named `DC` was
+classified as an instruction**. Both defects push the answer the same way: toward
+calling things code. It survived because it was **a second reader of the same
+information**, which is the thing this project spent the day arguing against in
+`dasm370` and has now found twice in its own tools. `source_kinds()` now delegates
+to `rootreach.known_code`, which carries the controls.
+
+Witness now controlled in both directions: over five modules, 25 of 25 data
+offsets reported data and 25 of 25 code offsets reported code. Whole-gate control:
+darkening only instruction cards in `0x100..0x110` gives **436 bytes, all called
+code, 0 called data**.
+
 The gate is built and proven:
 [`tools/reachgate.py`](tools/reachgate.py), region by region rather than a ratio,
 because **a scalar cannot see a local failure** — a module where 400 bytes of a

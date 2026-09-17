@@ -174,40 +174,52 @@ def corpus(name):
 LST = re.compile(r"^([0-9A-F]{6})\s")
 
 def source_kinds(csect):
-    """{offset: 'I'|'D'} from OUR assembly listing, or None."""
-    import tempfile
-    from macpath import flags
-    from asmparams import params
-    src = os.path.join(ROOT, f"work/src-states/overlay/{csect}.ASM")
-    if not os.path.exists(src):
+    """{offset: 'I'|'D'} from OUR assembly listing, or None.
+
+    ⚠️ **Rewritten 2026-09-17. The first version had two defects and both pushed
+    the answer the same way — toward calling things code.**
+
+    It read the card image at column **41**, where it begins at **40**. On an
+    unnamed card the operation still parsed, so instructions came out right; on a
+    NAMED card the first field was the label minus its first character, the
+    operation was never looked at, and **every named `DC` was classified as an
+    instruction**. And it did not track the section, so a source holding several
+    CSECTs contributed all of them at colliding offsets.
+
+    The identical column error had been found and fixed in `rootreach.py` the same
+    morning. It survived here because this is **a second reader of the same
+    information** — the thing this project has now spent a day arguing against in
+    `dasm370` and found twice in its own tools.
+
+    So it is no longer a second reader: `rootreach.known_code` is the one
+    instrument, and it carries the controls.
+    """
+    sys.path.insert(0, HERE)
+    from rootreach import known_code
+    kc = known_code(csect, csect)
+    if not kc:
         return None
-    binp = os.path.join(ROOT, "work/src-states/bin/as370-main")
-    with tempfile.TemporaryDirectory() as td:
-        lst = os.path.join(td, "l.lst")
-        argv, env = params(csect)
-        subprocess.run([binp] + argv + list(flags()) + ["-a=" + lst,
-                        "-o", os.path.join(td, "o.obj"), src],
-                       capture_output=True, env=dict(os.environ, **env))
-        if not os.path.exists(lst):
-            return None
-        out = {}
-        for line in open(lst, encoding="latin-1", errors="replace"):
-            m = LST.match(line)
-            if not m:
-                continue
-            body = line[:72]
-            f = body[41:].split()
-            if not f:
-                continue
-            op = f[0].upper()
-            if op in ("CSECT", "DSECT", "END", "EQU", "USING", "DROP"):
-                continue
-            out[int(m.group(1), 16)] = "D" if op in DATA_OPS else "I"
-        return out or None
+    code, data = kc
+    out = {a: "I" for a in code}
+    out.update({a: "D" for a in data})
+    return out or None
 
 
 def witness(csect, regs):
-    """For each instruction->DC region, what the SOURCE says is there."""
+    """For each instruction->DC region, what the SOURCE says is there.
+
+    ⚠️ **This was defined and `main()` never called it**, from the day the gate was
+    written until 2026-09-17. The module docstring above offers the witness as the
+    thing that makes this a test rather than a tally, and the tool shipped the
+    tally. It was exercised by hand when the gate was proven -- an injected flip of
+    24 instruction bytes, four regions, the witness calling all four real code --
+    and that hand run is what made it look wired. Found by the cc370 session, who
+    called it themselves over the gate's `--out` table and then asked whether the
+    omission was deliberate.
+
+    **A function that is only ever called by hand is a function the tool does not
+    have.**
+    """
     k = source_kinds(csect)
     if not k:
         return None
@@ -251,11 +263,13 @@ def main():
         res = list(ex.map(one, jobs))
 
     tot = collections.Counter(); bad = []; err = 0; unpl = []
+    byreg = {}
     for cs, regs, cov, un in res:
         if regs is None:
             err += 1; continue
         if un and un[0] != un[1]:
             unpl.append((cs, un[0], un[1]))
+        byreg[cs] = regs
         for st, ln, o, n in regs:
             tot[f"{o}->{n}"] += 1
             if o == "I" and n == "D":
@@ -280,6 +294,33 @@ def main():
           f"{len({c for c,_,_ in bad})} modules")
     for cs, st, ln in sorted(bad, key=lambda r: -r[2])[:15]:
         print(f"     {cs:10s} 0x{st:06X}  {ln:5d} bytes")
+
+    # The witness -- the only thing here that can say a classification is WRONG
+    # rather than merely DIFFERENT. Runs on the control corpus, where there is
+    # real source; silent elsewhere because there is nothing to ask.
+    if a.corpus == "control" and bad:
+        code = data = unk = 0
+        permod = []
+        for cs, regs in sorted(byreg.items()):
+            w = witness(cs, regs)
+            if w is None:
+                continue
+            c = sum(ln for _, ln, k in w if k == "I")
+            d = sum(ln for _, ln, k in w if k == "D")
+            u = sum(ln for _, ln, k in w if k not in ("I", "D"))
+            code += c; data += d; unk += u
+            if c or d:
+                permod.append((cs, c, d))
+        print(f"\n  SOURCE WITNESS over the control corpus, in BYTES:")
+        print(f"     darkened and the source calls it CODE : {code:7,}")
+        print(f"     darkened and the source calls it DATA : {data:7,}")
+        if unk:
+            print(f"     unattributable                        : {unk:7,}")
+        if data:
+            print(f"     ratio code:data = {code/data:.1f} : 1"
+                  f"   -- above 1 means the change destroys more than it silences")
+        for cs, c, d in sorted(permod, key=lambda r: -r[1])[:12]:
+            print(f"     {cs:10s} code {c:6,}  data {d:5,}")
     if a.out:
         with open(a.out, "w") as fh:
             fh.write("csect\toffset\tlength\tfrom\tto\n")
