@@ -70,11 +70,27 @@ is the thing to fix in the man page rather than in the code. Bytes reached are
 | `balr` | 4,292 | 5.4 % | 6.5 % |
 | `both` | 49,680 | 62.1 % | 75.4 % |
 
-The cc370 session quotes 5.3 / 6.8 / 76.6 %, so their denominator is code bytes
-counted inside the tool and this side's is code bytes parsed out of the text —
-within 1.2 points. **The finding is unaffected and is the interesting part:
-neither base assumption is worth much alone, ~5–7 % each, and together they are
-~75 %, five times their sum.**
+⚠️ **Three denominators are in circulation for one run, and two of them coincide
+numerically for opposite reasons** — measured explicitly rather than inferred:
+
+| | `r15` | `balr` | `both` |
+|---|---:|---:|---:|
+| `reached / section length` | 4.2 % | 5.4 % | 62.1 % |
+| `reached / witness code` (62,078) | 5.5 % | 6.9 % | **80.0 %** |
+| `reached / dasm370's own code` (65,888) | 5.2 % | 6.5 % | **75.4 %** |
+| **`(reached ∩ witness) / witness`** — what cc370 publishes | 5.3 % | 6.8 % | **76.6 %** |
+
+The cc370 session read this side's 75.4 % as *"close to my 76.6, so you must be
+intersecting too"*. **It is not.** This side divided the **full** reached set by
+`dasm370`'s **own** code classification — no intersection — and that denominator
+is 3,810 bytes larger than the witness's, which pulls the ratio down by about the
+same amount their intersection does. **Two different quantities landing within 1.2
+points of each other for unrelated reasons**, which is exactly the coincidence that
+would have cemented a wrong story about whose parse was doing what.
+
+**The finding is unaffected and is the interesting part: neither base assumption
+is worth much alone — about 5 % and 7 % each — and together they are about 77 %,
+five times their sum.**
 
 **What is left for whoever picks up the applied form**: the limit is the **base
 map and not the root set** — `ICKTR02` has four roots and reaches 1.1 % — and the
