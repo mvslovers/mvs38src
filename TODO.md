@@ -262,17 +262,34 @@ outcome.
    because the advice it supported (*do not build a second reader, the information
    already exists*) was safe only if the false half were true.
 
-   ⚠️ **And the check found a real asymmetry between this session's own two
-   tools.** Six of the 30 have more roots read from the member than from the deck —
-   `BLSCAMER` 25 against 119, `HMASMADD` 75 against 95, `AMASPZAP` 2 against 5,
-   `HMASMASM` 23 against 37, `IEFAB473` 1 against 2, `IEFBB401` 1 against 5. The
-   cause is a definition that was never stated: `rootreach.py` requires the adcon to
-   *live in* the section (`R == P == esdid`), `rootdensity.py` only that it *points
-   into* it (`R == esdid`). **The second is the right definition for a root** — a
-   pointer into the section is a root for it wherever the pointer sits — so the deck
-   side is the one under-counting. No module changes between rootless and rooted
-   either way, so neither the 5.2 % floor nor the `END` finding moves, but the two
-   tools must not be read as one instrument until this is reconciled.
+   ⚠️ **The two tools disagreed on six of the 30, and the diagnosis written here
+   first was wrong.** It said the cause was `R == P == esdid` against `R == esdid`
+   — the adcon's own location. Measured: `BLSCAMER`'s deck and its member carry
+   **the same 119 RLD entries**, `(R,P) = (1,1)` for 119 of 120 on both sides, so
+   the R/P condition was never the difference. Correcting it moved 162 roots to
+   164, two.
+
+   🔑 **The real cause: one tool counted distinct TARGET ADDRESSES and the other
+   counted RLD ENTRIES.** A branch table of 119 relocations pointing at 25 places
+   is **25 roots**, and `BLSCAMER` is exactly that table. Over-counting happens
+   precisely where a module has a table, which is where roots matter most. Both
+   tools now resolve each relocation to its target through the section image and
+   count the distinct set; **they agree on all 30, 0 disagreements.**
+
+   🔑 **And it flips the density result in the direction that strengthens the
+   transfer.** Counting entries, the 30 looked 1.21× denser than the dark
+   population and only the median said otherwise — the "two statistics pointing
+   opposite ways" that had to be carried as a caveat. Counting roots:
+
+   ```
+   the 30 with source   183 roots / 80,058 bytes    2.286 per 1000   median 0.761
+   the 772 without    2,898 roots / 1,088,246       2.663 per 1000   median 2.172
+   ratio 30 : dark = 0.86
+   ```
+
+   **Both statistics now point the same way**: the dark population is the denser
+   of the two in aggregate as well as by median. The caveat is gone because the
+   instrument was fixed, not because the argument was settled.
 
    ⚠️ Two defects in that measurement were caught by controls before the figure
    left this machine, both in the listing walk: it did not track the section, so

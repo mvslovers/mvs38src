@@ -173,7 +173,13 @@ def roots(deck, csect):
             off += 4
             cont = bool(fl & 1)
             ln = ((fl >> 2) & 3) + 1
-            if R == esdid and P == esdid and ln == 4 and ad + 4 <= len(buf):
+            # R, not R and P. A pointer INTO the section is a root for it
+            # wherever the pointer itself sits -- settled with the cc370 session
+            # on 2026-09-17 after this tool and `rootdensity.py` disagreed by up
+            # to 94 roots on one module. The old condition could only ever miss
+            # roots, never invent them, which is why the figures it produced are
+            # floors and were not withdrawn.
+            if R == esdid and ln == 4 and ad + 4 <= len(buf):
                 out["adcon"].add(int.from_bytes(buf[ad:ad + 4], "big") & 0xFFFFFF)
     if end_entry is not None:
         out["end"].add(end_entry)

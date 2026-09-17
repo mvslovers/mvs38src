@@ -34,11 +34,35 @@ sys.path.insert(0, HERE)
 from ctlorder import records, B16                          # noqa: E402
 
 
+def image(b, rs):
+    """The member's text, laid out at its load addresses.
+
+    Needed because a root is a distinct TARGET ADDRESS and not an RLD entry: a
+    branch table of 119 relocations pointing at 25 places is 25 roots. Counting
+    entries instead over-counts exactly where a module has a table, which is
+    exactly where the roots matter.
+    """
+    buf = bytearray()
+    for i, (o, ln, t) in enumerate(rs):
+        if t < 0 or t & 0xF0 or not t & 0x01:
+            continue
+        adr = int.from_bytes(b[o + 9:o + 12], "big")
+        cnt = B16(b, o + 14)
+        nxt = rs[i + 1] if i + 1 < len(rs) else None
+        if not nxt or nxt[2] != -1:
+            continue
+        if len(buf) < adr + cnt:
+            buf.extend(b"\0" * (adr + cnt - len(buf)))
+        buf[adr:adr + cnt] = b[nxt[0]:nxt[0] + min(cnt, nxt[1])]
+    return bytes(buf)
+
+
 def sections_and_roots(b):
     """{name: (esdid, origin, length, lr_roots, rld_roots)} for one member."""
     rs = records(b)
     if rs is None:
         return None
+    img = image(b, rs)
     cesd = {}                                   # esdid -> (name, type, addr, f13)
     for o, ln, t in rs:
         if t not in (0x20, 0x28):
@@ -55,7 +79,7 @@ def sections_and_roots(b):
     for _, (name, typ, addr, f13, chid) in cesd.items():
         if typ == 3:                            # LR: owner ESDID at off 14
             lr[chid] += 1
-    rld = collections.Counter()
+    rld = collections.defaultdict(set)
     for o, ln, t in rs:
         if t < 0 or t & 0xF0:
             continue
@@ -72,12 +96,13 @@ def sections_and_roots(b):
             fl = b[off]
             off += 4
             cont = bool(fl & 1)
-            if ((fl >> 2) & 3) + 1 == 4:
-                rld[R] += 1
+            ad = int.from_bytes(b[off - 3:off], "big")
+            if ((fl >> 2) & 3) + 1 == 4 and ad + 4 <= len(img):
+                rld[R].add(int.from_bytes(img[ad:ad + 4], "big") & 0xFFFFFF)
     out = {}
     for esdid, (name, typ, addr, f13, chid) in cesd.items():
         if typ in (0, 4) and f13:
-            out[name] = (esdid, addr, f13, lr.get(esdid, 0), rld.get(esdid, 0))
+            out[name] = (esdid, addr, f13, lr.get(esdid, 0), len(rld.get(esdid, ())))
     return out
 
 
