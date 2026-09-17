@@ -63,6 +63,21 @@ regions; the classifier assigns 3,256 I / 877 D over five modules; an injected
 flip of 24 instruction bytes gives 4 regions and the source witness calls all four
 real code. The discriminating direction is `instruction → DC`.
 
+🔑 **The most useful thing to come out of 2026-09-17, and it is about the method
+rather than the code.** Six failures of one shape were recorded across the two
+sessions in a day: the cc370 session's 2,489 census, this session's *"four modules
+got worse"*, this session's *"it is in the PR body"*, their *"absent from our
+deck"*, this session's adjacency claim, and this session's `11 − 7 = 4`
+subtraction. **Every one was a sentence about a measurement, written by the person
+who had just made the measurement.** Five were caught by the other session; the
+sixth was caught before it was quoted, also by the other session. **Not one was
+caught by its author re-reading it** — including the two where the author knew the
+failure shape by name and had written it down the same day.
+
+So the defence is **not vigilance**. It is that the sentence gets read by someone
+who did not produce the number. That is what *"they build, we measure"* buys, and
+it is an argument for the division of work rather than a tally of mistakes.
+
 **Two things that gate cannot settle, and they have to be settled BEFORE the work,
 not after it.** Both were raised by the cc370 session, and both are the same
 hazard: #383 is byte-safe by construction — unreached code becomes `DC`, which
@@ -155,6 +170,27 @@ outcome.
    an `END` root and no other, named above. **A subtraction between two tools is
    the shape that produced four of today's five failures**; the filter is over a
    table that already existed.
+
+   🔑 **The rule text's missing sentence, and it is not a detail**: *the address
+   constant's own location does not matter, only its target — so a root scan reads
+   **every** relocation in the module and keeps those whose **R** names this
+   section, while the disassembler's own RLD set keeps those whose **P** does.*
+   Two different sets, two different uses, and **they must not share a name.**
+
+   The consequence is structural and belongs in the issue before anyone
+   implements: a root scan has to walk the **whole member's or deck's** RLD, not
+   the section's, so **`--csect X` stops being sufficient input for the
+   reachability pass** even though it remains sufficient for the disassembly.
+   `L 15,=V(B)` / `BALR 14,15` sits in a different CSECT by construction — that is
+   the ordinary shape of an entry point another module calls, not an edge case.
+
+   ⚠️ **`dasm370` cannot supply that root set today**, and it is not a missing
+   line: `dasm370.c:1466` and `:3431` both filter `r->p != sect_esdid`, and the
+   `r->r == sect_esdid` tests at `:1381`, `:2256` and `:2523` run **inside** that
+   already-P-filtered set. So its effective condition is `R == P == esdid` —
+   **the same under-count as `rootreach.py`, reached independently by two people
+   who never compared notes.** Checked here in the source rather than taken on
+   report.
 
    ⚠️ **And the check found a real asymmetry between this session's own two
    tools.** Six of the 30 have more roots read from the member than from the deck —
