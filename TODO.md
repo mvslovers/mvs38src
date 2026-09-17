@@ -73,9 +73,52 @@ outcome.
 1. **What counts as a root, as a rule stated in advance.** Not "the pass must not
    turn real code into `DC`" — that is an outcome and it is exactly what nobody can
    check at scale. The rule has to name the places an object reader has ground
-   truth for: the entry point, every `LD`/`LR` address in the CESD, every address
-   constant whose relocation resolves into this section. Anything beyond that is
-   inference, and inference is what the round trip cannot see through.
+   truth for: every `LD`/`LR` address in the CESD, every address constant whose
+   relocation resolves into this section, and **on a deck** the `END` card's entry.
+   Anything beyond that is inference, and inference is what the round trip cannot
+   see through.
+
+   ⚠️ **This rule first said "the entry point" without qualification, and that is
+   wrong for a bound member — which is the form the 772 exist in.** Two links
+   differing in nothing but the entry point produce **byte-identical members**; the
+   whole difference is two bytes of the PDS directory, `PDS2EP0` and `PDS2EPA`, and
+   our corpus is extracted member *content*. The entry survives on a deck's `END`
+   card and nowhere else, so the rule is **asymmetric** and has to say so.
+   Established in conversation with the cc370 session on 2026-09-16 — **and never
+   written into this repository, which is exactly how a rule contradicting it got
+   written a day later.** It is written down now.
+
+   🔑 **And the number that settles the narrowness question, measured here rather
+   than argued** ([`tools/rootreach.py`](tools/rootreach.py), the 30 control CSECTs
+   where we have real source to say which bytes are code):
+
+   ```
+   62,078 known code bytes in 1,554 contiguous runs
+       36 of 1,554 runs contain a root     =  2.3 %
+    3,250 of 62,078 code bytes are in one  =  5.2 %
+   roots: 19 LD   162 adcon   8 END        7 of 30 modules have NO root at all
+   ```
+
+   **A narrow rule leaves 95 % of known code to be found by branch-following.**
+   That does not make the rule wrong — it makes plain that the rule carries almost
+   none of the weight and the traversal carries nearly all of it, which is the
+   opposite of what "narrow and therefore safe" suggests. It is a **floor**: the
+   traversal reaches more, and that is what it is for. But an acceptance built on
+   the root rule alone would be measuring 5 %.
+
+   The code set is cross-checked against `dasm370`'s own independent
+   classification of the same decks: **66,689 of 68,192 comparable bytes agree,
+   97.8 %**. A 2 % doubt in the denominator cannot move a 5 % answer.
+
+   ⚠️ Two defects in that measurement were caught by controls before the figure
+   left this machine, both in the listing walk: it did not track the section, so
+   `IEHPROG1` returned 4,114 code bytes for an 84-byte section — 4,096 of them
+   another section's, at offsets that collide; and the card image begins at column
+   **40**, not 41. At 41 every *unnamed* card still parsed its operation correctly
+   and only the **name** field lost its first character — the one field the section
+   is tracked by. That failed loudly, at zero code bytes for every module. One
+   column the other way and it would have returned a section's worth of somebody
+   else's code, quietly.
 2. **The 126 unclassifiable of the 160 dark sections.** `text_frac` does not
    separate them and the round trip is blind to them in both directions. Whatever
    is agreed for these has to be agreed as a rule too, or the 126 become the place
