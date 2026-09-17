@@ -85,3 +85,57 @@ is still the live reading rather than a description.
   other seven now have explanations.
 - None of this argues against the per-module coverage line. It argues that the
   line should carry **why**, not only **how much**.
+
+---
+
+## Follow-up 2026-09-17, after the traversal moved 71.2 % → 81.0 %
+
+Category A landed: `IGCFR10D` 0.6 → 99.6 %, `IKJEGSTA` 2.4 → 99.2 % on `LR Rx,R15`
+propagation alone. Category B is intact as the explanation for three of the six
+that remain. Two corrections from this side.
+
+### ⚠️ `IECVERPL`'s `X'05A0'` at `0x244` is a REAL `BALR`, not a phantom in a table
+
+The cc370 session reported it as *"inside a table"*, a phantom their pre-scan took
+for a prologue. Our witness says `0x244` is **code**, and the listing says why:
+
+```
+000244           ERPLESTA DS    0H
+000244 05A0               BALR  R10,0
+000246 41F0 0246          LA    R15,ERPLESTA-IECVERPL+2
+00024A 1BAF               SR    R10,R15
+```
+
+It is a **second entry point** — an ESTAE exit — establishing its own base for the
+same register the module's front end loads with `LR R10,R15`.
+
+**The fix is right and the reason recorded for it is wrong**, and the corrected
+reason is the more useful one. The defect was not a phantom; it was a **pre-scan
+adopting a base that belongs to a different entry path and applying it from offset
+0**. So `IECVERPL` is not a category A module that the `LR` rule should have
+finished — it is a **per-path base** case, which is exactly the limit the cc370
+session named for the other three. That is why it moved to 49.5 % and stopped.
+
+Moving base discovery into the walk is still the right change, and the sentence it
+earns stands: *a `BALR` that is never reached never sets anything*. But
+`IECVERPL` is no longer its evidence; it is evidence for per-path state.
+
+### `BLSCAMER` — category D — carries four `BALR R14,R15` and six real phantoms
+
+```
+0000E4  05EF   BALR @14,@15        four external calls
+0001C6  05EF   BALR @14,@15
+0002F2  05EF   BALR @14,@15
+000382  05EF   BALR @14,@15
+```
+
+and, in bytes our witness calls **data**, six halfwords that decode as a prologue:
+`0x052A 0590`, `0x0536 0590`, `0x0542 0590`, `0x0552 05D0`, `0x0566 05E0`,
+`0x0586 05D0`. With base discovery inside the walk those can no longer be adopted,
+which is a second reason the change was right.
+
+**The hypothesis worth testing for category D, offered as a case and not a
+diagnosis**: `BALR R14,R15` is a **call and falls through** — a traversal that
+treats `BALR Rx,Ry` as an unconditional transfer with no fall-through stops at the
+first external call. `BLSCAMER` has four of them and reaches 39.5 %. This side
+cannot confirm it without the trace.
