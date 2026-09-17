@@ -42,5 +42,32 @@ member carries `28B2` there; `dasm370` emits `PTLB` with **no operand**, so
 `STPT 1970(2)` is emitted **with** its operand — so the operand-less form is the
 odd one, not the rule.
 
-Sent to the cc370 session as a case. Whether the answer is to emit the operand, or
-to emit `DC` when it is non-zero, is theirs.
+Sent to the cc370 session as a case, and fixed as `cc370#412`.
+
+**It was `F_S0` — an S-format opcode with no operand — and `reencode_ok()` was
+comparing the input with itself.** The check set bytes 0–1 from the opcode and
+**left 2–3 as read**, so any tail passed. The rule it violates was already written
+two lines above it in that source, for `IEAVTCR1`'s `SSM`: *the comparison must be
+against what the statement assembles to, never against the bytes it was read
+from.* The same defect, two bytes further out.
+
+Gated here:
+
+```
+null control   745 runs, EXACTLY 1 moved -- and it is IFNX5M00
+round trip     649 of 649 no-source sections identical
+```
+
+**One module changes, it is the one that was broken, and the exception in the
+population is gone.** That is the sharpest shape a correction can take, and the
+cc370 session's own "1 of 649 moves" is confirmed by running it rather than by
+re-deriving their number.
+
+Two things they found in themselves while building it, both worth more than the
+fix. **The first version's guard sat in a branch that never runs** — an `F_S0`
+opcode is two bytes wide, so the `opw == 2` arm claims it first: the binary
+changed, the module still said `PTLB`, and no instrument objected. *A guard in a
+branch that never runs is a guard that reports success.* And **the first fixture
+could not fail**: the bad and good four bytes were adjacent, and a `DC` run
+swallows sixteen, so the good `PTLB` went into the same `DC` and the control could
+not fire. It needs an address constant between them to break the run.
