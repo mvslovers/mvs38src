@@ -108,3 +108,49 @@ knows, and that is what sent this side looking for a wrong member.
 
 It changes nothing about the 22.2 % — that is computed over the 598 that were
 measured — and it changes entirely who has the defect.
+
+---
+
+## The 50 that emit no instruction, and what #383 is actually left with
+
+The cc370 session measured their side: **50 of 50 are `DC` only, every byte covered
+by `TXT`, no `DS`, no holes** — and, checking their own claim before it was asked
+for, **50 of 50 also reach zero bytes from the `SD` root**, so the first byte does
+not decode and the `DC` chunking is not hiding instructions further in.
+
+They asked whether any of the 50 has source. **None does, and that is by
+construction** — these are drawn from the no-source corpus. So the question cannot
+separate "data" from "a decoder finding" from either side, and this is what our
+corpus can contribute instead:
+
+```
+                       n     median text_frac   median length
+the 50                50           0.06              206
+the other 722        722           0.17              727
+```
+
+Shorter and less text-like than the population. Sixteen of the 50 are
+`IECVOPTA`…`IECVOPTU`, a lettered family of option tables; `IEAMSPSA` is 1,360
+bytes at `text_frac` **0.00**, `IEFJESCT` is 80 bytes — a PSA and a JES
+communication table, both in `NUCLEUS(IEANUC01)`. Those read as data, and the
+reading is ours rather than a measurement.
+
+🔑 **But two of the 50 are the opposite, and one of them is `#383`'s own named
+case.** `IKJEFLE2` and `IKJEFLE4` have `text_frac` **1.00** — and the issue's
+original acceptance names `IKJEFLE4` as the sharp one, *"21 bytes at 100 % — an
+opcode gate cannot save it: text decodes as `L`/`LA`/`ST`/`BC`, which are in every
+subset. Only reachability can say nothing branches here."*
+
+**It is already entirely `DC` today, with no reachability at all.** Not because
+anything branches or does not, but because the decoder finds nothing at its first
+byte. So over the 72 sections above 60 % printable that `#383` was written for:
+
+```
+ 4  already fully DC today          IKJEFD22  IKJEFD3A  IKJEFLE2  IKJEFLE4
+ 3  entry-point cases dasm370 refuses
+65  still decode instructions       ISTCFCM1 7,988 code bytes, PDE00000 5,192,
+                                    TSMSGS 1,862, USERLAB 1,136, MESSLIST 1,126 …
+```
+
+**65 of 72 is what the issue is actually for**, and the one case it argued from is
+not among them.
