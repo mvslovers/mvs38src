@@ -166,16 +166,35 @@ def corpus(name):
         return out
     h, rs = rows(os.path.join(ROOT, "work/measurements/nosource-corpus.tsv"))
     i = {k: n for n, k in enumerate(h)}
+    # ⚠️ The load-module name is resolved through Dave Kreiss' LMDXRF
+    # cross-reference, NOT guessed from the CSECT name. Guessing cost a whole
+    # exchange on 2026-09-17: 124 of the 772 have an empty `load_module` column,
+    # the fallback globbed a member carrying that name, and it exists -- the name
+    # is in it as an ENTRY POINT and the section that owns it is called something
+    # else. 93 of those. `dasm370` refused them correctly and the refusal was read
+    # as a reader limit. The map already existed and this file did not ask it.
+    sys.path.insert(0, HERE)
+    import baseline_gate as bg
+    tx, dx = bg.xref("org-tgt.txt"), bg.xref("org-dlib.txt")
     out = []
     for r in rs:
         if len(r) < len(h) or r[i["exclude"]]:
             continue
-        lm = r[i["load_module"]] or r[i["csect"]]
-        for pat in ("target-bytes", "dlib-bytes"):
-            g = (glob.glob(os.path.join(ROOT, f"work/measurements/{pat}/tk5/{r[i['library']]}/{lm}.bin"))
-                 or glob.glob(os.path.join(ROOT, f"work/measurements/{pat}/tk5/*/{lm}.bin")))
-            if g:
-                out.append((r[i["csect"]], g[0])); break
+        cs = r[i["csect"]]
+        cands = []
+        for src, pat in ((tx, "target-bytes"), (dx, "dlib-bytes")):
+            for lib, lmod, _ln in src.get(cs, []):
+                cands.append(os.path.join(
+                    ROOT, f"work/measurements/{pat}/tk5/{lib}/{lmod}.bin"))
+        # the recorded load module, then the xref, and the bare name LAST
+        lm = r[i["load_module"]]
+        if lm:
+            cands = [os.path.join(ROOT, f"work/measurements/{p}/tk5/{r[i['library']]}/{lm}.bin")
+                     for p in ("target-bytes", "dlib-bytes")] + cands
+        for c in cands:
+            if os.path.exists(c):
+                out.append((cs, c))
+                break
     return out
 
 

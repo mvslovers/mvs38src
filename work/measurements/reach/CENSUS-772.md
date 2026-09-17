@@ -1,4 +1,17 @@
-# `--reach-report` over the 772 that have no source — 2026-09-17
+# `--reach-report` over the CSECTs that have no source — 2026-09-17
+
+> ✅ **Corpus repaired the same day, and the population is 649, not 772.**
+> `reachgate.corpus("nosource")` now resolves the load module through Dave Kreiss'
+> `LMDXRF` cross-reference instead of guessing it from the CSECT name. **649 of
+> 772 resolve, and all 649 are readable — zero refusals**, against 124 before.
+> **The other 123 are not in the cross-reference at all**, 0 of 123, so they are
+> not control sections: they are entry points and deleted names that this corpus
+> listed as CSECTs. The no-source CSECT population is **649**.
+>
+> **The figure barely moves: 22.2 % → 22.4 %, median `SELF` 1.5 % either way.**
+> That is the right outcome — the repair fixed the attribution, not the finding.
+> The sections below are kept as they were written, with their corrections, because
+> the sequence of errors is the more useful record.
 
 `cc370#406` shipped the traversal as a measurement and held the applied form, on
 evidence from the **30 control CSECTs**. Those are the modules that HAVE source,
