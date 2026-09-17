@@ -228,7 +228,7 @@ def one(job):
     txt = deck_text(deck, csect)
     seclen = len(txt) if txt else 0
     covered = len([a for a in (code | data) if a < seclen])
-    return csect, dict(code=tot, runs=len(rs), runs_with_root=len(hit),
+    return csect, dict(_runs=rs, code=tot, runs=len(rs), runs_with_root=len(hit),
                        seclen=seclen, covered=covered,
                        bytes_in_rooted_runs=cov,
                        ld=len(rt["ld"]), adcon=len(rt["adcon"]), end=len(rt["end"]))
@@ -237,6 +237,11 @@ def one(job):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--jobs", type=int, default=6)
+    ap.add_argument("--runs-out", dest="runs_out",
+                    help="write the code-run witness as csect/offset/length -- the "
+                         "same runs the coverage figures are computed over, for a "
+                         "traversal on the other side to measure itself against "
+                         "without re-implementing this instrument")
     ap.add_argument("--set", default="deliverable",
                     choices=("deliverable", "proposed"),
                     help="deliverable: SD + owned LD/LR + END on a deck, NO adcons "
@@ -258,6 +263,13 @@ def main():
     res = []
     with ThreadPoolExecutor(a.jobs) as ex:
         res = list(ex.map(one, jobs))
+    if a.runs_out:
+        with open(a.runs_out, "w") as fh:
+            fh.write("csect\toffset\tlength\n")
+            for cs, d in sorted(res):
+                for off, ln in (d or {}).get("_runs", []):
+                    fh.write(f"{cs}\t0x{off:06X}\t{ln}\n")
+        print(f"  Zeuge -> {a.runs_out}")
     cols = ["code", "runs", "runs_with_root", "bytes_in_rooted_runs", "seclen",
             "covered", "ld", "adcon", "end"]
     with open(a.out, "w") as fh:
