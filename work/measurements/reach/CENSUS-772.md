@@ -154,3 +154,18 @@ byte. So over the 72 sections above 60 % printable that `#383` was written for:
 
 **65 of 72 is what the issue is actually for**, and the one case it argued from is
 not among them.
+
+**Confirmed from the cc370 side to the byte**, and the four are the same four:
+
+```
+IKJEFLE4      17 bytes accounted,      0 decode as instructions
+ISTCFCM1   26,565 bytes accounted,  7,988 decode as INSTRUCTIONS
+```
+
+⚠️ **And it is more than a stale example, which is why it was handed back rather
+than edited here.** `#383`'s sentence is *"an opcode gate cannot save
+`IKJEFLE4`"* — an argument **against `--isa`**, which is `cc370#395` and next in
+the queue. It is now an argument about a module that **needs no saving**, so
+`#395` would have inherited a dismissal with nothing behind it. The issue carries
+a comment with the superseded sentence quoted in full, so a reader meets the old
+argument and its replacement together instead of finding a silently edited issue.
