@@ -106,7 +106,7 @@ bound member, puts it into our source in place of ours, and assembles — so the
 assembler recomputes every displacement and whatever survives is a cause of its
 own. Over the 104:
 
-| | Module | abweichende Bytes vorher → nachher | identical |
+| | modules | differing bytes before → after | identical |
 |---|---:|---|---:|
 | length delta = +8 | 11 | 1,474 → **1,410** (−4.3 %) | **1** |
 | length delta ≠ +8 | 85 | 304,153 → **301,948** (−0.7 %) | 0 |
@@ -144,7 +144,16 @@ IGC0112F   2428/2436   mixed           14        IEFAB4UV  2293/2301   mixed   1
 ```
 
 **`IEFAB486` becomes byte-identical** — 4,164 → 4,172 bytes, `cmplmd370` exit 0,
-and the identifier was the only cause. Four more land within 14 bytes. That is the
+and the identifier was the only cause. The two identifiers, so the decision can be
+made from the record:
+
+```
+ours  DC AL1(16)  DC C'IEFAB486  76.342'
+IBM   DC AL1(24)  DC C'IEFAB486 79061  UZ25269 '
+```
+
+IBM's carries a PTF number and a Julian date; ours carries an assembly date. Four
+more land within 14 bytes. Four more land within 14 bytes. That is the
 value of the class: not that it explains the rest, but that it converts *"length
 differs, nothing can be compared"* into a residue small enough to read.
 
@@ -161,10 +170,28 @@ member can never agree on. `IEFIB660` goes the other way: 42 under the first and
 shifts everything behind it. Read the alignment figure for magnitude and
 `cmplmd370` for the verdict.
 
-⚠️ **Four modules got worse** (`AMDPRCVT`, `ICBVUT03`, `IEECB909`, `ISDASDA0`):
-IBM's longer identifier moves their code to a place that agrees with IBM's text
-*less* than before. That is not an instrument defect — it says the `+8` in those
-modules is not at the front.
+⚠️ **"Four modules got worse" was the instrument, and the first version of this
+paragraph said the opposite.** It read: *"IBM's longer identifier moves their code
+to a place that agrees with IBM's text less than before … it says the `+8` in
+those modules is not at the front."* Two of the four, `AMDPRCVT` and `IEECB909`,
+are in the `+8` group, passed the repair self-check and end at IBM's exact length
+— the `+8` is demonstrably at the front for them. The positional check that needs
+no alignment — our body against IBM's, from the first byte after each identifier —
+settles it:
+
+| | body, positional, before | after |
+|---|---:|---:|
+| `AMDPRCVT` | 2,454 | **2,453** |
+| `IEECB909` | 1,828 | **1,827** |
+| `ICBVUT03` | 3,340 | **3,193** |
+| `ISDASDA0` | 9,120 | **8,958** |
+
+**None of the four got worse.** `difflib.SequenceMatcher` is a longest-block
+heuristic, not an optimal alignment: change the prefix and it anchors on a
+different block, and 37 bytes on a 19,808-byte section is noise from that. The
+alignment figure can move by tens of bytes in either direction for reasons that
+are not in the module. `cmplmd370` is the verdict; the alignment is the
+magnitude.
 
 **Eight of the 104 are counted as unmeasured rather than guessed at**: 3 not
 anchorable in their member (`ICKRI02`, `IGE0010E`, `ISTAPC54`), 3 with no
@@ -175,7 +202,8 @@ runs, same 95/3/3/2/1 and the same byte totals.
 **Three controls, because each of them could fake the result.** The *unmodified*
 source is assembled by the tool itself first and must give byte for byte the deck
 the gate built — otherwise "the repair changed something" and "this assembly is
-not the gate's" are the same observation; all 96 passed, no `setup-mismatch`.
+not the gate's" are the same observation. It runs before the eyecatcher and repair
+checks, so it ran on **101** of the 104 and passed 101, no `setup-mismatch`.
 After the repair the module's own bytes must carry IBM's branch and IBM's
 identifier, or it is `repair-failed`. And the anchors are deliberately **not** the
 instrument: `IEEMB814` has 23 failing anchors and is 188 bytes *shorter* than
