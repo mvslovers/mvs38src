@@ -1,0 +1,14 @@
+A = gate-PINNED.tsv   5353 modules
+B = gate-NEW.tsv   5353 modules
+
+=== dlib_c: transitions A -> B ===
+  none -- set-identical
+
+=== tgt_c: transitions A -> B ===
+  differs        -> identical          2   IEAVTSL2, IEAVTSLS
+
+tgt_c identical: A 1476  B 1478  gained 2  LOST 0
+
+chosen[A] = 1626 of 5353   dlib 1633  tgt 1476  both 1451  unread 2 (dlib says identical for 0)  no-target 839  disagree 57
+
+chosen[B] = 1628 of 5353   dlib 1633  tgt 1478  both 1453  unread 2 (dlib says identical for 0)  no-target 839  disagree 55
