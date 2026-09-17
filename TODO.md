@@ -90,7 +90,17 @@ would have cemented a wrong story about whose parse was doing what.
 
 **The finding is unaffected and is the interesting part: neither base assumption
 is worth much alone — about 5 % and 7 % each — and together they are about 77 %,
-five times their sum.**
+five times their sum.** `R15` carries the branch over the eyecatcher into the
+prologue and the prologue base carries the body; remove either and the traversal
+dies at the first step the other would have taken.
+
+**cc370#407 merged as `4eaacc8`** — the man page now names the formula, prints all
+four rows, and says first what a reader most needs: *anyone who divides the
+report's own byte counts by a code total gets 80.0 and will conclude the page is
+wrong; they are not, they computed a different thing.* **The "documentation only,
+so the null control is vacuous" claim was verified rather than taken**: one file
+changed, and the binary built from the PR head is byte-identical to the one built
+from `main`. A behaviour-free change is a hash, not an assurance.
 
 **What is left for whoever picks up the applied form**: the limit is the **base
 map and not the root set** — `ICKTR02` has four roots and reaches 1.1 % — and the
