@@ -84,9 +84,9 @@ The figures above it are not withdrawn and do not contradict it: the same decks 
 |---|---:|---:|
 | `recovered` — `cmplmd370` exits 0 | 1,629 | 30.4 % |
 | `reachable` — identical under a named macro reconstruction | 21 | 0.4 % |
-| `blocked` — attributed, but no reconstruction exists to prove it | 72 | 1.3 % |
-| **explained** | **1,722 of 5,353** | **32.2 %** |
-| unexplained | 3,631 | 67.8 % |
+| `blocked` — attributed, but no reconstruction exists to prove it | 73 | 1.4 % |
+| **explained** | **1,723 of 5,353** | **32.2 %** |
+| unexplained | 3,630 | 67.8 % |
 
 **The `blocked` rule is narrow on purpose.** One differing byte in open code and the module is unexplained, however obvious its cause looks. That is why the tier is small and why the figure can be trusted.
 

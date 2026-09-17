@@ -75,7 +75,7 @@ NOEMIT = re.compile(r"^\s{6,}(?:[0-9A-F]{5,6}\s+)?(\d{1,6})([+ ])(.*?)\s*$")
 def listing_rows(path):
     """(emitting rows by address, every statement in file order).
 
-    Returned as `(rows, seq)`: `rows` is [(address, is_macro, text, seq_index)]
+    Returned as `(rows, seq)`: `rows` is [(address, is_macro, text, seq_index, emitted_bytes)]
     sorted by address for the address lookup, `seq` is [(is_macro, text)] in the
     order the listing prints them, which is the order the walk-back needs.
 
@@ -101,7 +101,12 @@ def listing_rows(path):
                 elif op in ("CSECT", "START", "RSECT"):
                     in_dsect = False
                 elif not in_dsect:
-                    rows.append((int(m.group(1), 16), m.group(4) == "+", text, len(seq) - 1))
+                    # The EMITTED length, which the first version of this file
+                    # collected and then discarded. `owner()` needs it: without it
+                    # a statement owns every address up to the next one, including
+                    # bytes it never produced.
+                    rows.append((int(m.group(1), 16), m.group(4) == "+", text,
+                                 len(seq) - 1, len(m.group(2).replace(" ", "")) // 2))
                 continue
             m = NOEMIT.match(line)
             if m:
@@ -123,6 +128,17 @@ def owner(rows, seq, addr):
     `fillgaps.py` had to be corrected into, because the last listing row is not
     the owning one when the listing is not in address order.
 
+    ⚠️ **And it must actually REACH the address, which this did not check.** The
+    greatest address at or below a cluster owns it only if the statement emitted
+    enough bytes to cover it; otherwise the cluster sits in a gap the statement
+    never produced -- alignment padding, or a `DS` reserving space. The identical
+    defect was found and fixed in `alignfill.py` on 2026-09-16, where a single
+    `DC 0D'0'` was owning clusters of 52, 14 and 33 bytes in `IEBWSAM` and moved
+    49 modules to 44. The cc370 session named it again on 2026-09-17 as the reason
+    `cc370#385`'s object-side shape would ship a known-bad attribution on this
+    side. A statement that does not reach the address returns **no owner**, which
+    is a different answer from a wrong one.
+
     The call is then the nearest preceding statement WITHOUT the `+`, walked back
     **in listing order and not in address order**: an inner macro is itself
     macro-generated, so this names `XCTL` rather than `IHBINNRB`, which is the
@@ -138,6 +154,8 @@ def owner(rows, seq, addr):
     if lo == 0:
         return None, None
     stmt = rows[lo - 1]
+    if len(stmt) > 4 and addr >= stmt[0] + max(stmt[4], 1):
+        return None, None
     if not stmt[1]:
         return stmt, None
     j = stmt[3]
@@ -192,30 +210,52 @@ def one(job):
         return mod, "length differs", 0, 0, {}
     cl = s.get("clusters") or []
     if not cl:
-        return mod, "no clusters", 0, 0, {}
+        return mod, "no clusters", 0, 0, {}, 0
     rows, seq = listing_rows(lst)
     if not rows:
-        return mod, "no listing rows", 0, 0, {}
+        return mod, "no listing rows", 0, 0, {}, 0
     # Listing addresses are absolute within the CSECT here: the section starts at
     # 0 in a single-CSECT deck. Where it does not, the cluster offset is
     # section-relative and the listing is not -- the mistake where.py made once,
     # and the reason a module whose first row is not 0 is reported rather than
     # guessed at.
     origin = rows[0][0]
-    mac = op = 0
+    mac = op = un = 0
     calls = collections.Counter()
     for c in cl:
         stmt, call = owner(rows, seq, origin + c["offset"])
         if stmt is None:
+            un += 1
             continue
         if stmt[1]:
             mac += 1
             calls[opname(call[1]) if call else "?"] += 1
         else:
             op += 1
-    verdict = ("all in macro expansions" if op == 0 else
+    # ⚠️ `op == 0` was tested FIRST, so a module where EVERY cluster failed to
+    # find an owner -- mac == 0 and op == 0 -- fell through to "all in macro
+    # expansions", the strongest claim in the set, on no evidence at all. It was
+    # unreachable while `owner()` always answered; bounding `owner()` by the bytes
+    # a statement actually emits made it reachable, and it landed on 66 modules on
+    # the first run. `explained.py` is protected from it only by accident (it also
+    # requires a non-empty call list), which is not a reason to leave it.
+    #
+    # "no cluster attributed" is a FOURTH state and says so.
+    #
+    # ⚠️⚠️ And an UNATTRIBUTED cluster must not be dropped, which the first version
+    # of this fix did. Bounding `owner()` made 110 of `HMASMGTA`'s clusters
+    # ownerless; discarding them turned "mixed, 8 macro against 110 open code" into
+    # "ALL in macro expansions" on the strength of the 8. `IEAVPSI` went the same
+    # way for the opposite reason -- it lost the one `MODID` cluster that was
+    # keeping it OUT of `blocked`, so removing evidence made the claim stronger.
+    # **A correction that raises a figure by discarding what it cannot attribute is
+    # the failure this repository spent 2026-09-17 documenting.** Unattributed
+    # clusters are counted and no module with one is "all in" anything.
+    verdict = ("no cluster attributed" if mac == 0 and op == 0 else
+               "partly unattributed" if un else
+               "all in macro expansions" if op == 0 else
                "all in open code" if mac == 0 else "mixed")
-    return mod, verdict, mac, op, dict(calls)
+    return mod, verdict, mac, op, dict(calls), un
 
 
 def main():
@@ -261,11 +301,12 @@ def main():
         res = [r for r in ex.map(one, jobs) if r]
 
     with open(a.out, "w") as fh:
-        fh.write("module\tverdict\tclusters_in_macro\tclusters_in_opencode\tmacro_calls\n")
-        for mod, v, mac, op, calls in sorted(res):
+        fh.write("module\tverdict\tclusters_in_macro\tclusters_in_opencode\t"
+                 "macro_calls\tclusters_unattributed\n")
+        for mod, v, mac, op, calls, un in sorted(res):
             top = " ".join(f"{k}:{n}" for k, n in
                            sorted(calls.items(), key=lambda x: -x[1]))
-            fh.write(f"{mod}\t{v}\t{mac}\t{op}\t{top}\n")
+            fh.write(f"{mod}\t{v}\t{mac}\t{op}\t{top}\t{un}\n")
 
     c = collections.Counter(v for _, v, *_ in res)
     print(f"\n-> {a.out}")

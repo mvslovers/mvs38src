@@ -48,6 +48,46 @@ only what it can derive; every other number in this file is prose that no tool
 reads, and a `--check` failure naming `TODO.md` means that table and nothing
 else.
 
+### 🔑 `macroattr.py` answered for 5,674 clusters it could not attribute — 2026-09-17
+
+**`owner()` returned the greatest listing address at or below a cluster without
+checking that the statement emitted enough bytes to reach it.** A cluster sitting
+in alignment padding or a `DS` reservation was therefore attributed to whatever
+statement happened to precede it. **The identical defect was fixed in
+`alignfill.py` on 2026-09-16**, where one `DC 0D'0'` owned clusters of 52, 14 and
+33 bytes in `IEBWSAM`; the cc370 session named it again on 2026-09-17 as the
+reason `cc370#385`'s object-side shape would ship a known-bad attribution on this
+side. Now bounded by the emitted length.
+
+**Two further defects fell out of fixing it, and the second was in the fix.**
+
+⚠️ **`op == 0` was tested first**, so a module where *every* cluster failed to find
+an owner — `mac == 0` and `op == 0` — fell through to **"all in macro expansions"**,
+the strongest claim in the set, on no evidence at all. Unreachable while `owner()`
+always answered; reachable the moment it stopped, and it landed on **66 modules on
+the first run**. `explained.py` was protected from it only by accident. *"No cluster
+attributed"* is a fourth state and now says so.
+
+⚠️⚠️ **And the first version of the fix RAISED `explained` from 1,723 to 1,729, by
+discarding what it could not attribute.** `HMASMGTA` went from *"mixed, 8 macro
+against 110 open code"* to *"ALL in macro expansions"* on the strength of the 8,
+because the 110 lost their owner and were dropped. `IEAVPSI` gained `blocked`
+status because it lost the one `MODID` cluster that was keeping it out — **removing
+evidence made the claim stronger.** That is the failure shape this file spent the
+day documenting, arriving inside its own correction. Unattributed clusters are now
+**counted**, and no module with one is "all in" anything.
+
+```
+verdicts, 1,042 modules        clusters that cannot be attributed: 5,674
+  partly unattributed   547    all in open code        257
+  no cluster attributed 117    all in macro expansions  38    mixed 83
+```
+
+**664 of 1,042 modules were making a claim they had no basis for**, and the
+published figure does not move: `blocked` keeps the identical **14** eligible
+modules and `explained` is **1,723** either way. A correctness repair that changes
+no number is the good case, and it is only visible because the number was checked.
+
 ### ⏸ `cc370#383` — the measurement ships, the applied form is HELD — 2026-09-17
 
 **Mike's decision**: `--reach-report` ships, `--reach` waits for per-path base
@@ -953,17 +993,21 @@ rank against a comparator and a deck set that are both superseded.
 | | |
 |---|---:|
 | **under the chosen baseline — target, DLIB where no target exists** | **1,629 of 5,353 — 30.4 %** |
-| **explained — the second verdict** | **1,722 — 32.2 %** |
+| **explained — the second verdict** | **1,723 — 32.2 %** |
 | the same decks against the DLIB alone | 1,633 |
 | against the target alone | 1,478 |
 | against both | 1,453 |
 | target member not paired — was 143 | **2** |
 | DLIB and target disagree — was 57 | **55** |
 
-**+2 came from the instrument** — cc370#404, the RLD offset, accepted and merged
-this morning — and **+1 from source work**, the first in a while: `IEFAB486` was
-deposited in `src/` with IBM's own module identifier and is byte-identical.
-`src/` is 317.
+**+2 came from the instrument** — cc370#404, the RLD offset — and **+1 from source
+work**, the first in a while: `IEFAB486` deposited in `src/` with IBM's own module
+identifier, byte-identical. `src/` is 317.
+
+**`explained` 1,722 → 1,723 is a re-cut, not a finding.** `macroattr.tsv` was
+stale — cut before `#404` and before the `IEFAB486` deposit — and re-cutting it
+against the current decks moves one module into `blocked`. Worth separating from
+the `owner()` repair below, which moved **nothing**.
 
 ⚠️ **1,719 and not the 1,724 this table said until it was re-read.** The figure
 dropped by five when `alignfill.py`'s guard was added the same evening — it had
