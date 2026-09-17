@@ -46,12 +46,35 @@ DATA_OPS = {"DC", "DS"}
 
 
 def classify(binary, csect, ref):
-    """{offset: 'I'|'D'} for every byte the disassembly accounts for."""
+    """({offset: 'I'|'D'}, unplaced) -- and `unplaced` is not a diagnostic.
+
+    A statement whose remark column carries no six-hex group cannot be placed, and
+    the loop below drops it. The PRECEDING statement's classification then extends
+    over its bytes -- so a change that darkens real code AND stops writing the
+    offset remark on those cards is invisible wherever the darkened run follows an
+    instruction, which is the ordinary case for code.
+
+    **Measured by the cc370 session, attacking this gate on request.** The same
+    darkening of the same bytes, with the remark kept and omitted:
+
+        0x20..0x30    23 regions -> 11        0x100..0x110   31 -> 10
+        0x40..0x50    29 regions -> 14        0x200..0x210   28 -> 11
+
+    Between 52 % and 68 % of the change goes unreported. The compensating pair they
+    tried FIRST does not work, because the report is per region with a direction
+    and an I->D beside a D->I prints as two regions rather than cancelling -- so
+    the per-region design held and the accounting did not.
+
+    **A statement the parser cannot place is not "no change", it is "unknown".**
+    The count is therefore returned and the gate refuses when it moves between the
+    two builds: a change that hides itself by dropping lines now has to hide the
+    fact that it dropped them, which it cannot.
+    """
     p = subprocess.run([binary, "--csect", csect, ref],
                        capture_output=True, text=True)
     if p.returncode not in (0, 1):
         return None
-    ent = []
+    ent, unplaced = [], 0
     for line in p.stdout.splitlines():
         body = line[:72]
         # A comment card carries `*` in COLUMN 1, where it lands inside LINE's
@@ -72,6 +95,7 @@ def classify(binary, csect, ref):
             continue
         offs = OFF.findall(body)
         if not offs:
+            unplaced += 1
             continue
         ent.append((int(offs[-1], 16), "D" if op in DATA_OPS else "I"))
     if not ent:
@@ -82,7 +106,7 @@ def classify(binary, csect, ref):
         end = ent[i + 1][0] if i + 1 < len(ent) else off + 1
         for a in range(off, max(end, off + 1)):
             out[a] = kind
-    return out
+    return out, unplaced
 
 
 def regions(a, b):
@@ -212,26 +236,45 @@ def main():
 
     def one(j):
         cs, ref = j
-        x = classify(a.old, cs, ref)
-        y = classify(a.new, cs, ref)
-        if x is None or y is None:
-            return (cs, None, None)
+        rx = classify(a.old, cs, ref)
+        ry = classify(a.new, cs, ref)
+        if rx is None or ry is None:
+            return (cs, None, None, None)
+        x, ux = rx
+        y, uy = ry
         return (cs, regions(x, y), (sum(1 for v in x.values() if v == "I"),
-                                    sum(1 for v in y.values() if v == "I")))
+                                    sum(1 for v in y.values() if v == "I")),
+                (ux, uy))
 
     res = []
     with concurrent.futures.ThreadPoolExecutor(a.jobs) as ex:
         res = list(ex.map(one, jobs))
 
-    tot = collections.Counter(); bad = []; err = 0
-    for cs, regs, cov in res:
+    tot = collections.Counter(); bad = []; err = 0; unpl = []
+    for cs, regs, cov, un in res:
         if regs is None:
             err += 1; continue
+        if un and un[0] != un[1]:
+            unpl.append((cs, un[0], un[1]))
         for st, ln, o, n in regs:
             tot[f"{o}->{n}"] += 1
             if o == "I" and n == "D":
                 bad.append((cs, st, ln))
     print(f"{len(jobs)} CSECTs, {err} unreadable")
+    # The accounting hole, closed. A statement the parser cannot place is
+    # UNKNOWN, not unchanged, and a change that hides itself by dropping the
+    # offset remark now has to hide the dropping too.
+    if unpl:
+        print(f"  ⚠️ REFUSED: {len(unpl)} CSECTs where the number of statements "
+              f"this parser cannot place DIFFERS between the two builds.")
+        print("     A dropped statement is read as the PRECEDING one's "
+              "classification, so this gate under-reports exactly there.")
+        for cs, o, n in sorted(unpl, key=lambda r: -abs(r[2] - r[1]))[:15]:
+            print(f"     {cs:10s} old {o:5d}  new {n:5d}  ({n - o:+d})")
+    else:
+        print("  unplaceable statements: identical in both builds "
+              f"({sum(u[0] for _, _, _, u in res if u)} lines) -- "
+              "the region counts below account for every statement")
     print(f"  regions by direction: {dict(tot)}")
     print(f"  instruction -> DC regions: {len(bad)} in "
           f"{len({c for c,_,_ in bad})} modules")
@@ -240,11 +283,11 @@ def main():
     if a.out:
         with open(a.out, "w") as fh:
             fh.write("csect\toffset\tlength\tfrom\tto\n")
-            for cs, regs, _ in res:
+            for cs, regs, _, _ in res:
                 for st, ln, o, n in (regs or []):
                     fh.write(f"{cs}\t0x{st:06X}\t{ln}\t{o}\t{n}\n")
         print(f"  -> {a.out}")
-    return 0
+    return 1 if unpl else 0
 
 
 if __name__ == "__main__":

@@ -105,6 +105,29 @@ ordinary MVS shape is a CSECT entered at its origin by `V(name)` from another lo
 module, so the branched-through test cannot be applied to it from inside the
 member at all.
 
+⚠️ **The gate was defeated on 2026-09-17, on this session's own invitation, and is
+repaired.** Not by the compensating pair — that failed, and the per-region design
+with a direction is why: an `I→D` beside a `D→I` prints as two regions instead of
+cancelling. What worked was **a change that stops writing the offset remark**.
+`classify()` dropped any statement whose remark column carried no six-hex group,
+and the *preceding* statement's classification then extended over its bytes — so
+darkening real code was invisible wherever the darkened run followed an
+instruction, which is the ordinary case for code. The cc370 session measured the
+identical darkening of the identical bytes with the remark kept and omitted:
+
+```
+0x20..0x30   23 regions -> 11     0x100..0x110   31 -> 10
+0x40..0x50   29 regions -> 14     0x200..0x210   28 -> 11
+```
+
+**Between 52 % and 68 % of the change went unreported.** The fix is two lines and
+a principle: **a statement the parser cannot place is not "no change", it is
+"unknown".** `classify()` now returns that count and the gate **refuses, exit 1**,
+when it differs between the two builds — a change that hides itself by dropping
+lines has to hide the dropping too, and it cannot. Controls: identity → 0
+unplaceable in both, exit 0; a wrapper that strips the remark from every `DC` card
+→ refused on **30 of 30**, exit 1, `HMASMADD` +231 lines.
+
 The gate is built and proven:
 [`tools/reachgate.py`](tools/reachgate.py), region by region rather than a ratio,
 because **a scalar cannot see a local failure** — a module where 400 bytes of a
