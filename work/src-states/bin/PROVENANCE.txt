@@ -95,3 +95,35 @@ as370-main sha256    e7e709241959fa0bec29790660b949aa0407034544a88a5784568d4b397
 as370-main source    cc370 3c6cf07 (main), cc -O2 -Wall -Wextra -Werror
 as370-main replaces  bdef7470342b10fd5b718b146368e1d528823ed97cdfd408593e90d4f1a6146f
 as370-main evidence  decks byte-identical to the replaced binary's, 5,538 of 5,538
+
+# Added 2026-09-17. cmplmd370 re-pinned after cc370#404 (issue #403) landed: a
+# bound member's control record holds its RLD info FIRST and its ID/length list
+# after it, and the reader computed the RLD offset as 16 + idlen -- four bytes
+# late, taking the first item's flag and address for an R/P pair. A
+# desynchronised RLD parse leaves a relocated field unmasked, and an unmasked
+# relocated field reads as an ordinary text difference: a mechanism for calling
+# an identical module `differs`, in the tool whose answer this project treats as
+# final.
+#
+# Two controls took their strongest possible form and both are worth the lines.
+# The build from the PR's PARENT (057ab3f) is BYTE-IDENTICAL to the binary that
+# was pinned -- so the parent does not merely measure the same as the pin, it IS
+# the pin, and the whole delta is attributable to the change without a second
+# run. The build from the MERGED commit (210ec3a) is byte-identical to the
+# binary the acceptance was measured on (e28156442704fcad95f7622c7a0537f90bfd37
+# 35c7ed56279cec1e51591c2fa9), so the run transfers to the merged commit rather
+# than being re-argued.
+#
+# Measured: recovered 1,626 -> 1,628, explained 1,719 -> 1,721, +2/-0 as SETS,
+# dlib_c set-identical. The direction control is the one that decided it and it
+# needs no record census: the fix can only mask MORE bytes as relocated, never
+# fewer, so one module moving identical -> differs would refute the diagnosis.
+# Zero did. work/measurements/cmplmd-rldorder/ carries the run.
+#
+# CI green on the PR head (9233d0f, clang and gcc) AND on the merged commit --
+# checked this time, unlike #375.
+cmplmd370  sha256    e28156442704fcad95f7622c7a0537f90bfd3735c7ed56279cec1e51591c2fa9
+cmplmd370  source    cc370 210ec3a (main, CI green), cc -O2 -Wall -Wextra -Werror
+cmplmd370  replaces  8e73a789a1e77491a9d3c3e375479392d34e926ce3aff03a19f5174ea9065a45
+cmplmd370  built     via `git archive 210ec3a | tar -x` into a scratchpad, never
+#                    out of a working tree another session rebuilds

@@ -48,7 +48,7 @@ only what it can derive; every other number in this file is prose that no tool
 reads, and a `--check` failure naming `TODO.md` means that table and nothing
 else.
 
-### ⏳ Open: `cmplmd370` reads a bound member's RLD info four bytes late — 2026-09-17
+### ✅ Closed: `cmplmd370` read a bound member's RLD info four bytes late — 2026-09-17
 
 **The verdict instrument has the defect, not only the disassembler.** The `cc370`
 session found that both `cmplmd370` and `dasm370` compute a control record's RLD
@@ -82,22 +82,38 @@ The one member that does not walk is named and not swallowed: `HEWLF064`, the
 linkage editor, reads 33 records and then has 28 bytes that are not a record —
 `cmplmd370`'s `trailing_bytes`. It carries none of the records counted here.
 
-**The acceptance, when the PR arrives**, reuses the harness in
-[`work/measurements/cmplmd-reader/`](work/measurements/cmplmd-reader/):
+**Accepted and merged as `210ec3a`**; the run is in
+[`work/measurements/cmplmd-rldorder/`](work/measurements/cmplmd-rldorder/) and the
+account is `RESULT-rld-offset-9233d0f.md`.
 
-1. Null control on the 30 control CSECTs — re-run here, not taken from the
-   author, because a control run by the author on their own build is the one case
-   this arrangement exists to avoid.
-2. The population: `gate_with.py` old against new over all 5,353 modules under the
-   chosen baseline, compared as **sets** by `cmp_gates.py`. Watching `recovered`
-   = **1,626** and `explained` = **1,719**.
-3. **The direction control, which needs no census.** If the diagnosis is right the
-   fix can only mask *more* bytes as relocated, never fewer, so a verdict may move
-   `differs → identical` and **must never move `identical → differs`**. One module
-   going the other way refutes the diagnosis whatever the record counts say.
+```
+recovered   1,626 -> 1,628      (+2 / -0 as SETS)   IEAVTSL2, IEAVTSLS
+explained   1,719 -> 1,721
+disagree       57 ->    55
+dlib_c      set-identical, no transitions
+```
 
-Merge with `gh pr merge --match-head-commit <full 40-char sha>` on a green head —
-cc370#375 went in with a red gcc job because `gh pr checks` was never run.
+**Two controls took the strongest form they can take here**, and both are worth
+remembering as a shape rather than as this PR's detail. The build from the PR's
+**parent** is byte-identical to the pinned binary — so the parent does not merely
+*measure* the same as the pin, it **is** the pin, and the delta is attributable
+without a second run. The build from the **merged** commit is byte-identical to
+the binary the acceptance was measured on — so the run transfers to the merged
+commit instead of being re-argued. When a build is reproducible, a hash comparison
+replaces a whole control run.
+
+**The direction control is the one that decided it**, and it needed no census: the
+fix can only mask *more* bytes as relocated, never fewer, so one module moving
+`identical → differs` would refute the diagnosis whatever any record count said.
+Zero did, and every module that moved carries such a record.
+
+**+2 is small and that is the finding, not a disappointment.** The defect could
+only hide a difference that was *entirely* a relocated field, so a module it could
+rescue had to be otherwise already right — rare in this corpus by construction.
+
+CI was green on the PR head and on the merged commit, and checked both times.
+cc370#375 went in with a red gcc job because `gh pr checks` was never run; every
+merge since uses `--match-head-commit` against a full 40-character sha.
 
 ### 🔑 218 modules diverge first at byte 0, and the cause is the eyecatcher — 2026-09-17
 
@@ -504,16 +520,20 @@ two generations behind — `decks.py` exists precisely for this and `worklist.py
 does not ask it. `worklist.txt` and `worklist16.txt` were not re-cut, so they
 rank against a comparator and a deck set that are both superseded.
 
-### Where it stands, 2026-09-16 evening
+### Where it stands, 2026-09-17 morning
 
 | | |
 |---|---:|
-| **under the chosen baseline — target, DLIB where no target exists** | **1,626 of 5,353 — 30.4 %** |
-| **explained — the second verdict** | **1,719 — 32.1 %** |
+| **under the chosen baseline — target, DLIB where no target exists** | **1,628 of 5,353 — 30.4 %** |
+| **explained — the second verdict** | **1,721 — 32.2 %** |
 | the same decks against the DLIB alone | 1,633 |
-| against the target alone | 1,476 |
-| against both | 1,451 |
+| against the target alone | 1,478 |
+| against both | 1,453 |
 | target member not paired — was 143 | **2** |
+| DLIB and target disagree — was 57 | **55** |
+
+**The +2 came from the instrument again, not from source work** — cc370#404, the
+RLD offset, accepted and merged this morning. `src/` is unchanged.
 
 ⚠️ **1,719 and not the 1,724 this table said until it was re-read.** The figure
 dropped by five when `alignfill.py`'s guard was added the same evening — it had
