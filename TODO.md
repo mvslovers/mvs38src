@@ -139,11 +139,34 @@ outcome.
    says the floor is a floor on both.
 
    127 of the 772 do not resolve to a member that names the CSECT in its CESD and
-   are counted as not measured. And **11 rootless here against 7 in `rootreach.py`
-   is the asymmetry itself**: that tool reads decks and counts the `END` entry,
-   this one reads members where no entry point exists. **Four of the 30 have a root
-   only because of the `END` card** — which is exactly the difference between the
-   two forms, arrived at from the other side.
+   are counted as not measured. Keep that on the same line as the 645: 127 dropped
+   silently would make every ratio here look better than it is.
+
+   🔑 **Four of the 30 have a root ONLY because of the `END` card** — `BLSRCOPY`,
+   `IGCFR10D`, `IGG08113`, `IKJEGSTA`. On a member those four are rootless and
+   nothing about the module changed, only the form it is stored in. **So the rule
+   does not merely lose a root on a member; for one module in eight it loses the
+   only one.** That belongs in #383's rule text.
+
+   ⚠️ **It was first written as a subtraction — 11 rootless here against 7 in
+   `rootreach.py` — and that was not good enough.** Two things differ between the
+   two tools, not one: the input form changes the `END` half *and* the adcon half.
+   The cc370 session said so, and the filter settles it directly: four modules have
+   an `END` root and no other, named above. **A subtraction between two tools is
+   the shape that produced four of today's five failures**; the filter is over a
+   table that already existed.
+
+   ⚠️ **And the check found a real asymmetry between this session's own two
+   tools.** Six of the 30 have more roots read from the member than from the deck —
+   `BLSCAMER` 25 against 119, `HMASMADD` 75 against 95, `AMASPZAP` 2 against 5,
+   `HMASMASM` 23 against 37, `IEFAB473` 1 against 2, `IEFBB401` 1 against 5. The
+   cause is a definition that was never stated: `rootreach.py` requires the adcon to
+   *live in* the section (`R == P == esdid`), `rootdensity.py` only that it *points
+   into* it (`R == esdid`). **The second is the right definition for a root** — a
+   pointer into the section is a root for it wherever the pointer sits — so the deck
+   side is the one under-counting. No module changes between rootless and rooted
+   either way, so neither the 5.2 % floor nor the `END` finding moves, but the two
+   tools must not be read as one instrument until this is reconciled.
 
    ⚠️ Two defects in that measurement were caught by controls before the figure
    left this machine, both in the listing walk: it did not track the section, so
