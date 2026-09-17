@@ -60,5 +60,28 @@ it is not what this corpus hoped for.
 not being counted anywhere: sections `dasm370` emits with no instruction at all.
 Whether they are pure data or a reader limit is not answered here.
 
-**And 124 that cannot be read at all** is the number to chase before any of this:
-16 % of the population is not a reachability question.
+⚠️ **The "124 `dasm370` cannot read" is OURS, not the tool's, and the first report
+of it said the opposite.** It was sent to the cc370 session as *"124 it cannot read
+at all — a larger hole than reachability was ever going to fill"*, and they were
+about to open an issue on it. Measured instead of asserted:
+
+```
+124 refusals, every one rc=2 "no section named X"
+  0  the section IS in the member's CESD  -- a dasm370 case
+124  the section is NOT in the CESD       -- our corpus points at the wrong member
+124  ... and all 124 have an EMPTY load_module column
+```
+
+`AHLDMPMD.bin` carries `AHLWTO`. `AHLTDSP.bin` carries `AHLTPID`. With no load
+module recorded, `reachgate.corpus("nosource")` falls back to the CSECT name,
+globs a member that happens to exist under it, and asks it for a section it never
+had. **`dasm370` is answering the question correctly; the question is wrong.**
+
+The repair is on this side and it is the one `baseline_gate.py` already does:
+resolve these through Dave Kreiss' `LMDXRF` cross-reference, which is one record
+per (library, LMOD, CSECT, length), instead of guessing the member from the name.
+Until that is done, **the no-source population is 648 resolvable and 124
+unresolved by us**, not 772 of which 124 are unreadable.
+
+It changes nothing about the 22.2 % — that is computed over the 598 that were
+measured — and it changes entirely who has the defect.
