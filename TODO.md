@@ -48,7 +48,43 @@ only what it can derive; every other number in this file is prose that no tool
 reads, and a `--check` failure naming `TODO.md` means that table and nothing
 else.
 
-### 🔴 OPEN: `cc370#383` — and an afternoon spent refining a clause the issue excludes
+### ⏸ `cc370#383` — the measurement ships, the applied form is HELD — 2026-09-17
+
+**Mike's decision**: `--reach-report` ships, `--reach` waits for per-path base
+state. **cc370#406 merged as `3054c8a`.**
+
+```
+control  the PR against main, ordinary disassembly   868 of 868 BYTE-IDENTICAL
+control  `--reach` is not silently absent            exit 16, names the measurement
+control  merged build vs the gated one               BYTE-IDENTICAL 8d37ad61…
+CI       clang and gcc green on head and on main
+```
+
+**The per-mode table reproduces in mechanism and differs in denominator**, which
+is the thing to fix in the man page rather than in the code. Bytes reached are
+`dasm370`'s own and exact; the percentage depends on what it is divided by:
+
+| mode | reached | / section | / code |
+|---|---:|---:|---:|
+| `r15` | 3,396 | 4.2 % | 5.2 % |
+| `balr` | 4,292 | 5.4 % | 6.5 % |
+| `both` | 49,680 | 62.1 % | 75.4 % |
+
+The cc370 session quotes 5.3 / 6.8 / 76.6 %, so their denominator is code bytes
+counted inside the tool and this side's is code bytes parsed out of the text —
+within 1.2 points. **The finding is unaffected and is the interesting part:
+neither base assumption is worth much alone, ~5–7 % each, and together they are
+~75 %, five times their sum.**
+
+**What is left for whoever picks up the applied form**: the limit is the **base
+map and not the root set** — `ICKTR02` has four roots and reaches 1.1 % — and the
+three named shapes are `R15`-relative throughout with entry stubs, a base loaded
+from storage, and a second entry path establishing its own base for a register the
+front end already loaded. The traversal is in the tree and instrumented; it needs
+a register to be allowed more than one value. The applied form stays on
+`wip/dasm370-reach` at `180f891` for re-measurement.
+
+### 🔴 The afternoon spent refining a clause the issue excludes
 
 **#404 and #405 are merged and measured. Mike opened #383 on 2026-09-17, and the
 first thing done after he did was to re-read the deliverable — which neither
