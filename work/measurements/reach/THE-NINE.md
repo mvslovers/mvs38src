@@ -139,3 +139,47 @@ diagnosis**: `BALR R14,R15` is a **call and falls through** — a traversal that
 treats `BALR Rx,Ry` as an unconditional transfer with no fall-through stops at the
 first external call. `BLSCAMER` has four of them and reaches 39.5 %. This side
 cannot confirm it without the trace.
+
+---
+
+## The branch table behind `BLSCAMER 0001D8`, and what it does to the rule
+
+The cc370 session refuted this side's category D lead — `BALR R14,R15` does not stop
+their traversal, everything but `BALR Rn,0` falls through — and found **one cause
+for all six**: each stops at an unconditional branch through a register. The
+worked case is `BLSCAMER`:
+
+```
+0001D8  SLA  9,2(0)
+0001DC  L    9,1744(9,12)     indexed load, base @12 = 0x1C
+0001E0  BR   9
+```
+
+Measured here, because *"the branched-through adcon"* suggests a single constant
+and this is not one:
+
+```
+table at 0x06EC  (base 0x1C + 1744)   -- DATA per the witness, not code
+0x06EC 00000000   0x06F0 000001E2 …   20 words, EVERY ONE RLD-covered,
+                                       R = BLSCAMER, length 4
+values 0x1E2 ×6, then 0x1EE, 0x1FA, 0x206 -- code addresses beginning at
+the byte after the `BR 9` that stopped the walk
+```
+
+**So the first and fourth bullets of `cc370#383` are not in tension; the fourth is
+the promotion rule for the first.** An RLD target is a label root on its own —
+that is bullet 1 and it is right. A register loaded from an RLD-covered location
+and then **branched through** promotes those targets to code roots — that is bullet
+4. The discriminator is the `BR`, not the adcon.
+
+**And the traversal does not have to resolve the index.** It cannot know which
+entry `R9` selects, and it does not need to: what it recognises is that the load's
+target region is RLD-covered, and then **every relocated word in that table** is a
+code root. That is why the `rld` pass alone fires four times and adds nothing — it
+has the targets and lacks the gate.
+
+**The one thing the rule text must then say, and it is not obvious: what delimits
+the table.** Here it is 20 contiguous RLD-covered words. *"The maximal run of
+RLD-covered words containing the load's target"* is implementable and checkable;
+anything vaguer decides `DC A(BUFFER)` cases by accident, which is what bullet 1
+exists to prevent.
