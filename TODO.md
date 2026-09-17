@@ -48,6 +48,64 @@ only what it can derive; every other number in this file is prose that no tool
 reads, and a `--check` failure naming `TODO.md` means that table and nothing
 else.
 
+### 🔑 218 modules diverge first at byte 0, and the cause is the eyecatcher — 2026-09-17
+
+**The first shared cause found in the length-differing block, and the largest
+family this project has measured.**
+[`work/measurements/divergence/eyecatcher.tsv`](work/measurements/divergence/eyecatcher.tsv).
+
+The anchor report prints both sides at every failed anchor. Re-run keeping the
+bytes and grouped by `(ours, IBM's)` — the move that found `IGGCP14` and the
+`×`/`|` class over 47 modules — this time over **185,385 divergence points in
+2,292 modules**:
+
+```
+104 modules, ALL at offset 0x000000, identical pair:
+   ours 47F0F016 = B 22(,15)        IBM 47F0F01E = B 30(,15)
+```
+
+The branch over the eyecatcher at a PL/S module's entry. **IBM's is eight bytes
+longer**, and what is in them is maintenance identification our source never
+received — per module, not shared:
+
+| | ours | IBM |
+|---|---|---|
+| `ICBMSG05` | `'ICBMSG05  78.188'` | `'ICBMSG05 01/11/85'` + more |
+| `AMDPRCVT` | `'AMDPRCVT  76.189'` | `'AMDPRCVT 78215  UZ86400'` |
+
+`UZ86400` is a PTF number, the shape `MODID` turned up as `UZ61918` and
+`UY35469` ([`sysparm.md`](docs/sysparm.md)). Ours declares `DC AL1(16)`; IBM's
+declares 25. Widened to the **form** — any branch-over-eyecatcher at offset 0
+whose target differs — it is **218 modules, 80 % of the 274 that diverge first at
+byte 0**.
+
+⚠️ **The delta is SIGNED and the description "IBM's is longer" is wrong for 22 of
+them**: `+8` × 119, `+6` × 24, `+16` × 16, `+4` × 6 … and **`−2` × 18, `−4` × 2,
+`−8` × 2** (`IGG019DD`, `IKTIOFRR`). For those 22 **ours is longer and IBM's
+shorter** — our source carries something IBM's object does not, which is a
+different repair entirely. Caught by the cc370 session reading the file after
+this session had summarised it without the sign.
+
+⚠️ **It is not a recovery.** Median 148 divergence points per module, minimum 5,
+and **zero of the 104 have only this one**. Repairing the eyecatcher recovers
+nothing by itself.
+
+**It is a shared FIRST cause**, and the value is the mechanism that has paid three
+times now: everything after byte 0 is shifted by the same amount, `cmplmd370`
+pairs nothing while lengths differ, and removing the shift makes the rest
+visible. That is how `&SYSPARM` went from invisible to 111 recovered and how the
+reader fix went from 143 unreadable to 2.
+
+**And it is `cc370#384`'s acceptance set**, which is what it is worth most as.
+218 modules with a known cause, at a known offset, of a known size, each carrying
+~148 divergences: **a module whose classifier reports ~148 constant changes has
+failed; one reporting a handful has worked, and the handful is the finding.** The
+22 negatives are the only thing in the set that exercises the deletion path.
+
+**The next measurement, not yet run**: give one of the 104 IBM's longer eyecatcher
+and see what survives. That tests this section's own claim — that the 148 are
+consequences rather than 148 causes.
+
 ### 🔑 1,878 of 2,292 length-differing modules now have a located divergence point
 
 **The length block is 41.7 % of the corpus and the largest single thing between
