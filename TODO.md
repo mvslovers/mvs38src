@@ -107,9 +107,16 @@ fix can only mask *more* bytes as relocated, never fewer, so one module moving
 `identical → differs` would refute the diagnosis whatever any record count said.
 Zero did, and every module that moved carries such a record.
 
-**+2 is small and that is the finding, not a disappointment.** The defect could
-only hide a difference that was *entirely* a relocated field, so a module it could
-rescue had to be otherwise already right — rare in this corpus by construction.
+**+2 is small, and the reason is measured rather than reasoned.** The first
+version of this passage said *"the defect could only hide a difference that was
+entirely a relocated field, so a module it could rescue had to be otherwise
+already right — rare in this corpus by construction."* The second half is wrong.
+**2,170 modules have a target member carrying such a record** — exposure is not
+rare at all — and 665 of them (30.6 %) were already `identical`, which is the
+corpus rate of 32.7 % to within noise. So the defect was in play for **1,505
+modules that were not identical, and it was the whole story for 2 of them:
+0.13 %.** What is rare is not the exposure but the module whose *only* remaining
+difference is an unmasked relocated field.
 
 CI was green on the PR head and on the merged commit, and checked both times.
 cc370#375 went in with a red gcc job because `gh pr checks` was never run; every

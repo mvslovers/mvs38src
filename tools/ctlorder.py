@@ -24,6 +24,15 @@ mean.
 
     ctlorder.py [members...]        default: every .bin under dlib-bytes + target-bytes
 
+**The walk is strict in both directions.** A member must open with a CESD record
+and its records must tile it exactly; anything else is reported, never truncated
+into a member that "walked". That matters here more than usual: the cc370 session
+found its own census had used `X'04'` as the module-end bit where `X'08'` is
+right, and stopped one record early. **An undercount of a 2,488-to-0 result reads
+exactly as convincing as the true one.** This walker never tests that bit -- it
+runs to the end of the member -- so it cannot make that error, and the exact-tiling
+check is what stops it making the opposite one.
+
 **One member of 7,749 does not walk**, and it is named rather than swallowed:
 `LINKLIB/HEWLF064` -- the linkage editor itself -- reads 33 records cleanly and
 then has 28 bytes left over that are not a record. `cmplmd370` reports the same
@@ -49,6 +58,8 @@ def records(b):
     counted as a member that agrees.
     """
     out, o, n = [], 0, len(b)
+    if b[:1] not in (b"\x20", b"\x28"):
+        return None            # every bound member opens with a CESD record
     while o < n:
         t = b[o]
         if t in (0x20, 0x28):
@@ -74,7 +85,11 @@ def records(b):
             o += ln + tl
         else:
             o += ln
-    return out
+    # The records must TILE the member exactly. Every step above refuses a length
+    # that would overrun, so reaching here means o == n -- but the invariant is
+    # asserted rather than reasoned about, because this parser's whole value is
+    # that a member it cannot read is reported and not counted.
+    return out if o == n else None
 
 
 def check(b):

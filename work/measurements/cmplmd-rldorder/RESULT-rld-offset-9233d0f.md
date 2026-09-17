@@ -1,8 +1,19 @@
 # cc370 #404 — the RLD offset in a bound member's control record
 
 The tree-wide acceptance run for cc370 **#404** (issue #403), head
-`9233d0f3d3560a923f5c1f3f0570c7dac87e9af6`. It is the basis for merging it and
+`9233d0f3d3560a923f5c1f3f0570c7dac87e9af6`. It was the basis for merging it and
 for moving the `cmplmd370` pin.
+
+## Status — adopted 2026-09-17
+
+Merged as **`210ec3a`**, and the pin names that commit. The build from `210ec3a`
+is **byte-identical** to the binary the acceptance was measured on
+(`e28156442704fcad95f7622c7a0537f90bfd3735c7ed56279cec1e51591c2fa9`), so the run
+transfers to the merged commit instead of being re-argued, and the official gate
+re-run under the new pin is **set-identical** to `gate-NEW.tsv`, 0/0 on both
+columns. CI is green on the PR head **and** on the merged commit, and both were
+checked — cc370#375 was merged with a red gcc job because `gh pr checks` was never
+run.
 
 ## Why this one needed the tree-wide run more than most
 
@@ -89,10 +100,18 @@ records with both lists — 2 of 2 agreeing with the after-RLD reading.
 
 ## What it does not say
 
-**+2 is small and that is the finding, not a disappointment.** The defect could
-only hide a difference that was *entirely* a relocated field, and a module whose
-source is otherwise already right is rare in this corpus by construction. The
-number that mattered was the one in the other direction, and it is zero.
+**+2 is small, and the reason is measured rather than reasoned.** The first
+version of this passage said *"the defect could only hide a difference that was
+entirely a relocated field, so a module it could rescue had to be otherwise
+already right — rare in this corpus by construction."* The second half is wrong.
+**2,170 modules have a target member carrying such a record** — exposure is not
+rare at all — and 665 of them (30.6 %) were already `identical`, which is the
+corpus rate of 32.7 % to within noise. So the defect was in play for **1,505
+modules that were not identical, and it was the whole story for 2 of them:
+0.13 %.** What is rare is not the exposure but the module whose *only* remaining
+difference is an unmasked relocated field.
+
+The number that mattered was the one in the other direction, and it is zero.
 
 The attribution maps (`reachable.tsv`, `alignfill.tsv`, `macroattr.tsv`,
 `lenattr.tsv`) were cut under the old comparator and are **not** re-cut here; the
