@@ -79,6 +79,20 @@ declares 25. Widened to the **form** — any branch-over-eyecatcher at offset 0
 whose target differs — it is **218 modules, 80 % of the 274 that diverge first at
 byte 0**.
 
+⚠️ **It is a FORM, not a family, and "the +8 family" is how both sessions were
+saying it.** The file has **24 distinct deltas spanning −8 to +170**, and `+8`
+covers 119 of 218 — **55 %, just over half**:
+
+```
+-8 × 2   -4 × 2   -2 × 18   +2 × 2   +4 × 6   +6 × 24   +8 × 119
++10 × 5  +12 × 2  +14 × 2  +16 × 16  +18 × 4  +20 × 3
+singletons: +24  +28 × 3  +32  +34  +36  +40  +42  +48  +78  +134  +170
+```
+
+An expectation keyed on `+8` scores 99 working modules as failures, and the three
+at `+78`, `+134` and `+170` are where an unclassified shift would be most plainly
+wrong and least likely to be looked for.
+
 ⚠️ **The delta is SIGNED and the description "IBM's is longer" is wrong for 22 of
 them**: `+8` × 119, `+6` × 24, `+16` × 16, `+4` × 6 … and **`−2` × 18, `−4` × 2,
 `−8` × 2** (`IGG019DD`, `IKTIOFRR`). For those 22 **ours is longer and IBM's
