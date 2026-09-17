@@ -196,7 +196,7 @@ def runs(code):
 
 
 def one(job):
-    csect, deck = job
+    csect, deck, which = job
     kc = known_code(csect, csect)
     if kc is None:
         return csect, None
@@ -204,7 +204,13 @@ def one(job):
     rt = roots(deck, csect)
     if rt is None:
         return csect, None
-    allr = rt["ld"] | rt["adcon"] | rt["end"]
+    # The SD entry is the section origin, and cc370#383 lists it FIRST among the
+    # code roots. Both of this session's tools omitted it, which is why they could
+    # report a section as rootless at all: with SD every section has a root at 0.
+    if which == "deliverable":
+        allr = {0} | rt["ld"] | rt["end"]
+    else:
+        allr = rt["ld"] | rt["adcon"] | rt["end"]
     rs = runs(code)
     hit = [r for r in rs if any(r[0] <= x < r[0] + r[1] for x in allr)]
     cov = sum(r[1] for r in hit)
@@ -231,6 +237,14 @@ def one(job):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--jobs", type=int, default=6)
+    ap.add_argument("--set", default="deliverable",
+                    choices=("deliverable", "proposed"),
+                    help="deliverable: SD + owned LD/LR + END on a deck, NO adcons "
+                         "-- cc370#383's own first bullet says an RLD target is a "
+                         "LABEL root and not a code root. proposed: the rule this "
+                         "session proposed before reading the issue, LD + adcon + "
+                         "END, kept so the two can be compared rather than one "
+                         "quietly replacing the other.")
     ap.add_argument("--out", default=os.path.join(
         ROOT, "work/measurements/dasm370-rootreach.tsv"))
     a = ap.parse_args()
@@ -238,8 +252,9 @@ def main():
             open(os.path.join(ROOT, "work/measurements/dasm370-decoder-control.tsv"),
                  encoding="utf-8")]
     h = {k: i for i, k in enumerate(rows[0])}
-    jobs = [(r[h["csect"]], os.path.join(ROOT, r[h["our_deck"]]))
+    jobs = [(r[h["csect"]], os.path.join(ROOT, r[h["our_deck"]]), a.set)
             for r in rows[1:] if len(r) >= len(rows[0])]
+    print(f"Wurzelmenge: {a.set}")
     res = []
     with ThreadPoolExecutor(a.jobs) as ex:
         res = list(ex.map(one, jobs))
@@ -263,11 +278,18 @@ def main():
     print(f"  zusammenhaengende Codelaeufe      {tr:9,}")
     print(f"  davon mit mindestens einer Wurzel {th:9,}  = {th/tr:5.1%}")
     print(f"  Codebytes in bewurzelten Laeufen  {tb:9,}  = {tb/tc:5.1%}")
-    print(f"\n  Wurzeln: LD {sum(d['ld'] for _,d in ok)}   "
-          f"Adcon {sum(d['adcon'] for _,d in ok)}   "
-          f"END {sum(d['end'] for _,d in ok)}")
-    print(f"\n  Module ohne jede Wurzel: "
-          f"{sum(1 for _,d in ok if d['ld']+d['adcon']+d['end']==0)}")
+    ld = sum(d["ld"] for _, d in ok)
+    ac = sum(d["adcon"] for _, d in ok)
+    en = sum(d["end"] for _, d in ok)
+    if a.set == "deliverable":
+        print(f"\n  Wurzeln: SD {len(ok)}   LD {ld}   END {en}"
+              f"   (Adcon {ac} NICHT gezaehlt -- Labelwurzeln, nicht Codewurzeln)")
+        print(f"\n  Module ohne jede Wurzel: 0 von {len(ok)} "
+              f"-- mit SD hat jede Sektion eine Wurzel bei Offset 0")
+    else:
+        print(f"\n  Wurzeln: LD {ld}   Adcon {ac}   END {en}   (ohne SD)")
+        print(f"\n  Module ohne jede Wurzel: "
+              f"{sum(1 for _, d in ok if d['ld'] + d['adcon'] + d['end'] == 0)}")
     print(f"-> {a.out}")
     return 0
 

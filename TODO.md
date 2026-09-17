@@ -48,13 +48,64 @@ only what it can derive; every other number in this file is prose that no tool
 reads, and a `--check` failure naming `TODO.md` means that table and nothing
 else.
 
-### ⏸ Waiting on Mike: whether `cc370#383` starts — 2026-09-17
+### 🔴 OPEN: `cc370#383` — and an afternoon spent refining a clause the issue excludes
 
-**#404 and #405 are merged and measured. The cc370 session is holding on #383 on
-Mike's own instruction** — one step at a time, and the decision to open it is his.
-Nothing here presumes it.
+**#404 and #405 are merged and measured. Mike opened #383 on 2026-09-17, and the
+first thing done after he did was to re-read the deliverable — which neither
+session had done all afternoon.**
 
-The gate is built and proven either way:
+⚠️⚠️ **The root rule refined here for six hours contains a clause `cc370#383`
+rules out in its own first bullet.** Verbatim:
+
+> **RLD targets are *label* roots, not code roots.** An RLD entry says where an
+> address constant points, which is data at least as often as code; treating a
+> `DC A(BUFFER)` table as code reintroduces exactly what reachability exists to
+> remove.
+
+The clause argued over — `R == esdid` against `R == P == esdid` — was about the
+**definition** of a set that does not belong in the code-root rule at all, except
+in the narrow case the deliverable does name: an A-con target **only when the
+loaded register is actually branched through**. And **both sessions' tools omitted
+`SD`**, which the deliverable lists *first*.
+
+**This is different in kind from the other instances below.** Those were a
+sentence beside a correct measurement, and the other session caught every one.
+This is two sessions measuring the right thing about the **wrong set**, each
+checking the other's arithmetic, neither checking the premise — **so the division
+of work did not catch it, because both were inside the same frame.** What catches
+it is the thing neither did: **re-read the deliverable before refining a rule
+meant to satisfy it.**
+
+**Re-measured with the deliverable's set** — `SD` + owned `LD`/`LR` + `END` on a
+deck, no adcons (`rootreach.py --set deliverable`, and `--set proposed` keeps the
+old one so the two can be compared rather than one quietly replacing the other):
+
+```
+                         runs with a root      code bytes in one
+deliverable set          45 of 1,554  2.9 %    1,928 of 62,078  3.1 %
+proposed set (wrong)     36 of 1,554  2.3 %    3,250 of 62,078  5.2 %
+```
+
+**The conclusion survives and hardens: 3.1 %, not 5.2 %.** The static code roots
+reach *less* than was concluded, so the traversal carries even more. And `5.2 %`
+is now an **upper** bound on a floor rather than the floor itself.
+
+⚠️ **Every "rootless" figure in this file is about the proposed set and is moot
+for the deliverable's**: with `SD` a root, **no section is rootless** — every one
+has a root at offset 0. The `END` asymmetry is still real and still belongs in the
+rule text (a member has no entry point), but it is **not** the difference between a
+module having a root and having none. `rootdensity.py`'s 3.960 against 3.271 is
+**label**-root density on both populations; the comparison stands, its name
+changes.
+
+**And `SD` has to stay for the opposite reason**, which is the sharper half:
+without it, **11 of the 30 control CSECTs — real code, real source — come out
+entirely `DC`**, byte-safe and invisible to every instrument either side has. The
+ordinary MVS shape is a CSECT entered at its origin by `V(name)` from another load
+module, so the branched-through test cannot be applied to it from inside the
+member at all.
+
+The gate is built and proven:
 [`tools/reachgate.py`](tools/reachgate.py), region by region rather than a ratio,
 because **a scalar cannot see a local failure** — a module where 400 bytes of a
 text table correctly stop decoding and 20 bytes of real code incorrectly stop
