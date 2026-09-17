@@ -69,10 +69,11 @@ sessions in a day: the cc370 session's 2,489 census, this session's *"four modul
 got worse"*, this session's *"it is in the PR body"*, their *"absent from our
 deck"*, this session's adjacency claim, and this session's `11 − 7 = 4`
 subtraction. **Every one was a sentence about a measurement, written by the person
-who had just made the measurement.** Five were caught by the other session; the
-sixth was caught before it was quoted, also by the other session. **Not one was
-caught by its author re-reading it** — including the two where the author knew the
-failure shape by name and had written it down the same day.
+who had just made the measurement.** A seventh followed the same evening — the
+cc370 session's *"the existing label set already computes two of the three"*,
+above. **Every one was caught by the other session, and not one by its author
+re-reading it** — including the two where the author knew the failure shape by
+name and had written it down the same day.
 
 So the defence is **not vigilance**. It is that the sentence gets read by someone
 who did not produce the number. That is what *"they build, we measure"* buys, and
@@ -191,6 +192,24 @@ outcome.
    **the same under-count as `rootreach.py`, reached independently by two people
    who never compared notes.** Checked here in the source rather than taken on
    report.
+
+   ⚠️ **So "no new machinery is needed" is false, and it was the reason the advice
+   against building a second reader looked safe.** The cc370 session's first
+   formulation was *"the existing label set, minus the section start, plus the
+   `END` entry where there is one"*, on the strength of `derive_labels()` already
+   computing two of the three kinds. Verified here: `derive_labels()` walks
+   `rld[]` — the P-filtered array — and tests `rld[i].r == sect_esdid` inside it,
+   so what it computes is the **narrow intersection**. The `LD`/`LR` half and the
+   `END` entry come free; **the adcon half does not and needs a new scan of the
+   whole module's relocations.** The corrected shape, theirs:
+
+   > the `LD`/`LR` addresses, plus the `END` entry on a deck, plus a **new** scan
+   > of the whole module's relocations keeping those whose `R` names this section.
+
+   Their own correction, found because of a message from this side rather than
+   because the sentence looked wrong — and it is the sharpest of the day precisely
+   because the advice it supported (*do not build a second reader, the information
+   already exists*) was safe only if the false half were true.
 
    ⚠️ **And the check found a real asymmetry between this session's own two
    tools.** Six of the 30 have more roots read from the member than from the deck —
