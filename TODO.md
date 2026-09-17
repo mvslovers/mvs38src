@@ -48,6 +48,39 @@ only what it can derive; every other number in this file is prose that no tool
 reads, and a `--check` failure naming `TODO.md` means that table and nothing
 else.
 
+### ⏸ Waiting on Mike: whether `cc370#383` starts — 2026-09-17
+
+**#404 and #405 are merged and measured. The cc370 session is holding on #383 on
+Mike's own instruction** — one step at a time, and the decision to open it is his.
+Nothing here presumes it.
+
+The gate is built and proven either way:
+[`tools/reachgate.py`](tools/reachgate.py), region by region rather than a ratio,
+because **a scalar cannot see a local failure** — a module where 400 bytes of a
+text table correctly stop decoding and 20 bytes of real code incorrectly stop
+decoding moves a ratio exactly as intended. Its controls: identity gives 0
+regions; the classifier assigns 3,256 I / 877 D over five modules; an injected
+flip of 24 instruction bytes gives 4 regions and the source witness calls all four
+real code. The discriminating direction is `instruction → DC`.
+
+**Two things that gate cannot settle, and they have to be settled BEFORE the work,
+not after it.** Both were raised by the cc370 session, and both are the same
+hazard: #383 is byte-safe by construction — unreached code becomes `DC`, which
+reproduces its own bytes — so **every instrument this project runs reports success
+either way**. An acceptance agreed afterwards would be an acceptance fitted to the
+outcome.
+
+1. **What counts as a root, as a rule stated in advance.** Not "the pass must not
+   turn real code into `DC`" — that is an outcome and it is exactly what nobody can
+   check at scale. The rule has to name the places an object reader has ground
+   truth for: the entry point, every `LD`/`LR` address in the CESD, every address
+   constant whose relocation resolves into this section. Anything beyond that is
+   inference, and inference is what the round trip cannot see through.
+2. **The 126 unclassifiable of the 160 dark sections.** `text_frac` does not
+   separate them and the round trip is blind to them in both directions. Whatever
+   is agreed for these has to be agreed as a rule too, or the 126 become the place
+   the whole question hides.
+
 ### ✅ Closed: `dasm370 --align-diff` — cc370#405, merged as `01ee607` — 2026-09-17
 
 **A shift measured from the two sides instead of assumed.** Both objects of one
@@ -86,10 +119,13 @@ thing being scrutinised.** See the RESULT document.
 `first=` is the first *finding*; `first_divergence` is a **bound** from
 `--anchors=report`. For **557 of 832** `first=` is the sharper number, median 38
 bytes and up to 3,898 ahead of our anchor. Checked by hand here: `IGG019GW`,
-anchor `0xCB4`, `first=000034` — IBM's member has `L 4,24(0,3)` where our deck has
-`L 4,20(0,1)`, a different base register and a different displacement, 3,200 bytes
-before our column says the divergence begins. **Read `first=` when ranking a
-module for repair.**
+anchor `0xCB4`, `first=000034` — IBM's member has `L 4,24(0,3)` at ref `0x34`
+where our deck has `L 4,20(0,1)` at cand `0x3C`, a different base register and a
+different displacement, 3,200 bytes before our column says the divergence begins.
+**Read `first=` when ranking a module for repair.** (The two edits are twelve
+bytes apart with matched statements between, so it is a substitution in effect and
+not one the alignment saw as a single `replace` — a refinement the cc370 session
+sent after this was first written, and the record needed it.)
 
 **And a warning class that was written down too broadly here.** This file has said
 that `_FORTIFY_SOURCE`-dependent gcc warnings are unreachable on a Mac. They are

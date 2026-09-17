@@ -139,11 +139,29 @@ comes from `--anchors=report`, where the anchor is a **bound** and says so of
 itself.
 
 For the 557 it is the sharper number, and one case checked here by hand rather
-than taken on report: `IGG019GW`, anchor `0xCB4`, `first=000034`. IBM's member
-carries `L 4,24(0,3)` at `0x34` and our deck carries `L 4,20(0,1)` at `0x3C` —
-not a missing instruction but a different base register and a different
-displacement, **3,200 bytes ahead of where our own column says the divergence
-starts**.
+than taken on report: `IGG019GW`, anchor `0xCB4`, `first=000034`.
+
+```
+FINDING delete ref 000034 4 bytes (1 stmt)  cand 000034 0 bytes (0 stmt)  -4
+    ref  000034 L     4,24(0,3)                 58403018
+FINDING insert ref 000040 0 bytes (0 stmt)  cand 00003C 4 bytes (1 stmt)  +4
+    cand 00003C L     4,20(0,1)                 58401014
+```
+
+IBM's member carries `L 4,24(0,3)` at ref `0x34` and our deck carries
+`L 4,20(0,1)` at cand `0x3C` — **not a missing instruction but a different base
+register and a different displacement**, 3,200 bytes ahead of where our own column
+says the divergence starts. The cc370 session had reported it as *"present in
+IBM's member and absent from our deck"*, having read the `delete` line and not the
+`insert` two lines below it in a file they had open — the same shape as this
+session's three, and they said so.
+
+⚠️ **And the refinement they sent afterwards, which this record also needed.** The
+two edits are **not adjacent**: the `delete` is at ref `0x34` and the `insert`
+lands at ref `0x40`, twelve bytes later, with matched statements in between that
+print no line because they agree. So it is a substitution **in effect** — net
+−4 +4 over that span — and not one the alignment saw as a single `replace`. The
+paragraph above read as though both instructions occupied the same slot.
 
 So: keep both, name what each one means, and read `first=` when ranking a module
 for repair. A column that silently mixed a bound with a location would be the
