@@ -108,7 +108,42 @@ outcome.
 
    The code set is cross-checked against `dasm370`'s own independent
    classification of the same decks: **66,689 of 68,192 comparable bytes agree,
-   97.8 %**. A 2 % doubt in the denominator cannot move a 5 % answer.
+   97.8 %**. A 2 % doubt in the denominator cannot move a 5 % answer. Neither side
+   is the reference there, so the 2.2 % is a *disagreement* and not an error rate
+   for either.
+
+   ⚠️ **5.2 % is measured on the 30, and the 30 are the modules that HAVE source.**
+   The population #383 exists for is the 772 that have none. Raised by the cc370
+   session, and it is the hazard neither instrument can see from inside itself: the
+   corpus that measures *truth* answering for the corpus that measures *reach*.
+
+   🔑 **Bounded, with [`tools/rootdensity.py`](tools/rootdensity.py)** — root
+   *density* needs no source and is readable from the objects on both populations,
+   and **both are read from bound members with the same extractor** so the
+   deck/member asymmetry cannot leak into the comparison:
+
+   ```
+   the 30 with source     30 sections    80,058 bytes    317 roots
+                          3.960 per 1000 bytes   median per section 0.951
+                          no root at all: 11 of 30 = 36.7 %
+
+   the 772 without       645 sections 1,088,246 bytes  3,560 roots
+                          3.271 per 1000 bytes   median per section 2.315
+                          no root at all: 154 of 645 = 23.9 %
+   ```
+
+   **The 30 are not unusually rich, so 5.2 % transfers as a floor.** In aggregate
+   they are 1.21× denser, and **by the median the dark population is more than
+   twice as dense** and has a smaller share of rootless sections — the aggregate is
+   carried by a few large sections. Neither direction rescues the root rule; it
+   says the floor is a floor on both.
+
+   127 of the 772 do not resolve to a member that names the CSECT in its CESD and
+   are counted as not measured. And **11 rootless here against 7 in `rootreach.py`
+   is the asymmetry itself**: that tool reads decks and counts the `END` entry,
+   this one reads members where no entry point exists. **Four of the 30 have a root
+   only because of the `END` card** — which is exactly the difference between the
+   two forms, arrived at from the other side.
 
    ⚠️ Two defects in that measurement were caught by controls before the figure
    left this machine, both in the listing walk: it did not track the section, so
