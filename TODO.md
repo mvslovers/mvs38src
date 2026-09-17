@@ -48,6 +48,56 @@ only what it can derive; every other number in this file is prose that no tool
 reads, and a `--check` failure naming `TODO.md` means that table and nothing
 else.
 
+### ✅ Closed: `dasm370 --align-diff` — cc370#405, merged as `01ee607` — 2026-09-17
+
+**A shift measured from the two sides instead of assumed.** Both objects of one
+CSECT are disassembled and aligned statement by statement with the displacements
+masked out of the key, so a displacement that moved because something before it
+changed length is a **consequence** and one that did not is a **finding**. The
+gate is in [`work/measurements/aligndiff/`](work/measurements/aligndiff/).
+
+```
+A  refactor 62d460d vs main 210ec3a      868 of 868 runs BYTE-IDENTICAL
+B  identity --align-diff X X on the 30   30/30 findings=0, shift set {+0}, first=-
+C  agreement with cmplmd370 on the 30    30/30
+D  the 832 run                           832/832 SUMMARY, align=ok, none abandoned
+
+382,378 conseq   109,257 const   2,579 ins   6,423 del   1,904 data
+120,163 findings  43,486 unchanged   base 158 exact / 347 weak / 327 none
+```
+
+**Control A is the shape worth keeping.** Half the PR was a refactor advertised as
+behaviour-identical, and that half is checked by *running* it — 868 runs of
+byte-identical stdout and exit code — not by reading it. It is the half that could
+have broken everything else quietly.
+
+**The 109,257 constant changes are the population `lenattr.py` cannot see**, since
+it drops every equal-length difference. That is the new material here; the
+suppressed shifts only report how well this agrees with what we already do.
+
+⚠️ **This session's own failure, third of the day and the same shape as the other
+two.** The gate report said a number *"does not reproduce, and it is in the PR
+body"*. The measurement was right; the claim about where the other number lived
+was invented — the PR and the man page had carried the measured figures since the
+first push, and this session never opened either. **What was wrong was never the
+thing being scrutinised.** See the RESULT document.
+
+**`first=` and our anchor column are not the same quantity**, and both are kept.
+`first=` is the first *finding*; `first_divergence` is a **bound** from
+`--anchors=report`. For **557 of 832** `first=` is the sharper number, median 38
+bytes and up to 3,898 ahead of our anchor. Checked by hand here: `IGG019GW`,
+anchor `0xCB4`, `first=000034` — IBM's member has `L 4,24(0,3)` where our deck has
+`L 4,20(0,1)`, a different base register and a different displacement, 3,200 bytes
+before our column says the divergence begins. **Read `first=` when ranking a
+module for repair.**
+
+**And a warning class that was written down too broadly here.** This file has said
+that `_FORTIFY_SOURCE`-dependent gcc warnings are unreachable on a Mac. They are
+not: `gcc-16 -O2 -Wall -Wextra -Wformat-truncation=2` fires them locally with no
+`_FORTIFY_SOURCE`. **Level 2 is what does it** — the default from `-Wall -Wextra`
+stays quiet, which is why the class reads as CI-only. Too noisy for the build,
+but a pre-flight grep for a new buffer name catches it before the push.
+
 ### ✅ Closed: `cmplmd370` read a bound member's RLD info four bytes late — 2026-09-17
 
 **The verdict instrument has the defect, not only the disassembler.** The `cc370`

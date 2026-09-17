@@ -1,8 +1,25 @@
 # cc370 #405 — `--align-diff`, gated 2026-09-17
 
-The acceptance run for cc370 **#405** (issue #384), head
-`7cdbfe51faa40c773e2fd0fb13170acccb8a20c3`, built here from a `git archive` of
-that commit and never out of the working tree the cc370 session rebuilds.
+The acceptance run for cc370 **#405** (issue #384), built here from a
+`git archive` of the commit and never out of the working tree the cc370 session
+rebuilds.
+
+## Status — adopted 2026-09-17
+
+Gated twice. First on `7cdbfe51faa40c773e2fd0fb13170acccb8a20c3`, then again on
+`6eff9214d625c46abfb5eae3e610b8a9596dc3d7` after the `SUMMARY` line gained the
+fields asked for below, and **merged as `01ee607`**.
+
+The second gate is the control that makes the first one still count: over the 832
+modules, **not one of the eleven shared columns moves on any module** between the
+two heads, so the fields were added and nothing else changed. The build from
+the merged commit is **byte-identical** to the one the second gate ran on
+(`bb5cf36bf3363dbebc407f7a63374ad363e5694129e6fac1395f79764b5f8ae7`), so the run
+transfers to `01ee607` rather than being re-argued. CI is green on both gated
+heads and on the merged commit, and all three were checked.
+
+`run-832-7cdbfe5.tsv` and `run-832-6eff921.tsv` are both kept — the pair is the
+evidence for that null control, not redundancy.
 
 ## Controls
 
@@ -87,7 +104,7 @@ ICBMSG56 317   ICKRI01 316   IEECB905 246
 ICKIT01  232   ICKIN01 225   IKJEFT02 175
 ```
 
-## Two fields the `SUMMARY` line needs before it is in `main`
+## Two fields the `SUMMARY` line needed, and got before it was in `main`
 
 `SUMMARY` is the only machine-readable line a population run leaves, and it is
 what this repository will grep. Two things it knows and does not print:
@@ -99,6 +116,38 @@ what this repository will grep. Two things it knows and does not print:
   scalar for triage and it is what
   [`first-divergence.tsv`](../divergence/first-divergence.tsv) is built on;
   without it the whole report has to be re-parsed to rank a module.
+
+Both landed, with `reflen=` and `candlen=` as well, and `first=-` where there is
+no finding — never `first=000000`, which is asserted in cc370's own suite rather
+than assumed. Verified here: the identity control gives `first=-` on all 30.
+
+### What `first=` says about our own anchor column, which is our judgement to make
+
+Over the same 832, `first=` against `for-aligndiff.tsv`'s `first_divergence`:
+
+```
+identical                     80
+our anchor LATER than first=  557   median 38 bytes, max 3,898
+our anchor EARLIER            195   median  4 bytes
+```
+
+**They are not the same quantity and neither replaces the other.** `first=` is
+the first **finding** — the first difference that is not a displacement
+consequence — so it sits *later* than the true first differing byte whenever that
+byte is a consequence, which is the whole point of the mode. `first_divergence`
+comes from `--anchors=report`, where the anchor is a **bound** and says so of
+itself.
+
+For the 557 it is the sharper number, and one case checked here by hand rather
+than taken on report: `IGG019GW`, anchor `0xCB4`, `first=000034`. IBM's member
+carries `L 4,24(0,3)` at `0x34` and our deck carries `L 4,20(0,1)` at `0x3C` —
+not a missing instruction but a different base register and a different
+displacement, **3,200 bytes ahead of where our own column says the divergence
+starts**.
+
+So: keep both, name what each one means, and read `first=` when ranking a module
+for repair. A column that silently mixed a bound with a location would be the
+worst of the three options.
 
 ## The 22 of 140, which is what the author asked judgement on
 
