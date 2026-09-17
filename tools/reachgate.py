@@ -24,6 +24,22 @@ means reachability found more, which is not what it is for. Every `I->D` region
 is a candidate defect, and outside the text-heavy CSECTs there should be very
 few -- a list to read rather than a number to trust.
 
+**`D -> I` does not alarm, and it is not nothing.** Measured on #383's `--reach`
+over the 30: **130 bytes, and the witness calls ALL of it code** -- eight modules,
+every one immediately after the eyecatcher, because silencing the eyecatcher as
+one clean run puts a `DC`-run boundary back where it belongs and code that used to
+be swallowed decodes again. So the ledger has **three** columns, not two: code
+darkened, data silenced, code recovered. Quiet is the right default for this
+direction and quiet is not the same as absent.
+
+⚠️ **And it is a trap for any ratio built on top.** A "how much of the code
+survives" figure must count **survivors of the original instruction bytes**, not
+net instruction bytes -- the recovered bytes belong in the numerator of neither.
+This session computed `I_after / I_before` and got `IEHPROG1` at 100 % where the
+stated definition gives 50 %: 12 instruction bytes before, 6 surviving, 6 newly
+recovered. The entire margin disagreement between the two sessions' threshold
+tables was that one column, and correcting it reproduced every figure exactly.
+
 **And the control that makes it a test rather than a tally**: for the 30
 decoder-control CSECTs we hold real source, so a region that stopped decoding can
 be checked against the assembly listing -- is there an instruction at that offset
