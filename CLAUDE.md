@@ -30,6 +30,23 @@ So, before believing a figure:
 - **Write down what was wrong, not just what is right.** Corrections stay visible
   in the documents; a number that moved four times says so.
 
+**The sentence beside a measurement is read by the session that did not produce
+the number. And before refining a rule meant to satisfy a deliverable, the
+deliverable is re-read — cross-reading cannot catch a frame both sessions are
+inside.**
+
+On 2026-09-17 more than thirty errors of one shape occurred across this session
+and the cc370 session. Every one was **a sentence written beside a measurement
+that was correct**, by the person who had just made the measurement. **Not one was
+caught by its author re-reading it** — including the cases where the author knew
+the failure shape by name and had written it down that same day. In every case the
+question that exposed it came from someone who **had not produced the number**.
+
+So the defence is not vigilance and not a second look; it is the other reader.
+The one failure the cross-reading did *not* catch is the one the second sentence
+exists for: an afternoon spent refining a root rule against a clause `cc370#383`
+excludes in its own first bullet, which neither session had re-read.
+
 ## Working with the cc370 session
 
 The toolchain (`as370`, `ld370`, `cmplmd370`, `file370`) is built by a separate

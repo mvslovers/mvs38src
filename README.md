@@ -72,9 +72,9 @@ Dave Kreiss: *"target not DLIB is the version of code you should compare to sinc
 
 | | modules | |
 |---|---:|---:|
-| **recovered under the chosen baseline** | **1,628 of 5,353** | **30.4 %** |
+| **recovered under the chosen baseline** | **1,629 of 5,353** | **30.4 %** |
 
-The figures above it are not withdrawn and do not contradict it: the same decks are identical to **1,633** DLIB members, **1,478** target members, and **1,453** of both. **2 modules are counted as not recovered because `cmplmd370` does not pair their target member** — the deck names a CSECT the member does not carry. **None of them is called identical by the DLIB either**, so nothing is being withheld from the count by the instrument. A further **839** have no target counterpart at all, and for those the DLIB is the only object there is.
+The figures above it are not withdrawn and do not contradict it: the same decks are identical to **1,634** DLIB members, **1,479** target members, and **1,454** of both. **2 modules are counted as not recovered because `cmplmd370` does not pair their target member** — the deck names a CSECT the member does not carry. **None of them is called identical by the DLIB either**, so nothing is being withheld from the count by the instrument. A further **839** have no target counterpart at all, and for those the DLIB is the only object there is.
 
 ### The second verdict, since the goal was reformulated on 2026-09-16
 
@@ -82,11 +82,11 @@ The figures above it are not withdrawn and do not contradict it: the same decks 
 
 | | modules | |
 |---|---:|---:|
-| `recovered` — `cmplmd370` exits 0 | 1,628 | 30.4 % |
+| `recovered` — `cmplmd370` exits 0 | 1,629 | 30.4 % |
 | `reachable` — identical under a named macro reconstruction | 21 | 0.4 % |
 | `blocked` — attributed, but no reconstruction exists to prove it | 72 | 1.3 % |
-| **explained** | **1,721 of 5,353** | **32.2 %** |
-| unexplained | 3,632 | 67.8 % |
+| **explained** | **1,722 of 5,353** | **32.2 %** |
+| unexplained | 3,631 | 67.8 % |
 
 **The `blocked` rule is narrow on purpose.** One differing byte in open code and the module is unexplained, however obvious its cause looks. That is why the tier is small and why the figure can be trusted.
 

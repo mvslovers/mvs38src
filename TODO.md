@@ -586,8 +586,12 @@ more land within 14 bytes. Four more land within 14 bytes. That is the
 value of the class: not that it explains the rest, but that it converts *"length
 differs, nothing can be compared"* into a residue small enough to read.
 
-**The repair is NOT deposited in `src/`.** It is a measurement, and whether IBM's
-identifier belongs in our source is the user's decision, not this tool's.
+**✅ Deposited 2026-09-17, on Mike's decision**: `src/AOSB3/IEFAB486.ASM` carries
+IBM's own identifier, `DC AL1(24)` / `DC C'IEFAB486 79061  UZ25269 '`, and the
+CSECT is byte-identical to `LPALIB(IEFW21SD)`. Marked with comment cards, columns
+and sequence numbers untouched. **It is IBM's own byte, not a disassembler's
+guess** — that is what made it a different case from the rest of this class, and
+the rest of the class stays where it is.
 
 ⚠️ **Two instruments, two numbers, both right.** The table above counts bytes
 under a difflib alignment, which absorbs a shift and therefore says how much
@@ -886,16 +890,18 @@ rank against a comparator and a deck set that are both superseded.
 
 | | |
 |---|---:|
-| **under the chosen baseline — target, DLIB where no target exists** | **1,628 of 5,353 — 30.4 %** |
-| **explained — the second verdict** | **1,721 — 32.2 %** |
+| **under the chosen baseline — target, DLIB where no target exists** | **1,629 of 5,353 — 30.4 %** |
+| **explained — the second verdict** | **1,722 — 32.2 %** |
 | the same decks against the DLIB alone | 1,633 |
 | against the target alone | 1,478 |
 | against both | 1,453 |
 | target member not paired — was 143 | **2** |
 | DLIB and target disagree — was 57 | **55** |
 
-**The +2 came from the instrument again, not from source work** — cc370#404, the
-RLD offset, accepted and merged this morning. `src/` is unchanged.
+**+2 came from the instrument** — cc370#404, the RLD offset, accepted and merged
+this morning — and **+1 from source work**, the first in a while: `IEFAB486` was
+deposited in `src/` with IBM's own module identifier and is byte-identical.
+`src/` is 317.
 
 ⚠️ **1,719 and not the 1,724 this table said until it was re-read.** The figure
 dropped by five when `alignfill.py`'s guard was added the same evening — it had
