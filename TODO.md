@@ -100,9 +100,22 @@ shorter** — our source carries something IBM's object does not, which is a
 different repair entirely. Caught by the cc370 session reading the file after
 this session had summarised it without the sign.
 
-⚠️ **It is not a recovery.** Median 148 divergence points per module, minimum 5,
-and **zero of the 104 have only this one**. Repairing the eyecatcher recovers
-nothing by itself.
+⚠️ **It is not a recovery, and that is now measured and not inferred.**
+[`tools/eyerepair.py`](tools/eyerepair.py) takes IBM's own identifier out of the
+bound member, puts it into our source in place of ours, and assembles — so the
+assembler recomputes every displacement and whatever survives is a cause of its
+own. Over the 104:
+
+| | Module | abweichende Bytes vorher → nachher | identical |
+|---|---:|---|---:|
+| length delta = +8 | 11 | 1,474 → **1,410** (−4.3 %) | **1** |
+| length delta ≠ +8 | 85 | 304,153 → **301,948** (−0.7 %) | 0 |
+| **all measured** | **96** | **305,627 → 303,358 (−0.7 %)** | **1** |
+
+**So the ~148 divergences are not consequences of the shift.** Removing the shift
+at the source, with the assembler doing all the arithmetic, takes away **less than
+one per cent** of them. The paragraph that used to stand here guessed the opposite
+and said so as a question; this is the answer, and it is no.
 
 **It is a shared FIRST cause**, and the value is the mechanism that has paid three
 times now: everything after byte 0 is shifted by the same amount, `cmplmd370`
@@ -116,9 +129,57 @@ reader fix went from 143 unreadable to 2.
 failed; one reporting a handful has worked, and the handful is the finding.** The
 22 negatives are the only thing in the set that exercises the deletion path.
 
-**The next measurement, not yet run**: give one of the 104 IBM's longer eyecatcher
-and see what survives. That tests this section's own claim — that the 148 are
-consequences rather than 148 causes.
+**What the repair IS worth: it makes `cmplmd370` work at all.** The instrument
+refuses to compare a CSECT whose length differs, and that is all 104 of them. For
+the 11 whose length delta is exactly `+8` the repair closes the length gap, and
+`cmplmd370` then answers for the first time:
+
+```
+IEFAB486   4164/4172   identical        0        IEFDB4FE   562/ 570   text      87
+ICB2AIR     545/ 553   text             1        IEFAB4EF  1604/1612   text     187
+IEAVTJBN    932/ 940   mixed            2        IEFIB660   677/ 685   mixed    355
+IEFAB441   2232/2240   mixed            8        IEECB909 19800/19808  text    1438
+IGC0112F   2428/2436   mixed           14        IEFAB4UV  2293/2301   mixed   1935
+                                                 AMDPRCVT  4594/4602   mixed   2144
+```
+
+**`IEFAB486` becomes byte-identical** — 4,164 → 4,172 bytes, `cmplmd370` exit 0,
+and the identifier was the only cause. Four more land within 14 bytes. That is the
+value of the class: not that it explains the rest, but that it converts *"length
+differs, nothing can be compared"* into a residue small enough to read.
+
+**The repair is NOT deposited in `src/`.** It is a measurement, and whether IBM's
+identifier belongs in our source is the user's decision, not this tool's.
+
+⚠️ **Two instruments, two numbers, both right.** The table above counts bytes
+under a difflib alignment, which absorbs a shift and therefore says how much
+*content* differs; `cmplmd370` compares positionally after clearing the
+RLD-covered bytes. `IEFAB486` came back with 51 differing bytes under the first
+and **0** under the second — relocated address constants, which a deck and a bound
+member can never agree on. `IEFIB660` goes the other way: 42 under the first and
+**355** under the second, because one internal insertion survives the repair and
+shifts everything behind it. Read the alignment figure for magnitude and
+`cmplmd370` for the verdict.
+
+⚠️ **Four modules got worse** (`AMDPRCVT`, `ICBVUT03`, `IEECB909`, `ISDASDA0`):
+IBM's longer identifier moves their code to a place that agrees with IBM's text
+*less* than before. That is not an instrument defect — it says the `+8` in those
+modules is not at the front.
+
+**Eight of the 104 are counted as unmeasured rather than guessed at**: 3 not
+anchorable in their member (`ICKRI02`, `IGE0010E`, `ISTAPC54`), 3 with no
+`DC AL1(n)` / `DC C'…'` in the source (`IEBGENR3`, `IEBGSCAN`, `IEHMVSRV`), 2
+where the repair did not take (`IDCRD05`, `IEAVAD0C`). The run reproduces: two
+runs, same 95/3/3/2/1 and the same byte totals.
+
+**Three controls, because each of them could fake the result.** The *unmodified*
+source is assembled by the tool itself first and must give byte for byte the deck
+the gate built — otherwise "the repair changed something" and "this assembly is
+not the gate's" are the same observation; all 96 passed, no `setup-mismatch`.
+After the repair the module's own bytes must carry IBM's branch and IBM's
+identifier, or it is `repair-failed`. And the anchors are deliberately **not** the
+instrument: `IEEMB814` has 23 failing anchors and is 188 bytes *shorter* than
+IBM's module.
 
 ### 🔑 1,878 of 2,292 length-differing modules now have a located divergence point
 
