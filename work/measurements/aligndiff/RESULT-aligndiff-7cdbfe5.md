@@ -49,24 +49,43 @@ build on separate hardware paths. The shift-set strength table matches too:
 | 33–128 | 166 | 113,877 | 29.8 % |
 | > 128 | 14 | 12,330 | 3.2 % |
 
-## One number does not reproduce, and it is in the PR body
+## ⚠️ One number did not reproduce, and THIS SESSION put it in the wrong place
 
-The cc370 session states *"the shift set's median size is 20 and its maximum
-174"*. Measured here over the same 832 rows that produced the table above:
+The section that stood here was headed *"One number does not reproduce, and it is
+in the PR body"*, and reported that the PR states a median shift-set size of 20
+and a maximum of 174 where 16 and 317 are measured. The measurement was right and
+**the claim about where the number lived was invented**: the PR body and
+`man/dasm370.pod` have carried **16 and 317 since the first push** — the same
+figures measured here — and the man page already says *"membership in a 317-value
+set is close to no test at all"*, which is the caution at its right magnitude.
+
+The `20` and `174` were in the cc370 session's **message** and nowhere else. This
+session read them there, wrote *"it is in the PR body"*, and never opened the PR
+body to look. One `gh pr view 405 --json body` would have settled it before a gate
+report went out saying a document said something it does not.
+
+**That is the failure this project keeps writing down, in its usual shape**: the
+measurement was checked exhaustively and the one-line claim attached to it was not
+checked at all. It is the same shape as merging cc370#375 with a red CI job after
+verifying its measurement exhaustively — the thing that was wrong was never the
+thing being scrutinised.
+
+The discrepancy itself has a clean explanation and it reproduces, which is what
+makes it an explanation rather than an excuse. The cc370 session's `20`/`174` came
+from an older binary over the 140-module subset, when `ALIGN_MAXD` was 3,000 and 8
+of the 140 were abandoned — among them `ICBMSG56` (317), `IEECB905` (246) and
+`IKJEFT02` (175), three of the six large-set modules named below. The other three
+are not in the 140 at all. The same subset today gives median 21 and max 175:
+**+1 on every module**, because the section-end fix that landed after that message
+adds exactly one value to every shift set.
+
+**`16` over the 832 is the number.** The 20/174 is withdrawn from this record, and
+the six modules above 174 stand as measured:
 
 ```
-all 832           median 16   mean 25.2   max 317
-the 140 eyecatcher modules in it   median 22   max 317
-six modules exceed 174:  ICBMSG56 317  ICKRI01 316  IEECB905 246
-                         ICKIT01  232  ICKIN01 225  IKJEFT02 175
+ICBMSG56 317   ICKRI01 316   IEECB905 246
+ICKIT01  232   ICKIN01 225   IKJEFT02 175
 ```
-
-The bucket table agrees to the unit, so both sides are reading the same run —
-which makes the median and the maximum a statistic taken differently rather than
-a different measurement. It matters because the sentence carries a **caution**:
-*"membership in a 174-value set is a weak test."* If the true maximum is 317 the
-caution is understated by a factor of nearly two, and the number is going into
-`main`. Sent as a case, not a diagnosis.
 
 ## Two fields the `SUMMARY` line needs before it is in `main`
 
