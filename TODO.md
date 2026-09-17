@@ -48,6 +48,57 @@ only what it can derive; every other number in this file is prose that no tool
 reads, and a `--check` failure naming `TODO.md` means that table and nothing
 else.
 
+### ⏳ Open: `cmplmd370` reads a bound member's RLD info four bytes late — 2026-09-17
+
+**The verdict instrument has the defect, not only the disassembler.** The `cc370`
+session found that both `cmplmd370` and `dasm370` compute a control record's RLD
+offset as `16 + idlen` — the ID/length list first — where the record in fact
+carries the **RLD info first and the list after it**. A desynchronised RLD parse
+leaves a relocated field unmasked, and an unmasked relocated field reads as an
+ordinary text difference: **a mechanism for calling an identical module
+`differs`.** `recovered` is defined as `cmplmd370` exiting 0, so the README
+scoreboard rests on this.
+
+`docs/load-module-format.md` §4 (in cc370) documents the list at offset 16, which
+is right for every record that carries no RLD info — exactly the case where the
+two orders cannot be told apart. **Both tools were reimplemented from the prose,
+which is how they got the same bug.**
+
+**Verified here, independently, before the PR exists.**
+[`tools/ctlorder.py`](tools/ctlorder.py) walks our own member images and applies
+the loader's own arbiter: bytes 14–15 are the CCW count, the number of text bytes
+the loader is about to read, and the ID/length list's lengths must add up to it.
+A closed check on a single record — no reference, no second tool, no assumption
+about what an RLD item means.
+
+```
+7,748 of 7,749 members walked   802 carry such a record
+  1,668  records with both lists
+  1,668  agree with the list AFTER the RLD info
+      0  agree with the list AT OFFSET 16
+```
+
+The one member that does not walk is named and not swallowed: `HEWLF064`, the
+linkage editor, reads 33 records and then has 28 bytes that are not a record —
+`cmplmd370`'s `trailing_bytes`. It carries none of the records counted here.
+
+**The acceptance, when the PR arrives**, reuses the harness in
+[`work/measurements/cmplmd-reader/`](work/measurements/cmplmd-reader/):
+
+1. Null control on the 30 control CSECTs — re-run here, not taken from the
+   author, because a control run by the author on their own build is the one case
+   this arrangement exists to avoid.
+2. The population: `gate_with.py` old against new over all 5,353 modules under the
+   chosen baseline, compared as **sets** by `cmp_gates.py`. Watching `recovered`
+   = **1,626** and `explained` = **1,719**.
+3. **The direction control, which needs no census.** If the diagnosis is right the
+   fix can only mask *more* bytes as relocated, never fewer, so a verdict may move
+   `differs → identical` and **must never move `identical → differs`**. One module
+   going the other way refutes the diagnosis whatever the record counts say.
+
+Merge with `gh pr merge --match-head-commit <full 40-char sha>` on a green head —
+cc370#375 went in with a red gcc job because `gh pr checks` was never run.
+
 ### 🔑 218 modules diverge first at byte 0, and the cause is the eyecatcher — 2026-09-17
 
 **The first shared cause found in the length-differing block, and the largest
