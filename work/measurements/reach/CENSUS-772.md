@@ -65,23 +65,46 @@ of it said the opposite.** It was sent to the cc370 session as *"124 it cannot r
 at all — a larger hole than reachability was ever going to fill"*, and they were
 about to open an issue on it. Measured instead of asserted:
 
+**Not a `dasm370` defect — every refusal is `rc=2` "no section named X" and none
+of the 124 names a section.** But the sentence written next, *"our corpus points
+at the wrong member"*, was wrong for 122 of them, and correcting it needed a
+defect fixed in this side's own CESD reader first.
+
+⚠️ **The name appears TWICE in these CESDs** — once as `LR` (`X'03'`) and once as
+a `NULL` tombstone (`X'07'`) — and the reader here was a dict keyed by name, so
+the last entry won and every one came back `NULL`. 119 `NULL` / 3 `LR` against the
+cc370 session's 91 / 31, from the same 124 members: **a duplicate silently
+dropped, which is the "last wins" shape again.** Counting every occurrence:
+
 ```
-124 refusals, every one rc=2 "no section named X"
-  0  the section IS in the member's CESD  -- a dasm370 case
-124  the section is NOT in the CESD       -- our corpus points at the wrong member
-124  ... and all 124 have an EMPTY load_module column
+124 refusals, by what the name IS in that member's CESD
+   93  an ENTRY POINT (LR), sometimes plus its own tombstone
+       -- and all 93 have a section in that same member
+   29  a NULL / deleted entry only
+    2  not in the CESD at all
+    0  a section (SD/PC/CM)
 ```
 
-`AHLDMPMD.bin` carries `AHLWTO`. `AHLTDSP.bin` carries `AHLTPID`. With no load
-module recorded, `reachgate.corpus("nosource")` falls back to the CSECT name,
-globs a member that happens to exist under it, and asks it for a section it never
-had. **`dasm370` is answering the question correctly; the question is wrong.**
+`AHLDMPMD` is an **entry** in `AHLDMPMD.bin`; the section there is `AHLWTO`.
+`AHLTDSP` is an entry in `AHLTDSP.bin`; the section is `AHLTPID`. **So the member
+is the right member.** The name is in it, as an entry point, and the section that
+owns it is called something else — a structural fact about the bound module, not
+a lookup that missed. Only the **2** are genuine misses.
 
-The repair is on this side and it is the one `baseline_gate.py` already does:
-resolve these through Dave Kreiss' `LMDXRF` cross-reference, which is one record
-per (library, LMOD, CSECT, length), instead of guessing the member from the name.
-Until that is done, **the no-source population is 648 resolvable and 124
-unresolved by us**, not 772 of which 124 are unreadable.
+(The cc370 session counts 91/31 where this reads 93/29; the two differ on names
+carrying both types in different records, and nothing rests on it.)
+
+**What the 93 mean is open and neither side has answered it**: whether they are
+real CSECTs merged into other sections at link time, or corpus rows that name
+entry points. The repair is the same either way and `baseline_gate.py` already
+does it — resolve through Dave Kreiss' `LMDXRF` cross-reference, one record per
+(library, LMOD, CSECT, length), which reaches the owning section from either.
+
+**And there is a `dasm370` defect after all, found from the other side**: the tool
+walks the CESD and stores every `LR` before concluding there is no section, so
+when it says *"no section named AHLDMPMD"* it already knows the name is an entry
+owned by `AHLWTO` and says none of it. The refusal asserts less than the tool
+knows, and that is what sent this side looking for a wrong member.
 
 It changes nothing about the 22.2 % — that is computed over the 598 that were
 measured — and it changes entirely who has the defect.
